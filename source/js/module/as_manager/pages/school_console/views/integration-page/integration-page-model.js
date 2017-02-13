@@ -37,10 +37,19 @@ IntegrationPageModel.prototype.getDataLoadedHandle = function(data) {
 		binding.set('data', self.grid.table.data);
 	};
 };
+IntegrationPageModel.prototype.onClick = function(linkGoogleCalendar){
+	window.open(linkGoogleCalendar);
+};
 
 IntegrationPageModel.prototype.getGrid = function() {
-	const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+	const 	role 					= this.rootBinding.get('userData.authorizationInfo.role'),
+			integrationAllowed 		= role === "ADMIN";
+	
+	let linkGoogleCalendar;
+	
+	window.Server.integrationGoogleCalendar.post({schoolId: this.activeSchoolId}).then( link => {
+		linkGoogleCalendar = link.url.toString();
+	});
 	
 	const columns = [
 		{
@@ -59,9 +68,9 @@ IntegrationPageModel.prototype.getGrid = function() {
 			showStrip:true,
 			hideBtnFilter: true,
 			/**Only school admin and manager can add integration. All other users should not see that button.*/
-			btnAdd:changeAllowed ?
+			btnAdd:integrationAllowed ?
 				(
-					<div className="addButton bTooltip" data-description="Add Integration" onClick={() => {console.log('Server request')}}>
+					<div className="addButton bTooltip" data-description="Add Integration" onClick={() => {this.onClick(linkGoogleCalendar)}}>
 						<SVG icon="icon_cog" />
 					</div>
 				) : null
