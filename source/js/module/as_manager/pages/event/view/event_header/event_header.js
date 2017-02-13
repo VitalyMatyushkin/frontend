@@ -3,7 +3,8 @@ const	React				= require('react');
 const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
-		Buttons				= require('./buttons');
+		Buttons				= require('./buttons'),
+		PencilButton	= require('../../../../../ui/pencil_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
@@ -40,11 +41,7 @@ const EventHeader = React.createClass({
 							<If condition={this.props.eventStatus !== "FINISHED"}>
 								<div className="eEventHeader_fieldColumn mRelative">
 									<div className="eEventHeader_editLinkWrapper">
-										<a	className	= "eEventHeader_editLink"
-											onClick		= {this.props.onClickEditEventButton}
-										>
-											Edit
-										</a>
+										<PencilButton handleClick={this.props.onClickEditEventButton}/>
 									</div>
 								</div>
 							</If>
