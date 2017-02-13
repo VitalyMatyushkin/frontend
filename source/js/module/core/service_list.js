@@ -195,6 +195,9 @@ const serviceList = {
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
 		serviceList.studentSchoolEvents = new Service('/i/events', binding);
 		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
+		
+		// Integrations
+		serviceList.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
 
 		// postcode
 		serviceList.postCodes = new Service('/public/postcodes', binding);

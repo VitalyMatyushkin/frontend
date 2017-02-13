@@ -16,6 +16,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
+		IntegrationPage							= require('./views/integration-page/integration-page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
@@ -92,6 +93,10 @@ const SchoolConsole = React.createClass({
 								href	: '/#school_console/moderation',
 								name	: 'Moderation',
 								key		: 'moderation'
+							},{
+								href	: '/#school_console/integration',
+								name	: 'Integration',
+								key		: 'integration'
 							}];
 
 				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
@@ -113,6 +118,10 @@ const SchoolConsole = React.createClass({
 						href	: '/#school_console/moderation',
 						name	: 'Moderation',
 						key		: 'moderation'
+					},{
+						href	: '/#school_console/integration',
+						name	: 'Integration',
+						key		: 'integration'
 					}];
 
 				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
@@ -164,6 +173,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
 						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
+						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
 					</RouterView>
 				</div>
 			</div>
