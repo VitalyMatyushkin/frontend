@@ -33,6 +33,7 @@ const StudentAddPage = React.createClass({
 		this.saveNextOfKin(data);
         return window.Server.schoolStudents.post(this.activeSchoolId, data).then(() => {
             document.location.hash = 'school_admin/students';   // TODO: holly cow!
+			document.location.reload();
         })
     },
     
