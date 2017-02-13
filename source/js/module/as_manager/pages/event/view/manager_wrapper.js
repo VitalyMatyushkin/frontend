@@ -28,7 +28,7 @@ const ManagerWrapper = React.createClass({
 
 		const event = binding.toJS('model');
 
-		binding.set('isTeamManagerInSearchingState', false);
+		binding.set('isTeamManagerSync', false);
 
 		teamManagerWrapperBinding.atomically()
 			.set('isSubmitProcessing',				false)
@@ -53,20 +53,19 @@ const ManagerWrapper = React.createClass({
 		this.addListeners();
 	},
 	addListeners: function() {
-		this.addListenerForTeamManagerByOrder(0);
-		this.addListenerForTeamManagerByOrder(1);
+		this.addListenerForTeamManager();
 	},
-	addListenerForTeamManagerByOrder: function(order) {
+	addListenerForTeamManager: function() {
 		const binding = this.getDefaultBinding();
 
 		binding
-			.sub(`teamManagerWrapper.default.${ManagerHelper.getPathToManagerIsSearchFlagByOrder(order)}`)
+			.sub(`teamManagerWrapper.default.isSync`)
 			.addListener(eventDescriptor => {
 				// Lock submit button if team manager in searching state.
-				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', true);
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
 
 				// Unlock submit button if team manager in searching state.
-				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', false);
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
 			});
 	},
 	getRivals: function() {
@@ -337,7 +336,7 @@ const ManagerWrapper = React.createClass({
 		// if true - then user click to finish button
 		// so we shouldn't do anything
 		if(
-			!binding.get('isTeamManagerInSearchingState') &&
+			binding.get('isTeamManagerSync') &&
 			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
 			TeamHelper.isTeamDataCorrect(event, validationData)
 		) {
@@ -395,7 +394,7 @@ const ManagerWrapper = React.createClass({
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
-			'mDisable': this.getDefaultBinding().get('isTeamManagerInSearchingState')
+			'mDisable': !this.getDefaultBinding().get('isTeamManagerSync')
 		});
 	},
 	render: function() {

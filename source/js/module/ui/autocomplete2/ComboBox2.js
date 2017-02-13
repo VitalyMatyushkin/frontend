@@ -8,6 +8,9 @@ const	React	= require('react'),
 		Lazy	= require('lazy.js');
 
 const ComboBox2 = React.createClass({
+
+	isMouseDown: false,
+
 	propTypes: {
 		/** piece of data to display as initial portion */
 		defaultItem:		React.PropTypes.object,
@@ -63,6 +66,24 @@ const ComboBox2 = React.createClass({
 		return {
 			isBlocked: false
 		};
+	},
+	componentDidMount: function () {
+		window.addEventListener('mousedown', this.handlePageClick, false);
+	},
+	componentWillUnmount: function() {
+		window.removeEventListener('mousedown', this.handlePageClick);
+	},
+	handlePageClick: function() {
+		if (!this.isMouseDown) {
+			this.closeMenu();
+			this.restorePrevSelectedText();
+		}
+	},
+	handleMouseUp: function() {
+		this.isMouseDown = false;
+	},
+	handleMouseDown: function() {
+		this.isMouseDown = true;
 	},
 	/** Checks on mount if we need to set default item */
 	componentWillMount: function(){
@@ -270,7 +291,6 @@ const ComboBox2 = React.createClass({
 	onBlur: function(){
 		const self = this;
 
-		this.restorePrevSelectedText();
 		self.closeMenu();
 	},
 	/**
@@ -417,7 +437,10 @@ const ComboBox2 = React.createClass({
 		};
 
 		return (
-			<div className={`bCombobox ${isOpenCN}`}>
+			<div	className	= {`bCombobox ${isOpenCN}`}
+					onMouseDown	= {this.handleMouseDown}
+					onMouseUp	= {this.handleMouseUp}
+			>
 				<div className="eCombobox_inputContainer">
 					<input	type			= 'text'
 							style			= { hintStyle }
@@ -432,7 +455,6 @@ const ComboBox2 = React.createClass({
 							onChange	= {self.onChange}
 							onKeyUp		= {self.onKeyUp}
 							onClick		= {self.onInputClick}
-							onBlur		= {self.onBlur}
 							role		= "combobox"
 					/>
 					<img className		= {self.getLoaderCssStyle()}

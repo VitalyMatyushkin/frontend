@@ -54,6 +54,7 @@ const Manager = React.createClass({
 
 		defaultBinding
 			.atomically()
+			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
@@ -72,6 +73,7 @@ const Manager = React.createClass({
 					],
 					teamWrapper: [
 						{
+							isLoadingTeam: false,
 							filter: undefined,
 							prevSelectedTeamId: firstTeam,
 							selectedTeamId: firstTeam,
@@ -90,6 +92,7 @@ const Manager = React.createClass({
 							isSetTeamLater: false
 						},
 						{
+							isLoadingTeam: false,
 							filter: undefined,
 							prevSelectedTeamId: secondTeam,
 							selectedTeamId: secondTeam,
@@ -199,6 +202,48 @@ const Manager = React.createClass({
 		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
 			self._validate(1);
 		}));
+
+		this.addSyncListeners();
+	},
+	addSyncListeners: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		this.addListenerToIsLoadingTeamByIndex(0);
+		this.addListenerToIsLoadingTeamByIndex(1);
+
+		this.addListenerToTeamManagerIsSearchByIndex(0);
+		this.addListenerToTeamManagerIsSearchByIndex(1);
+	},
+	addListenerToIsLoadingTeamByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
+			// team wrapper is loading data
+			if(eventDescriptor.getCurrentValue()) {
+				binding.set('isSync', false);
+			}
+
+			// team wrapper isn't loading data
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
+				binding.set('isSync', true);
+			}
+		});
+	},
+	addListenerToTeamManagerIsSearchByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
+			// player selector is loading data
+			if(eventDescriptor.getCurrentValue()) {
+				binding.set('isSync', false);
+			}
+
+			// player selector isn't loading data
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
+				binding.set('isSync', true);
+			}
+		});
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
@@ -387,6 +432,8 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
+
+		console.log(defaultBinding.toJS());
 
 			return (
 				<div className="eManager_container">

@@ -155,6 +155,7 @@ const Event = React.createClass({
 				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
 			}).then(tasks => {
 				eventData.matchReport = report.content;
+				eventData.individualScoreForRemove = [];
 
 				this.setPlayersFromEventToBinding(eventData);
 				binding.atomically()
@@ -230,7 +231,6 @@ const Event = React.createClass({
 
 				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
 			}).then(tasks => {
-
 				eventData.matchReport = report.content;
 
 				this.setPlayersFromEventToBinding(eventData);
@@ -334,6 +334,9 @@ const Event = React.createClass({
 		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
 			const teamId = binding.toJS('model.teamsData.0.id');
 
+			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
+
 			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId(teamId);
 				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
@@ -342,6 +345,9 @@ const Event = React.createClass({
 
 		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
 			const teamId = binding.toJS('model.teamsData.1.id');
+
+			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
 
 			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId('teamScore', teamId);
@@ -355,6 +361,29 @@ const Event = React.createClass({
 		const updScore = binding.toJS(`model.results.individualScore`).filter(s => s.teamId !== teamId);
 
 		binding.set(`model.results.individualScore`, Immutable.fromJS(updScore));
+	},
+	/**
+	 * Function copy model.results.individualScore by teamId to model.individualScoreForRemove.
+	 * individualScoreForRemove - it's a array of scores. These scores will be removed after score submit.
+	 * @param teamId
+	 */
+	setIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const	individualScoreForRemove = binding.toJS(`model.individualScoreForRemove`),
+				newIndividualScoreForRemove = binding.toJS(`model.results.individualScore`).filter(s => s.teamId === teamId);
+
+		binding.set(
+			`model.individualScoreForRemove`,
+			Immutable.fromJS(individualScoreForRemove.concat(newIndividualScoreForRemove))
+		);
+	},
+	clearIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const individualScoreForRemove = binding.toJS(`model.individualScoreForRemove`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.individualScoreForRemove`, Immutable.fromJS(individualScoreForRemove));
 	},
 	clearTeamScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
