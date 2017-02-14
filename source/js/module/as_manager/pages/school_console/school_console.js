@@ -16,6 +16,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
+		IntegrationPage							= require('./views/integration-page/integration-page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
@@ -70,7 +71,6 @@ const SchoolConsole = React.createClass({
 
 		const _createSubMenuData = function(count){
 
-			if (allowImportStudent) {
 				let menuItems = [{
 								href	: '/#school_console/users',
 								name	: 'Users & Permissions',
@@ -85,40 +85,29 @@ const SchoolConsole = React.createClass({
 								name	: 'Requests Archive',
 								key		: 'archive'
 							},{
-								href	: '/#school_console/import_students',
-								name	: 'Import Students',
-								key		: 'import'
-							},{
 								href	: '/#school_console/moderation',
 								name	: 'Moderation',
 								key		: 'moderation'
 							}];
+				//we must show link with import only school with allowImportStudent flag === true
+				if (allowImportStudent) {
+					menuItems.push({
+						href	: '/#school_console/import_students',
+						name	: 'Import Students',
+						key		: 'import'
+					});
+				}
+				//we must show link integration only admin of school
+				if (viewerRole === 'ADMIN') {
+					menuItems.push({
+						href	: '/#school_console/integration',
+						name	: 'Integration',
+						key		: 'integration'
+					});
+				}
 
-				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-			} else {
-				let menuItems = [{
-						href	: '/#school_console/users',
-						name	: 'Users & Permissions',
-						key		: 'Users'
-					},{
-						href	: '/#school_console/requests',
-						name	: 'New Requests',
-						key		: 'requests',
-						num		: '(' + count + ')'
-					},{
-						href	: '/#school_console/archive',
-						name	: 'Requests Archive',
-						key		: 'archive'
-					},{
-						href	: '/#school_console/moderation',
-						name	: 'Moderation',
-						key		: 'moderation'
-					}];
-
-				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-			}
+				binding.set('subMenuItems', Immutable.fromJS(menuItems));
 		}
-
 		let requestFilter = {
 			status: 'NEW'
 		};
@@ -164,6 +153,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
 						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
+						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
 					</RouterView>
 				</div>
 			</div>
