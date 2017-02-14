@@ -344,6 +344,7 @@ const TeamManager = React.createClass({
 						handleClickPlayerSub			= { self.handleClickPlayerSub }
 						handleClickRemovePlayerButton	= { self.handleClickRemovePlayerButton }
 						isRemovePlayerButtonBlock		= { binding.toJS('isRemovePlayerButtonBlock') }
+						error							= { this.getBinding('error').toJS() }
 				/>
 				<PlayerChooser	students					= { binding.toJS('foundStudents') }
 								handleChangeSearchText		= { self.handleChangeSearchText }
