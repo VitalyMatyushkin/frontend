@@ -40,12 +40,17 @@ IntegrationPageModel.prototype.getDataLoadedHandle = function(data) {
 IntegrationPageModel.prototype.getStringGoogleCalendar = function() {
 	return "Google calendar";
 };
-IntegrationPageModel.prototype.onRemove = function(id, event) {
+IntegrationPageModel.prototype.onRemove = function(item, event) {
 	window.confirmAlert(
 		`Are you sure you want to remove this integration?`,
 		"Ok",
 		"Cancel",
-		() => {console.log("Request")}
+		() => {
+			window.Server.integration
+		.delete( {schoolId:this.activeSchoolId, integrationId:item.id} )
+		.then(() => this.reloadData())
+		},
+		() => {}
 	);
 	event.stopPropagation();
 };
