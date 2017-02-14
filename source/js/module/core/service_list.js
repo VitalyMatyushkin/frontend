@@ -199,6 +199,7 @@ const serviceList = {
 		// Integrations
 		serviceList.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
 		serviceList.integrations = new Service('/i/schools/{schoolId}/integrations', binding);
+		serviceList.integration = new Service('/i/schools/{schoolId}/integrations/{integrationId}', binding);
 
 		// postcode
 		serviceList.postCodes = new Service('/public/postcodes', binding);
