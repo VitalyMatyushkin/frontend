@@ -110,6 +110,19 @@ const Event = React.createClass({
 				}));
 			}).then(schoolsData => {
 				eventData.schoolsData = schoolsData;
+				if(TeamHelper.isIndividualSport(eventData)) {
+					eventData.individualsData = eventData.individualsData.sort((player1, player2) => {
+						if (!player1 || !player2 || player1.firstName === player2.firstName) {
+							return 0;
+						}
+						if (player1.firstName < player2.firstName) {
+							return -1;
+						}
+						if (player1.firstName > player2.firstName) {
+							return 1;
+						}
+					});
+				}
 
 				eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
 					if (!t1 || !t2 || t1.name === t2.name) {
