@@ -358,8 +358,9 @@ const EventRival = React.createClass({
 	},
 	_renderTeamByOrder: function(order) {
 		const eventRivalClassName = classNames({
-			"bEventRival":	true,
-			"mRight":		order === 1
+			"bEventRival"		: true,
+			"mNoneBottomBorder"	: this.getDefaultBinding().toJS('mode') !== "closing",
+			"mRight"			: order === 1
 		});
 
 		return (
