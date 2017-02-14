@@ -37,6 +37,18 @@ IntegrationPageModel.prototype.getDataLoadedHandle = function(data) {
 		binding.set('data', self.grid.table.data);
 	};
 };
+IntegrationPageModel.prototype.getStringGoogleCalendar = function() {
+	return "Google calendar";
+};
+IntegrationPageModel.prototype.onRemove = function(id, event) {
+	window.confirmAlert(
+		`Are you sure you want to remove this integration?`,
+		"Ok",
+		"Cancel",
+		() => {console.log("Request")}
+	);
+	event.stopPropagation();
+};
 IntegrationPageModel.prototype.onClick = function(){
 	//it dirty way, but browser blocked opening window in async request 
 	const googleWindow = window.open("","_blank");
@@ -54,39 +66,31 @@ IntegrationPageModel.prototype.getGrid = function() {
 
 	const columns = [
 		{
-			text:'Access Token',
+			text:'Integration',
 			isSorted:false,
 			cell:{
-				dataField:'accessToken',
-				type:'general'
-			},
-			width: 400
-		},
-		{
-			text:'Expire',
-			isSorted:false,
-			cell:{
-				dataField:'expireAt',
-				type:'date'
+				type:'custom',
+				typeOptions: {
+					parseFunction: this.getStringGoogleCalendar
+				}
 			}
 		},
 		{
-			text:'Id',
+			text:'Name',
 			isSorted:false,
 			cell:{
-				dataField:'id',
+				dataField:'name',
 				type:'general'
-			},
-			width: 150
+			}
 		},
 		{
-			text:'Refresh Token',
-			isSorted:false,
+			text:'Actions',
 			cell:{
-				dataField:'refreshToken',
-				type:'general'
-			},
-			width: 150
+				type:'action-buttons',
+				typeOptions:{
+					onItemRemove: this.onRemove.bind(this)
+				}
+			}
 		}
 	];
 	
