@@ -19,7 +19,7 @@ const IntegrationPageModel = function(page){
 	
 	this.grid = this.getGrid();
 	this.dataLoader = 	new DataLoader({
-		serviceName:	'users',
+		serviceName:	'integrations',
 		params:			{schoolId:this.activeSchoolId},
 		grid:			this.grid,
 		onLoad: 		this.getDataLoadedHandle()
@@ -36,6 +36,18 @@ IntegrationPageModel.prototype.getDataLoadedHandle = function(data) {
 	return function(data){
 		binding.set('data', self.grid.table.data);
 	};
+};
+IntegrationPageModel.prototype.getStringGoogleCalendar = function() {
+	return "Google calendar";
+};
+IntegrationPageModel.prototype.onRemove = function(id, event) {
+	window.confirmAlert(
+		`Are you sure you want to remove this integration?`,
+		"Ok",
+		"Cancel",
+		() => {console.log("Request")}
+	);
+	event.stopPropagation();
 };
 IntegrationPageModel.prototype.onClick = function(){
 	//it dirty way, but browser blocked opening window in async request 
@@ -57,8 +69,27 @@ IntegrationPageModel.prototype.getGrid = function() {
 			text:'Integration',
 			isSorted:false,
 			cell:{
+				type:'custom',
+				typeOptions: {
+					parseFunction: this.getStringGoogleCalendar
+				}
+			}
+		},
+		{
+			text:'Name',
+			isSorted:false,
+			cell:{
 				dataField:'name',
 				type:'general'
+			}
+		},
+		{
+			text:'Actions',
+			cell:{
+				type:'action-buttons',
+				typeOptions:{
+					onItemRemove: this.onRemove.bind(this)
+				}
 			}
 		}
 	];
