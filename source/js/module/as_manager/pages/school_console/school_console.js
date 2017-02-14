@@ -71,7 +71,6 @@ const SchoolConsole = React.createClass({
 
 		const _createSubMenuData = function(count){
 
-			if (allowImportStudent) {
 				let menuItems = [{
 								href	: '/#school_console/users',
 								name	: 'Users & Permissions',
@@ -86,48 +85,29 @@ const SchoolConsole = React.createClass({
 								name	: 'Requests Archive',
 								key		: 'archive'
 							},{
-								href	: '/#school_console/import_students',
-								name	: 'Import Students',
-								key		: 'import'
-							},{
 								href	: '/#school_console/moderation',
 								name	: 'Moderation',
 								key		: 'moderation'
-							},{
-								href	: '/#school_console/integration',
-								name	: 'Integration',
-								key		: 'integration'
 							}];
-
-				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-			} else {
-				let menuItems = [{
-						href	: '/#school_console/users',
-						name	: 'Users & Permissions',
-						key		: 'Users'
-					},{
-						href	: '/#school_console/requests',
-						name	: 'New Requests',
-						key		: 'requests',
-						num		: '(' + count + ')'
-					},{
-						href	: '/#school_console/archive',
-						name	: 'Requests Archive',
-						key		: 'archive'
-					},{
-						href	: '/#school_console/moderation',
-						name	: 'Moderation',
-						key		: 'moderation'
-					},{
+				//we must show link with import only school with allowImportStudent flag === true
+				if (allowImportStudent) {
+					menuItems.push({
+						href	: '/#school_console/import_students',
+						name	: 'Import Students',
+						key		: 'import'
+					});
+				}
+				//we must show link integration only admin of school
+				if (viewerRole === 'ADMIN') {
+					menuItems.push({
 						href	: '/#school_console/integration',
 						name	: 'Integration',
 						key		: 'integration'
-					}];
+					});
+				}
 
-				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-			}
+				binding.set('subMenuItems', Immutable.fromJS(menuItems));
 		}
-
 		let requestFilter = {
 			status: 'NEW'
 		};
