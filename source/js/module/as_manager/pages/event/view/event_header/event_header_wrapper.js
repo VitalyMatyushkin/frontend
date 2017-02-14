@@ -2,6 +2,7 @@
  * Created by Woland on 10.01.2017.
  */
 const 	React 				= require('react'),
+		Immutable			= require('immutable'),
 		Morearty 			= require('morearty'),
 
 		ChallengeModel		= require('module/ui/challenges/challenge_model'),
@@ -36,9 +37,19 @@ const EventHeaderWrapper = React.createClass({
 	handleClickCloseEvent: function () {
 		const binding = this.getDefaultBinding();
 
+		this.backupResults();
 		EventHeaderActions.setModeClosing(binding);
 	},
+	backupResults: function() {
+		const binding = this.getDefaultBinding();
 
+		// backup results
+		// we need default state of results for revert event result changes
+		// when user click to cancel button(in close event mode)
+		const event = binding.toJS('model');
+		event.initResults = event.results;
+		binding.set('model', Immutable.fromJS(event));
+	},
 	/**
 	 * The event handler when clicking the button "Cancel" after clicking the button "Change score"
 	 */
@@ -63,7 +74,11 @@ const EventHeaderWrapper = React.createClass({
 			EventHeaderActions.closeMatch(activeSchoolId, event, binding);
 		}
 	},
+	onClickEditEventButton: function() {
+		const binding = this.getDefaultBinding();
 
+		binding.set('isEditEventPopupOpen', true);
+	},
 	/**
 	 * The function render's component EventHeaderWrapper
 	 * @returns {XML}
@@ -89,6 +104,7 @@ const EventHeaderWrapper = React.createClass({
 						handleClickCloseEvent			= { this.handleClickCloseEvent }
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
+						onClickEditEventButton			= { this.onClickEditEventButton }
 					/>
 		);
 	}

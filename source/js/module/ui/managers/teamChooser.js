@@ -213,8 +213,8 @@ const	TeamChooser	= React.createClass({
 				});
 
 		return (
-			<button	className={classNameRevertButton}
-					onClick={self._onTeamDeselectButtonClick}
+			<button	className	= {classNameRevertButton}
+					onClick		= {self._onTeamDeselectButtonClick}
 			>
 				Deselect Team
 			</button>

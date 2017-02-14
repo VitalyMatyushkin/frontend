@@ -11,7 +11,8 @@ const ConfirmPopup = React.createClass({
 		cancelButtonText:			React.PropTypes.string,
 		handleClickOkButton:		React.PropTypes.func,
 		handleClickCancelButton:	React.PropTypes.func,
-		isShowButtons:				React.PropTypes.bool
+		isShowButtons:				React.PropTypes.bool,
+		customStyle:				React.PropTypes.string
 	},
 	getDefaultProps: function() {
 		return {
@@ -24,13 +25,22 @@ const ConfirmPopup = React.createClass({
 			this.props.handleClickOkButton();
 		}
 	},
+	getConfirmPopupStyle: function() {
+		let style = "bConfirmPopup";
+
+		if(this.props.customStyle) {
+			style = style + " " + this.props.customStyle;
+		}
+
+		return style;
+	},
 	render: function() {
 		const okButtonClassName = classNames({
-			mMarginRight:	true,
+			mMarginLeft:	true,
 			mDisable:		this.props.isOkButtonDisabled
 		});
 
-		const bodyStyle = classNames({
+		const	bodyStyle = classNames({
 				eConfirmPopup_body	: true,
 				mZeroMargin			: !this.props.isShowButtons
 			}),
@@ -41,21 +51,24 @@ const ConfirmPopup = React.createClass({
 
 		return (
 			<div>
-				<div className="bConfirmPopup">
-					<div className="bodyStyle">
-						{this.props.children}
+				<div className="eConfirmPopup_overlay">
+					<div className={this.getConfirmPopupStyle()}>
+						<div className={bodyStyle}>
+							{this.props.children}
+						</div>
+						<div className={footerStyle}>
+							<Button text={this.props.cancelButtonText}
+									onClick={this.props.handleClickCancelButton}
+									extraStyleClasses="mCancel"
+								/>
+							<Button text={this.props.okButtonText}
+									onClick={this.handleClickOkButton}
+									extraStyleClasses={okButtonClassName}
+								/>
+						</div>
 					</div>
-					<div className={footerStyle}>
-						<Button	text				= {this.props.okButtonText}
-								onClick				= {this.handleClickOkButton}
-								extraStyleClasses	= {okButtonClassName}
-						/>
-						<Button	text	= {this.props.cancelButtonText}
-								onClick	= {this.props.handleClickCancelButton}
-						/>
-					</div>
+					<div className='bPopupBack mAcitve'></div>
 				</div>
-				<div className='bPopupBack mAcitve'></div>
 			</div>
 		);
 	}

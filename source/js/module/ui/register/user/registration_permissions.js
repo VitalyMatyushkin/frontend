@@ -30,7 +30,7 @@ const RegistrationPermissions = React.createClass({
 		const 	currentType = this.props.currentType,
 				fieldsAr	= this.props.fieldsAr,
 				dataToPost	= {
-					preset:currentType
+					preset:currentType.toUpperCase()
 				};
 
 		let arrayPromise = [];

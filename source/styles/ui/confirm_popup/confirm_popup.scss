@@ -1,18 +1,19 @@
 .bConfirmPopup {
-  position: fixed;
+  position: relative;
 
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   min-height: 50px;
-  margin-left: -250px;
-  margin-top: -25px;
-
-  top: 25%;
-  left: 50%;
 
   z-index: 10000;
 
   background: white;
   padding: 20px;
+  margin: auto;
+
+  &.mBig {
+    max-width: 700px;
+  }
 }
 
 .eConfirmPopup_body {
@@ -29,4 +30,20 @@
   &.mHide {
     display: none;
   }
+}
+
+.eConfirmPopup_overlay {
+  display: flex;
+  position: fixed;
+
+  min-height: 480px;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  overflow: auto;
+
+  z-index: 10000;
 }

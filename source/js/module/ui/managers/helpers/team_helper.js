@@ -989,12 +989,10 @@ function convertPoints(countPoints, pointsType){
 
 /** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
 function getSchoolsData(event) {
-	const schoolsData = [];
+	let schools = [];
 
-	schoolsData.push(event.inviterSchool);
-	event.invitedSchools && event.invitedSchools.forEach( s => schoolsData.push(s) );
-
-	return schoolsData;
+	schools.push(event.inviterSchool);
+	return schools.concat(event.invitedSchools.filter(school => school.id !== event.inviterSchoolId));
 }
 
 /** Return bundle with all schools participated in event data, all houses data and all teams data.

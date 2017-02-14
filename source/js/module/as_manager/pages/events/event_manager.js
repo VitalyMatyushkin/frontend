@@ -35,7 +35,7 @@ const EventManager = React.createClass({
 			// if true - then user click to finish button
 			// so we must block finish button
 			isSubmitProcessing: false,
-			isTeamManagerInSearchingState: false,
+			isTeamManagerSync: false,
 			model: {
 				name:			'',
 				startTime:		currentDate,
@@ -111,20 +111,19 @@ const EventManager = React.createClass({
 		binding.clear();
 	},
 	addListeners: function() {
-		this.addListenerForTeamManagerByOrder(0);
-		this.addListenerForTeamManagerByOrder(1);
+		this.addListenerForTeamManager();
 	},
-	addListenerForTeamManagerByOrder: function(order) {
+	addListenerForTeamManager: function() {
 		const binding = this.getDefaultBinding();
 
 		binding
-			.sub(`${ManagerHelper.getPathToManagerIsSearchFlagByOrder(order)}`)
+			.sub('isSync')
 			.addListener(eventDescriptor => {
 				// Lock submit button if team manager in searching state.
-				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', true);
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
 
 				// Unlock submit button if team manager in searching state.
-				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', false);
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
 			});
 	},
 	onSelectDate: function (newDate) {
@@ -372,8 +371,8 @@ const EventManager = React.createClass({
 		body.venue = {
 			venueType: modelVenue.venueType
 		};
-		if(modelVenue.postcode.id !== 'TBD') {
-			body.venue.postcodeId = modelVenue.postcode.id;
+		if(modelVenue.postcodeData.id !== 'TBD') {
+			body.venue.postcodeId = modelVenue.postcodeData.id;
 		}
 	},
 	/**
@@ -434,7 +433,7 @@ const EventManager = React.createClass({
 
 			const finishButtonClassName = classNames({
 				mFinish:	true,
-				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || binding.get('isTeamManagerInSearchingState')
+				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
 			});
 
 			return (
@@ -474,20 +473,20 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')			!== 'undefined' &&
-				binding.get('model.startTime') 					!== null &&
-				binding.get('model.startTime') 					!== '' &&
-				typeof binding.toJS('model.sportId')			!== 'undefined' &&
-				binding.toJS('model.sportId')					!== '' &&
-				typeof binding.toJS('model.gender')				!== 'undefined' &&
-				binding.toJS('model.gender')					!== '' &&
-				binding.toJS('model.gender')					!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')				!== 'undefined' &&
-				binding.toJS('model.ages').length				!== 0 &&
-				typeof binding.toJS('model.type')				!== 'undefined' &&
-				binding.toJS('model.type')						!== '' &&
-				typeof binding.toJS('model.venue.postcode')		!== 'undefined' &&
-				typeof binding.toJS('model.venue.postcode.id')	!== 'undefined' &&
+				typeof binding.get('model.startTime')				!== 'undefined' &&
+				binding.get('model.startTime') 						!== null &&
+				binding.get('model.startTime') 						!== '' &&
+				typeof binding.toJS('model.sportId')				!== 'undefined' &&
+				binding.toJS('model.sportId')						!== '' &&
+				typeof binding.toJS('model.gender')					!== 'undefined' &&
+				binding.toJS('model.gender')						!== '' &&
+				binding.toJS('model.gender')						!== 'not-selected-gender' &&
+				typeof binding.toJS('model.ages')					!== 'undefined' &&
+				binding.toJS('model.ages').length					!== 0 &&
+				typeof binding.toJS('model.type')					!== 'undefined' &&
+				binding.toJS('model.type')							!== '' &&
+				typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&
+				typeof binding.toJS('model.venue.postcodeData.id')	!== 'undefined' &&
 				self.isAllRivalsSelected()
 		);
 	},

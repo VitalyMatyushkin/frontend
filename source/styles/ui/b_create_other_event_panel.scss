@@ -1,49 +1,58 @@
 .bCreateOtherEventPanelWrapper {
-  position: relative;
-
   width: 1170px;
   height: 35px;
 
   margin: 0 auto 10px;
-  overflow: hidden;
 }
 
 .bCreateOtherEventPanel {
-  position: absolute;
-
-  text-align: center;
   width: 1170px;
   height: 35px;
 
+  text-align: center;
+  margin: 0px auto;
   padding: 10px 0px 0px 10px;
 
-  background-color: #007abf;
+  background-color: #f5f5f5;
   border-radius: 0 0 5px 5px;
+  border: solid 1px #e6e6e6;
+  border-top: none;
 
   transition-property: top;
   transition-duration: 1s;
+
+  cursor: default;
 }
 
 .eCreateOtherEventPanel_left {
   display: inline-block;
+  width: 1130px;
+  text-align: center;
+
+  color: #8c8c8c;
 }
 
 .eCreateOtherEventPanel_right {
   display: inline-block;
-  top: 8px;
-  right: 10px;
-  position: absolute;
+  margin-top: -2px;
 }
 
 .eCreateOtherEventPanel_link {
-  color: white;
+  text-decoration: underline;
+  color: #8c8c8c;
 
   &:hover {
-    color: white;
+    color: black;
     text-decoration: underline;
   }
 }
 
 .eCreateOtherEventPanel_cross {
-  color: white;
+  color: #8c8c8c;
+
+  &:hover {
+    color: black;
+  }
+
+  cursor: pointer;
 }

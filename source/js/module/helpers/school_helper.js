@@ -23,9 +23,8 @@ const SchoolHelper = {
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
 	getActiveSchoolInfo: function (self) {
-		const
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolInfo = rootBinding.toJS('activeSchool.schoolInfo');
+		const	rootBinding			= self.getMoreartyContext().getBinding(),
+				activeSchoolInfo	= rootBinding.toJS('activeSchool.schoolInfo');
 
 		return activeSchoolInfo;
 	},

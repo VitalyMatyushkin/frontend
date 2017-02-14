@@ -11,21 +11,17 @@ const EventResultHelper = {
 	 */
 	initializeEventResults: function(event) {
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-			event.results = TeamHelper.callFunctionForLeftContext(
+			TeamHelper.callFunctionForLeftContext(
 				this.activeSchoolId,
 				event,
 				this.getInitResults.bind(this, event)
 			);
-			event.results = TeamHelper.callFunctionForRightContext(
+			TeamHelper.callFunctionForRightContext(
 				this.activeSchoolId,
 				event,
 				this.getInitResults.bind(this, event)
 			);
 		}
-		// backup results
-		// we need default state of results for revert event result changes
-		// when user click to cancel button(in close event mode)
-		event.initResults = event.results;
 	},
 	getInitResults: function(event, teamBundleName, order) {
 		let	scoreBundleName,
@@ -74,8 +70,6 @@ const EventResultHelper = {
 				event.results[scoreBundleName].push(newScoreData);
 			}
 		}
-
-		return event.results;
 	}
 };
 

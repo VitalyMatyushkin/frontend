@@ -1,5 +1,7 @@
 const	React = require('react');
 
+const	If = require('../../../../../ui/if/if');
+
 const	CreateOtherEventPanelStyles = require('../../../../../../../styles/ui/b_create_other_event_panel.scss');
 
 const CreateOtherEventPanel = React.createClass({
@@ -8,44 +10,36 @@ const CreateOtherEventPanel = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			top	: '-35px'
+			isVisible: true
 		};
-	},
-	componentWillMount: function() {
-		setTimeout(() => {
-			this.setState({
-				top	: "0px"
-			});
-		}, 1000);
 	},
 	handleCrossClick: function() {
 		this.setState({
-			top	: "-35px"
+			isVisible: false
 		});
 	},
 	render: function() {
-		const style = {
-			top	: this.state.top
-		};
-
 		return (
 			<div className="bCreateOtherEventPanelWrapper">
-				<div className="bCreateOtherEventPanel" style={style}>
-					<div className="eCreateOtherEventPanel_left">
-						<a	className	= "eCreateOtherEventPanel_link"
-							href		= "#events/manager"
-						>
-							Would you like to create another event?
-						</a>
+				<If condition={this.state.isVisible}>
+					<div className="bCreateOtherEventPanel">
+						<div className="eCreateOtherEventPanel_left">
+							{"You have successfully created an event. "}
+							<a	className	= "eCreateOtherEventPanel_link"
+								href		= "#events/manager"
+							>
+								Add another event
+							</a>
+						</div>
+						<div className="eCreateOtherEventPanel_right">
+							<i	className	= "fa fa-times eCreateOtherEventPanel_cross"
+								aria-hidden	= "true"
+								onClick		= {this.handleCrossClick}
+							>
+							</i>
+						</div>
 					</div>
-					<div className="eCreateOtherEventPanel_right">
-						<i	className	= "fa fa-times eCreateOtherEventPanel_cross"
-							aria-hidden	= "true"
-							onClick		= {this.handleCrossClick}
-						>
-						</i>
-					</div>
-				</div>
+				</If>
 			</div>
 		);
 	}
