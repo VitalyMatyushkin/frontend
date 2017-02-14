@@ -19,7 +19,7 @@ const IntegrationPageModel = function(page){
 	
 	this.grid = this.getGrid();
 	this.dataLoader = 	new DataLoader({
-		serviceName:	'users',
+		serviceName:	'integrations',
 		params:			{schoolId:this.activeSchoolId},
 		grid:			this.grid,
 		onLoad: 		this.getDataLoadedHandle()
@@ -54,12 +54,39 @@ IntegrationPageModel.prototype.getGrid = function() {
 
 	const columns = [
 		{
-			text:'Integration',
+			text:'Access Token',
 			isSorted:false,
 			cell:{
-				dataField:'name',
+				dataField:'accessToken',
 				type:'general'
+			},
+			width: 400
+		},
+		{
+			text:'Expire',
+			isSorted:false,
+			cell:{
+				dataField:'expireAt',
+				type:'date'
 			}
+		},
+		{
+			text:'Id',
+			isSorted:false,
+			cell:{
+				dataField:'id',
+				type:'general'
+			},
+			width: 150
+		},
+		{
+			text:'Refresh Token',
+			isSorted:false,
+			cell:{
+				dataField:'refreshToken',
+				type:'general'
+			},
+			width: 150
 		}
 	];
 	
