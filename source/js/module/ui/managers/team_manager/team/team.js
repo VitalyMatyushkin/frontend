@@ -1,6 +1,7 @@
 const	React	= require('react'),
 
 		Player				= require('./player'),
+		ErrorItem			= require('./errorItem'),
 		RemovePlayersButton	= require('./remove_players_button');
 
 const DefaultTeam = React.createClass({
@@ -12,7 +13,8 @@ const DefaultTeam = React.createClass({
 		handleClickPlayerSub:			React.PropTypes.func.isRequired,
 		handleClickRemovePlayerButton:	React.PropTypes.func.isRequired,
 		isNonTeamSport:					React.PropTypes.bool.isRequired,
-		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired
+		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired,
+		error:							React.PropTypes.object.isRequired
 	},
 	renderTableHead: function() {
 		const self = this;
@@ -43,7 +45,15 @@ const DefaultTeam = React.createClass({
 		const	players		= self.props.players,
 				positions	= self.props.positions;
 
-		return players.map((player, index) =>
+		let xmlPlayers = [];
+
+		if(this.props.error.isError && this.props.error.text !== 'Please enter team name') {
+			xmlPlayers.push(
+				<ErrorItem errorText={this.props.error.text}/>
+			);
+		}
+
+		xmlPlayers = xmlPlayers.concat(players.map((player, index) =>
 			<Player	number						= {index + 1}
 					key							= {player.id}
 					isNonTeamSport				= {self.props.isNonTeamSport}
@@ -53,7 +63,9 @@ const DefaultTeam = React.createClass({
 					handleChangePlayerPosition	= {self.props.handleChangePlayerPosition}
 					handleClickPlayerSub		= {self.props.handleClickPlayerSub}
 			/>
-		);
+		));
+
+		return xmlPlayers;
 	},
 	render: function() {
 		const self  = this;
