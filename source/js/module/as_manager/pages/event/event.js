@@ -92,7 +92,7 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		this.initIsNewEvent();
+		this.initIsNewEventFlag();
 
 		let eventData, report, photos, settings;
 		/**
@@ -138,8 +138,8 @@ const Event = React.createClass({
 
 				// loading match report
 				return window.Server.schoolEventReport.get({
-					schoolId: this.props.activeSchoolId,
-					eventId: self.eventId
+					schoolId	: this.props.activeSchoolId,
+					eventId		: self.eventId
 				});
 			}).then(_report => {
 				report = _report;
@@ -152,7 +152,12 @@ const Event = React.createClass({
 			}).then(_settings => {
 				settings = _settings;
 
-				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+				return window.Server.schoolEventTasks.get(
+					{
+						schoolId	: this.props.activeSchoolId,
+						eventId		: self.eventId
+					}
+				);
 			}).then(tasks => {
 				eventData.matchReport = report.content;
 				eventData.individualScoreForRemove = [];
@@ -254,7 +259,7 @@ const Event = React.createClass({
 			});
 		}
 	},
-	initIsNewEvent: function() {
+	initIsNewEventFlag: function() {
 		const rootBinding = this.getMoreartyContext().getBinding();
 
 		const isNewEvent = rootBinding.get('routing.parameters.new');
