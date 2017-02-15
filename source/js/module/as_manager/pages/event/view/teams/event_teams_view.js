@@ -163,6 +163,7 @@ const EventTeamsView = React.createClass({
 		const	event						= self.getBinding('event').toJS(),
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
+				housesData					= event.housesData,
 				activeSchoolId				= self.getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('0.value');
@@ -175,7 +176,7 @@ const EventTeamsView = React.createClass({
 						event.invitedSchools[0].id;
 					return self.renderIndividualPlayersBySchoolId(schoolId, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return self.renderIndividualPlayersByHouseId(event.houses[0], individualScoreAvailable);
+					return self.renderIndividualPlayersByHouseId(housesData[0].id, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
 						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(0);
@@ -202,7 +203,7 @@ const EventTeamsView = React.createClass({
 				return self.renderTeamPlayersByOrder(order, individualScoreAvailable);
 			} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
-				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[0].id);
+				const teamIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {
@@ -231,6 +232,7 @@ const EventTeamsView = React.createClass({
 		const	event						= self.getBinding('event').toJS(),
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
+				housesData					= event.housesData,
 				activeSchoolId				= self.getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('1.value');
@@ -254,7 +256,7 @@ const EventTeamsView = React.createClass({
 						return self.renderAwaitingOpponentTeam();
 					}
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return self.renderIndividualPlayersByHouseId(event.houses[1], individualScoreAvailable);
+					return self.renderIndividualPlayersByHouseId(housesData[1].id, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
 						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(1);
@@ -308,7 +310,7 @@ const EventTeamsView = React.createClass({
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
-				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[1].id);
+				const teamIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {

@@ -433,8 +433,6 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-		console.log(defaultBinding.toJS());
-
 			return (
 				<div className="eManager_container">
 					{self._renderRivals()}
