@@ -355,7 +355,7 @@ const Event = React.createClass({
 			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
 
 			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId('teamScore', teamId);
+				this.clearTeamScoreByTeamId(teamId);
 				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
 			}
 		}));
