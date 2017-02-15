@@ -71,23 +71,21 @@ const GrantRole = React.createClass({
 	continueButtonClick:function(model){
 		let ids = this.props.userIdsBinding.toJS();
 		ids = ids && typeof ids === 'string' ? [ids] : ids;
-
-		model.preset = model.preset.toUpperCase();
-
+		
 		ids.forEach(currentId => {
 			let body;
 
 			switch(model.preset) {
 				case 'parent':
 					body = {
-						preset:     model.preset,
+						preset:     model.preset.toUpperCase(),
 						schoolId:   model.schoolId,
 						studentId:  model.studentId
 					};
 					break;
 				default:
 					body = {
-						preset:     model.preset,
+						preset:     model.preset.toUpperCase(),
 						schoolId:   model.schoolId
 					};
 					break;
