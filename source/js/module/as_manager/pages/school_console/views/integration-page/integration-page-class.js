@@ -104,7 +104,6 @@ class IntegrationPageClass{
 				title:'Integration',
 				showStrip:true,
 				hideBtnFilter: true,
-				/**Only school admin and manager can add integration. All other users should not see that button.*/
 				btnAdd:
 					(
 						<div className="addButton bTooltip" data-description="Add Integration" onClick={() => {this.onClick()}}>
