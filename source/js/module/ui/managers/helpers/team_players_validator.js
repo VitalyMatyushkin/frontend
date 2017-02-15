@@ -5,7 +5,7 @@ const TeamPlayersValidator = {
         let isError = false,
             text = undefined;
 
-        if(players && players.length !== 0) {
+        if(typeof players !== 'undefined') {
 			if (players && limits.minPlayers && players.length < limits.minPlayers) {
 				isError = true;
 				text = `Number of players should be greater or equal ${limits.minPlayers}`;

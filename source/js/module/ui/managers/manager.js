@@ -271,7 +271,7 @@ const Manager = React.createClass({
 					minPlayers:	event.sportModel.defaultLimits.minPlayers,
 					minSubs:	event.sportModel.defaultLimits.minSubs,
 					maxSubs:	event.sportModel.defaultLimits.maxSubs
-				} : {};
+				} : {minPlayers: 1};
 
 				let result = {
 					isError:	false,
