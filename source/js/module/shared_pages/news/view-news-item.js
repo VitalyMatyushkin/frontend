@@ -28,8 +28,8 @@ const ViewNewsItem = React.createClass({
 	renderRows:function(rows){
 		return (
 			<div className="inlineBlock newsItemText">
-				{rows.map(row => {
-					return <p>{row}</p>;
+				{rows.map((row, index) => {
+					return <p key={index}>{row}</p>;
 				})}
 			</div>
 		);
@@ -59,7 +59,7 @@ const ViewNewsItem = React.createClass({
 	},
 	renderNews: function(news) {
 		const 	binding		= this.getDefaultBinding(),
-				imgStyle 	= {backgroundImage: 'url(' + news.picUrl + ')'};
+				imgStyle 	= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {};
 
 		let	text, linkText;
 		if(binding.toJS('selectedNewsItem') == news.id) {

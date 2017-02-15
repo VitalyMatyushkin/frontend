@@ -314,6 +314,15 @@ const TeamWrapper = React.createClass({
 
 		return window.Server.team.get( { schoolId: self.activeSchoolId, teamId: teamId } );
 	},
+	getTeamManagerBinding: function() {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		return ({
+			default	: binding.sub("___teamManagerBinding"),
+			error	: this.getBinding('error')
+		});
+	},
 	_getPlayerChooserBinding: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -383,9 +392,14 @@ const TeamWrapper = React.createClass({
 			case TeamHelper.isNonTeamSport(event):
 				return null;
 			case TeamHelper.isTeamSport(event):
+				const errorData = this.getBinding('error').toJS();
+
+				const isError = errorData.isError && errorData.text === "Please enter team name";
+
 				return (
 					<TeamName	name				= { this.getDefaultBinding().toJS('teamName.name') }
 								handleChangeName	= { this.handleChangeName }
+								isShowError			= { isError }
 					/>
 				);
 		}
@@ -436,8 +450,8 @@ const TeamWrapper = React.createClass({
 				<div className={plugClass}>
 				</div>
 				{ self.renderTeamNameComponent() }
-				<TeamManager	isNonTeamSport={TeamHelper.isNonTeamSport(event)}
-								binding={binding.sub("___teamManagerBinding")}
+				<TeamManager	isNonTeamSport	= {TeamHelper.isNonTeamSport(event)}
+								binding			= {this.getTeamManagerBinding()}
 				/>
 				<If condition={self.isShowRevertChangesButton()}>
 					<div className="eTeamWrapper_modeContainer">

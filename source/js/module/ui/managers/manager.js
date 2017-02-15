@@ -271,7 +271,7 @@ const Manager = React.createClass({
 					minPlayers:	event.sportModel.defaultLimits.minPlayers,
 					minSubs:	event.sportModel.defaultLimits.minSubs,
 					maxSubs:	event.sportModel.defaultLimits.maxSubs
-				} : {};
+				} : {minPlayers: 1};
 
 				let result = {
 					isError:	false,
@@ -432,8 +432,6 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
-
-		console.log(defaultBinding.toJS());
 
 			return (
 				<div className="eManager_container">

@@ -92,7 +92,7 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		this.initIsNewEvent();
+		this.initIsNewEventFlag();
 
 		let eventData, report, photos, settings;
 		//For different roles we use different service
@@ -109,6 +109,19 @@ const Event = React.createClass({
 			}));
 		}).then(schoolsData => {
 			eventData.schoolsData = schoolsData;
+				if(TeamHelper.isIndividualSport(eventData)) {
+					eventData.individualsData = eventData.individualsData.sort((player1, player2) => {
+						if (!player1 || !player2 || player1.firstName === player2.firstName) {
+							return 0;
+						}
+						if (player1.firstName < player2.firstName) {
+							return -1;
+						}
+						if (player1.firstName > player2.firstName) {
+							return 1;
+						}
+					});
+				}
 
 			eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
 				if (!t1 || !t2 || t1.name === t2.name) {
@@ -151,7 +164,12 @@ const Event = React.createClass({
 		}).then(_settings => {
 			settings = _settings;
 
-			return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+				return window.Server.schoolEventTasks.get(
+					{
+						schoolId	: this.props.activeSchoolId,
+						eventId		: self.eventId
+					}
+				);
 		}).then(tasks => {
 			eventData.matchReport = report.content;
 			eventData.individualScoreForRemove = [];
@@ -187,8 +205,7 @@ const Event = React.createClass({
 			return window.Server.studentSchoolEvent
 		}
 	},
-	
-	initIsNewEvent: function() {
+	initIsNewEventFlag: function() {
 		const rootBinding = this.getMoreartyContext().getBinding();
 
 		const isNewEvent = rootBinding.get('routing.parameters.new');
@@ -284,7 +301,7 @@ const Event = React.createClass({
 			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
 
 			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId('teamScore', teamId);
+				this.clearTeamScoreByTeamId(teamId);
 				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
 			}
 		}));
