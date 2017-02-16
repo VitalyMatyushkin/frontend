@@ -266,21 +266,15 @@ const InviteAcceptView = React.createClass({
 		if(!!binding.get('sync')) {
 			return (
 				<div className="bInviteAccept">
-					<div className="bManager mTeamManager">
+					<div className="bTeamManagerWrapper">
 						<Manager	isInviteMode	= {true}
 									binding			= {managerBinding}
 						/>
-					</div>
-					<div className="eInviteAccept_footer">
-						<div className="eInviteAccept_acceptButtonWrapper">
-							<div className="eInviteAccept_footerLeftSide">
-							</div>
-							<div className="eInviteAccept_footerRightSide">
-								<Button	text				= "Accept"
-										onClick				= {this.onClickAccept}
-										extraStyleClasses	= {this.getAcceptButtonStyleClasses()}
-								/>
-							</div>
+						<div className="eTeamManagerWrapper_footer">
+							<Button	text				= "Accept"
+									   onClick				= {this.onClickAccept}
+									   extraStyleClasses	= {this.getAcceptButtonStyleClasses()}
+							/>
 						</div>
 					</div>
 					<SavingPlayerChangesPopup	binding	= {binding}
