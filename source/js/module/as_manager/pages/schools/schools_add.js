@@ -14,7 +14,7 @@ const AddSchoolForm = React.createClass({
 
 		// !!! Method modify schoolData !!!
 		// Side effect bro
-		// SchoolHelper.setServerPublicAccessSchoolValue(schoolData);		// TODO: Oleg, decrypt this plz
+		// SchoolHelper.setServerPublicAccessSchoolValue(schoolData);		// TODO: Decrypt this!
 
 		window.Server.schools.post(schoolData).then(function(data) {
 			// Добавляемая школа всегда становится школой "по умолчанию"
@@ -45,10 +45,8 @@ const AddSchoolForm = React.createClass({
 		}
 	},
 	render: function() {
-		var self = this;
-
 		return (
-			<SchoolForm title="Add new school..." onSubmit={self.submitAdd} binding={self.getDefaultBinding().sub('form')} />
+			<SchoolForm title="Add new school..." onSubmit={this.submitAdd} binding={this.getDefaultBinding().sub('form')} />
 		)
 	}
 });
