@@ -30,8 +30,33 @@ const StudentListModel = function(page){
 	this.setAddButton();
 	this.setColumns();
 };
-
 StudentListModel.prototype = {
+	loadFilter: function(grid){
+		this.grid = new GridModel({
+			actionPanel: {
+				title: this.title,
+				showStrip: true,
+				btnAdd: this.btnAdd
+			},
+			columns: this.columns,
+			handleClick: this.props.handleClick,
+			filters: {
+				where: grid.filter.where,
+				order: grid.filter.order
+			}
+		});
+		
+		this.dataLoader = new DataLoader({
+			serviceName: 'schoolStudents',
+			params: {schoolId: this.activeSchoolId},
+			grid: this.grid,
+			onLoad: this.getDataLoadedHandle()
+		});
+		
+		return this;
+	},
+	
+	
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
@@ -236,6 +261,7 @@ StudentListModel.prototype = {
 	init: function(){
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
 			if(schoolHelper.schoolSubscriptionPlanIsFull(this)) {
+				
 				this.grid = new GridModel({
 					actionPanel: {
 						title: this.title,
