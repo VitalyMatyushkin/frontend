@@ -5,6 +5,7 @@
     "check-es2015-constants",               // checking const expressions to be really const
     "transform-es2015-block-scoping",       // allowing block scope features
     "transform-es2015-template-literals",   // allow string interpolation
-    "transform-es2015-classes"              // allow class transformations to ES5 class-like
+    "transform-es2015-classes",             // allow class transformations to ES5 class-like
+    "transform-flow-strip-types"            // striping types from flow
   ]
 }
