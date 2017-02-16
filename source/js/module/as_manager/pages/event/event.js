@@ -866,11 +866,9 @@ const Event = React.createClass({
 			// sync and edit squad mode
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
-					<div className="bEventContainer">
-						<ManagerWrapper	binding			= {binding}
-										activeSchoolId	= {this.props.activeSchoolId}
-						/>
-					</div>
+					<ManagerWrapper	binding			= {binding}
+									activeSchoolId	= {this.props.activeSchoolId}
+					/>
 				);
 		}
 	}

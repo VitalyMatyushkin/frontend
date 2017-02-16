@@ -13,7 +13,8 @@ const	React					= require('react'),
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isInviteMode: 	React.PropTypes.bool
+		isInviteMode			: React.PropTypes.bool,
+		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	listeners: [],
 	componentWillMount: function () {
@@ -342,16 +343,11 @@ const Manager = React.createClass({
 
 		const event = self.getDefaultBinding().toJS('model');
 
-		return rivalsBinding.get().map(function (rival, index) {
+		return rivalsBinding.get().map((rival, index) => {
 			const	disable		= self._isRivalDisable(rival),
-					teamClasses	= classNames({
-						mActive: selectedRivalIndex == index,
-						eChooser_item: true,
-						mDisable: disable
-					}),
 					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'));
-			let		text		= '';
 
+			let text = '';
 			switch (eventType) {
 				case 'houses':
 				case 'inter-schools':
@@ -366,13 +362,39 @@ const Manager = React.createClass({
 					break;
 			}
 
-			if(!TeamHelper.isInternalEventForIndividualSport(event)
-				&& (self.isShowRivals() || selectedRivalIndex == index)) {
-				return (
-					<span key={`team-index-${index}`} className={teamClasses}
-						  onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
+			if(
+				!TeamHelper.isInternalEventForIndividualSport(event) &&
+				self.isShowRivals() &&
+				(typeof this.props.indexOfDisplayingRival !== 'undefined' ? index === this.props.indexOfDisplayingRival : true)
+			) {
+				const xmlRivals = [];
+
+				if(index === 1) {
+					xmlRivals.push(
+						<span	key			= 'team-index-separator'
+								className	= 'eChooser_separator'
+						>
+							vs.
+						</span>
+					);
+				}
+
+				const teamClasses = classNames({
+					eChooser_item	: true,
+					mOnce			: this.isShowRivals(),
+					mNotActive		: eventType !== 'inter-schools' && selectedRivalIndex !== index,
+					mDisable		: disable
+				});
+				xmlRivals.push(
+					<span	key			={`team-index-${index}`}
+							className	={teamClasses}
+							onClick		={!disable ? self.onChooseRival.bind(null, index) : null}
+					>
+						{text}
 					</span>
 				);
+
+				return xmlRivals;
 			}
 		}).toArray();
 	},
@@ -391,10 +413,8 @@ const Manager = React.createClass({
 		const self = this;
 
 		return (
-			<div className="eManager_chooser">
-				<div className="bChooserRival">
-					{self._getRivals()}
-				</div>
+			<div className="bChooserRival">
+				{self._getRivals()}
 			</div>
 		);
 	},

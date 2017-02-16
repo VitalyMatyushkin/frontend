@@ -8,6 +8,8 @@
   color: $COLOR;
   font-size: 16px;
 
+  padding-top: 30px;
+
   &.mTeamForm {
     padding-top: 30px;
   }
@@ -19,6 +21,12 @@
   &.mBase {
     padding-top: 60px;
   }
+}
+
+.eManager_controlButtons {
+  display: flex;
+  margin: 30px auto;
+  justify-content: center;
 }
 
 .eManager_dateTimePicker {
@@ -101,7 +109,8 @@
 .eManager_containerTeam {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: flex-start;
+
   margin: 10px 0;
 }
 

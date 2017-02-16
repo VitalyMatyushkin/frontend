@@ -35,3 +35,11 @@
   text-align: right;
   width: 10%;
 }
+
+.eMatchReport_buttons {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 940px;
+  width: 100%;
+  margin: 0 auto;
+}

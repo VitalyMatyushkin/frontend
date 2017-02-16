@@ -411,6 +411,13 @@ const TeamWrapper = React.createClass({
 			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
 			.commit();
 	},
+	getRevertButtonStyle: function() {
+		return classNames({
+			bButton		: true,
+			mRevert		: true,
+			mDisable	: !this.isShowRevertChangesButton()
+		});
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -439,15 +446,11 @@ const TeamWrapper = React.createClass({
 				<TeamManager	isNonTeamSport={TeamHelper.isNonTeamSport(event)}
 								binding={binding.sub("___teamManagerBinding")}
 				/>
-				<If condition={self.isShowRevertChangesButton()}>
-					<div className="eTeamWrapper_modeContainer">
-						<div className="eTeamWrapper_revertButtonContainer">
-							<div className="bButton mRevert" onClick={self._onRevertChangesButtonClick}>
-								{'Revert changes'}
-							</div>
-						</div>
+				<div className="eTeamWrapper_footer">
+					<div className={this.getRevertButtonStyle()} onClick={self._onRevertChangesButtonClick}>
+						{'Revert changes'}
 					</div>
-				</If>
+				</div>
 			</div>
 		);
 	}
