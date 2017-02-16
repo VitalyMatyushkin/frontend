@@ -1,3 +1,5 @@
+// @flow
+
 const	SchoolForm		= require('module/as_manager/pages/schools/schools_form'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
@@ -7,13 +9,12 @@ const	SchoolForm		= require('module/as_manager/pages/schools/schools_form'),
 
 const AddSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
-	submitAdd: function(schoolData) {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding();
+	submitAdd: function(schoolData: any) {
+		const globalBinding = this.getMoreartyContext().getBinding();
 
 		// !!! Method modify schoolData !!!
 		// Side effect bro
-		SchoolHelper.setServerPublicAccessSchoolValue(schoolData);
+		// SchoolHelper.setServerPublicAccessSchoolValue(schoolData);		// TODO: Oleg, decrypt this plz
 
 		window.Server.schools.post(schoolData).then(function(data) {
 			// Добавляемая школа всегда становится школой "по умолчанию"
