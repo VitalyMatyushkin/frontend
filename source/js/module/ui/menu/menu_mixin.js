@@ -1,4 +1,6 @@
-const 	React 		= require('react'),
+
+
+const 	React 			= require('react'),
 		GoBackItem		= require('./sub_menu_items/go_back_item'),
 		ChooseFileItem 	= require('./sub_menu_items/choose_file_item'),
 		DefaultItem		= require('./sub_menu_items/default_item'),
