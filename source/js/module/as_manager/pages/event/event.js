@@ -92,169 +92,120 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		this.initIsNewEvent();
+		this.initIsNewEventFlag();
 
 		let eventData, report, photos, settings;
-		/**
-		 * If role not equal student, do everything as usual
-		 */
-		if (role !== 'STUDENT') {
-			window.Server.schoolEvent.get({
-				schoolId	: this.props.activeSchoolId,
-				eventId		: self.eventId
-			}).then(event => {
-				eventData = event;
+		//For different roles we use different service
+		const service = this.getServiceForEvent(role);
+		
+		service.get({
+			schoolId	: this.props.activeSchoolId,
+			eventId		: self.eventId
+		}).then(event => {
+			eventData = event;
 
-				return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
-					return window.Server.publicSchool.get(school.id);
-				}));
-			}).then(schoolsData => {
-				eventData.schoolsData = schoolsData;
-
-				eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
-					if (!t1 || !t2 || t1.name === t2.name) {
-						return 0;
-					}
-					if (t1.name < t2.name) {
-						return -1;
-					}
-					if (t1.name > t2.name) {
-						return 1;
-					}
-				});
-				eventData.housesData = eventData.housesData.sort((h1, h2) => {
-					if (!h1 || !h2 || h1.name === h2.name) {
-						return 0;
-					}
-					if (h1.name < h2.name) {
-						return -1;
-					}
-					if (h1.name > h2.name) {
-						return 1;
-					}
-				});
-				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(eventData);
-
-				// loading match report
-				return window.Server.schoolEventReport.get({
-					schoolId: this.props.activeSchoolId,
-					eventId: self.eventId
-				});
-			}).then(_report => {
-				report = _report;
-
-				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-			}).then(_photos => {
-				photos = _photos;
-
-				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-			}).then(_settings => {
-				settings = _settings;
-
-				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
-			}).then(tasks => {
-				eventData.matchReport = report.content;
-				eventData.individualScoreForRemove = [];
-
-				this.setPlayersFromEventToBinding(eventData);
-				binding.atomically()
-					.set('model',							Immutable.fromJS(eventData))
-					.set('gallery.photos',					Immutable.fromJS(photos))
-					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-					.set('gallery.isSync',					true)
-					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-					.set('mode',							Immutable.fromJS('general'))
-					.commit();
-
-				self.initTabs();
-
-				if(TeamHelper.isTeamSport(eventData)) {
-					this.initIsIndividualScoreAvailable();
+			return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
+				return window.Server.publicSchool.get(school.id);
+			}));
+		}).then(schoolsData => {
+			eventData.schoolsData = schoolsData;
+				if(TeamHelper.isIndividualSport(eventData)) {
+					eventData.individualsData = eventData.individualsData.sort((player1, player2) => {
+						if (!player1 || !player2 || player1.firstName === player2.firstName) {
+							return 0;
+						}
+						if (player1.firstName < player2.firstName) {
+							return -1;
+						}
+						if (player1.firstName > player2.firstName) {
+							return 1;
+						}
+					});
 				}
-				binding.set('sync', Immutable.fromJS(true));
 
-				this.addListeners();
-
-				return eventData;
+			eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
+				if (!t1 || !t2 || t1.name === t2.name) {
+					return 0;
+				}
+				if (t1.name < t2.name) {
+					return -1;
+				}
+				if (t1.name > t2.name) {
+					return 1;
+				}
 			});
-		} else {
-			window.Server.studentSchoolEvent.get({
+			eventData.housesData = eventData.housesData.sort((h1, h2) => {
+				if (!h1 || !h2 || h1.name === h2.name) {
+					return 0;
+				}
+				if (h1.name < h2.name) {
+					return -1;
+				}
+				if (h1.name > h2.name) {
+					return 1;
+				}
+			});
+			// FUNCTION MODIFY EVENT OBJECT!!
+			EventResultHelper.initializeEventResults(eventData);
+
+			// loading match report
+			return window.Server.schoolEventReport.get({
 				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
-			}).then(event => {
-				event.schoolsData = TeamHelper.getSchoolsData(event);
-					event.teamsData = event.teamsData.sort((t1, t2) => {
-						if (!t1 || !t2 || t1.name === t2.name) {
-							return 0;
-						}
-						if (t1.name < t2.name) {
-							return -1;
-						}
-						if (t1.name > t2.name) {
-							return 1;
-						}
-					});
-					event.housesData = event.housesData.sort((h1, h2) => {
-						if (!h1 || !h2 || h1.name === h2.name) {
-							return 0;
-						}
-						if (h1.name < h2.name) {
-							return -1;
-						}
-						if (h1.name > h2.name) {
-							return 1;
-						}
-					});
-
-				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(event);
-
-				eventData = event;
-
-				// loading match report
-				return window.Server.schoolEventReport.get({
-					schoolId: this.props.activeSchoolId,
-					eventId: self.eventId
-				});
-			}).then(_report => {
-				report = _report;
-
-				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-			}).then(_photos => {
-				photos = _photos;
-
-				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-			}).then(_settings => {
-				settings = _settings;
-
-				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
-			}).then(tasks => {
-				eventData.matchReport = report.content;
-
-				this.setPlayersFromEventToBinding(eventData);
-				binding.atomically()
-					.set('model',							Immutable.fromJS(eventData))
-					.set('gallery.photos',					Immutable.fromJS(photos))
-					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-					.set('gallery.isSync',					true)
-					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-					.set('mode',							Immutable.fromJS('general'))
-					.commit();
-
-				self.initTabs();
-
-				binding.set('sync', Immutable.fromJS(true));
-
-				this.addListeners();
-
-				return eventData;
 			});
+		}).then(_report => {
+			report = _report;
+
+			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
+		}).then(_photos => {
+			photos = _photos;
+
+			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+		}).then(_settings => {
+			settings = _settings;
+
+				return window.Server.schoolEventTasks.get(
+					{
+						schoolId	: this.props.activeSchoolId,
+						eventId		: self.eventId
+					}
+				);
+		}).then(tasks => {
+			eventData.matchReport = report.content;
+			eventData.individualScoreForRemove = [];
+
+			this.setPlayersFromEventToBinding(eventData);
+			binding.atomically()
+				.set('model',							Immutable.fromJS(eventData))
+				.set('gallery.photos',					Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',					true)
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
+				.set('mode',							Immutable.fromJS('general'))
+				.commit();
+
+			self.initTabs();
+
+			if(TeamHelper.isTeamSport(eventData)) {
+				this.initIsIndividualScoreAvailable();
+			}
+			binding.set('sync', Immutable.fromJS(true));
+
+			this.addListeners();
+
+			return eventData;
+		});
+	},
+	//For different roles we use different service
+	getServiceForEvent: function(role) {
+		if (role!=='STUDENT') {
+			return window.Server.schoolEvent
+		} else {
+			return window.Server.studentSchoolEvent
 		}
 	},
-	initIsNewEvent: function() {
+	initIsNewEventFlag: function() {
 		const rootBinding = this.getMoreartyContext().getBinding();
 
 		const isNewEvent = rootBinding.get('routing.parameters.new');
@@ -350,7 +301,7 @@ const Event = React.createClass({
 			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
 
 			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId('teamScore', teamId);
+				this.clearTeamScoreByTeamId(teamId);
 				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
 			}
 		}));

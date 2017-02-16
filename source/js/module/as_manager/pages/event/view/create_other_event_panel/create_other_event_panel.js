@@ -5,9 +5,6 @@ const	If = require('../../../../../ui/if/if');
 const	CreateOtherEventPanelStyles = require('../../../../../../../styles/ui/b_create_other_event_panel.scss');
 
 const CreateOtherEventPanel = React.createClass({
-	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
-	},
 	getInitialState: function() {
 		return {
 			isVisible: true

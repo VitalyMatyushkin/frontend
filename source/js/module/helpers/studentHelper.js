@@ -145,7 +145,7 @@ const StudentHelper = {
 				where:{
 					status: EventHelper.EVENT_STATUS.FINISHED
 				},
-				limit:1000
+				limit:10
 			}}
 		);
 	},
@@ -157,7 +157,7 @@ const StudentHelper = {
 				scoredChildIdList: [studentId],
 				status: EventHelper.EVENT_STATUS.FINISHED
 			},
-			limit:1000
+			limit:10
 		}});
 	},
 	_getParents: function(studentId, schoolId) {

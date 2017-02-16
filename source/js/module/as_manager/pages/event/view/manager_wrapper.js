@@ -22,17 +22,16 @@ const ManagerWrapper = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		const	self						= this,
-				binding						= self.getDefaultBinding(),
-				index 						= binding.get('selectedRivalIndex'),
-				selectedRivalIndex 			= index !== undefined ? index : 0,
-				teamManagerWrapperBinding	= binding.sub('teamManagerWrapper.default');
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		const event = binding.toJS('model');
+		let selectedRivalIndex = binding.get('selectedRivalIndex');
+		typeof selectedRivalIndex === 'undefined' && (selectedRivalIndex = 0);
 
 		binding.set('isTeamManagerSync', false);
 
-		teamManagerWrapperBinding.atomically()
+		const event = binding.toJS('model');
+		binding.sub('teamManagerWrapper.default').atomically()
 			.set('isSubmitProcessing',				false)
 			.set('isSavingChangesModePopupOpen',	false)
 			.set('model',							Immutable.fromJS(event))
@@ -169,7 +168,7 @@ const ManagerWrapper = React.createClass({
 				};
 				break;
 			case 'houses':
-				players = event.individualsData.filter(p => p.houseId === event.houses[order])
+				players = event.individualsData.filter(p => p.houseId === event.housesData[order].id)
 				break;
 			case 'internal':
 				players = self.getNonTeamPlayersForInternalEvent(order);
