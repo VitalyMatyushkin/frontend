@@ -1,4 +1,6 @@
-const 	React 		= require('react'),
+// @flow
+
+const 	React			= require('react'),
 		Morearty 		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		DomainHelper	= require('module/helpers/domain_helper'),
