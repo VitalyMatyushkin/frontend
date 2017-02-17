@@ -14,6 +14,8 @@ const	Actions							= require('../actions/actions'),
 		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
 		ManagerHelper					= require('../../../../ui/managers/helpers/manager_helper');
 
+const	TeamManagerWrapperStyle			= require('../../../../../../styles/ui/b_team_manager_wrapper.scss');
+
 const ManagerWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -393,7 +395,8 @@ const ManagerWrapper = React.createClass({
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
-			'mDisable': !this.getDefaultBinding().get('isTeamManagerSync')
+			'mMarginRight'	: true,
+			'mDisable'		: !this.getDefaultBinding().get('isTeamManagerSync')
 		});
 	},
 	render: function() {
@@ -401,21 +404,21 @@ const ManagerWrapper = React.createClass({
 				managerBinding	= this.getManagerBinding();
 
 		return (
-			<div>
-				<Manager	binding			= {managerBinding}
-							isInviteMode	= {true}
+			<div className="bTeamManagerWrapper">
+				<Manager	binding					= {managerBinding}
+							indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
 				/>
 				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}
 											submit	= {this.handleClickPopupSubmit}
 				/>
-				<div className="bEventButtons">
-					<Button	text				= "Cancel"
-							onClick				= {this.handleClickCancelButton}
-							extraStyleClasses	= {"mCancel mMarginRight"}
-					/>
+				<div className="eTeamManagerWrapper_footer">
 					<Button	text				= "Save"
 							onClick				= {this.handleClickSubmitButton}
 							extraStyleClasses	= {this.getSaveButtonStyleClass()}
+					/>
+					<Button	text				= "Cancel"
+							onClick				= {this.handleClickCancelButton}
+							extraStyleClasses	= {"mCancel"}
 					/>
 				</div>
 			</div>

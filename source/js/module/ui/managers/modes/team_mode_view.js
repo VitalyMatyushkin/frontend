@@ -244,11 +244,6 @@ const TeamModeView = React.createClass({
 
 		const event = self.getBinding('model').toJS();
 
-		const teamModeViewClass = classNames({
-			eManager_teamModeViewContainer: true,
-			mIndividuals: TeamHelper.isNonTeamSport(event)
-		});
-
 		let teamChoosers = null;
 		if(TeamHelper.isTeamSport(event)) {
 			const	selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
@@ -284,7 +279,7 @@ const TeamModeView = React.createClass({
 		}
 
 		return (
-			<div className={teamModeViewClass}>
+			<div>
 				{ teamChoosers }
 				{ self._renderTeamWrapper() }
 			</div>

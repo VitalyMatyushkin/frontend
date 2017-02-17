@@ -397,53 +397,39 @@ const EventManager = React.createClass({
 
 		const step = binding.get('step');
 
-		return (
-			<div className="eEvents_buttons">
-				{ self._renderBackStepButton(step) }
-				{ self._renderNextStepButton(step) }
-				{ self._renderFinishStepButton(step) }
-			</div>
-		);
-	},
-	_renderNextStepButton: function(step) {
-		const self = this;
+		switch (true) {
+			case step === 1:
+				const continueButtonClassName = classNames({
+					mWidth		: true,
+					mDisable	: !self._isStepComplete(1)
+				});
 
-		if(step === 1 && self._isStepComplete(1)) {
-			return <span className="bButton" onClick={self.toNext}>Continue</span>;
-		} else {
-			return null;
-		}
-	},
-	_renderBackStepButton: function(step) {
-		const self = this;
+				return (
+					<div className="eManager_controlButtons">
+						<Button	text				= "Continue"
+								onClick				= {this.toNext}
+								extraStyleClasses	= {continueButtonClassName}
+						/>
+					</div>
+				);
+			case step === 2:
+				const finishButtonClassName = classNames({
+					mFinish:	true,
+					mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
+				});
 
-		if(step === 2) {
-			return (
-				<span className="bButton mCancel mMarginRight" onClick={self.toBack}>Back</span>
-			);
-		} else {
-			return null;
-		}
-	},
-	_renderFinishStepButton: function(step) {
-		const self = this;
-
-		if(step === 2) {
-			const binding = this.getDefaultBinding();
-
-			const finishButtonClassName = classNames({
-				mFinish:	true,
-				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
-			});
-
-			return (
-				<Button	text				= "Finish"
-						onClick				= {this.handleClickFinishButton}
-						extraStyleClasses	= {finishButtonClassName}
-				/>
-			);
-		} else {
-			return null;
+				return (
+					<div className="eTeamManagerWrapper_footer">
+						<Button	text				= "Back"
+								onClick				= {this.toBack}
+								extraStyleClasses	= {"mCancel mMarginRight"}
+						/>
+						<Button	text				= "Finish"
+								onClick				= {this.handleClickFinishButton}
+								extraStyleClasses	= {finishButtonClassName}
+						/>
+					</div>
+				);
 		}
 	},
 	_isStepComplete: function(step) {
@@ -515,13 +501,14 @@ const EventManager = React.createClass({
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
-				step			= binding.get('step'),
-				bManagerClasses	= classNames({
-					bManager			: true,
-					mBase				: step === 1,
-					mTeamManager		: step === 2
-				}),
-				commonBinding	= {
+				step			= binding.get('step');
+
+		const	bManagerClasses	= classNames({
+					bManager			: step === 1,
+					bTeamManagerWrapper : step === 2
+				});
+
+		const	commonBinding	= {
 					default				: binding,
 					sports				: self.getBinding('sports'),
 					calendar			: self.getBinding('calendar')
@@ -543,8 +530,8 @@ const EventManager = React.createClass({
 					<If condition={step === 2}>
 						<Manager isInviteMode={false} binding={managerBinding} />
 					</If>
+					{self._renderStepButtons()}
 				</div>
-				{ self._renderStepButtons() }
 				<SavingPlayerChangesPopup	binding	= {binding}
 											submit	= {() => this.submit(binding.toJS('model'))}
 				/>
