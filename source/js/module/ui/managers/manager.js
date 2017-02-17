@@ -381,7 +381,7 @@ const Manager = React.createClass({
 
 				const teamClasses = classNames({
 					eChooser_item	: true,
-					mOnce			: this.isShowRivals(),
+					mOnce			: typeof this.props.indexOfDisplayingRival !== 'undefined', //it mean that only one rival is displaying
 					mNotActive		: eventType !== 'inter-schools' && selectedRivalIndex !== index,
 					mDisable		: disable
 				});
