@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Anatoly on 02.03.2016.
  */
@@ -17,7 +18,7 @@ const SportIcon = React.createClass({
 	 * @param sport {string} sport name
 	 * @returns {string} style name to apply on SVG
 	 */
-    getSportIcon:function(sport){
+    getSportIcon:function(sport: string): string {
         let icon;
         sport = sport ? sport.trim().toLowerCase() : '';
         switch (true){
