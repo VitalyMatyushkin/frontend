@@ -1,0 +1,27 @@
+.bActionList {
+  position: relative;
+  display: inline-block;
+}
+
+.eActionList_itemsContainer {
+  position: absolute;
+  margin-top: 3px;
+
+  z-index: 100;
+}
+
+.eActionList_itemListHead {
+  height: 8px;
+  background: url("/images/team_chooser_list.png") no-repeat bottom;
+  background-size: 100% 8px;
+}
+
+.eActionList_itemList {
+  width: 100%;
+
+  border: solid 1px #c2c2c2;
+  border-top: none;
+  padding: 10px 20px 0px 20px;
+
+  background: white;
+}

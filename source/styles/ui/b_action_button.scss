@@ -1,0 +1,42 @@
+@import "../!variables";
+
+.bActionButton {
+  background: $blueColor;
+  border: solid 1px #164170;
+  border-radius: $borderRadius;
+  color: #fff;
+  display: inline-block;
+  font-size: 18px;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  font-family: $basicFontFamily;
+
+  &:hover{
+    background: $lightBlue;
+    color: #fff;
+  }
+}
+
+.eActionButton_text {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+}
+
+.eActionButton_arrowWrapper {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  width: 10px;
+  height: 50px;
+}
+
+.eActionButton_arrow {
+  position: absolute;
+  top: 10px;
+}
