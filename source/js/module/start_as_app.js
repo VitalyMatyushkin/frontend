@@ -1,3 +1,5 @@
+// @flow
+
 const 	ApplicationView 	= require('module/as_manager/application'),
 		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
 		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),

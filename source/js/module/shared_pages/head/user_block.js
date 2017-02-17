@@ -1,3 +1,5 @@
+// @flow
+
 const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		Immutable 		= require('immutable'),
@@ -40,16 +42,16 @@ const UserBlock = React.createClass({
 		}
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			authData = binding.toJS('authorizationInfo'),
-			UserButton = null,
-            userClasses = classNames({
-                eTopMenu_photo:true,
-                mDisabled:self.props.asAdmin
-            }),
-			LoginButton = null,
-            RolesList = null;
+		let		self = this,
+				binding = self.getDefaultBinding(),
+				authData = binding.toJS('authorizationInfo'),
+				UserButton = null,
+				userClasses = classNames({
+					eTopMenu_photo:true,
+					mDisabled:self.props.asAdmin
+				}),
+				LoginButton = null,
+				RolesList = null;
 
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {

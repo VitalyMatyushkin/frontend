@@ -1,3 +1,5 @@
+// @flow
+
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 
