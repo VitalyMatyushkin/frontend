@@ -1,14 +1,15 @@
-const React = require('react');
+const	React				= require('react');
 
-const	ActionButton	= require('./action_button'),
-		ActionItem		= require('./action_item');
+const	ActionButton		= require('./action_button'),
+		ActionItem			= require('./action_item');
 
-const ActionListCssStyle = require('../../../../styles/ui/b_action_list.scss');
+const	ActionListCssStyle	= require('../../../../styles/ui/b_action_list.scss');
 
 const ActionList = React.createClass({
 	propTypes: {
-		buttonText: React.PropTypes.string.isRequired,
-		actionList: React.PropTypes.array.isRequired
+		buttonText				: React.PropTypes.string.isRequired,
+		actionList				: React.PropTypes.array.isRequired,
+		handleClickActionItem	: React.PropTypes.func.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -17,11 +18,12 @@ const ActionList = React.createClass({
 	},
 	renderList: function() {
 		if(this.state.isOpen) {
-			const items = this.props.actionList.map(action =>
-				<ActionItem	key		= {action.id}
-							id		= {action.id}
-							text	= {action.text}
-							onClick	= {() => {}}
+			const items = this.props.actionList.map((action,index, actionList) =>
+				<ActionItem	key					= {action.id}
+							id					= {action.id}
+							text				= {action.text}
+							extraStyleClasses	= {index === actionList.length - 1 ? 'mLast' : ''}
+							onClick				= {this.props.handleClickActionItem}
 				/>
 			);
 
@@ -53,5 +55,3 @@ const ActionList = React.createClass({
 });
 
 module.exports = ActionList;
-
-

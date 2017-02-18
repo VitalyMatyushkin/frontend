@@ -4,8 +4,7 @@ const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
 		Buttons				= require('./buttons'),
-		ActionList		= require('../../../../../ui/action_list/action_list'),
-		PencilButton	= require('../../../../../ui/pencil_button');
+		PencilButton		= require('../../../../../ui/pencil_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
@@ -51,8 +50,15 @@ const EventHeader = React.createClass({
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
 					<div className="eEventHeader_rightSide">
-						<ActionList	buttonText	= 'Actions'
-									actionList	= {[{id:'close', text:'Close'}, {id:'cancel', text:'Cancel'}]}
+						<Buttons
+							mode 							= { this.props.mode }
+							eventStatus 					= { this.props.eventStatus }
+							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
+							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+							onClickCloseCancel				= { this.props.onClickCloseCancel }
+							onClickOk						= { this.props.onClickOk }
 						/>
 					</div>
 				</div>
