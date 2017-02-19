@@ -50,15 +50,15 @@ const EventHeader = React.createClass({
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
 					<div className="eEventHeader_rightSide">
-						<Buttons
-							mode 							= { this.props.mode }
-							eventStatus 					= { this.props.eventStatus }
-							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
-							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
-							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
-							onClickCloseCancel				= { this.props.onClickCloseCancel }
-							onClickOk						= { this.props.onClickOk }
+						<Buttons	eventId							= { event.id }
+									mode							= { this.props.mode }
+									eventStatus 					= { this.props.eventStatus }
+									isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
+									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+									onClickCloseCancel				= { this.props.onClickCloseCancel }
+									onClickOk						= { this.props.onClickOk }
 						/>
 					</div>
 				</div>

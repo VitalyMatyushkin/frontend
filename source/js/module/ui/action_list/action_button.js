@@ -7,20 +7,22 @@ function Button(props) {
 			className = `bActionButton ${extraStyleClasses}`;
 
 	return (
-		<div	className	= {className}
+		<button	className	= {className}
 				onClick		= {props.onClick}
+				onBlur		= {props.onBlur}
 		>
 			<div className="eActionButton_text">{props.text}</div>
 			<div className="eActionButton_arrowWrapper">
 				<i className="eActionButton_arrow fa fa-sort-desc" aria-hidden="true"/>
 			</div>
-		</div>
+		</button>
 	);
 }
 
 Button.propTypes = {
 	text: 				React.PropTypes.string,		// text to display in button
 	onClick:			React.PropTypes.func,		// function to be called on click
+	onBlur:				React.PropTypes.func,
 	extraStyleClasses: 	React.PropTypes.string		// if one need to add extra styles to button.
 };
 

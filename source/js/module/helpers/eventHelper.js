@@ -1,5 +1,5 @@
 const	RoleHelper		= require('module/helpers/role_helper'),
-		EventsConst			= require('module/helpers/consts/events'),
+		EventsConst		= require('module/helpers/consts/events'),
 		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const EventHelper = {

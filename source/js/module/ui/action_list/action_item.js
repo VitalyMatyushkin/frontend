@@ -18,7 +18,7 @@ const ActionList = React.createClass({
 
 		return (
 			<div	className	= {className}
-					onClick		= {this.onClick}
+					onMouseDown	= {this.onClick}
 			>
 				{this.props.text}
 			</div>

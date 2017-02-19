@@ -10,14 +10,15 @@ const	EventHelper		= require('module/helpers/eventHelper'),
  * */
 const Buttons = React.createClass({
 	propTypes: {
-		mode:							React.PropTypes.string.isRequired,
-		eventStatus:					React.PropTypes.string.isRequired,
-		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
-		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
-		handleClickCancelEvent:			React.PropTypes.func.isRequired,
-		handleClickCloseEvent:			React.PropTypes.func.isRequired,
-		onClickCloseCancel:				React.PropTypes.func.isRequired,
-		onClickOk:						React.PropTypes.func.isRequired
+		eventId							: React.PropTypes.string.isRequired,
+		mode							: React.PropTypes.string.isRequired,
+		eventStatus						: React.PropTypes.string.isRequired,
+		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
+		handleClickCancelEvent			: React.PropTypes.func.isRequired,
+		handleClickCloseEvent			: React.PropTypes.func.isRequired,
+		onClickCloseCancel				: React.PropTypes.func.isRequired,
+		onClickOk						: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -82,6 +83,7 @@ const Buttons = React.createClass({
 		switch (id) {
 			// create event like this
 			case 'create':
+				document.location.hash = `events/manager?copyId=${this.props.eventId}`;
 				break;
 			case 'change':
 				this.props.handleClickCloseEvent();

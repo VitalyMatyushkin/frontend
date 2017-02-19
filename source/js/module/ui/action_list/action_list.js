@@ -42,11 +42,15 @@ const ActionList = React.createClass({
 	handleClick: function() {
 		this.setState({isOpen: !this.state.isOpen});
 	},
+	handleBlur: function() {
+		this.setState({isOpen: false});
+	},
 	render: function () {
 		return (
 			<div className="bActionList">
 				<ActionButton	text	= {this.props.buttonText}
 								onClick	= {this.handleClick}
+								onBlur	= {this.handleBlur}
 				/>
 				{this.renderList()}
 			</div>
