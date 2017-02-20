@@ -1,5 +1,8 @@
-const	React			= require('react'),
-		EventHelper		= require('module/helpers/eventHelper'),
+const	React			= require('react');
+
+const	ActionList		= require('../../../../../ui/action_list/action_list');
+
+const	EventHelper		= require('module/helpers/eventHelper'),
 		LinkStyles 	    = require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 /**
@@ -7,61 +10,15 @@ const	React			= require('react'),
  * */
 const Buttons = React.createClass({
 	propTypes: {
-		mode:							React.PropTypes.string.isRequired,
-		eventStatus:					React.PropTypes.string.isRequired,
-		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
-		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
-		handleClickCancelEvent:			React.PropTypes.func.isRequired,
-		handleClickCloseEvent:			React.PropTypes.func.isRequired,
-		onClickCloseCancel:				React.PropTypes.func.isRequired,
-		onClickOk:						React.PropTypes.func.isRequired
-	},
-	/**
-	 * The function render's button "Cancel" for event
-	 */
-	renderCancelEventButton: function() {
-		const eventStatus = this.props.eventStatus;
-
-		if(
-			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
-			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
-			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
-		) {
-			return (
-				<div className="eLink_CancelEvent">
-					<a onClick={this.props.handleClickCancelEvent}>
-						Cancel
-					</a>
-				</div>
-			);
-		} else {
-			return null;
-		}
-	},
-	/**
-	 * The function render's buttons "Change score"/"Close event"
-	 */
-	renderScoreEventButton: function() {
-		const eventStatus = this.props.eventStatus;
-
-		switch (eventStatus) {
-			case EventHelper.EVENT_STATUS.FINISHED:
-				return (
-					<div	onClick		= {this.props.handleClickCloseEvent}
-							className	="bButton mFullWidth"
-					>
-						Change score
-					</div>
-				);
-			case EventHelper.EVENT_STATUS.ACCEPTED:
-				return (
-					<div	onClick		= {this.props.handleClickCloseEvent}
-							className	="bButton mFullWidth"
-					>
-						Close event
-					</div>
-				);
-		};
+		eventId							: React.PropTypes.string.isRequired,
+		mode							: React.PropTypes.string.isRequired,
+		eventStatus						: React.PropTypes.string.isRequired,
+		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
+		handleClickCancelEvent			: React.PropTypes.func.isRequired,
+		handleClickCloseEvent			: React.PropTypes.func.isRequired,
+		onClickCloseCancel				: React.PropTypes.func.isRequired,
+		onClickOk						: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -71,15 +28,72 @@ const Buttons = React.createClass({
 
 		if(isShowScoreEventButtonsBlock) {
 			return (
-				<div className="bEventButtons">
-					<div className="eEventButtons_wrapper">
-						{this.renderScoreEventButton()}
-						{this.renderCancelEventButton()}
-					</div>
-				</div>
+				<ActionList	buttonText				= 'Actions'
+							actionList				= {this.getActionList()}
+							handleClickActionItem	= {this.handleClickActionItem}
+				/>
 			);
 		} else {
 			return null;
+		}
+	},
+	getActionList: function() {
+		const actionList = [];
+
+		actionList.push({id:'create', text:'Create Event Like This'});
+
+		if(this.isCloseEventActionAvailable()) {
+			actionList.push({id:'close', text:'Close Event'});
+		}
+
+		if(this.isChangeScoreEventActionAvailable()) {
+			actionList.push({id:'change', text:'Change Score'});
+		}
+
+		if(this.isCancelEventActionAvailable()) {
+			actionList.push({id:'cancel', text:'Cancel Event'});
+		}
+
+		return actionList;
+	},
+	isCancelEventActionAvailable: function() {
+		const eventStatus = this.props.eventStatus;
+
+		return (
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
+			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+		);
+	},
+	isCloseEventActionAvailable: function() {
+		const eventStatus = this.props.eventStatus;
+
+		return (
+			eventStatus !== EventHelper.EVENT_STATUS.ACCEPTED
+		);
+	},
+	isChangeScoreEventActionAvailable: function() {
+		const eventStatus = this.props.eventStatus;
+
+		return (
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED
+		);
+	},
+	handleClickActionItem: function(id) {
+		switch (id) {
+			// create event like this
+			case 'create':
+				document.location.hash = `events/manager?copyId=${this.props.eventId}`;
+				break;
+			case 'change':
+				this.props.handleClickCloseEvent();
+				break;
+			case 'close':
+				this.props.handleClickCloseEvent();
+				break;
+			case 'cancel':
+				this.props.handleClickCancelEvent();
+				break;
 		}
 	},
 	/**
