@@ -14,8 +14,8 @@ const StudentList = React.createClass({
 		handleClick: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		const 	binding = this.getDefaultBinding(),
-				grid = binding.toJS('grid');
+		const 	binding 	= this.getDefaultBinding(),
+				grid 		= binding.toJS('grid');
 		
 		if (grid) {
 			this.model = new StudentListClass(this).loadFilter(grid);
