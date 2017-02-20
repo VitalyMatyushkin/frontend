@@ -3,7 +3,8 @@ const	Form			= require('module/ui/form/form'),
 		FormField		= require('module/ui/form/form_field'),
 		React			= require('react'),
 		Morearty        = require('morearty'),
-		Immutable		= require('immutable');
+		Immutable		= require('immutable'),
+		Bootstrap		= require('../../../../../styles/bootstrap-custom.scss');
 
 const USER = require('module/helpers/consts/user');
 
@@ -60,8 +61,10 @@ const GeneralSettingsPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-				<Form formStyleClass="bSettingsForm mLeft" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving...">
-					<FormColumn>
+			<div className="container">
+				<Form formStyleClass="bSettingsForm mLeft row" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving...">
+
+					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<h3>YOUR PHOTO</h3>
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<h3>NOTIFICATION SETTINGS</h3>
@@ -69,18 +72,19 @@ const GeneralSettingsPage = React.createClass({
 						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
 						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
 					</FormColumn>
-					<FormColumn>
+					<FormColumn customStyle="col-md-5">
 					<h3>SUMMARY</h3>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
 						<FormField type="dropdown" field="gender" options={self.getGender()}>Gender</FormField>
 						<FormField type="date" field="birthday" validation="birthday" >Date of birth</FormField>
-						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
+						<h3>VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email" isDisabled={true}>Email</FormField>
 						<FormField type="phone" field="phone" validation="phone" isDisabled={true}>Phone number</FormField>
 						<br/>
 					</FormColumn>
 				</Form>
+			</div>
 		);
 		//	<FormField type="text">Phone code</FormField>
 		//<FormField type="text">Email code</FormField>

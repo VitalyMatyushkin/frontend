@@ -9,7 +9,6 @@ $labelColor:              #8c8c8c;
 
 .bForm {
   margin: auto;
-  padding: 0 130px;
   position: relative;
   text-align: center;
 
@@ -70,16 +69,14 @@ $labelColor:              #8c8c8c;
       color: $inputDisabledTextColor;
     }
   }
-}
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: url("/images/arrow_down.svg") no-repeat 98% center;
-  background-size: 10px;
-}
-input.eDateInput{
-  width: 85px;
+  select {
+    appearance: none;
+    background: url("/images/arrow_down.svg") no-repeat 98% center;
+    background-size: 10px;
+  }
+  input.eDateInput{
+    width: 100px;
+  }
 }
 
 .mDetails {
@@ -245,11 +242,8 @@ input.eDateInput{
   box-sizing: border-box;
   padding: 0 0 15px 0;
 }
-.mLeft .eForm_atCenter {
-  display: block;
-}
+
 .eForm_atCenter{
-  display: inline-block;
   position: relative;
   text-align: left;
 }
@@ -329,12 +323,6 @@ input.eDateInput{
   height: 35px;
   width: 100%;
   display: inline-block;
-}
-.eHouseForm .eForm_field{
-  display: flex;
-  align-items: center;
-  height: 60px;
-  margin: 0;
 }
 
 .eForm_blazonUpload{

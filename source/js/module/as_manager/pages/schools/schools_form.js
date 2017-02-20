@@ -54,9 +54,10 @@ const SchoolForm = React.createClass({
 				postcode 	= binding.toJS('postcode');
 
 		return (
-			<Form name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains"
+			<div className="container">
+			<Form formStyleClass="row" name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains"
 				  onSubmit={self.props.onSubmit} submitOnEnter={false}>
-				<FormColumn>
+				<FormColumn customStyle="col-md-5 col-md-offset-1">
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
 					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
@@ -66,7 +67,7 @@ const SchoolForm = React.createClass({
 						Sports Department Email
 					</FormField>
 				</FormColumn>
-				<FormColumn>
+				<FormColumn customStyle="col-md-5">
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
@@ -95,6 +96,7 @@ const SchoolForm = React.createClass({
 					</FormField>
 				</FormColumn>
 			</Form>
+			</div>
 		);
 	}
 });
