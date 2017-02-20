@@ -1,3 +1,5 @@
+// @flow
+
 const 	HeadView 		= require('module/as_manager/head'),
 		CenterView 		= require('module/as_manager/center'),
 		Morearty		= require('morearty'),

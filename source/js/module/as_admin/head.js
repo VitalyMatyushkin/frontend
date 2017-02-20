@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by bridark on 04/06/15.
  */
@@ -12,21 +13,18 @@ const   Logo        = require('module/as_admin/head/logo'),
 
 const Head = React.createClass({
     mixins: [Morearty.Mixin],
-    componentWillMount: function() {
-        var self = this;
-
-        self.menuItems = [{
-            href: '/#admin_schools',
-            icon: 'icon_home',
-            name: 'Dashboard',
-            key: 'Dashboard',
-            routes:['/admin_schools/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
-            authorization:true
-        }];
-    },
     render: function() {
-        var self = this,
-            binding = this.getDefaultBinding();
+        const binding = this.getDefaultBinding();
+
+        // TODO: should it be here ??
+		const menuItems = [{
+			href: '/#admin_schools',
+			icon: 'icon_home',
+			name: 'Dashboard',
+			key: 'Dashboard',
+			routes:['/admin_schools/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
+			authorization:true
+		}];
 
         return (
             <div className="bTopPanel container">
@@ -35,7 +33,7 @@ const Head = React.createClass({
                         <Logo />
                     </div>
                     <div className="col-md-8 bTopNav">
-                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                        <TopMenu items={this.menuItems} binding={binding.sub('routing')}/>
                         <UserBlock binding={binding.sub('userData')} asAdmin={true}/>
                     </div>
                 </div>

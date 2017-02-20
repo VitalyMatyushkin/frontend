@@ -1,0 +1,25 @@
+[ignore]
+<PROJECT_ROOT>/build/.*
+<PROJECT_ROOT>/dist/.*
+<PROJECT_ROOT>/docs/.*
+<PROJECT_ROOT>/fonts/.*
+<PROJECT_ROOT>/images/.*
+<PROJECT_ROOT>/layout/.*
+<PROJECT_ROOT>/tests/.*
+<PROJECT_ROOT>/source/__test__/.*
+<PROJECT_ROOT>/source/styles/.*
+<PROJECT_ROOT>/.git/.*
+
+.*/node_modules/fbjs/.*
+
+[include]
+
+
+[libs]
+
+
+[options]
+module.file_ext=.js
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=source/js
+module.name_mapper='.*\(.scss\)' -> 'empty/object'
