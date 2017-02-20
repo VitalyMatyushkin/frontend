@@ -1,8 +1,11 @@
 @import "../../!variables";
 
-$inputBg:             #f5f5f5;
-$inputFocusedBorder:  #1082c3;
-$labelColor:         #8c8c8c;
+$inputBg:                 #f5f5f5;
+$inputDisabledBg:         #fcfcfc;
+$inputDisabledBorder:     #f2f2f2;
+$inputDisabledTextColor:  #dcdcdc;
+$inputFocusedBorder:      #1082c3;
+$labelColor:              #8c8c8c;
 
 .bForm {
   margin: auto;
@@ -59,7 +62,12 @@ $labelColor:         #8c8c8c;
       border-color: $inputFocusedBorder;
     }
     &:focus.mDisabled {
+    }
 
+    &:disabled {
+      background: $inputDisabledBg;
+      border-color: $inputDisabledBorder;
+      color: $inputDisabledTextColor;
     }
   }
 }
