@@ -226,13 +226,15 @@ function convertGenderToServerValue(gender) {
 }
 
 function getBodyForAddPlayersRequest(player) {
+	// User Id may be contained in userId field or in id.
+	// Because manager component gets users from different sources
 	const body = {
-		userId:         player.userId ? player.userId : player.id,
-		permissionId:   player.permissionId
+		userId			: player.userId ? player.userId : player.id,
+		permissionId	: player.permissionId
 	};
 
-	player.positionId	&&	(body.positionId = player.positionId);
-	player.sub 			&&	(body.sub = player.sub);
+	player.positionId && (body.positionId = player.positionId);
+	player.sub && (body.sub = player.sub);
 
 	return body;
 };
