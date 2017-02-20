@@ -12,7 +12,7 @@ const	classNames						= require('classnames'),
 
 // Special components
 const	Manager							= require('../../../ui/managers/manager'),
-		EventManagerBase				= require('./manager/base'),
+		EventForm						= require('./manager/event_form'),
 		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
 
 // Helpers
@@ -121,6 +121,8 @@ const EventManager = React.createClass({
 			schoolId	: this.activeSchoolId,
 			eventId		: eventId
 		}).then(event => {
+			// It's a convertation event data to EventForm component format,
+			// because event
 			event.gender = this.convertServerGenderConstToClient(event);
 			event.type = this.convertServerEventTypeConstToClient(event);
 
@@ -130,12 +132,22 @@ const EventManager = React.createClass({
 				event.venue.postcodeData.id = postcodeId;
 			}
 
+			const rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
+			if(TeamHelper.isNonTeamSport(event)) {
+				rivals[0].players.forEach(p => {
+					p.id = p.userId;
+				});
+				rivals[1].players.forEach(p => {
+					p.id = p.userId;
+				});
+			}
+
 			binding.atomically()
 				.set('isSubmitProcessing',				false)
 				.set('isSavingChangesModePopupOpen',	false)
 				.set('model',							Immutable.fromJS(event))
 				.set('model.sportModel',				Immutable.fromJS(event.sport))
-				.set('rivals',							Immutable.fromJS(ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true)))
+				.set('rivals',							Immutable.fromJS(rivals))
 				.set('error',							Immutable.fromJS([
 					{
 						isError: false,
@@ -633,7 +645,7 @@ const EventManager = React.createClass({
 
 		if(isEventManagerSync) {
 			return (
-				<EventManagerBase binding={commonBinding} />
+				<EventForm binding={commonBinding} />
 			);
 		} else {
 			return (

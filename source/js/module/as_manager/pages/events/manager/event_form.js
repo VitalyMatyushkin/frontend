@@ -1,24 +1,24 @@
 const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
+		Immutable						= require('immutable');
 
-		If								= require('module/ui/if/if'),
-		Autocomplete					= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+const	If								= require('../../../../ui/if/if'),
+		Autocomplete					= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		EventVenue						= require('./event_venue'),
-		TimeInputWrapper				= require('./time_input_wrapper'),
+		TimeInputWrapper				= require('./time_input_wrapper');
 
-		DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
+const	DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
 		GenderSelectorWrapper			= require('./manager_components/gender_selector/gender_selector_wrapper'),
 		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
-		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
+		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper');
 
-		InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
+const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
 		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
 		HouseAutocompleteWrapper		= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
 
-const EventManagerBase = React.createClass({
+const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	/**
 	 * House filtering service...
@@ -292,4 +292,4 @@ const EventManagerBase = React.createClass({
 	}
 });
 
-module.exports = EventManagerBase;
+module.exports = EventForm;
