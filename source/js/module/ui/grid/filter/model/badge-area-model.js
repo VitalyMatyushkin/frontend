@@ -9,9 +9,9 @@
  * @param {object} options
  *
  * */
-const BadgeAreaModel = function(filter){
+const BadgeAreaModel = function(filter, badges){
 	this.filter = filter;
-	this.badges = {};
+	this.badges = typeof badges === 'undefined' ? {} : badges;
 
 	this.onChange = null;
 };
