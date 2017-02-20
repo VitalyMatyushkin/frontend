@@ -442,7 +442,7 @@ const EventTeamsView = React.createClass({
 						<div className="bEventTeams_col mLeft">
 							{self.renderPlayersForLeftSide()}
 						</div>
-						<div className="bEventTeams_col">
+						<div className="bEventTeams_col mHiddenInIndividuals">
 							{self.renderPlayersForRightSide()}
 						</div>
 					</div>
