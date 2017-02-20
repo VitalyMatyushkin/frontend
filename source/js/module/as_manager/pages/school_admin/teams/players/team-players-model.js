@@ -1,8 +1,8 @@
 /**
  * Created by Anatoly on 22.08.2016.
  */
-const  Morearty			= require('morearty'),
-	StudentListModel  	= require('./../../students/list/student-list-model');
+const  	Morearty			= require('morearty'),
+		StudentListClass  	= require('./../../students/list/student-list-class');
 
 const TeamPlayersModel = function(page){
 	this.getDefaultBinding = page.getDefaultBinding;
@@ -15,7 +15,7 @@ const TeamPlayersModel = function(page){
 	const 	teamId = this.rootBinding.get('routing.parameters.id'),
 			teamName = this.rootBinding.get('routing.parameters.name');
 
-	this.model = new StudentListModel(page);
+	this.model = new StudentListClass(page);
 
 	this.model.title = `Players of ${teamName} team`;
 	this.model.btnAdd = null;

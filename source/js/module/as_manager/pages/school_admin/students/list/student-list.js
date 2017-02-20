@@ -3,7 +3,7 @@
  */
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
-		StudentListModel  	= require('./student-list-model'),
+		StudentListClass  	= require('./student-list-class'),
 		Grid 				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
@@ -18,9 +18,9 @@ const StudentList = React.createClass({
 				grid = binding.toJS('grid');
 		
 		if (grid) {
-			this.model = new StudentListModel(this).loadFilter(grid);
+			this.model = new StudentListClass(this).loadFilter(grid);
 		} else {
-			this.model = new StudentListModel(this).init();
+			this.model = new StudentListClass(this).init();
 		}
 	},
 	render: function () {

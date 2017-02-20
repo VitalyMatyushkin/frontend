@@ -16,7 +16,7 @@ const 	React 			= require('react'),
  * @param {object} page
  *
  * */
-class StudentListModel{
+class StudentListClass{
 	constructor(page){
 		this.getDefaultBinding = page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
@@ -306,4 +306,4 @@ class StudentListModel{
 	}
 }
 
-module.exports = StudentListModel;
+module.exports = StudentListClass;
