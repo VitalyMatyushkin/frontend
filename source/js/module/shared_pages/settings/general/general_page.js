@@ -65,9 +65,9 @@ const GeneralSettingsPage = React.createClass({
 						<h3>YOUR PHOTO</h3>
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<h3>NOTIFICATION SETTINGS</h3>
-						<FormField type="checkbox" field="notification.sendNews" >Send me news</FormField>
-						<FormField type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
-						<FormField type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
+						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendNews" >Send me news</FormField>
+						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
+						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
 					</FormColumn>
 					<FormColumn>
 					<h3>SUMMARY</h3>

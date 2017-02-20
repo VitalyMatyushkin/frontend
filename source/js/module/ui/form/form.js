@@ -292,11 +292,11 @@ const Form = React.createClass({
 
 					<div className="eForm_savePanel">
 						<If condition={!this.props.hideCancelButton}>
-							<button className="bButton mRight mCancel" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
+							<button className="bButton mRight mCancel mMarginRight" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
 								Cancel
 							</button>
 						</If>
-						<button className="bButton mRight mMarginLeft" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
+						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
 							{binding.meta().get('buttonText')}
 						</button>
 					</div>

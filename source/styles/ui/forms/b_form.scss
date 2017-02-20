@@ -79,7 +79,6 @@ input.eDateInput{
 }
 
 .eForm_fieldInput {
-  display: inline-block;
   position: relative;
 
   &.mDisplayBlock {
@@ -131,9 +130,9 @@ input.eDateInput{
   select{
     border: none;
     position: absolute;
-    height: 20px;
+    height: 38px;
     width: 50px;
-    margin-top: -1px;
+    margin: 1px;
   }
   input{
     padding-left: 55px;
@@ -143,8 +142,23 @@ input.eDateInput{
 .eForm_field {
   padding: 8px 0;
 
+  &.mPaddingBottomOnly {
+    padding: 0 0 8px;
+  }
+  &.mWithoutPadding {
+    padding: 0;
+  }
+
   &.mDisabled {
     display: none;
+  }
+
+  &.mSingleLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    max-width: 190px;
   }
 
   p{
@@ -176,7 +190,6 @@ input.eDateInput{
     .eForm_fieldName {
       color: $INVALID_COLOR;
     }
-
   }
 }
 .eForm_fieldValidText{
@@ -185,6 +198,7 @@ input.eDateInput{
   font-size: 1rem;
 
   padding-left: 5px;
+  padding-top: 8px;
 }
 .eForm_fieldValidIcon {
   display: none;
@@ -216,20 +230,6 @@ input.eDateInput{
   }
 }
 
-.eForm_field.mLarge {
-  max-width: 500px;
-  text-align: left;
-
-  .eForm_fieldName{
-    display: block;
-    width: 190px;
-  }
-  .eForm_fieldColumn{
-    margin: 0 0 25px 0;
-    padding: 0;
-    float: none;
-  }
-}
 .eForm_savePanel{
   display: flex;
   width: 100%;
@@ -275,8 +275,6 @@ input.eDateInput{
 }
 
 .eForm_fieldColumn{
-  display: inline-block;
-  margin-right: 85px;
   vertical-align: top;
 
   &.mWithoutMargin {
@@ -428,16 +426,6 @@ input.eDateInput{
   font-size: 12px;
   color: #616161;
   margin: 0 2px 10px;
-}
-.eForm_confirmField {
-
-  .eForm_fieldColumn {
-    display: inline-block;
-    float: right;
-    margin: -20px 0 20px;
-    padding-bottom: 25px;
-  }
-
 }
 
 .bLoginForm input[type="text"],
