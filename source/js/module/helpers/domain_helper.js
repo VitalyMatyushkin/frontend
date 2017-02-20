@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Anatoly on 29.05.2016.
  */
@@ -14,7 +15,7 @@ const DomainHelper = {
 	 * @param {string} domainName - domain name, for ex. 'greatwalstead'
 	 * @return {string} new subdomain name, for ex. 'greatwalstead.squard.com:8080'
 	 * */
-	getSubDomain:function(domainName){
+	getSubDomain:function(domainName: string): string {
 		const subdomains = document.location.host.split('.');
 		subdomains[0] = domainName;
 		return subdomains.join(".");
@@ -23,7 +24,7 @@ const DomainHelper = {
 	/**
 	 * Get login Url for redirect after logout
 	 * */
-	getLoginUrl:function(){
+	getLoginUrl:function(): string {
 		let subdomains = document.location.host.split('.');
 		subdomains[0] = subdomains[0] !=='admin' ? 'app': subdomains[0];
 		const domain = subdomains.join(".");
@@ -33,14 +34,15 @@ const DomainHelper = {
 	/**
 	 * Redirect to start page after login
 	 * */
-	redirectToStartPage: function(role, schoolKind) {
+	redirectToStartPage: function(role: string, schoolKind: string): void {
 		const	domainName	= this.getDomainNameByRole(role),
 				defaultPage	= this.getDefaultPageByRoleNameAndSchoolKind(role, schoolKind);
 
 		window.location.href = `//${domainName}/#${defaultPage}`;
 		window.location.reload();
 	},
-	getDefaultPageByRoleNameAndSchoolKind: function(roleName, schoolKind) {
+
+	getDefaultPageByRoleNameAndSchoolKind: function(roleName: string, schoolKind: string): string {
 		const _roleName = roleName.toLowerCase();
 
 		switch (true) {
@@ -62,12 +64,14 @@ const DomainHelper = {
 				return `events/calendar/all`;
 			case _roleName === 'admin' && schoolKind === 'SchoolUnion':
 				return `school_union_admin/summary`;
+			default:
+				throw Error(`No role mapping for ${roleName}`);
 		}
 	},
-	getThirdLevelDomainByRole: function(role) {
+	getThirdLevelDomainByRole: function(role: string): string {
 		return RoleHelper.roleMapper[role.toLowerCase()];
 	},
-	getDomainNameByRole: function(role) {
+	getDomainNameByRole: function(role: string): string {
 		// parse domains from domain name to array
 		// app.squard.com => ['app', 'squard', 'com']
 		const domains = document.location.host.split('.');
@@ -76,7 +80,7 @@ const DomainHelper = {
 
 		return domains.join(".");
 	},
-	redirectToSettingsPage: function() {
+	redirectToSettingsPage: function(): void {
 		this.redirectToStartPage('no_body', undefined);
 	}
 };

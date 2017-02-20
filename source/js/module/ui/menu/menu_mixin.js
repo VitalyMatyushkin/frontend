@@ -1,4 +1,6 @@
-const 	React 		= require('react'),
+// @flow
+
+const 	React 			= require('react'),
 		GoBackItem		= require('./sub_menu_items/go_back_item'),
 		ChooseFileItem 	= require('./sub_menu_items/choose_file_item'),
 		DefaultItem		= require('./sub_menu_items/default_item'),
@@ -13,7 +15,7 @@ const MenuMixin = {
 			items: []
 		};
 	},
-	__getMenuNode: function(item, globalBinding, authorization, currentPath, itemClassName) {
+	__getMenuNode: function(item: any, globalBinding: any, authorization: any, currentPath: any, itemClassName: string) {
 		const 	itemPath 	= item.href && item.href.replace('#', ''),
 				itemRoutes 	= item.routes || [];
 
@@ -53,10 +55,9 @@ const MenuMixin = {
 	},
 
 	getMenuNodes: function() {
-		const 	self 			= this,
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				binding 		= self.getDefaultBinding(),
-				itemsBinding 	= self.getBinding('itemsBinding'),
+		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
+				binding 		= this.getDefaultBinding(),
+				itemsBinding 	= this.getBinding('itemsBinding'),
 				authorization 	= globalBinding.get('userData.authorizationInfo.id'),
 				currentPath 	= binding.get('currentPath') || '/';
 
@@ -65,11 +66,11 @@ const MenuMixin = {
 		if (itemsBinding && itemsBinding.toJS()) {
 			menuItems = itemsBinding.toJS();
 		} else {
-			menuItems = self.props.items;
+			menuItems = this.props.items;
 		}
 
 		//rendering menu
-		const MenuItemsViews = menuItems.map(item => self.__getMenuNode(item, globalBinding, authorization, currentPath, self.itemClassName));
+		const MenuItemsViews = menuItems.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
 		return MenuItemsViews;
 	}
 };

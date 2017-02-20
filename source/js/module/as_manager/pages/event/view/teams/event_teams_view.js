@@ -15,7 +15,8 @@ const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 
 	propTypes: {
-		customCss:	React.PropTypes.string
+		activeSchoolId	: React.PropTypes.string,
+		customCss		: React.PropTypes.string
 	},
 
 	getPointsByStudent: function(event, userId) {
@@ -157,6 +158,13 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
+	_getActiveSchoolId: function() {
+		if(this.props.activeSchoolId !== "undefined") {
+			return this.props.activeSchoolId;
+		} else {
+			return this.getActiveSchoolId();
+		}
+	},
 	renderPlayersForLeftSide: function() {
 		const self = this;
 
@@ -164,7 +172,7 @@ const EventTeamsView = React.createClass({
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
 				housesData					= event.housesData,
-				activeSchoolId				= self.getActiveSchoolId(),
+				activeSchoolId				= self._getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('0.value');
 
@@ -233,7 +241,7 @@ const EventTeamsView = React.createClass({
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
 				housesData					= event.housesData,
-				activeSchoolId				= self.getActiveSchoolId(),
+				activeSchoolId				= self._getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('1.value');
 
@@ -403,7 +411,7 @@ const EventTeamsView = React.createClass({
 		) {
 			const	event	= self.getBinding('event').toJS(),
 					isOwner	= event.eventType === 'inter-schools' ?
-								event.teamsData[order].schoolId === self.getActiveSchoolId() :
+								event.teamsData[order].schoolId === self._getActiveSchoolId() :
 								true;
 
 			players = self.renderPlayers(

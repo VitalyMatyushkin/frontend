@@ -1,48 +1,51 @@
+// @flow
 /**
  * Created by wert on 26.02.16.
  */
 
 const Ajax = require('module/core/AJAX');
 
-/**
- * Simple wrapper for image service usage
- * @constructor
- */
-const ImageService = function(endpoint){
-    this.endpoint   = endpoint;
-    this.__uploadUrl  = endpoint + '/images';
-};
 
-/** Will upload file to storage and return it's url*/
-ImageService.prototype.upload = function(file){
-    const fd = new FormData();
-    fd.append('image', file);
-    return Ajax({
-        type:           'POST',
-        url:            this.__uploadUrl,
-        data:           fd,
-        processData:    false,
-        contentType:    false
-    })
-    .then( success => this.__getOriginalUrlByKey(success.data.key));
-};
+class ImageService {
+	endpoint: string;
+	__uploadUrl: string;
 
-ImageService.prototype.__getOriginalUrlByKey = function(key){
-    return this.endpoint + '/images/' + key;
-};
+	constructor(endpoint: string) {
+		this.endpoint   = endpoint;
+		this.__uploadUrl  = endpoint + '/images';
+	}
 
-ImageService.prototype.getResizedToHeightUrl = function(origUrl, height) {
-    return `${origUrl}?sizing=height&height=${height}`;
-};
+	/** Will upload file to storage and return it's url*/
+	upload(file: any){		// TODO: file type ???
+		const fd = new FormData();
+		fd.append('image', file);
+		return Ajax({
+			type:           'POST',
+			url:            this.__uploadUrl,
+			data:           fd,
+			processData:    false,
+			contentType:    false
+		})
+			.then( success => this.__getOriginalUrlByKey(success.data.key));
+	}
 
-ImageService.prototype.getResizedToBoxUrl = function(origUrl, height, width) {
-	return `${origUrl}?sizing=box&height=${height}&width=${width}`;
-};
+	__getOriginalUrlByKey(key: string): string {
+		return this.endpoint + '/images/' + key;
+	}
 
-ImageService.prototype.getResizedToMinValueUrl = function(origUrl, minValue) {
-	return `${origUrl}?sizing=minvalue&value=${minValue}`;
-};
+	getResizedToHeightUrl(origUrl: string, height: number): string {
+		return `${origUrl}?sizing=height&height=${height}`;
+	}
 
+	getResizedToBoxUrl(origUrl: string, height: number, width: number): string {
+		return `${origUrl}?sizing=box&height=${height}&width=${width}`;
+	}
+
+	getResizedToMinValueUrl(origUrl: string, minValue: number): string {
+		return `${origUrl}?sizing=minvalue&value=${minValue}`;
+	}
+
+}
 
 
 module.exports = ImageService;
