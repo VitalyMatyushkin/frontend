@@ -69,14 +69,14 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
-			eventStatus !== EventHelper.EVENT_STATUS.FINISHED
+			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED
 		);
 	},
 	isChangeScoreEventActionAvailable: function() {
 		const eventStatus = this.props.eventStatus;
 
 		return (
-			eventStatus !== EventHelper.EVENT_STATUS.ACCEPTED
+			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
 	handleClickActionItem: function(id) {
