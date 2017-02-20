@@ -41,7 +41,7 @@ const EventHeader = React.createClass({
 							<If condition={this.props.eventStatus !== "FINISHED"}>
 								<div className="eEventHeader_fieldColumn mRelative">
 									<div className="eEventHeader_editLinkWrapper">
-										<PencilButton handleClick={this.props.onClickEditEventButton}/>
+										<PencilButton extraClassName="mLess" handleClick={this.props.onClickEditEventButton}/>
 									</div>
 								</div>
 							</If>
