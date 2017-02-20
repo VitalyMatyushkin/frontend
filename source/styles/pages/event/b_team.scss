@@ -22,8 +22,11 @@
     .bEventTeams_col {
       @include make-md-column(10);
       height: auto;
-    }
 
+      &.mHiddenInIndividuals {
+        display: none;
+      }
+    }
   }
 }
 

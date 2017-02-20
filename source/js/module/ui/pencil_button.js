@@ -1,8 +1,10 @@
 const React = require('react');
 
 function PencilButton(props) {
+	const 	extraClassName = props.extraClassName || '',
+			className = `bButton mCircle ${extraClassName}`;
 	return (
-		<div	className	= "bButton mCircle"
+		<div	className	= {className}
 				onClick		= {props.handleClick}
 		>
 			<i className="fa fa-pencil" aria-hidden="true"/>
@@ -11,7 +13,8 @@ function PencilButton(props) {
 }
 
 PencilButton.propTypes = {
-	handleClick: React.PropTypes.func.isRequired
+	handleClick: React.PropTypes.func.isRequired,
+	extraClassName: 	React.PropTypes.string
 };
 
 module.exports = PencilButton;
