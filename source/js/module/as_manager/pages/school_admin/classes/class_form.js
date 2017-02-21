@@ -26,7 +26,7 @@ const ClassForm = React.createClass({
 
 	render: function() {
 		return (
-			<Form name={this.props.title} onSubmit={this.props.onFormSubmit} binding={this.getDefaultBinding()} >
+			<Form formStyleClass="mNarrow" name={this.props.title} onSubmit={this.props.onFormSubmit} binding={this.getDefaultBinding()} >
 				<FormField type="text" field="name" validation="required">Form name</FormField>
 				<FormField type="select" sourceArray={this.getAllAges()} field="age" validation="required">Age group</FormField>
 			</Form>

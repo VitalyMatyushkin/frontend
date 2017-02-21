@@ -733,13 +733,16 @@ const Event = React.createClass({
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
-									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
-																isVisible	= {isaLeftShow}
-																className	= "mLeft"
-									/>
-									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.1')}
-																isVisible	= {isaRightShow}
-									/>
+									<div className="col-md-5 col-md-offset-1 col-sm-6">
+										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+																  isVisible={isaLeftShow}
+											/>
+									</div>
+									<div className="col-md-5 col-sm-6">
+										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+																  isVisible={isaRightShow}
+											/>
+									</div>
 								</div>
 							</div>
 							<EventTeams	binding			= {self.getEventTeamsBinding()}

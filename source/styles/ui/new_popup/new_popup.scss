@@ -20,23 +20,10 @@
 
   font-size: 18px !important;
 
-  // TODO Remove it, when new forms design will be added
   input {
-    background: #f5f5f5;
-    border: 1px solid #d2d2d2;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    display: inline-block;
-    font-size: 18px;
-    height: 40px;
     margin: 30px 0;
-    text-indent: 10px;
-    width: 100%;
   }
-  .mInvalid input, input:focus, input:hover {
-    border-width: 1px;
-  }
+
   .eForm_fieldValidText {
     top: 40%;
   }
