@@ -6,7 +6,8 @@ const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		GridModel 		= require('module/ui/grid/grid-model'),
+		BadgeModel		= require('module/ui/grid/filter/model/badge-model');
 
 /**
  * ClassListModel
@@ -25,7 +26,7 @@ class ClassListClass{
 		this.rootBinding = this.getMoreartyContext().getBinding();
 		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 		
-		this.grid = this.setColumns();
+		this.setColumns();
 	}
 	
 	reloadData(){
@@ -149,6 +150,17 @@ class ClassListClass{
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
+		/*this.badges = new BadgeModel({
+			field: {
+				text: grid.filterPanel.filterFields["0"].field.text,
+				name: grid.filterPanel.filterFields["0"].field.name
+			},
+			type: grid.filterPanel.filterFields["0"].type,
+			badgeArea: grid.filterPanel.filterFields["0"].badgeArea,
+		 	values: grid.filterPanel.badgeArea.badges.name.values
+			
+		});*/
+		
 		this.grid = new GridModel({
 			actionPanel:{
 				title:'Forms',
@@ -168,7 +180,7 @@ class ClassListClass{
 				where: grid.filter.where,
 				order: grid.filter.order
 			},
-			badges: grid.filterPanel.badgeArea.badges
+			badges: grid.filterPanel.badgeArea
 		});
 		
 		this.dataLoader = new DataLoader({
@@ -177,7 +189,6 @@ class ClassListClass{
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});
-		
 		
 		return this;
 	}
