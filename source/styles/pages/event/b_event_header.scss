@@ -17,6 +17,9 @@
 }
 
 .eEventHeader_rightSide {
+  display: flex;
+  justify-content: flex-end;
+
   @include make-md-column(4);
   @extend .col-sm-4
 }

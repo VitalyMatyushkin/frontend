@@ -159,7 +159,7 @@ const EventTeamsView = React.createClass({
 		}
 	},
 	_getActiveSchoolId: function() {
-		if(this.props.activeSchoolId !== "undefined") {
+		if(typeof this.props.activeSchoolId !== "undefined") {
 			return this.props.activeSchoolId;
 		} else {
 			return this.getActiveSchoolId();

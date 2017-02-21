@@ -1,23 +1,35 @@
-const	EventManagerBase				= require('./manager/base'),
-		If								= require('module/ui/if/if'),
-		Manager							= require('module/ui/managers/manager'),
-		classNames						= require('classnames'),
-		React							= require('react'),
-		MoreartyHelper					= require('module/helpers/morearty_helper'),
-		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
-		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
-		EventHelper						= require('module/helpers/eventHelper'),
+const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Promise 						= require('bluebird'),
-		Immutable						= require('immutable'),
-		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup'),
-		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper'),
-		ManagerHelper					= require('../../../ui/managers/helpers/manager_helper'),
-		Button							= require('../../../ui/button/button'),
-		ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
+		Immutable						= require('immutable');
+
+// Main components
+const	classNames						= require('classnames'),
+		Promise							= require('bluebird'),
+		propz							= require('propz'),
+		If								= require('../../../ui/if/if'),
+		Loader							= require('../../../ui/loader'),
+		Button							= require('../../../ui/button/button');
+
+// Special components
+const	Manager							= require('../../../ui/managers/manager'),
+		EventForm						= require('./manager/event_form'),
+		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
+
+// Helpers
+const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wrapper_helper'),
+		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
+		EventConsts						= require('../../../helpers/consts/events'),
+		EventHelper						= require('../../../helpers/eventHelper'),
+		MoreartyHelper					= require('../../../helpers/morearty_helper'),
+		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
+		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
+
+// Styles
+const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -67,6 +79,7 @@ const EventManager = React.createClass({
 					text:    ''
 				}
 			],
+			isEventManagerSync: false,
 			isSync: false,
 			isSavingChangesModePopupOpen: false
 		});
@@ -75,12 +88,103 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		this.setSchoolInfo()
+			.then(() => {
+				const rootBinding	= self.getMoreartyContext().getBinding();
+
+				const eventId = rootBinding.get('routing.parameters.copyId');
+
+				if(typeof eventId !== 'undefined') {
+					this.isCopyMode = true;
+					return this.setEvent(eventId);
+				} else {
+					this.isCopyMode = false;
+					return true;
+				}
+			})
+			.then(() => {
+				this.addListeners();
+
+				binding.atomically()
+					.set('isSync',				true)
+					.set('isEventManagerSync',	true)
+					.commit();
+			});
+	},
+	setEvent: function(eventId) {
+		const binding = this.getDefaultBinding();
+
+		this.eventId = eventId;
+
+		// TODO check inter-schools case
+		return window.Server.schoolEvent.get({
+			schoolId	: this.activeSchoolId,
+			eventId		: eventId
+		}).then(event => {
+			// It's a convertation event data to EventForm component format,
+			// because event
+			event.gender = this.convertServerGenderConstToClient(event);
+			event.type = this.convertServerEventTypeConstToClient(event);
+
+			// TODO need reviver for postcode on server side
+			const postcodeId = propz.get(event, ['venue', 'postcodeData', '_id']);
+			if(typeof postcodeId !== 'undefined') {
+				event.venue.postcodeData.id = postcodeId;
+			}
+
+			const rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
+			if(TeamHelper.isNonTeamSport(event)) {
+				rivals[0].players.forEach(p => {
+					p.id = p.userId;
+				});
+				rivals[1].players.forEach(p => {
+					p.id = p.userId;
+				});
+			}
+
+			binding.atomically()
+				.set('isSubmitProcessing',				false)
+				.set('isSavingChangesModePopupOpen',	false)
+				.set('model',							Immutable.fromJS(event))
+				.set('model.sportModel',				Immutable.fromJS(event.sport))
+				.set('rivals',							Immutable.fromJS(rivals))
+				.set('error',							Immutable.fromJS([
+					{
+						isError: false,
+						text: ""
+					},
+					{
+						isError: false,
+						text: ""
+					}
+				]))
+				.commit();
+
+			return true;
+		});
+	},
+	convertServerGenderConstToClient: function(event) {
+		switch (event.gender) {
+			case EventConsts.EVENT_GENDERS_SERVER.FEMALE_ONLY:
+				return EventConsts.EVENT_GENDERS.FEMALE_ONLY;
+			case EventConsts.EVENT_GENDERS_SERVER.MALE_ONLY:
+				return EventConsts.EVENT_GENDERS.MALE_ONLY;
+			case EventConsts.EVENT_GENDERS_SERVER.MIXED:
+				return EventConsts.EVENT_GENDERS.MIXED;
+		};
+	},
+	convertServerEventTypeConstToClient: function(event) {
+		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+	},
+	setSchoolInfo: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		let schoolData;
-
 		//get school data
-		window.Server.school.get(self.activeSchoolId)
+		return window.Server.school.get(self.activeSchoolId)
 			.then(_schoolData => {
 				schoolData = _schoolData;
 
@@ -98,33 +202,64 @@ const EventManager = React.createClass({
 					.set('schoolInfo',		Immutable.fromJS(schoolData))
 					.set('rivals',			Immutable.fromJS([schoolData]))
 					.set('availableAges',	Immutable.fromJS(ages))
-					.set('isSync',			Immutable.fromJS(true))
 					.commit();
 
-				this.addListeners();
+				return true;
 			});
 	},
 	componentWillUnmount: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		this.listeners.forEach(l => binding.removeListener(l));
 		binding.clear();
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
+		if(this.isCopyMode) {
+			this.addListenersForEventManagerBase();
+		}
 	},
 	addListenerForTeamManager: function() {
 		const binding = this.getDefaultBinding();
 
-		binding
-			.sub('isSync')
-			.addListener(eventDescriptor => {
-				// Lock submit button if team manager in searching state.
-				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
+		this.listeners.push(
+			binding
+				.sub('isSync')
+				.addListener(eventDescriptor => {
+					// Lock submit button if team manager in searching state.
+					eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
 
-				// Unlock submit button if team manager in searching state.
-				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
-			});
+					// Unlock submit button if team manager in searching state.
+					!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
+				})
+		);
+	},
+	addListenersForEventManagerBase: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('model.sportId').addListener(() => this.clearRivalsBinding());
+		binding.sub('model.gender').addListener(() => this.clearRivalsBinding());
+		binding.sub('model.ages').addListener(() => this.clearRivalsBinding());
+		binding.sub('model.type').addListener(() => this.clearRivalsBinding());
+	},
+	clearRivalsBinding: function() {
+		const	binding	= this.getDefaultBinding(),
+				step	= binding.get('step');
+
+		if(!this.isRivalsClear && step === 1) {
+			this.isRivalsClear = true;
+			const rivals = binding.toJS('rivals');
+
+			rivals[0].players = undefined;
+			rivals[0].team = undefined;
+			if(typeof rivals[1] !==  'undefined') {
+				rivals[1].players = undefined;
+				rivals[1].team = undefined;
+			}
+
+			binding.set('rivals', Immutable.fromJS(rivals));
+		}
 	},
 	onSelectDate: function (newDate) {
 		// TODO Why do we store date in ISO format?
@@ -391,7 +526,7 @@ const EventManager = React.createClass({
 
 		return true;
 	},
-	_renderStepButtons: function() {
+	renderStepButtons: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding();
 
@@ -498,22 +633,37 @@ const EventManager = React.createClass({
 	showSavingChangesModePopup: function() {
 		this.getDefaultBinding().set('isSavingChangesModePopupOpen', true);
 	},
+	renderEventManagerBase: function() {
+		const	binding				= this.getDefaultBinding(),
+				isEventManagerSync	= binding.get('isEventManagerSync');
+
+		const	commonBinding	= {
+				default				: binding,
+				sports				: this.getBinding('sports'),
+				calendar			: this.getBinding('calendar')
+			};
+
+		if(isEventManagerSync) {
+			return (
+				<EventForm binding={commonBinding} />
+			);
+		} else {
+			return (
+				<Loader condition={true}/>
+			);
+		}
+	},
 	render: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				step			= binding.get('step');
+		const	binding				= this.getDefaultBinding(),
+				isEventManagerSync	= binding.get('isEventManagerSync'),
+				step				= binding.get('step');
 
 		const	bManagerClasses	= classNames({
 					bManager			: step === 1,
 					bTeamManagerWrapper : step === 2
 				});
 
-		const	commonBinding	= {
-					default				: binding,
-					sports				: self.getBinding('sports'),
-					calendar			: self.getBinding('calendar')
-				},
-				managerBinding	= {
+		const	managerBinding	= {
 					default				: binding,
 					selectedRivalIndex	: binding.sub('selectedRivalIndex'),
 					rivals				: binding.sub('rivals'),
@@ -525,12 +675,16 @@ const EventManager = React.createClass({
 			<div>
 				<div className={bManagerClasses}>
 					<If condition={step === 1}>
-						<EventManagerBase binding={commonBinding} />
+						{this.renderEventManagerBase()}
 					</If>
 					<If condition={step === 2}>
-						<Manager isInviteMode={false} binding={managerBinding} />
+						<Manager	isInviteMode	= {false}
+									binding			= {managerBinding}
+						/>
 					</If>
-					{self._renderStepButtons()}
+					<If condition={isEventManagerSync}>
+						{this.renderStepButtons()}
+					</If>
 				</div>
 				<SavingPlayerChangesPopup	binding	= {binding}
 											submit	= {() => this.submit(binding.toJS('model'))}
