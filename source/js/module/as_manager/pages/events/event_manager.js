@@ -238,10 +238,10 @@ const EventManager = React.createClass({
 	addListenersForEventManagerBase: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('model.sportId').addListener(() => this.clearRivalsBinding());
-		binding.sub('model.gender').addListener(() => this.clearRivalsBinding());
-		binding.sub('model.ages').addListener(() => this.clearRivalsBinding());
-		binding.sub('model.type').addListener(() => this.clearRivalsBinding());
+		this.listeners.push(binding.sub('model.sportId').addListener(() => this.clearRivalsBinding()));
+		this.listeners.push(binding.sub('model.gender').addListener(() => this.clearRivalsBinding()));
+		this.listeners.push(binding.sub('model.ages').addListener(() => this.clearRivalsBinding()));
+		this.listeners.push(binding.sub('model.type').addListener(() => this.clearRivalsBinding()));
 	},
 	clearRivalsBinding: function() {
 		const	binding	= this.getDefaultBinding(),
