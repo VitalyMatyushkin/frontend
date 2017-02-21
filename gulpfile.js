@@ -50,7 +50,13 @@ gulp.task('svgSymbols', function () {
 	.pipe(cheerio({
 		run: function ($, file) {
 			//get file name without extension, example: tennis, cricket, rounders, etc
-			var fileNameSvg = file.history[0].substring(file.history[0].lastIndexOf('\\')+1, (file.history[0].length-4)).replace(" ", "_");
+			var filePath = file.history[0].lastIndexOf('\\'),
+				fileNameSvg;
+			if (filePath === -1) {
+				fileNameSvg = file.history[0].substring(file.history[0].lastIndexOf('/')+1, (file.history[0].length-4)).replace(" ", "_");
+			} else {
+				fileNameSvg = file.history[0].substring(file.history[0].lastIndexOf('\\')+1, (file.history[0].length-4)).replace(" ", "_");
+			}
 			// add filename in all svg tags, which contain attr "class" .st0, .st1, .st2
 			$('.st0, .st1, st2').each(function(){
 				var classSvg = $(this);
@@ -130,4 +136,8 @@ gulp.task('default', function (done) {
 
 gulp.task('deploy', function (callback) {
     run('clean', 'svgSymbols', 'buildVersionFile', 'webpack', callback);
+});
+
+gulp.task('svg', function (callback) {
+	run('svgSymbols', callback);
 });
