@@ -26,8 +26,12 @@ const Manager = React.createClass({
 
 		self._addListeners();
 
-		self._validate(0);
-		self._validate(1);
+		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
+			self._validate(this.props.indexOfDisplayingRival);
+		} else {
+			self._validate(0);
+			self._validate(1);
+		}
 	},
 	componentWillUnmount: function() {
 		const	self	= this,
