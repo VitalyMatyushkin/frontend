@@ -46,6 +46,7 @@ gulp.task('collectTestConfigurations', function(){		// TODO: maybe done will be 
 // SVG Symbols generation
 gulp.task('svgSymbols', function () {
 	return gulp.src('./images/icons/*.svg')
+	.pipe(svgmin())
 	.pipe(cheerio({
 		run: function ($, file) {
 			//get file name without extension, example: tennis, cricket, rounders, etc
@@ -69,7 +70,6 @@ gulp.task('svgSymbols', function () {
 		},
 		parserOptions: { xmlMode: true }
 	}))
-	.pipe(svgmin())
 	.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }))
 	.pipe(gulp.dest(BUILD + '/images'))
 });
