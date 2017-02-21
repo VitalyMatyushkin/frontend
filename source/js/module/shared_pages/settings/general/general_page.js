@@ -62,7 +62,8 @@ const GeneralSettingsPage = React.createClass({
 
 		return (
 			<div className="container">
-				<Form formStyleClass="bSettingsForm mLeft row" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving...">
+				<Form formStyleClass="bSettingsForm mLeft row" onSubmit={self.submitEdit} binding={binding}
+					  defaultButton="Save" loadingButton="Saving..." formButtonsClass='col-md-10 col-md-offset-1'>
 
 					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<h3>YOUR PHOTO</h3>

@@ -53,58 +53,64 @@ const SchoolUnionForm = React.createClass({
 				];
 
 		return (
-			<Form	name			= {self.props.title}
-					binding			= {self.getDefaultBinding()}
-					service			= "i/schools/domains"
-					onSubmit		= {self.props.onSubmit}
-					submitOnEnter	= {false}
-			>
-				<FormColumn>
-					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
+			<div className="container">
+				<div className="row">
+					<Form name={self.props.title}
+						  binding={self.getDefaultBinding()}
+						  service="i/schools/domains"
+						  onSubmit={self.props.onSubmit}
+						  submitOnEnter={false}
+						  formButtonsClass='col-md-10 col-md-offset-1'
+						  formTitleClass="col-md-10 col-md-offset-1"
+						>
+						<FormColumn customStyle="col-md-5 col-md-offset-1">
+							<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
-					<FormField	type			= "text"
-								field			= "email"
-								validation		= "email"
-								fieldClassName	= "mLarge"
-					>
-						School Union Official Email
-					</FormField>
-					<FormField	type			= "text"
-								field			= "sportsDepartmentEmail"
-								validation		= "email"
-								fieldClassName	= "mLarge">
-						Sports Union Department Email
-					</FormField>
-				</FormColumn>
-				<FormColumn>
-					<FormField	type		= "text"
-								field		= "name"
-								validation	= "required"
-					>
-						Name
-					</FormField>
-					<FormField type="textarea" field="description" validation="any">Description</FormField>
-					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
-						School Status
-					</FormField>
-					<FormField type="phone" field="phone" validation="any">Phone</FormField>
-					<FormField type="text" field="address" validation="any">Address</FormField>
-					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
-					<FormField	type="dropdown"
-								field="publicSite.status"
-								options={ self.getPublicSiteAccessTypes() }
-					>
-						Public Site Access
-					</FormField>
-					<FormField	type			= "password"
-								field			= "publicSite.password"
-								condition={passActive}
-								validation="required"
-					>
-						Public Site Access Password
-					</FormField>
-				</FormColumn>
-			</Form>
+							<FormField type="text"
+									   field="email"
+									   validation="email"
+									   fieldClassName="mLarge"
+								>
+								School Union Official Email
+							</FormField>
+							<FormField type="text"
+									   field="sportsDepartmentEmail"
+									   validation="email"
+									   fieldClassName="mLarge">
+								Sports Union Department Email
+							</FormField>
+						</FormColumn>
+						<FormColumn customStyle="col-md-5">
+							<FormField type="text"
+									   field="name"
+									   validation="required"
+								>
+								Name
+							</FormField>
+							<FormField type="textarea" field="description" validation="any">Description</FormField>
+							<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
+								School Status
+							</FormField>
+							<FormField type="phone" field="phone" validation="any">Phone</FormField>
+							<FormField type="text" field="address" validation="any">Address</FormField>
+							<FormField type="text" field="domain" validation="domain server">Domain</FormField>
+							<FormField type="dropdown"
+									   field="publicSite.status"
+									   options={ self.getPublicSiteAccessTypes() }
+								>
+								Public Site Access
+							</FormField>
+							<FormField type="password"
+									   field="publicSite.password"
+									   condition={passActive}
+									   validation="required"
+								>
+								Public Site Access Password
+							</FormField>
+						</FormColumn>
+					</Form>
+				</div>
+			</div>
 		);
 	}
 });

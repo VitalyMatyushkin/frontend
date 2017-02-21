@@ -64,6 +64,7 @@ const SchoolUnionForm = React.createClass({
 					service			= "i/schools/domains"
 					onSubmit		= {this.props.onSubmit}
 					submitOnEnter	= {false}
+					formStyleClass	= "mNarrow"
 			>
 				<FormColumn>
 					<FormField	type		= "imageFile"

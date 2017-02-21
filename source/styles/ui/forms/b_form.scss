@@ -15,16 +15,21 @@ $labelColor:              #8c8c8c;
   h2, h3 {
     color: $blueColor;
     font-weight: normal;
-    margin: 25px 0;
+    margin-top: 25px;
+    margin-bottom: 25px;
   }
   h3.mHigh {
     margin-top: 85px;
   }
-
+  &.mNarrow {
+    max-width: 360px;
+  }
+  &.mFitContent .eForm_atCenter {
+      display: inline-block;
+  }
   &.mWide {
     padding: 0px 70px;
   }
-
   &.mZeroPadding {
     padding: 0px;
   }
@@ -50,9 +55,9 @@ $labelColor:              #8c8c8c;
     color: $textColor;
     font-size: 1rem;
 
-    &:hover {
+    transition: border-color .2s;
 
-    }
+    &:hover {}
     &:hover.mDisabled {
       border: solid #d7d7d7;
       border-width: 0 0 1px;
@@ -60,23 +65,24 @@ $labelColor:              #8c8c8c;
     &:focus {
       border-color: $inputFocusedBorder;
     }
-    &:focus.mDisabled {
-    }
-
     &:disabled {
       background: $inputDisabledBg;
       border-color: $inputDisabledBorder;
-      color: $inputDisabledTextColor;
     }
   }
   select {
-    appearance: none;
-    background: url("/images/arrow_down.svg") no-repeat 98% center;
+    background: $inputBg url("/images/arrow_down.svg") no-repeat 98% center;
     background-size: 10px;
   }
   input.eDateInput{
     width: 100px;
   }
+}
+
+select {
+  appearance: none;
+  background: url("/images/arrow_down.svg") no-repeat 98% center;
+  background-size: 10px;
 }
 
 .mDetails {
@@ -89,15 +95,12 @@ $labelColor:              #8c8c8c;
   &.mDisplayBlock {
     display: block;
   }
-
   &.mLongWidth {
     width: 265px;
   }
-
   &.mMarginBottom {
     margin-bottom: 10px;
   }
-
   &.mMarginTop {
     margin-top: 10px;
   }
@@ -136,11 +139,11 @@ $labelColor:              #8c8c8c;
     border: none;
     position: absolute;
     height: 38px;
-    width: 50px;
+    width: 55px;
     margin: 1px;
   }
   input{
-    padding-left: 55px;
+    padding-left: 60px;
   }
 }
 
@@ -153,11 +156,9 @@ $labelColor:              #8c8c8c;
   &.mWithoutPadding {
     padding: 0;
   }
-
   &.mDisabled {
     display: none;
   }
-
   &.mSingleLine {
     display: flex;
     justify-content: space-between;
@@ -165,14 +166,11 @@ $labelColor:              #8c8c8c;
 
     max-width: 190px;
   }
-
   p{
     font-size: 12px;
     margin-bottom: 4px;
   }
-
   &.mInvalid{
-
 
     input{
       border-color: $INVALID_COLOR;
@@ -182,7 +180,7 @@ $labelColor:              #8c8c8c;
     }
 
     .eForm_fieldValidText {
-      display: inline-block;
+      display: inline;
 
       color: $labelColor;
     }
@@ -191,20 +189,20 @@ $labelColor:              #8c8c8c;
 
       color: $INVALID_COLOR;
     }
-
     .eForm_fieldName {
       color: $INVALID_COLOR;
     }
   }
 }
+
 .eForm_fieldValidText{
   display: none;
 
   font-size: 1rem;
 
   padding-left: 5px;
-  padding-top: 8px;
 }
+
 .eForm_fieldValidIcon {
   display: none;
 
@@ -218,6 +216,7 @@ $labelColor:              #8c8c8c;
 .eForm_fieldName {
   padding-left: 10px;
   padding-bottom: 8px;
+  max-width: 360px;
 
   color: $labelColor;
   font-size: 1rem;
@@ -250,30 +249,29 @@ $labelColor:              #8c8c8c;
 
 .eForm_fieldSet{
   position: relative;
+  max-width: 360px;
 
   &.mInvalid{
     .mNotRequired{
       color: #a9a9a9;
     }
   }
-}
-
-.eForm_fieldSet.mValid{
-  color: $blueColor;
-
-  .eForm_fieldValidText{
-    display: block;
-  }
-  input{
+  &.mValid{
     color: $blueColor;
-  }
-}
-.eForm_fieldSet.mEmpty{
-  border-bottom: solid 1px #ccc;
-}
 
-.eForm_fieldSet.mAreaField input{
-  text-transform: uppercase;
+    .eForm_fieldValidText{
+      display: block;
+    }
+    input{
+      color: $blueColor;
+    }
+  }
+  &.mEmpty{
+    border-bottom: solid 1px #ccc;
+  }
+  &.mAreaField input{
+    text-transform: uppercase;
+  }
 }
 
 .eForm_fieldColumn{
@@ -428,22 +426,7 @@ $labelColor:              #8c8c8c;
 .bLoginForm input[type="password"] {
   width: 200px;
 }
-.eStudentForm {
 
-  .eForm_fieldColumn{
-    margin: 0;
-  }
-  .eForm_atCenter {
-    width: 100%;
-  }
-  textarea {
-    width: 300px;
-  }
-
-}
-.bForm .eCombobox_input{
-  width: 300px;
-}
 .eForm_info{
   margin-top: 10px;
 }
