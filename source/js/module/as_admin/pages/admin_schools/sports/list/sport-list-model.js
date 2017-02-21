@@ -55,7 +55,7 @@ SportListModel.prototype = {
 				cell:{
 					type:'custom',
 					typeOptions:{
-						parseFunction: item => <Sport name={item.name} />
+						parseFunction: item => <Sport name={item.name} className='bIcon_invites ' />
 					}
 				}
 			},
