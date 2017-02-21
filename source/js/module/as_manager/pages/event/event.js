@@ -339,9 +339,14 @@ const Event = React.createClass({
 	clearTeamScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
 
-		const updScore = binding.toJS(`model.results.teamScore`).filter(s => s.teamId !== teamId);
+		const score = binding.toJS(`model.results.teamScore`);
+		score.forEach(s => {
+			if(s.teamId === teamId) {
+				s.score = 0;
+			}
+		});
 
-		binding.set(`model.results.teamScore`, Immutable.fromJS(updScore));
+		binding.set(`model.results.teamScore`, Immutable.fromJS(score));
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
