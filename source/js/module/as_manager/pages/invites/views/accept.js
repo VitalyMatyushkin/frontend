@@ -233,24 +233,6 @@ const InviteAcceptView = React.createClass({
 
         return !self.getDefaultBinding().toJS('error.0').isError;
     },
-	getAcceptButtonStyleClasses: function() {
-		const binding = this.getDefaultBinding();
-
-		const	event			= binding.toJS('model'),
-				validationData	= [
-					binding.toJS('error.0'),
-					binding.toJS('error.1')
-				];
-
-		return classNames({
-			'mButton_leftSidePosition'	: true,
-			'mDisable'					: (
-				!TeamHelper.isTeamDataCorrect(event, validationData) ||
-				binding.get('isSubmitProcessing') ||
-				!binding.get('isTeamManagerSync')
-			)
-		});
-	},
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -272,8 +254,8 @@ const InviteAcceptView = React.createClass({
 						/>
 						<div className="eTeamManagerWrapper_footer">
 							<Button	text				= "Accept"
-									   onClick				= {this.onClickAccept}
-									   extraStyleClasses	= {this.getAcceptButtonStyleClasses()}
+									onClick				= {this.onClickAccept}
+									extraStyleClasses	= {'mButton_leftSidePosition'}
 							/>
 						</div>
 					</div>
