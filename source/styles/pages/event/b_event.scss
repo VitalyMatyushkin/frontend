@@ -256,13 +256,9 @@
 
 .mIndividualScoreAvailable{
   &.eForm_field{
-    @include make-md-column(5);
-    @extend .col-sm-6;
-    margin: 10px 0;
+    margin: 10px 0 0;
+    max-width: 200px;
 
-    &.mLeft {
-      @include make-md-column-offset(1);
-    }
     .eForm_fieldName{
       width: 200px;
     }

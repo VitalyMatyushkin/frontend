@@ -21,6 +21,7 @@ const EventVenue = React.createClass({
 	propTypes: {
 		eventType			: React.PropTypes.string.isRequired,
 		activeSchoolInfo	: React.PropTypes.object.isRequired,
+		isCopyMode			: React.PropTypes.bool,
 		opponentSchoolInfo	: React.PropTypes.object
 	},
 	componentWillReceiveProps:function(nextProps){
@@ -283,7 +284,7 @@ const EventVenue = React.createClass({
 		const	homePostcode	= this.getHomeSchoolPostCode(),
 				awayPostcode	= this.getOpponentSchoolPostCode();
 
-		const defPostcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
+		let defPostcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
 
 		switch(true) {
 			case typeof homePostcode !== "undefined" && typeof defPostcode !== "undefined" && homePostcode.id === defPostcode._id:
@@ -291,6 +292,12 @@ const EventVenue = React.createClass({
 				break;
 			case typeof awayPostcode !== "undefined" && typeof defPostcode !== "undefined" && awayPostcode.id === defPostcode._id:
 				defPostcode.tooltip = ' (opponent school)';
+				break;
+			case this.props.isCopyMode && typeof defPostcode === 'undefined':
+				defPostcode = {
+					id: "TBD",
+					postcode: "TBD"
+				};
 				break;
 		};
 

@@ -4,7 +4,7 @@ const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
 		Buttons				= require('./buttons'),
-		PencilButton	= require('../../../../../ui/pencil_button');
+		PencilButton		= require('../../../../../ui/pencil_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
@@ -41,7 +41,7 @@ const EventHeader = React.createClass({
 							<If condition={this.props.eventStatus !== "FINISHED"}>
 								<div className="eEventHeader_fieldColumn mRelative">
 									<div className="eEventHeader_editLinkWrapper">
-										<PencilButton handleClick={this.props.onClickEditEventButton}/>
+										<PencilButton extraClassName="mLess" handleClick={this.props.onClickEditEventButton}/>
 									</div>
 								</div>
 							</If>
@@ -50,15 +50,15 @@ const EventHeader = React.createClass({
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
 					<div className="eEventHeader_rightSide">
-						<Buttons
-							mode 							= { this.props.mode }
-							eventStatus 					= { this.props.eventStatus }
-							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
-							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
-							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
-							onClickCloseCancel				= { this.props.onClickCloseCancel }
-							onClickOk						= { this.props.onClickOk }
+						<Buttons	eventId							= { event.id }
+									mode							= { this.props.mode }
+									eventStatus 					= { this.props.eventStatus }
+									isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
+									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+									onClickCloseCancel				= { this.props.onClickCloseCancel }
+									onClickOk						= { this.props.onClickOk }
 						/>
 					</div>
 				</div>

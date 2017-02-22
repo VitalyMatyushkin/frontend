@@ -116,13 +116,17 @@ const SettingsPage = React.createClass({
 
 		return (
 			<div>
-				<div className="bSettings_top">
-					<div className="bSettings_name">
-						<span>{binding.get('userInfo.firstName')}</span>
-						<span>{binding.get('userInfo.lastName')}</span>
+				<div className="bSettings_top container">
+					<div className="row">
+						<div className="bSettings_name col-md-10 col-md-offset-1">
+							<span>{binding.get('userInfo.firstName')}</span>
+							<span>{binding.get('userInfo.lastName')}</span>
+						</div>
+						<div className="col-md-10 col-md-offset-1">
+							<Tabs tabListModel={self.tabListModel}
+								  onClick={self.changeActiveTab}/>
+						</div>
 					</div>
-					<Tabs	tabListModel={self.tabListModel}
-							onClick	= {self.changeActiveTab}/>
 				</div>
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>

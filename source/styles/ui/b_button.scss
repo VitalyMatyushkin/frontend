@@ -46,6 +46,9 @@
   &.mMarginLeft {
     margin-left: 2%;
   }
+  &.mMarginLeftFixed {
+    margin-left: 5px;
+  }
   &.mFullWidth {
     width: 100%;
   }
@@ -101,6 +104,12 @@
     &.mCross {
       font-size: 18px;
       padding: 15px;
+    }
+
+    &.mLess {
+      height: 45px;
+      width: 45px;
+      padding: 10px 12px;
     }
   }
 
@@ -173,7 +182,7 @@
   color: #929496;
 }
 .mClose:hover .bIcon{
-  color: $COLOR;
+  color: $blueColor;
 }
 
 .mCenteredText {

@@ -10,6 +10,8 @@ const	React					= require('react'),
 		Immutable				= require('immutable'),
 		ManagerConsts			= require('./helpers/manager_consts');
 
+const	propz					= require('propz');
+
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -24,8 +26,12 @@ const Manager = React.createClass({
 
 		self._addListeners();
 
-		self._validate(0);
-		self._validate(1);
+		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
+			self._validate(this.props.indexOfDisplayingRival);
+		} else {
+			self._validate(0);
+			self._validate(1);
+		}
 	},
 	componentWillUnmount: function() {
 		const	self	= this,
@@ -125,50 +131,55 @@ const Manager = React.createClass({
 		];
 	},
 	getInitPlayersByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order] !== "undefined" &&
-			typeof binding.rivals.toJS()[order].players !== "undefined" ?
-				binding.rivals.toJS()[order].players :
-				[]
-		);
+		let players = [];
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			const _players = propz.get(rivals, [order, 'players']);
+			if(typeof _players !== "undefined") {
+				players = _players;
+			}
+		}
+
+		return players;
 	},
 	getTeamNameByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order] !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.name :
-				undefined
-		);
+		let teamName;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamName = propz.get(rivals, [order, 'team', 'name']);
+		}
+
+		return teamName;
 	},
 	getTeamIdByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.id :
-				undefined
-		);
+		let teamId;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamId = propz.get(rivals, [order, 'team', 'id']);
+		}
+
+		return teamId;
 	},
 	getTeamTypeByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const	binding	= this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.teamType :
-				undefined
-		);
+		let teamType;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamType = propz.get(rivals, [order, 'team', 'teamType']);
+		}
+
+		return teamType;
 	},
 	/**
 	 * Add listeners on binding
@@ -381,7 +392,7 @@ const Manager = React.createClass({
 
 				const teamClasses = classNames({
 					eChooser_item	: true,
-					mOnce			: this.isShowRivals(),
+					mOnce			: typeof this.props.indexOfDisplayingRival !== 'undefined', //it mean that only one rival is displaying
 					mNotActive		: eventType !== 'inter-schools' && selectedRivalIndex !== index,
 					mDisable		: disable
 				});

@@ -106,7 +106,7 @@ const MultiSelect = React.createClass({
     render: function() {
         const self = this;
         let   binding = self.getDefaultBinding(),
-              count = self.props.selections.length;
+              count = self.props.selections.size; // typeof self.props.selections === object
 
         return (
             <div className="bMultiSelect">

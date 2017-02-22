@@ -69,9 +69,9 @@ const StudentForm = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<div className="eStudentForm">
-				<Form onSubmit={self.props.onFormSubmit} binding={binding} submitOnEnter={false}>
-					<FormColumn>
+			<div className="eStudentForm container">
+				<Form formStyleClass="row" onSubmit={self.props.onFormSubmit} binding={binding} submitOnEnter={false}>
+					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<h3>SUMMARY</h3>
 						<FormField labelText="+" type="imageFile" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required">Name</FormField>
@@ -82,10 +82,10 @@ const StudentForm = React.createClass({
 								   defaultItem={self.props.initialForm} >Form</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId"
 								   defaultItem={self.props.initialHouse} >House</FormField>
-						<FormField type="checkbox" field="unwell" >Injured/Unwell</FormField>
+						<FormField classNames="mSingleLine" type="checkbox" field="unwell" >Injured/Unwell</FormField>
 						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
 					</FormColumn>
-					<FormColumn>
+					<FormColumn customStyle="col-md-5">
 						<h3>NEXT OF KIN</h3>
 						<FormField type="text" field="nok_relationship">Relationship</FormField>
 						<FormField type="text" field="nok_firstName">Name</FormField>

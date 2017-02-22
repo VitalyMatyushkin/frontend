@@ -11,6 +11,7 @@ const FormField = React.createClass({
 		field: 				React.PropTypes.string.isRequired,
 		validation:			React.PropTypes.string,
 		errorClassName:		React.PropTypes.string, //Error message specific class
+		errorIconClass:		React.PropTypes.string,
 		fieldClassName:		React.PropTypes.string,
 		condition:			React.PropTypes.bool, 	//false - field is not included in the form, true or undefined - included
 		isDisabled:			React.PropTypes.bool, 	//false - show field like disabled
@@ -35,22 +36,26 @@ const FormField = React.createClass({
 		/* creating new input with built props */
 		const inputField = React.createElement(typeList[self.props.type], inputProps);
 
-		const fieldStyleClass = classNames('eForm_fieldSet', {
-                                    mInvalid: 	binding.get('showError'),
-                                    mValid: 	binding.get('showSuccess')
-                                });
+		const fieldStyleClass = classNames('eForm_field',
+			self.props.classNames, {
+				mInvalid: binding.get('showError'),
+				mValid: binding.get('showSuccess')
+			});
 		//If a specific class has been provided for styling error messages then use it
-		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
+		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName),
+			  errorIconClass = classNames("eForm_fieldValidIcon", self.props.errorClassName);
 
 		/** props.condition === true or undefined */
 		if(self.props.condition || typeof self.props.condition === 'undefined'){
 			binding.set('active', true);
 			return (
-				<div className={classNames("eForm_field", self.props.fieldClassName)}>
-					<div className="eForm_fieldName">{self.props.children}</div>
-					<div className={fieldStyleClass}>
+				<div className={fieldStyleClass}>
+					<div className="eForm_fieldName">{self.props.children}
+						<span className={errorClassName}>{binding.get('error') || ''}</span>
+					</div>
+					<div className={classNames("eForm_fieldSet", self.props.fieldClassName)}>
 						{inputField}
-						<div className={errorClassName} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
+						<div className={errorIconClass} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
 					</div>
 				</div>
 			);

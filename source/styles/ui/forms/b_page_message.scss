@@ -6,23 +6,35 @@
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
   text-align: center;
+
+  h2 {
+    color: $blueColor;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .mInvalid .eForm_fieldValidText {
+    display: inline-block!important;
+    white-space: nowrap;
+    padding-left: 0;
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .eForgotPass {
+    text-align: center;
+    text-decoration: none;
+  }
 }
 
 .ePageMessage_text .bButton{
   margin: 0 6px;
 }
-.bPageMessage h2 {
-  text-align: center;
-  color: $COLOR;
-}
-.bPageMessage .eForm_atCenter {
-  text-align: center;
-}
-.bPageMessage .eForm_fieldSet{
-  padding: 0;
-  display: flex;
-  justify-content: center;
-}
 .bPageMessage .bButton.mRight {
   width: 100%;
+  max-width: 200px;
 }

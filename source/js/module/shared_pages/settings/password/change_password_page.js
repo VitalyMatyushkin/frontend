@@ -30,33 +30,39 @@ const SecuritySettingsPage = React.createClass({
 
 		return (
 			<div>
-				<Form
-					formStyleClass="bSettingsForm mLeft"
-					name="Change password"
-					onSubmit={self.onChangePassword}
-					binding={binding}
-					defaultButton="Change"
-					loadingButton="Saving..."
-					autoupdateOff={true}
-					onCancel={this.onCancel}
-				>
-					<FormField type="text"
-							   textType="password"
-							   field="oldPassword"
-							   validation="required"
-							   fieldClassName="mLarge"
-						>
-						Old Password
-					</FormField>
-					<FormField type="confirmText"
-							   textType="password"
-							   field="newPassword"
-							   validation="required password"
-							   fieldClassName="mLarge"
-						>
-						New Password
-					</FormField>
-				</Form>
+				<div className="container">
+					<div className="row">
+						<div className="col-md-10 col-md-offset-1">
+							<Form
+								formStyleClass="bSettingsForm mLeft"
+								name="Change password"
+								onSubmit={self.onChangePassword}
+								binding={binding}
+								defaultButton="Change"
+								loadingButton="Saving..."
+								autoupdateOff={true}
+								onCancel={this.onCancel}
+								>
+								<FormField type="text"
+										   textType="password"
+										   field="oldPassword"
+										   validation="required"
+										   fieldClassName="mLarge"
+									>
+									Old Password
+								</FormField>
+								<FormField type="confirmText"
+										   textType="password"
+										   field="newPassword"
+										   validation="required password"
+										   fieldClassName="mLarge"
+									>
+									New Password
+								</FormField>
+							</Form>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
