@@ -645,7 +645,9 @@ const EventManager = React.createClass({
 
 		if(isEventManagerSync) {
 			return (
-				<EventForm binding={commonBinding} />
+				<EventForm	binding		= {commonBinding}
+							isCopyMode	= {this.isCopyMode}
+				/>
 			);
 		} else {
 			return (

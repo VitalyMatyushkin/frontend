@@ -21,6 +21,7 @@ const EventVenue = React.createClass({
 	propTypes: {
 		eventType			: React.PropTypes.string.isRequired,
 		activeSchoolInfo	: React.PropTypes.object.isRequired,
+		isCopyMode			: React.PropTypes.bool,
 		opponentSchoolInfo	: React.PropTypes.object
 	},
 	componentWillReceiveProps:function(nextProps){
@@ -292,7 +293,7 @@ const EventVenue = React.createClass({
 			case typeof awayPostcode !== "undefined" && typeof defPostcode !== "undefined" && awayPostcode.id === defPostcode._id:
 				defPostcode.tooltip = ' (opponent school)';
 				break;
-			case typeof defPostcode === 'undefined':
+			case this.props.isCopyMode && typeof defPostcode === 'undefined':
 				defPostcode = {
 					id: "TBD",
 					postcode: "TBD"
