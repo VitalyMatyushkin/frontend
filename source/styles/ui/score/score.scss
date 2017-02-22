@@ -11,6 +11,8 @@
 input[type="text"].eScore_Points {
   width: 40px;
   font-size: 14px;
+
+  background: transparent;
   border-width: 0 0 1px;
 
   &.mTime{
@@ -52,6 +54,6 @@ input[type="text"].eScore_Points {
 
   color: #333132;
   &:hover {
-    color: $COLOR;
+    color: $blueColor;
   }
 }

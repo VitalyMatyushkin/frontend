@@ -173,10 +173,10 @@
 
 }
 .eSchoolFixtureTab.eCalendar_tab h1{
-  color: $COLOR;
+  color: $blueColor;
 }
 .eSchoolFixtureTab.eCalendar_tab hr{
-  border-color: $COLOR;
+  border-color: $blueColor;
 }
 
 .eSchoolCalendarWrapper{
@@ -199,7 +199,7 @@
 
 .eSchoolFixtureListItem h5{
   font-size: 14px;
-  color: $COLOR;
+  color: $blueColor;
 }
 .eSchoolFixtureListItem h2{
   font-size: 22px;
@@ -412,7 +412,7 @@
 }
 .eSchoolCalenderFixtureTitle{
   background: $blueColor;
-  color: $COLOR;
+  color: $blueColor;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -434,7 +434,7 @@
   text-align: right;
   text-transform: uppercase;
   font-size: 12px;
-  color: $COLOR;
+  color: $blueColor;
   cursor: pointer;
   text-decoration: underline;
   margin-bottom: 10px;
