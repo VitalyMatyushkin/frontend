@@ -45,10 +45,13 @@
 
   margin: 10px 0;
 
-  &.mEvent{
+  &.mEvent {
     font-size: 1.5625rem;
     text-align: left;
     text-overflow: ellipsis;
+
+    display: flex;
+    justify-content: space-between;
   }
   &.mDate,
   &.mAges {
@@ -58,11 +61,10 @@
 }
 
 .eEventHeader_fieldColumn {
-  display: inline-block;
-  vertical-align: top;
 
   &.mRelative {
     position: relative;
+    width: 50px;
   }
 }
 @media (max-width: $screen-xs-max) {
