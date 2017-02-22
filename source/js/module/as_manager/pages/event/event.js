@@ -222,31 +222,33 @@ const Event = React.createClass({
 	initIsIndividualScoreAvailableByOrder: function(order) {
 		const binding = this.getDefaultBinding();
 
-		const	activeSchoolId 	= this.props.activeSchoolId,
+		const	activeSchoolId	= this.props.activeSchoolId,
 				event			= binding.toJS('model');
 
-		let params;
-		switch (order) {
-			case 0:
-				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
-				break;
-			case 1:
-				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
-				break;
-		}
+		if(event.teamsData.length !== 0) {
+			let params;
+			switch (order) {
+				case 0:
+					params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+					break;
+				case 1:
+					params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+					break;
+			}
 
-		// id of school, house or team.
-		let id = event[params.bundleName][params.order].id;
-		switch (params.bundleName) {
-			case "schoolsData":
-				binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));
-				break;
-			case "housesData":
-				binding.set(`individualScoreAvailable.${order}.houseId`, Immutable.fromJS(id));
-				break;
-			case "teamsData":
-				binding.set(`individualScoreAvailable.${order}.teamId`, Immutable.fromJS(id));
-				break;
+			// id of school, house or team.
+			let id = event[params.bundleName][params.order].id;
+			switch (params.bundleName) {
+				case "schoolsData":
+					binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));
+					break;
+				case "housesData":
+					binding.set(`individualScoreAvailable.${order}.houseId`, Immutable.fromJS(id));
+					break;
+				case "teamsData":
+					binding.set(`individualScoreAvailable.${order}.teamId`, Immutable.fromJS(id));
+					break;
+			}
 		}
 	},
 	addListeners: function() {
@@ -339,9 +341,14 @@ const Event = React.createClass({
 	clearTeamScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
 
-		const updScore = binding.toJS(`model.results.teamScore`).filter(s => s.teamId !== teamId);
+		const score = binding.toJS(`model.results.teamScore`);
+		score.forEach(s => {
+			if(s.teamId === teamId) {
+				s.score = 0;
+			}
+		});
 
-		binding.set(`model.results.teamScore`, Immutable.fromJS(updScore));
+		binding.set(`model.results.teamScore`, Immutable.fromJS(score));
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();

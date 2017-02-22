@@ -76,8 +76,23 @@
   height: 100px;
   max-width: 500px;
   max-height: 200px;
+  margin-top: 10px;
+
+  padding: 10px;
+
+  border: 1px solid #d2d2d2;
+  border-radius: 4px;
 
   font-family: Glober, sans-serif;
+
+  &:hover{
+    border: 1px solid #d2d2d2;
+    border-radius: 4px;
+  }
+  &:focus{
+    border: 1px solid #d2d2d2;
+    border-radius: 4px;
+  }
 }
 
 .eDetails_timeContainer {

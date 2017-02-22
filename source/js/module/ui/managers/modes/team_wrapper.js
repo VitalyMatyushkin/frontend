@@ -392,7 +392,7 @@ const TeamWrapper = React.createClass({
 			case TeamHelper.isNonTeamSport(event):
 				return null;
 			case TeamHelper.isTeamSport(event):
-				const errorData = this.getBinding('error').toJS();
+				const errorData = typeof this.getBinding('error') !== 'undefined' ? this.getBinding('error').toJS() : {};
 
 				const isError = errorData.isError && errorData.text === "Please enter team name";
 
