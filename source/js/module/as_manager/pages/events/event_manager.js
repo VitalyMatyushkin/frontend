@@ -344,7 +344,7 @@ const EventManager = React.createClass({
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(!binding.toJS('isSubmitProcessing')) {
+		if(self._isStepComplete(2) && !binding.get('isSubmitProcessing') && binding.get('isTeamManagerSync')) {
 			const	event			= binding.toJS('model'),
 					teamWrappers	= this.getTeamWrappers(),
 					validationData	= [
@@ -549,8 +549,7 @@ const EventManager = React.createClass({
 				);
 			case step === 2:
 				const finishButtonClassName = classNames({
-					mFinish:	true,
-					mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
+					mFinish:	true
 				});
 
 				return (
