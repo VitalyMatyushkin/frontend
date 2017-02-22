@@ -45,7 +45,7 @@ class StudentListClass{
 				where: grid.filter.where,
 				order: grid.filter.order
 			},
-			badges: grid.filterPanel.badgeArea.badges
+			badges: grid.filterPanel.badgeArea
 		});
 		
 		this.dataLoader = new DataLoader({
