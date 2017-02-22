@@ -191,7 +191,7 @@ const ManagerWrapper = React.createClass({
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
-			'mMarginRight'	: true,
+			'mMarginLeftFixed'	: true,
 			'mDisable'		: !this.getDefaultBinding().get('isTeamManagerSync')
 		});
 	},
@@ -208,13 +208,13 @@ const ManagerWrapper = React.createClass({
 											submit	= {this.handleClickPopupSubmit}
 				/>
 				<div className="eTeamManagerWrapper_footer">
+					<Button	text				= "Cancel"
+							   onClick				= {this.handleClickCancelButton}
+							   extraStyleClasses	= {"mCancel"}
+						/>
 					<Button	text				= "Save"
 							onClick				= {this.handleClickSubmitButton}
 							extraStyleClasses	= {this.getSaveButtonStyleClass()}
-					/>
-					<Button	text				= "Cancel"
-							onClick				= {this.handleClickCancelButton}
-							extraStyleClasses	= {"mCancel"}
 					/>
 				</div>
 			</div>
