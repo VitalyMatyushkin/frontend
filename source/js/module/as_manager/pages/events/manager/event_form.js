@@ -20,6 +20,9 @@ const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wra
 
 const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		isCopyMode : React.PropTypes.bool
+	},
 	/**
 	 * House filtering service...
 	 * @param houseName
@@ -286,6 +289,7 @@ const EventForm = React.createClass({
 							eventType			= {binding.toJS('model.type')}
 							activeSchoolInfo	= {binding.toJS('schoolInfo')}
 							opponentSchoolInfo	= {binding.toJS('rivals.1')}
+							isCopyMode			= {this.props.isCopyMode}
 				/>
 			</div>
 		);
