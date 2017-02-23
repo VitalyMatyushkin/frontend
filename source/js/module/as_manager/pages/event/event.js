@@ -728,7 +728,7 @@ const Event = React.createClass({
 				return (
 					<div className={EventContainerStyle}>
 						<If condition={isNewEvent}>
-							<CreateOtherEventPanel/>
+							<CreateOtherEventPanel eventId={event.id}/>
 						</If>
 						<div className="bEvent">
 							<EventHeaderWrapper	binding			= {binding}

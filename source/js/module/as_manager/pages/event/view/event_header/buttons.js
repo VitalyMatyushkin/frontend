@@ -80,7 +80,8 @@ const Buttons = React.createClass({
 		switch (id) {
 			// create event like this
 			case 'create':
-				document.location.hash = `events/manager?copyId=${this.props.eventId}`;
+				const mode = EventHelper.EVENT_CREATION_MODE.COPY;
+				document.location.hash = `events/manager?mode=${mode}&eventId=${this.props.eventId}`;
 				break;
 			case 'change':
 				this.props.handleClickCloseEvent();
