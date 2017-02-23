@@ -76,7 +76,7 @@ const GenderSelectorWrapper = React.createClass({
 		if(sportModel) {
 			const genders = sportModel.toJS().genders;
 
-			return !genders.maleOnly;
+			return !(genders.maleOnly || genders.mixed);
 		} else {
 			return true;
 		}
@@ -87,7 +87,7 @@ const GenderSelectorWrapper = React.createClass({
 		if(sportModel) {
 			const genders = sportModel.toJS().genders;
 
-			return !genders.femaleOnly;
+			return !(genders.femaleOnly || genders.mixed);
 		} else {
 			return true;
 		}
