@@ -3,7 +3,8 @@ const	React			= require('react');
 const	ActionList		= require('../../../../../ui/action_list/action_list');
 
 const	EventHelper		= require('module/helpers/eventHelper'),
-		LinkStyles 	    = require('styles/pages/event/b_event_eLink_cancel_event.scss');
+		TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
+		LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 /**
  * This component displays the buttons "Close event", "Change score", "Save", "Cancel".
@@ -24,18 +25,12 @@ const Buttons = React.createClass({
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
 	 */
 	renderScoreEventButtonsContainer: function() {
-		const isShowScoreEventButtonsBlock = this.props.isShowScoreEventButtonsBlock;
-
-		if(isShowScoreEventButtonsBlock) {
-			return (
-				<ActionList	buttonText				= 'Actions'
-							actionList				= {this.getActionList()}
-							handleClickActionItem	= {this.handleClickActionItem}
-				/>
-			);
-		} else {
-			return null;
-		}
+		return (
+			<ActionList	buttonText				= 'Actions'
+						actionList				= {this.getActionList()}
+						handleClickActionItem	= {this.handleClickActionItem}
+			/>
+		);
 	},
 	getActionList: function() {
 		const actionList = [];
@@ -69,6 +64,7 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
+			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED
 		);
 	},
@@ -76,6 +72,7 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
+			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
