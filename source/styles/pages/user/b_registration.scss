@@ -74,8 +74,7 @@ $chooserIconSize: 35px;
 
   .eRegistration_input, .bCombobox {
     width: 215px;
-    margin-bottom: 10px;
-    padding: 5px 0;
+    margin: 5px 0 15px 0;
 
     input {
       @include text-overflow;

@@ -48,7 +48,8 @@ const ComboBox2 = React.createClass({
 		 * Combobox doesn't react on click if true.
 		 * False by default.
 		 */
-		isBlocked:			React.PropTypes.bool
+		isBlocked:			React.PropTypes.bool,
+		customListItem:		React.PropTypes.object
 	},
 	getInitialState: function(){
 		return {
@@ -337,20 +338,27 @@ const ComboBox2 = React.createClass({
 	renderMenuItems: function() {
 		const self = this;
 
-		if(self.state.dataList.length == 0) {
-			return (
-				<div className="eCombobox_list" role="listbox">
-					<div className='eCombobox_option'>
-						No matches found
+		switch (true) {
+			case self.state.dataList.length == 0:
+				return (
+					<div className="eCombobox_list" role="listbox">
+						<div className='eCombobox_option'>
+							No matches found
+						</div>
 					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className="eCombobox_list" role="listbox">
-					{self.state.dataList.map(self.renderMenuItem)}
-				</div>
-			);
+				);
+			case typeof self.props.customListItem === 'undefined':
+				return (
+					<div className="eCombobox_list" role="listbox">
+						{self.state.dataList.map(self.renderMenuItem)}
+					</div>
+				);
+			case typeof self.props.customListItem !== 'undefined':
+				return (
+					<div className="eCombobox_list" role="listbox">
+						{self.state.dataList.map(self.renderCustomMenuItem)}
+					</div>
+				);
 		}
 	},
 	getMenuItemText: function(currentMenuItem) {
@@ -375,6 +383,22 @@ const ComboBox2 = React.createClass({
 				{this.getMenuItemText(data)}
 			</div>
 		);
+	},
+	renderCustomMenuItem: function(data) {
+		const	self	= this,
+				index	= Lazy(self.state.dataList).indexOf(data);
+
+		const isSelected = index === self.state.currentIndex;
+
+		const	props = {
+					key			: data.id ? data.id : self.props.getElementTitle(data),
+					isSelected	: isSelected,
+					onMouseDown	: self.onListItemClick.bind(self, index),
+					school		: data
+				},
+				customMenuItem = React.createElement(self.props.customListItem, props);
+
+		return customMenuItem;
 	},
 	getPlaceHolder: function() {
 		const   self = this;
@@ -452,7 +476,7 @@ const ComboBox2 = React.createClass({
 							defaultValue	= { placeholder }
 							readOnly
 					/>
-					<input  style		= {inputStyle}
+					<input	style		= {inputStyle}
 							ref			= "input"
 							className	= {self.getInputCssStyle()}
 							placeholder	= {placeholder}
@@ -462,9 +486,9 @@ const ComboBox2 = React.createClass({
 							onClick		= {self.onInputClick}
 							role		= "combobox"
 					/>
-					<img className		= {self.getLoaderCssStyle()}
-						 style			= {loaderStyle}
-						 src			= "/images/spinner.gif"
+					<img	className		= {self.getLoaderCssStyle()}
+							style			= {loaderStyle}
+							src				= "/images/spinner.gif"
 					/>
 				</div>
 				<div
