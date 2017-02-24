@@ -390,6 +390,11 @@ const ComboBox2 = React.createClass({
 
 		return typeof self.props.extraCssStyle !== 'undefined' ? self.props.extraCssStyle : '';
 	},
+	getComboboxCssStyle: function() {
+		const self = this;
+
+		return "bCombobox " + self.getExtraCssStyle();
+	},
 	getLoaderCssStyle: function() {
 		const self = this;
 
@@ -437,7 +442,7 @@ const ComboBox2 = React.createClass({
 		};
 
 		return (
-			<div	className	= {`bCombobox ${isOpenCN}`}
+			<div	className	= {`${this.getComboboxCssStyle()} ${isOpenCN}`}
 					onMouseDown	= {this.handleMouseDown}
 					onMouseUp	= {this.handleMouseUp}
 			>
