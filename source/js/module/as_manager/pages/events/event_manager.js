@@ -215,7 +215,6 @@ const EventManager = React.createClass({
 			})
 			.then(forms => {
 				schoolData.forms = forms;
-				console.log(schoolData);
 
 				// get avail ages
 				const ages = TeamHelper.getAges(schoolData);

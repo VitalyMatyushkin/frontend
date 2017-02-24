@@ -4,6 +4,7 @@ const	React							= require('react'),
 
 const	If								= require('../../../../ui/if/if'),
 		Autocomplete					= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		SchoolItemList					= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		EventVenue						= require('./event_venue'),
 		TimeInputWrapper				= require('./time_input_wrapper');
 
@@ -341,6 +342,7 @@ const EventForm = React.createClass({
 										onSelect		= {self.onSelectRival.bind(null, 1)}
 										binding			= {binding.sub('autocomplete.inter-schools.0')}
 										extraCssStyle	= "mBigSize"
+										customListItem	= {SchoolItemList}
 						/>
 					</If>
 					{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
