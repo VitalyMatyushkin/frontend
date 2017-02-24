@@ -27,9 +27,11 @@ const SchoolListItem = React.createClass({
 						{this.props.school.name}
 					</div>
 				</div>
-				<div	className	= "eSchoolListItem_address">
-					Address: {this.props.school.address}
-				</div>
+				<If condition={typeof this.props.school.address !== 'undefined'}>
+					<div className="eSchoolListItem_address">
+						Address: {this.props.school.address}
+					</div>
+				</If>
 			</div>
 		)
 	}

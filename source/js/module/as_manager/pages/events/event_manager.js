@@ -20,6 +20,7 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
+		LocalEventHelper				= require('./eventHelper'),
 		MoreartyHelper					= require('../../../helpers/morearty_helper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
@@ -81,7 +82,9 @@ const EventManager = React.createClass({
 			],
 			isEventManagerSync: false,
 			isSync: false,
-			isSavingChangesModePopupOpen: false
+			isSavingChangesModePopupOpen: false,
+			fartherThen: LocalEventHelper.fartherThenItems[0].id,
+			eventFormOpponentSchoolKey: undefined
 		});
 	},
 	componentWillMount: function () {
