@@ -1,10 +1,14 @@
 /**
  * Created by Woland on 12.01.2017.
  */
-const	React 					= require ('react'),
-		If						= require('module/ui/if/if'),
-		AutoComplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		PermissionDetailsHelper	= require('./permission_detail_helper');
+const	React 					= require ('react');
+
+const	If						= require('../../../../ui/if/if'),
+		CrossButton				= require('../../../../ui/cross_button/cross_button'),
+		AutoComplete			= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		PostcodeSelector		= require('./postcode_selector/postcode_selector');
+
+const	PermissionDetailsHelper	= require('./permission_detail_helper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -28,16 +32,51 @@ const PermissionDetails = React.createClass({
 		comment:					React.PropTypes.string,
 		fieldNumber:				React.PropTypes.string.isRequired
 	},
-
+	getInitialState: function(){
+		return {
+			postcode: undefined
+		};
+	},
 	/**
 	 * school filter by schoolName
 	 * @param schoolName
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function (schoolName) {
+		if(typeof this.state.postcode === 'undefined') {
+			return this.searchSchool(schoolName);
+		} else {
+			return this.searchSchoolNearCurrentPostcode(schoolName);
+		}
+	},
+	searchSchool: function(schoolName) {
 		return window.Server.publicSchools.get(PermissionDetailsHelper.getSchoolServiceFilter(schoolName, this.props.type));
 	},
+	searchSchoolNearCurrentPostcode: function(schoolName) {
+		const point = this.state.postcode.point;
 
+		const filter = {
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					},
+					'postcode.point': {
+						$nearSphere: {
+							$geometry: {
+								type: 'Point',
+								coordinates: [point.lng, point.lat] // [longitude, latitude]
+							}
+						}
+					}
+				},
+				limit: 20
+			}
+		};
+
+		return window.Server.publicSchools.get(filter);
+	},
 	/**
 	 * house filter by houseName
 	 * @param houseName
@@ -82,7 +121,6 @@ const PermissionDetails = React.createClass({
 	 * It's not good, but autocomplete return only schoolId
 	 */
 	onSelectSchool: function(schoolId, school) {
-		console.log(school);
 		if (typeof schoolId !== 'undefined') {
 			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
 				this.props.handleSchoolSelect(schoolId, school.name, this.props.fieldNumber);
@@ -136,14 +174,26 @@ const PermissionDetails = React.createClass({
 				<span>and we will add it!</span>
 			</div>)
 	},
-
+	handleSelectPostcode: function(id, postcode) {
+		this.setState({
+			postcode: postcode
+		});
+	},
+	handleEscapePostcode: function() {
+		this.setState({
+			postcode: undefined
+		});
+	},
 	render: function() {
 		const 	currentType		= this.props.type,
 				houseName		= this.props.houseName ? this.props.houseName : '',
 				formName		= this.props.formName ? this.props.formName : '',
-				schoolName		= this.props.schoolName ? this.props.schoolName : '',
+				schoolName		= this.props.schoolName ? this.props.schoolName : '';
 
-				message			= this.getSchoolMessage();
+		const	message			= this.getSchoolMessage();
+
+		console.log(this.state.postcode);
+
 		return (
 			<div>
 				{/**
@@ -152,12 +202,16 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof currentType !== 'undefined'}>
 					<div>
+						<PostcodeSelector	currentPostcode			= {this.state.postcode}
+											handleSelectPostcode	= {this.handleSelectPostcode}
+											handleEscapePostcode	= {this.handleEscapePostcode}
+						/>
 						<AutoComplete
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
 							placeholder		= "school's name"
-							defaultItem		= {{name: schoolName}}
+							defaultItem		= { {name: schoolName} }
 						/>
 						{message}
 					</div>

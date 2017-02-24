@@ -11,6 +11,14 @@ $inputBg: #f5f5f5;
   &.mFixedWidth {
     max-width: 360px;
   }
+
+  &.mRegistrationPostcode {
+    width: 170px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    margin-right: 5px !important;
+    vertical-align: top;
+  }
 }
 .bCombobox:hover .eCombobox_inputContainer {
   color: $textColor;

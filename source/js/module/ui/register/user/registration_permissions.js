@@ -2,7 +2,7 @@
  * Created by bridark on 15/10/15.
  */
 const	If						= require('module/ui/if/if'),
-		PermissionDetails		= require('./permission_details'),
+		PermissionDetails		= require('./permission_details/permission_details'),
 		propz					= require('propz'),
 		React					= require('react'),
 		Promise					= require('bluebird');
