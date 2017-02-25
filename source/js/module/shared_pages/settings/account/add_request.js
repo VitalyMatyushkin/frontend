@@ -9,6 +9,7 @@ const	React		= require('react'),
 		Form		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		classNames	= require('classnames'),
+		If			= require('module/ui/if/if'),
 		roleList	= require('module/data/roles_data');
 
 const AddPermissionRequest = React.createClass({
@@ -123,7 +124,9 @@ const AddPermissionRequest = React.createClass({
 					field			= "studentName"
 					fieldClassName	= {classNames({mHidden:!isParent})}
 				>
-					Student
+					<If condition={Boolean(isParent)}>
+						<span>Student</span>
+					</If>
 				</FormField>
 				<FormField
 					type	= "textarea"
