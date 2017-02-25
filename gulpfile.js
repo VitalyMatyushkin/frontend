@@ -80,6 +80,46 @@ gulp.task('svgSymbols', function () {
 	.pipe(gulp.dest(BUILD + '/images'))
 });
 
+// SVG Symbols generation for IE
+gulp.task('svgSymbolsIE', function () {
+	return gulp.src('./images/icons/*.svg')
+	.pipe(svgmin())
+	.pipe(cheerio({
+		run: function ($, file) {
+			//we cut tag <defs> and <clipPath>, because in IE in sprite this tags do not work correctly
+			$('defs').remove();
+			$('clipPath').remove();
+			//get file name without extension, example: tennis, cricket, rounders, etc
+			var filePath = file.history[0].lastIndexOf('\\'),
+				fileNameSvg;
+			if (filePath === -1) {
+				fileNameSvg = file.history[0].substring(file.history[0].lastIndexOf('/')+1, (file.history[0].length-4)).replace(" ", "_");
+			} else {
+				fileNameSvg = file.history[0].substring(file.history[0].lastIndexOf('\\')+1, (file.history[0].length-4)).replace(" ", "_");
+			}
+			// add filename in all svg tags, which contain attr "class" .st0, .st1, .st2
+			$('.st0, .st1, st2').each(function(){
+				var classSvg = $(this);
+				
+				classSvg.attr('class', classSvg.attr('class') + '-' + fileNameSvg);
+			});
+			// add filename in all svg tags <style>, which contain class .st0, .st1, .st2
+			$('style').each(function(){
+				var style 		= $(this),
+					styleText 	= style.text()
+					.replace(".st0", ".st0-" + fileNameSvg)
+					.replace(".st1", ".st1-" + fileNameSvg)
+					.replace(".st2", ".st2-" + fileNameSvg);
+				
+				style.text(styleText);
+			});
+		},
+		parserOptions: { xmlMode: true }
+	}))
+	.pipe(svgstore({ fileName: 'iconsIE.svg', prefix: 'icon_' }))
+	.pipe(gulp.dest(BUILD + '/images'))
+});
+
 /** let it be here at least for a while. A bit later it can be removed */
 gulp.task('webpack', function() {
 	return gulp.src([SOURCE + '/*.js', SOURCE + '/**/*.js'])
@@ -135,9 +175,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'svgSymbols', 'buildVersionFile', 'webpack', callback);
-});
-
-gulp.task('svg', function (callback) {
-	run('svgSymbols', callback);
+    run('clean', 'svgSymbols', 'svgSymbolsIE', 'buildVersionFile', 'webpack', callback);
 });
