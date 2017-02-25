@@ -1,6 +1,7 @@
 /**
  * Created by wert on 07.12.15.
  */
+const Bowser = require('bowser');
 
 /** Will add new div with svg icons */
 function loadSVG() {
@@ -14,8 +15,11 @@ function loadSVG() {
         div.style.display = 'none';
         script.parentNode.insertBefore(div, script);
     };
-
-    xhr.open('get', '/build/images/icons.svg', true);
+	if (Bowser.msie || Bowser.msedge) {
+		xhr.open('get', '/build/images/iconsIE.svg', true) // for Edge and IE
+	} else {
+		xhr.open('get', '/build/images/icons.svg', true); //for other browser
+	}
     xhr.send();
 }
 
