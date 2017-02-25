@@ -153,8 +153,11 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 			if(foundPlayer.sub !== initialPlayer.sub) {
 				changes.sub = foundPlayer.sub;
 			}
+			if(foundPlayer.isCaptain !== initialPlayer.isCaptain) {
+				changes.isCaptain = foundPlayer.isCaptain;
+			}
 
-			if(changes.positionId !== undefined || changes.sub !== undefined) {
+			if(changes.positionId !== undefined || changes.sub !== undefined || changes.isCaptain !== undefined) {
 				return changePlayer(
 						schoolId,
 						teamId,
