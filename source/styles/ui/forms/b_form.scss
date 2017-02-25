@@ -253,6 +253,10 @@ select {
   position: relative;
   max-width: 360px;
 
+  input:-ms-input-placeholder{
+	color: #c2c2c2;
+  }
+
   &.mInvalid{
     .mNotRequired{
       color: #a9a9a9;
