@@ -132,16 +132,18 @@ function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
-function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
+function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding, optDays) {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
-	dayStart.setDate(dayStart.getDate() - 7);
+	const days = optDays ? optDays : 7;
+
+	dayStart.setDate(dayStart.getDate() - days);
 
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 
 	const filter = {
-		limit: 100,
+		limit: 10,
 		order: "startTime DESC",
 		where: {
 			startTime: {
