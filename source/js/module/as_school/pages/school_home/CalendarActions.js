@@ -106,7 +106,7 @@ function setNextMonth(activeSchoolId, eventsBinding) {
 
 function setNextDaysEvents(activeSchoolId: string, eventsBinding, optDates?: number = 7): Promise {
 	const dayStart = new Date(); // current day
-	console.log(typeof eventsBinding);
+	
 	// create end day = start day + option days
 	const dayEnd = new Date();
 	dayEnd.setDate(dayEnd.getDate() + optDates);
@@ -114,7 +114,7 @@ function setNextDaysEvents(activeSchoolId: string, eventsBinding, optDates?: num
 	eventsBinding.set('nextSevenDaysEvents.isSync', false);
 
 	const filter = {
-		limit: 100,
+		limit: 10,
 		where: {
 			startTime: {
 				$gte:	dayStart,
@@ -141,7 +141,7 @@ function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding, optDat
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 
 	const filter = {
-		limit: 100,
+		limit: 10,
 		order: "startTime DESC",
 		where: {
 			startTime: {
@@ -157,30 +157,6 @@ function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding, optDat
 	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
 		eventsBinding.set('prevSevenDaysFinishedEvents.events', Immutable.fromJS(eventsData));
 		eventsBinding.set('prevSevenDaysFinishedEvents.isSync', true);
-	});
-}
-
-function setPrevAllFinishedEvents(activeSchoolId: string, eventsBinding): Promise {
-	const	dayStart	= new Date();
-	
-	eventsBinding.set('prevAllFinishedEvents.isSync', false);
-	
-	const filter = {
-		limit: 100,
-		order: "startTime DESC",
-		where: {
-			startTime: {
-				$lte:	dayStart
-			},
-			status: {
-				$in: ['FINISHED']
-			}
-		}
-	};
-	
-	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
-		eventsBinding.set('prevAllFinishedEvents.events', Immutable.fromJS(eventsData));
-		eventsBinding.set('prevAllFinishedEvents.isSync', true);
 	});
 }
 
@@ -205,4 +181,3 @@ module.exports.setSelectedDate					= setSelectedDate;
 module.exports.setCurrentMonth					= loadMonthDistinctEventDatesToBinding;
 module.exports.setNextDaysEvents				= setNextDaysEvents;
 module.exports.setPrevDaysFinishedEvents		= setPrevDaysFinishedEvents;
-module.exports.setPrevAllFinishedEvents			= setPrevAllFinishedEvents;
