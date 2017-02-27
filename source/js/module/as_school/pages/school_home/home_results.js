@@ -8,8 +8,8 @@ const HomeResults = React.createClass({
 	render:function() {
 		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				binding			= this.getDefaultBinding().sub('events'),
-				events			= binding.get('prevSevenDaysFinishedEvents.events').toJS(),
-				isSync			= binding.get('prevSevenDaysFinishedEvents.isSync');
+				events			= typeof binding.get('prevAllFinishedEvents.events') !== 'undefined' ? binding.get('prevAllFinishedEvents.events').toJS() : {},
+				isSync			= binding.get('prevAllFinishedEvents.isSync');
 
 		return (
 			<FixtureList	title					= "Results"

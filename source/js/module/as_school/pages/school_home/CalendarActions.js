@@ -160,6 +160,30 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
+function setPrevAllFinishedEvents(activeSchoolId, eventsBinding) {
+	const	dayStart	= new Date();
+	
+	eventsBinding.set('prevAllFinishedEvents.isSync', false);
+	
+	const filter = {
+		limit: 100,
+		order: "startTime DESC",
+		where: {
+			startTime: {
+				$lte:	dayStart
+			},
+			status: {
+				$in: ['FINISHED']
+			}
+		}
+	};
+	
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+		eventsBinding.set('prevAllFinishedEvents.events', Immutable.fromJS(eventsData));
+		eventsBinding.set('prevAllFinishedEvents.isSync', true);
+	});
+}
+
 function setPrevMonth(activeSchoolId, eventsBinding) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			prevMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1);
@@ -181,3 +205,4 @@ module.exports.setSelectedDate					= setSelectedDate;
 module.exports.setCurrentMonth					= loadMonthDistinctEventDatesToBinding;
 module.exports.setNextSevenDaysEvents			= setNextSevenDaysEvents;
 module.exports.setPrevSevenDaysFinishedEvents	= setPrevSevenDaysFinishedEvents;
+module.exports.setPrevAllFinishedEvents			= setPrevAllFinishedEvents;
