@@ -1,3 +1,4 @@
+/* @flow */
 const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		Challenges		= require('module/ui/challenges/challenges'),
@@ -16,7 +17,7 @@ const HomeCalender = React.createClass({
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
-		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
+		CalendarActions.setNextDaysEvents(activeSchoolId, binding);
 		CalendarActions.setPrevAllFinishedEvents(activeSchoolId, binding);
 	},
 

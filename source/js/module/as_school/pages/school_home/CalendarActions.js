@@ -1,7 +1,7 @@
 /**
  * Created by wert on 06.09.16.
  */
-
+/* @flow */
 const Immutable = require('immutable');
 
 /** Load in binding data for all dates which have events */
@@ -86,7 +86,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 		}
 	};
 
-	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter})
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter })
 		.then( eventsData => {
 			eventsBinding.set('selectedDateEventsData.events', Immutable.fromJS(eventsData));
 			eventsBinding.set('selectedDateEventsData.isSync', true);
@@ -104,12 +104,12 @@ function setNextMonth(activeSchoolId, eventsBinding) {
 	loadMonthDistinctEventDatesToBinding(nextMonthDate, activeSchoolId, eventsBinding);
 }
 
-function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
+function setNextDaysEvents(activeSchoolId: string, eventsBinding, optDates?: number = 7): Promise {
 	const dayStart = new Date(); // current day
-
-	// create end day = start day + 7 days
+	console.log(typeof eventsBinding);
+	// create end day = start day + option days
 	const dayEnd = new Date();
-	dayEnd.setDate(dayEnd.getDate() + 7);
+	dayEnd.setDate(dayEnd.getDate() + optDates);
 
 	eventsBinding.set('nextSevenDaysEvents.isSync', false);
 
@@ -132,11 +132,11 @@ function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
-function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
+function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding, optDates?: number = 7): Promise {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
-	dayStart.setDate(dayStart.getDate() - 7);
+	dayStart.setDate(dayStart.getDate() - optDates);
 
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 
@@ -160,7 +160,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
-function setPrevAllFinishedEvents(activeSchoolId, eventsBinding) {
+function setPrevAllFinishedEvents(activeSchoolId: string, eventsBinding): Promise {
 	const	dayStart	= new Date();
 	
 	eventsBinding.set('prevAllFinishedEvents.isSync', false);
@@ -203,6 +203,6 @@ module.exports.setNextMonth						= setNextMonth;
 module.exports.setPrevMonth						= setPrevMonth;
 module.exports.setSelectedDate					= setSelectedDate;
 module.exports.setCurrentMonth					= loadMonthDistinctEventDatesToBinding;
-module.exports.setNextSevenDaysEvents			= setNextSevenDaysEvents;
-module.exports.setPrevSevenDaysFinishedEvents	= setPrevSevenDaysFinishedEvents;
+module.exports.setNextDaysEvents				= setNextDaysEvents;
+module.exports.setPrevDaysFinishedEvents		= setPrevDaysFinishedEvents;
 module.exports.setPrevAllFinishedEvents			= setPrevAllFinishedEvents;
