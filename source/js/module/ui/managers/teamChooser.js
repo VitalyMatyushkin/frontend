@@ -29,7 +29,14 @@ const	TeamChooser	= React.createClass({
 
 		binding.set('viewMode', Immutable.fromJS('close'));
 
-		self._getTeams().then(teams => binding.set('teams', Immutable.fromJS(teams)));
+		self._getTeams().then(teams => {
+				teams.sort((teamA, teamB)=>{
+					if (teamA.name.toLowerCase() > teamB.name.toLowerCase()) {return 1}
+					if (teamA.name.toLowerCase() < teamB.name.toLowerCase()) {return -1}
+				});
+				binding.set('teams', Immutable.fromJS(teams));
+			}
+		);
 	},
 	_getTeams: function() {
 		const	self	= this,
