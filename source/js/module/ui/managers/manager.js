@@ -383,7 +383,7 @@ const Manager = React.createClass({
 			) {
 				const xmlRivals = [];
 
-				if(index === 1) {
+				if(typeof this.props.indexOfDisplayingRival === 'undefined' && index === 1) {
 					xmlRivals.push(
 						<span	key			= 'team-index-separator'
 								className	= 'eChooser_separator'
