@@ -2,11 +2,11 @@ const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable');
 
-const	If					= require('../../../../ui/if/if'),
-		propz				= require('propz'),
+const	propz				= require('propz'),
 		Promise				= require('bluebird'),
-		Map					= require('module/ui/map/map2'),
-		Autocomplete		= require('../../../../../../js/module/ui/autocomplete2/OldAutocompleteWrapper');
+		If					= require('../../../../ui/if/if'),
+		Map					= require('../../../../ui/map/map2'),
+		Autocomplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper');
 
 const	InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -329,7 +329,7 @@ const EventVenue = React.createClass({
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
-					<Map 	point				= {this.getPoint()}
+					<Map	point				= {this.getPoint()}
 							customStylingClass	= "eEvents_venue_map"
 					/>
 				</If>
