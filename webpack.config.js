@@ -41,7 +41,8 @@ module.exports = {
 						"transform-es2015-block-scoping",       // allowing block scope features
 						"transform-es2015-template-literals",   // allow string interpolation
 						"transform-es2015-classes",				// allow class syntax
-						"transform-class-properties"
+						"transform-class-properties",
+						"transform-es2015-parameters"			// transforming default values 
 					]
 				}
 			}, {
