@@ -3,10 +3,10 @@
 @font-face {
   font-family: 'Glober';
   src: 	url('/fonts/glober_regular-webfont.eot');
-  src: 	url('/fonts/glober_regular-webfont.eot?#iefix') format('embedded-opentype'),
+  src:	url('/fonts/glober_regular-webfont.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/glober_regular.ttf') format('truetype'),
  		url('/fonts/glober_regular-webfont.woff2') format('woff2'),
-		url('/fonts/glober_regular-webfont.woff') format('woff'),
-		url('/fonts/glober_regular-webfont.ttf') format('truetype');
+		url('/fonts/glober_regular-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
