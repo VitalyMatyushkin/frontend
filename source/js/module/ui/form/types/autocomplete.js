@@ -12,7 +12,8 @@ const TypeAutocomplete = React.createClass({
 		field:				React.PropTypes.string,
 		defaultItem:		React.PropTypes.object,
 		placeholder: 		React.PropTypes.string,
-		onSelect:			React.PropTypes.func
+		onSelect:			React.PropTypes.func,
+		customListItem:		React.PropTypes.object
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){
@@ -28,8 +29,7 @@ const TypeAutocomplete = React.createClass({
 	},
 
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const self = this;
 
 		return (
 			<Autocomplete2
@@ -39,6 +39,7 @@ const TypeAutocomplete = React.createClass({
 				onSelect		= {self.onSelect}
 				defaultItem		= {self.props.defaultItem}
 				placeholder 	= {self.props.placeholder}
+				customListItem	= {self.props.customListItem}
 			/>
 		);
 	}
