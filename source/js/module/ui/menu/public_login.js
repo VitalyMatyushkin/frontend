@@ -12,10 +12,9 @@ const PublicLogin = React.createClass({
     },
     render:function(){
         return(
-                <div className="bPublicMenu_login">
-                    <div onClick={this.handleSignInUpClick.bind(null,this)}
-                         className="bPublicMenu_login_holder bPublicMenu_login_active">
-                        <span>Log In</span>
+                <div className="bPublicMenu_login ePublicMenu_item">
+                    <div onClick={this.handleSignInUpClick.bind(null,this)}>
+                        Log In
                     </div>
                 </div>
         )

@@ -12,10 +12,18 @@ const Head = React.createClass({
 				binding = this.getDefaultBinding();
 
 		return (
-			<div className="bTopPanel schoolPanel container">
-				<Logo />
-				<TopMenu menuItems={['school','fixtures','cricket','rounders','rugby','netball','football','hockey']}></TopMenu>
-				<PublicLogin />
+			<div className="bTopPanel mSchoolPanel mFixed">
+				<div className="container">
+					<div className="row">
+						<div className="col-md-5">
+							<Logo />
+						</div>
+						<div className="col-md-7 eTopPanel_right">
+							<TopMenu menuItems={['Calendar','Fixtures','Results','News']}></TopMenu>
+							<PublicLogin />
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}

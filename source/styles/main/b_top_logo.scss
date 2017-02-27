@@ -13,8 +13,22 @@
   height: 45px;
 }*/
 .bPublicLogo {
-  float:left;
-  padding: 8px 0 0;
+  display: flex;
+  align-items: center;
+  height: 100px;
+
+  .ePublicLogo_img, img {
+    display: inline-block;
+
+    height: auto;
+    max-width: 100%;
+    width: 80px;
+    margin-right: 15px;
+  }
+
+  .ePublicLogo_school {
+    font-size: 25px;
+  }
 }
 .bLoginIcon {
   height: 200px;

@@ -1,0 +1,42 @@
+@import "../!variables";
+
+.bPublicMenu {
+  display: inline-block;
+
+  text-align: right;
+}
+
+.ePublicMenu_item {
+  display: inline-block;
+
+  font-size: 1.125rem;
+
+  padding: 40px 25px;
+
+  a, .bPublicMenu_login {
+    color: $textColor;
+  }
+}
+
+
+
+
+//TODO Check whether the code below is used
+.bPublicMenu_login{
+
+}
+
+.bPublicMenu_login .eForm_field{
+  height:48px;
+}
+.bPublicMenu_login .eForm_fieldName{
+  height:20px;
+}
+.bPublicMenu_login .mRight{
+  height:25px;
+  line-height: 25px;
+  margin-top: 10px;
+}
+.bPublicMenu_login .bForm h2{
+  margin-bottom: -30px;
+}
