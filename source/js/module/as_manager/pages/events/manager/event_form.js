@@ -91,61 +91,64 @@ const EventForm = React.createClass({
 
 		return otherHouseId;
 	},
+	getMainSchoolFilter: function(activeSchoolId, schoolName) {
+		return {
+			filter: {
+				where: {
+					id: {
+						$nin: [activeSchoolId]
+					},
+					name: { like: schoolName }
+				},
+				limit: 20
+			}
+		};
+	},
+	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
+		switch (fartherThenValue) {
+			case "UNLIMITED":
+				return {
+					$nearSphere: {
+						$geometry: {
+							type: 'Point',
+							coordinates: [point.lng, point.lat] // [longitude, latitude]
+						}
+					}
+				};
+			default:
+				return {
+					$nearSphere: {
+						$geometry: {
+							type: 'Point',
+							coordinates: [point.lng, point.lat] // [longitude, latitude]
+						}
+					},
+					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
+				};
+		}
+	},
 	/**
 	 * School filtering service
 	 * @param schoolName
 	 * @returns {*}
 	 */
-	serviceSchoolFilter: function(schoolName) {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				schoolId	= binding.get('schoolInfo.id');
+	schoolService: function(schoolName) {
+		const binding = this.getDefaultBinding();
 
-		let		schools;
-
-		let		filter;
 		const	activeSchool			= binding.toJS('schoolInfo'),
-				activeSchoolPostcode	= activeSchool.postcode;
+				activeSchoolId			= activeSchool.id,
+				activeSchoolPostcode	= activeSchool.postcode,
+				fartherThen				= binding.toJS('fartherThen');
 
-		const fartherThen = binding.toJS('fartherThen');
-		if(typeof activeSchoolPostcode !== 'undefined' && fartherThen !== "UNLIMITED") {
-
+		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
+		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
-			filter = {
-				filter: {
-					where: {
-						id: {
-							$nin: [schoolId]
-						},
-						name: { like: schoolName }
-					},
-					'postcode.point': {
-						$nearSphere: {
-							$geometry: {
-								type: 'Point',
-								coordinates: [point.lng, point.lat] // [longitude, latitude]
-							}
-						},
-						$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThen).value * 1000    // 20 km
-					},
-					limit: 20
-				}
-			};
+			filter.filter['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
 		} else {
-			filter = {
-				filter: {
-					where: {
-						id: {
-							$nin: [schoolId]
-						},
-						name: { like: schoolName }
-					},
-					order:"name ASC",
-					limit: 20
-				}
-			};
+			filter.filter.order = "name ASC";
 		}
 
+		let schools;
 		return window.Server.publicSchools.get(filter)
 			.then(_schools => {
 				schools = _schools;
@@ -153,8 +156,6 @@ const EventForm = React.createClass({
 				return this.getTBDSchool();
 			})
 			.then(data => {
-
-
 				if(data.length > 0 && data[0].name === "TBD") {
 					// set TBD school at first
 					schools.unshift(data[0]);
@@ -262,7 +263,7 @@ const EventForm = React.createClass({
 				sportId             = binding.get('model.sportId'),
 				fartherThen         = binding.get('fartherThen'),
 				services = {
-					'inter-schools':    self.serviceSchoolFilter,
+					'inter-schools':    self.schoolService,
 					'houses':           self.serviceHouseFilter,
 					'internal':         self.serviceClassFilter
 				},
