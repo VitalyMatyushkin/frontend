@@ -21,7 +21,7 @@ const HomeCalender = React.createClass({
 		CalendarActions.setPrevDaysFinishedEvents(activeSchoolId, binding, 365);
 	},
 
-	handleClickEvent: function(eventId) {
+	handleClickEvent: function(eventId: string) {
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 
