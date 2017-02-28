@@ -5,7 +5,7 @@
 const Immutable = require('immutable');
 
 /** Load in binding data for all dates which have events */
-function loadMonthDistinctEventDatesToBinding(monthDate: Object, activeSchoolId: string, eventsBinding: Object) {
+function loadMonthDistinctEventDatesToBinding(monthDate: Date, activeSchoolId: string, eventsBinding: any) {
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
@@ -50,7 +50,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate: Object, activeSchoolId:
 
 }
 
-function loadDailyEvents(date: Object, activeSchoolId: string, eventsBinding: Object) {
+function loadDailyEvents(date: Date, activeSchoolId: string, eventsBinding: any) {
 	const 	dayStart	= new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
 			dayEnd		= new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
 
@@ -95,7 +95,7 @@ function loadDailyEvents(date: Object, activeSchoolId: string, eventsBinding: Ob
 	});
 }
 
-function setNextMonth(activeSchoolId: string, eventsBinding: Object) {
+function setNextMonth(activeSchoolId: string, eventsBinding: any) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			nextMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1);
 
@@ -104,7 +104,7 @@ function setNextMonth(activeSchoolId: string, eventsBinding: Object) {
 	loadMonthDistinctEventDatesToBinding(nextMonthDate, activeSchoolId, eventsBinding);
 }
 
-function setNextDaysEvents(activeSchoolId: string, eventsBinding: Object, optDates: number = 7) {
+function setNextDaysEvents(activeSchoolId: string, eventsBinding: any, optDates: number = 7) {
 	const dayStart = new Date(); // current day
 	
 	// create end day = start day + option days
@@ -132,7 +132,7 @@ function setNextDaysEvents(activeSchoolId: string, eventsBinding: Object, optDat
 	});
 }
 
-function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding: Object, optDates: number = 7) {
+function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding: any, optDates: number = 7) {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
@@ -160,7 +160,7 @@ function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding: Object
 	});
 }
 
-function setPrevMonth(activeSchoolId: string, eventsBinding: Object) {
+function setPrevMonth(activeSchoolId: string, eventsBinding: any) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			prevMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1);
 
@@ -169,7 +169,7 @@ function setPrevMonth(activeSchoolId: string, eventsBinding: Object) {
 	loadMonthDistinctEventDatesToBinding(prevMonthDate, activeSchoolId, eventsBinding);
 }
 
-function setSelectedDate(date: Object, activeSchoolId: string, eventsBinding: Object) {
+function setSelectedDate(date: Date, activeSchoolId: string, eventsBinding: any) {
 	eventsBinding.set('selectedDate', date);
 
 	return loadDailyEvents(date, activeSchoolId, eventsBinding);
