@@ -7,6 +7,7 @@
 }
 
 .ePublicMenu_item {
+  background: #ffffff;
   display: inline-block;
 
   font-size: 1.125rem;
@@ -15,6 +16,62 @@
 
   a, .bPublicMenu_login {
     color: $textColor;
+  }
+}
+
+.ePublicMenuCollapsedItems{
+
+  &.mShown {
+    display: block;
+  }
+}
+
+.ePublicMenu_toggle {
+  cursor: pointer;
+  display: none;
+
+  position: absolute;
+  right: 0;
+  top: -55px;
+
+  width: 50px;
+
+  text-align: left;
+  font-size: 30px;
+}
+
+/* Medium Devices, Desktops */
+@media screen and (max-width: 992px){
+  .ePublicMenu_item {
+    padding: 40px 10px;
+  }
+}
+
+/* Small Devices, Phones */
+@media screen and (max-width: 767px){
+  .bPublicMenu {
+    display: block;
+  }
+  .ePublicMenu_toggle {
+    display: block;
+  }
+
+  .ePublicMenuCollapsedItems{
+    display: none;
+
+    &.mShown {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  .ePublicMenu_item {
+    width: 100%;
+    padding: 15px;
+
+    text-align: center;
+
+    border-bottom: $mainBorder;
   }
 }
 

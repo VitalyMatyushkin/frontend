@@ -38,3 +38,10 @@ $HEADER_HEIGHT: 69px;
     text-align: right;
   }
 }
+
+/* Small Devices, Phones */
+@media screen and (max-width: 768px){
+  .bTopPanel.mSchoolPanel {
+    min-height: 70px;
+  }
+}

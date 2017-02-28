@@ -6,11 +6,11 @@ const Logo = React.createClass({
 	mixins:[Morearty.Mixin],
 	render:function() {
 		const 	activeSchool 	= this.getMoreartyContext().getBinding().toJS('activeSchool'),
-				schoolLogo		= activeSchool.pic || '';
+				schoolLogo		= {backgroundImage:`url(${activeSchool.pic || 'images/default_blazon.svg'})`};
 
 		return (
 			<div className="bPublicLogo">
-				<img src={schoolLogo} className ="ePublicLogo_img"/>
+				<div style={schoolLogo} className ="ePublicLogo_img"/>
 				<span className = "ePublicLogo_school"> {activeSchool.name} </span>
 			</div>);
 	}

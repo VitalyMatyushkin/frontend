@@ -4,6 +4,7 @@
 const   Morearty            = require('morearty'),
         React               = require('react'),
         SVG                 = require('module/ui/svg'),
+        PublicLogin = require('module/ui/menu/public_login'),
         PublicMenuStyles    = require('./../../../../styles/main/b_public_menu.scss'),
         Bootstrap           = require('./../../../../styles/bootstrap-custom.scss');
 
@@ -13,7 +14,7 @@ const PublicMenu = React.createClass({
         menuItems: React.PropTypes.array.isRequired
     },
     getInitialState:function(){
-        return {menuActive:true}
+        return {mHidden:true}
     },
     getMenuItems:function(){
         const items = this.props.menuItems;
@@ -26,25 +27,29 @@ const PublicMenu = React.createClass({
         }
     },
     menuToggle:function(){
-        const currentState = this.state.menuActive;
-
-        if(currentState === false){
-            this.setState({menuActive:true});
+        if(!this.state.mHidden){
+            this.setState({mHidden:true});
             this.forceUpdate();
         }else{
-            this.setState({menuActive:false});
+            this.setState({mHidden:false});
             this.forceUpdate();
         }
     },
     render:function(){
         const 	self 		= this,
 				menuNodes 	= self.getMenuItems(),
-				menuClasses = self.state.menuActive === true ? 'bPublicMenu_tray bPublicMenu_show' : 'bPublicMenu_tray bPublicMenu_hide';
+				extraClasses = self.state.mHidden === false ? 'mShown' : '',
+                classNames = `ePublicMenuCollapsedItems ${extraClasses}`;
         return(
-            <ul className="bPublicMenu">
-                <span className="hBurgerIcon" onClick={self.menuToggle.bind(null,this)}><img src="images/menu.png"/></span>
+            <div className="bPublicMenu">
+                <span className="ePublicMenu_toggle" onClick={self.menuToggle}>
+                    <i className="fa fa-bars" aria-hidden="true" />
+                </span>
+                <ul className={classNames}>
                     {menuNodes}
-            </ul>
+                    <PublicLogin />
+                </ul>
+            </div>
         );
     }
 });
