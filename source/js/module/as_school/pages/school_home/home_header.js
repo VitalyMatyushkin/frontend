@@ -69,7 +69,9 @@ const HomeHeader = React.createClass({
 
             if(photos.length !== 0) {
                 /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
-                headerSection.src = photos[randIndexPos];
+                //headerSection.src = photos[randIndexPos];
+                headerSection.style.backgroundImage = "url(" + photos[randIndexPos] +")";
+                console.log("BACKGROUND: "  +  headerSection.style.backgroundImage);
             }
         },5000);
     },
@@ -80,25 +82,11 @@ const HomeHeader = React.createClass({
     },
 
     render: function(){
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-				activeSchool	= this.getMoreartyContext().getBinding().get('activeSchool'),
-                schoolName      = activeSchool.get('name'),
-                schoolBlazon    = {backgroundImage:`url(${activeSchool.get('pic') || 'images/default_blazon.svg'})`};
+        const activeSchool	= this.getMoreartyContext().getBinding().get('activeSchool');
 
         return(
-
             <div className="eSchoolHeader">
-                <div className="eSchoolMainSlideOutBanner">
-                    <img ref="schoolMainBanner" className="transitionImage" src=""/>
-                </div>
-                <div className="eSchoolMastHead">
-                    <div className="eSchoolMotto">
-                        <div className="eSchoolBlazon" style={schoolBlazon}>
-                        </div>
-                        {schoolName}
-                    </div>
-                </div>
+                <div ref="schoolMainBanner" className="eSchoolMainSlideOutBanner transitionImage"></div>
             </div>
         )
     }

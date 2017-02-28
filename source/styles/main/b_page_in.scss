@@ -14,7 +14,8 @@
 /*header*/
 .eSchoolHeader{
   background-size: cover;
-  height: 470px;
+  height: 450px;
+  margin-top: 100px;
   position:relative;
   overflow: hidden;
 }
@@ -377,20 +378,13 @@
   left:0;
   width: 100%;
   height: 100%;
-  background:transparent;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.eSchoolMainSlideOutBanner img{
-  width: 100%;
-  height: auto;
-  position: relative;
-  display: inline-block;
-}
 .transitionImage{
-  -webkit-transition: all 0.5s ease-in-out, background 0.5s linear;
-  -moz-transition: all 0.5s ease-in-out;
-  -ms-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
 
@@ -451,15 +445,34 @@
   font-size: 16px;
 }
 
-@media screen and (max-width: 992px){
+/* Medium Devices, Desktops */
+@media screen and (max-width: 992px) {
   .eSchoolNewsItemDescription {
     margin-left: 20px;
   }
+
+  .eSchoolHeader {
+    height: 400px;
+  }
 }
-@media screen and (max-width: 767px){
+
+/* Small Devices, Phones */
+@media screen and (max-width: 768px){
+  .eSchoolHeader {
+      height: 350px;
+      margin-top: 70px;
+  }
+
   .eSchoolNewsItemDescription {
     width: 100%;
     margin-left: 0px;
     padding: 0 20px;
+  }
+
+}
+
+@media screen and (max-width: 480px){
+  .eSchoolHeader {
+    height: 250px;
   }
 }
