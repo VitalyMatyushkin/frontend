@@ -71,11 +71,11 @@ const Event = React.createClass({
 			},
 			individualScoreAvailable: [
 				{
-					value					: true,
+					value					: false,
 					isTeamScoreWasChanged	: false
 				},
 				{
-					value					: true,
+					value					: false,
 					isTeamScoreWasChanged	: false
 				}
 			],
@@ -225,19 +225,21 @@ const Event = React.createClass({
 		const	activeSchoolId	= this.props.activeSchoolId,
 				event			= binding.toJS('model');
 
-		if(event.teamsData.length !== 0) {
-			let params;
-			switch (order) {
-				case 0:
-					params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
-					break;
-				case 1:
-					params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
-					break;
-			}
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
 
+		const team = event[params.bundleName][params.order];
+		// team is undefined when "set team later" is true
+		if(typeof team !== 'undefined') {
 			// id of school, house or team.
-			let id = event[params.bundleName][params.order].id;
+			const id = team.id;
 			switch (params.bundleName) {
 				case "schoolsData":
 					binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));

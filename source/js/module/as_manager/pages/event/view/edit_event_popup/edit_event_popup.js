@@ -16,49 +16,76 @@ const EditEventPopup = React.createClass({
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.set('eventEditForm.model', Immutable.fromJS(this.props.event));
+		binding.atomically()
+			.set('eventEditForm.model',			Immutable.fromJS(this.props.event))
+			.set('eventEditForm.originModel',	Immutable.fromJS(this.props.event))
+			.commit();
+	},
+	/**
+	 * Function returns TRUE if event data was changed.
+	 * @param origin - original state of event
+	 * @param current - current state of event
+	 * @returns {boolean}
+	 */
+	isDataChanged: function(origin, current) {
+		return (
+			origin.startTime !== current.startTime ||
+			this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue)
+		);
+	},
+	/**
+	 * Function returns id of venue.
+	 * In relation of situation venue can contains id or _id
+	 * @param venue - venue model
+	 * @returns {string}
+	 */
+	getPostcodeIdFromVenue: function(venue) {
+		return typeof venue.postcodeData._id !== "undefined" ? venue.postcodeData._id : venue.postcodeData.id;
 	},
 	handleClickOkButton: function() {
 		const binding = this.getDefaultBinding();
 
-		const event = binding.toJS('eventEditForm.model');
+		const	currentEvent	= binding.toJS('eventEditForm.model'),
+				originEvent		= binding.toJS('eventEditForm.originModel');
 
-		const body = {
-			startTime: event.startTime
-		};
+		if(this.isDataChanged(originEvent, currentEvent)) {
+			const body = {
+				startTime: currentEvent.startTime
+			};
 
-		// TODO copy cat from event_manager.setEventVenue
-		const modelVenue = event.venue;
-		body.venue = {
-			venueType: modelVenue.venueType
-		};
-		// TODO _id and id - it's a little trick, sorry.
-		// TODO venue component write id and it's need for event_manager component
-		if(modelVenue.postcodeData.id !== 'TBD') {
-			const postcodeId = typeof modelVenue.postcodeData._id !== "undefined" ? modelVenue.postcodeData._id : modelVenue.postcodeData.id;
+			// TODO copy cat from event_manager.setEventVenue
+			const venue = currentEvent.venue;
+			body.venue = {
+				venueType: venue.venueType
+			};
+			if(venue.postcodeData.id !== 'TBD') {
+				const postcodeId = this.getPostcodeIdFromVenue(venue);
+				body.venue.postcodeId = postcodeId;
+			}
 
-			body.venue.postcodeId = postcodeId;
-		}
-
-		return window.Server.schoolEvent.put(
-			{
-				schoolId	: this.props.activeSchoolId,
-				eventId		: event.id
-			},
-			body
-		).then(() => {
-			return window.Server.schoolEvent.get({
-				schoolId	: this.props.activeSchoolId,
-				eventId		: event.id
+			return window.Server.schoolEvent.put(
+				{
+					schoolId	: this.props.activeSchoolId,
+					eventId		: currentEvent.id
+				},
+				body
+			).then(() => {
+				return window.Server.schoolEvent.get({
+					schoolId	: this.props.activeSchoolId,
+					eventId		: currentEvent.id
+				});
+			}).then(updEvent => {
+				this.props.handleSuccessSubmit(updEvent);
 			});
-		}).then(updEvent => {
-			this.props.handleSuccessSubmit(updEvent);
-		});
+		} else {
+			binding.get('eventEditForm').clear();
+			this.props.handleClosePopup();
+		}
 	},
 	handleClickCancelButton: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('eventEditForm').clear();
+		binding.get('eventEditForm').clear();
 		this.props.handleClosePopup();
 	},
 	render: function() {
