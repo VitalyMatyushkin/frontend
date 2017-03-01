@@ -361,6 +361,11 @@ const EventTeamsView = React.createClass({
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
+					<If condition = {player.isCaptain}>
+							<span className="ePlayer_star">
+								<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
+							</span>
+					</If>
 					<If condition={
 						!self.isNonInternalEventForOneOnOneSport(event)
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
