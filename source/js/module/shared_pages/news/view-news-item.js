@@ -4,7 +4,9 @@
 const	React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty        = require('morearty'),
-		DateTimeMixin	= require('module/mixins/datetime');
+		DateTimeMixin	= require('module/mixins/datetime'),
+		NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
+		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
 
 const ViewNewsItem = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
@@ -73,7 +75,7 @@ const ViewNewsItem = React.createClass({
 		return (
 			<div className="eSchoolNewsItem">
 				<div className="eSchoolNewsImage" style={imgStyle}>
-					
+
 				</div>
 				<div className="eSchoolNewsItemDescription">
 					<div className="eSchoolNewsItemInfo">

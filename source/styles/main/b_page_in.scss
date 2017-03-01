@@ -1,10 +1,5 @@
 @import '../!variables';
 
-.bPageIn{
-  padding: 25px 20px;
-  box-sizing: border-box;
-  position: relative;
-}
 .eSchoolHomePage{
   -webkit-font-smoothing: antialiased;
   position: relative;
@@ -35,98 +30,17 @@
   }
 }
 
-.bFixtureResult{
-  width: 90px;
-  min-height: 100px;
-  background: #007dbe;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.eSchoolNewsContainer{
-  height: auto;
-  position: relative;
-}
-.eSchoolNewsItems{
+.eSchoolHomeFooter{
   width: 100%;
-  height: auto;
+  padding: 20px 0;
+
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  color:#898989;
 }
 
-.eSchoolNewsItemLatest{
-  position: relative;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription{
-  top: 210px;
-  position: absolute;
-  color: #fff;
-  width: 40%;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription hr{
-  border: solid 1px #fff;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription h1{
-  font-weight: bold;
-}
-
-.eSchoolNewsItemLatest span.eSchoolNewsImage img{
-  width: 940px;
-  height: 400px;
-  margin: 0 auto;
-  padding-left: 10px;
-}
-
-.eSchoolNewsItem {
-  display: flex;
-  flex-flow: row wrap;
-  height: auto;
-  background: #fff;
-  width: 100%;
-  max-width: 920px;
-  margin: 20px;
-  border: $BORDER;
-  color: #333132;
-}
-.eSchoolNewsImage {
-  display: flex;
-  width: 35%;
-  background-size: cover;
-  background-position: center top;
-}
-.eSchoolNewsItemDescription{
-  height:auto;
-  display: flex;
-  flex-direction: column;
-  padding-left: 80px;
-  padding-right: 80px;
-  width: 65%;
-}
-
-.eSchoolNewsItemInfo{
-  height: auto;
-  margin: 30px 0;
-}
-.eSchoolNewsDateText{
-  font-size: 10px;
-  margin-right: 5px;
-}
-
-.newsItemTitle{
-  font-weight: normal;
-  font-size: 30px;
-}
-.newsItemText{
-  margin-top: 10px;
-
-  p{
-    line-height: 18px;
-    margin-bottom: 10px;
-  }
+.eSchoolHomeFooterCopyright {
+  text-align: right;
+  padding: 20px 0;
 }
 
 .eSchoolBodyWrapper{
@@ -148,35 +62,26 @@
 
 }
 
-.eSchoolCalendarWrapper{
-  width: 100%;
-  position: relative;
-  height: auto;
-  padding-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+//.eSchoolFixtureListItem{
+//  color: #333132;
+//  text-transform: none;
+//  display: flex;
+//  border-bottom: $BORDER;
+//  margin: 0 25px;
+//}
+//
+//.eSchoolFixtureListItem h5{
+//  font-size: 14px;
+//  color: $blueColor;
+//}
+//.eSchoolFixtureListItem h2{
+//  font-size: 22px;
+//  font-weight: bold;
+//  color: #333132;
+//  text-transform: none;
+//  margin-bottom: 5px;
+//}
 
-.eSchoolFixtureListItem{
-  color: #333132;
-  text-transform: none;
-  display: flex;
-  border-bottom: $BORDER;
-  margin: 0 25px;
-}
-
-.eSchoolFixtureListItem h5{
-  font-size: 14px;
-  color: $blueColor;
-}
-.eSchoolFixtureListItem h2{
-  font-size: 22px;
-  font-weight: bold;
-  color: #333132;
-  text-transform: none;
-  margin-bottom: 5px;
-}
 .eSchoolBlog{
   width: 960px;
   background: #FFFFFF;
@@ -304,26 +209,9 @@
   color:#8e908c;
   font-weight:200;
 }
-.eSchoolHomeFooter{
-  width: 100%;
-  padding: 20px 0;
 
-  position: relative;
-  color:#898989;
-}
-
-.eSchoolHomeFooterCopyright {
-  text-align: right;
-  padding: 20px 0;
-}
 .carouselUpScroll{
-  //overflow: hidden;
-  //overflow-y: hidden;
   overflow: hidden;
-  //height: 1200px;
-  //border: 2px solid red;
-  //overflow: -moz-scrollbars-none;
-  //-ms-overflow-style: none;
 }
 .versusText{
   font-size: 64px;
@@ -364,19 +252,6 @@
 }
 .eSchoolCalenderFixtureItem img{
   width: 30px;
-}
-.eSchoolNewsMoreInfo{
-  text-align: right;
-  text-transform: uppercase;
-  font-size: 12px;
-  color: $blueColor;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-bottom: 10px;
-}
-.eSchoolNewsItemLatest .eSchoolNewsMoreInfo{
-  color: #fff;
-  font-weight: bold;
 }
 
 .bFixtureMessage {

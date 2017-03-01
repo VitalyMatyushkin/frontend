@@ -21,7 +21,7 @@ const PublicMenu = React.createClass({
         if(typeof items !== 'undefined'){
             return items.map( node => {
                 return (<li key={node} className="ePublicMenu_item">
-                    <a href="">{node}</a>
+                    <a href={"#" + node} >{node}</a>
                 </li>);
             });
         }
