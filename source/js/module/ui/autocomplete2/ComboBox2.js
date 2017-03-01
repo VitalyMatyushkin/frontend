@@ -88,9 +88,10 @@ const ComboBox2 = React.createClass({
 	},
 	/** Checks on mount if we need to set default item */
 	componentWillMount: function(){
-		if(this.props.defaultItem && this.props.onSelect) {
+		if(typeof this.props.defaultItem !== 'undefined' && typeof this.props.onSelect !== 'undefined') {
 			this.props.onSelect(this.props.defaultItem.id, this.props.defaultItem);
-			if(typeof this.props.defaultItem !== "undefined" && typeof this.props.getElementTooltip !== "undefined") {
+			this.setState({prevText: this.props.getElementTitle(this.props.defaultItem)});
+			if(typeof this.props.getElementTooltip !== "undefined") {
 				this.setState({
 					currentTooltip: this.props.getElementTooltip(this.props.defaultItem)
 				});
@@ -99,12 +100,11 @@ const ComboBox2 = React.createClass({
 	},
 	/** Checks on new props if we need to set default item */
 	componentWillReceiveProps: function(nextProps) {
-		/* eliminating infinite looping by checking if really props update take place */
+		// Eliminating infinite looping by checking if really props update take place
 		if(nextProps.defaultItem && nextProps.onSelect && JSON.stringify(nextProps.defaultItem) !== JSON.stringify(this.props.defaultItem)) {
 			nextProps.onSelect(nextProps.defaultItem.id, nextProps.defaultItem);
-			/**
-			 * Change current text (value in input field) on props.defaultItem, if received new props.defaultItem
-			 */
+
+			// Change current text (value in input field) on props.defaultItem, if received new props.defaultItem
 			this.setState({currentText: this.props.getElementTitle(nextProps.defaultItem)});
 			if(typeof nextProps.getElementTooltip !== "undefined") {
 				this.setState({
@@ -225,8 +225,8 @@ const ComboBox2 = React.createClass({
 	 * @param index - index of selected element
 	 */
 	selectElement: function(index) {
-		const self			= this,
-			currentElement	= self.state.dataList[index];
+		const	self			= this,
+				currentElement	= self.state.dataList[index];
 
 		self.props.onSelect(currentElement.id, currentElement);
 		if(self.props.clearAfterSelect) {
