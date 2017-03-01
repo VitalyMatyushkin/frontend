@@ -82,12 +82,12 @@
 }
 .eChallenge_date{
   padding-top: 5px;
-  width: 16%;
+  width: 15%;
 }
 
 .eChallenge_name{
   @include text-overflow;
-  width: 50%;
+  width: 45%;
   padding-top: 5px;
 }
 .eChallenge_type{
@@ -116,7 +116,7 @@
 .eChallenge_score {
   padding-top: 5px;
   text-align: center;
-  width: 24%;
+  width: 25%;
 }
 .eChallenge_childName{
   padding-top: 5px;
@@ -133,4 +133,11 @@
   margin: 15px auto;
   max-width: 1060px;
   width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+  .eChallenge_title,
+  .eChallenge {
+    padding: 0;
+  }
 }
