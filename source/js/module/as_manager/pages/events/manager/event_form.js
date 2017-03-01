@@ -30,7 +30,11 @@ const EventForm = React.createClass({
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
+		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
+
 		binding.atomically()
+			.set('isShowAllSports', !isSchoolHaveFavoriteSports )
+			.set('isSchoolHaveFavoriteSports', isSchoolHaveFavoriteSports)
 			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.generateOpponentSchoolInputKey()))
 			.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
 			.commit();
@@ -240,11 +244,16 @@ const EventForm = React.createClass({
 				binding	= this.getDefaultBinding(),
 				sports	= self.getBinding('sports').toJS();
 
+		const isSchoolHaveFavoriteSports = binding.get('isSchoolHaveFavoriteSports');
+
 		return sports.models.filter(sport => {
-			if(binding.get('isShowAllSports')) {
-				return true
-			} else {
-				return sport.isFavorite;
+			switch (true) {
+				case !isSchoolHaveFavoriteSports:
+					return true;
+				case binding.get('isShowAllSports'):
+					return true;
+				default:
+					return sport.isFavorite;
 			}
 		}).map(sport => {
 			return (
@@ -270,6 +279,11 @@ const EventForm = React.createClass({
 			);
 		});
 	},
+	isSchoolHaveFavoriteSports: function() {
+		const sports = this.getBinding('sports').toJS().models;
+
+		return sports.filter(s => s.isFavorite).length > 0;
+	},
 	handleChangeShowAllSports: function() {
 		const binding = this.getDefaultBinding();
 
@@ -293,18 +307,18 @@ const EventForm = React.createClass({
 		}
 	},
 	render: function() {
-		const   self                = this,
-				binding             = self.getDefaultBinding(),
-				activeSchoolName    = binding.get('schoolInfo.name'),
-				sportId             = binding.get('model.sportId'),
-				isShowAllSports		= binding.get('model.isShowAllSports'),
-				fartherThen         = binding.get('fartherThen'),
-				services = {
-					'inter-schools':    self.schoolService,
-					'houses':           self.serviceHouseFilter,
-					'internal':         self.serviceClassFilter
+		const self = this,
+			binding = self.getDefaultBinding();
+
+		const	sportId						= binding.get('model.sportId'),
+				isShowAllSports				= binding.get('model.isShowAllSports'),
+				fartherThen					= binding.get('fartherThen'),
+				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
+				services					= {
+					'inter-schools': self.schoolService,
+					'houses': self.serviceHouseFilter
 				},
-				type    = binding.get('model.type');
+				type						= binding.get('model.type');
 
 		return(
 			<div className="eManager_base">
@@ -333,15 +347,17 @@ const EventForm = React.createClass({
 							</option>
 							{self.getSports()}
 						</select>
-						<div className="bSmallCheckboxBlock">
-							<div className="eSmallCheckboxBlock_label">
-								Show all sports
+						<If condition={isSchoolHaveFavoriteSports}>
+							<div className="bSmallCheckboxBlock">
+								<div className="eSmallCheckboxBlock_label">
+									Show all sports
+								</div>
+								<div className="eForm_fieldInput">
+									<input className="eSwitch" type="checkbox" checked={isShowAllSports} onChange={this.handleChangeShowAllSports} />
+									<label/>
+								</div>
 							</div>
-							<div className="eForm_fieldInput">
-								<input className="eSwitch" type="checkbox" checked={isShowAllSports} onChange={this.handleChangeShowAllSports} />
-								<label/>
-							</div>
-						</div>
+						</If>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">

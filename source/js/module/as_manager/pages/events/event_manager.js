@@ -665,7 +665,7 @@ const EventManager = React.createClass({
 				calendar			: this.getBinding('calendar')
 			};
 
-		if(isEventManagerSync) {
+		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
 			return (
 				<EventForm	binding		= {commonBinding}
 							isCopyMode	= {this.isCopyMode}
