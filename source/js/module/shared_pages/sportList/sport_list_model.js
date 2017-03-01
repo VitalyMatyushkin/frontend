@@ -1,12 +1,14 @@
-const	Sport			= require('module/ui/icons/sport_icon'),
+const	React			= require('react'),
+		Sport			= require('module/ui/icons/sport_icon'),
 		DataLoader		= require('module/ui/grid/data-loader'),
 		GridModel		= require('module/ui/grid/grid-model');
 
-const SportListModel = function(page){
+const SportListModel = function(page, schoolId){
 	this.getDefaultBinding = page.getDefaultBinding;
 	this.getMoreartyContext = page.getMoreartyContext;
 	this.props = page.props;
 	this.state = page.state;
+	this.schoolId = schoolId;
 
 	this.setColumns();
 	this.grid = new GridModel({
@@ -18,12 +20,9 @@ const SportListModel = function(page){
 		filters: {limit: 20}
 	});
 
-	const globalBinding = this.getMoreartyContext().getBinding(),
-		schoolId = globalBinding.get('routing.pathParameters.0');
-
 	this.dataLoader = new DataLoader({
 		serviceName: 'schoolSports',
-		params: {schoolId:schoolId},
+		params: {schoolId: schoolId},
 		grid: this.grid,
 		onLoad: this.getDataLoadedHandle()
 	});
@@ -52,12 +51,10 @@ SportListModel.prototype.getQuickEditAction = function(itemId, action){
 };
 
 SportListModel.prototype.getSelectAsFavoriteFunction = function(itemId){
-	const globalBinding = this.getMoreartyContext().getBinding(),
-		schoolId = globalBinding.get('routing.pathParameters.0'),
-		sportId = itemId;
+	const sportId = itemId;
 
 	window.Server.schoolSport.put({
-		schoolId: schoolId,
+		schoolId: this.schoolId,
 		sportId: sportId
 	}, {
 		isFavorite: true
@@ -65,12 +62,10 @@ SportListModel.prototype.getSelectAsFavoriteFunction = function(itemId){
 };
 
 SportListModel.prototype.getUnselectAsFavoriteFunction = function(itemId){
-	const globalBinding = this.getMoreartyContext().getBinding(),
-		schoolId = globalBinding.get('routing.pathParameters.0'),
-		sportId = itemId;
+	const sportId = itemId;
 
 	window.Server.schoolSport.put({
-		schoolId: schoolId,
+		schoolId: this.schoolId,
 		sportId: sportId
 	}, {
 		isFavorite: false

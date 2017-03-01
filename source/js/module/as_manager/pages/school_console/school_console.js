@@ -17,6 +17,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
+		SportsPage								= require('./views/sports_page/sports_page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
@@ -24,21 +25,14 @@ const SchoolConsole = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			permissions			: {},
-			requests			: {},
-			decline				: {
-									type: 'decline'
-								},
-			cancel				: {
-									type: 'cancel'
-								},
-			consoleRouting		: {},
-			parentPermission	: {},
-			moderation			: {
-				moderationForm: {
-
-				}
-			}
+			permissions: {},
+			requests: {},
+			decline: {type: 'decline'},
+			cancel: {type: 'cancel'},
+			consoleRouting: {},
+			parentPermission: {},
+			moderation: {moderationForm: {}},
+			sports: {}
 		});
 	},
 	componentWillMount: function () {
@@ -92,17 +86,21 @@ const SchoolConsole = React.createClass({
 				//we must show link with import only school with allowImportStudent flag === true
 				if (allowImportStudent) {
 					menuItems.push({
-						href	: '/#school_console/import_students',
-						name	: 'Import Students',
-						key		: 'import'
+						href: '/#school_console/import_students',
+						name: 'Import Students',
+						key: 'import'
 					});
 				}
 				//we must show link integration only admin of school
 				if (viewerRole === 'ADMIN') {
 					menuItems.push({
-						href	: '/#school_console/integration',
-						name	: 'Integration',
-						key		: 'integration'
+						href: '/#school_console/integration',
+						name: 'Integration',
+						key: 'integration'
+					}, {
+						href: '/#school_console/sports',
+						name: 'Sports',
+						key: 'sports'
 					});
 				}
 
@@ -154,6 +152,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
 						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
+						<Route path='/school_console/sports' binding={binding.sub('sports')} component={SportsPage}/>
 					</RouterView>
 				</div>
 			</div>
