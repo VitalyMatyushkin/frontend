@@ -1,7 +1,6 @@
 const	React		= require('react'),
-		Morearty	= require('morearty');
-
-const	Grid		= require('module/ui/grid/grid'),
+		Morearty	= require('morearty'),
+		Grid		= require('module/ui/grid/grid'),
 		Model		= require('./sport_list_model');
 
 const SportList = React.createClass({
