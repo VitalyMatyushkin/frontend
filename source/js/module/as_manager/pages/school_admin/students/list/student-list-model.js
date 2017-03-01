@@ -237,10 +237,11 @@ StudentListModel.prototype = {
 	getCaptainStar: function(item){
 		//In service student we don't get field 'isCaptain', because we search it in playerData
 		let student = [];
-		student = this.playerData.filter(player => {
+		student = this.playerData.find(player => {
 			return item.id === player.userId;
 		});
-		if (student[0].isCaptain === true) {
+		
+		if (student.isCaptain === true) {
 			return (
 				<span className="eStar">
 					<i className = "fa fa-star fa-lg" aria-hidden="true"></i>

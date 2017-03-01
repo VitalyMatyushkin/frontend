@@ -361,7 +361,7 @@ const EventTeamsView = React.createClass({
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
-					<If condition = {player.isCaptain}>
+					<If condition = {Boolean(player.isCaptain)}>
 							<span className="ePlayer_star">
 								<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
 							</span>
