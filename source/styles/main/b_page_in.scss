@@ -19,41 +19,20 @@
   position:relative;
   overflow: hidden;
 }
-.eSchoolMastHead{
-  position: absolute;
-  top: 85px;
-  left: 0;
-  width: 100%;
-}
-.eSchoolMotto{
-  background: #fff;
-  border-radius: 10px;
-  box-sizing: border-box;
-  color: $textColor;
-  font-size: 1.5625rem;
-  height: 300px;
-  margin: auto;
-  max-width: 315px;
-  padding-top: 70px;
-  text-align: center;
-}
-.eSchoolBlazon {
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
 
-  margin: 0 auto 20px;
-  height: 110px;
-  width: 110px;
-}
+.eSchoolHomeTitle {
+  display: block;
 
-.eSchoolFixtureTab{//TODO Rename it
   width: 100%;
-  max-width: 1180px;
-  height: 40px;
-  position:relative;
+  padding: 35px 0;
+
   text-align: center;
-  margin: 30px auto;
+
+  h1 {
+    color: $darkGrey;
+    font-size: 30px;
+    font-weight: normal;
+  }
 }
 
 .bFixtureResult{
@@ -65,16 +44,10 @@
   justify-content: center;
   align-items: center;
 }
-.eSchoolFixtureTab.eNews_tab h1{
-  color: #9c3022;
-}
-.eSchoolFixtureTab.eNews_tab hr{
-  border-color: #f26522;
-}
+
 .eSchoolNewsContainer{
   height: auto;
   position: relative;
-  margin-top: 40px;
 }
 .eSchoolNewsItems{
   width: 100%;
@@ -161,23 +134,18 @@
   height: auto;
   margin: auto;
 }
+
 .eSchoolCalenderContainer{
-  height: auto;
+  background: $secondBackgroundColor;
+
+  padding-bottom: 90px;
   position: relative;
-  margin-top: 40px;
-  * {
-    box-sizing: border-box;//Remove it after adding bootstrap grid to school page
-  }
+
+
   .bCalendar {
     background: transparent;
   }
 
-}
-.eSchoolFixtureTab.eCalendar_tab h1{
-  color: $blueColor;
-}
-.eSchoolFixtureTab.eCalendar_tab hr{
-  border-color: $blueColor;
 }
 
 .eSchoolCalendarWrapper{
@@ -388,33 +356,6 @@
   transition: all 0.5s ease-in-out;
 }
 
-.eSchoolFixtureTab hr{
-  position: absolute;
-  width: 100%;
-  border: solid 1px #007dbe;
-}
-.eSchoolFixtureTab h1{
-  color: #293e6b;
-  max-width: 180px;
-  display: block;
-  background: #fff;
-  position: relative;
-  margin: auto;
-  top: 25px;
-  z-index: 1;
-  text-transform: uppercase;
-}
-.eSchoolCalenderFixtureTitle{
-  background: $blueColor;
-  color: $blueColor;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 25px;
-  height: 40px;
-  font-weight: bold;
-  font-size: 14px;
-}
 .eSchoolCalenderFixtureItem{
   width: 25%;
   margin: auto;

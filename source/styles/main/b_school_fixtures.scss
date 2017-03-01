@@ -4,8 +4,14 @@
 
 .bSchoolFixtures {
   height: auto;
+  padding-bottom: 90px;
+
   position: relative;
-  margin-top: 40px;
+
+
+  &:nth-child(3) {
+    background: $secondBackgroundColor;
+  }
 }
 
 .bFixtureContainer {
