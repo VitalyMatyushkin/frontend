@@ -84,7 +84,8 @@ const EventManager = React.createClass({
 			isSync: false,
 			isSavingChangesModePopupOpen: false,
 			fartherThen: LocalEventHelper.fartherThenItems[0].id,
-			eventFormOpponentSchoolKey: undefined
+			eventFormOpponentSchoolKey: undefined,
+			isShowAllSports: false
 		});
 	},
 	componentWillMount: function () {

@@ -19,7 +19,8 @@ const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wra
 		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
 		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
-		HouseAutocompleteStyle			= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
+		HouseAutocompleteStyle			= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss'),
+		SmallCheckboxBlockStyle			= require('./../../../../../../styles/ui/b_small_checkbox_block.scss');
 
 const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -29,9 +30,16 @@ const EventForm = React.createClass({
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.generateOpponentSchoolInputKey()));
+		binding.atomically()
+			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.generateOpponentSchoolInputKey()))
+			.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+			.commit();
 	},
 	generateOpponentSchoolInputKey: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+	generateSportSelectorKey: function() {
 		// just current date in timestamp view
 		return + new Date();
 	},
@@ -229,9 +237,16 @@ const EventForm = React.createClass({
 	},
 	getSports: function () {
 		const	self	= this,
+				binding	= this.getDefaultBinding(),
 				sports	= self.getBinding('sports').toJS();
 
-		return sports.models.map(sport => {
+		return sports.models.filter(sport => {
+			if(binding.get('isShowAllSports')) {
+				return true
+			} else {
+				return sport.isFavorite;
+			}
+		}).map(sport => {
 			return (
 				<option	value	= { sport.id }
 						key		= { sport.id }
@@ -255,12 +270,34 @@ const EventForm = React.createClass({
 			);
 		});
 	},
+	handleChangeShowAllSports: function() {
+		const binding = this.getDefaultBinding();
 
+		const isShowAllSports = binding.get('isShowAllSports'),
+			currentSport = binding.toJS('model.sportModel');
+
+		// so, if isShowAllSports was true, now it's false
+		// and it means that we should clear sportId if that sport isn't favorite.
+		if(isShowAllSports && !currentSport.isFavorite) {
+			binding.atomically()
+				.set('model.sportModel', Immutable.fromJS(undefined))
+				.set('model.sportId', Immutable.fromJS(undefined))
+				.set('isShowAllSports', !isShowAllSports)
+				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+				.commit()
+		} else {
+			binding.atomically()
+				.set('isShowAllSports', !isShowAllSports)
+				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+				.commit()
+		}
+	},
 	render: function() {
 		const   self                = this,
 				binding             = self.getDefaultBinding(),
 				activeSchoolName    = binding.get('schoolInfo.name'),
 				sportId             = binding.get('model.sportId'),
+				isShowAllSports		= binding.get('model.isShowAllSports'),
 				fartherThen         = binding.get('fartherThen'),
 				services = {
 					'inter-schools':    self.schoolService,
@@ -282,8 +319,9 @@ const EventForm = React.createClass({
 					<div className="bInputLabel">
 						Game
 					</div>
-						<select	className		= "bDropdown"
-								defaultValue	= "unlimited"
+						<select	key				= {binding.toJS('eventFormSportSelectorKey')}
+								className		= "bDropdown"
+								defaultValue	= "not-selected-sport"
 								value			= {sportId}
 								onChange		= {self.changeCompleteSport}
 						>
@@ -295,6 +333,15 @@ const EventForm = React.createClass({
 							</option>
 							{self.getSports()}
 						</select>
+						<div className="bSmallCheckboxBlock">
+							<div className="eSmallCheckboxBlock_label">
+								Show all sports
+							</div>
+							<div className="eForm_fieldInput">
+								<input className="eSwitch" type="checkbox" checked={isShowAllSports} onChange={this.handleChangeShowAllSports} />
+								<label/>
+							</div>
+						</div>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">

@@ -50,7 +50,7 @@ const EventView = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        window.Server.sports.get({
+        window.Server.schoolSports.get(self.activeSchoolId, {
             filter: {
                 limit: 100
             }
