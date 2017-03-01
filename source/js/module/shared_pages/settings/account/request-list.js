@@ -17,7 +17,7 @@ const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		this.actions = new Actions(this).init();
-		SchoolHelper.loadActiveSchoolInfo(this).then(() => {
+		SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
 			const binding = this.getDefaultBinding();
 
 			binding.set('isSync', true);

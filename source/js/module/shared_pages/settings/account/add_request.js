@@ -89,8 +89,7 @@ const AddPermissionRequest = React.createClass({
 	},
 	getSchoolService: function() {
 		const postcode = this.props.activeSchool.postcode;
-
-		console.log(this.props.activeSchool);
+		
 		if(typeof postcode !== 'undefined') {
 			return (schoolName) => {
 				const point = postcode.point;
