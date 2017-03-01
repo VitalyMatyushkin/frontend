@@ -210,7 +210,7 @@ const EventForm = React.createClass({
 			case sportModel.genders.maleOnly:
 				return 'maleOnly';
 			case sportModel.genders.mixed:
-				return 'mixed';
+				return undefined;
 		}
 	},
 	changeCompleteAges: function (selections) {
