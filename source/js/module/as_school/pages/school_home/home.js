@@ -8,7 +8,6 @@ const   HomeHeader          = require('./home_header'),
         HomeCalender        = require('./home_calendar'),
         React               = require('react'),
         Morearty            = require('morearty'),
-		HomeBlog            = require('./home_carousel'),
 		SchoolAbout 		= require('./school_about'),
         CookiePopupMessage  = require('./../../../ui/cookie_popup_message/cookie_popup_message');
 
@@ -27,7 +26,6 @@ const SchoolHomePage = React.createClass({
 					<HomeFixture binding={binding} />
 					<HomeResults binding={binding} />
                     <HomeNews binding={binding}/>
-                    <HomeBlog binding={binding} />
 					<SchoolAbout binding={binding} />
                 </div>
                 <div className="eSchoolHomeFooter">
