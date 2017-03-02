@@ -25,11 +25,11 @@ const PermissionRoleSelector = React.createClass({
 					});
 
 					return (
-						<div key={type} className={itemClasses} onClick={() => this.props.onClickType(type)}>
-							<div className="eChooserItem_wrap">
+						<div key={type} className={itemClasses}>
+							<div className="eChooserItem_wrap" onClick={() => this.props.onClickType(type)}>
 								<div className="eChooserItem_inside"></div>
 							</div>
-							<span className="eRegistration_chooserTitle">{visibleTypes[i]}</span>
+							<span className="eRegistration_chooserTitle" onClick={() => this.props.onClickType(type)}>{visibleTypes[i]}</span>
 						</div>
 					);
 				})}
