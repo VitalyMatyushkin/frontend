@@ -57,6 +57,7 @@ const authСontroller = {
 				the login view because they are not authenticated.
 			 */
 			window.location.href = domainHelper.getLoginUrl();
+			window.location.reload();
 		}
 	}
 };
