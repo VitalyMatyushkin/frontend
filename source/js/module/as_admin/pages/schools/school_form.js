@@ -132,6 +132,9 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField type="dropdown" field="subscriptionPlan" options={subscriptionPlanOptions}>
 						Subscription Plan
 					</FormField>
+					<FormField type="checkbox" field="canEditFavoriteSports">
+						Can Admin Edit Favorite Sports
+					</FormField>
 				</FormColumn>
 			</Form>
 		);
