@@ -21,15 +21,15 @@ const ViewNewsItem = React.createClass({
 		if(news !== undefined){
 			return (
 				<div>
-					<span className="eSchoolNewsDateText">{self.getDateFromIso(news.date)}</span>
-					<span className="eSchoolNewsDateText">{self.getTimeFromIso(news.date)}</span>
+					<span>{self.getDateFromIso(news.date) + ", "}</span>
+					<span>{self.getTimeFromIso(news.date)}</span>
 				</div>
 			)
 		}
 	},
 	renderRows:function(rows){
 		return (
-			<div className="inlineBlock newsItemText">
+			<div>
 				{rows.map((row, index) => {
 					return <p key={index}>{row}</p>;
 				})}
@@ -63,33 +63,39 @@ const ViewNewsItem = React.createClass({
 		const 	binding		= this.getDefaultBinding(),
 				imgStyle 	= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {};
 
-		let	text, linkText;
+		let	text, linkText, iconStyle;
 		if(binding.toJS('selectedNewsItem') == news.id) {
 			text = this.getFullNewsText(news.body);
-			linkText = 'Less info'
+			linkText = 'Less info';
+			iconStyle = 'fa fa-angle-up'
 		} else {
 			text = this.getNewsExcerpt(news.body);
-			linkText = 'More info'
+			linkText = 'More info';
+			iconStyle = 'fa fa-angle-down'
 		}
 
 		return (
-			<div className="eSchoolNewsItem">
-				<div className="eSchoolNewsImage" style={imgStyle}>
-
-				</div>
-				<div className="eSchoolNewsItemDescription">
-					<div className="eSchoolNewsItemInfo">
-						<h1 className="inlineBlock newsItemTitle">{news.title}</h1>
-						<div className="eSchoolNewsItemDate">
-							{this.getNewsDate(news)}
-						</div><hr/>
-						{text}
-					</div>
-					<span	className="eSchoolNewsMoreInfo"
-							onClick={this._newsItemMoreInfo.bind(this, news.id)}
-					>
+			<div className="row">
+				<div className="col-md-10 col-md-offset-1">
+					<div className="eSchoolNewsItem">
+						<div className="eSchoolNewsImage" style={imgStyle}>
+						</div>
+						<div className="eSchoolNewsItemDescription">
+							<div className="eSchoolNewsItemInfo">
+								<h1 className="eSchoolNewsItem_title">{news.title}</h1>
+								<div className="eSchoolNewsItem_date">
+									{this.getNewsDate(news)}
+								</div>
+								<div className="eSchoolNewsItem_text">
+									{text}
+								</div>
+							</div>
+					<span className="eSchoolNews_more" onClick={this._newsItemMoreInfo.bind(this, news.id)}>
+						<i className={iconStyle} aria-hidden="true"></i>
 						{linkText}
 					</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		);

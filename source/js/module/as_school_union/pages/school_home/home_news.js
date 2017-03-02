@@ -39,7 +39,7 @@ const HomeNews = React.createClass({
 				<div className="eSchoolHomeTitle">
 					<h1>News</h1>
 				</div>
-				<div className="eSchoolNewsItems">
+				<div className="eSchoolNewsItems container">
 					{news}
 				</div>
 			</div>

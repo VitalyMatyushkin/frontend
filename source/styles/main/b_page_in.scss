@@ -246,10 +246,6 @@
 
 /* Medium Devices, Desktops */
 @media screen and (max-width: 992px) {
-  .eSchoolNewsItemDescription {
-    margin-left: 20px;
-  }
-
   .eSchoolHeader {
     height: 400px;
   }
@@ -267,13 +263,6 @@
   .eSchoolHeader {
       height: 350px;
   }
-
-  .eSchoolNewsItemDescription {
-    width: 100%;
-    margin-left: 0px;
-    padding: 0 20px;
-  }
-
 }
 
 @media screen and (max-width: 480px){
