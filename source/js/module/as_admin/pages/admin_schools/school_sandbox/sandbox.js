@@ -10,7 +10,10 @@ const 	RouterView 				= require('module/core/router'),
 		ClassesPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page'),
 		EventsPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
 		SummaryPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
-		HousePageComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page');
+		HousePageComponent		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
+		SportsComponent			= require('./favorite_sports/sports_page');
+
+const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
 
 const SchoolSandbox = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -56,6 +59,12 @@ const SchoolSandbox = React.createClass({
 										name:'Summary',
 										key:'summary',
 										routes:[`/school_sandbox/${schoolId}/summary`]
+                                    },
+									{
+										href:`/#school_sandbox/${schoolId}/sports`,
+										name:'Sports',
+										key:'sports',
+										routes:[`/school_sandbox/${schoolId}/sports`]
 									}
 								];
 		//Set sub menu items in default binding
@@ -83,8 +92,10 @@ const SchoolSandbox = React.createClass({
 			<div>
 				<SubMenu binding={{default: subBinding.sub('routing'), itemsBinding: binding.sub('subMenuItems')}} />
 				{/*Display current school name, so admin knows what school he or she is operating on*/}
-				<div style={{margin:10+'px',fontWeight:'bold'}}>You are currently viewing:{binding.get('schoolDetails.name')}</div>
 				<div className="bSchoolMaster">
+					<div className="bSandboxHeader">
+						{binding.get('schoolDetails.name')}
+					</div>
 					<RouterView routes={subBinding.sub('routing')} binding={global}>
 						<Route
 							path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
@@ -105,6 +116,11 @@ const SchoolSandbox = React.createClass({
 							path="/school_sandbox/:schoolId/summary"
 							binding={binding}
 							component={SummaryPageComponent}
+                        />
+                        <Route
+                            path="/school_sandbox/:schoolId/sports"
+                            binding={binding}
+                            component={SportsComponent}
 						/>
 					</RouterView>
 				</div>
