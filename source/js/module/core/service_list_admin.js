@@ -59,6 +59,7 @@ const serviceList = {
 
         //events
         serviceList.events = new Service('/superadmin/schools/{schoolId}/events', binding);
+        serviceList.event = new Service('/superadmin/schools/{schoolId}/events/{eventId}', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
