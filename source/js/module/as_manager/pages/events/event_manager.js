@@ -84,7 +84,8 @@ const EventManager = React.createClass({
 			isSync: false,
 			isSavingChangesModePopupOpen: false,
 			fartherThen: LocalEventHelper.fartherThenItems[0].id,
-			eventFormOpponentSchoolKey: undefined
+			eventFormOpponentSchoolKey: undefined,
+			isShowAllSports: false
 		});
 	},
 	componentWillMount: function () {
@@ -664,7 +665,7 @@ const EventManager = React.createClass({
 				calendar			: this.getBinding('calendar')
 			};
 
-		if(isEventManagerSync) {
+		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
 			return (
 				<EventForm	binding		= {commonBinding}
 							isCopyMode	= {this.isCopyMode}
