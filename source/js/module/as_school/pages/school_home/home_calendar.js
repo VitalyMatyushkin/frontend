@@ -45,7 +45,7 @@ const HomeCalender = React.createClass({
 		}
 
 		return (
-			<div className="eSchoolCalenderContainer" id="Calendar">
+			<div className="eSchoolCalenderContainer" id="eSchoolCalendar">
 				<div className="eSchoolHomeTitle">
 					<h1> Calendar </h1>
 				</div>

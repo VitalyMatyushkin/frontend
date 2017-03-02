@@ -61,7 +61,7 @@ const ViewNewsItem = React.createClass({
 	},
 	renderNews: function(news) {
 		const 	binding		= this.getDefaultBinding(),
-				imgStyle 	= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {};
+				imgStyle 	= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'};
 
 		let	text, linkText, iconStyle;
 		if(binding.toJS('selectedNewsItem') == news.id) {
