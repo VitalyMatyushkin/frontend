@@ -8,19 +8,17 @@
     vertical-align: top;
   }
 }
-/*.bTopLogo .bIcon {
-  width: 105px;
-  height: 45px;
-}*/
+
 .bPublicLogo {
   display: flex;
   align-items: center;
+  height: 100px;
 
   .ePublicLogo_img, img {
-    display: inline-block;
+    display: block;
 
     height: 80px;
-    width: 80px;
+    max-width: 100%;
     margin: 10px 15px 10px 0;
 
     background: no-repeat center;
@@ -39,12 +37,12 @@
 /* Large Devices, Wide Screens */
 @media screen and (max-width: 1200px) {
   .bPublicLogo {
+    height: 70px;
     .ePublicLogo_img, img {
       margin: {
         top: 5px;
         bottom: 5px;
-      }
-    ;
+      } ;
       height: 60px;
     }
   }
@@ -56,8 +54,6 @@
     margin-right: 50px;
 
     .ePublicLogo_img, img{
-      height: 70px;
-      width: 70px;
       margin: 5px;
     }
     .ePublicLogo_school {
@@ -68,12 +64,12 @@
 
 @media screen and (max-height: 900px){
   .bPublicLogo {
+    height: 70px;
     .ePublicLogo_img, img {
       margin: {
         top: 5px;
         bottom: 5px;
-      }
-    ;
+      } ;
       height: 60px;
     }
   }
