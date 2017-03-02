@@ -46,6 +46,8 @@ const serviceList = {
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.publicSchoolCheckPassword = new Service('/public/schools/{schoolId}/publicSite/password/check', binding);
 
+		serviceList.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
+		serviceList.schoolSport = new Service('/i/schools/{schoolId}/sports/{sportId}', binding);
 
 		// students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
