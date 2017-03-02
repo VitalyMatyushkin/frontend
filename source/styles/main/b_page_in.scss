@@ -47,11 +47,13 @@
   position:relative;
   height: auto;
   margin: auto;
+
+   >div:nth-child(odd) {
+     background: $secondBackgroundColor;
+   }
 }
 
 .eSchoolCalenderContainer{
-  background: $secondBackgroundColor;
-
   padding-bottom: 90px;
   position: relative;
 
@@ -61,26 +63,6 @@
   }
 
 }
-
-//.eSchoolFixtureListItem{
-//  color: #333132;
-//  text-transform: none;
-//  display: flex;
-//  border-bottom: $BORDER;
-//  margin: 0 25px;
-//}
-//
-//.eSchoolFixtureListItem h5{
-//  font-size: 14px;
-//  color: $blueColor;
-//}
-//.eSchoolFixtureListItem h2{
-//  font-size: 22px;
-//  font-weight: bold;
-//  color: #333132;
-//  text-transform: none;
-//  margin-bottom: 5px;
-//}
 
 .eSchoolBlog{
   width: 960px;
@@ -92,6 +74,7 @@
   overflow:hidden;
   display: none;
 }
+
 //carousel styles
 .carouselContainer{
   height: 250px;
@@ -272,11 +255,17 @@
   }
 }
 
+/* Large Devices, Wide Screens */
+@media screen and (max-width: 1200px) {
+  .eSchoolHeader {
+    margin-top: 70px;
+  }
+}
+
 /* Small Devices, Phones */
 @media screen and (max-width: 768px){
   .eSchoolHeader {
       height: 350px;
-      margin-top: 70px;
   }
 
   .eSchoolNewsItemDescription {
@@ -290,5 +279,11 @@
 @media screen and (max-width: 480px){
   .eSchoolHeader {
     height: 250px;
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .eSchoolHeader {
+    margin-top: 70px;
   }
 }

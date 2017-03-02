@@ -72,9 +72,8 @@ const SchoolList = React.createClass({
 	render: function() {
 		return (
 			<div className="bSchoolUnionSchoolList">
-				<div className="eSchoolFixtureTab eNews_tab">
-					<h1>Schools</h1><hr/>
-					<span></span>
+				<div className="eSchoolHomeTitle">
+					<h1>Schools</h1>
 				</div>
 				<div className="eSchoolUnionSchoolList_body">
 					{this.renderSchoolList()}

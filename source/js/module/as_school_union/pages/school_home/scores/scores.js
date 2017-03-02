@@ -66,7 +66,7 @@ const Scores = React.createClass({
 	render: function(){
 		return (
 			<div className="bSchoolUnionSeasonScores">
-				<div className="eSchoolFixtureTab eNews_tab">
+				<div className="eSchoolHomeTitle">
 					<h1>Season Scores</h1>
 				</div>
 				<div className="container">

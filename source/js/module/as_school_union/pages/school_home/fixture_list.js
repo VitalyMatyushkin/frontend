@@ -76,8 +76,8 @@ const FixtureList = React.createClass({
 	render: function(){
 		return (
 			<div className="bSchoolFixtures">
-				<div className="eSchoolFixtureTab">
-					<h1>{ this.props.title }</h1><hr/>
+				<div className="eSchoolHomeTitle">
+					<h1>{ this.props.title }</h1>
 				</div>
 				{ this.renderFixtureList() }
 				{ this.renderShowAllItemsButton() }

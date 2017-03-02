@@ -10,16 +10,22 @@
   background: #ffffff;
   display: inline-block;
 
+  cursor: pointer;
+
   font-size: 1.125rem;
 
-  padding: 40px 25px;
-
-  a, .bPublicMenu_login {
+  a, &.bPublicMenu_login {
+    display: inline-block;
     color: $textColor;
+    padding: 40px 25px;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
-.ePublicMenuCollapsedItems{
+.ePublicMenuCollapsedItems {
 
   &.mShown {
     display: block;
@@ -40,15 +46,26 @@
   font-size: 30px;
 }
 
-/* Medium Devices, Desktops */
-@media screen and (max-width: 992px){
+/* Large Devices, Wide Screens */
+@media screen and (max-width: 1200px) {
   .ePublicMenu_item {
-    padding: 40px 10px;
+    a, &.bPublicMenu_login {
+      padding: 25px 15px;
+    }
+  }
+}
+
+/* Medium Devices, Desktops */
+@media screen and (max-width: 992px) {
+  .ePublicMenu_item {
+    a, &.bPublicMenu_login {
+      padding: 25px 5px;
+    }
   }
 }
 
 /* Small Devices, Phones */
-@media screen and (max-width: 767px){
+@media screen and (max-width: 767px) {
   .bPublicMenu {
     display: block;
   }
@@ -56,7 +73,7 @@
     display: block;
   }
 
-  .ePublicMenuCollapsedItems{
+  .ePublicMenuCollapsedItems {
     display: none;
 
     &.mShown {
@@ -67,33 +84,49 @@
 
   .ePublicMenu_item {
     width: 100%;
-    padding: 15px;
 
-    text-align: center;
+    a, &.bPublicMenu_login {
+      width: 100%;
+      padding: 15px!important;
 
-    border-bottom: $mainBorder;
+      text-align: center;
+
+      border-bottom: $mainBorder;
+    }
   }
 }
 
-
-
+@media screen and (max-height: 900px) {
+  .ePublicMenu_item {
+    a, &.bPublicMenu_login {
+      padding: {
+        top: 25px;
+        bottom: 25px;
+      }
+    ;
+    }
+  }
+}
 
 //TODO Check whether the code below is used
-.bPublicMenu_login{
+.bPublicMenu_login {
 
 }
 
-.bPublicMenu_login .eForm_field{
-  height:48px;
+.bPublicMenu_login .eForm_field {
+  height: 48px;
 }
-.bPublicMenu_login .eForm_fieldName{
-  height:20px;
+
+.bPublicMenu_login .eForm_fieldName {
+  height: 20px;
 }
-.bPublicMenu_login .mRight{
-  height:25px;
+
+.bPublicMenu_login .mRight {
+  height: 25px;
   line-height: 25px;
   margin-top: 10px;
 }
-.bPublicMenu_login .bForm h2{
+
+.bPublicMenu_login .bForm h2 {
   margin-bottom: -30px;
 }
