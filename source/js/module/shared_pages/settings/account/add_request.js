@@ -4,18 +4,21 @@
 
 const	React		= require('react'),
 		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
+		Immutable	= require('immutable');
 
-		Form		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		classNames	= require('classnames'),
-		roleList	= require('module/data/roles_data');
+const	Form			= require('module/ui/form/form'),
+		FormField 		= require('module/ui/form/form_field'),
+		classNames		= require('classnames'),
+		If				= require('module/ui/if/if'),
+		SchoolListItem	= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		roleList		= require('module/data/roles_data');
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
-		onSuccess:	React.PropTypes.func,
-		onCancel: 	React.PropTypes.func
+		onSuccess:		React.PropTypes.func,
+		onCancel:		React.PropTypes.func,
+		activeSchool:	React.PropTypes.object.isRequired
 	},
 	getDefaultState:function() {
 		return Immutable.Map({
@@ -84,9 +87,56 @@ const AddPermissionRequest = React.createClass({
 			}
 		});
 	},
+	getSchoolService: function() {
+		const postcode = this.props.activeSchool.postcode;
+		
+		if(typeof postcode !== 'undefined') {
+			return (schoolName) => {
+				const point = postcode.point;
+
+				const filter = {
+					filter: {
+						where: {
+							name: {
+								like: schoolName,
+								options: 'i'
+							},
+							'postcode.point': {
+								$nearSphere: {
+									$geometry: {
+										type: 'Point',
+										coordinates: [point.lng, point.lat] // [longitude, latitude]
+									}
+								}
+							}
+						},
+						limit: 20
+					}
+				};
+
+				return window.Server.publicSchools.get(filter);
+			};
+		} else {
+			return (schoolName) => {
+				const filter = {
+					filter: {
+						where: {
+							name: {
+								like: schoolName,
+								options: 'i'
+							}
+						},
+						order:"name ASC",
+						limit: 20
+					}
+				};
+
+				return window.Server.publicSchools.get(filter);
+			};
+		}
+	},
 	render: function() {
-		const 	binding		= this.getDefaultBinding(),
-				getSchools	= window.Server.publicSchools.filter,
+		const	binding		= this.getDefaultBinding(),
 				isParent	= binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
 
 		return (
@@ -102,7 +152,8 @@ const AddPermissionRequest = React.createClass({
 				<FormField
 					type				= "autocomplete"
 					field				= "schoolId"
-					serviceFullData		= {getSchools}
+					serviceFullData		= {this.getSchoolService()}
+					customListItem		= {SchoolListItem}
 					placeholder 		= {'Please select school'}
 					validation			= "required"
 				>
@@ -123,7 +174,9 @@ const AddPermissionRequest = React.createClass({
 					field			= "studentName"
 					fieldClassName	= {classNames({mHidden:!isParent})}
 				>
-					Student
+					<If condition={Boolean(isParent)}>
+						<span>Student</span>
+					</If>
 				</FormField>
 				<FormField
 					type	= "textarea"

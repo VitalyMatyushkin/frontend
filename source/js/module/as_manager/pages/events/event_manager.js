@@ -20,6 +20,7 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
+		LocalEventHelper				= require('./eventHelper'),
 		MoreartyHelper					= require('../../../helpers/morearty_helper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
@@ -81,25 +82,27 @@ const EventManager = React.createClass({
 			],
 			isEventManagerSync: false,
 			isSync: false,
-			isSavingChangesModePopupOpen: false
+			isSavingChangesModePopupOpen: false,
+			fartherThen: LocalEventHelper.fartherThenItems[0].id,
+			eventFormOpponentSchoolKey: undefined,
+			isShowAllSports: false
 		});
 	},
 	componentWillMount: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		this.setParamsFromUrl();
+
 		this.setSchoolInfo()
 			.then(() => {
-				const rootBinding	= self.getMoreartyContext().getBinding();
-
-				const eventId = rootBinding.get('routing.parameters.copyId');
-
-				if(typeof eventId !== 'undefined') {
-					this.isCopyMode = true;
-					return this.setEvent(eventId);
-				} else {
-					this.isCopyMode = false;
-					return true;
+				switch (this.mode) {
+					case EventHelper.EVENT_CREATION_MODE.COPY:
+						return this.setEvent(this.eventId);
+					case EventHelper.EVENT_CREATION_MODE.ANOTHER:
+						return this.setDateFromEventByEventId(this.eventId);
+					default:
+						return true;
 				}
 			})
 			.then(() => {
@@ -111,10 +114,30 @@ const EventManager = React.createClass({
 					.commit();
 			});
 	},
+	/**
+	 * Get event from server by eventId and set date from this event to event form.
+	 * It needs for 'another' creation mode - when user create event by click "add another event" button.
+	 */
+	setDateFromEventByEventId:function (eventId) {
+		return window.Server.schoolEvent.get({
+			schoolId	: this.activeSchoolId,
+			eventId		: eventId
+		}).then(event => {
+			this.getDefaultBinding().set('model.startTime', Immutable.fromJS(event.startTime));
+
+			return true;
+		});
+	},
+	setParamsFromUrl:function() {
+		const rootBinding	= this.getMoreartyContext().getBinding();
+
+		this.mode = rootBinding.get('routing.parameters.mode');
+		if(typeof this.mode !== 'undefined') {
+			this.eventId = rootBinding.get('routing.parameters.eventId');
+		}
+	},
 	setEvent: function(eventId) {
 		const binding = this.getDefaultBinding();
-
-		this.eventId = eventId;
 
 		// TODO check inter-schools case
 		return window.Server.schoolEvent.get({
@@ -216,7 +239,7 @@ const EventManager = React.createClass({
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
-		if(this.isCopyMode) {
+		if(this.mode === 'copy') {
 			this.addListenersForEventManagerBase();
 		}
 	},
@@ -344,7 +367,7 @@ const EventManager = React.createClass({
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(!binding.toJS('isSubmitProcessing')) {
+		if(self._isStepComplete(2) && !binding.get('isSubmitProcessing') && binding.get('isTeamManagerSync')) {
 			const	event			= binding.toJS('model'),
 					teamWrappers	= this.getTeamWrappers(),
 					validationData	= [
@@ -549,8 +572,7 @@ const EventManager = React.createClass({
 				);
 			case step === 2:
 				const finishButtonClassName = classNames({
-					mFinish:	true,
-					mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
+					mFinish:	true
 				});
 
 				return (
@@ -643,7 +665,7 @@ const EventManager = React.createClass({
 				calendar			: this.getBinding('calendar')
 			};
 
-		if(isEventManagerSync) {
+		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
 			return (
 				<EventForm	binding		= {commonBinding}
 							isCopyMode	= {this.isCopyMode}

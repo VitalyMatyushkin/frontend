@@ -12,7 +12,7 @@ const PermissionsDetailsHelper = {
 					 */
 					availableForRegistration: { $ne: false }
 				},
-				limit: 1000,
+				limit: 20,
 				order: 'name ASC'
 			}
 		};

@@ -48,7 +48,8 @@ const ComboBox2 = React.createClass({
 		 * Combobox doesn't react on click if true.
 		 * False by default.
 		 */
-		isBlocked:			React.PropTypes.bool
+		isBlocked:			React.PropTypes.bool,
+		customListItem:		React.PropTypes.object
 	},
 	getInitialState: function(){
 		return {
@@ -87,9 +88,10 @@ const ComboBox2 = React.createClass({
 	},
 	/** Checks on mount if we need to set default item */
 	componentWillMount: function(){
-		if(this.props.defaultItem && this.props.onSelect) {
+		if(typeof this.props.defaultItem !== 'undefined' && typeof this.props.onSelect !== 'undefined') {
 			this.props.onSelect(this.props.defaultItem.id, this.props.defaultItem);
-			if(typeof this.props.defaultItem !== "undefined" && typeof this.props.getElementTooltip !== "undefined") {
+			this.setState({prevText: this.props.getElementTitle(this.props.defaultItem)});
+			if(typeof this.props.getElementTooltip !== "undefined") {
 				this.setState({
 					currentTooltip: this.props.getElementTooltip(this.props.defaultItem)
 				});
@@ -98,12 +100,11 @@ const ComboBox2 = React.createClass({
 	},
 	/** Checks on new props if we need to set default item */
 	componentWillReceiveProps: function(nextProps) {
-		/* eliminating infinite looping by checking if really props update take place */
+		// Eliminating infinite looping by checking if really props update take place
 		if(nextProps.defaultItem && nextProps.onSelect && JSON.stringify(nextProps.defaultItem) !== JSON.stringify(this.props.defaultItem)) {
 			nextProps.onSelect(nextProps.defaultItem.id, nextProps.defaultItem);
-			/**
-			 * Change current text (value in input field) on props.defaultItem, if received new props.defaultItem
-			 */
+
+			// Change current text (value in input field) on props.defaultItem, if received new props.defaultItem
 			this.setState({currentText: this.props.getElementTitle(nextProps.defaultItem)});
 			if(typeof nextProps.getElementTooltip !== "undefined") {
 				this.setState({
@@ -224,8 +225,8 @@ const ComboBox2 = React.createClass({
 	 * @param index - index of selected element
 	 */
 	selectElement: function(index) {
-		const self			= this,
-			currentElement	= self.state.dataList[index];
+		const	self			= this,
+				currentElement	= self.state.dataList[index];
 
 		self.props.onSelect(currentElement.id, currentElement);
 		if(self.props.clearAfterSelect) {
@@ -337,20 +338,27 @@ const ComboBox2 = React.createClass({
 	renderMenuItems: function() {
 		const self = this;
 
-		if(self.state.dataList.length == 0) {
-			return (
-				<div className="eCombobox_list" role="listbox">
-					<div className='eCombobox_option'>
-						No matches found
+		switch (true) {
+			case self.state.dataList.length == 0:
+				return (
+					<div className="eCombobox_list" role="listbox">
+						<div className='eCombobox_option'>
+							No matches found
+						</div>
 					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className="eCombobox_list" role="listbox">
-					{self.state.dataList.map(self.renderMenuItem)}
-				</div>
-			);
+				);
+			case typeof self.props.customListItem === 'undefined':
+				return (
+					<div className="eCombobox_list" role="listbox">
+						{self.state.dataList.map(self.renderMenuItem)}
+					</div>
+				);
+			case typeof self.props.customListItem !== 'undefined':
+				return (
+					<div className="eCombobox_list" role="listbox">
+						{self.state.dataList.map(self.renderCustomMenuItem)}
+					</div>
+				);
 		}
 	},
 	getMenuItemText: function(currentMenuItem) {
@@ -376,6 +384,22 @@ const ComboBox2 = React.createClass({
 			</div>
 		);
 	},
+	renderCustomMenuItem: function(data) {
+		const	self	= this,
+				index	= Lazy(self.state.dataList).indexOf(data);
+
+		const isSelected = index === self.state.currentIndex;
+
+		const	props = {
+					key			: data.id ? data.id : self.props.getElementTitle(data),
+					isSelected	: isSelected,
+					onMouseDown	: self.onListItemClick.bind(self, index),
+					school		: data
+				},
+				customMenuItem = React.createElement(self.props.customListItem, props);
+
+		return customMenuItem;
+	},
 	getPlaceHolder: function() {
 		const   self = this;
 
@@ -389,6 +413,11 @@ const ComboBox2 = React.createClass({
 		const self = this;
 
 		return typeof self.props.extraCssStyle !== 'undefined' ? self.props.extraCssStyle : '';
+	},
+	getComboboxCssStyle: function() {
+		const self = this;
+
+		return "bCombobox " + self.getExtraCssStyle();
 	},
 	getLoaderCssStyle: function() {
 		const self = this;
@@ -437,7 +466,7 @@ const ComboBox2 = React.createClass({
 		};
 
 		return (
-			<div	className	= {`bCombobox ${isOpenCN}`}
+			<div	className	= {`${this.getComboboxCssStyle()} ${isOpenCN}`}
 					onMouseDown	= {this.handleMouseDown}
 					onMouseUp	= {this.handleMouseUp}
 			>
@@ -447,7 +476,7 @@ const ComboBox2 = React.createClass({
 							defaultValue	= { placeholder }
 							readOnly
 					/>
-					<input  style		= {inputStyle}
+					<input	style		= {inputStyle}
 							ref			= "input"
 							className	= {self.getInputCssStyle()}
 							placeholder	= {placeholder}
@@ -457,9 +486,9 @@ const ComboBox2 = React.createClass({
 							onClick		= {self.onInputClick}
 							role		= "combobox"
 					/>
-					<img className		= {self.getLoaderCssStyle()}
-						 style			= {loaderStyle}
-						 src			= "/images/spinner.gif"
+					<img	className		= {self.getLoaderCssStyle()}
+							style			= {loaderStyle}
+							src				= "/images/spinner.gif"
 					/>
 				</div>
 				<div

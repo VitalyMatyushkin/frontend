@@ -4,6 +4,7 @@ const	React							= require('react'),
 
 const	If								= require('../../../../ui/if/if'),
 		Autocomplete					= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		SchoolItemList					= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		EventVenue						= require('./event_venue'),
 		TimeInputWrapper				= require('./time_input_wrapper');
 
@@ -12,16 +13,39 @@ const	DateSelectorWrapper				= require('./manager_components/date_selector/date_
 		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
 		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper');
 
+const	EventHelper						= require('../eventHelper');
+
 const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
 		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
-		HouseAutocompleteWrapper		= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
+		HouseAutocompleteStyle			= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss'),
+		SmallCheckboxBlockStyle			= require('./../../../../../../styles/ui/b_small_checkbox_block.scss');
 
 const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isCopyMode : React.PropTypes.bool
+	},
+	componentWillMount: function() {
+		const binding = this.getDefaultBinding();
+
+		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
+
+		binding.atomically()
+			.set('isShowAllSports', !isSchoolHaveFavoriteSports )
+			.set('isSchoolHaveFavoriteSports', isSchoolHaveFavoriteSports)
+			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.generateOpponentSchoolInputKey()))
+			.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+			.commit();
+	},
+	generateOpponentSchoolInputKey: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+	generateSportSelectorKey: function() {
+		// just current date in timestamp view
+		return + new Date();
 	},
 	/**
 	 * House filtering service...
@@ -79,31 +103,64 @@ const EventForm = React.createClass({
 
 		return otherHouseId;
 	},
+	getMainSchoolFilter: function(activeSchoolId, schoolName) {
+		return {
+			filter: {
+				where: {
+					id: {
+						$nin: [activeSchoolId]
+					},
+					name: { like: schoolName }
+				},
+				limit: 20
+			}
+		};
+	},
+	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
+		switch (fartherThenValue) {
+			case "UNLIMITED":
+				return {
+					$nearSphere: {
+						$geometry: {
+							type: 'Point',
+							coordinates: [point.lng, point.lat] // [longitude, latitude]
+						}
+					}
+				};
+			default:
+				return {
+					$nearSphere: {
+						$geometry: {
+							type: 'Point',
+							coordinates: [point.lng, point.lat] // [longitude, latitude]
+						}
+					},
+					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
+				};
+		}
+	},
 	/**
 	 * School filtering service
 	 * @param schoolName
 	 * @returns {*}
 	 */
-	serviceSchoolFilter: function(schoolName) {
-		const   self        = this,
-				binding     = self.getDefaultBinding(),
-				schoolId    = binding.get('schoolInfo.id');
+	schoolService: function(schoolName) {
+		const binding = this.getDefaultBinding();
+
+		const	activeSchool			= binding.toJS('schoolInfo'),
+				activeSchoolId			= activeSchool.id,
+				activeSchoolPostcode	= activeSchool.postcode,
+				fartherThen				= binding.toJS('fartherThen');
+
+		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
+		if(typeof activeSchoolPostcode !== 'undefined') {
+			const point = activeSchoolPostcode.point;
+			filter.filter['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
+		} else {
+			filter.filter.order = "name ASC";
+		}
 
 		let schools;
-
-		const filter = {
-			filter: {
-				where: {
-					id: {
-						$nin: [schoolId]
-					},
-					name: { like: schoolName }
-				},
-				order:"name ASC",
-				limit: 400
-			}
-		};
-
 		return window.Server.publicSchools.get(filter)
 			.then(_schools => {
 				schools = _schools;
@@ -111,8 +168,6 @@ const EventForm = React.createClass({
 				return this.getTBDSchool();
 			})
 			.then(data => {
-
-
 				if(data.length > 0 && data[0].name === "TBD") {
 					// set TBD school at first
 					schools.unshift(data[0]);
@@ -147,6 +202,15 @@ const EventForm = React.createClass({
 			.set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
 			.commit();
 	},
+	handleChangeFartherThan: function (eventDescriptor) {
+		const binding = this.getDefaultBinding();
+
+		binding.atomically()
+			.set('rivals.1',					undefined)
+			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(this.generateOpponentSchoolInputKey()))
+			.set('fartherThen',					eventDescriptor.target.value)
+			.commit();
+	},
 	getDefaultGender: function(sportModel) {
 		switch (true) {
 			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && sportModel.genders.mixed:
@@ -157,6 +221,8 @@ const EventForm = React.createClass({
 				return 'femaleOnly';
 			case sportModel.genders.maleOnly:
 				return 'maleOnly';
+			case sportModel.genders.mixed:
+				return undefined;
 		}
 	},
 	changeCompleteAges: function (selections) {
@@ -175,9 +241,21 @@ const EventForm = React.createClass({
 	},
 	getSports: function () {
 		const	self	= this,
+				binding	= this.getDefaultBinding(),
 				sports	= self.getBinding('sports').toJS();
 
-		return sports.models.map(sport => {
+		const isSchoolHaveFavoriteSports = binding.get('isSchoolHaveFavoriteSports');
+
+		return sports.models.filter(sport => {
+			switch (true) {
+				case !isSchoolHaveFavoriteSports:
+					return true;
+				case binding.get('isShowAllSports'):
+					return true;
+				default:
+					return sport.isFavorite;
+			}
+		}).map(sport => {
 			return (
 				<option	value	= { sport.id }
 						key		= { sport.id }
@@ -187,18 +265,60 @@ const EventForm = React.createClass({
 			);
 		});
 	},
+	getFartherThenItems: function () {
+		const	self	= this,
+				sports	= self.getBinding('sports').toJS();
 
+		return EventHelper.fartherThenItems.map(item => {
+			return (
+				<option	value	= { item.id }
+						key		= { item.id }
+				>
+					{item.text}
+				</option>
+			);
+		});
+	},
+	isSchoolHaveFavoriteSports: function() {
+		const sports = this.getBinding('sports').toJS().models;
+
+		return sports.filter(s => s.isFavorite).length > 0;
+	},
+	handleChangeShowAllSports: function() {
+		const binding = this.getDefaultBinding();
+
+		const isShowAllSports = binding.get('isShowAllSports'),
+			currentSport = binding.toJS('model.sportModel');
+
+		// so, if isShowAllSports was true, now it's false
+		// and it means that we should clear sportId if that sport isn't favorite.
+		if(isShowAllSports && !currentSport.isFavorite) {
+			binding.atomically()
+				.set('model.sportModel', Immutable.fromJS(undefined))
+				.set('model.sportId', Immutable.fromJS(undefined))
+				.set('isShowAllSports', !isShowAllSports)
+				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+				.commit()
+		} else {
+			binding.atomically()
+				.set('isShowAllSports', !isShowAllSports)
+				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+				.commit()
+		}
+	},
 	render: function() {
-		const   self                = this,
-				binding             = self.getDefaultBinding(),
-				activeSchoolName    = binding.get('schoolInfo.name'),
-				sportId             = binding.get('model.sportId'),
-				services = {
-					'inter-schools':    self.serviceSchoolFilter,
-					'houses':           self.serviceHouseFilter,
-					'internal':         self.serviceClassFilter
+		const self = this,
+			binding = self.getDefaultBinding();
+
+		const	sportId						= binding.get('model.sportId'),
+				isShowAllSports				= binding.get('model.isShowAllSports'),
+				fartherThen					= binding.get('fartherThen'),
+				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
+				services					= {
+					'inter-schools': self.schoolService,
+					'houses': self.serviceHouseFilter
 				},
-				type    = binding.get('model.type');
+				type						= binding.get('model.type');
 
 		return(
 			<div className="eManager_base">
@@ -213,7 +333,8 @@ const EventForm = React.createClass({
 					<div className="bInputLabel">
 						Game
 					</div>
-						<select	className		= "bDropdown"
+						<select	key				= {binding.toJS('eventFormSportSelectorKey')}
+								className		= "bDropdown"
 								defaultValue	= "not-selected-sport"
 								value			= {sportId}
 								onChange		= {self.changeCompleteSport}
@@ -226,6 +347,17 @@ const EventForm = React.createClass({
 							</option>
 							{self.getSports()}
 						</select>
+						<If condition={isSchoolHaveFavoriteSports}>
+							<div className="bSmallCheckboxBlock">
+								<div className="eSmallCheckboxBlock_label">
+									Show all sports
+								</div>
+								<div className="eForm_fieldInput">
+									<input className="eSwitch" type="checkbox" checked={isShowAllSports} onChange={this.handleChangeShowAllSports} />
+									<label/>
+								</div>
+							</div>
+						</If>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
@@ -245,18 +377,36 @@ const EventForm = React.createClass({
 					</div>
 					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
+				<If	condition	= {type === 'inter-schools'}
+					key			= {'if-farther-then'}
+				>
+					<div className="bInputWrapper">
+						<div className="bInputLabel">
+							Not farther than
+						</div>
+						<select	className		= "bDropdown"
+								defaultValue	= {EventHelper.fartherThenItems[0].id}
+								value			= {fartherThen}
+								onChange		= {self.handleChangeFartherThan}
+						>
+							{self.getFartherThenItems()}
+						</select>
+					</div>
+				</If>
 				<div className="bInputWrapper">
 					{type === 'inter-schools' ? <div className="bInputLabel">Choose school</div> : null}
 					<If	condition	= {type === 'inter-schools'}
 						key			= {'if-choose-school'}
 					>
-						<Autocomplete	defaultItem		= {binding.toJS('rivals.1')}
+						<Autocomplete	key				= {binding.toJS('eventFormOpponentSchoolKey')}
+										defaultItem		= {binding.toJS('rivals.1')}
 										serviceFilter	= {services[type]}
 										serverField		= "name"
 										placeholder		= "enter school name"
 										onSelect		= {self.onSelectRival.bind(null, 1)}
 										binding			= {binding.sub('autocomplete.inter-schools.0')}
 										extraCssStyle	= "mBigSize"
+										customListItem	= {SchoolItemList}
 						/>
 					</If>
 					{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}

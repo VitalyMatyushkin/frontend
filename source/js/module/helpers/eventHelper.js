@@ -3,6 +3,10 @@ const	RoleHelper		= require('module/helpers/role_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const EventHelper = {
+	EVENT_CREATION_MODE: {
+		COPY: "copy", // when user copy some event
+		ANOTHER: "another" // then user click "add another event" button on event page
+	},
 	clientEventTypeToServerClientTypeMapping: {
 		'inter-schools':	'EXTERNAL_SCHOOLS',
 		'houses':			'INTERNAL_HOUSES',

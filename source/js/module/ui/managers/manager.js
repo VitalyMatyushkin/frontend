@@ -261,8 +261,9 @@ const Manager = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
-		const	isSetTeamLater	= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
-				errorBinding	= self.getBinding('error');
+		const	isSetTeamLater		= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
+				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan'),
+				errorBinding		= self.getBinding('error');
 
 		if(isSetTeamLater) {
 			errorBinding.sub(rivalIndex).set(
@@ -294,7 +295,8 @@ const Manager = React.createClass({
 					case TeamHelper.isNonTeamSport(event):
 						result = TeamPlayersValidator.validate(
 							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-							limits
+							limits,
+							subscriptionPlan
 						);
 						break;
 					case TeamHelper.isTeamSport(event):
@@ -309,7 +311,8 @@ const Manager = React.createClass({
 						} else {
 							result = TeamPlayersValidator.validate(
 								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-								limits
+								limits,
+								subscriptionPlan
 							);
 						}
 						break;
@@ -380,7 +383,7 @@ const Manager = React.createClass({
 			) {
 				const xmlRivals = [];
 
-				if(index === 1) {
+				if(typeof this.props.indexOfDisplayingRival === 'undefined' && index === 1) {
 					xmlRivals.push(
 						<span	key			= 'team-index-separator'
 								className	= 'eChooser_separator'

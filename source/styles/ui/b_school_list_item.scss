@@ -1,0 +1,31 @@
+.bSchoolListItem {
+  padding: 10px;
+
+  &:hover {
+    background: #dadada;
+  }
+}
+
+.eSchoolListItem_wrapper {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.eSchoolListItem_pic {
+  padding-right: 5px;
+}
+
+.eSchoolListItem_name {
+  text-overflow: ellipsis;
+  padding-top: 2px;
+  font-weight: bold;
+  font-size: 18px;
+
+  color: #3b3b3b;
+}
+
+.eSchoolListItem_address {
+  text-overflow: ellipsis;
+  color: grey;
+  font-size: 12px;
+}

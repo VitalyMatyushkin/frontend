@@ -1,7 +1,7 @@
 const	React			= require('react'),
 		If				= require('../../../../../ui/if/if'),
 		PencilButton	= require('../../../../../ui/pencil_button'),
-		CrossButton		= require('../../../../../ui/cross_button'),
+		CrossButton		= require('../../../../../ui/circle_cross_button'),
 		TaskCssStyle	= require('../../../../../../../styles/ui/task.scss');
 
 const Task = React.createClass({

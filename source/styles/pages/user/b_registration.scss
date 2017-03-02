@@ -29,7 +29,6 @@ $chooserIconSize: 35px;
 
 .eRegistration_chooserItem {
   display: flex;
-  cursor: pointer;
   margin-bottom: 10px;
   align-items: baseline;
   &.mActive .eChooserItem_wrap{
@@ -47,6 +46,7 @@ $chooserIconSize: 35px;
 }
 
 .eChooserItem_wrap {
+  cursor: pointer;
   box-sizing: border-box;
   width: 15px;
   height: 15px;
@@ -62,6 +62,7 @@ $chooserIconSize: 35px;
 }
 
 .eRegistration_chooserTitle {
+  cursor: pointer;
   text-transform: capitalize;
   margin-left: 10px;
   color: #a9a9a9;
@@ -74,8 +75,7 @@ $chooserIconSize: 35px;
 
   .eRegistration_input, .bCombobox {
     width: 215px;
-    margin-bottom: 10px;
-    padding: 5px 0;
+    margin: 5px 0 15px 0;
 
     input {
       @include text-overflow;

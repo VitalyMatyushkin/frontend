@@ -191,8 +191,7 @@ const ManagerWrapper = React.createClass({
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
-			'mMarginLeftFixed'	: true,
-			'mDisable'		: !this.getDefaultBinding().get('isTeamManagerSync')
+			'mMarginLeftFixed'	: true
 		});
 	},
 	render: function() {
