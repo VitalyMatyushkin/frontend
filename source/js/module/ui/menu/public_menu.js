@@ -14,7 +14,7 @@ const PublicMenu = React.createClass({
         menuItems: React.PropTypes.array.isRequired
     },
     getInitialState:function(){
-        return {mHidden:true}
+        return {hidden:true}
     },
     getMenuItems:function(){
         const items = this.props.menuItems;
@@ -27,18 +27,18 @@ const PublicMenu = React.createClass({
         }
     },
     menuToggle:function(){
-        if(!this.state.mHidden){
-            this.setState({mHidden:true});
+        if(!this.state.hidden){
+            this.setState({hidden:true});
             this.forceUpdate();
         }else{
-            this.setState({mHidden:false});
+            this.setState({hidden:false});
             this.forceUpdate();
         }
     },
     render:function(){
         const 	self 		= this,
 				menuNodes 	= self.getMenuItems(),
-				extraClasses = self.state.mHidden === false ? 'mShown' : '',
+				extraClasses = self.state.hidden === false ? 'mShown' : '',
                 classNames = `ePublicMenuCollapsedItems ${extraClasses}`;
         return(
             <div className="bPublicMenu">
