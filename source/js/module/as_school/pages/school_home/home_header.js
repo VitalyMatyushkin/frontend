@@ -69,9 +69,7 @@ const HomeHeader = React.createClass({
 
             if(photos.length !== 0) {
                 /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
-                //headerSection.src = photos[randIndexPos];
                 headerSection.style.backgroundImage = "url(" + photos[randIndexPos] +")";
-                console.log("BACKGROUND: "  +  headerSection.style.backgroundImage);
             }
         },5000);
     },
