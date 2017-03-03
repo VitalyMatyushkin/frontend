@@ -236,11 +236,8 @@ StudentListModel.prototype = {
 	//We add icon star only captain (flag isCaptain === true)
 	getCaptainStar: function(item){
 		//In service student we don't get field 'isCaptain', because we search it in playerData
-		let student = [];
-		student = this.playerData.find(player => {
-			return item.id === player.userId;
-		});
-		
+		const student = this.playerData.find(player => {item.id === player.userId});
+		//If field captain false or undefined, we return null (as react element), if field captain true, we draw star
 		if (student.isCaptain === true) {
 			return (
 				<span className="eStar">
@@ -254,13 +251,13 @@ StudentListModel.prototype = {
 	},
 	//For team view we want display column 'Captain'
 	getColumnsCaptain: function(){
-		this.columns.splice(1,0,
+		this.columns.splice(1, 0,
 			{
-				text:'Captain',
-				cell:{
-					dataField:'captain',
-					type:'custom',
-					typeOptions:{
+				text: 'Captain',
+				cell: {
+					dataField: 'captain',
+					type: 'custom',
+					typeOptions: {
 						parseFunction:this.getCaptainStar.bind(this)
 					}
 				}
