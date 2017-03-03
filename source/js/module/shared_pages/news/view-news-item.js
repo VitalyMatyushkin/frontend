@@ -21,8 +21,8 @@ const ViewNewsItem = React.createClass({
 		if(news !== undefined){
 			return (
 				<div>
-					<span>{self.getDateFromIso(news.date) + ", "}</span>
-					<span>{self.getTimeFromIso(news.date)}</span>
+					{self.getDateFromIso(news.date) + ", "}
+					{self.getTimeFromIso(news.date)}
 				</div>
 			)
 		}
