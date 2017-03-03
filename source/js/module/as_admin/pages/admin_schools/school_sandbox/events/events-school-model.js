@@ -28,13 +28,13 @@ const EventsSchoolModel = function(page){
 	this.setColumns();
 	this.grid = new GridModel({
 		actionPanel:{
-			title		: 'Events',
-			showStrip	: true
+			title: 'Events',
+			showStrip: true
 		},
-		columns:this.columns,
+		columns: this.columns,
 		filters:{
-			limit	: 20,
-			order	: 'startTime DESC'
+			limit: 20,
+			order: 'startTime DESC'
 		},
 		classStyleAdmin: true
 	});
