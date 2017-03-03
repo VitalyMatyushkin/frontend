@@ -233,11 +233,17 @@ function getBodyForAddPlayersRequest(player) {
 	// Because manager component gets users from different sources
 	const body = {
 		userId			: player.userId ? player.userId : player.id,
-		permissionId	: player.permissionId
+		permissionId	: player.permissionId,
+		isCaptain 		: typeof player.isCaptain !== 'undefined' ? player.isCaptain : false
 	};
 
-	player.positionId && (body.positionId = player.positionId);
-	player.sub && (body.sub = player.sub);
+	if (typeof player.positionId !=='undefined') {
+		body.positionId = player.positionId
+	}
+	
+	if (typeof player.sub !== 'undefined') {
+		body.sub = player.sub
+	}
 
 	return body;
 };
