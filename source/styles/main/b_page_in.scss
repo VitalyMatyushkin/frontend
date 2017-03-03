@@ -7,7 +7,7 @@
 }
 
 /*header*/
-.eSchoolHeader{
+.bSchoolHeader {
   background-size: cover;
   height: 450px;
   margin-top: 100px;
@@ -210,7 +210,7 @@
   left: 130px;
   color:#8e908c;
 }
-.eSchoolMainSlideOutBanner{
+.eSchoolHeader_slider {
   position: absolute;
   display:inline-block;
   top: 0;
@@ -223,7 +223,7 @@
   background-repeat: no-repeat;
 }
 
-.transitionImage{
+.mTransitionImage{
   transition: all 0.5s ease-in-out;
 }
 
@@ -246,21 +246,21 @@
 
 /* Medium Devices, Desktops */
 @media screen and (max-width: 992px) {
-  .eSchoolHeader {
+  .bSchoolHeader {
     height: 400px;
   }
 }
 
 /* Large Devices, Wide Screens */
 @media screen and (max-width: 1200px) {
-  .eSchoolHeader {
+  .bSchoolHeader {
     margin-top: 70px;
   }
 }
 
 /* Small Devices, Phones */
 @media screen and (max-width: 768px){
-  .eSchoolHeader {
+  .bSchoolHeader {
       height: 350px;
   }
   .eSchoolHomeFooter,
@@ -270,13 +270,13 @@
 }
 
 @media screen and (max-width: 480px){
-  .eSchoolHeader {
+  .bSchoolHeader {
     height: 250px;
   }
 }
 
 @media screen and (max-height: 900px) {
-  .eSchoolHeader {
+  .bSchoolHeader {
     margin-top: 70px;
   }
 }

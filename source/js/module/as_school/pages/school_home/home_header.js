@@ -60,7 +60,7 @@ const HomeHeader = React.createClass({
 
     componentDidMount: function(){
         const   self            = this,
-                headerSection   = self.refs.schoolMainBanner;
+                headerSection   = self.refs.eSchoolHeader_slider;
 
         /** running timer which will switch images in header */
         self.intervalId = setInterval(() => {
@@ -83,8 +83,8 @@ const HomeHeader = React.createClass({
         const activeSchool	= this.getMoreartyContext().getBinding().get('activeSchool');
 
         return(
-            <div className="eSchoolHeader">
-                <div ref="schoolMainBanner" className="eSchoolMainSlideOutBanner transitionImage"></div>
+            <div className="bSchoolHeader">
+                <div ref="eSchoolHeader_slider" className="eSchoolHeader_slider mTransitionImage"></div>
             </div>
         )
     }
