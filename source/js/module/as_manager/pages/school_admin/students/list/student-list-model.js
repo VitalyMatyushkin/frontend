@@ -236,9 +236,10 @@ StudentListModel.prototype = {
 	//We add icon star only captain (flag isCaptain === true)
 	getCaptainStar: function(item){
 		//In service student we don't get field 'isCaptain', because we search it in playerData
+		//Player MUST be always found
 		const student = this.playerData.find(player => {item.id === player.userId});
 		//If field captain false or undefined, we return null (as react element), if field captain true, we draw star
-		if (student.isCaptain === true) {
+		if (student && student.isCaptain) {
 			return (
 				<span className="eStar">
 					<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
