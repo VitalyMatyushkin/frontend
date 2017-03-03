@@ -15,21 +15,6 @@
   overflow: hidden;
 }
 
-.eSchoolHomeTitle {
-  display: block;
-
-  width: 100%;
-  padding: 35px 0;
-
-  text-align: center;
-
-  h1 {
-    color: $darkGrey;
-    font-size: 30px;
-    font-weight: normal;
-  }
-}
-
 .eSchoolHomeFooter{
   width: 100%;
   padding: 20px 0;
@@ -51,17 +36,6 @@
    >div:nth-child(odd) {
      background: $secondBackgroundColor;
    }
-}
-
-.eSchoolCalenderContainer{
-  padding-bottom: 90px;
-  position: relative;
-
-
-  .bCalendar {
-    background: transparent;
-  }
-
 }
 
 .eSchoolBlog{

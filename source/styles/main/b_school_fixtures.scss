@@ -7,10 +7,6 @@
   padding-bottom: 90px;
 
   position: relative;
-
-  &:nth-child(3) {
-    background: $secondBackgroundColor;
-  }
 }
 
 .bFixtureContainer {
@@ -27,6 +23,17 @@
   @include make-md-column-offset(1);
   @include make-md-column(10);
   @include add-clearfix();
+}
+
+.eSchoolFixtures_title {
+  width: 100%;
+  padding: 35px 0;
+
+  text-align: center;
+
+  color: $darkGrey;
+  font-size: 30px;
+  font-weight: normal;
 }
 
 .eFixture_leftSide,
