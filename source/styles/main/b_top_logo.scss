@@ -14,7 +14,7 @@
   align-items: center;
   height: 100px;
 
-  .ePublicLogo_img, img {
+  .ePublicLogo_img {
     display: block;
 
     height: 80px;
@@ -38,7 +38,7 @@
 @media screen and (max-width: 1200px) {
   .bPublicLogo {
     height: 70px;
-    .ePublicLogo_img, img {
+    .ePublicLogo_img {
       margin: {
         top: 5px;
         bottom: 5px;
@@ -53,7 +53,7 @@
   .bPublicLogo {
     margin-right: 50px;
 
-    .ePublicLogo_img, img{
+    .ePublicLogo_img {
       margin: 5px;
     }
     .ePublicLogo_school {
@@ -65,7 +65,7 @@
 @media screen and (max-height: 900px){
   .bPublicLogo {
     height: 70px;
-    .ePublicLogo_img, img {
+    .ePublicLogo_img {
       margin: {
         top: 5px;
         bottom: 5px;

@@ -62,12 +62,7 @@
 .eSchoolNewsItem_text {
   padding: {
     top: 0;
-    bottom: 20px;
     left: 10px;
-  }
-
-  p {
-    margin: 0;
   }
 }
 
@@ -76,7 +71,7 @@
 
   cursor: pointer;
 
-  i {
+  .eSchoolNews_arrow {
     color: $blueColor;
     font-size: 1.3rem;
     padding-right: 5px;

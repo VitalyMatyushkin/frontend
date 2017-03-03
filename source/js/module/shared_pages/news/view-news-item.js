@@ -67,11 +67,11 @@ const ViewNewsItem = React.createClass({
 		if(binding.toJS('selectedNewsItem') == news.id) {
 			text = this.getFullNewsText(news.body);
 			linkText = 'Less info';
-			iconStyle = 'fa fa-angle-up'
+			iconStyle = 'eSchoolNews_arrow fa fa-angle-up'
 		} else {
 			text = this.getNewsExcerpt(news.body);
 			linkText = 'More info';
-			iconStyle = 'fa fa-angle-down'
+			iconStyle = 'eSchoolNews_arrow fa fa-angle-down'
 		}
 
 		return (
