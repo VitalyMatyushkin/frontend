@@ -286,29 +286,40 @@ const Event = React.createClass({
 	addListenerForIndividualScoreAvailable: function() {
 		const binding = this.getDefaultBinding();
 
-		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.0.id');
+		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 0))
+		);
+		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 1))
+		);
+	},
+	handleIndividualAvailableFlagChanges: function(order, eventDescriptor) {
+		const	binding			= this.getDefaultBinding(),
+				activeSchoolId	= this.props.activeSchoolId,
+				event			= binding.toJS('model');
 
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
 
-			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
+		const team = event[params.bundleName][params.order];
+		if(typeof team !== 'undefined') {
+			const teamId = team.id;
+
+			!eventDescriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			eventDescriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId);
+
+			if(binding.toJS(`individualScoreAvailable.${order}.isTeamScoreWasChanged`) && eventDescriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId(teamId);
-				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
+				binding.set(`individualScoreAvailable.${order}.isTeamScoreWasChanged`, false);
 			}
-		}));
-
-		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.1.id');
-
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
-
-			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId(teamId);
-				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
-			}
-		}));
+		}
 	},
 	clearIndividualScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
@@ -743,8 +754,8 @@ const Event = React.createClass({
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
 									<div className="col-md-5 col-md-offset-1 col-sm-6">
-										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-																  isVisible={isaLeftShow}
+										<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
+																	isVisible	= {isaLeftShow}
 											/>
 									</div>
 									<div className="col-md-5 col-sm-6">
