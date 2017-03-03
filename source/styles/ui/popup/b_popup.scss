@@ -16,6 +16,8 @@
   box-shadow: 0px 0px 27px 9px rgba(0, 0, 0, 0.39);
 }
 
+//TODO change usages of styles below
+
 .bPopup.mAcitve{
   display: block;
 }
@@ -92,8 +94,6 @@
 
 .bPopup {
   min-height: 245px;
-  margin-left: -100px;
-  margin-top: -100px;
 
   .eForm_savePanel {
     padding: 0;
@@ -106,9 +106,12 @@
   margin-top: -250px;
 }
 .bPopupGrant{
+  position: fixed;
+  top: 50%;
   height: auto;
-  margin-left: -260px;
-  margin-top: -250px;
+  margin: 0;
+  padding-top: 0;
+  transform: translateY(-50%) translateX(-50%);
 }
 /*Confirm Dialog styling*/
 .bDialog{
