@@ -1,3 +1,4 @@
+@import '../../bootstrap-custom';
 .bSchoolAbout {
   min-height: 340px;
   padding: 30px 0;
@@ -35,6 +36,19 @@
     color: #299AEA;
     text-decoration: underline;
   }
+}
+
+.eSchoolAbout_container {
+  @extend .container;
+}
+
+.eSchoolAbout_row {
+  @include make-row();
+}
+
+.eSchoolAbout_col_medium_10 {
+  @include make-md-column(10);
+  @include make-md-column-offset(1);
 }
 
 /* Small Devices, Phones */

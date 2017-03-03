@@ -12,12 +12,12 @@ const Head = React.createClass({
 
 		return (
 			<div className="bTopPanel mSchoolPanel mFixed">
-				<div className="container">
-					<div className="row">
-						<div className="col-sm-5 ">
+				<div className="eTopPanel_container">
+					<div className="eTopPanel_row">
+						<div className="eTopPanel_col_small_4">
 							<Logo />
 						</div>
-						<div className="col-sm-7 eTopPanel_right">
+						<div className="eTopPanel_col_small_8 eTopPanel_right">
 							<TopMenu menuItems={['Calendar','Fixtures','Results','News']}></TopMenu>
 						</div>
 					</div>

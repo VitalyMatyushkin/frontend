@@ -13,9 +13,9 @@ const SchoolAbout = React.createClass({
 
 		return (
 			<div className="bSchoolAbout">
-				<div className="container">
-					<div className="row">
-						<div className="col-md-10 col-md-offset-1">
+				<div className="eSchoolAbout_container">
+					<div className="eSchoolAbout_row">
+						<div className="eSchoolAbout_col_medium_10">
 							<div className="eSchoolPicWrapper">
 								<div className="eSchoolPic" style={stylePic}/>
 							</div>

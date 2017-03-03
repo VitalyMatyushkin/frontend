@@ -1,4 +1,5 @@
 @import "../!variables";
+@import "../bootstrap-custom";
 
 /* .bTopPanel */
 $HEADER_HEIGHT: 69px;
@@ -28,6 +29,22 @@ $HEADER_HEIGHT: 69px;
     z-index: 100;
 
     width: 100%;
+  }
+
+  .eTopPanel_container {
+    @extend .container;
+  }
+
+  .eTopPanel_row {
+    @include make-row();
+  }
+
+  .eTopPanel_col_small_4 {
+    @include make-sm-column(4);
+  }
+
+  .eTopPanel_col_small_8 {
+    @include make-sm-column(8);
   }
 
   .eTopPanel_right {

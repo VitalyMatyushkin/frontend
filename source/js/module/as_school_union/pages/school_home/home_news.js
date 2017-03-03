@@ -37,9 +37,7 @@ const HomeNews = React.createClass({
 		return (
 			<div className="bSchoolNewsContainer">
 				<h1 className="eSchoolNewsContainer_title">News</h1>
-				<div className="eSchoolNewsItems container">
-					{news}
-				</div>
+				{news}
 			</div>
 		);
 	}

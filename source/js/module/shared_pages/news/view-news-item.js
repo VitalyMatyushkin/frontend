@@ -75,25 +75,29 @@ const ViewNewsItem = React.createClass({
 		}
 
 		return (
-			<div className="row">
-				<div className="col-md-10 col-md-offset-1">
-					<div className="eSchoolNewsItem">
-						<div className="eSchoolNewsImage" style={imgStyle}>
-						</div>
-						<div className="eSchoolNewsItemDescription">
-							<div className="eSchoolNewsItemInfo">
-								<h1 className="eSchoolNewsItem_title">{news.title}</h1>
-								<div className="eSchoolNewsItem_date">
-									{this.getNewsDate(news)}
+			<div className="bSchoolNewsItem">
+				<div className="eSchoolNewsItem_container">
+					<div className="eSchoolNewsItem_row">
+						<div className="eSchoolNewsItem_col_medium_10">
+							<div className="eSchoolNewsItem">
+								<div className="eSchoolNewsImage" style={imgStyle}>
 								</div>
-								<div className="eSchoolNewsItem_text">
-									{text}
-								</div>
-							</div>
+								<div className="eSchoolNewsItemDescription">
+									<div className="eSchoolNewsItemInfo">
+										<h1 className="eSchoolNewsItem_title">{news.title}</h1>
+										<div className="eSchoolNewsItem_date">
+											{this.getNewsDate(news)}
+										</div>
+										<div className="eSchoolNewsItem_text">
+											{text}
+										</div>
+									</div>
 					<span className="eSchoolNews_more" onClick={this._newsItemMoreInfo.bind(this, news.id)}>
 						<i className={iconStyle} aria-hidden="true"></i>
 						{linkText}
 					</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
