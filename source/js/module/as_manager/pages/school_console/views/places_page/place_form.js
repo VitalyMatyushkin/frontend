@@ -3,7 +3,6 @@ const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Form		= require('../../../../../ui/form/form'),
 		FormField	= require('../../../../../ui/form/form_field'),
-		FormColumn	= require('../../../../../ui/form/form_column'),
 		Map			= require('../../../../../ui/map/map2');
 
 const PlaceForm = React.createClass({
@@ -27,8 +26,8 @@ const PlaceForm = React.createClass({
 				filter: {
 					where: {
 						postcode: {
-							like	: searchText,
-							options	: 'i'
+							like: searchText,
+							options: 'i'
 						}
 					},
 					limit: 10
@@ -39,6 +38,8 @@ const PlaceForm = React.createClass({
 		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode))
 	},
 	render: function() {
+		const selectedPostcode = this.getDefaultBinding().toJS('selectedPostcode');
+
 		return (
 			<Form
 				name		= { this.props.title }
@@ -55,6 +56,7 @@ const PlaceForm = React.createClass({
 				<FormField
 					type			= 'autocomplete'
 					serviceFullData	= { this.postcodeService }
+					defaultItem		= { selectedPostcode }
 					serverField		= { 'postcode' }
 					field			= 'postcode'
 					onSelect		= { this.onSelectPostcode }

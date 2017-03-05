@@ -1,10 +1,8 @@
-const 	React 			= require('react'),
+const	React			= require('react'),
 		Morearty		= require('morearty'),
-		SVG 			= require('module/ui/svg'),
-		GenderIcon		= require('module/ui/icons/gender_icon'),
-		Sport           = require('module/ui/icons/sport_icon'),
-		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		SVG				= require('module/ui/svg'),
+		DataLoader		= require('module/ui/grid/data-loader'),
+		GridModel		= require('module/ui/grid/grid-model');
 
 const PlaceListModel = function(page){
 	this.getDefaultBinding = page.getDefaultBinding;
@@ -15,7 +13,7 @@ const PlaceListModel = function(page){
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 
 	const binding = this.getDefaultBinding();
-	this.getPlaces().then(places => binding.set('places', places));
+	this.getPlaces(this.activeSchoolId).then(places => binding.set('places', places));
 
 	this.grid = this.getGrid();
 	this.dataLoader = new DataLoader({
@@ -30,30 +28,31 @@ PlaceListModel.prototype = {
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
-	onEdit: function(data, event) {
-		document.location.hash += '/edit?id=' + data.id;
-		event.stopPropagation();
+	onEdit: function(place, eventDescriptor) {
+		document.location.hash += `/edit?id=${place.id}`;
+		eventDescriptor.stopPropagation();
 	},
-	onChildren: function(data, event) {
-		document.location.hash += `/players?id=${data.id}&name=${data.name}`;
-		event.stopPropagation();
-	},
-	onRemove: function(team, event) {
+	onRemove: function(place, eventDescriptor) {
 		const self = this;
 
 		window.confirmAlert(
-			`Are you sure you want to remove team ${team.name}?`,
+			`Are you sure you want to remove place ${place.name}?`,
 			"Ok",
 			"Cancel",
-			() => window.Server.team
-				.delete( {schoolId:self.activeSchoolId, teamId:team.id} )
+			() => window.Server.schoolPlace
+				.delete(
+					{
+						schoolId: self.activeSchoolId,
+						placeId: place.id
+					}
+				)
 				.then(() => self.reloadData()),
 			() => {}
 		);
-		event.stopPropagation();
+		eventDescriptor.stopPropagation();
 	},
-	getPlaces:function () {
-		return window.Server.sports.get({filter:{limit:1000}});
+	getPlaces:function (schoolId) {
+		return window.Server.schoolPlaces.get(schoolId, {filter:{limit:1000}});
 	},
 	getGrid: function(){
 		const columns = [
@@ -83,7 +82,6 @@ PlaceListModel.prototype = {
 					type: 'action-buttons',
 					typeOptions: {
 						onItemEdit: this.onEdit.bind(this),
-						onItemSelect: this.onChildren.bind(this),
 						onItemRemove: this.onRemove.bind(this)
 					}
 				}

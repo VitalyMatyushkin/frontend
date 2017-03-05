@@ -51,7 +51,7 @@ const serviceList = {
 
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
-		serviceList.schoolPlace = new Service('/i/schools/{schoolId}/places/{sportId}', binding);
+		serviceList.schoolPlace = new Service('/i/schools/{schoolId}/places/{placeId}', binding);
 
 		// students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
