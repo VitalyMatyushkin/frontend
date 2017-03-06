@@ -288,6 +288,13 @@ select {
   }
 }
 
+.eForm_fieldColumn {
+  &.mTwoColumns {
+	display: inline-block;
+	margin-right: 85px;
+  }
+}
+
 .eForm_fieldSelection{
   display: inline-block;
   margin-right: 10px;
