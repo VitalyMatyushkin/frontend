@@ -325,7 +325,7 @@ const EventVenue = React.createClass({
 									onSelect		= {this.handleSelectPostcode}
 									placeholder		= {'Select Postcode'}
 									isBlocked		= {this.isPostcodeInputBlocked()}
-									extraCssStyle	= {'mBigSize'}
+									extraCssStyle	= {'mBigSize mWhiteBG'}
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
