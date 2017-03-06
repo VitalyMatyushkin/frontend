@@ -405,7 +405,7 @@ const EventForm = React.createClass({
 										placeholder		= "enter school name"
 										onSelect		= {self.onSelectRival.bind(null, 1)}
 										binding			= {binding.sub('autocomplete.inter-schools.0')}
-										extraCssStyle	= "mBigSize"
+										extraCssStyle	= "mBigSize mWhiteBG"
 										customListItem	= {SchoolItemList}
 						/>
 					</If>
@@ -420,7 +420,7 @@ const EventForm = React.createClass({
 									placeholder		= {'Select the first house'}
 									onSelect		= {self.onSelectRival.bind(null, 0)}
 									binding			= {binding.sub('autocomplete.houses.0')}
-									extraCssStyle	= {'mBigSize'}
+									extraCssStyle	= {'mBigSize mWhiteBG'}
 								/>
 							</div>
 							<Autocomplete
@@ -430,7 +430,7 @@ const EventForm = React.createClass({
 								placeholder		= "Select the second house"
 								onSelect		= {self.onSelectRival.bind(null, 1)}
 								binding			= {binding.sub('autocomplete.houses.1')}
-								extraCssStyle	= {'mBigSize'}
+								extraCssStyle	= {'mBigSize mWhiteBG'}
 							/>
 						</div>
 					</If>

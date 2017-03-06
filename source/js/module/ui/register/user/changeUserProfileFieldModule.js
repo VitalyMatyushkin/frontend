@@ -54,7 +54,7 @@ const ChangeUserProfileFieldModule = React.createClass({
 				<div className="eRegistration_labelField">
 					{ this.props.labelText }
 				</div>
-					<input	className	= 'eRegistration_input'
+					<input	className	= 'eRegistration_input mFullWidth'
 							value		= { this.state.inputText }
 							onChange	= { this.handleChangeInput }
 					/>
