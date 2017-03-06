@@ -117,6 +117,7 @@ const EventForm = React.createClass({
 		};
 	},
 	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
+		const milesToMeters = 1609.344;
 		switch (fartherThenValue) {
 			case "UNLIMITED":
 				return {
@@ -133,9 +134,9 @@ const EventForm = React.createClass({
 						$geometry: {
 							type: 'Point',
 							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					},
-					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
+						},
+						$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * milesToMeters // 20 miles in meters
+					}
 				};
 		}
 	},
@@ -405,7 +406,7 @@ const EventForm = React.createClass({
 										placeholder		= "enter school name"
 										onSelect		= {self.onSelectRival.bind(null, 1)}
 										binding			= {binding.sub('autocomplete.inter-schools.0')}
-										extraCssStyle	= "mBigSize"
+										extraCssStyle	= "mBigSize mWhiteBG"
 										customListItem	= {SchoolItemList}
 						/>
 					</If>
@@ -420,7 +421,7 @@ const EventForm = React.createClass({
 									placeholder		= {'Select the first house'}
 									onSelect		= {self.onSelectRival.bind(null, 0)}
 									binding			= {binding.sub('autocomplete.houses.0')}
-									extraCssStyle	= {'mBigSize'}
+									extraCssStyle	= {'mBigSize mWhiteBG'}
 								/>
 							</div>
 							<Autocomplete
@@ -430,7 +431,7 @@ const EventForm = React.createClass({
 								placeholder		= "Select the second house"
 								onSelect		= {self.onSelectRival.bind(null, 1)}
 								binding			= {binding.sub('autocomplete.houses.1')}
-								extraCssStyle	= {'mBigSize'}
+								extraCssStyle	= {'mBigSize mWhiteBG'}
 							/>
 						</div>
 					</If>

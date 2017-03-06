@@ -390,7 +390,7 @@ const EventVenue = React.createClass({
 									onSelect			= { this.handleSelectPostcode }
 									placeholder			= { 'Select Postcode' }
 									isBlocked			= { this.isPostcodeInputBlocked() }
-									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin' }
+									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin mWhiteBG' }
 					/>
 					<StarButton	handleClick	= {this.onClickStarButton}
 								isEnable	= {this.isStarButtonEnable()}
