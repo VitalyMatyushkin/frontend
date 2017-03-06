@@ -248,24 +248,22 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.formId !== 'undefined' && currentType === 'parent'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "firstNameField"
-								placeholder		= "first name"
-								type			= { 'text' }
-								value			= { this.props.firstName }
-								onChange		= { this.onChangeFirstName }
+						<input
+							className="eRegistration_input"
+							ref="firstNameField"
+							placeholder="first name"
+							type={ 'text' }
+							value={ this.props.firstName }
+							onChange={ this.onChangeFirstName }
 							/>
-						</div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "lastNameField"
-								placeholder		= "last name"
-								type			= { 'text' }
-								value			= { this.props.lastName }
-								onChange		= { this.onChangeLastName }
+						<input
+							className="eRegistration_input"
+							ref="lastNameField"
+							placeholder="last name"
+							type={ 'text' }
+							value={ this.props.lastName }
+							onChange={ this.onChangeLastName }
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -274,13 +272,12 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined'}>
 					<div>
-						<div className="eRegistration_input">
 							<textarea
+								className="eRegistration_textarea mFixedWidth"
 								value={ this.props.comment }
 								placeholder="Comment"
 								onChange={this.onChangeComment}
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -289,15 +286,14 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'admin'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "promo"
-								placeholder		= "promo"
-								type			= {'text'}
-								onChange		= { this.onChangePromo }
-								value			= { this.props.promo }
+						<input
+							className="eRegistration_input"
+							ref="promo"
+							placeholder="promo"
+							type={'text'}
+							onChange={ this.onChangePromo }
+							value={ this.props.promo }
 							/>
-						</div>
 					</div>
 				</If>
 			</div>
