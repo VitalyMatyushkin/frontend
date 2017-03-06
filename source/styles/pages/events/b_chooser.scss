@@ -19,7 +19,8 @@
 
   &.mOnce {
     cursor: default;
-    padding: 10px 10px 5px 0;
+	padding: 0px;
+	margin-bottom: 0px;
     &:hover {
       background: none;
     }
