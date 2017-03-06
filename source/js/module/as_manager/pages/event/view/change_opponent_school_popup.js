@@ -103,7 +103,7 @@ const ChangeOpponentSchoolPopup = React.createClass({
 									placeholder		= "enter school name"
 									onSelect		= {this.handleChangeOpponentSchool}
 									binding			= {binding.sub('autocompleteChangeOpponentSchool')}
-									extraCssStyle	= "mBigSize"
+									extraCssStyle	= "ePopup mBigSize"
 					/>
 				</div>
 			</ConfirmPopup>
