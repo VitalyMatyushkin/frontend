@@ -1,9 +1,12 @@
 /**
  * Created by bridark on 30/07/15.
  */
-const   Morearty    = require('morearty'),
-        React       = require('react'),
-        SVG         = require('module/ui/svg');
+const   Morearty            = require('morearty'),
+        React               = require('react'),
+        SVG                 = require('module/ui/svg'),
+        PublicLogin = require('module/ui/menu/public_login'),
+        PublicMenuStyles    = require('./../../../../styles/main/b_public_menu.scss'),
+        Bootstrap           = require('./../../../../styles/bootstrap-custom.scss');
 
 const PublicMenu = React.createClass({
     mixins:[Morearty.Mixin],
@@ -11,38 +14,41 @@ const PublicMenu = React.createClass({
         menuItems: React.PropTypes.array.isRequired
     },
     getInitialState:function(){
-        return {menuActive:true}
+        return {hidden:true}
     },
     getMenuItems:function(){
         const items = this.props.menuItems;
         if(typeof items !== 'undefined'){
             return items.map( node => {
-                return (<div key={node} className="bPublicMenu_item">{node}</div>);
+                return (<li key={node} className="ePublicMenu_item">
+                    <a href={"#eSchool" + node} className="ePublicMenu_link" >{node}</a>
+                </li>);
             });
         }
     },
     menuToggle:function(){
-        const currentState = this.state.menuActive;
-
-        if(currentState === false){
-            this.setState({menuActive:true});
+        if(!this.state.hidden){
+            this.setState({hidden:true});
             this.forceUpdate();
         }else{
-            this.setState({menuActive:false});
+            this.setState({hidden:false});
             this.forceUpdate();
         }
     },
     render:function(){
         const 	self 		= this,
 				menuNodes 	= self.getMenuItems(),
-				menuClasses = self.state.menuActive === true ? 'bPublicMenu_tray bPublicMenu_show' : 'bPublicMenu_tray bPublicMenu_hide';
+				extraClasses = self.state.hidden === false ? 'mShown' : '',
+                classNames = `ePublicMenuCollapsedItems ${extraClasses}`;
         return(
-            <div className="bTopMenu bPublicMenu">
-                <span>Menu</span>
-                <span className="hBurgerIcon" onClick={self.menuToggle.bind(null,this)}><img src="images/menu.png"/></span>
-                <div className={menuClasses}>
+            <div className="bPublicMenu">
+                <span className="ePublicMenu_toggle" onClick={self.menuToggle}>
+                    <i className="fa fa-bars" aria-hidden="true" />
+                </span>
+                <ul className={classNames}>
                     {menuNodes}
-                </div>
+                    <PublicLogin />
+                </ul>
             </div>
         );
     }

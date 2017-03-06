@@ -42,7 +42,7 @@ const FixtureItem = React.createClass({
 				<div className="eFixture_item_imgContainer">
 					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
-				<span>{model.rivals[0].value}</span>
+				<div className="eFixture_item mSchoolName">{model.rivals[0].value}</div>
 			</div>
 		);
 	},
@@ -56,7 +56,7 @@ const FixtureItem = React.createClass({
 				<div className="eFixture_item_imgContainer">
 					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
-				<span>{model.rivals[1].value}</span>
+				<div className="eFixture_item mSchoolName">{model.rivals[1].value}</div>
 			</div>
 		);
 	},

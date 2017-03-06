@@ -8,15 +8,69 @@
     vertical-align: top;
   }
 }
-/*.bTopLogo .bIcon {
-  width: 105px;
-  height: 45px;
-}*/
+
 .bPublicLogo {
-  float:left;
-  padding: 8px 0 0;
+  display: flex;
+  align-items: center;
+  height: 100px;
+
+  .ePublicLogo_img {
+    display: block;
+
+    height: 80px;
+    max-width: 100%;
+    margin: 10px 15px 10px 0;
+
+    background: no-repeat center;
+    background-size: contain;
+  }
+
+  .ePublicLogo_school {
+    font-size: 25px;
+  }
 }
 .bLoginIcon {
   height: 200px;
   width: 200px;
+}
+
+/* Large Devices, Wide Screens */
+@media screen and (max-width: 1200px) {
+  .bPublicLogo {
+    height: 70px;
+    .ePublicLogo_img {
+      margin: {
+        top: 5px;
+        bottom: 5px;
+      } ;
+      height: 60px;
+    }
+  }
+}
+
+/* Small Devices, Phones */
+@media screen and (max-width: 768px){
+  .bPublicLogo {
+    margin-right: 50px;
+
+    .ePublicLogo_img {
+      margin: 5px;
+    }
+    .ePublicLogo_school {
+      font-size: 22px;
+    }
+  }
+}
+
+@media screen and (max-height: 900px){
+  .bPublicLogo {
+    height: 70px;
+    .ePublicLogo_img {
+      margin: {
+        top: 5px;
+        bottom: 5px;
+      } ;
+      height: 60px;
+    }
+  }
 }
