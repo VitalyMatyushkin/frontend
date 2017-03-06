@@ -117,6 +117,7 @@ const EventForm = React.createClass({
 		};
 	},
 	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
+		const milesToMeters = 1609.344;
 		switch (fartherThenValue) {
 			case "UNLIMITED":
 				return {
@@ -133,9 +134,9 @@ const EventForm = React.createClass({
 						$geometry: {
 							type: 'Point',
 							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					},
-					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
+						},
+						$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * milesToMeters // 20 miles in meters
+					}
 				};
 		}
 	},
