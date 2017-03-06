@@ -19,7 +19,7 @@ const PlaceAdd = React.createClass({
 				postcodeId: data.postcode
 			}
 		).then(() => {
-			this.isMounted() && (this.redirectToPlaceListPage());
+			this.redirectToPlaceListPage();
 		});
 	},
 	render: function() {

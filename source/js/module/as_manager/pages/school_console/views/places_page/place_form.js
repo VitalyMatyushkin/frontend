@@ -10,7 +10,8 @@ const PlaceForm = React.createClass({
 	propTypes: {
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		title:			React.PropTypes.string.isRequired,
-		onSubmit:		React.PropTypes.func.isRequired
+		onSubmit:		React.PropTypes.func.isRequired,
+		onCancel:		React.PropTypes.func.isRequired
 	},
 	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
 	getPoint: function() {
@@ -44,6 +45,7 @@ const PlaceForm = React.createClass({
 			<Form
 				name		= { this.props.title }
 				onSubmit	= { this.props.onSubmit }
+				onCancel	= { this.props.onCancel }
 				binding		= { this.getDefaultBinding().sub('form') }
 			>
 				<FormField

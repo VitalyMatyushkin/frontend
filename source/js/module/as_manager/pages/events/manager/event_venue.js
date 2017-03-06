@@ -7,7 +7,9 @@ const	propz				= require('propz'),
 		If					= require('../../../../ui/if/if'),
 		Map					= require('../../../../ui/map/map2'),
 		Autocomplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		PlaceListItem		= require('../../../../ui/autocomplete2/custom_list_items/place_list_item/place_list_item');
+		PlaceListItem		= require('../../../../ui/autocomplete2/custom_list_items/place_list_item/place_list_item'),
+		PlacePopup			= require('./place_popup'),
+		StarButton			= require('../../../../ui/star_button');
 
 const	InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -331,6 +333,39 @@ const EventVenue = React.createClass({
 	getPostcodeTitle: function(elem) {
 		return typeof elem.name !== 'undefined' ? elem.name : elem.postcode;
 	},
+	isStarButtonEnable: function() {
+		const postcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
+
+		return typeof postcode !== 'undefined' ? this.isPlace(postcode) : false;
+	},
+	isShowPlacePopup: function() {
+		return this.getDefaultBinding().get('isShowPlacePopup');
+	},
+	showPlacePopup: function() {
+		this.getDefaultBinding().set('isShowPlacePopup', true);
+	},
+	closePlacePopup: function() {
+		this.getDefaultBinding().set('isShowPlacePopup', false);
+	},
+	onClickStarButton: function() {
+		if(!this.isStarButtonEnable() && typeof this.getDefaultBinding().toJS('model.venue.postcodeData') !== 'undefined') {
+			this.showPlacePopup();
+		}
+	},
+	onSubmit: function(data) {
+		const binding =  this.getDefaultBinding();
+
+		const postcode = binding.toJS('model.venue.postcodeData');
+		postcode.name = data.name;
+
+		binding.atomically()
+			.set('isShowPlacePopup', false)
+			.set('model.venue.postcodeData', Immutable.fromJS(postcode))
+			.commit();
+	},
+	onCancel: function() {
+		this.closePlacePopup();
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -355,12 +390,22 @@ const EventVenue = React.createClass({
 									onSelect			= { this.handleSelectPostcode }
 									placeholder			= { 'Select Postcode' }
 									isBlocked			= { this.isPostcodeInputBlocked() }
-									extraCssStyle		= { 'mBigSize' }
+									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin' }
+					/>
+					<StarButton	handleClick	= {this.onClickStarButton}
+								isEnable	= {this.isStarButtonEnable()}
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
 					<Map	point				= { this.getPoint() }
 							customStylingClass	= "eEvents_venue_map"
+					/>
+				</If>
+				<If condition={this.isShowPlacePopup()}>
+					<PlacePopup	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolInfo.id }
+								onSubmit		= { this.onSubmit }
+								onCancel		= { this.onCancel }
 					/>
 				</If>
 			</div>
