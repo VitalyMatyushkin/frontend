@@ -85,6 +85,9 @@ $inputBg: #f5f5f5;
   &.mWhiteBG {
     background-color: #ffffff;
   }
+  &.ePopup.mBigSize{
+	width: 100%;
+  }
 }
 
 .eCombobox_button {
