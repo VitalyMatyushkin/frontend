@@ -1,0 +1,13 @@
+.bPlaceListItem {
+  padding: 10px;
+
+  color: black;
+
+  &:hover {
+    background: #dadada;
+  }
+}
+
+.ePlaceListItem_tooltipText {
+  color: grey;
+}
