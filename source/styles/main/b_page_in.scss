@@ -193,7 +193,7 @@
   height: 100%;
   background-size: cover;
   background-attachment: fixed;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 
@@ -236,6 +236,9 @@
 @media screen and (max-width: 768px){
   .bSchoolHeader {
       height: 350px;
+  }
+  .eSchoolHeader_slider {
+    background-attachment: scroll;
   }
   .eSchoolHomeFooter,
   .eSchoolHomeFooterCopyright{
