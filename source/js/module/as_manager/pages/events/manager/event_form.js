@@ -283,12 +283,12 @@ const EventForm = React.createClass({
 	handleChangeShowAllSports: function() {
 		const binding = this.getDefaultBinding();
 
-		const isShowAllSports = binding.get('isShowAllSports'),
-			currentSport = binding.toJS('model.sportModel');
+		const	isShowAllSports	= binding.get('isShowAllSports'),
+				currentSport	= binding.toJS('model.sportModel');
 
 		// so, if isShowAllSports was true, now it's false
 		// and it means that we should clear sportId if that sport isn't favorite.
-		if(isShowAllSports && !currentSport.isFavorite) {
+		if(isShowAllSports && typeof currentSport !== 'undefined' && !currentSport.isFavorite) {
 			binding.atomically()
 				.set('model.sportModel', Immutable.fromJS(undefined))
 				.set('model.sportId', Immutable.fromJS(undefined))
