@@ -35,9 +35,9 @@ const authСontroller = {
 		var self = this,
 			path = document.location.hash;
 
-		return self._publicPages.some(function(value){return path.indexOf(value)!== -1;});
+		return self._publicPages.some(value => {path.indexOf(value)!== -1});
 	},
-	updateAuth: function(asSchool) {
+	updateAuth: function() {
 		var self = this,
 			binding = self.binding,
 			data = binding.toJS('userData.authorizationInfo'),
@@ -50,7 +50,7 @@ const authСontroller = {
 			if (notRegister && (data.adminId || data.isBecome)) {
 				document.location.hash = self.nextPage;
 			}
-		} else if(self.nextPage ==='loginPublicSchool' || self.nextPage ==='home') {
+		} else if(self.nextPage === 'loginPublicSchool' || self.nextPage === 'home') {
 			document.location.hash = self.nextPage;  //Bypass authentication
 		// For public page of event we change hash
 		} else if (self.nextPage.indexOf('event') !== -1) {
