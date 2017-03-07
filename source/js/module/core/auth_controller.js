@@ -15,11 +15,10 @@ const authСontroller = {
 			self.nextPage = document.location.hash;
 		}
 		//By pass authentication for public home page for school
-		if(options.asSchool === true){
-			// For public page of event we don't change self.nextPage, because it already contains correct hash
-			if (self.nextPage.indexOf('event') === -1) {
-				self.nextPage = options.defaultPath;
-			}
+		if (options.asSchool === true) {
+			//we save hash in binding, because we will use it in LoginPublicSchool component
+			options.binding.sub('loginPublicSchool').set('hash', self.nextPage);
+			self.nextPage = options.defaultPath;
 		}
 		self.binding = options.binding;
 		self.updateAuth();
@@ -51,9 +50,6 @@ const authСontroller = {
 				document.location.hash = self.nextPage;
 			}
 		} else if(self.nextPage === 'loginPublicSchool' || self.nextPage === 'home') {
-			document.location.hash = self.nextPage;  //Bypass authentication
-		// For public page of event we change hash
-		} else if (self.nextPage.indexOf('event') !== -1) {
 			document.location.hash = self.nextPage;  //Bypass authentication
 		} else if(!self.isPublicPage()) {
 			/*
