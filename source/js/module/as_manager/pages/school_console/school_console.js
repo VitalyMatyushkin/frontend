@@ -58,7 +58,15 @@ const SchoolConsole = React.createClass({
 		if(role !== "ADMIN" && role !== "MANAGER") {
 			document.location.hash = 'school_admin/summary';
 		} else {
-			this.createSubMenu();
+			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
+				this.activeSchoolInfo = school;
+
+				if(typeof this.activeSchoolInfo.studentImportForAdminAllowed === 'undefined') {
+					this.activeSchoolInfo.studentImportForAdminAllowed = false;
+				}
+
+				this.createSubMenu();
+			});
 		}
 	},
 	componentDidMount: function() {
@@ -67,65 +75,8 @@ const SchoolConsole = React.createClass({
 		this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
 	},
 	createSubMenu: function() {
-		const	binding			= this.getDefaultBinding(),
-				viewerRole		= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
+		const viewerRole = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
 
-		let		allowImportStudent  = false;
-
-		binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
-		window.Server.school.get(activeSchoolId).then(schoolData => {
-			allowImportStudent = typeof schoolData.studentImportForAdminAllowed === 'undefined' ? false : schoolData.studentImportForAdminAllowed;
-			binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
-		});
-
-		const _createSubMenuData = function(count){
-
-				let menuItems = [{
-								href	: '/#school_console/users',
-								name	: 'Users & Permissions',
-								key		: 'Users'
-							},{
-								href	: '/#school_console/requests',
-								name	: 'New Requests',
-								key		: 'requests',
-								num		: '(' + count + ')'
-							},{
-								href	: '/#school_console/archive',
-								name	: 'Requests Archive',
-								key		: 'archive'
-							},{
-								href	: '/#school_console/moderation',
-								name	: 'Moderation',
-								key		: 'moderation'
-							},{
-								href	: '/#school_console/places',
-								name	: 'Places',
-								key		: 'places'
-							}];
-				//we must show link with import only school with allowImportStudent flag === true
-				if (allowImportStudent) {
-					menuItems.push({
-						href: '/#school_console/import_students',
-						name: 'Import Students',
-						key: 'import'
-					});
-				}
-				//we must show link integration only admin of school
-				if (viewerRole === 'ADMIN') {
-					menuItems.push({
-						href: '/#school_console/integration',
-						name: 'Integration',
-						key: 'integration'
-					}, {
-						href: '/#school_console/sports',
-						name: 'Sports',
-						key: 'sports'
-					});
-				}
-
-				binding.set('subMenuItems', Immutable.fromJS(menuItems));
-		}
 		let requestFilter = {
 			status: 'NEW'
 		};
@@ -136,25 +87,75 @@ const SchoolConsole = React.createClass({
 		}
 
 		// drawing placeholder
-		_createSubMenuData('*');
+		this.createSubMenuData('*');
 
 		//Get the total number of permissions (Notification badge) in submenu
 		return window.Server.permissionRequests.get(
-			MoreartyHelper.getActiveSchoolId(this),
+			this.activeSchoolInfo.id,
 			{
 				filter: {
 					limit: 1000,
 					where: requestFilter
 				}
 			}
-		)
-		.then(permissions => {
-			_createSubMenuData(permissions.length);
+		).then(permissions => {
+			this.createSubMenuData(permissions.length);
 			// yep, always i'm right
 			return true;
 		});
 	},
+	createSubMenuData: function(count) {
+		const	binding		= this.getDefaultBinding(),
+				viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
 
+		let menuItems = [{
+			href	: '/#school_console/users',
+			name	: 'Users & Permissions',
+			key		: 'Users'
+		},{
+			href	: '/#school_console/requests',
+			name	: 'New Requests',
+			key		: 'requests',
+			num		: '(' + count + ')'
+		},{
+			href	: '/#school_console/archive',
+			name	: 'Requests Archive',
+			key		: 'archive'
+		},{
+			href	: '/#school_console/moderation',
+			name	: 'Moderation',
+			key		: 'moderation'
+		},{
+			href	: '/#school_console/places',
+			name	: 'Places',
+			key		: 'places'
+		}];
+		//we must show link with import only school with allowImportStudent flag === true
+		if (this.activeSchoolInfo.allowImportStudent) {
+			menuItems.push({
+				href: '/#school_console/import_students',
+				name: 'Import Students',
+				key: 'import'
+			});
+		}
+		//we must show link integration only admin of school
+		if (viewerRole === 'ADMIN') {
+			menuItems.push({
+				href: '/#school_console/integration',
+				name: 'Integration',
+				key: 'integration'
+			});
+		}
+		if (viewerRole === 'ADMIN' && this.activeSchoolInfo.canEditFavoriteSports) {
+			menuItems.push({
+				href: '/#school_console/sports',
+				name: 'Sports',
+				key: 'sports'
+			});
+		}
+
+		binding.set('subMenuItems', Immutable.fromJS(menuItems));
+	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				globalBinding	= this.getMoreartyContext().getBinding();
