@@ -18,6 +18,7 @@ const	React									= require('react'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
 		SportsPage								= require('./views/sports_page/sports_page'),
+		PlacesPage								= require('./views/places_page/places_page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
@@ -32,7 +33,22 @@ const SchoolConsole = React.createClass({
 			consoleRouting: {},
 			parentPermission: {},
 			moderation: {moderationForm: {}},
-			sports: {}
+			sports: {},
+			places: {
+				placesRouting: {},
+				placeList: {},
+				placeView: {},
+				placeAdd: {
+					placeForm: {
+						form: {}
+					}
+				},
+				placeEdit: {
+					placeForm: {
+						form: {}
+					}
+				}
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -82,6 +98,10 @@ const SchoolConsole = React.createClass({
 								href	: '/#school_console/moderation',
 								name	: 'Moderation',
 								key		: 'moderation'
+							},{
+								href	: '/#school_console/places',
+								name	: 'Places',
+								key		: 'places'
 							}];
 				//we must show link with import only school with allowImportStudent flag === true
 				if (allowImportStudent) {
@@ -153,6 +173,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
 						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
 						<Route path='/school_console/sports' binding={binding.sub('sports')} component={SportsPage}/>
+						<Route path='/school_console/places' binding={binding.sub('places')} component={PlacesPage}/>
 					</RouterView>
 				</div>
 			</div>

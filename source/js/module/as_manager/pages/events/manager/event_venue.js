@@ -6,7 +6,10 @@ const	propz				= require('propz'),
 		Promise				= require('bluebird'),
 		If					= require('../../../../ui/if/if'),
 		Map					= require('../../../../ui/map/map2'),
-		Autocomplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper');
+		Autocomplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		PlaceListItem		= require('../../../../ui/autocomplete2/custom_list_items/place_list_item/place_list_item'),
+		PlacePopup			= require('./place_popup'),
+		StarButton			= require('../../../../ui/star_button');
 
 const	InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -143,7 +146,7 @@ const EventVenue = React.createClass({
 
 		const postCodeFilter = {
 			where: {
-				postcode: {
+				text: {
 					like	: postcode,
 					options	: 'i'
 				}
@@ -151,7 +154,13 @@ const EventVenue = React.createClass({
 			limit: 10
 		};
 
-		return window.Server.postCodes.get({ filter: postCodeFilter }).then(postcodes => {
+		return window.Server.schoolPlacesAndPostcodes.get(
+			this.props.activeSchoolInfo.id,
+			{
+				filter: postCodeFilter
+			}
+		)
+		.then(postcodes => {
 			// away
 			if(gameType === 'inter-schools' && typeof opponentPostcode !== 'undefined') {
 				const foundAwayPostcodeIndex = postcodes.findIndex(p => p.id === opponentPostcode.id);
@@ -229,8 +238,26 @@ const EventVenue = React.createClass({
 			.set('model.venue.postcodeData',	Immutable.fromJS(postcode))
 			.commit();
 	},
+	isPlace: function(value) {
+		return typeof value.name !== 'undefined';
+	},
+	convertPlaceToPostcode: function(place) {
+		return {
+			id: place.postcodeId,
+			name: place.name,
+			point: place.point,
+			postcode: place.postcode,
+			postcodeNoSpaces: place.postcodeNoSpaces
+		};
+	},
 	handleSelectPostcode: function(id, value) {
-		this.setPostcode(value);
+		let postcode = value;
+
+		if(this.isPlace(postcode)) {
+			postcode = this.convertPlaceToPostcode(postcode);
+		}
+
+		this.setPostcode(postcode);
 	},
 	handleClickPostcodeInput: function(eventDescriptor) {
 		if(this.isPostcodeInputBlocked()) {
@@ -303,6 +330,42 @@ const EventVenue = React.createClass({
 
 		return defPostcode;
 	},
+	getPostcodeTitle: function(elem) {
+		return typeof elem.name !== 'undefined' ? elem.name : elem.postcode;
+	},
+	isStarButtonEnable: function() {
+		const postcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
+
+		return typeof postcode !== 'undefined' ? this.isPlace(postcode) : false;
+	},
+	isShowPlacePopup: function() {
+		return this.getDefaultBinding().get('isShowPlacePopup');
+	},
+	showPlacePopup: function() {
+		this.getDefaultBinding().set('isShowPlacePopup', true);
+	},
+	closePlacePopup: function() {
+		this.getDefaultBinding().set('isShowPlacePopup', false);
+	},
+	onClickStarButton: function() {
+		if(!this.isStarButtonEnable() && typeof this.getDefaultBinding().toJS('model.venue.postcodeData') !== 'undefined') {
+			this.showPlacePopup();
+		}
+	},
+	onSubmit: function(data) {
+		const binding =  this.getDefaultBinding();
+
+		const postcode = binding.toJS('model.venue.postcodeData');
+		postcode.name = data.name;
+
+		binding.atomically()
+			.set('isShowPlacePopup', false)
+			.set('model.venue.postcodeData', Immutable.fromJS(postcode))
+			.commit();
+	},
+	onCancel: function() {
+		this.closePlacePopup();
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -312,25 +375,37 @@ const EventVenue = React.createClass({
 		return (
 			<div>
 				<div	className	= "bInputWrapper"
-						onClick		= {this.handleClickPostcodeInput}
+						onClick		= { this.handleClickPostcodeInput }
 				>
 					<div className="bInputLabel">
 						Postcode
 					</div>
-					<Autocomplete	key				= {binding.toJS('postcodeInputKey')}
-									serverField		= "postcode"
-									binding			= {binding}
-									defaultItem		= {this.getDefaultPostcode()}
-									serviceFilter	= {this.postcodeService}
-									onSelect		= {this.handleSelectPostcode}
-									placeholder		= {'Select Postcode'}
-									isBlocked		= {this.isPostcodeInputBlocked()}
-									extraCssStyle	= {'mBigSize mWhiteBG'}
+					<Autocomplete	key					= { binding.toJS('postcodeInputKey') }
+									customListItem		= { PlaceListItem }
+									getElementTitle		= { this.getPostcodeTitle }
+									serverField			= "postcode"
+									binding				= { binding }
+									defaultItem			= { this.getDefaultPostcode() }
+									serviceFilter		= { this.postcodeService }
+									onSelect			= { this.handleSelectPostcode }
+									placeholder			= { 'Select Postcode' }
+									isBlocked			= { this.isPostcodeInputBlocked() }
+									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin mWhiteBG' }
+					/>
+					<StarButton	handleClick	= {this.onClickStarButton}
+								isEnable	= {this.isStarButtonEnable()}
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
-					<Map	point				= {this.getPoint()}
+					<Map	point				= { this.getPoint() }
 							customStylingClass	= "eEvents_venue_map"
+					/>
+				</If>
+				<If condition={this.isShowPlacePopup()}>
+					<PlacePopup	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolInfo.id }
+								onSubmit		= { this.onSubmit }
+								onCancel		= { this.onCancel }
 					/>
 				</If>
 			</div>

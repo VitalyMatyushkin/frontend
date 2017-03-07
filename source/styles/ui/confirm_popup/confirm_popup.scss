@@ -1,8 +1,8 @@
 .bConfirmPopup {
   position: relative;
+  display: inline-block;
 
-  width: 100%;
-  max-width: 500px;
+  min-width: 500px;
   min-height: 50px;
 
   z-index: 10000;
