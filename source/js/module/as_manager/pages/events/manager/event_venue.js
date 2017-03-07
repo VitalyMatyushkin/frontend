@@ -241,20 +241,25 @@ const EventVenue = React.createClass({
 	isPlace: function(value) {
 		return typeof value.name !== 'undefined';
 	},
-	convertPlaceToPostcode: function(place) {
+	/**
+	 * Function converts place to postcode and adds name place and placeId to it.
+	 * @param place
+	 */
+	convertPlaceToPostcodeWithPlaceName: function(place) {
 		return {
-			id: place.postcodeId,
-			name: place.name,
-			point: place.point,
-			postcode: place.postcode,
-			postcodeNoSpaces: place.postcodeNoSpaces
+			id:					place.postcodeId,
+			placeId:			place.id,
+			name:				place.name,
+			point:				place.point,
+			postcode:			place.postcode,
+			postcodeNoSpaces:	place.postcodeNoSpaces
 		};
 	},
 	handleSelectPostcode: function(id, value) {
 		let postcode = value;
 
 		if(this.isPlace(postcode)) {
-			postcode = this.convertPlaceToPostcode(postcode);
+			postcode = this.convertPlaceToPostcodeWithPlaceName(postcode);
 		}
 
 		this.setPostcode(postcode);
@@ -347,20 +352,54 @@ const EventVenue = React.createClass({
 	closePlacePopup: function() {
 		this.getDefaultBinding().set('isShowPlacePopup', false);
 	},
+	removePlace: function(place) {
+		const binding = this.getDefaultBinding();
+
+		window.Server.schoolPlace.delete(
+			{
+				schoolId: this.props.activeSchoolInfo.id,
+				placeId: place.placeId
+			}
+		).then(() => {
+			// just delete name and placeId
+			// because in really it's no place, it's postcode with some place data
+			const postcode = {
+				id:					place.id,
+				point:				place.point,
+				postcode:			place.postcode,
+				postcodeNoSpaces:	place.postcodeNoSpaces
+			};
+
+			binding.set('model.venue.postcodeData', Immutable.fromJS(postcode));
+		});
+	},
 	onClickStarButton: function() {
-		if(!this.isStarButtonEnable() && typeof this.getDefaultBinding().toJS('model.venue.postcodeData') !== 'undefined') {
-			this.showPlacePopup();
+		const	binding		= this.getDefaultBinding(),
+				postcode	= binding.toJS('model.venue.postcodeData');
+
+		switch (true) {
+			case typeof postcode !== 'undefined' && this.isStarButtonEnable():
+				window.confirmAlert(
+					"You are going to remove the venue. Are you sure?",
+					"Ok",
+					"Cancel",
+					() => { this.removePlace(postcode) },
+					() => {  }
+				);
+				break;
+			case typeof postcode !== 'undefined' && !this.isStarButtonEnable():
+				this.showPlacePopup();
+				break;
 		}
 	},
-	onSubmit: function(data) {
+	onSubmit: function(newPlace) {
 		const binding =  this.getDefaultBinding();
 
-		const postcode = binding.toJS('model.venue.postcodeData');
-		postcode.name = data.name;
+		const place = this.convertPlaceToPostcodeWithPlaceName(newPlace);
 
 		binding.atomically()
 			.set('isShowPlacePopup', false)
-			.set('model.venue.postcodeData', Immutable.fromJS(postcode))
+			.set('model.venue.postcodeData', Immutable.fromJS(place))
 			.commit();
 	},
 	onCancel: function() {
