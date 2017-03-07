@@ -156,7 +156,7 @@ const EventForm = React.createClass({
 		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
-			filter.filter['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
+			filter.filter.where['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
 		} else {
 			filter.filter.order = "name ASC";
 		}
@@ -187,13 +187,10 @@ const EventForm = React.createClass({
 		return window.Server.publicSchools.get(filter);
 	},
 	changeCompleteSport: function (event) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			sportsBinding = self.getBinding('sports'),
-			sportId = event.target.value,
-			sportIndex = sportsBinding.get('models').findIndex(function(model) {
-				return model.get('id') === sportId;
-			});
+		const 	binding			= this.getDefaultBinding(),
+				sportsBinding	= this.getBinding('sports'),
+				sportId			= event.target.value,
+				sportIndex		= sportsBinding.get('models').findIndex( model => model.get('id') === sportId );
 
 		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
 
@@ -227,14 +224,12 @@ const EventForm = React.createClass({
 		}
 	},
 	changeCompleteAges: function (selections) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('model.ages', Immutable.fromJS(selections));
 	},
 	onSelectRival: function (order, id, model) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
 			binding.set(`rivals.${order}`, Immutable.fromJS(model));
