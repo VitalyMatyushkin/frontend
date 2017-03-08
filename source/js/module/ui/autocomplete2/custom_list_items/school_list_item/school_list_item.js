@@ -1,14 +1,25 @@
-const	React				= require ('react');
-
-const	If					= require ('../../../../ui/if/if');
-
-const	SchoolListItemStyle	= require('../../../../../../styles/ui/b_school_list_item.scss');
+const	React				= require ('react'),
+		If					= require ('../../../../ui/if/if'),
+		propz				= require ('propz'),
+		SchoolListItemStyle	= require('../../../../../../styles/ui/b_school_list_item.scss');
 
 const SchoolListItem = React.createClass({
 	propTypes: {
 		isSelected	: React.PropTypes.bool.isRequired,
 		onMouseDown	: React.PropTypes.func.isRequired,
 		data		: React.PropTypes.object.isRequired
+	},
+	getAddress: function() {
+		console.log(this.props.data);
+		let postcode = propz.get(this.props.data, ['postcode', 'postcode']);
+
+		if(typeof postcode !== 'undefined') {
+			postcode = `(${postcode})`;
+		} else {
+			postcode = '';
+		}
+
+		return `${this.props.data.address} ${postcode}`;
 	},
 	render: function() {
 		return (
@@ -29,7 +40,7 @@ const SchoolListItem = React.createClass({
 				</div>
 				<If condition={typeof this.props.data.address !== 'undefined'}>
 					<div className="eSchoolListItem_address">
-						Address: {this.props.data.address}
+						Address: {this.getAddress()}
 					</div>
 				</If>
 			</div>
