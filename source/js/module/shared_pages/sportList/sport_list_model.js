@@ -3,7 +3,7 @@ const	React			= require('react'),
 		DataLoader		= require('module/ui/grid/data-loader'),
 		GridModel		= require('module/ui/grid/grid-model');
 
-const SportListModel = function(page, schoolId){
+const SportListModel = function(page, schoolId, onReload){
 	this.getDefaultBinding = page.getDefaultBinding;
 	this.getMoreartyContext = page.getMoreartyContext;
 	this.props = page.props;
@@ -27,6 +27,7 @@ const SportListModel = function(page, schoolId){
 		onLoad: this.getDataLoadedHandle()
 	});
 
+	this.onReload = onReload;
 };
 
 SportListModel.prototype.getActions = function(){
@@ -58,7 +59,7 @@ SportListModel.prototype.getSelectAsFavoriteFunction = function(itemId){
 		sportId: sportId
 	}, {
 		isFavorite: true
-	}).then(() => this.dataLoader.loadData());
+	}).then(() => this.onReload());
 };
 
 SportListModel.prototype.getUnselectAsFavoriteFunction = function(itemId){
@@ -69,7 +70,7 @@ SportListModel.prototype.getUnselectAsFavoriteFunction = function(itemId){
 		sportId: sportId
 	}, {
 		isFavorite: false
-	}).then(() => this.dataLoader.loadData());
+	}).then(() => this.onReload());
 };
 
 SportListModel.prototype.setColumns = function(){

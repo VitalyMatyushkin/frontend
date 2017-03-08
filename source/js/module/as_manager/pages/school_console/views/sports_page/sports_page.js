@@ -6,10 +6,14 @@ const	React			= require('react'),
 
 const SportsPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes:{
+		onReload: React.PropTypes.func.isRequired
+	},
 	componentWillMount: function () {
 		this.model = new Model(
 			this,
-			MoreartyHelper.getActiveSchoolId(this)
+			MoreartyHelper.getActiveSchoolId(this),
+			this.props.onReload
 		);
 	},
 	render: function () {

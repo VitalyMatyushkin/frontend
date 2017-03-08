@@ -17,7 +17,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
-		SportsPage								= require('./views/sports_page/sports_page'),
+		SportsPage								= require('./views/sports_page/sport_page_wrapper'),
 		PlacesPage								= require('./views/places_page/places_page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
