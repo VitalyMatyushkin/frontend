@@ -34,7 +34,7 @@ const authСontroller = {
 		var self = this,
 			path = document.location.hash;
 
-		return self._publicPages.some(value => {path.indexOf(value)!== -1});
+		return self._publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
 	updateAuth: function() {
 		var self = this,
