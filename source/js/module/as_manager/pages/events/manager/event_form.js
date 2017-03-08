@@ -378,7 +378,7 @@ const EventForm = React.createClass({
 				>
 					<div className="bInputWrapper">
 						<div className="bInputLabel">
-							Not farther than
+							Maximum distance
 						</div>
 						<select	className		= "bDropdown"
 								defaultValue	= {EventHelper.fartherThenItems[0].id}
