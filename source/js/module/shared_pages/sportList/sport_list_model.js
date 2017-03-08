@@ -31,7 +31,7 @@ const SportListModel = function(page, schoolId, onReload){
 };
 
 SportListModel.prototype.getActions = function(){
-	const actionList = ['Select as favorite', 'Unselect as favorite'];
+	const actionList = ['Add to favourites', 'Remove from favourites'];
 	return actionList;
 };
 
@@ -39,10 +39,10 @@ SportListModel.prototype.getQuickEditAction = function(itemId, action){
 	const actionKey = action;
 	//For future extension, maybe will appear new actions
 	switch (actionKey){
-		case 'Select as favorite':
+		case 'Add to favourites':
 			this.getSelectAsFavoriteFunction(itemId);
 			break;
-		case 'Unselect as favorite':
+		case 'Remove from favourites':
 			this.getUnselectAsFavoriteFunction(itemId);
 			break;
 		default :
