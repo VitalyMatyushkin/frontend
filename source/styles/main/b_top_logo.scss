@@ -18,7 +18,7 @@
     display: block;
 
     height: 80px;
-    max-width: 100%;
+    width: auto;
     margin: 10px 15px 10px 0;
 
     background: no-repeat center;
@@ -51,7 +51,6 @@
 /* Small Devices, Phones */
 @media screen and (max-width: 768px){
   .bPublicLogo {
-    margin-right: 50px;
 
     .ePublicLogo_img {
       margin: 5px;
@@ -59,6 +58,12 @@
     .ePublicLogo_school {
       font-size: 22px;
     }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .bPublicLogo {
+    margin-right: 50px;
   }
 }
 

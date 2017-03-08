@@ -135,6 +135,29 @@
     height: 50px;
     width: 120px;
   }
+
+  &.mStar {
+    height: 40px;
+    width: 40px;
+
+    padding: 0;
+    border: 1px solid #d7d7d7;
+    background-color: #f5f5f5;
+    &:hover {
+      border-color: #959595;
+    }
+  }
+}
+
+.eButton_star {
+  position: absolute;
+  top: 11px;
+  left: 8px;
+  color: #FCD614;
+
+  &.mDisable {
+    color: #959595;
+  }
 }
 
 .bButton.mRed {
