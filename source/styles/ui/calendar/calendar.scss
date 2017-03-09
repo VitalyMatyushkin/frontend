@@ -9,6 +9,10 @@ $active-day-background: #b2d7ec;
   flex-flow: column wrap;
   justify-content: center;
   background: #fff;
+
+  &.mTransparent {
+    background: transparent;
+  }
 }
 
 .eCalendar_navBar {
@@ -51,6 +55,8 @@ $active-day-background: #b2d7ec;
 .eMonth_row {
   display: flex;
   justify-content: center;
+
+  max-width: 100%;
 }
 
 .eMonth_day {

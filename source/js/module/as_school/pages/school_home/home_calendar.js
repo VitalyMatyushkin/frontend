@@ -4,7 +4,8 @@ const 	React			= require('react'),
 		Challenges		= require('module/ui/challenges/challenges'),
 		MonthCalendar	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions'),
-		Morearty		= require('morearty');
+		Morearty		= require('morearty'),
+		CalendarStyle	= require('./../../../../../styles/ui/b_home_calender.scss');
 
 /** Show calendar section: month calendar and events for selected date */
 const HomeCalender = React.createClass({
@@ -45,15 +46,13 @@ const HomeCalender = React.createClass({
 		}
 
 		return (
-			<div className="eSchoolCalenderContainer">
-				<div className="eSchoolFixtureTab eCalendar_tab">
-					<h1>Calendar</h1>
-					<hr/>
-				</div>
+			<div className="bHomeCalender" id="eSchoolCalendar">
+				<h1 className="eHomeCalender_title"> Calendar </h1>
+
 				<div className="eEvents_container">
 					<div className="eEvents_row">
 						<div className="eEvents_leftSideContainer">
-							<div className="bCalendar">
+							<div className="bCalendar mTransparent">
 								<MonthCalendar
 									monthDate		= {monthDate}
 									todayDate		= {todayDate}

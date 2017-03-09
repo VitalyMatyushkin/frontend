@@ -247,6 +247,7 @@ select {
 .eForm_atCenter{
   position: relative;
   text-align: left;
+  display: inline-block;
 }
 
 .eForm_fieldSet{
@@ -285,6 +286,13 @@ select {
 
   &.mWithoutMargin {
     margin-right: 0px;
+  }
+}
+
+.eForm_fieldColumn {
+  &.mTwoColumns {
+	display: inline-block;
+	margin-right: 85px;
   }
 }
 

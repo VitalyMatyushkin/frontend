@@ -3,7 +3,7 @@ const	React						= require('react'),
 		RouterView					= require('module/core/router'),
 		Route						= require('module/core/route');
 
-const	SportListComponent	= require('./sport_list');
+const	SportListComponent	= require('./sport_list_wrapper');
 
 const SportsPage = React.createClass({
 	mixins: [Morearty.Mixin],

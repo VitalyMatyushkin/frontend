@@ -8,7 +8,7 @@ const SchoolListItem = React.createClass({
 	propTypes: {
 		isSelected	: React.PropTypes.bool.isRequired,
 		onMouseDown	: React.PropTypes.func.isRequired,
-		school		: React.PropTypes.object.isRequired
+		data		: React.PropTypes.object.isRequired
 	},
 	render: function() {
 		return (
@@ -16,20 +16,20 @@ const SchoolListItem = React.createClass({
 					onMouseDown	= {this.props.onMouseDown}
 			>
 				<div className="eSchoolListItem_wrapper">
-					<If condition={typeof this.props.school.pic !== 'undefined'}>
+					<If condition={typeof this.props.data.pic !== 'undefined'}>
 						<img	className	= "eSchoolListItem_pic"
-								src			= {this.props.school.pic}
+								src			= {this.props.data.pic}
 								height		= "40px"
 								width		= "40px"
 						/>
 					</If>
 					<div	className	= "eSchoolListItem_name">
-						{this.props.school.name}
+						{this.props.data.name}
 					</div>
 				</div>
-				<If condition={typeof this.props.school.address !== 'undefined'}>
+				<If condition={typeof this.props.data.address !== 'undefined'}>
 					<div className="eSchoolListItem_address">
-						Address: {this.props.school.address}
+						Address: {this.props.data.address}
 					</div>
 				</If>
 			</div>

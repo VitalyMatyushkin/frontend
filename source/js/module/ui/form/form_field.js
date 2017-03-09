@@ -19,6 +19,11 @@ const FormField = React.createClass({
 		onSelect:			React.PropTypes.func,
 		binding:			React.PropTypes.any
 	},
+	getErrorText: function() {
+		const error = this.getDefaultBinding().get('error');
+
+		return typeof error === 'string' ? error.toLowerCase() : '';
+	},
 	render: function () {
 		const 	self 	= this,
 				binding = self.getDefaultBinding(),
@@ -51,7 +56,7 @@ const FormField = React.createClass({
 			return (
 				<div className={fieldStyleClass}>
 					<div className="eForm_fieldName">{self.props.children}
-						<span className={errorClassName}>{binding.get('error') || ''}</span>
+						<span className={errorClassName}>{this.getErrorText()}</span>
 					</div>
 					<div className={classNames("eForm_fieldSet", self.props.fieldClassName)}>
 						{inputField}

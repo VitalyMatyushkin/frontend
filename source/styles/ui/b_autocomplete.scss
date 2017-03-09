@@ -20,6 +20,19 @@ $inputBg: #f5f5f5;
     margin-top: 0 !important;
     vertical-align: top !important;
   }
+
+  &.mWidth350 {
+    width: 350px !important;
+  }
+
+  &.mInline {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  &.mRightMargin {
+    margin-right: 10px;
+  }
 }
 .bCombobox:hover .eCombobox_inputContainer {
   color: $textColor;
@@ -82,8 +95,15 @@ $inputBg: #f5f5f5;
     }
   }
 
+  &.mWidth350 {
+    width: 350px !important;
+  }
+
   &.mWhiteBG {
     background-color: #ffffff;
+  }
+  &.ePopup.mBigSize{
+	width: 100%;
   }
 }
 

@@ -49,7 +49,7 @@ function initMainSchoolView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			loginPublicSchool: {
-
+				hash: ''
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,

@@ -5,11 +5,14 @@ const	React		= require('react'),
 
 const SportList = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes:{
+		onReload: React.PropTypes.func.isRequired
+	},
 	componentWillMount: function () {
 		const globalBinding = this.getMoreartyContext().getBinding(),
 			schoolId = globalBinding.get('routing.pathParameters.0');
 
-		this.model = new Model(this, schoolId);
+		this.model = new Model(this, schoolId, this.props.onReload);
 	},
 	render: function () {
 		return (

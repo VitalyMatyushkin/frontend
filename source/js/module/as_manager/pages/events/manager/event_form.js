@@ -117,6 +117,7 @@ const EventForm = React.createClass({
 		};
 	},
 	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
+		const milesToMeters = 1609.344;
 		switch (fartherThenValue) {
 			case "UNLIMITED":
 				return {
@@ -133,9 +134,9 @@ const EventForm = React.createClass({
 						$geometry: {
 							type: 'Point',
 							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					},
-					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
+						},
+						$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * milesToMeters // 20 miles in meters
+					}
 				};
 		}
 	},
@@ -155,7 +156,7 @@ const EventForm = React.createClass({
 		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
-			filter.filter['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
+			filter.filter.where['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
 		} else {
 			filter.filter.order = "name ASC";
 		}
@@ -186,13 +187,10 @@ const EventForm = React.createClass({
 		return window.Server.publicSchools.get(filter);
 	},
 	changeCompleteSport: function (event) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			sportsBinding = self.getBinding('sports'),
-			sportId = event.target.value,
-			sportIndex = sportsBinding.get('models').findIndex(function(model) {
-				return model.get('id') === sportId;
-			});
+		const 	binding			= this.getDefaultBinding(),
+				sportsBinding	= this.getBinding('sports'),
+				sportId			= event.target.value,
+				sportIndex		= sportsBinding.get('models').findIndex( model => model.get('id') === sportId );
 
 		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
 
@@ -226,14 +224,12 @@ const EventForm = React.createClass({
 		}
 	},
 	changeCompleteAges: function (selections) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('model.ages', Immutable.fromJS(selections));
 	},
 	onSelectRival: function (order, id, model) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
 			binding.set(`rivals.${order}`, Immutable.fromJS(model));
@@ -287,12 +283,12 @@ const EventForm = React.createClass({
 	handleChangeShowAllSports: function() {
 		const binding = this.getDefaultBinding();
 
-		const isShowAllSports = binding.get('isShowAllSports'),
-			currentSport = binding.toJS('model.sportModel');
+		const	isShowAllSports	= binding.get('isShowAllSports'),
+				currentSport	= binding.toJS('model.sportModel');
 
 		// so, if isShowAllSports was true, now it's false
 		// and it means that we should clear sportId if that sport isn't favorite.
-		if(isShowAllSports && !currentSport.isFavorite) {
+		if(isShowAllSports && typeof currentSport !== 'undefined' && !currentSport.isFavorite) {
 			binding.atomically()
 				.set('model.sportModel', Immutable.fromJS(undefined))
 				.set('model.sportId', Immutable.fromJS(undefined))
@@ -382,7 +378,7 @@ const EventForm = React.createClass({
 				>
 					<div className="bInputWrapper">
 						<div className="bInputLabel">
-							Not farther than
+							Maximum distance
 						</div>
 						<select	className		= "bDropdown"
 								defaultValue	= {EventHelper.fartherThenItems[0].id}

@@ -722,8 +722,11 @@ const Event = React.createClass({
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent');
-
+				isNewEvent		= binding.get('isNewEvent'),
+				//If team don't have players we don't display checkbox "Individual Score"
+				isLeftPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.0') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.0').length) : false,
+				isRightPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.1') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.1').length) : false;
+		
 		const EventContainerStyle = classNames({
 			bEventContainer	: true,
 			mTopMargin		: !isNewEvent
@@ -755,12 +758,12 @@ const Event = React.createClass({
 									<EditingTeamsButtons binding={binding} />
 									<div className="col-md-5 col-md-offset-1 col-sm-6">
 										<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
-																	isVisible	= {isaLeftShow}
+																	isVisible	= {isLeftPlayers && isaLeftShow}
 											/>
 									</div>
 									<div className="col-md-5 col-sm-6">
 										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-																  isVisible={isaRightShow}
+																  isVisible={isRightPlayers && isaRightShow}
 											/>
 									</div>
 								</div>

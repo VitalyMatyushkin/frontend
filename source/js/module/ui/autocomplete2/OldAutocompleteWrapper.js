@@ -17,7 +17,8 @@ const OldAutocompleteWrapper = React.createClass({
 		isBlocked:			React.PropTypes.bool,
 		defaultItem:		React.PropTypes.object,
 		extraCssStyle:		React.PropTypes.string,
-		customListItem:		React.PropTypes.object
+		getElementTitle:	React.PropTypes.func,
+		customListItem:		React.PropTypes.func
 	},
 	searchFunction: function(text) {
 		return {
@@ -35,7 +36,11 @@ const OldAutocompleteWrapper = React.createClass({
 		}
 	},
 	getInputText: function(elem) {
-		return  elem[this.props.serverField];
+		if(typeof this.props.getElementTitle !== 'undefined') {
+			return this.props.getElementTitle(elem);
+		} else {
+			return elem[this.props.serverField];
+		}
 	},
 	getElementTooltip: function(elem) {
 		return  typeof elem.tooltip !== 'undefined' ? elem.tooltip : '';
