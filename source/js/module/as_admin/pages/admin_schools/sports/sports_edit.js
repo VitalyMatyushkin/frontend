@@ -35,7 +35,6 @@ const SportEdit = React.createClass({
 			window.Server.sport.put(self.sportId, SportsHelpers.convertFormDataToServerData(data)).then(() => {
 				self.isMounted() && SportsHelpers.redirectToSportsPage();
 			}).catch(function(err){
-				console.log(err);
 				self.isMounted() && SportsHelpers.redirectToSportsPage();
 			});
 		}
