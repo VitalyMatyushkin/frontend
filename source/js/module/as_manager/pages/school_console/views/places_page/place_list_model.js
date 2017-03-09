@@ -90,12 +90,12 @@ PlaceListModel.prototype = {
 
 		return new GridModel({
 			actionPanel: {
-				title: 'Places',
+				title: 'Venues',
 				showStrip: true,
 				btnAdd: (
 					<div
 						className			= "addButtonShort bTooltip"
-						data-description	= "Add Place"
+						data-description	= "Add venue"
 						onClick				= {() => document.location.hash += '/add'}
 					>
 						<SVG icon="icon_add_team" />

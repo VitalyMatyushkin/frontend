@@ -26,17 +26,21 @@ const PlaceEdit = React.createClass({
 				return window.Server.postCodeById.get(placeData.postcodeId);
 			}).then(postcodeData => {
 				binding.atomically()
-					.set('placeForm.form', Immutable.fromJS({
+					.set('form', Immutable.fromJS({
 						name: placeData.name,
 						postcode: placeData.postcodeId
 					}))
-					.set('placeForm.selectedPostcode', Immutable.fromJS(postcodeData))
+					.set('selectedPostcode', Immutable.fromJS(postcodeData))
+					.set('isSync', true)
 					.commit();
 			});
 		}
 	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().clear();
+	},
 	redirectToPlaceListPage: function() {
-		document.location.hash = 'school_console/places';
+		document.location.hash = 'school_console/venues';
 	},
 	onSubmit: function(data) {
 		window.Server.schoolPlace.put(
@@ -52,16 +56,18 @@ const PlaceEdit = React.createClass({
 		});
 	},
 	render: function() {
-		return (
-			<div className="container">
-				<PlaceForm
-					activeSchoolId	= { this.activeSchoolId }
-					title			= { 'Add new place' }
-					onSubmit		= { this.onSubmit }
-					binding			= { this.getDefaultBinding().sub('placeForm') }
-				/>
-			</div>
-		);
+		if(this.getDefaultBinding().toJS('isSync')) {
+			return (
+				<div className="container">
+					<PlaceForm
+						activeSchoolId	= { this.activeSchoolId }
+						title			= { 'Add new place' }
+						onSubmit		= { this.onSubmit }
+						binding			= { this.getDefaultBinding() }
+					/>
+				</div>
+			);
+		}
 	}
 });
 
