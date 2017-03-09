@@ -1,4 +1,4 @@
-const EventHelper = require('./eventHelper');
+const EventHelper = require('../as_manager/pages/events/eventHelper');
 
 const MILES_TO_METERS = 1609.344;
 
