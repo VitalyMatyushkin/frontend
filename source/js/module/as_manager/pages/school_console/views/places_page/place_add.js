@@ -8,8 +8,11 @@ const PlaceAdd = React.createClass({
 	componentWillMount: function() {
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().clear();
+	},
 	redirectToPlaceListPage: function() {
-		document.location.hash = 'school_console/places';
+		document.location.hash = 'school_console/venues';
 	},
 	onSubmit: function(data) {
 		window.Server.schoolPlaces.post(
@@ -29,7 +32,7 @@ const PlaceAdd = React.createClass({
 					activeSchoolId	= { this.activeSchoolId }
 					title			= { 'Add new place' }
 					onSubmit		= { this.onSubmit }
-					binding			= { this.getDefaultBinding().sub('placeForm') }
+					binding			= { this.getDefaultBinding() }
 				/>
 			</div>
 		);

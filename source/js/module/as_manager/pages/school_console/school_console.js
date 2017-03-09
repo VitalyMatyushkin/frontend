@@ -38,16 +38,7 @@ const SchoolConsole = React.createClass({
 				placesRouting: {},
 				placeList: {},
 				placeView: {},
-				placeAdd: {
-					placeForm: {
-						form: {}
-					}
-				},
-				placeEdit: {
-					placeForm: {
-						form: {}
-					}
-				}
+				placeFormWrapper: {}
 			}
 		});
 	},
@@ -126,9 +117,9 @@ const SchoolConsole = React.createClass({
 			name	: 'Moderation',
 			key		: 'moderation'
 		},{
-			href	: '/#school_console/places',
-			name	: 'Places',
-			key		: 'places'
+			href	: '/#school_console/venues',
+			name	: 'Venues',
+			key		: 'venues'
 		}];
 		//we must show link with import only school with allowImportStudent flag === true
 		if (this.activeSchoolInfo.allowImportStudent) {
@@ -174,7 +165,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
 						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
 						<Route path='/school_console/sports' binding={binding.sub('sports')} component={SportsPage}/>
-						<Route path='/school_console/places' binding={binding.sub('places')} component={PlacesPage}/>
+						<Route path='/school_console/venues' binding={binding.sub('places')} component={PlacesPage}/>
 					</RouterView>
 				</div>
 			</div>

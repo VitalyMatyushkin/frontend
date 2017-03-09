@@ -25,23 +25,23 @@ const PlacesPage = React.createClass({
 						binding	= { globalBinding }
 			>
 				<Route
-					path		= "/school_console/places"
+					path		= "/school_console/venues"
 					binding		= { binding.sub('placeList') }
 					component	= { PlaceList }
 					handleClick	= { this.handleClickForm }
 				/>
 				<Route
-					path		= "/school_console/places/add"
-					binding		= { binding.sub('placeAdd') }
+					path		= "/school_console/venues/add"
+					binding		= { binding.sub('placeFormWrapper') }
 					component	= { PlaceAdd }
 				/>
 				<Route
-					path		= "/school_console/places/edit"
-					binding		= { binding.sub('placeEdit') }
+					path		= "/school_console/venues/edit"
+					binding		= { binding.sub('placeFormWrapper') }
 					component	= { PlaceEdit }
 				/>
 				<Route
-					path		= "/school_console/places/view"
+					path		= "/school_console/venues/view"
 					binding		= { binding.sub('placeView') }
 					component	= { PlaceView }
 				/>
