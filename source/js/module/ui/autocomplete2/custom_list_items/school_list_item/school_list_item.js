@@ -28,11 +28,11 @@ const SchoolListItem = React.createClass({
 			>
 				<div className="eSchoolListItem_wrapper">
 					<If condition={typeof this.props.data.pic !== 'undefined'}>
-						<img	className	= "eSchoolListItem_pic"
-								src			= {this.props.data.pic}
-								height		= "40px"
-								width		= "40px"
-						/>
+						<div className = "eSchoolListItem_wrapper_pic">
+							<img	className	= "eSchoolListItem_pic"
+									src			= {this.props.data.pic}
+							/>
+						</div>
 					</If>
 					<div	className	= "eSchoolListItem_name">
 						{this.props.data.name}
