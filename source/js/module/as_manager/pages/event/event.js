@@ -34,7 +34,8 @@ const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -97,10 +98,14 @@ const Event = React.createClass({
 		let eventData, report, photos, settings;
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
-		
-		service.get({
-			schoolId	: this.props.activeSchoolId,
-			eventId		: self.eventId
+
+		window.Server.publicSchool.get(this.props.activeSchoolId).then(activeSchool => {
+			binding.set('activeSchoolInfo', Immutable.fromJS(activeSchool));
+
+			return service.get({
+				schoolId	: this.props.activeSchoolId,
+				eventId		: self.eventId
+			});
 		}).then(event => {
 			eventData = event;
 
@@ -681,12 +686,12 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
-			.set("model.startTime"		, updEvent.startTime)
-			.set("model.venue"			, updEvent.venue)
+			.set("model.startTime",	updEvent.startTime)
+			.set("model.venue",		updEvent.venue)
 			.commit();
 
 		//TODO I'm going to make event changes without reload.
-		window.location.reload();
+		this.props.onReload();
 	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
@@ -751,6 +756,7 @@ const Event = React.createClass({
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<EventRivals	binding			= {binding}
+											onReload		= {this.props.onReload}
 											activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<div className="bEventMiddleSideContainer">

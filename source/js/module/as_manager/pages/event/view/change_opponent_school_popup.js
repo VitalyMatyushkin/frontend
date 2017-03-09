@@ -1,28 +1,23 @@
-const	EventHelper					= require('module/helpers/eventHelper'),
-		If							= require('../../../../ui/if/if'),
-		TeamHelper					= require('./../../../../ui/managers/helpers/team_helper'),
-		PencilButton				= require('./../../../../ui/pencil_button'),
-		Sport						= require('module/ui/icons/sport_icon'),
-		Score						= require('./../../../../ui/score/score'),
-		Autocomplete				= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		Morearty					= require('morearty'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
-		Immutable					= require('immutable'),
-		React						= require('react'),
-		ConfirmPopup				= require('./../../../../ui/confirm_popup'),
-
-		classNames					= require('classnames');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		Autocomplete	= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		ConfirmPopup	= require('./../../../../ui/confirm_popup'),
+		classNames		= require('classnames'),
+		propz			= require('propz');
 
 const ChangeOpponentSchoolPopup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	handleClickOkButton: function() {
-		const binding = this.getDefaultBinding();
-
-		const	event		= binding.toJS('model'),
-				newSchool	= binding.toJS('autocompleteChangeOpponentSchool.school');
+		const	binding				= this.getDefaultBinding(),
+				activeSchoolId		= this.props.activeSchoolId,
+				activeSchoolInfo	= binding.toJS('activeSchoolInfo'),
+				event				= binding.toJS('model'),
+				newSchool			= binding.toJS('autocompleteChangeOpponentSchool.school');
 
 		// change school in event
 		event.invitedSchools = [newSchool];
@@ -33,13 +28,65 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		// change school on server
 		window.Server.schoolEventChangeOpponent.post(
 			{
-				schoolId	: this.props.activeSchoolId,
+				schoolId	: activeSchoolId,
 				eventId		: event.id
 			}, {
 				invitedSchoolIds: event.invitedSchoolIds
 			}
 		)
-		.then(() => this.closeSavingChangesModePopup());
+		.then(() => {
+			const	venueType				= this.getVenueType(),
+					newSchoolPostcodeId		= propz.get(newSchool, ['postcodeId']),
+					activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
+
+			switch (true) {
+				case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined' && typeof activeSchoolPostcodeId === 'undefined':
+					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
+				case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
+					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
+				case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined':
+					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'HOME', activeSchoolPostcodeId);
+				default:
+					return true;
+			}
+		})
+		.then(() => {
+			this.closeSavingChangesModePopup();
+			this.props.onReload();
+		});
+	},
+	/**
+	 * Server side.
+	 * Function update event venue.
+	 * @param activeSchoolId
+	 * @param eventId
+	 * @param venueType
+	 * @param postcodeId - can be undefined
+	 */
+	updateEventVenuePostcode: function(activeSchoolId, eventId, venueType, postcodeId) {
+		const body = {
+			venue: {
+				venueType: venueType
+			}
+		};
+
+		if(venueType !== 'TBD') {
+			body.venue.postcodeId = postcodeId;
+		}
+
+		window.Server.schoolEvent.put(
+			{
+				schoolId	: activeSchoolId,
+				eventId		: eventId
+			},
+			body
+		)
+	},
+	getVenueType: function() {
+		const	binding	= this.getDefaultBinding(),
+				model	= binding.toJS('model');
+
+		return propz.get(model, ['venue', 'venueType']);
 	},
 	closeSavingChangesModePopup: function() {
 		const binding = this.getDefaultBinding();
@@ -52,12 +99,10 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		binding.set('autocompleteChangeOpponentSchool.school', Immutable.fromJS(model));
 	},
 	serviceSchoolFilter: function(schoolName) {
-		const   self        = this,
-				binding     = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		const	event		= binding.toJS('model');
-
-		let schools;
+		const	event	= binding.toJS('model');
 
 		const filter = {
 			filter: {
@@ -72,16 +117,6 @@ const ChangeOpponentSchoolPopup = React.createClass({
 			}
 		};
 
-		return window.Server.publicSchools.get(filter);
-	},
-	getTBDSchool: function() {
-		const filter = {
-			filter: {
-				where: {
-					name: { like: "TBD" }
-				}
-			}
-		};
 		return window.Server.publicSchools.get(filter);
 	},
 	render: function() {
