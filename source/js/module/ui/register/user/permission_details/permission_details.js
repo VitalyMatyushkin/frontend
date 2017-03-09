@@ -209,7 +209,7 @@ const PermissionDetails = React.createClass({
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
-							placeholder		= "school's name"
+							placeholder		= "school name"
 							defaultItem		= { {name: schoolName} }
 							customListItem	= { SchoolListItem }
 						/>

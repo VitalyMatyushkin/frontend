@@ -43,10 +43,11 @@ const PlaceForm = React.createClass({
 
 		return (
 			<Form
-				name		= { this.props.title }
-				onSubmit	= { this.props.onSubmit }
-				onCancel	= { this.props.onCancel }
-				binding		= { this.getDefaultBinding().sub('form') }
+				name			= { this.props.title }
+				onSubmit		= { this.props.onSubmit }
+				onCancel		= { this.props.onCancel }
+				binding			= { this.getDefaultBinding().sub('form') }
+				defaultButton	= { 'Save' }
 			>
 				<FormField
 					type		= 'text'
