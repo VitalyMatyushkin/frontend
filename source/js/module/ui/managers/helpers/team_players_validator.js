@@ -1,6 +1,5 @@
 const TeamPlayersValidator = {
     validate: function(players, limits, subscriptionPlan) {
-		console.log(subscriptionPlan);
         const self = this;
 
         let isError = false,

@@ -410,7 +410,7 @@ const EventVenue = React.createClass({
 
 		// Note. Pls look at Autocomplete component.
 		// You can see generated key.
-		// We must have opportunity to reset state of this component by hand.
+		// In some cases we should reload this component by hand.
 		return (
 			<div>
 				<div	className	= "bInputWrapper"

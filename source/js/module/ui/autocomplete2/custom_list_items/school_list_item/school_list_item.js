@@ -10,7 +10,6 @@ const SchoolListItem = React.createClass({
 		data		: React.PropTypes.object.isRequired
 	},
 	getAddress: function() {
-		console.log(this.props.data);
 		let postcode = propz.get(this.props.data, ['postcode', 'postcode']);
 
 		if(typeof postcode !== 'undefined') {
