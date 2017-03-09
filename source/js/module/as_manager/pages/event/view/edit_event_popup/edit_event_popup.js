@@ -98,7 +98,7 @@ const EditEventPopup = React.createClass({
 							isOkButtonDisabled		= {false}
 							handleClickOkButton		= {this.handleClickOkButton}
 							handleClickCancelButton	= {this.handleClickCancelButton}
-							customStyle				= 'mBig'
+							customStyle				= 'mBig mFullWidth'
 			>
 				<EventEditForm binding={binding.sub('eventEditForm')}/>
 			</ConfirmPopup>
