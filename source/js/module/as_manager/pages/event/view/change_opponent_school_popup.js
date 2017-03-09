@@ -4,6 +4,8 @@ const	React			= require('react'),
 		Autocomplete	= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		ConfirmPopup	= require('./../../../../ui/confirm_popup'),
 		classNames		= require('classnames'),
+		GeoSearchHelper	= require('../../../../helpers/geo_search_helper'),
+		SchoolListItem	= require('./../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		propz			= require('propz');
 
 const ChangeOpponentSchoolPopup = React.createClass({
@@ -99,10 +101,11 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		binding.set('autocompleteChangeOpponentSchool.school', Immutable.fromJS(model));
 	},
 	serviceSchoolFilter: function(schoolName) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	event	= binding.toJS('model');
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				activeSchoolInfo	= binding.toJS('activeSchoolInfo'),
+				postcode			= activeSchoolInfo.postcode,
+				event				= binding.toJS('model');
 
 		const filter = {
 			filter: {
@@ -110,12 +113,21 @@ const ChangeOpponentSchoolPopup = React.createClass({
 					id: {
 						$nin: [this.props.activeSchoolId, event.invitedSchoolIds[0]]
 					},
-					name: { like: schoolName }
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
 				},
-				order:"name ASC",
-				limit: 400
+				limit: 20
 			}
 		};
+
+		// user geo search or not
+		if(typeof postcode !== 'undefined') {
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getUnlimitedGeoSchoolFilter(postcode.point)
+		} else {
+			filter.filter.order = "name ASC";
+		}
 
 		return window.Server.publicSchools.get(filter);
 	},
@@ -133,6 +145,7 @@ const ChangeOpponentSchoolPopup = React.createClass({
 				<div>
 					Change opponent
 					<Autocomplete	defaultItem		= {binding.toJS('autocompleteChangeOpponentSchool.school')}
+									customListItem	= { SchoolListItem }
 									serviceFilter	= {this.serviceSchoolFilter}
 									serverField		= "name"
 									placeholder		= "enter school name"

@@ -13,7 +13,8 @@ const	DateSelectorWrapper				= require('./manager_components/date_selector/date_
 		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
 		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper');
 
-const	EventHelper						= require('../eventHelper');
+const	EventHelper						= require('../eventHelper'),
+		GeoSearchHelper					= require('../../../../helpers/geo_search_helper');
 
 const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -116,30 +117,6 @@ const EventForm = React.createClass({
 			}
 		};
 	},
-	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
-		const milesToMeters = 1609.344;
-		switch (fartherThenValue) {
-			case "UNLIMITED":
-				return {
-					$nearSphere: {
-						$geometry: {
-							type: 'Point',
-							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					}
-				};
-			default:
-				return {
-					$nearSphere: {
-						$geometry: {
-							type: 'Point',
-							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						},
-						$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * milesToMeters // 20 miles in meters
-					}
-				};
-		}
-	},
 	/**
 	 * School filtering service
 	 * @param schoolName
@@ -156,7 +133,7 @@ const EventForm = React.createClass({
 		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
-			filter.filter.where['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
 		} else {
 			filter.filter.order = "name ASC";
 		}
@@ -265,7 +242,7 @@ const EventForm = React.createClass({
 		const	self	= this,
 				sports	= self.getBinding('sports').toJS();
 
-		return EventHelper.fartherThenItems.map(item => {
+		return EventHelper.distanceItems.map(item => {
 			return (
 				<option	value	= { item.id }
 						key		= { item.id }
@@ -302,9 +279,17 @@ const EventForm = React.createClass({
 				.commit()
 		}
 	},
+	isShowDistanceSelector: function() {
+		const	binding			= this.getDefaultBinding(),
+				type			= binding.get('model.type'),
+				activeSchool	= binding.toJS('schoolInfo'),
+				postcode		= activeSchool.postcode;
+
+		return type === 'inter-schools' && typeof postcode !== 'undefined';
+	},
 	render: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const	self = this,
+				binding = self.getDefaultBinding();
 
 		const	sportId						= binding.get('model.sportId'),
 				isShowAllSports				= binding.get('model.isShowAllSports'),
@@ -373,7 +358,7 @@ const EventForm = React.createClass({
 					</div>
 					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
-				<If	condition	= {type === 'inter-schools'}
+				<If	condition	= {this.isShowDistanceSelector()}
 					key			= {'if-farther-then'}
 				>
 					<div className="bInputWrapper">
@@ -381,7 +366,7 @@ const EventForm = React.createClass({
 							Maximum distance
 						</div>
 						<select	className		= "bDropdown"
-								defaultValue	= {EventHelper.fartherThenItems[0].id}
+								defaultValue	= {EventHelper.distanceItems[0].id}
 								value			= {fartherThen}
 								onChange		= {self.handleChangeFartherThan}
 						>
