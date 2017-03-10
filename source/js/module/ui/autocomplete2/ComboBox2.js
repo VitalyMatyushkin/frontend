@@ -483,6 +483,7 @@ const ComboBox2 = React.createClass({
 							onKeyUp		= {self.onKeyUp}
 							onClick		= {self.onInputClick}
 							role		= "combobox"
+							disabled	= {this.props.isBlocked}
 					/>
 					<img	className		= {self.getLoaderCssStyle()}
 							style			= {loaderStyle}

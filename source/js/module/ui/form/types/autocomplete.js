@@ -40,6 +40,7 @@ const TypeAutocomplete = React.createClass({
 				defaultItem		= {self.props.defaultItem}
 				placeholder 	= {self.props.placeholder}
 				customListItem	= {self.props.customListItem}
+				isBlocked		= {self.props.isDisabled}
 			/>
 		);
 	}
