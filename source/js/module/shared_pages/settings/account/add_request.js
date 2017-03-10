@@ -172,11 +172,9 @@ const AddPermissionRequest = React.createClass({
 				<FormField
 					type			= "text"
 					field			= "studentName"
-					fieldClassName	= {classNames({mHidden:!isParent})}
+					isDisabled		= {!isParent}
 				>
-					<If condition={Boolean(isParent)}>
-						<span>Student</span>
-					</If>
+					<span>Student</span>
 				</FormField>
 				<FormField
 					type	= "textarea"
