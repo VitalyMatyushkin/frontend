@@ -1,10 +1,17 @@
 /**
  * Created by Woland on 12.01.2017.
  */
-const	React 					= require ('react'),
-		If						= require('module/ui/if/if'),
-		AutoComplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		PermissionDetailsHelper	= require('./permission_detail_helper');
+const	React 				= require ('react');
+
+const	If					= require('../../../../ui/if/if'),
+		CrossButton			= require('../../../../ui/cross_button/cross_button'),
+		AutoComplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		SchoolListItem		= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		PostcodeSelector	= require('./postcode_selector/postcode_selector'),
+		GeoSearchHelper		= require('../../../../helpers/geo_search_helper');
+
+
+const	PermissionDetailsHelper	= require('./permission_detail_helper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -28,16 +35,44 @@ const PermissionDetails = React.createClass({
 		comment:					React.PropTypes.string,
 		fieldNumber:				React.PropTypes.string.isRequired
 	},
-
+	getInitialState: function(){
+		return {
+			postcode: undefined
+		};
+	},
 	/**
 	 * school filter by schoolName
 	 * @param schoolName
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function (schoolName) {
+		if(typeof this.state.postcode === 'undefined') {
+			return this.searchSchool(schoolName);
+		} else {
+			return this.searchSchoolNearCurrentPostcode(schoolName);
+		}
+	},
+	searchSchool: function(schoolName) {
 		return window.Server.publicSchools.get(PermissionDetailsHelper.getSchoolServiceFilter(schoolName, this.props.type));
 	},
+	searchSchoolNearCurrentPostcode: function(schoolName) {
+		const point = this.state.postcode.point;
 
+		const filter = {
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
+				},
+				'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(point),
+				limit: 20
+			}
+		};
+
+		return window.Server.publicSchools.get(filter);
+	},
 	/**
 	 * house filter by houseName
 	 * @param houseName
@@ -82,7 +117,6 @@ const PermissionDetails = React.createClass({
 	 * It's not good, but autocomplete return only schoolId
 	 */
 	onSelectSchool: function(schoolId, school) {
-		console.log(school);
 		if (typeof schoolId !== 'undefined') {
 			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
 				this.props.handleSchoolSelect(schoolId, school.name, this.props.fieldNumber);
@@ -136,14 +170,24 @@ const PermissionDetails = React.createClass({
 				<span>and we will add it!</span>
 			</div>)
 	},
-
+	handleSelectPostcode: function(id, postcode) {
+		this.setState({
+			postcode: postcode
+		});
+	},
+	handleEscapePostcode: function() {
+		this.setState({
+			postcode: undefined
+		});
+	},
 	render: function() {
 		const 	currentType		= this.props.type,
 				houseName		= this.props.houseName ? this.props.houseName : '',
 				formName		= this.props.formName ? this.props.formName : '',
-				schoolName		= this.props.schoolName ? this.props.schoolName : '',
+				schoolName		= this.props.schoolName ? this.props.schoolName : '';
 
-				message			= this.getSchoolMessage();
+		const	message			= this.getSchoolMessage();
+
 		return (
 			<div>
 				{/**
@@ -152,12 +196,17 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof currentType !== 'undefined'}>
 					<div>
+						<PostcodeSelector	currentPostcode			= {this.state.postcode}
+											handleSelectPostcode	= {this.handleSelectPostcode}
+											handleEscapePostcode	= {this.handleEscapePostcode}
+						/>
 						<AutoComplete
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
-							placeholder		= "school's name"
-							defaultItem		= {{name: schoolName}}
+							placeholder		= "school name"
+							defaultItem		= { {name: schoolName} }
+							customListItem	= { SchoolListItem }
 						/>
 						{message}
 					</div>
@@ -194,24 +243,22 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.formId !== 'undefined' && currentType === 'parent'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "firstNameField"
-								placeholder		= "first name"
-								type			= { 'text' }
-								value			= { this.props.firstName }
-								onChange		= { this.onChangeFirstName }
+						<input
+							className="eRegistration_input"
+							ref="firstNameField"
+							placeholder="first name"
+							type={ 'text' }
+							value={ this.props.firstName }
+							onChange={ this.onChangeFirstName }
 							/>
-						</div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "lastNameField"
-								placeholder		= "last name"
-								type			= { 'text' }
-								value			= { this.props.lastName }
-								onChange		= { this.onChangeLastName }
+						<input
+							className="eRegistration_input"
+							ref="lastNameField"
+							placeholder="last name"
+							type={ 'text' }
+							value={ this.props.lastName }
+							onChange={ this.onChangeLastName }
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -220,13 +267,12 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined'}>
 					<div>
-						<div className="eRegistration_input">
 							<textarea
+								className="eRegistration_textarea mFixedWidth"
 								value={ this.props.comment }
 								placeholder="Comment"
 								onChange={this.onChangeComment}
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -235,15 +281,14 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'admin'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "promo"
-								placeholder		= "promo"
-								type			= {'text'}
-								onChange		= { this.onChangePromo }
-								value			= { this.props.promo }
+						<input
+							className="eRegistration_input"
+							ref="promo"
+							placeholder="promo"
+							type={'text'}
+							onChange={ this.onChangePromo }
+							value={ this.props.promo }
 							/>
-						</div>
 					</div>
 				</If>
 			</div>

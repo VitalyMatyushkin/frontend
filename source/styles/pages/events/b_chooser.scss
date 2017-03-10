@@ -1,32 +1,40 @@
 @import "../../!variables";
 
-.bChooser, .bChooserRival {
-  margin: 0 auto;
+.bChooserRival {
   display: flex;
-  align-items: center;
-}
-
-.bChooser.mLong {
-  width: 100%;
 }
 
 .eChooser_item {
-  color: $COLOR;
-  transition: all .2s ease-out;
-  font-size: 18px;
-  padding: 10px 10px 5px 10px;
-  border-bottom: solid 3px transparent;
-  margin-bottom: 15px;
+  padding: 10px 10px 0px 0px;
   cursor: pointer;
+
+  font-size: 1.5625rem;
+  text-align: left;
+  text-overflow: ellipsis;
+
   &:hover {
     background: #d7d7d7;
   }
-  &.mActive {
-    color: $blueColor;
-    background: repeat-x url('/images/team_selector.png') bottom;
+
+  &.mOnce {
+    cursor: default;
+	padding: 0px;
+	margin-bottom: 0px;
+    &:hover {
+      background: none;
+    }
   }
-  &.mDisable {
+
+  &.mNotActive {
     opacity: 0.3;
+    &:hover {
+      opacity: 1;
+      background: #d7d7d7;
+    }
+  }
+
+  &.mDisable {
+    opacity: 0.4;
     cursor: default;
     user-select: none;
     &:hover {
@@ -35,13 +43,16 @@
     }
   }
 }
-.bChooserRival .eChooser_item {
-  border: none;
-  font-size: 20px;
-}
 
-.eChooser_title {
-  margin-right: 10px;
+.eChooser_separator {
+  padding: 10px 10px 0px 10px;
+  cursor: pointer;
+
+  opacity: 0.4;
+
+  font-size: 1.5625rem;
+  text-align: center;
+  text-overflow: ellipsis;
 }
 
 /* mLong */

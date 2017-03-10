@@ -23,7 +23,7 @@ const EventIndividualScoreAvailable = React.createClass({
 				<FormField	binding			= {this.getDefaultBinding()}
 							type			= "checkbox"
 							field			= "individualScoreAvailable"
-							fieldClassName	= {classNames("mIndividualScoreAvailable", this.props.className)}
+							classNames	= {classNames("mIndividualScoreAvailable mSingleLine", this.props.className)}
 				>
 					Individual score available
 				</FormField>

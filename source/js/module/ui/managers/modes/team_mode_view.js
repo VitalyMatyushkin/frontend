@@ -176,17 +176,19 @@ const TeamModeView = React.createClass({
 				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
 				tableWrapperBindings= [
 										{
-											default:			binding.sub(`teamWrapper.${0}`),
-											model:				self.getBinding().model,
-											rival:				self.getBinding().rivals.sub(0),
-											players:			binding.sub(`players.${0}`),
-											otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(0)}`)
+											default				: binding.sub(`teamWrapper.${0}`),
+											model				: self.getBinding().model,
+											rival				: self.getBinding().rivals.sub(0),
+											players				: binding.sub(`players.${0}`),
+											otherTeamPlayers	: binding.sub(`players.${self._getAnotherRivalIndex(0)}`),
+											error				: self.getBinding('error').sub(0)
 										},{
 											default:			binding.sub(`teamWrapper.${1}`),
 											model:				self.getBinding().model,
 											rival:				self.getBinding().rivals.sub(1),
 											players:			binding.sub(`players.${1}`),
-											otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(1)}`)
+											otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(1)}`),
+											error				: self.getBinding('error').sub(1)
 										}];
 
 		const _classNames = [
@@ -226,14 +228,13 @@ const TeamModeView = React.createClass({
 		binding.set(`teamTable.${rivalIndex}.isSelectedTeam`, Immutable.fromJS(false));
 	},
 	_renderErrorBox: function() {
-		const	self				= this,
-				binding				= self.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-				errorText			= self.getBinding().error.toJS(selectedRivalIndex).text;
+		const	selectedRivalIndex	= this.getDefaultBinding().toJS('selectedRivalIndex'),
+				_errorText			= this.getBinding('error').toJS(selectedRivalIndex).text;
 
+		// it doesn't show team name warning
 		return (
 			<div className="eTeam_errorBox">
-				{errorText}
+				{_errorText !== 'Please enter team name' ? _errorText : ''}
 			</div>
 		);
 	},
@@ -242,11 +243,6 @@ const TeamModeView = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const event = self.getBinding('model').toJS();
-
-		const teamModeViewClass = classNames({
-			eManager_teamModeViewContainer: true,
-			mIndividuals: TeamHelper.isNonTeamSport(event)
-		});
 
 		let teamChoosers = null;
 		if(TeamHelper.isTeamSport(event)) {
@@ -283,9 +279,8 @@ const TeamModeView = React.createClass({
 		}
 
 		return (
-			<div className={teamModeViewClass}>
+			<div>
 				{ teamChoosers }
-				{ self._renderErrorBox() }
 				{ self._renderTeamWrapper() }
 			</div>
 		);

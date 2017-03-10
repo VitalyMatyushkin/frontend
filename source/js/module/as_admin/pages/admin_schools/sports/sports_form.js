@@ -431,131 +431,142 @@ const SportsForm = React.createClass({
         // but Form Component can't handle changes.
         return (
             <div>
-                <Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} formStyleClass="mWide">
-                    <FormColumn>
-                        <FormField  type="text"
-                                    field="name"
-                                    validation="required"
-                        >
-                            Sport name
-                        </FormField>
-                        <FormField  type="text"
-                                    field="description"
-                        >
-                            Description
-                        </FormField>
-                        <FormField  field="scoring"
-                                    options={SportsHelpers.clientScoringArray}
-                                    type="dropdown"
-                        >
-                            Scoring
-                        </FormField>
-                        <FormField  field="players"
-                                    options={SportsHelpers.clientPlayersArray}
-                                    type="dropdown"
-                        >
-                            Type of players
-                        </FormField>
-                        <FormField  type="checkbox"
-                                    field="individualResultsAvailable"
-                        >
-                            Is individual results available
-                        </FormField>
-                        <div className="eForm_fieldName">Limits</div>
-                        <FormPlaceholder>
-                            <FormField  type="text"
-                                        field="minPlayers"
-                            >
-                                Minimum players
+                <div className="container">
+                    <Form name={self.props.title}
+                          onSubmit={self.props.onFormSubmit}
+                          binding={binding}
+                          formStyleClass="mWide"
+                          formStyleClass="row">
+                        <FormColumn customStyle="col-md-5 col-md-offset-1">
+                            <FormField type="text"
+                                       field="name"
+                                       validation="required"
+                                >
+                                Sport name
                             </FormField>
-                            <FormField  type="text"
-                                        field="maxPlayers"
-                            >
-                                Maximum players
+                            <FormField type="text"
+                                       field="description"
+                                >
+                                Description
                             </FormField>
-                            <FormField  type="text"
-                                        field="minSubs"
-                            >
-                                Minimum substitutions
+                            <FormField field="scoring"
+                                       options={SportsHelpers.clientScoringArray}
+                                       type="dropdown"
+                                >
+                                Scoring
                             </FormField>
-                            <FormField  type="text"
-                                        field="maxSubs"
-                            >
-                                Maximum substitutions
+                            <FormField field="players"
+                                       options={SportsHelpers.clientPlayersArray}
+                                       type="dropdown"
+                                >
+                                Type of players
                             </FormField>
-                        </FormPlaceholder>
-                        <div className="eForm_fieldName">Genders</div>
-                        <FormPlaceholder>
-                            <FormField  type="checkbox"
-                                        field="genders.maleOnly"
-                            >
-                                Boys
+                            <FormField type="checkbox"
+                                       field="individualResultsAvailable"
+                                >
+                                Is individual results available
                             </FormField>
-                            <FormField  type="checkbox"
-                                        field="genders.femaleOnly"
-                            >
-                                Girls
-                            </FormField>
-                            <FormField  type="checkbox"
-                                        field="genders.mixed"
-                            >
-                                Mixed
-                            </FormField>
-                        </FormPlaceholder>
-                        <div className="eForm_fieldName">Points</div>
-                        <FormPlaceholder>
-                            <FormField  type="text"
-                                        field="pointsName"
-                                        validation="required"
-                            >
-                                Points name
-                            </FormField>
-                            <FormField  type="text"
-                                        field="pointsNamePlural"
-                                        validation="required"
-                            >
-                                Points name plural
-                            </FormField>
-                            <FormField  type="text"
-                                        field="pointsStep"
-                                        validation="required number"
-                            >
-                                Points step
-                            </FormField>
-							<FormField  field="pointsDisplay"
-										options={SportsHelpers.clientPointDisplayArray}
-										type="dropdown"
-							>
-								How to display points
-							</FormField>
-							<FormField  type="text"
-										field="pointsInputMask"
-										validation="required"
-										condition={showMask}
-							>
-								Points input mask
-							</FormField>
-                        </FormPlaceholder>
-                        <div className="eForm_fieldName mMarginTop">Game Field Picture</div>
-                        <FormField labelText="Upload Game Field Picture" type="imageFile" field="fieldPic"/>
-                        <div className="eForm_fieldName mMarginTop">Sport Icon</div>
-                        <FormField labelText="Upload Game Icon" type="imageFile" field="icon"/>
-                    </FormColumn>
-                    <FormColumn customStyle='mWithoutMargin'>
-                        <div className="eForm_fieldName">Positions</div>
-                        <div field="field">
-                            {self.getPositionFields()}
-                        </div>
-                        <div className="eForm_fieldName mMarginTop">Discipline</div>
-                        <div field="discipline">
-                            {self.getDisciplineFields()}
-                        </div>
-                        <div className="eForm_fieldName mMarginTop">Performance</div>
-                        <div field="performance">
-                            {self.getPerformanceFields()}
-                        </div>
-                    </FormColumn>
-                </Form>
+
+                            <div className="eForm_fieldName">Limits</div>
+                            <FormPlaceholder>
+                                <FormField type="text"
+                                           field="minPlayers"
+                                    >
+                                    Minimum players
+                                </FormField>
+                                <FormField type="text"
+                                           field="maxPlayers"
+                                    >
+                                    Maximum players
+                                </FormField>
+                                <FormField type="text"
+                                           field="minSubs"
+                                    >
+                                    Minimum substitutions
+                                </FormField>
+                                <FormField type="text"
+                                           field="maxSubs"
+                                    >
+                                    Maximum substitutions
+                                </FormField>
+                            </FormPlaceholder>
+
+                            <div className="eForm_fieldName">Genders</div>
+                            <FormPlaceholder>
+                                <FormField type="checkbox"
+                                           field="genders.maleOnly"
+                                    >
+                                    Boys
+                                </FormField>
+                                <FormField type="checkbox"
+                                           field="genders.femaleOnly"
+                                    >
+                                    Girls
+                                </FormField>
+                                <FormField type="checkbox"
+                                           field="genders.mixed"
+                                    >
+                                    Mixed
+                                </FormField>
+                            </FormPlaceholder>
+
+                            <div className="eForm_fieldName">Points</div>
+                            <FormPlaceholder>
+                                <FormField type="text"
+                                           field="pointsName"
+                                           validation="required"
+                                    >
+                                    Points name
+                                </FormField>
+                                <FormField type="text"
+                                           field="pointsNamePlural"
+                                           validation="required"
+                                    >
+                                    Points name plural
+                                </FormField>
+                                <FormField type="text"
+                                           field="pointsStep"
+                                           validation="required number"
+                                    >
+                                    Points step
+                                </FormField>
+                                <FormField field="pointsDisplay"
+                                           options={SportsHelpers.clientPointDisplayArray}
+                                           type="dropdown"
+                                    >
+                                    How to display points
+                                </FormField>
+                                <FormField type="text"
+                                           field="pointsInputMask"
+                                           validation="required"
+                                           condition={showMask}
+                                    >
+                                    Points input mask
+                                </FormField>
+                            </FormPlaceholder>
+
+                            <div className="eForm_fieldName mMarginTop">Game Field Picture</div>
+                            <FormField labelText="Upload Game Field Picture" type="imageFile" field="fieldPic"/>
+
+                            <div className="eForm_fieldName mMarginTop">Sport Icon</div>
+                            <FormField labelText="Upload Game Icon" type="imageFile" field="icon"/>
+                        </FormColumn>
+                        <FormColumn customStyle='mWithoutMargin col-md-5'>
+                            <div className="eForm_fieldName">Positions</div>
+                            <div field="field">
+                                {self.getPositionFields()}
+                            </div>
+                            <div className="eForm_fieldName mMarginTop">Discipline</div>
+                            <div field="discipline">
+                                {self.getDisciplineFields()}
+                            </div>
+                            <div className="eForm_fieldName mMarginTop">Performance</div>
+                            <div field="performance">
+                                {self.getPerformanceFields()}
+                            </div>
+                        </FormColumn>
+                    </Form>
+                </div>
             </div>
         )
     }

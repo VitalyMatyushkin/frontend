@@ -233,24 +233,6 @@ const InviteAcceptView = React.createClass({
 
         return !self.getDefaultBinding().toJS('error.0').isError;
     },
-	getAcceptButtonStyleClasses: function() {
-		const binding = this.getDefaultBinding();
-
-		const	event			= binding.toJS('model'),
-				validationData	= [
-					binding.toJS('error.0'),
-					binding.toJS('error.1')
-				];
-
-		return classNames({
-			'mButton_leftSidePosition'	: true,
-			'mDisable'					: (
-				!TeamHelper.isTeamDataCorrect(event, validationData) ||
-				binding.get('isSubmitProcessing') ||
-				!binding.get('isTeamManagerSync')
-			)
-		});
-	},
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -266,21 +248,15 @@ const InviteAcceptView = React.createClass({
 		if(!!binding.get('sync')) {
 			return (
 				<div className="bInviteAccept">
-					<div className="bManager mTeamManager">
+					<div className="bTeamManagerWrapper">
 						<Manager	isInviteMode	= {true}
 									binding			= {managerBinding}
 						/>
-					</div>
-					<div className="eInviteAccept_footer">
-						<div className="eInviteAccept_acceptButtonWrapper">
-							<div className="eInviteAccept_footerLeftSide">
-							</div>
-							<div className="eInviteAccept_footerRightSide">
-								<Button	text				= "Accept"
-										onClick				= {this.onClickAccept}
-										extraStyleClasses	= {this.getAcceptButtonStyleClasses()}
-								/>
-							</div>
+						<div className="eTeamManagerWrapper_footer">
+							<Button	text				= "Accept"
+									onClick				= {this.onClickAccept}
+									extraStyleClasses	= {'mButton_leftSidePosition'}
+							/>
 						</div>
 					</div>
 					<SavingPlayerChangesPopup	binding	= {binding}

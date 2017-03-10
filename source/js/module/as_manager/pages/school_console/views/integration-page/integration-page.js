@@ -4,13 +4,13 @@
 
 const 	React 					= require('react'),
 		Morearty				= require('morearty'),
-		IntegrationPageModel	= require('./integration-page-model'),
+		IntegrationPageClass	= require('./integration-page-class'),
 		Grid 					= require('module/ui/grid/grid');
 
 const IntegrationPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.model = new IntegrationPageModel(this);
+		this.model = new IntegrationPageClass(this);
 	},
 	render: function () {
 		return this.model.grid ? <Grid model={this.model.grid}/> : null;

@@ -157,7 +157,7 @@ const ImportStudentsModule = React.createClass({
 					importIsSync = binding.toJS('importIsSync');
 
 			return (
-				<div className='bForm'>
+				<div className='bForm mNarrow'>
 					<h3>Pls, choose school</h3>
 					<div className='eForm_field'>
 						<Autocomplete

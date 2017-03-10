@@ -35,11 +35,14 @@ module.exports = {
 				query: {
 					"presets": ["react"],
 					"plugins": [
+						"transform-flow-strip-types",
 						"transform-es2015-arrow-functions",     // allowing arrow functions
 						"check-es2015-constants",               // checking const expressions to be really const
 						"transform-es2015-block-scoping",       // allowing block scope features
 						"transform-es2015-template-literals",   // allow string interpolation
-						"transform-es2015-classes"				// allow class syntax
+						"transform-es2015-classes",				// allow class syntax
+						"transform-class-properties",
+						"transform-es2015-parameters"			// transforming default values 
 					]
 				}
 			}, {

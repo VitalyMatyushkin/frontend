@@ -29,7 +29,6 @@ $chooserIconSize: 35px;
 
 .eRegistration_chooserItem {
   display: flex;
-  cursor: pointer;
   margin-bottom: 10px;
   align-items: baseline;
   &.mActive .eChooserItem_wrap{
@@ -47,6 +46,7 @@ $chooserIconSize: 35px;
 }
 
 .eChooserItem_wrap {
+  cursor: pointer;
   box-sizing: border-box;
   width: 15px;
   height: 15px;
@@ -62,6 +62,7 @@ $chooserIconSize: 35px;
 }
 
 .eRegistration_chooserTitle {
+  cursor: pointer;
   text-transform: capitalize;
   margin-left: 10px;
   color: #a9a9a9;
@@ -70,12 +71,10 @@ $chooserIconSize: 35px;
 .eRegistration_permissionsField {
   display: flex;
   flex-flow: column nowrap;
-  float:left;
 
   .eRegistration_input, .bCombobox {
-    width: 215px;
-    margin-bottom: 10px;
-    padding: 5px 0;
+    width: 310px;
+    margin: 5px 0 15px 0;
 
     input {
       @include text-overflow;
@@ -104,7 +103,29 @@ $chooserIconSize: 35px;
 }
 
 .eRegistration_input {
+  border-radius: 5px;
+  background: #f5f5f5;
+
+  padding: 10px;
   width: 200px;
+  height: 40px;
+
+  &.mFullWidth {
+    width: 100%;
+  }
+}
+
+.eRegistration_textarea {
+  border-radius: 5px;
+  background: #f5f5f5;
+  resize: vertical;
+
+  padding: 10px;
+  margin: 5px 0 15px 0;
+
+  &.mFixedWidth {
+    width: 310px;
+  }
 }
 
 .eRegistration_permissionStep{
@@ -118,10 +139,6 @@ $chooserIconSize: 35px;
   padding: 0;
   margin-left: 40px;
 }
-  .eForm_fieldName {
-    color: $COLOR;
-    font-weight: normal;
-  }
 }
 .bRegistrationTitle {
   color: $COLOR;

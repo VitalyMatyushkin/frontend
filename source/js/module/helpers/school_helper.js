@@ -1,9 +1,11 @@
+// @flow
+
 /**
  * Created by Anatoly on 12.12.2016.
  */
 
-const 	Immutable = require('immutable'),
-		Promise = require('bluebird');
+const 	Immutable	= require('immutable'),
+		Promise		= require('bluebird');
 
 const schoolConsts = require('./consts/schools');
 
@@ -14,7 +16,7 @@ const SchoolHelper = {
 	 * Return active school id
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	getActiveSchoolId: function(self) {
+	getActiveSchoolId: function(self: any) {
 		return self.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 	},
 
@@ -22,7 +24,7 @@ const SchoolHelper = {
 	 * Return active school data
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	getActiveSchoolInfo: function (self) {
+	getActiveSchoolInfo: function (self: any) {
 		const	rootBinding			= self.getMoreartyContext().getBinding(),
 				activeSchoolInfo	= rootBinding.toJS('activeSchool.schoolInfo');
 
@@ -33,7 +35,7 @@ const SchoolHelper = {
 	 * Return active school data
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	loadActiveSchoolInfo: function (self) {
+	loadActiveSchoolInfo: function (self: any) {
 		const
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.toJS('userRules.activeSchoolId');
@@ -44,8 +46,24 @@ const SchoolHelper = {
 			return Promise.resolve(data);
 		})
 	},
+	
+	/**
+	 * Return active school data (public)
+	 * @param self - context(this) of react element that include morearty mixin
+	 */
+	loadActiveSchoolInfoPublic: function (self: any) {
+		const
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.toJS('userRules.activeSchoolId');
+		
+		return window.Server.publicSchool.get(activeSchoolId).then(data => {
+			rootBinding.set('activeSchool.schoolInfo', Immutable.fromJS(data));
+			
+			return Promise.resolve(data);
+		})
+	},
 
-	setSchoolSubscriptionPlanPromise: function (self) {
+	setSchoolSubscriptionPlanPromise: function (self: any) {
 		const binding = self.getDefaultBinding();
 
 		return this.loadActiveSchoolInfo(self).then(data => {
@@ -56,10 +74,9 @@ const SchoolHelper = {
 
 	},
 
-	schoolSubscriptionPlanIsFull: function (self) {
-		const
-			binding = self.getDefaultBinding(),
-			subscriptionPlan = binding.get('schoolSubscriptionPlan');
+	schoolSubscriptionPlanIsFull: function (self: any) {
+		const 	binding				= self.getDefaultBinding(),
+				subscriptionPlan	= binding.get('schoolSubscriptionPlan');
 
 		if(subscriptionPlan === schoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE){
 			window.simpleAlert(
@@ -77,7 +94,7 @@ const SchoolHelper = {
 	 * Method replace client publicSite.password field value by server value
 	 * @param data
 	 */
-	setServerPublicSiteAccessPasswordValue: function(data) {
+	setServerPublicSiteAccessPasswordValue: function(data: any) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected && data.publicSite.password === defaultPassValue){
@@ -89,7 +106,7 @@ const SchoolHelper = {
 	 * Method replace server publicSite.password field value by client value
 	 * @param data
 	 */
-	setClientPublicSiteAccessPasswordValue: function(data) {
+	setClientPublicSiteAccessPasswordValue: function(data: any) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected){

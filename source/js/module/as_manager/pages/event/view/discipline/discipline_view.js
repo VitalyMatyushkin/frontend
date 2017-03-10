@@ -236,7 +236,7 @@ const DisciplineView = React.createClass({
 			});
 
 			return (
-				<div key={playerIndex} className={playerStyle}>
+				<div key={player.userId} className={playerStyle}>
 					<div className="ePlayer_name mBold">
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
@@ -261,7 +261,7 @@ const DisciplineView = React.createClass({
 	renderPlayerDisciplineItems: function(player) {
 		return this.props.disciplineItems.map(disciplineItem => {
 			return (
-				<div className="ePlayer_disciplineItem">
+				<div key={disciplineItem._id} className="ePlayer_disciplineItem">
 					<div className="ePlayer_disciplineItemName">
 						{disciplineItem.namePlural}
 					</div>

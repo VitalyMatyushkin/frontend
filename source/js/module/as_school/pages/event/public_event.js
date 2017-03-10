@@ -128,7 +128,9 @@ const PublicEvent = React.createClass({
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
-					<PublicEventTeams	binding			= {this._getEventTeamsBinding()}/>
+					<PublicEventTeams	binding			= { this._getEventTeamsBinding() }
+										activeSchoolId	= { this.props.activeSchoolId }
+					/>
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
 					{this.renderMatchReport()}
 				</div>

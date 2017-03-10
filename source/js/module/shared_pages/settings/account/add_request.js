@@ -2,20 +2,24 @@
  * Created by Anatoly on 21.04.2016.
  */
 
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable');
 
-		Form		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		classNames	= require('classnames'),
-		roleList	= require('module/data/roles_data');
+const	Form			= require('module/ui/form/form'),
+		FormField 		= require('module/ui/form/form_field'),
+		classNames		= require('classnames'),
+		If				= require('module/ui/if/if'),
+		SchoolListItem	= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		roleList		= require('module/data/roles_data'),
+		GeoSearchHelper	= require('../../../helpers/geo_search_helper');
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
-		onSuccess:	React.PropTypes.func,
-		onCancel: 	React.PropTypes.func
+		onSuccess:		React.PropTypes.func,
+		onCancel:		React.PropTypes.func,
+		activeSchool:	React.PropTypes.object.isRequired
 	},
 	getDefaultState:function() {
 		return Immutable.Map({
@@ -84,9 +88,31 @@ const AddPermissionRequest = React.createClass({
 			}
 		});
 	},
+	schoolService: function(schoolName) {
+		const postcode = this.props.activeSchool.postcode;
+
+		const filter = {
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
+				},
+				limit: 20
+			}
+		};
+
+		if(typeof postcode !== 'undefined') {
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getUnlimitedGeoSchoolFilter(postcode.point);
+		} else {
+			filter.filter.order = "name ASC";
+		}
+
+		return window.Server.publicSchools.get(filter);
+	},
 	render: function() {
-		const 	binding		= this.getDefaultBinding(),
-				getSchools	= window.Server.publicSchools.filter,
+		const	binding		= this.getDefaultBinding(),
 				isParent	= binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
 
 		return (
@@ -102,7 +128,8 @@ const AddPermissionRequest = React.createClass({
 				<FormField
 					type				= "autocomplete"
 					field				= "schoolId"
-					serviceFullData		= {getSchools}
+					serviceFullData		= {this.schoolService}
+					customListItem		= {SchoolListItem}
 					placeholder 		= {'Please select school'}
 					validation			= "required"
 				>
@@ -123,7 +150,9 @@ const AddPermissionRequest = React.createClass({
 					field			= "studentName"
 					fieldClassName	= {classNames({mHidden:!isParent})}
 				>
-					Student
+					<If condition={Boolean(isParent)}>
+						<span>Student</span>
+					</If>
 				</FormField>
 				<FormField
 					type	= "textarea"

@@ -71,7 +71,7 @@ const GrantRole = React.createClass({
 	continueButtonClick:function(model){
 		let ids = this.props.userIdsBinding.toJS();
 		ids = ids && typeof ids === 'string' ? [ids] : ids;
-		
+
 		ids.forEach(currentId => {
 			let body;
 

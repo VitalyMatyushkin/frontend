@@ -16,7 +16,8 @@ const	EventHelper					= require('module/helpers/eventHelper'),
 const EventRival = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	getPic: function (order) {
 		const	self = this,
@@ -358,8 +359,9 @@ const EventRival = React.createClass({
 	},
 	_renderTeamByOrder: function(order) {
 		const eventRivalClassName = classNames({
-			"bEventRival":	true,
-			"mRight":		order === 1
+			"bEventRival"		: true,
+			"mNoneBottomBorder"	: this.getDefaultBinding().toJS('mode') !== "closing",
+			"mRight"			: order === 1
 		});
 
 		return (
@@ -419,20 +421,20 @@ const EventRival = React.createClass({
 			binding	= self.getDefaultBinding();
 
 		const	eventType	= binding.get('model.eventType'),
-			teamsData	= binding.toJS('model.teamsData');
+				teamsData	= binding.toJS('model.teamsData');
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
 		} else if (
 			// if inter school event and participant[0] is our school
-		teamsData.length > 1 &&
-		eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+			teamsData.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
 		} else if(
 			// if inter school event and opponent school is not yet accept invitation
-		teamsData.length === 1 &&
-		eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+			teamsData.length === 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
 		} else {
@@ -445,7 +447,13 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		if(binding.toJS('isChangeOpponentSchoolPopupOpen')) {
-			return <ChangeOpponentSchoolPopup activeSchoolId={this.props.activeSchoolId} binding={binding}/>
+			return (
+				<ChangeOpponentSchoolPopup
+					activeSchoolId	= {this.props.activeSchoolId}
+					onReload		= {this.props.onReload}
+					binding			= {binding}
+				/>
+			);
 		} else {
 			return null;
 		}

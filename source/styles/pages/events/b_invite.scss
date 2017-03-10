@@ -5,8 +5,10 @@
   border-radius: 5px;
   font-size: 1rem;
   margin-bottom: 10px;
+
     .eEvent_commentBlog {
       width: 515px;
+
       textarea{
         resize: none;
         border: 1px solid #d7d7d7;
@@ -125,4 +127,33 @@
 .eInvite_comments {
   border-top: $mainBorder;
   padding-top: 10px;
+}
+
+/* Medium Devices, Desktops */
+@media screen and (max-width: 992px) {
+  .eInvite_buttons {
+    padding-right: 15px;
+  }
+}
+
+/* Small Devices, Phones */
+@media screen and (max-width: 767px) {
+  .eInvite_img {
+    margin: 0 0 10px;
+  }
+
+  .eInvite_info {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .eInvite_content {
+    min-height: 1px;
+    padding: 0 15px;
+  }
+
+  .eInvite_buttons {
+    padding: 20px 15px;
+  }
 }

@@ -27,7 +27,7 @@
   display: inline-block;
 }
 
-.eTeamWrapper_revertButtonContainer {
+.eTeamWrapper_footer {
   margin: 10px 0 10px 0;
 }
 
@@ -54,10 +54,10 @@
 .eTeamWrapper_plug {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 403px;
   z-index: 900;
-  background-color: grey;
-  opacity: 0.6;
+  background-color: white;
+  opacity: 0.3;
 
   &.mDisabled {
     display: none;

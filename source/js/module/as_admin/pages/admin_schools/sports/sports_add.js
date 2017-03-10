@@ -23,7 +23,6 @@ const SportsAdd = React.createClass({
 			window.Server.sports.post(dataForServer).then(() => {
 				self.isMounted() && SportsHelpers.redirectToSportsPage();
 			}).catch(function(err){
-				console.log(err);
 				self.isMounted() && SportsHelpers.redirectToSportsPage();
 			});
 		}

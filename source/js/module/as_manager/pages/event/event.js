@@ -15,7 +15,7 @@ const	React						= require('react'),
 		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
 		TasksWrapper				= require('./view/tasks/tasks_wrapper'),
 		EventGallery				= require('./new_gallery/event_gallery'),
-		ManagerWrapper				= require('./view/manager_wrapper'),
+		ManagerWrapper				= require('./view/manager_wrapper/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		classNames					= require('classnames'),
@@ -34,7 +34,8 @@ const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -71,11 +72,11 @@ const Event = React.createClass({
 			},
 			individualScoreAvailable: [
 				{
-					value					: true,
+					value					: false,
 					isTeamScoreWasChanged	: false
 				},
 				{
-					value					: true,
+					value					: false,
 					isTeamScoreWasChanged	: false
 				}
 			],
@@ -92,169 +93,124 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		this.initIsNewEvent();
+		this.initIsNewEventFlag();
 
 		let eventData, report, photos, settings;
-		/**
-		 * If role not equal student, do everything as usual
-		 */
-		if (role !== 'STUDENT') {
-			window.Server.schoolEvent.get({
+		//For different roles we use different service
+		const service = this.getServiceForEvent(role);
+
+		window.Server.publicSchool.get(this.props.activeSchoolId).then(activeSchool => {
+			binding.set('activeSchoolInfo', Immutable.fromJS(activeSchool));
+
+			return service.get({
 				schoolId	: this.props.activeSchoolId,
 				eventId		: self.eventId
-			}).then(event => {
-				eventData = event;
-
-				return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
-					return window.Server.publicSchool.get(school.id);
-				}));
-			}).then(schoolsData => {
-				eventData.schoolsData = schoolsData;
-
-				eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
-					if (!t1 || !t2 || t1.name === t2.name) {
-						return 0;
-					}
-					if (t1.name < t2.name) {
-						return -1;
-					}
-					if (t1.name > t2.name) {
-						return 1;
-					}
-				});
-				eventData.housesData = eventData.housesData.sort((h1, h2) => {
-					if (!h1 || !h2 || h1.name === h2.name) {
-						return 0;
-					}
-					if (h1.name < h2.name) {
-						return -1;
-					}
-					if (h1.name > h2.name) {
-						return 1;
-					}
-				});
-				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(eventData);
-
-				// loading match report
-				return window.Server.schoolEventReport.get({
-					schoolId: this.props.activeSchoolId,
-					eventId: self.eventId
-				});
-			}).then(_report => {
-				report = _report;
-
-				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-			}).then(_photos => {
-				photos = _photos;
-
-				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-			}).then(_settings => {
-				settings = _settings;
-
-				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
-			}).then(tasks => {
-				eventData.matchReport = report.content;
-				eventData.individualScoreForRemove = [];
-
-				this.setPlayersFromEventToBinding(eventData);
-				binding.atomically()
-					.set('model',							Immutable.fromJS(eventData))
-					.set('gallery.photos',					Immutable.fromJS(photos))
-					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-					.set('gallery.isSync',					true)
-					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-					.set('mode',							Immutable.fromJS('general'))
-					.commit();
-
-				self.initTabs();
-
-				if(TeamHelper.isTeamSport(eventData)) {
-					this.initIsIndividualScoreAvailable();
-				}
-				binding.set('sync', Immutable.fromJS(true));
-
-				this.addListeners();
-
-				return eventData;
 			});
-		} else {
-			window.Server.studentSchoolEvent.get({
+		}).then(event => {
+			eventData = event;
+
+			return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
+				return window.Server.publicSchool.get(school.id);
+			}));
+		}).then(schoolsData => {
+			eventData.schoolsData = schoolsData;
+				if(TeamHelper.isIndividualSport(eventData)) {
+					eventData.individualsData = eventData.individualsData.sort((player1, player2) => {
+						if (!player1 || !player2 || player1.firstName === player2.firstName) {
+							return 0;
+						}
+						if (player1.firstName < player2.firstName) {
+							return -1;
+						}
+						if (player1.firstName > player2.firstName) {
+							return 1;
+						}
+					});
+				}
+
+			eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
+				if (!t1 || !t2 || t1.name === t2.name) {
+					return 0;
+				}
+				if (t1.name < t2.name) {
+					return -1;
+				}
+				if (t1.name > t2.name) {
+					return 1;
+				}
+			});
+			eventData.housesData = eventData.housesData.sort((h1, h2) => {
+				if (!h1 || !h2 || h1.name === h2.name) {
+					return 0;
+				}
+				if (h1.name < h2.name) {
+					return -1;
+				}
+				if (h1.name > h2.name) {
+					return 1;
+				}
+			});
+			// FUNCTION MODIFY EVENT OBJECT!!
+			EventResultHelper.initializeEventResults(eventData);
+
+			// loading match report
+			return window.Server.schoolEventReport.get({
 				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
-			}).then(event => {
-				event.schoolsData = TeamHelper.getSchoolsData(event);
-					event.teamsData = event.teamsData.sort((t1, t2) => {
-						if (!t1 || !t2 || t1.name === t2.name) {
-							return 0;
-						}
-						if (t1.name < t2.name) {
-							return -1;
-						}
-						if (t1.name > t2.name) {
-							return 1;
-						}
-					});
-					event.housesData = event.housesData.sort((h1, h2) => {
-						if (!h1 || !h2 || h1.name === h2.name) {
-							return 0;
-						}
-						if (h1.name < h2.name) {
-							return -1;
-						}
-						if (h1.name > h2.name) {
-							return 1;
-						}
-					});
-
-				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(event);
-
-				eventData = event;
-
-				// loading match report
-				return window.Server.schoolEventReport.get({
-					schoolId: this.props.activeSchoolId,
-					eventId: self.eventId
-				});
-			}).then(_report => {
-				report = _report;
-
-				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-			}).then(_photos => {
-				photos = _photos;
-
-				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-			}).then(_settings => {
-				settings = _settings;
-
-				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
-			}).then(tasks => {
-				eventData.matchReport = report.content;
-
-				this.setPlayersFromEventToBinding(eventData);
-				binding.atomically()
-					.set('model',							Immutable.fromJS(eventData))
-					.set('gallery.photos',					Immutable.fromJS(photos))
-					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-					.set('gallery.isSync',					true)
-					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-					.set('mode',							Immutable.fromJS('general'))
-					.commit();
-
-				self.initTabs();
-
-				binding.set('sync', Immutable.fromJS(true));
-
-				this.addListeners();
-
-				return eventData;
 			});
+		}).then(_report => {
+			report = _report;
+
+			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
+		}).then(_photos => {
+			photos = _photos;
+
+			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+		}).then(_settings => {
+			settings = _settings;
+
+				return window.Server.schoolEventTasks.get(
+					{
+						schoolId	: this.props.activeSchoolId,
+						eventId		: self.eventId
+					}
+				);
+		}).then(tasks => {
+			eventData.matchReport = report.content;
+			eventData.individualScoreForRemove = [];
+
+			this.setPlayersFromEventToBinding(eventData);
+			binding.atomically()
+				.set('model',							Immutable.fromJS(eventData))
+				.set('gallery.photos',					Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',					true)
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
+				.set('mode',							Immutable.fromJS('general'))
+				.commit();
+
+			self.initTabs();
+
+			if(TeamHelper.isTeamSport(eventData)) {
+				this.initIsIndividualScoreAvailable();
+			}
+			binding.set('sync', Immutable.fromJS(true));
+
+			this.addListeners();
+
+			return eventData;
+		});
+	},
+	//For different roles we use different service
+	getServiceForEvent: function(role) {
+		if (role!=='STUDENT') {
+			return window.Server.schoolEvent
+		} else {
+			return window.Server.studentSchoolEvent
 		}
 	},
-	initIsNewEvent: function() {
+	initIsNewEventFlag: function() {
 		const rootBinding = this.getMoreartyContext().getBinding();
 
 		const isNewEvent = rootBinding.get('routing.parameters.new');
@@ -271,7 +227,7 @@ const Event = React.createClass({
 	initIsIndividualScoreAvailableByOrder: function(order) {
 		const binding = this.getDefaultBinding();
 
-		const	activeSchoolId 	= this.props.activeSchoolId,
+		const	activeSchoolId	= this.props.activeSchoolId,
 				event			= binding.toJS('model');
 
 		let params;
@@ -284,18 +240,22 @@ const Event = React.createClass({
 				break;
 		}
 
-		// id of school, house or team.
-		let id = event[params.bundleName][params.order].id;
-		switch (params.bundleName) {
-			case "schoolsData":
-				binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));
-				break;
-			case "housesData":
-				binding.set(`individualScoreAvailable.${order}.houseId`, Immutable.fromJS(id));
-				break;
-			case "teamsData":
-				binding.set(`individualScoreAvailable.${order}.teamId`, Immutable.fromJS(id));
-				break;
+		const team = event[params.bundleName][params.order];
+		// team is undefined when "set team later" is true
+		if(typeof team !== 'undefined') {
+			// id of school, house or team.
+			const id = team.id;
+			switch (params.bundleName) {
+				case "schoolsData":
+					binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));
+					break;
+				case "housesData":
+					binding.set(`individualScoreAvailable.${order}.houseId`, Immutable.fromJS(id));
+					break;
+				case "teamsData":
+					binding.set(`individualScoreAvailable.${order}.teamId`, Immutable.fromJS(id));
+					break;
+			}
 		}
 	},
 	addListeners: function() {
@@ -331,29 +291,40 @@ const Event = React.createClass({
 	addListenerForIndividualScoreAvailable: function() {
 		const binding = this.getDefaultBinding();
 
-		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.0.id');
+		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 0))
+		);
+		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 1))
+		);
+	},
+	handleIndividualAvailableFlagChanges: function(order, eventDescriptor) {
+		const	binding			= this.getDefaultBinding(),
+				activeSchoolId	= this.props.activeSchoolId,
+				event			= binding.toJS('model');
 
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
 
-			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
+		const team = event[params.bundleName][params.order];
+		if(typeof team !== 'undefined') {
+			const teamId = team.id;
+
+			!eventDescriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			eventDescriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId);
+
+			if(binding.toJS(`individualScoreAvailable.${order}.isTeamScoreWasChanged`) && eventDescriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId(teamId);
-				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
+				binding.set(`individualScoreAvailable.${order}.isTeamScoreWasChanged`, false);
 			}
-		}));
-
-		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.1.id');
-
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
-
-			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId('teamScore', teamId);
-				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
-			}
-		}));
+		}
 	},
 	clearIndividualScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
@@ -388,9 +359,14 @@ const Event = React.createClass({
 	clearTeamScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
 
-		const updScore = binding.toJS(`model.results.teamScore`).filter(s => s.teamId !== teamId);
+		const score = binding.toJS(`model.results.teamScore`);
+		score.forEach(s => {
+			if(s.teamId === teamId) {
+				s.score = 0;
+			}
+		});
 
-		binding.set(`model.results.teamScore`, Immutable.fromJS(updScore));
+		binding.set(`model.results.teamScore`, Immutable.fromJS(score));
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
@@ -710,12 +686,12 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
-			.set("model.startTime"		, updEvent.startTime)
-			.set("model.venue"			, updEvent.venue)
+			.set("model.startTime",	updEvent.startTime)
+			.set("model.venue",		updEvent.venue)
 			.commit();
 
 		//TODO I'm going to make event changes without reload.
-		window.location.reload();
+		this.props.onReload();
 	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
@@ -751,8 +727,11 @@ const Event = React.createClass({
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent');
-
+				isNewEvent		= binding.get('isNewEvent'),
+				//If team don't have players we don't display checkbox "Individual Score"
+				isLeftPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.0') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.0').length) : false,
+				isRightPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.1') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.1').length) : false;
+		
 		const EventContainerStyle = classNames({
 			bEventContainer	: true,
 			mTopMargin		: !isNewEvent
@@ -770,25 +749,29 @@ const Event = React.createClass({
 				return (
 					<div className={EventContainerStyle}>
 						<If condition={isNewEvent}>
-							<CreateOtherEventPanel/>
+							<CreateOtherEventPanel eventId={event.id}/>
 						</If>
 						<div className="bEvent">
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<EventRivals	binding			= {binding}
+											onReload		= {this.props.onReload}
 											activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
-									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
-																isVisible	= {isaLeftShow}
-																className	= "mLeft"
-									/>
-									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.1')}
-																isVisible	= {isaRightShow}
-									/>
+									<div className="col-md-5 col-md-offset-1 col-sm-6">
+										<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
+																	isVisible	= {isLeftPlayers && isaLeftShow}
+											/>
+									</div>
+									<div className="col-md-5 col-sm-6">
+										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+																  isVisible={isRightPlayers && isaRightShow}
+											/>
+									</div>
 								</div>
 							</div>
 							<EventTeams	binding			= {self.getEventTeamsBinding()}
@@ -866,11 +849,9 @@ const Event = React.createClass({
 			// sync and edit squad mode
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
-					<div className="bEventContainer">
-						<ManagerWrapper	binding			= {binding}
-										activeSchoolId	= {this.props.activeSchoolId}
-						/>
-					</div>
+					<ManagerWrapper	binding			= {binding}
+									activeSchoolId	= {this.props.activeSchoolId}
+					/>
 				);
 		}
 	}

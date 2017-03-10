@@ -1,11 +1,11 @@
 const TeamPlayersValidator = {
-    validate: function(players, limits) {
+    validate: function(players, limits, subscriptionPlan) {
         const self = this;
 
         let isError = false,
             text = undefined;
 
-        if(players && players.length !== 0) {
+        if(subscriptionPlan !== "LITE" && typeof players !== 'undefined') {
 			if (players && limits.minPlayers && players.length < limits.minPlayers) {
 				isError = true;
 				text = `Number of players should be greater or equal ${limits.minPlayers}`;

@@ -330,6 +330,23 @@ const TeamManager = React.createClass({
 
 		binding.set('teamStudents', Immutable.fromJS(teamStudents));
 	},
+	handleClickPlayerIsCaptain: function(playerId, isCaptain) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	teamStudents	= binding.toJS('teamStudents'),
+				playerIndex		= teamStudents.findIndex(s => s.id === playerId),
+				// ahah old captain, yohoho
+				oldCaptainIndex	= teamStudents.findIndex(s => s.isCaptain);
+
+		teamStudents[playerIndex].isCaptain = isCaptain;
+		// kill captain, i'm a captain
+		if(isCaptain && oldCaptainIndex !== -1) {
+			teamStudents[oldCaptainIndex].isCaptain = false;
+		}
+
+		binding.set('teamStudents', Immutable.fromJS(teamStudents));
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -342,8 +359,10 @@ const TeamManager = React.createClass({
 						handleClickPlayer				= { self.handleClickPlayer }
 						handleChangePlayerPosition		= { self.handleChangePlayerPosition }
 						handleClickPlayerSub			= { self.handleClickPlayerSub }
+						handleClickPlayerIsCaptain		= { self.handleClickPlayerIsCaptain }
 						handleClickRemovePlayerButton	= { self.handleClickRemovePlayerButton }
 						isRemovePlayerButtonBlock		= { binding.toJS('isRemovePlayerButtonBlock') }
+						error							= { typeof this.getBinding('error') !== 'undefined' ? this.getBinding('error').toJS() : {} }
 				/>
 				<PlayerChooser	students					= { binding.toJS('foundStudents') }
 								handleChangeSearchText		= { self.handleChangeSearchText }

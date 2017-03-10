@@ -1,0 +1,24 @@
+@import "../!variables";
+
+.bCrossButton {
+  display: inline-block;
+  height: 39px;
+  padding: 0 10px;
+  line-height: 47px;
+
+  background: $blueColor;
+  border: solid 1px #164170;
+  border-radius: $borderRadius;
+  color: #fff;
+  font-size: 18px;
+
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+
+  &:hover {
+    background: $lightBlue;
+    color: #fff;
+  }
+}

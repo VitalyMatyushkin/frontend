@@ -10,10 +10,13 @@ const	React					= require('react'),
 		Immutable				= require('immutable'),
 		ManagerConsts			= require('./helpers/manager_consts');
 
+const	propz					= require('propz');
+
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isInviteMode: 	React.PropTypes.bool
+		isInviteMode			: React.PropTypes.bool,
+		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	listeners: [],
 	componentWillMount: function () {
@@ -23,8 +26,12 @@ const Manager = React.createClass({
 
 		self._addListeners();
 
-		self._validate(0);
-		self._validate(1);
+		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
+			self._validate(this.props.indexOfDisplayingRival);
+		} else {
+			self._validate(0);
+			self._validate(1);
+		}
 	},
 	componentWillUnmount: function() {
 		const	self	= this,
@@ -124,50 +131,55 @@ const Manager = React.createClass({
 		];
 	},
 	getInitPlayersByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order] !== "undefined" &&
-			typeof binding.rivals.toJS()[order].players !== "undefined" ?
-				binding.rivals.toJS()[order].players :
-				[]
-		);
+		let players = [];
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			const _players = propz.get(rivals, [order, 'players']);
+			if(typeof _players !== "undefined") {
+				players = _players;
+			}
+		}
+
+		return players;
 	},
 	getTeamNameByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order] !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.name :
-				undefined
-		);
+		let teamName;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamName = propz.get(rivals, [order, 'team', 'name']);
+		}
+
+		return teamName;
 	},
 	getTeamIdByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const binding = this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.id :
-				undefined
-		);
+		let teamId;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamId = propz.get(rivals, [order, 'team', 'id']);
+		}
+
+		return teamId;
 	},
 	getTeamTypeByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getBinding();
+		const	binding	= this.getBinding();
 
-		return (
-			typeof binding.rivals !== "undefined" &&
-			typeof binding.rivals.toJS()[order].team !== "undefined" ?
-				binding.rivals.toJS()[order].team.teamType :
-				undefined
-		);
+		let teamType;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			teamType = propz.get(rivals, [order, 'team', 'teamType']);
+		}
+
+		return teamType;
 	},
 	/**
 	 * Add listeners on binding
@@ -249,8 +261,9 @@ const Manager = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
-		const	isSetTeamLater	= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
-				errorBinding	= self.getBinding('error');
+		const	isSetTeamLater		= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
+				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan'),
+				errorBinding		= self.getBinding('error');
 
 		if(isSetTeamLater) {
 			errorBinding.sub(rivalIndex).set(
@@ -271,7 +284,7 @@ const Manager = React.createClass({
 					minPlayers:	event.sportModel.defaultLimits.minPlayers,
 					minSubs:	event.sportModel.defaultLimits.minSubs,
 					maxSubs:	event.sportModel.defaultLimits.maxSubs
-				} : {};
+				} : {minPlayers: 1};
 
 				let result = {
 					isError:	false,
@@ -282,7 +295,8 @@ const Manager = React.createClass({
 					case TeamHelper.isNonTeamSport(event):
 						result = TeamPlayersValidator.validate(
 							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-							limits
+							limits,
+							subscriptionPlan
 						);
 						break;
 					case TeamHelper.isTeamSport(event):
@@ -297,7 +311,8 @@ const Manager = React.createClass({
 						} else {
 							result = TeamPlayersValidator.validate(
 								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-								limits
+								limits,
+								subscriptionPlan
 							);
 						}
 						break;
@@ -342,16 +357,11 @@ const Manager = React.createClass({
 
 		const event = self.getDefaultBinding().toJS('model');
 
-		return rivalsBinding.get().map(function (rival, index) {
+		return rivalsBinding.get().map((rival, index) => {
 			const	disable		= self._isRivalDisable(rival),
-					teamClasses	= classNames({
-						mActive: selectedRivalIndex == index,
-						eChooser_item: true,
-						mDisable: disable
-					}),
 					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'));
-			let		text		= '';
 
+			let text = '';
 			switch (eventType) {
 				case 'houses':
 				case 'inter-schools':
@@ -366,13 +376,39 @@ const Manager = React.createClass({
 					break;
 			}
 
-			if(!TeamHelper.isInternalEventForIndividualSport(event)
-				&& (self.isShowRivals() || selectedRivalIndex == index)) {
-				return (
-					<span key={`team-index-${index}`} className={teamClasses}
-						  onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
+			if(
+				!TeamHelper.isInternalEventForIndividualSport(event) &&
+				self.isShowRivals() &&
+				(typeof this.props.indexOfDisplayingRival !== 'undefined' ? index === this.props.indexOfDisplayingRival : true)
+			) {
+				const xmlRivals = [];
+
+				if(typeof this.props.indexOfDisplayingRival === 'undefined' && index === 1) {
+					xmlRivals.push(
+						<span	key			= 'team-index-separator'
+								className	= 'eChooser_separator'
+						>
+							vs.
+						</span>
+					);
+				}
+
+				const teamClasses = classNames({
+					eChooser_item	: true,
+					mOnce			: typeof this.props.indexOfDisplayingRival !== 'undefined', //it mean that only one rival is displaying
+					mNotActive		: eventType !== 'inter-schools' && selectedRivalIndex !== index,
+					mDisable		: disable
+				});
+				xmlRivals.push(
+					<span	key			={`team-index-${index}`}
+							className	={teamClasses}
+							onClick		={!disable ? self.onChooseRival.bind(null, index) : null}
+					>
+						{text}
 					</span>
 				);
+
+				return xmlRivals;
 			}
 		}).toArray();
 	},
@@ -391,10 +427,8 @@ const Manager = React.createClass({
 		const self = this;
 
 		return (
-			<div className="eManager_chooser">
-				<div className="bChooserRival">
-					{self._getRivals()}
-				</div>
+			<div className="bChooserRival">
+				{self._getRivals()}
 			</div>
 		);
 	},
@@ -432,8 +466,6 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
-
-		console.log(defaultBinding.toJS());
 
 			return (
 				<div className="eManager_container">

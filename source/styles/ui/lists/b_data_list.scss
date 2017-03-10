@@ -9,6 +9,16 @@
   &.mCentred {
     margin: 0 auto;
   }
+  a{
+	color:$blueColor;
+	text-decoration: underline;
+	&:hover{
+	  text-decoration: none;
+	}
+  }
+  .eDataList_listItemText{
+	margin-top: 10px;
+  }
 
   @media (max-width: 992px) {
     font-size: 14px;
@@ -94,6 +104,16 @@
     word-wrap: break-word;
     max-width: 180px;
   }
+  .bIcon_invites{
+	height: 30px;
+	width: 30px;
+  }
+  .eStar {
+	color: #FCD614;
+  }
+}
+.eStar {
+	color: #FCD614;
 }
 
 .eDataList_listItemCell .bLinkLike{

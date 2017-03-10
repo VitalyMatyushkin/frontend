@@ -17,6 +17,9 @@
 }
 
 .eEventHeader_rightSide {
+  display: flex;
+  justify-content: flex-end;
+
   @include make-md-column(4);
   @extend .col-sm-4
 }
@@ -46,6 +49,9 @@
   margin: 10px 0;
 
   &.mEvent {
+    display: flex;
+    justify-content: flex-start;
+
     font-size: 1.5625rem;
     text-align: left;
     text-overflow: ellipsis;

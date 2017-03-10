@@ -1,7 +1,10 @@
 const	React	= require('react'),
 
 		Player				= require('./player'),
+		ErrorItem			= require('./errorItem'),
 		RemovePlayersButton	= require('./remove_players_button');
+
+const	TeamStyle			= require('../../../../../../styles/ui/mangers/b_team.scss');
 
 const DefaultTeam = React.createClass({
 	propTypes: {
@@ -11,8 +14,10 @@ const DefaultTeam = React.createClass({
 		handleChangePlayerPosition:		React.PropTypes.func.isRequired,
 		handleClickPlayerSub:			React.PropTypes.func.isRequired,
 		handleClickRemovePlayerButton:	React.PropTypes.func.isRequired,
+		handleClickPlayerIsCaptain:		React.PropTypes.func.isRequired,
 		isNonTeamSport:					React.PropTypes.bool.isRequired,
-		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired
+		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired,
+		error:							React.PropTypes.object.isRequired
 	},
 	renderTableHead: function() {
 		const self = this;
@@ -32,6 +37,7 @@ const DefaultTeam = React.createClass({
 					<div className="eTeam_playerItem mName">Name</div>
 					<div className="eTeam_playerItem mForm">Form</div>
 					<div className="eTeam_playerItem mPosition">Position</div>
+					<div className="eTeam_playerItem mCaptain">Captain</div>
 					<div className="eTeam_playerItem mSub">Sub</div>
 				</div>
 			);
@@ -43,7 +49,15 @@ const DefaultTeam = React.createClass({
 		const	players		= self.props.players,
 				positions	= self.props.positions;
 
-		return players.map((player, index) =>
+		let xmlPlayers = [];
+
+		if(this.props.error.isError && this.props.error.text !== 'Please enter team name') {
+			xmlPlayers.push(
+				<ErrorItem errorText={this.props.error.text}/>
+			);
+		}
+
+		xmlPlayers = xmlPlayers.concat(players.map((player, index) =>
 			<Player	number						= {index + 1}
 					key							= {player.id}
 					isNonTeamSport				= {self.props.isNonTeamSport}
@@ -52,8 +66,11 @@ const DefaultTeam = React.createClass({
 					handleClickPlayer			= {self.props.handleClickPlayer}
 					handleChangePlayerPosition	= {self.props.handleChangePlayerPosition}
 					handleClickPlayerSub		= {self.props.handleClickPlayerSub}
+					handleClickPlayerIsCaptain	= {self.props.handleClickPlayerIsCaptain}
 			/>
-		);
+		));
+
+		return xmlPlayers;
 	},
 	render: function() {
 		const self  = this;

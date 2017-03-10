@@ -3,13 +3,16 @@
 .bManager {
   display: flex;
   flex-direction: column;
-  width: 700px;
+  width: 750px;
   margin: 0 auto;
   color: $COLOR;
   font-size: 16px;
 
+  padding-top: 30px;
+
   &.mTeamForm {
     padding-top: 30px;
+    width: 750px;
   }
 
   &.mTeamManager {
@@ -19,6 +22,12 @@
   &.mBase {
     padding-top: 60px;
   }
+}
+
+.eManager_controlButtons {
+  display: flex;
+  margin: 30px auto;
+  justify-content: center;
 }
 
 .eManager_dateTimePicker {
@@ -81,7 +90,7 @@
 
 .eManager_container {
   display: flex;
-  max-width: 1070px;
+  max-width: 1130px;
   margin: 0 auto;
   flex-direction: column;
 }
@@ -101,7 +110,8 @@
 .eManager_containerTeam {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: flex-start;
+
   margin: 10px 0;
 }
 

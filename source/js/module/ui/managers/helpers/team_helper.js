@@ -153,8 +153,11 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 			if(foundPlayer.sub !== initialPlayer.sub) {
 				changes.sub = foundPlayer.sub;
 			}
+			if(foundPlayer.isCaptain !== initialPlayer.isCaptain) {
+				changes.isCaptain = foundPlayer.isCaptain;
+			}
 
-			if(changes.positionId !== undefined || changes.sub !== undefined) {
+			if(changes.positionId !== undefined || changes.sub !== undefined || changes.isCaptain !== undefined) {
 				return changePlayer(
 						schoolId,
 						teamId,
@@ -226,13 +229,21 @@ function convertGenderToServerValue(gender) {
 }
 
 function getBodyForAddPlayersRequest(player) {
+	// User Id may be contained in userId field or in id.
+	// Because manager component gets users from different sources
 	const body = {
-		userId:         player.userId ? player.userId : player.id,
-		permissionId:   player.permissionId
+		userId			: player.userId ? player.userId : player.id,
+		permissionId	: player.permissionId,
+		isCaptain 		: typeof player.isCaptain !== 'undefined' ? player.isCaptain : false
 	};
 
-	player.positionId	&&	(body.positionId = player.positionId);
-	player.sub 			&&	(body.sub = player.sub);
+	if (typeof player.positionId !=='undefined') {
+		body.positionId = player.positionId
+	}
+	
+	if (typeof player.sub !== 'undefined') {
+		body.sub = player.sub
+	}
 
 	return body;
 };

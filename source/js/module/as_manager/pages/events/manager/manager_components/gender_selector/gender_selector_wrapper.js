@@ -71,12 +71,12 @@ const GenderSelectorWrapper = React.createClass({
 		}
 	},
 	isBoysDisabled: function() {
-		const sportModel = this.getDefaultBinding().get('model.sportModel');
+		const sportModel = this.getDefaultBinding().get('model.sportModel') || this.getDefaultBinding().get('model.sport');
 
 		if(sportModel) {
 			const genders = sportModel.toJS().genders;
 
-			return !genders.maleOnly;
+			return !(genders.maleOnly || genders.mixed);
 		} else {
 			return true;
 		}
@@ -87,7 +87,7 @@ const GenderSelectorWrapper = React.createClass({
 		if(sportModel) {
 			const genders = sportModel.toJS().genders;
 
-			return !genders.femaleOnly;
+			return !(genders.femaleOnly || genders.mixed);
 		} else {
 			return true;
 		}

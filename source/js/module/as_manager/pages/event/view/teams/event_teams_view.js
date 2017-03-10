@@ -15,7 +15,8 @@ const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 
 	propTypes: {
-		customCss:	React.PropTypes.string
+		activeSchoolId	: React.PropTypes.string,
+		customCss		: React.PropTypes.string
 	},
 
 	getPointsByStudent: function(event, userId) {
@@ -157,13 +158,21 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
+	_getActiveSchoolId: function() {
+		if(typeof this.props.activeSchoolId !== "undefined") {
+			return this.props.activeSchoolId;
+		} else {
+			return this.getActiveSchoolId();
+		}
+	},
 	renderPlayersForLeftSide: function() {
 		const self = this;
 
 		const	event						= self.getBinding('event').toJS(),
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
-				activeSchoolId				= self.getActiveSchoolId(),
+				housesData					= event.housesData,
+				activeSchoolId				= self._getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('0.value');
 
@@ -175,7 +184,7 @@ const EventTeamsView = React.createClass({
 						event.invitedSchools[0].id;
 					return self.renderIndividualPlayersBySchoolId(schoolId, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return self.renderIndividualPlayersByHouseId(event.houses[0], individualScoreAvailable);
+					return self.renderIndividualPlayersByHouseId(housesData[0].id, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
 						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(0);
@@ -202,7 +211,7 @@ const EventTeamsView = React.createClass({
 				return self.renderTeamPlayersByOrder(order, individualScoreAvailable);
 			} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
-				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[0].id);
+				const teamIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {
@@ -231,7 +240,8 @@ const EventTeamsView = React.createClass({
 		const	event						= self.getBinding('event').toJS(),
 				eventType					= event.eventType,
 				teamsData					= event.teamsData,
-				activeSchoolId				= self.getActiveSchoolId(),
+				housesData					= event.housesData,
+				activeSchoolId				= self._getActiveSchoolId(),
 				isaBinding 					= self.getBinding('individualScoreAvailable'),
 				individualScoreAvailable	= isaBinding && isaBinding.toJS('1.value');
 
@@ -254,7 +264,7 @@ const EventTeamsView = React.createClass({
 						return self.renderAwaitingOpponentTeam();
 					}
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return self.renderIndividualPlayersByHouseId(event.houses[1], individualScoreAvailable);
+					return self.renderIndividualPlayersByHouseId(housesData[1].id, individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
 						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(1);
@@ -308,7 +318,7 @@ const EventTeamsView = React.createClass({
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
-				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[1].id);
+				const teamIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {
@@ -351,6 +361,11 @@ const EventTeamsView = React.createClass({
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
+					<If condition = {Boolean(player.isCaptain)}>
+							<span className="ePlayer_star">
+								<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
+							</span>
+					</If>
 					<If condition={
 						!self.isNonInternalEventForOneOnOneSport(event)
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
@@ -401,7 +416,7 @@ const EventTeamsView = React.createClass({
 		) {
 			const	event	= self.getBinding('event').toJS(),
 					isOwner	= event.eventType === 'inter-schools' ?
-								event.teamsData[order].schoolId === self.getActiveSchoolId() :
+								event.teamsData[order].schoolId === self._getActiveSchoolId() :
 								true;
 
 			players = self.renderPlayers(
@@ -432,7 +447,7 @@ const EventTeamsView = React.createClass({
 						<div className="bEventTeams_col mLeft">
 							{self.renderPlayersForLeftSide()}
 						</div>
-						<div className="bEventTeams_col">
+						<div className="bEventTeams_col mHiddenInIndividuals">
 							{self.renderPlayersForRightSide()}
 						</div>
 					</div>

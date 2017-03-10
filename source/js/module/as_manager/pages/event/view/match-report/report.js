@@ -68,7 +68,7 @@ const MatchReport = React.createClass({
 									value={binding.get('content')}
 								/>
 							</div>
-							<div className="bEventButtons col-md-3">
+							<div className="eMatchReport_buttons col-md-3">
 								<div className="bButton mCancel mMarginRight" onClick={this.actions.onCancel.bind(this.actions)}>
 									Cancel
 								</div>

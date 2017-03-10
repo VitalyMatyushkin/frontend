@@ -56,14 +56,13 @@ const SchoolUnionForm = React.createClass({
 					{text: 'Lite', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE}
 				];
 
-		console.log(binding.meta().toJS());
-
 		return (
 			<Form	name			= {this.props.title}
 					binding			= {this.getDefaultBinding()}
 					service			= "i/schools/domains"
 					onSubmit		= {this.props.onSubmit}
 					submitOnEnter	= {false}
+					formStyleClass	= "mNarrow"
 			>
 				<FormColumn>
 					<FormField	type		= "imageFile"

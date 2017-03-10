@@ -11,11 +11,15 @@ const PlayerSubColumn = React.createClass({
 	},
 	handleCheckBoxClick: function(eventDescriptor) {
 		this.props.handleClickPlayerSub(eventDescriptor.target.checked);
+		eventDescriptor.stopPropagation();
+	},
+	handleClick: function(eventDescriptor) {
+		eventDescriptor.stopPropagation();
 	},
 
 	render: function() {
 		return (
-			<div className="eTeam_playerItem mSub">
+			<div className="eTeam_playerItem mSub" onClick={this.handleClick}>
 				<input	onChange	= { this.handleCheckBoxClick }
 						type		= "checkbox"
 						checked		= { this.isChecked() }

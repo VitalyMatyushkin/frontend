@@ -1,17 +1,19 @@
 const	React					= require('react'),
 		PlayerPositionsColumn	= require('./playerPositionsColumn'),
 		PlayerSubColumn			= require('./playerSubColumn'),
+		PlayerIsCaptainColumn	= require('./playerIsCaptainColumn'),
 		classNames				= require('classnames');
 
 const Player = React.createClass({
 	propTypes: {
 		isNonTeamSport:				React.PropTypes.bool.isRequired,
-		number:						React.PropTypes.string.isRequired,
+		number:						React.PropTypes.number.isRequired,
 		player:						React.PropTypes.object.isRequired,
 		positions:					React.PropTypes.array,
 		handleClickPlayer:			React.PropTypes.func.isRequired,
 		handleChangePlayerPosition:	React.PropTypes.func.isRequired,
-		handleClickPlayerSub:		React.PropTypes.func.isRequired
+		handleClickPlayerSub:		React.PropTypes.func.isRequired,
+		handleClickPlayerIsCaptain:	React.PropTypes.func.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -36,6 +38,11 @@ const Player = React.createClass({
 
 		self.props.handleClickPlayerSub(self.props.player.id, isSub);
 	},
+	handleClickPlayerIsCaptain: function(isCaptain) {
+		const self = this;
+
+		self.props.handleClickPlayerIsCaptain(self.props.player.id, isCaptain);
+	},
 	renderPositions: function() {
 		const self = this;
 
@@ -46,6 +53,19 @@ const Player = React.createClass({
 				<PlayerPositionsColumn	positions					= {self.props.positions}
 										selectedPositionId			= {self.props.player.positionId}
 										handleChangePlayerPosition	= {self.handleChangePlayerPosition}
+				/>
+			);
+		}
+	},
+	renderIsCaptain: function() {
+		const self = this;
+
+		if(self.props.isNonTeamSport) {
+			return null;
+		} else {
+			return (
+				<PlayerIsCaptainColumn	isChecked					= {self.props.player.isCaptain}
+										handleClickPlayerIsCaptain	= {self.handleClickPlayerIsCaptain}
 				/>
 			);
 		}
@@ -97,6 +117,7 @@ const Player = React.createClass({
 					{player.form ? player.form.name : ""}
 				</div>
 				{self.renderPositions()}
+				{self.renderIsCaptain()}
 				{self.renderSub()}
 			</div>
 		);

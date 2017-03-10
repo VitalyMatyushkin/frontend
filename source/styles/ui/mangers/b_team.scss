@@ -10,7 +10,7 @@
   color: #2a2a2a;
 
   &.mDefaultView {
-    width:        406px;
+    width:        456px;
     height:       322px;
     border-left:  solid 1px #c2c2c2;
     box-sizing: border-box;
@@ -75,7 +75,7 @@
     width: 32%;
 
     &.mDefaultView {
-      width: 35%;
+      width: 30%;
     }
     &.mLong {
       width: 45%;
@@ -83,25 +83,22 @@
   }
 
   &.mForm {
-    width: 15%;
+    width: 8%;
     &.mLong {
       width: 50%;
     }
   }
 
   &.mPosition {
-    width: 40%;
-  }
-
-  &.mPosition {
-    width: 40%;
-
-    &.mSelector {
-    }
+    width: 33%;
   }
 
   &.mSub {
-    width: 8%;
+    width: 7%;
+  }
+
+  &.mCaptain {
+    width: 15%;
   }
 
   &.mRemove {
@@ -126,7 +123,7 @@
 .eManager_gameFieldContainer {
   display: inline-block;
   width: 364px;
-  margin: 45px 0 0 10px;
+  margin: 87px 0 0 10px;
 }
 
 .eTeam_errorBox{

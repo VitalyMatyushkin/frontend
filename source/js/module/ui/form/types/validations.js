@@ -107,7 +107,7 @@ var validationsSet = {
 		var self = this,
 			value = value || '';
 		if (value.trim && value.trim() === '' ) {
-			return 'Please enter your '+self.props.name;
+			return 'Please enter '+self.props.name;
 		} else {
 			return false;
 		}

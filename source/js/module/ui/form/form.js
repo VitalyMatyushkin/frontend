@@ -34,6 +34,8 @@ const Form = React.createClass({
 		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
 		autoupdateOff: 		React.PropTypes.bool,
 		formStyleClass: 	React.PropTypes.string,
+		formButtonsClass: 	React.PropTypes.string,
+		formTitleClass: 	React.PropTypes.string,
 		submitOnEnter: 		React.PropTypes.bool, 	//submitting the form by pressing the Enter key
 		hideCancelButton: 	React.PropTypes.bool,
 		submitButtonId:		React.PropTypes.string,	// html id of submit button
@@ -263,7 +265,7 @@ const Form = React.createClass({
 		}
 	},
 	getTitle: function(){
-		return this.props.name ? <h2 dangerouslySetInnerHTML={{__html: this.props.name}}/> : null;
+		return this.props.name ? <h2 className={this.props.formTitleClass} dangerouslySetInnerHTML={{__html: this.props.name}}/> : null;
 	},
 	getAutoupdateOffElement: function(){
 		return this.props.autoupdateOff ? (
@@ -290,13 +292,13 @@ const Form = React.createClass({
 
 					{this._createBindedClones(this)}
 
-					<div className="eForm_savePanel">
+					<div className={classNames('eForm_savePanel', this.props.formButtonsClass)}>
 						<If condition={!this.props.hideCancelButton}>
-							<button className="bButton mRight mCancel" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
+							<button className="bButton mRight mCancel mMarginRight" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
 								Cancel
 							</button>
 						</If>
-						<button className="bButton mRight mMarginLeft" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
+						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
 							{binding.meta().get('buttonText')}
 						</button>
 					</div>

@@ -314,6 +314,15 @@ const TeamWrapper = React.createClass({
 
 		return window.Server.team.get( { schoolId: self.activeSchoolId, teamId: teamId } );
 	},
+	getTeamManagerBinding: function() {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		return ({
+			default	: binding.sub("___teamManagerBinding"),
+			error	: this.getBinding('error')
+		});
+	},
 	_getPlayerChooserBinding: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -383,9 +392,14 @@ const TeamWrapper = React.createClass({
 			case TeamHelper.isNonTeamSport(event):
 				return null;
 			case TeamHelper.isTeamSport(event):
+				const errorData = typeof this.getBinding('error') !== 'undefined' ? this.getBinding('error').toJS() : {};
+
+				const isError = errorData.isError && errorData.text === "Please enter team name";
+
 				return (
 					<TeamName	name				= { this.getDefaultBinding().toJS('teamName.name') }
 								handleChangeName	= { this.handleChangeName }
+								isShowError			= { isError }
 					/>
 				);
 		}
@@ -410,6 +424,13 @@ const TeamWrapper = React.createClass({
 			.set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
 			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
 			.commit();
+	},
+	getRevertButtonStyle: function() {
+		return classNames({
+			bButton		: true,
+			mRevert		: true,
+			mDisable	: !this.isShowRevertChangesButton()
+		});
 	},
 	render: function() {
 		const	self	= this,
@@ -436,18 +457,14 @@ const TeamWrapper = React.createClass({
 				<div className={plugClass}>
 				</div>
 				{ self.renderTeamNameComponent() }
-				<TeamManager	isNonTeamSport={TeamHelper.isNonTeamSport(event)}
-								binding={binding.sub("___teamManagerBinding")}
+				<TeamManager	isNonTeamSport	= {TeamHelper.isNonTeamSport(event)}
+								binding			= {this.getTeamManagerBinding()}
 				/>
-				<If condition={self.isShowRevertChangesButton()}>
-					<div className="eTeamWrapper_modeContainer">
-						<div className="eTeamWrapper_revertButtonContainer">
-							<div className="bButton mRevert" onClick={self._onRevertChangesButtonClick}>
-								{'Revert changes'}
-							</div>
-						</div>
+				<div className="eTeamWrapper_footer">
+					<div className={this.getRevertButtonStyle()} onClick={self._onRevertChangesButtonClick}>
+						{'Revert changes'}
 					</div>
-				</If>
+				</div>
 			</div>
 		);
 	}
