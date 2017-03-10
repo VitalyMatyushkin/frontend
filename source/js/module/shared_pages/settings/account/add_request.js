@@ -2,16 +2,17 @@
  * Created by Anatoly on 21.04.2016.
  */
 
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable');
 
 const	Form			= require('module/ui/form/form'),
 		FormField 		= require('module/ui/form/form_field'),
 		classNames		= require('classnames'),
 		If				= require('module/ui/if/if'),
 		SchoolListItem	= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		roleList		= require('module/data/roles_data');
+		roleList		= require('module/data/roles_data'),
+		GeoSearchHelper	= require('../../../helpers/geo_search_helper');
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -87,53 +88,28 @@ const AddPermissionRequest = React.createClass({
 			}
 		});
 	},
-	getSchoolService: function() {
+	schoolService: function(schoolName) {
 		const postcode = this.props.activeSchool.postcode;
-		
+
+		const filter = {
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
+				},
+				limit: 20
+			}
+		};
+
 		if(typeof postcode !== 'undefined') {
-			return (schoolName) => {
-				const point = postcode.point;
-
-				const filter = {
-					filter: {
-						where: {
-							name: {
-								like: schoolName,
-								options: 'i'
-							},
-							'postcode.point': {
-								$nearSphere: {
-									$geometry: {
-										type: 'Point',
-										coordinates: [point.lng, point.lat] // [longitude, latitude]
-									}
-								}
-							}
-						},
-						limit: 20
-					}
-				};
-
-				return window.Server.publicSchools.get(filter);
-			};
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getUnlimitedGeoSchoolFilter(postcode.point);
 		} else {
-			return (schoolName) => {
-				const filter = {
-					filter: {
-						where: {
-							name: {
-								like: schoolName,
-								options: 'i'
-							}
-						},
-						order:"name ASC",
-						limit: 20
-					}
-				};
-
-				return window.Server.publicSchools.get(filter);
-			};
+			filter.filter.order = "name ASC";
 		}
+
+		return window.Server.publicSchools.get(filter);
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
@@ -152,7 +128,7 @@ const AddPermissionRequest = React.createClass({
 				<FormField
 					type				= "autocomplete"
 					field				= "schoolId"
-					serviceFullData		= {this.getSchoolService()}
+					serviceFullData		= {this.schoolService}
 					customListItem		= {SchoolListItem}
 					placeholder 		= {'Please select school'}
 					validation			= "required"

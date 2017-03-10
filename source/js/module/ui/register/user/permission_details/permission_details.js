@@ -1,13 +1,15 @@
 /**
  * Created by Woland on 12.01.2017.
  */
-const	React 					= require ('react');
+const	React 				= require ('react');
 
-const	If						= require('../../../../ui/if/if'),
-		CrossButton				= require('../../../../ui/cross_button/cross_button'),
-		AutoComplete			= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		SchoolListItem			= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		PostcodeSelector		= require('./postcode_selector/postcode_selector');
+const	If					= require('../../../../ui/if/if'),
+		CrossButton			= require('../../../../ui/cross_button/cross_button'),
+		AutoComplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		SchoolListItem		= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		PostcodeSelector	= require('./postcode_selector/postcode_selector'),
+		GeoSearchHelper		= require('../../../../helpers/geo_search_helper');
+
 
 const	PermissionDetailsHelper	= require('./permission_detail_helper');
 
@@ -62,16 +64,9 @@ const PermissionDetails = React.createClass({
 					name: {
 						like: schoolName,
 						options: 'i'
-					},
-					'postcode.point': {
-						$nearSphere: {
-							$geometry: {
-								type: 'Point',
-								coordinates: [point.lng, point.lat] // [longitude, latitude]
-							}
-						}
 					}
 				},
+				'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(point),
 				limit: 20
 			}
 		};
