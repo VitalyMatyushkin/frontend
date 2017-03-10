@@ -1,9 +1,6 @@
-const	React 					= require ('react');
-
-const	CrossButton				= require('../../../../../ui/cross_button/cross_button'),
-		AutoComplete			= require('../../../../../ui/autocomplete2/OldAutocompleteWrapper');
-
-const	PermissionDetailsHelper	= require('../permission_detail_helper');
+const	React 			= require ('react'),
+		CrossButton		= require('../cross_button/cross_button'),
+		AutoComplete	= require('../autocomplete2/OldAutocompleteWrapper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -45,7 +42,7 @@ const PermissionDetails = React.createClass({
 		return (
 				<div>
 					<AutoComplete	key				= {this.state.postcodeInputKey}
-									placeholder		= "your postcode"
+									placeholder		= "Please enter your postcode"
 									serviceFilter	= {this.service}
 									serverField		= "postcode"
 									onSelect		= {this.props.handleSelectPostcode}

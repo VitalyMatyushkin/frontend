@@ -23,8 +23,8 @@ const Popup = React.createClass({
 			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : '')+' '+(self.props.otherClass !== undefined ? self.props.otherClass:''),
 			popup_back_class_name = 'bPopupBack ' + (isOpened ? 'mAcitve' : '');
         //Bind onClick event listener to div with popup_back class if you want to dismiss modal on clicking outside boundary
-		return (
-			<If condition={isOpened}>
+		if(isOpened) {
+			return (
 				<div>
 					<div className={popup_class_name}>
 						<div className="ePopup_Close" onClick={this.props.onRequestClose}></div>
@@ -32,8 +32,10 @@ const Popup = React.createClass({
 					</div>
 					<div className={popup_back_class_name}></div>
 				</div>
-			</If>
-		)
+			);
+		} else {
+			return null;
+		}
 	}
 });
 
