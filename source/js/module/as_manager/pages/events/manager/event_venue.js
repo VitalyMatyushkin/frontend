@@ -314,9 +314,9 @@ const EventVenue = React.createClass({
 	},
 	getDefaultPostcode: function() {
 		const	homePostcode	= this.getHomeSchoolPostCode(),
-				awayPostcode	= this.getOpponentSchoolPostCode();
-
-		let defPostcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
+				awayPostcode	= this.getOpponentSchoolPostCode(),
+				venue			= this.getDefaultBinding().toJS('model.venue');
+		let		defPostcode		= venue.postcodeData;
 
 		switch(true) {
 			case typeof homePostcode !== "undefined" && typeof defPostcode !== "undefined" && homePostcode.id === defPostcode.id:
@@ -331,7 +331,13 @@ const EventVenue = React.createClass({
 					postcode: "TBD"
 				};
 				break;
-		};
+			case venue.venueType === 'TBD':
+				defPostcode = {
+					id: "TBD",
+					postcode: "TBD"
+				};
+				break;
+		}
 
 		return defPostcode;
 	},
