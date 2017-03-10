@@ -37,27 +37,28 @@ const PermissionRequestList = React.createClass({
 		const	schools	= binding.get('schools'),
 				isSync	= binding.get('isSync');
 
-		return (
-			<div>
+		if(this.isSync()) {
+			return (
+				<div className="eTable_view">
+					<Grid model={this.actions.grid}/>
+					<Popup	binding			= {binding}
+							  stateProperty	= {'popup'}
+							  onRequestClose	= {this.actions._closePopup.bind(this.actions)}
+							  otherClass		= "bPopupGrant"
+					>
+						<AddRequest	binding			= {binding.sub('addRequest')}
+									   activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
+									   onSuccess		= {this.actions._onSuccess.bind(this.actions)}
+									   onCancel		= {this.actions._closePopup.bind(this.actions)}
+						/>
+					</Popup>
+				</div>
+			);
+		} else {
+			return (
 				<Loader condition={!this.isSync()}/>
-				<If condition={this.isSync()}>
-					<div className="eTable_view">
-						<Grid model={this.actions.grid}/>
-						<Popup	binding			= {binding}
-								stateProperty	= {'popup'}
-								onRequestClose	= {this.actions._closePopup.bind(this.actions)}
-								otherClass		= "bPopupGrant"
-						>
-							<AddRequest	binding			= {binding.sub('addRequest')}
-										activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
-										onSuccess		= {this.actions._onSuccess.bind(this.actions)}
-										onCancel		= {this.actions._closePopup.bind(this.actions)}
-							/>
-						</Popup>
-					</div>
-				</If>
-			</div>
-		);
+			);
+		}
 	}
 });
 
