@@ -8,9 +8,6 @@ const	React	= require('react'),
 		Lazy	= require('lazy.js');
 
 const ComboBox2 = React.createClass({
-
-	isMouseDown: false,
-
 	propTypes: {
 		/** piece of data to display as initial portion */
 		defaultItem:		React.PropTypes.object,
@@ -53,6 +50,7 @@ const ComboBox2 = React.createClass({
 	},
 	getInitialState: function(){
 		return {
+			isMouseDown:			false,
 			dataList:				[],
 			isLoading:				false,
 			isOpen:					false,
@@ -75,16 +73,20 @@ const ComboBox2 = React.createClass({
 		window.removeEventListener('mousedown', this.handlePageClick);
 	},
 	handlePageClick: function() {
-		if (!this.isMouseDown) {
+		if (!this.state.isMouseDown && this.state.isOpen) {
 			this.closeMenu();
 			this.restorePrevSelectedText();
 		}
 	},
 	handleMouseUp: function() {
-		this.isMouseDown = false;
+		this.setState({
+			isMouseDown: false
+		});
 	},
 	handleMouseDown: function() {
-		this.isMouseDown = true;
+		this.setState({
+			isMouseDown: true
+		});
 	},
 	/** Checks on mount if we need to set default item */
 	componentWillMount: function(){
