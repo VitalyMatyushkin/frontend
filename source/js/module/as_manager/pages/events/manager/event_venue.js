@@ -315,28 +315,31 @@ const EventVenue = React.createClass({
 	getDefaultPostcode: function() {
 		const	homePostcode	= this.getHomeSchoolPostCode(),
 				awayPostcode	= this.getOpponentSchoolPostCode(),
-				venue			= this.getDefaultBinding().toJS('model.venue');
-		let		defPostcode		= venue.postcodeData;
+				model			= this.getDefaultBinding().toJS('model'),
+				venue			= propz.get(model, ['venue']);
+		let		defPostcode		= propz.get(model, ['venue', 'postcodeData']);
 
-		switch(true) {
-			case typeof homePostcode !== "undefined" && typeof defPostcode !== "undefined" && homePostcode.id === defPostcode.id:
-				defPostcode.tooltip = ' (your school)';
-				break;
-			case typeof awayPostcode !== "undefined" && typeof defPostcode !== "undefined" && awayPostcode.id === defPostcode.id:
-				defPostcode.tooltip = ' (opponent school)';
-				break;
-			case this.props.isCopyMode && typeof defPostcode === 'undefined':
-				defPostcode = {
-					id: "TBD",
-					postcode: "TBD"
-				};
-				break;
-			case venue.venueType === 'TBD':
-				defPostcode = {
-					id: "TBD",
-					postcode: "TBD"
-				};
-				break;
+		if(typeof venue !== 'undefined') {
+			switch(true) {
+				case typeof homePostcode !== "undefined" && typeof defPostcode !== "undefined" && homePostcode.id === defPostcode.id:
+					defPostcode.tooltip = ' (your school)';
+					break;
+				case typeof awayPostcode !== "undefined" && typeof defPostcode !== "undefined" && awayPostcode.id === defPostcode.id:
+					defPostcode.tooltip = ' (opponent school)';
+					break;
+				case this.props.isCopyMode && typeof defPostcode === 'undefined':
+					defPostcode = {
+						id: "TBD",
+						postcode: "TBD"
+					};
+					break;
+				case venue.venueType === 'TBD':
+					defPostcode = {
+						id: "TBD",
+						postcode: "TBD"
+					};
+					break;
+			}
 		}
 
 		return defPostcode;
