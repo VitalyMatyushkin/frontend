@@ -13,12 +13,14 @@ const	If				= require('module/ui/if/if'),
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-
+	SELECT_PLAYERS_LATER: 'Select players later...',
+	MEMBERS_NOT_ADDED: 'Team members have not been added yet',
+	ACCEPTED_BY_OPPONENT: 'Accepted by opponent',
+	AWAITING_OPPONENT: 'Awaiting opponent...',
 	propTypes: {
 		activeSchoolId	: React.PropTypes.string,
 		customCss		: React.PropTypes.string
 	},
-
 	getPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 
@@ -81,7 +83,7 @@ const EventTeamsView = React.createClass({
 				players	= player ? [ player ] : [];
 
 		if(players.length === 0) {
-			return self.renderPlayerTeamLater();
+			return self.renderText(this.SELECT_PLAYERS_LATER);
 		} else {
 			return (
 				<div className="bEventTeams_team">
@@ -90,15 +92,6 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
-	renderPlayerTeamLater: function() {
-		return (
-			<div className="bEventTeams_team">
-				<div className="eEventTeams_awaiting">
-					{'Select players later...'}
-				</div>
-			</div>
-		);
-	},
 	renderIndividualPlayersBySchoolId: function(schoolId, individualScoreAvailable) {
 		const self = this;
 
@@ -106,7 +99,7 @@ const EventTeamsView = React.createClass({
 				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
-			return self.renderSelectTeamLater();
+			return self.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
 			return (
 				<div className="bEventTeams_team">
@@ -115,29 +108,20 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
-	renderSelectPlayersLater: function() {
+	renderText: function(text) {
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Select players later...'}
+					{text}
 				</div>
 			</div>
 		);
 	},
-	renderSelectTeamLater: function() {
+	renderAwaitingOpponentTeam: function() {
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Team members have not been added yet'}
-				</div>
-			</div>
-		);
-	},
-	renderOpponentSelectTeamLater: function() {
-		return (
-			<div className="bEventTeams_team">
-				<div className="eEventTeams_awaiting">
-					{'Accepted by opponent'}
+					{'Awaiting opponent...'}
 				</div>
 			</div>
 		);
@@ -149,7 +133,7 @@ const EventTeamsView = React.createClass({
 				players	= self.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
 
 		if(players.length === 0) {
-			return self.renderSelectTeamLater();
+			return self.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
 			return (
 				<div className="bEventTeams_team">
@@ -203,7 +187,7 @@ const EventTeamsView = React.createClass({
 					teamsData[0].schoolId !== activeSchoolId
 				)
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderText(this.MEMBERS_NOT_ADDED);
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
@@ -215,7 +199,7 @@ const EventTeamsView = React.createClass({
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {
-					return self.renderSelectTeamLater();
+					return self.renderText(this.MEMBERS_NOT_ADDED);
 				}
 			} else if (
 				(
@@ -230,7 +214,7 @@ const EventTeamsView = React.createClass({
 				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderText(this.MEMBERS_NOT_ADDED);
 			}
 		}
 	},
@@ -256,7 +240,7 @@ const EventTeamsView = React.createClass({
 						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return self.renderOpponentSelectTeamLater();
+							return self.renderText(this.ACCEPTED_BY_OPPONENT);
 						} else {
 							return self.renderIndividualPlayersBySchoolId(schoolId, individualScoreAvailable);
 						}
@@ -281,7 +265,7 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderOpponentSelectTeamLater();
+					return self.renderText(this.ACCEPTED_BY_OPPONENT);
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
@@ -311,7 +295,7 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderOpponentSelectTeamLater();
+					return self.renderText(this.ACCEPTED_BY_OPPONENT);
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
@@ -322,26 +306,17 @@ const EventTeamsView = React.createClass({
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex, individualScoreAvailable);
 				} else {
-					return self.renderSelectTeamLater();
+					return self.renderText(this.MEMBERS_NOT_ADDED);
 				}
 			} else if (
 				teamsData.length <= 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderText(this.MEMBERS_NOT_ADDED);
 			} else {
 				return self.renderTeamPlayersByOrder(1, individualScoreAvailable);
 			}
 		}
-	},
-	renderAwaitingOpponentTeam: function() {
-		return (
-			<div className="bEventTeams_team">
-				<div className="eEventTeams_awaiting">
-					{'Awaiting opponent...'}
-				</div>
-			</div>
-		);
 	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
@@ -395,7 +370,7 @@ const EventTeamsView = React.createClass({
 				players	= self.getDefaultBinding().toJS('players');
 
 		if(players.length === 0) {
-			return self.renderSelectPlayersLater();
+			return self.renderText(this.SELECT_PLAYERS_LATER);
 		} else {
 			return (
 				<div className="bEventTeams_team">
@@ -404,34 +379,37 @@ const EventTeamsView = React.createClass({
 		}
 	},
 	renderTeamPlayersByOrder: function(order, individualScoreAvailable) {
-		const	self	= this;
-		let		players	= null;
+		let xmlPlayers = null;
 
-		const playersBinding = self.getDefaultBinding().get(['players', order]);
+		const playersBinding = this.getDefaultBinding().get(['players', order]);
 
-		if(
-			typeof playersBinding !== 'undefined' &&
-			typeof playersBinding.toJS() !== 'undefined' &&
-			typeof playersBinding.toJS().length !== 'undefined'
-		) {
-			const	event	= self.getBinding('event').toJS(),
-					isOwner	= event.eventType === 'inter-schools' ?
-								event.teamsData[order].schoolId === self._getActiveSchoolId() :
-								true;
+		if(typeof playersBinding !== 'undefined' && typeof playersBinding.toJS() !== 'undefined') {
+			const playersData = playersBinding.toJS();
 
-			players = self.renderPlayers(
-				event.teamsData[order].id,
-				playersBinding.toJS(),
-				isOwner,
-				individualScoreAvailable
-			);
+			if(playersData.length === 0) {
+				xmlPlayers = this.renderText(this.MEMBERS_NOT_ADDED);
+			} else {
+				const	event	= this.getBinding('event').toJS(),
+						isOwner	= event.eventType === 'inter-schools' ?
+							event.teamsData[order].schoolId === this._getActiveSchoolId() :
+							true;
+
+				xmlPlayers = (
+					<div className="bEventTeams_team">
+						{
+							this.renderPlayers(
+								event.teamsData[order].id,
+								playersData,
+								isOwner,
+								individualScoreAvailable
+							)
+						}
+					</div>
+				);
+			}
 		}
 
-		return (
-			<div className="bEventTeams_team">
-				{players}
-			</div>
-		);
+		return xmlPlayers;
 	},
 	render: function() {
 		const self = this;
