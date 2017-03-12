@@ -67,6 +67,8 @@ const PlaceEdit = React.createClass({
 					/>
 				</div>
 			);
+		} else {
+			return null;
 		}
 	}
 });
