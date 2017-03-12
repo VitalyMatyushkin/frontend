@@ -16,12 +16,21 @@ const	Actions 		= require('./request-list-model'),
 const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.actions = new Actions(this).init();
-		SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
-			const binding = this.getDefaultBinding();
+		const	rootBinding		= this.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.toJS('userRules.activeSchoolId');
 
+		this.actions = new Actions(this).init();
+
+		// TODO: actually this is shit. This should not be done like this. 
+		if(activeSchoolId) {
+			SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
+				const binding = this.getDefaultBinding();
+				binding.set('isSync', true);
+			});
+		} else {
+			const binding = this.getDefaultBinding();
 			binding.set('isSync', true);
-		});
+		}
 	},
 	isSync: function() {
 		const binding = this.getDefaultBinding();
