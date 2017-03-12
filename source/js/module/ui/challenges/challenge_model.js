@@ -93,12 +93,28 @@ ChallengeModel.prototype._getTextResult = function(event){
 		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS") {
 			const scoreArray = this.scoreAr;
 
-			if(scoreArray[0] > scoreArray[1]) {
-				return "Won";
-			} else if(scoreArray[0] < scoreArray[1]) {
-				return "Lost";
-			} else {
-				return "Draw";
+			switch (event.sport.scoring) {
+				case 'LESS_SCORES':
+				case 'LESS_TIME':
+				case 'LESS_RESULT':
+					if(scoreArray[0] < scoreArray[1]) {
+						return "Won";
+					} else if(scoreArray[0] > scoreArray[1]) {
+						return "Lost";
+					} else {
+						return "Draw";
+					}
+				case 'MORE_SCORES':
+				case 'MORE_TIME':
+				case 'MORE_RESULT':
+				case 'FIRST_TO_N_POINTS':
+					if(scoreArray[0] > scoreArray[1]) {
+						return "Won";
+					} else if(scoreArray[0] < scoreArray[1]) {
+						return "Lost";
+					} else {
+						return "Draw";
+					}
 			}
 		}
 };
