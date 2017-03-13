@@ -106,9 +106,8 @@ const SportIcon = React.createClass({
 			case 	sport === 'american football':
 				icon = "american_football";
 				break;
-			//no icon
 			case 	sport === 'sports hall athletics':
-				icon = "empty";
+				icon = "athletics";
 				break;
 			//maybe
 			case 	sport === 'hammer throw':
