@@ -200,7 +200,7 @@ const PermissionDetails = React.createClass({
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
-							placeholder		= "school name"
+							placeholder		= "School name"
 							defaultItem		= { {name: schoolName} }
 							customListItem	= { SchoolListItem }
 						/>
@@ -216,7 +216,7 @@ const PermissionDetails = React.createClass({
 						serviceFilter	= { this.serviceHouseFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectHouse }
-						placeholder		= "house's name"
+						placeholder		= "House name"
 						defaultItem		= {{name: houseName}}
 					/>
 				</If>
@@ -229,7 +229,7 @@ const PermissionDetails = React.createClass({
 						serviceFilter	= { this.serviceFormFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectForm }
-						placeholder		= "form's name"
+						placeholder		= "Form name"
 						defaultItem		= {{name: formName}}
 					/>
 				</If>
@@ -242,7 +242,7 @@ const PermissionDetails = React.createClass({
 						<input
 							className="eRegistration_input"
 							ref="firstNameField"
-							placeholder="first name"
+							placeholder="First name"
 							type={ 'text' }
 							value={ this.props.firstName }
 							onChange={ this.onChangeFirstName }
@@ -250,7 +250,7 @@ const PermissionDetails = React.createClass({
 						<input
 							className="eRegistration_input"
 							ref="lastNameField"
-							placeholder="last name"
+							placeholder="Last name"
 							type={ 'text' }
 							value={ this.props.lastName }
 							onChange={ this.onChangeLastName }
@@ -280,7 +280,7 @@ const PermissionDetails = React.createClass({
 						<input
 							className="eRegistration_input"
 							ref="promo"
-							placeholder="promo"
+							placeholder="Promo"
 							type={'text'}
 							onChange={ this.onChangePromo }
 							value={ this.props.promo }
