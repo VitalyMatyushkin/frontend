@@ -116,7 +116,7 @@ const VerificationStep = React.createClass({
                     <input className    = 'eRegistration_input'
                            ref          = 'emailCodeField'
                            value        = { this.state.emailCode }
-                           placeholder  = "email code"
+                           placeholder  = "Email code"
                            onChange     = { this.handleChangeEmailCode }
                     />
                     <button     className   = { this.getEmailCodeCheckButtonClassName() }
@@ -148,7 +148,7 @@ const VerificationStep = React.createClass({
                     <span className="eRegistration_labelField">Phone Verification Code</span>
                     <input  className   = 'eRegistration_input'
                             value       = { this.state.phoneCode }
-                            placeholder = "phone code"
+                            placeholder = "Phone code"
                             onChange    = { this.handleChangePhoneCode }
                     />
                     <button     className   = { this.getPhoneCodeCheckButtonClassName() }
