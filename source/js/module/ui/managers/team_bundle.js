@@ -1,24 +1,30 @@
 // Main components
-const	React				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty			= require('morearty'),
-		classNames			= require('classnames');
+const	React		= require('react'),
+		Immutable	= require('immutable'),
+		Morearty	= require('morearty'),
+		classNames	= require('classnames');
 
 // Team bundle react components
-const	TeamChooser			= require('./teamChooser'),
-		TeamWrapper			= require('./team_wrapper');
+const	TeamChooser	= require('./teamChooser'),
+		TeamWrapper	= require('./team_wrapper');
 
 // Helpers
-const	TeamHelper			= require('module/ui/managers/helpers/team_helper');
+const	TeamHelper	= require('module/ui/managers/helpers/team_helper');
+
+// Style
+const	TeamBundleStyle	= require('../../../../styles/ui/teams_manager/b_team_bundle.scss');
 
 const TeamBundle = React.createClass({
 	mixins: [Morearty.Mixin],
+	TEAM_COUNT: 2,
 	componentWillMount: function() {
 		const self = this;
 
 		self.initBinding();
 		self.addListeners();
 	},
+
+	/** INIT FUNCTIONS **/
 	initBinding: function() {
 		const	self	= this;
 
@@ -52,6 +58,8 @@ const TeamBundle = React.createClass({
 			)
 		);
 	},
+
+	/** LISTENER FUNCTIONS **/
 	addListeners: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -71,21 +79,55 @@ const TeamBundle = React.createClass({
 			)
 		});
 	},
-	/**
-	 * Handler for click on team in team table
-	 * @param teamId
-	 * @private
-	 */
-	onTeamClick: function(teamId, team) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
 
-		const	rivalIndex			= binding.toJS('selectedRivalIndex'),
-				prevSelectedTeamId	= binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
+	/** HELPER FUNCTIONS **/
+	getTeamChooserBindings: function() {
+		const	binding				= this.getDefaultBinding(),
+				teamChooserBindings	= [];
 
-		if(prevSelectedTeamId !== teamId) {
-			self.selectTeam(teamId, team);
+		for(let i = 0; i < this.TEAM_COUNT; i++) {
+			teamChooserBindings.push({
+				default:	binding.sub(`teamTable.${i}`),
+				model:		this.getBinding().model,
+				rival:		this.getBinding().rivals.sub(i)
+			});
 		}
+
+		return teamChooserBindings;
+	},
+	getTeamWrapperBindings: function() {
+		const	binding					= this.getDefaultBinding(),
+				selectedRivalIndex		= binding.toJS('selectedRivalIndex'),
+				tableWrapperBindings	= [];
+
+		for(let i = 0; i < this.TEAM_COUNT; i++) {
+			tableWrapperBindings.push({
+				default				: binding.sub(`teamWrapper.${i}`),
+				model				: this.getBinding().model,
+				rival				: this.getBinding().rivals.sub(i),
+				players				: binding.sub(`players.${i}`),
+				otherTeamPlayers	: binding.sub(`players.${this.getAnotherRivalIndex(i)}`),
+				error				: this.getBinding('error').sub(i)
+			});
+		}
+
+		return tableWrapperBindings;
+	},
+	getClassNamesForTeamWrapper: function() {
+		const	binding				= this.getDefaultBinding(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
+				_classNames			= [];
+
+		for(let i = 0; i < this.TEAM_COUNT; i++) {
+			_classNames.push(
+				classNames({
+						bWrapperTeamWrapper: true,
+						mDisable: parseInt(selectedRivalIndex, 10) !== i
+					}
+				));
+		}
+
+		return _classNames;
 	},
 	getAnotherRivalIndex: function(rivalIndex) {
 
@@ -173,55 +215,16 @@ const TeamBundle = React.createClass({
 			)
 			.commit();
 	},
-	renderTeamWrapper: function() {
-		const	self				= this,
-				binding				= self.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-				tableWrapperBindings= [
-										{
-											default				: binding.sub(`teamWrapper.${0}`),
-											model				: self.getBinding().model,
-											rival				: self.getBinding().rivals.sub(0),
-											players				: binding.sub(`players.${0}`),
-											otherTeamPlayers	: binding.sub(`players.${self.getAnotherRivalIndex(0)}`),
-											error				: self.getBinding('error').sub(0)
-										},{
-											default:			binding.sub(`teamWrapper.${1}`),
-											model:				self.getBinding().model,
-											rival:				self.getBinding().rivals.sub(1),
-											players:			binding.sub(`players.${1}`),
-											otherTeamPlayers:	binding.sub(`players.${self.getAnotherRivalIndex(1)}`),
-											error				: self.getBinding('error').sub(1)
-										}];
 
-		const _classNames = [
-			classNames({
-				bWrapperTeamWrapper: true,
-				mDisable: parseInt(selectedRivalIndex, 10) !== 0
-			}),
-			classNames({
-				bWrapperTeamWrapper: true,
-				mDisable: parseInt(selectedRivalIndex, 10) !== 1
-			})
-		];
-		return (
-			<div>
-				<div	key			= "team_wrapper_1"
-						className	= { _classNames[0] }
-				>
-					<TeamWrapper	binding					= {tableWrapperBindings[0] }
-									handleIsSelectTeamLater	= {self.handleIsSelectTeamLater.bind(self, 0) }
-					/>
-				</div>
-				<div	key			= "team_wrapper_2"
-						className	= { _classNames[1] }
-				>
-					<TeamWrapper	binding					= { tableWrapperBindings[1] }
-									handleIsSelectTeamLater	= { self.handleIsSelectTeamLater.bind(self, 1) }
-					/>
-				</div>
-			</div>
-		);
+	/** HANDLE FUNCTIONS **/
+	handleTeamClick: function(teamId, team) {
+		const	binding				= this.getDefaultBinding(),
+				rivalIndex			= binding.toJS('selectedRivalIndex'),
+				prevSelectedTeamId	= binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
+
+		if(prevSelectedTeamId !== teamId) {
+			this.selectTeam(teamId, team);
+		}
 	},
 	handleIsSelectTeamLater: function(rivalIndex) {
 		const	self	= this,
@@ -230,27 +233,15 @@ const TeamBundle = React.createClass({
 		self.deselectTeam();
 		binding.set(`teamTable.${rivalIndex}.isSelectedTeam`, Immutable.fromJS(false));
 	},
-	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
 
-		const event = self.getBinding('model').toJS();
+	/** RENDER FUNCTIONS **/
+	renderTeamChoosers: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= this.getBinding('model').toJS();
 
 		let teamChoosers = null;
 		if(TeamHelper.isTeamSport(event)) {
-			const	selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-					teamTableBindings	= [
-						{
-							default:	binding.sub(`teamTable.${0}`),
-							model:		self.getBinding().model,
-							rival:		self.getBinding().rivals.sub(0)
-						},
-						{
-							default:	binding.sub(`teamTable.${1}`),
-							model:		self.getBinding().model,
-							rival:		self.getBinding().rivals.sub(1)
-						}
-					];
+			const selectedRivalIndex = binding.toJS('selectedRivalIndex');
 
 			//TODO shitty way
 			//one react element and many data bundles - that's what we need
@@ -260,20 +251,40 @@ const TeamBundle = React.createClass({
 			//so we can't just send new data to TeamChooser in some point of TeamChooser lifecycle
 			//and hope - everything will work good. NO!)
 			//All fall down. Sorrrry, mate.
-			teamChoosers = teamTableBindings.map((binding, index) =>
+			teamChoosers = this.getTeamChooserBindings().map((binding, index) =>
 				<TeamChooser	key				= { `team-chooser-${index}` }
-								onTeamClick		= { self.onTeamClick }
-								onTeamDeselect	= { self.deselectTeam }
-								binding			= { teamTableBindings[index] }
+								onTeamClick		= { this.handleTeamClick }
+								onTeamDeselect	= { this.deselectTeam }
+								binding			= { binding }
 								isEnable		= { parseInt(selectedRivalIndex, 10) === index }
 				/>
 			);
 		}
 
+		return teamChoosers;
+	},
+	renderTeamWrapper: function() {
+		const	binding				= this.getDefaultBinding(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
+				_classNames			= this.getClassNamesForTeamWrapper();
+
+		return this.getTeamWrapperBindings().map((binding, index) => {
+			return (
+				<div	key			= { `team_wrapper_${index}` }
+						className	= { _classNames[index] }
+				>
+					<TeamWrapper	binding					= { binding }
+									handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
+					/>
+				</div>
+			);
+		});
+	},
+	render: function() {
 		return (
-			<div>
-				{ teamChoosers }
-				{ self.renderTeamWrapper() }
+			<div className="bTeamBundle">
+				{ this.renderTeamChoosers() }
+				{ this.renderTeamWrapper() }
 			</div>
 		);
 	}
