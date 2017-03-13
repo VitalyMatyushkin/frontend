@@ -57,13 +57,13 @@ const PermissionDetails = React.createClass({
 		const filter = {
 			filter: {
 				where: {
+					'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(point),
 					name: {
 						like: schoolName,
 						options: 'i'
 					}
 				},
-				'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(point),
-				limit: 20
+				limit: 40
 			}
 		};
 
