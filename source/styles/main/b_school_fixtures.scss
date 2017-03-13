@@ -1,0 +1,151 @@
+@import '../!variables';
+@import '../!mixins';
+@import '../bootstrap-custom';
+
+.bSchoolFixtures {
+  height: auto;
+  padding-bottom: 90px;
+
+  position: relative;
+}
+
+.bFixtureContainer {
+  @extend .container;
+
+  margin-bottom: 10px;
+}
+
+.eFixture_row {
+  @include make-row()
+}
+
+.eFixture_content {
+  @include make-md-column-offset(1);
+  @include make-md-column(10);
+  @include add-clearfix();
+}
+
+.eSchoolFixtures_title {
+  width: 100%;
+  padding: 35px 0;
+
+  text-align: center;
+
+  color: $darkGrey;
+  font-size: 30px;
+  font-weight: normal;
+}
+
+.eFixture_leftSide,
+.eFixture_rightSide {
+  display: flex;
+  float: left;
+
+  height: 200px;
+  width: 50%;
+
+  border: $mainBorder;
+}
+
+.eFixture_leftSide {
+  padding-top: 55px;
+}
+
+.eFixture_rightSide {
+  border-left: none;
+}
+
+.eFixture_item {
+  &.mSport {
+    padding: 10px 15px;
+  }
+
+  &.mOpponent {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 38%;
+
+    text-align: center;
+  }
+  &_imgContainer {
+    height: 140px;
+    padding: 15px;
+
+    border-bottom: $mainBorder;
+  }
+  &_img {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    height: 100%;
+    width: 100%;
+  }
+
+  &.mResult {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24%;
+
+    background: $blueColor;
+    color: #fff;
+
+    font-size: 1.25rem;
+  }
+  &.mSchoolName {
+    margin: auto;
+
+    line-height: 1.5;
+  }
+}
+
+.bIcon_fixture_mod {
+  width: 60px !important;
+  height: 60px !important;
+}
+
+.bFix_date {
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  padding-bottom: 1.5rem;
+}
+
+.bFix_name {
+  color: $darkGrey;
+  padding-bottom: 0.5rem;
+}
+
+.bFix_type {
+  color: $BodyColor;
+}
+
+.bFix_scoreText,
+.bFix_scoreResult {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+/* Small Devices, Phones */
+@media screen and (max-width: 768px) {
+  .eFixture_leftSide,
+  .eFixture_rightSide {
+    float: none;
+
+    height: auto;
+    width: 100%;
+  }
+  .eFixture_leftSide {
+    height: auto;
+    padding: {
+      top: 40px;
+      bottom: 40px;
+    }
+  }
+
+  .eFixture_rightSide {
+    border-left: $mainBorder;
+    border-top: none;
+  }
+}

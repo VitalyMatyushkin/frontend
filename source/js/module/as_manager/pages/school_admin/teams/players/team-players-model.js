@@ -19,6 +19,8 @@ const TeamPlayersModel = function(page){
 
 	this.model.title = `Players of ${teamName} team`;
 	this.model.btnAdd = null;
+	//we transmit in model StudentListModel flag 'team', because we want display column 'Captain' in grid
+	this.model.team = true;
 	this.getPlayers(teamId);
 
 	return this.model;
@@ -27,6 +29,8 @@ const TeamPlayersModel = function(page){
 TeamPlayersModel.prototype.getPlayers = function(teamId){
 	window.Server.teamPlayers.get({schoolId:this.activeSchoolId, teamId:teamId},{filter:{limit: 100}})
 	.then(data => {
+		//we transmit data of team players in model StudentListModel, because in service student we don't get field 'isCaptain'
+		this.model.playerData = data;
 		const ids = data.map(player => player.userId);
 		this.model.filters = {where:{id:{$in:ids}}};
 		this.model.init();

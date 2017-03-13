@@ -1,0 +1,24 @@
+@import '../!variables';
+
+.bSchoolUnionSeasonScores {
+  padding-bottom: 60px;
+}
+
+.eSchoolUnionSeasonScores_title {
+  width: 100%;
+  padding: 35px 0;
+
+  text-align: center;
+
+  color: $darkGrey;
+  font-size: 30px;
+  font-weight: normal;
+}
+
+.eSchoolUnionSeasonScores_body {
+  margin: 0 auto;
+}
+
+.eSchoolUnionSeasonScores_scoreTableWrapper {
+  margin-top: 40px;
+}
