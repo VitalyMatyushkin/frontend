@@ -221,9 +221,6 @@ const Manager = React.createClass({
 		this.addSyncListeners();
 	},
 	addSyncListeners: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
 		this.addListenerToIsLoadingTeamByIndex(0);
 		this.addListenerToIsLoadingTeamByIndex(1);
 
