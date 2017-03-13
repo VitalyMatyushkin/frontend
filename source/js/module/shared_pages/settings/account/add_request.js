@@ -25,6 +25,7 @@ const AddPermissionRequest = React.createClass({
 			preset:		'',
 			schoolId:	'',
 			comment:	'',
+			form:		{},
 			postcode:	undefined
 		});
 	},
@@ -42,14 +43,15 @@ const AddPermissionRequest = React.createClass({
 			});
 	},
 	isSchoolSelected: function() {
-		const binding = this.getDefaultBinding();
+		const formBinding = this.getDefaultBinding().sub('form');
 
-		return binding.meta().toJS('schoolId.value') !== '';
+		return typeof formBinding.meta().toJS('schoolId.value') !== 'undefined' &&
+			formBinding.meta().toJS('schoolId.value') !== '';
 	},
 	getSchoolSelectedId: function() {
-		const binding = this.getDefaultBinding();
+		const formBinding = this.getDefaultBinding().sub('form');
 
-		return binding.meta().toJS('schoolId.value');
+		return formBinding.meta().toJS('schoolId.value');
 	},
 	getPlaceHolderForRoleSelect: function() {
 		return this.isSchoolSelected() ? 'Please select role' : "";
@@ -58,8 +60,8 @@ const AddPermissionRequest = React.createClass({
 		return !this.isSchoolSelected();
 	},
 	getRoles: function() {
-		const 	binding = this.getDefaultBinding(),
-				fullSchoolData = binding.meta('schoolId.fullValue').toJS();
+		const	formBinding		= this.getDefaultBinding().sub('form'),
+				fullSchoolData	= formBinding.meta('schoolId.fullValue').toJS();
 		
 		// user roles for active school
 		const currentRoles = this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions')
@@ -119,13 +121,14 @@ const AddPermissionRequest = React.createClass({
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
-				isParent	= binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
+				formBinding	= binding.sub('form'),
+				isParent	= formBinding.meta('preset.value').toJS() === 'parent' && formBinding.meta('schoolId.value').toJS();
 
 		return (
 			<Form
 				name			= "New Request"
 				updateBinding	= { true }
-				binding			= { binding }
+				binding			= { binding.sub('form') }
 				onSubmit		= { this.continueButtonClick }
 				onCancel		= { this.props.onCancel }
 				formStyleClass	= "bGrantContainer"
