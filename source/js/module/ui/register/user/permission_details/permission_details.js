@@ -1,15 +1,13 @@
 /**
  * Created by Woland on 12.01.2017.
  */
-const	React 					= require ('react');
-
-const	If						= require('../../../../ui/if/if'),
-		CrossButton				= require('../../../../ui/cross_button/cross_button'),
+const	React 					= require('react'),
+		If						= require('../../../../ui/if/if'),
 		AutoComplete			= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		SchoolListItem			= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		PostcodeSelector		= require('./postcode_selector/postcode_selector');
-
-const	PermissionDetailsHelper	= require('./permission_detail_helper');
+		PostcodeSelector		= require('../../../postcode_selector/postcode_selector'),
+		GeoSearchHelper			= require('../../../../helpers/geo_search_helper'),
+		PermissionDetailsHelper	= require('./permission_detail_helper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -59,20 +57,13 @@ const PermissionDetails = React.createClass({
 		const filter = {
 			filter: {
 				where: {
+					'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(point),
 					name: {
 						like: schoolName,
 						options: 'i'
-					},
-					'postcode.point': {
-						$nearSphere: {
-							$geometry: {
-								type: 'Point',
-								coordinates: [point.lng, point.lat] // [longitude, latitude]
-							}
-						}
 					}
 				},
-				limit: 20
+				limit: 40
 			}
 		};
 
@@ -209,7 +200,7 @@ const PermissionDetails = React.createClass({
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
-							placeholder		= "school's name"
+							placeholder		= "School name"
 							defaultItem		= { {name: schoolName} }
 							customListItem	= { SchoolListItem }
 						/>
@@ -225,7 +216,7 @@ const PermissionDetails = React.createClass({
 						serviceFilter	= { this.serviceHouseFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectHouse }
-						placeholder		= "house's name"
+						placeholder		= "House name"
 						defaultItem		= {{name: houseName}}
 					/>
 				</If>
@@ -238,7 +229,7 @@ const PermissionDetails = React.createClass({
 						serviceFilter	= { this.serviceFormFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectForm }
-						placeholder		= "form's name"
+						placeholder		= "Form name"
 						defaultItem		= {{name: formName}}
 					/>
 				</If>
@@ -248,24 +239,22 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.formId !== 'undefined' && currentType === 'parent'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "firstNameField"
-								placeholder		= "first name"
-								type			= { 'text' }
-								value			= { this.props.firstName }
-								onChange		= { this.onChangeFirstName }
+						<input
+							className="eRegistration_input"
+							ref="firstNameField"
+							placeholder="First name"
+							type={ 'text' }
+							value={ this.props.firstName }
+							onChange={ this.onChangeFirstName }
 							/>
-						</div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "lastNameField"
-								placeholder		= "last name"
-								type			= { 'text' }
-								value			= { this.props.lastName }
-								onChange		= { this.onChangeLastName }
+						<input
+							className="eRegistration_input"
+							ref="lastNameField"
+							placeholder="Last name"
+							type={ 'text' }
+							value={ this.props.lastName }
+							onChange={ this.onChangeLastName }
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -274,13 +263,12 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined'}>
 					<div>
-						<div className="eRegistration_input">
 							<textarea
+								className="eRegistration_textarea mFixedWidth"
 								value={ this.props.comment }
 								placeholder="Comment"
 								onChange={this.onChangeComment}
 							/>
-						</div>
 					</div>
 				</If>
 				{/**
@@ -289,15 +277,14 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'admin'}>
 					<div>
-						<div className="eRegistration_input">
-							<input
-								ref				= "promo"
-								placeholder		= "promo"
-								type			= {'text'}
-								onChange		= { this.onChangePromo }
-								value			= { this.props.promo }
+						<input
+							className="eRegistration_input"
+							ref="promo"
+							placeholder="Promo"
+							type={'text'}
+							onChange={ this.onChangePromo }
+							value={ this.props.promo }
 							/>
-						</div>
 					</div>
 				</If>
 			</div>

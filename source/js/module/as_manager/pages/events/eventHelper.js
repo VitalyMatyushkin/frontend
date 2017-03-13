@@ -9,7 +9,7 @@ const EventHelper = {
 		'INTERNAL_HOUSES':	'houses',
 		'INTERNAL_TEAMS':	'internal'
 	},
-	fartherThenItems: [
+	distanceItems: [
 		{id: 'UNLIMITED', text:'Unlimited'},
 		{id: '10M', value: 10, text: '10 miles'},
 		{id: '20M', value: 20, text: '20 miles'},

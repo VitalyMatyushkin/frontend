@@ -10,7 +10,7 @@ let serverValidationTimer = null;
 var validationsSet = {
 	phone: function(value) {
         if(value && value.length < 7)
-			return "Incorrect phone number!";
+			return "Please enter a valid mobile phone number";
 		else
 			return false;
 
@@ -107,7 +107,18 @@ var validationsSet = {
 		var self = this,
 			value = value || '';
 		if (value.trim && value.trim() === '' ) {
-			return 'Please enter '+self.props.name;
+			switch (self.props.name) {
+				case 'Name':
+					return 'Please enter your name';
+				case 'Surname':
+					return 'Please enter your surname';
+				case 'Email':
+					return 'Please enter a valid email address';
+				case 'Phone':
+					return 'Please enter a valid mobile phone number';
+				default:
+					return 'Please enter ' + self.props.name;
+			}
 		} else {
 			return false;
 		}
@@ -149,7 +160,7 @@ var validationsSet = {
 				crossDomain: 	true,
 				data: 			JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
 				error: function(data, error, errorText) {
-					self.showError(`${self.props.name} has already been taken. Choose another or log in`);
+					self.showError(`This ${self.props.name} has already been used, please choose an alternative or log in`);
 				},
 				success: function(data) {
 					const status = data[self.props.field] || data.isAvailable;
@@ -157,7 +168,7 @@ var validationsSet = {
 					if(status === true) {
 						self.showSuccess('V');
 					} else {
-						self.showError(`${self.props.name} has already been taken. Choose another or log in`);
+						self.showError(`This ${self.props.name} has already been used, please choose an alternative or log in`);
 					}
 				}
 			});

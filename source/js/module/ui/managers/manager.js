@@ -312,7 +312,8 @@ const Manager = React.createClass({
 							result = TeamPlayersValidator.validate(
 								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 								limits,
-								subscriptionPlan
+								subscriptionPlan,
+								true
 							);
 						}
 						break;

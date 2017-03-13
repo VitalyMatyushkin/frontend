@@ -13,7 +13,8 @@ const	DateSelectorWrapper				= require('./manager_components/date_selector/date_
 		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
 		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper');
 
-const	EventHelper						= require('../eventHelper');
+const	EventHelper						= require('../eventHelper'),
+		GeoSearchHelper					= require('../../../../helpers/geo_search_helper');
 
 const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -116,29 +117,6 @@ const EventForm = React.createClass({
 			}
 		};
 	},
-	getMainGeoSchoolFilterByParams: function(fartherThenValue, point) {
-		switch (fartherThenValue) {
-			case "UNLIMITED":
-				return {
-					$nearSphere: {
-						$geometry: {
-							type: 'Point',
-							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					}
-				};
-			default:
-				return {
-					$nearSphere: {
-						$geometry: {
-							type: 'Point',
-							coordinates: [point.lng, point.lat] // [longitude, latitude]
-						}
-					},
-					$maxDistance: EventHelper.fartherThenItems.find(i => i.id === fartherThenValue).value * 1000 // 20 km
-				};
-		}
-	},
 	/**
 	 * School filtering service
 	 * @param schoolName
@@ -155,7 +133,7 @@ const EventForm = React.createClass({
 		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
-			filter.filter['postcode.point'] = this.getMainGeoSchoolFilterByParams(fartherThen, point);
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
 		} else {
 			filter.filter.order = "name ASC";
 		}
@@ -186,13 +164,10 @@ const EventForm = React.createClass({
 		return window.Server.publicSchools.get(filter);
 	},
 	changeCompleteSport: function (event) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			sportsBinding = self.getBinding('sports'),
-			sportId = event.target.value,
-			sportIndex = sportsBinding.get('models').findIndex(function(model) {
-				return model.get('id') === sportId;
-			});
+		const 	binding			= this.getDefaultBinding(),
+				sportsBinding	= this.getBinding('sports'),
+				sportId			= event.target.value,
+				sportIndex		= sportsBinding.get('models').findIndex( model => model.get('id') === sportId );
 
 		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
 
@@ -226,14 +201,12 @@ const EventForm = React.createClass({
 		}
 	},
 	changeCompleteAges: function (selections) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('model.ages', Immutable.fromJS(selections));
 	},
 	onSelectRival: function (order, id, model) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
 			binding.set(`rivals.${order}`, Immutable.fromJS(model));
@@ -269,7 +242,7 @@ const EventForm = React.createClass({
 		const	self	= this,
 				sports	= self.getBinding('sports').toJS();
 
-		return EventHelper.fartherThenItems.map(item => {
+		return EventHelper.distanceItems.map(item => {
 			return (
 				<option	value	= { item.id }
 						key		= { item.id }
@@ -287,12 +260,12 @@ const EventForm = React.createClass({
 	handleChangeShowAllSports: function() {
 		const binding = this.getDefaultBinding();
 
-		const isShowAllSports = binding.get('isShowAllSports'),
-			currentSport = binding.toJS('model.sportModel');
+		const	isShowAllSports	= binding.get('isShowAllSports'),
+				currentSport	= binding.toJS('model.sportModel');
 
 		// so, if isShowAllSports was true, now it's false
 		// and it means that we should clear sportId if that sport isn't favorite.
-		if(isShowAllSports && !currentSport.isFavorite) {
+		if(isShowAllSports && typeof currentSport !== 'undefined' && !currentSport.isFavorite) {
 			binding.atomically()
 				.set('model.sportModel', Immutable.fromJS(undefined))
 				.set('model.sportId', Immutable.fromJS(undefined))
@@ -306,9 +279,17 @@ const EventForm = React.createClass({
 				.commit()
 		}
 	},
+	isShowDistanceSelector: function() {
+		const	binding			= this.getDefaultBinding(),
+				type			= binding.get('model.type'),
+				activeSchool	= binding.toJS('schoolInfo'),
+				postcode		= activeSchool.postcode;
+
+		return type === 'inter-schools' && typeof postcode !== 'undefined';
+	},
 	render: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const	self = this,
+				binding = self.getDefaultBinding();
 
 		const	sportId						= binding.get('model.sportId'),
 				isShowAllSports				= binding.get('model.isShowAllSports'),
@@ -377,15 +358,15 @@ const EventForm = React.createClass({
 					</div>
 					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
-				<If	condition	= {type === 'inter-schools'}
+				<If	condition	= {this.isShowDistanceSelector()}
 					key			= {'if-farther-then'}
 				>
 					<div className="bInputWrapper">
 						<div className="bInputLabel">
-							Not farther than
+							Maximum distance
 						</div>
 						<select	className		= "bDropdown"
-								defaultValue	= {EventHelper.fartherThenItems[0].id}
+								defaultValue	= {EventHelper.distanceItems[0].id}
 								value			= {fartherThen}
 								onChange		= {self.handleChangeFartherThan}
 						>
@@ -402,10 +383,10 @@ const EventForm = React.createClass({
 										defaultItem		= {binding.toJS('rivals.1')}
 										serviceFilter	= {services[type]}
 										serverField		= "name"
-										placeholder		= "enter school name"
+										placeholder		= "Enter school name"
 										onSelect		= {self.onSelectRival.bind(null, 1)}
 										binding			= {binding.sub('autocomplete.inter-schools.0')}
-										extraCssStyle	= "mBigSize"
+										extraCssStyle	= "mBigSize mWhiteBG"
 										customListItem	= {SchoolItemList}
 						/>
 					</If>
@@ -420,7 +401,7 @@ const EventForm = React.createClass({
 									placeholder		= {'Select the first house'}
 									onSelect		= {self.onSelectRival.bind(null, 0)}
 									binding			= {binding.sub('autocomplete.houses.0')}
-									extraCssStyle	= {'mBigSize'}
+									extraCssStyle	= {'mBigSize mWhiteBG'}
 								/>
 							</div>
 							<Autocomplete
@@ -430,7 +411,7 @@ const EventForm = React.createClass({
 								placeholder		= "Select the second house"
 								onSelect		= {self.onSelectRival.bind(null, 1)}
 								binding			= {binding.sub('autocomplete.houses.1')}
-								extraCssStyle	= {'mBigSize'}
+								extraCssStyle	= {'mBigSize mWhiteBG'}
 							/>
 						</div>
 					</If>

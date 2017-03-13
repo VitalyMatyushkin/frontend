@@ -58,10 +58,6 @@ $labelColor:              #8c8c8c;
     transition: border-color .2s;
 
     &:hover {}
-    &:hover.mDisabled {
-      border: solid #d7d7d7;
-      border-width: 0 0 1px;
-    }
     &:focus {
       border-color: $inputFocusedBorder;
     }
@@ -247,6 +243,7 @@ select {
 .eForm_atCenter{
   position: relative;
   text-align: left;
+  display: inline-block;
 }
 
 .eForm_fieldSet{
@@ -285,6 +282,13 @@ select {
 
   &.mWithoutMargin {
     margin-right: 0px;
+  }
+}
+
+.eForm_fieldColumn {
+  &.mTwoColumns {
+	display: inline-block;
+	margin-right: 85px;
   }
 }
 

@@ -52,15 +52,15 @@ const SchoolHelper = {
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
 	loadActiveSchoolInfoPublic: function (self: any) {
-		const
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.toJS('userRules.activeSchoolId');
-		
-		return window.Server.publicSchool.get(activeSchoolId).then(data => {
+		const	rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.toJS('userRules.activeSchoolId');
+
+		return window.Server.publicSchool.get(activeSchoolId).then( data => {
 			rootBinding.set('activeSchool.schoolInfo', Immutable.fromJS(data));
-			
+
 			return Promise.resolve(data);
 		})
+
 	},
 
 	setSchoolSubscriptionPlanPromise: function (self: any) {

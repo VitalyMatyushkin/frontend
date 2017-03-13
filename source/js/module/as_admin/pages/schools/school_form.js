@@ -72,7 +72,7 @@ const SystemAdminSchoolForm = React.createClass({
 		return (
 			<Form name={this.props.title} binding={this.getDefaultBinding()} service="i/schools/domains"
 				  onSubmit={this.props.onSubmit} submitOnEnter={false}>
-				<FormColumn>
+				<FormColumn customStyle={'mTwoColumns'}>
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
 					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
@@ -88,7 +88,7 @@ const SystemAdminSchoolForm = React.createClass({
 						Allow student import for Admin
 					</FormField>
 				</FormColumn>
-				<FormColumn>
+				<FormColumn customStyle={'mTwoColumns'}>
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>

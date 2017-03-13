@@ -49,6 +49,11 @@ const serviceList = {
 		serviceList.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
 		serviceList.schoolSport = new Service('/i/schools/{schoolId}/sports/{sportId}', binding);
 
+		// places
+		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
+		serviceList.schoolPlace = new Service('/i/schools/{schoolId}/places/{placeId}', binding);
+		serviceList.schoolPlacesAndPostcodes = new Service('/i/schools/{schoolId}/placesAndPostcodes', binding);
+
 		// students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
         serviceList.schoolStudentsCount = new Service('/i/schools/{schoolId}/students/count', binding);

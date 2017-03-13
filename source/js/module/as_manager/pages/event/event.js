@@ -34,7 +34,8 @@ const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -97,10 +98,14 @@ const Event = React.createClass({
 		let eventData, report, photos, settings;
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
-		
-		service.get({
-			schoolId	: this.props.activeSchoolId,
-			eventId		: self.eventId
+
+		window.Server.publicSchool.get(this.props.activeSchoolId).then(activeSchool => {
+			binding.set('activeSchoolInfo', Immutable.fromJS(activeSchool));
+
+			return service.get({
+				schoolId	: this.props.activeSchoolId,
+				eventId		: self.eventId
+			});
 		}).then(event => {
 			eventData = event;
 
@@ -286,29 +291,40 @@ const Event = React.createClass({
 	addListenerForIndividualScoreAvailable: function() {
 		const binding = this.getDefaultBinding();
 
-		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.0.id');
+		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 0))
+		);
+		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(
+			this.handleIndividualAvailableFlagChanges.bind(this, 1))
+		);
+	},
+	handleIndividualAvailableFlagChanges: function(order, eventDescriptor) {
+		const	binding			= this.getDefaultBinding(),
+				activeSchoolId	= this.props.activeSchoolId,
+				event			= binding.toJS('model');
 
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
 
-			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
+		const team = event[params.bundleName][params.order];
+		if(typeof team !== 'undefined') {
+			const teamId = team.id;
+
+			!eventDescriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			eventDescriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId);
+
+			if(binding.toJS(`individualScoreAvailable.${order}.isTeamScoreWasChanged`) && eventDescriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId(teamId);
-				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
+				binding.set(`individualScoreAvailable.${order}.isTeamScoreWasChanged`, false);
 			}
-		}));
-
-		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
-			const teamId = binding.toJS('model.teamsData.1.id');
-
-			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
-			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
-
-			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
-				this.clearTeamScoreByTeamId(teamId);
-				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
-			}
-		}));
+		}
 	},
 	clearIndividualScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
@@ -670,12 +686,12 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
-			.set("model.startTime"		, updEvent.startTime)
-			.set("model.venue"			, updEvent.venue)
+			.set("model.startTime",	updEvent.startTime)
+			.set("model.venue",		updEvent.venue)
 			.commit();
 
 		//TODO I'm going to make event changes without reload.
-		window.location.reload();
+		this.props.onReload();
 	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
@@ -711,8 +727,11 @@ const Event = React.createClass({
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent');
-
+				isNewEvent		= binding.get('isNewEvent'),
+				//If team don't have players we don't display checkbox "Individual Score"
+				isLeftPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.0') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.0').length) : false,
+				isRightPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.1') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.1').length) : false;
+		
 		const EventContainerStyle = classNames({
 			bEventContainer	: true,
 			mTopMargin		: !isNewEvent
@@ -737,19 +756,20 @@ const Event = React.createClass({
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<EventRivals	binding			= {binding}
+											onReload		= {this.props.onReload}
 											activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
 									<div className="col-md-5 col-md-offset-1 col-sm-6">
-										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-																  isVisible={isaLeftShow}
+										<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
+																	isVisible	= {isLeftPlayers && isaLeftShow}
 											/>
 									</div>
 									<div className="col-md-5 col-sm-6">
 										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-																  isVisible={isaRightShow}
+																  isVisible={isRightPlayers && isaRightShow}
 											/>
 									</div>
 								</div>

@@ -16,12 +16,21 @@ const	Actions 		= require('./request-list-model'),
 const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.actions = new Actions(this).init();
-		SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
-			const binding = this.getDefaultBinding();
+		const	rootBinding		= this.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.toJS('userRules.activeSchoolId');
 
+		this.actions = new Actions(this).init();
+
+		// TODO: actually this is shit. This should not be done like this. 
+		if(activeSchoolId) {
+			SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
+				const binding = this.getDefaultBinding();
+				binding.set('isSync', true);
+			});
+		} else {
+			const binding = this.getDefaultBinding();
 			binding.set('isSync', true);
-		});
+		}
 	},
 	isSync: function() {
 		const binding = this.getDefaultBinding();
@@ -37,27 +46,28 @@ const PermissionRequestList = React.createClass({
 		const	schools	= binding.get('schools'),
 				isSync	= binding.get('isSync');
 
-		return (
-			<div>
+		if(this.isSync()) {
+			return (
+				<div className="eTable_view">
+					<Grid model={this.actions.grid}/>
+					<Popup	binding			= {binding}
+							  stateProperty	= {'popup'}
+							  onRequestClose	= {this.actions._closePopup.bind(this.actions)}
+							  otherClass		= "bPopupGrant"
+					>
+						<AddRequest	binding			= {binding.sub('addRequest')}
+									   activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
+									   onSuccess		= {this.actions._onSuccess.bind(this.actions)}
+									   onCancel		= {this.actions._closePopup.bind(this.actions)}
+						/>
+					</Popup>
+				</div>
+			);
+		} else {
+			return (
 				<Loader condition={!this.isSync()}/>
-				<If condition={this.isSync()}>
-					<div className="eTable_view">
-						<Grid model={this.actions.grid}/>
-						<Popup	binding			= {binding}
-								stateProperty	= {'popup'}
-								onRequestClose	= {this.actions._closePopup.bind(this.actions)}
-								otherClass		= "bPopupGrant"
-						>
-							<AddRequest	binding			= {binding.sub('addRequest')}
-										activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
-										onSuccess		= {this.actions._onSuccess.bind(this.actions)}
-										onCancel		= {this.actions._closePopup.bind(this.actions)}
-							/>
-						</Popup>
-					</div>
-				</If>
-			</div>
-		);
+			);
+		}
 	}
 });
 

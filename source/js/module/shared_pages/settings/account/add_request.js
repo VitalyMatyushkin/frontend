@@ -2,16 +2,16 @@
  * Created by Anatoly on 21.04.2016.
  */
 
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable');
 
-const	Form			= require('module/ui/form/form'),
-		FormField 		= require('module/ui/form/form_field'),
-		classNames		= require('classnames'),
-		If				= require('module/ui/if/if'),
-		SchoolListItem	= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		roleList		= require('module/data/roles_data');
+const	Form				= require('module/ui/form/form'),
+		FormField 			= require('module/ui/form/form_field'),
+		SchoolListItem		= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		roleList			= require('module/data/roles_data'),
+		PostcodeSelector	= require('../../../ui/postcode_selector/postcode_selector'),
+		GeoSearchHelper		= require('../../../helpers/geo_search_helper');
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -24,7 +24,8 @@ const AddPermissionRequest = React.createClass({
 		return Immutable.Map({
 			preset:		'',
 			schoolId:	'',
-			comment:	''
+			comment:	'',
+			postcode:	undefined
 		});
 	},
 	componentWillUnmount:function(){
@@ -87,53 +88,34 @@ const AddPermissionRequest = React.createClass({
 			}
 		});
 	},
-	getSchoolService: function() {
-		const postcode = this.props.activeSchool.postcode;
-		
+	schoolService: function(schoolName) {
+		const postcode = this.getDefaultBinding().toJS('postcode');
+
+		const filter = {
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
+				},
+				limit: 20
+			}
+		};
+
 		if(typeof postcode !== 'undefined') {
-			return (schoolName) => {
-				const point = postcode.point;
-
-				const filter = {
-					filter: {
-						where: {
-							name: {
-								like: schoolName,
-								options: 'i'
-							},
-							'postcode.point': {
-								$nearSphere: {
-									$geometry: {
-										type: 'Point',
-										coordinates: [point.lng, point.lat] // [longitude, latitude]
-									}
-								}
-							}
-						},
-						limit: 20
-					}
-				};
-
-				return window.Server.publicSchools.get(filter);
-			};
+			filter.filter.where['postcode.point'] = GeoSearchHelper.getUnlimitedGeoSchoolFilter(postcode.point);
 		} else {
-			return (schoolName) => {
-				const filter = {
-					filter: {
-						where: {
-							name: {
-								like: schoolName,
-								options: 'i'
-							}
-						},
-						order:"name ASC",
-						limit: 20
-					}
-				};
-
-				return window.Server.publicSchools.get(filter);
-			};
+			filter.filter.order = "name ASC";
 		}
+
+		return window.Server.publicSchools.get(filter);
+	},
+	handleSelectPostcode: function(id, postcode) {
+		this.getDefaultBinding().set('postcode', postcode);
+	},
+	handleEscapePostcode: function() {
+		this.getDefaultBinding().set('postcode', undefined);
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
@@ -149,34 +131,40 @@ const AddPermissionRequest = React.createClass({
 				formStyleClass	= "bGrantContainer"
 				defaultButton	= "Submit"
 			>
+				<div className="eForm_field">
+					<div className="eForm_fieldName">
+						Postcode
+					</div>
+					<PostcodeSelector	currentPostcode			= {binding.toJS('postcode')}
+										handleSelectPostcode	= {this.handleSelectPostcode}
+										handleEscapePostcode	= {this.handleEscapePostcode}
+					/>
+				</div>
 				<FormField
-					type				= "autocomplete"
-					field				= "schoolId"
-					serviceFullData		= {this.getSchoolService()}
-					customListItem		= {SchoolListItem}
-					placeholder 		= {'Please select school'}
-					validation			= "required"
+					type			= "autocomplete"
+					field			= "schoolId"
+					serviceFullData	= { this.schoolService }
+					customListItem	= { SchoolListItem }
+					placeholder 	= { 'Please select school' }
+					validation		= "required"
 				>
 					School
 				</FormField>
-
 				<FormField
 					type		= "select"
 					field		= "preset"
-					sourceArray	= {this.getRoles()}
-					placeHolder	= {this.getPlaceHolderForRoleSelect()}
-					isDisabled	= {this.isRoleSelectDisabled()}
+					sourceArray	= { this.getRoles() }
+					placeHolder	= { this.getPlaceHolderForRoleSelect() }
+					isDisabled	= { this.isRoleSelectDisabled() }
 				>
 					Role
 				</FormField>
 				<FormField
-					type			= "text"
-					field			= "studentName"
-					fieldClassName	= {classNames({mHidden:!isParent})}
+					type		= "text"
+					field		= "studentName"
+					isDisabled	= { !isParent }
 				>
-					<If condition={Boolean(isParent)}>
-						<span>Student</span>
-					</If>
+					Student
 				</FormField>
 				<FormField
 					type	= "textarea"

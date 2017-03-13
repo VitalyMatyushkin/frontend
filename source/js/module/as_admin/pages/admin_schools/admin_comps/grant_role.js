@@ -103,37 +103,37 @@ const GrantRole = React.createClass({
 	render:function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
-				isParent	= binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
+				isParent	= Boolean(binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS());
 
 		return (
 			<Form	name				= "New Permission"
-					updateBinding		= {true}
-					binding				= {binding}
-					onSubmit			= {self.continueButtonClick}
-					onCancel			= {this.props.handleClickCancel}
-					hideCancelButton	= {false}
+					updateBinding		= { true }
+					binding				= { binding }
+					onSubmit			= { self.continueButtonClick }
+					onCancel			= { this.props.handleClickCancel }
+					hideCancelButton	= { false}
 					formStyleClass		= "mZeroPadding"
 					defaultButton		= "Submit"
 			>
 				<FormField	type			= "autocomplete"
 							field			= "schoolId"
-							onSelect		= {this.handleSelectSchool}
-							serviceFullData	= {this.getSchoolService()}
+							onSelect		= { this.handleSelectSchool }
+							serviceFullData	= { this.getSchoolService() }
 				>
 					School
 				</FormField>
 				<FormField	type		= "select"
-							isDisabled	= {typeof this.selectedSchool === 'undefined'}
+							isDisabled	= { typeof this.selectedSchool === 'undefined' }
 							field		= "preset"
-							sourceArray	= {this.getRoleList()}
+							sourceArray	= { this.getRoleList() }
 				>
 					Role
 				</FormField>
 				<FormField	type			= "autocomplete"
 							field			= "studentId"
 							serverField		= "fullName"
-							serviceFullData	= {self.getStudents}
-							fieldClassName	= {classNames({mHidden:!isParent})}
+							serviceFullData	= { self.getStudents }
+							isDisabled		= { !isParent }
 				>
 					Student
 				</FormField>

@@ -1,7 +1,9 @@
 const	React			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty        = require('morearty'),
-		NewsItem 		= require('module/shared_pages/news/view-news-item');
+		NewsItem 		= require('module/shared_pages/news/view-news-item'),
+		NewsStyle		= require('./../../../../../styles/ui/b_school_news.scss'),
+		Bootstrap		= require('./../../../../../styles/bootstrap-custom.scss');
 
 const HomeNews = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -35,11 +37,8 @@ const HomeNews = React.createClass({
 				news	= self.renderNewsItems();
 
 		return (
-			<div className="eSchoolNewsContainer">
-				<div className="eSchoolFixtureTab eNews_tab">
-					<h1>News</h1><hr/>
-					<span></span>
-				</div>
+			<div className="bSchoolNewsContainer" id="eSchoolNews">
+				<h1 className="eSchoolNewsContainer_title">News</h1>
 				<div className="eSchoolNewsItems">
 					{news}
 				</div>

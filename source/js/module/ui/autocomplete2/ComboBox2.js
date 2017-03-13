@@ -8,9 +8,6 @@ const	React	= require('react'),
 		Lazy	= require('lazy.js');
 
 const ComboBox2 = React.createClass({
-
-	isMouseDown: false,
-
 	propTypes: {
 		/** piece of data to display as initial portion */
 		defaultItem:		React.PropTypes.object,
@@ -49,10 +46,11 @@ const ComboBox2 = React.createClass({
 		 * False by default.
 		 */
 		isBlocked:			React.PropTypes.bool,
-		customListItem:		React.PropTypes.object
+		customListItem:		React.PropTypes.func
 	},
 	getInitialState: function(){
 		return {
+			isMouseDown:			false,
 			dataList:				[],
 			isLoading:				false,
 			isOpen:					false,
@@ -75,21 +73,24 @@ const ComboBox2 = React.createClass({
 		window.removeEventListener('mousedown', this.handlePageClick);
 	},
 	handlePageClick: function() {
-		if (!this.isMouseDown) {
+		if (!this.state.isMouseDown && this.state.isOpen) {
 			this.closeMenu();
 			this.restorePrevSelectedText();
 		}
 	},
 	handleMouseUp: function() {
-		this.isMouseDown = false;
+		this.setState({
+			isMouseDown: false
+		});
 	},
 	handleMouseDown: function() {
-		this.isMouseDown = true;
+		this.setState({
+			isMouseDown: true
+		});
 	},
 	/** Checks on mount if we need to set default item */
 	componentWillMount: function(){
 		if(typeof this.props.defaultItem !== 'undefined' && typeof this.props.onSelect !== 'undefined') {
-			this.props.onSelect(this.props.defaultItem.id, this.props.defaultItem);
 			this.setState({prevText: this.props.getElementTitle(this.props.defaultItem)});
 			if(typeof this.props.getElementTooltip !== "undefined") {
 				this.setState({
@@ -102,7 +103,6 @@ const ComboBox2 = React.createClass({
 	componentWillReceiveProps: function(nextProps) {
 		// Eliminating infinite looping by checking if really props update take place
 		if(nextProps.defaultItem && nextProps.onSelect && JSON.stringify(nextProps.defaultItem) !== JSON.stringify(this.props.defaultItem)) {
-			nextProps.onSelect(nextProps.defaultItem.id, nextProps.defaultItem);
 
 			// Change current text (value in input field) on props.defaultItem, if received new props.defaultItem
 			this.setState({currentText: this.props.getElementTitle(nextProps.defaultItem)});
@@ -394,7 +394,7 @@ const ComboBox2 = React.createClass({
 					key			: data.id ? data.id : self.props.getElementTitle(data),
 					isSelected	: isSelected,
 					onMouseDown	: self.onListItemClick.bind(self, index),
-					school		: data
+					data		: data
 				},
 				customMenuItem = React.createElement(self.props.customListItem, props);
 
@@ -443,10 +443,10 @@ const ComboBox2 = React.createClass({
 		}
 	},
 	render: function(){
-		const	self			= this,
-				placeholder 	= self.getPlaceHolder(),
-				value			= self.getInputText(),
-				isOpenCN 		= self.state.isOpen === true ? 'mOpen' : '';
+		const	self		= this,
+				placeholder	= self.getPlaceHolder(),
+				value		= self.getInputText(),
+				isOpenCN	= self.state.isOpen === true ? 'mOpen' : '';
 
 		const hintStyle = {
 			position:	'absolute',
@@ -485,6 +485,7 @@ const ComboBox2 = React.createClass({
 							onKeyUp		= {self.onKeyUp}
 							onClick		= {self.onInputClick}
 							role		= "combobox"
+							disabled	= {this.props.isBlocked}
 					/>
 					<img	className		= {self.getLoaderCssStyle()}
 							style			= {loaderStyle}

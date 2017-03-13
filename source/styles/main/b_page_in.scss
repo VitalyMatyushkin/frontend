@@ -1,10 +1,5 @@
 @import '../!variables';
 
-.bPageIn{
-  padding: 25px 20px;
-  box-sizing: border-box;
-  position: relative;
-}
 .eSchoolHomePage{
   -webkit-font-smoothing: antialiased;
   position: relative;
@@ -12,202 +7,37 @@
 }
 
 /*header*/
-.eSchoolHeader{
+.bSchoolHeader {
   background-size: cover;
-  height: 470px;
+  height: 450px;
+  margin-top: 100px;
   position:relative;
   overflow: hidden;
 }
-.eSchoolMastHead{
-  position: absolute;
-  top: 85px;
-  left: 0;
+
+.eSchoolHomeFooter{
   width: 100%;
-}
-.eSchoolMotto{
-  background: #fff;
-  border-radius: 10px;
-  box-sizing: border-box;
-  color: $textColor;
-  font-size: 1.5625rem;
-  height: 300px;
-  margin: auto;
-  max-width: 315px;
-  padding-top: 70px;
-  text-align: center;
-}
-.eSchoolBlazon {
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  padding: 20px 0;
 
-  margin: 0 auto 20px;
-  height: 110px;
-  width: 110px;
-}
-
-.eSchoolFixtureTab{//TODO Rename it
-  width: 100%;
-  max-width: 1180px;
-  height: 40px;
-  position:relative;
-  text-align: center;
-  margin: 30px auto;
-}
-
-.bFixtureResult{
-  width: 90px;
-  min-height: 100px;
-  background: #007dbe;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.eSchoolFixtureTab.eNews_tab h1{
-  color: #9c3022;
-}
-.eSchoolFixtureTab.eNews_tab hr{
-  border-color: #f26522;
-}
-.eSchoolNewsContainer{
-  height: auto;
   position: relative;
-  margin-top: 40px;
-}
-.eSchoolNewsItems{
-  width: 100%;
-  height: auto;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  color:#898989;
 }
 
-.eSchoolNewsItemLatest{
-  position: relative;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription{
-  top: 210px;
-  position: absolute;
-  color: #fff;
-  width: 40%;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription hr{
-  border: solid 1px #fff;
-}
-.eSchoolNewsItemLatest .eSchoolNewsItemDescription h1{
-  font-weight: bold;
-}
-
-.eSchoolNewsItemLatest span.eSchoolNewsImage img{
-  width: 940px;
-  height: 400px;
-  margin: 0 auto;
-  padding-left: 10px;
-}
-
-.eSchoolNewsItem {
-  display: flex;
-  flex-flow: row wrap;
-  height: auto;
-  background: #fff;
-  width: 100%;
-  max-width: 920px;
-  margin: 20px;
-  border: $BORDER;
-  color: #333132;
-}
-.eSchoolNewsImage {
-  display: flex;
-  width: 35%;
-  background-size: cover;
-  background-position: center top;
-}
-.eSchoolNewsItemDescription{
-  height:auto;
-  display: flex;
-  flex-direction: column;
-  padding-left: 80px;
-  padding-right: 80px;
-  width: 65%;
-}
-
-.eSchoolNewsItemInfo{
-  height: auto;
-  margin: 30px 0;
-}
-.eSchoolNewsDateText{
-  font-size: 10px;
-  margin-right: 5px;
-}
-
-.newsItemTitle{
-  font-weight: normal;
-  font-size: 30px;
-}
-.newsItemText{
-  margin-top: 10px;
-
-  p{
-    line-height: 18px;
-    margin-bottom: 10px;
-  }
+.eSchoolHomeFooterCopyright {
+  text-align: right;
+  padding: 20px 0;
 }
 
 .eSchoolBodyWrapper{
   position:relative;
   height: auto;
   margin: auto;
-}
-.eSchoolCalenderContainer{
-  height: auto;
-  position: relative;
-  margin-top: 40px;
-  * {
-    box-sizing: border-box;//Remove it after adding bootstrap grid to school page
-  }
-  .bCalendar {
-    background: transparent;
-  }
 
-}
-.eSchoolFixtureTab.eCalendar_tab h1{
-  color: $blueColor;
-}
-.eSchoolFixtureTab.eCalendar_tab hr{
-  border-color: $blueColor;
+   >div:nth-child(odd) {
+     background: $secondBackgroundColor;
+   }
 }
 
-.eSchoolCalendarWrapper{
-  width: 100%;
-  position: relative;
-  height: auto;
-  padding-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.eSchoolFixtureListItem{
-  color: #333132;
-  text-transform: none;
-  display: flex;
-  border-bottom: $BORDER;
-  margin: 0 25px;
-}
-
-.eSchoolFixtureListItem h5{
-  font-size: 14px;
-  color: $blueColor;
-}
-.eSchoolFixtureListItem h2{
-  font-size: 22px;
-  font-weight: bold;
-  color: #333132;
-  text-transform: none;
-  margin-bottom: 5px;
-}
 .eSchoolBlog{
   width: 960px;
   background: #FFFFFF;
@@ -218,6 +48,7 @@
   overflow:hidden;
   display: none;
 }
+
 //carousel styles
 .carouselContainer{
   height: 250px;
@@ -335,26 +166,9 @@
   color:#8e908c;
   font-weight:200;
 }
-.eSchoolHomeFooter{
-  width: 100%;
-  padding: 20px 0;
 
-  position: relative;
-  color:#898989;
-}
-
-.eSchoolHomeFooterCopyright {
-  text-align: right;
-  padding: 20px 0;
-}
 .carouselUpScroll{
-  //overflow: hidden;
-  //overflow-y: hidden;
   overflow: hidden;
-  //height: 1200px;
-  //border: 2px solid red;
-  //overflow: -moz-scrollbars-none;
-  //-ms-overflow-style: none;
 }
 .versusText{
   font-size: 64px;
@@ -370,57 +184,30 @@
   left: 130px;
   color:#8e908c;
 }
-.eSchoolMainSlideOutBanner{
+.eSchoolHeader_slider {
   position: absolute;
   display:inline-block;
   top: 0;
   left:0;
   width: 100%;
   height: 100%;
-  background:transparent;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  z-index: 1;
 }
 
-.eSchoolMainSlideOutBanner img{
-  width: 100%;
-  height: auto;
-  position: relative;
-  display: inline-block;
+.mShowing {
+  opacity: 1;
+  z-index: 2;
 }
-.transitionImage{
-  -webkit-transition: all 0.5s ease-in-out, background 0.5s linear;
-  -moz-transition: all 0.5s ease-in-out;
-  -ms-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
+
+.mTransitionImage{
   transition: all 0.5s ease-in-out;
 }
 
-.eSchoolFixtureTab hr{
-  position: absolute;
-  width: 100%;
-  border: solid 1px #007dbe;
-}
-.eSchoolFixtureTab h1{
-  color: #293e6b;
-  max-width: 180px;
-  display: block;
-  background: #fff;
-  position: relative;
-  margin: auto;
-  top: 25px;
-  z-index: 1;
-  text-transform: uppercase;
-}
-.eSchoolCalenderFixtureTitle{
-  background: $blueColor;
-  color: $blueColor;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 25px;
-  height: 40px;
-  font-weight: bold;
-  font-size: 14px;
-}
 .eSchoolCalenderFixtureItem{
   width: 25%;
   margin: auto;
@@ -430,19 +217,6 @@
 .eSchoolCalenderFixtureItem img{
   width: 30px;
 }
-.eSchoolNewsMoreInfo{
-  text-align: right;
-  text-transform: uppercase;
-  font-size: 12px;
-  color: $blueColor;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-bottom: 10px;
-}
-.eSchoolNewsItemLatest .eSchoolNewsMoreInfo{
-  color: #fff;
-  font-weight: bold;
-}
 
 .bFixtureMessage {
   max-width: 1150px;
@@ -451,15 +225,42 @@
   font-size: 16px;
 }
 
-@media screen and (max-width: 992px){
-  .eSchoolNewsItemDescription {
-    margin-left: 20px;
+/* Medium Devices, Desktops */
+@media screen and (max-width: 992px) {
+  .bSchoolHeader {
+    height: 400px;
   }
 }
-@media screen and (max-width: 767px){
-  .eSchoolNewsItemDescription {
-    width: 100%;
-    margin-left: 0px;
-    padding: 0 20px;
+
+/* Large Devices, Wide Screens */
+@media screen and (max-width: 1200px) {
+  .bSchoolHeader {
+    margin-top: 70px;
+  }
+}
+
+/* Small Devices, Phones */
+@media screen and (max-width: 768px){
+  .bSchoolHeader {
+      height: 350px;
+  }
+  .eSchoolHeader_slider {
+    background-attachment: scroll;
+  }
+  .eSchoolHomeFooter,
+  .eSchoolHomeFooterCopyright{
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .bSchoolHeader {
+    height: 250px;
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .bSchoolHeader {
+    margin-top: 70px;
   }
 }

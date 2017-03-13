@@ -6,7 +6,6 @@ const	React			= require('react'),
 const SchoolUnionCreate = React.createClass({
 	mixins: [Morearty.Mixin],
 	submitAdd: function(schoolUnionData) {
-		console.log(schoolUnionData);
 		schoolUnionData.kind = "SchoolUnion";
 		window.Server.schools.post(schoolUnionData).then(() => {
 			document.location.hash = '/admin_schools/school_unions';

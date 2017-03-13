@@ -3,7 +3,7 @@ const	React			= require('react'),
 		DataLoader		= require('module/ui/grid/data-loader'),
 		GridModel		= require('module/ui/grid/grid-model');
 
-const SportListModel = function(page, schoolId){
+const SportListModel = function(page, schoolId, onReload){
 	this.getDefaultBinding = page.getDefaultBinding;
 	this.getMoreartyContext = page.getMoreartyContext;
 	this.props = page.props;
@@ -27,10 +27,11 @@ const SportListModel = function(page, schoolId){
 		onLoad: this.getDataLoadedHandle()
 	});
 
+	this.onReload = onReload;
 };
 
 SportListModel.prototype.getActions = function(){
-	const actionList = ['Select as favorite', 'Unselect as favorite'];
+	const actionList = ['Add to favourites', 'Remove from favourites'];
 	return actionList;
 };
 
@@ -38,10 +39,10 @@ SportListModel.prototype.getQuickEditAction = function(itemId, action){
 	const actionKey = action;
 	//For future extension, maybe will appear new actions
 	switch (actionKey){
-		case 'Select as favorite':
+		case 'Add to favourites':
 			this.getSelectAsFavoriteFunction(itemId);
 			break;
-		case 'Unselect as favorite':
+		case 'Remove from favourites':
 			this.getUnselectAsFavoriteFunction(itemId);
 			break;
 		default :
@@ -58,7 +59,7 @@ SportListModel.prototype.getSelectAsFavoriteFunction = function(itemId){
 		sportId: sportId
 	}, {
 		isFavorite: true
-	}).then(() => this.dataLoader.loadData());
+	}).then(() => this.onReload());
 };
 
 SportListModel.prototype.getUnselectAsFavoriteFunction = function(itemId){
@@ -69,7 +70,7 @@ SportListModel.prototype.getUnselectAsFavoriteFunction = function(itemId){
 		sportId: sportId
 	}, {
 		isFavorite: false
-	}).then(() => this.dataLoader.loadData());
+	}).then(() => this.onReload());
 };
 
 SportListModel.prototype.setColumns = function(){

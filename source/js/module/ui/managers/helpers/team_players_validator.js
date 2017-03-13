@@ -1,12 +1,11 @@
 const TeamPlayersValidator = {
-    validate: function(players, limits, subscriptionPlan) {
-		console.log(subscriptionPlan);
+    validate: function(players, limits, subscriptionPlan, isTeamSport = false) {
         const self = this;
 
         let isError = false,
             text = undefined;
 
-        if(subscriptionPlan !== "LITE" && typeof players !== 'undefined') {
+        if(this.mustCheckIt(players, subscriptionPlan, isTeamSport)) {
 			if (players && limits.minPlayers && players.length < limits.minPlayers) {
 				isError = true;
 				text = `Number of players should be greater or equal ${limits.minPlayers}`;
@@ -25,6 +24,23 @@ const TeamPlayersValidator = {
             text:      text
         };
     },
+	/**
+	 * Returns true if players must be validated.
+	 * @param players
+	 * @param subscriptionPlan
+	 * @param isTeamSport
+	 */
+	mustCheckIt: function(players, subscriptionPlan, isTeamSport) {
+		return (
+			subscriptionPlan !== "LITE" &&
+			typeof players !== 'undefined' &&
+			(
+				isTeamSport ?
+					players.length !== 0 :
+					true
+			)
+		);
+	},
     checkSubstitutions: function(players, minSubs, maxSubs) {
         const result = {
             isError:    false,

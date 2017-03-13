@@ -35,12 +35,16 @@ const EditEventPopup = React.createClass({
 	},
 	/**
 	 * Function returns id of venue.
-	 * In relation of situation venue can contains id or _id
+	 * In depend of situation venue can contains id or _id
 	 * @param venue - venue model
 	 * @returns {string}
 	 */
 	getPostcodeIdFromVenue: function(venue) {
-		return typeof venue.postcodeData._id !== "undefined" ? venue.postcodeData._id : venue.postcodeData.id;
+		const postcode = venue.postcodeData;
+
+		if(typeof postcode !== 'undefined') {
+			return typeof postcode._id !== "undefined" ? postcode._id : postcode.id;
+		}
 	},
 	handleClickOkButton: function() {
 		const binding = this.getDefaultBinding();
@@ -98,7 +102,7 @@ const EditEventPopup = React.createClass({
 							isOkButtonDisabled		= {false}
 							handleClickOkButton		= {this.handleClickOkButton}
 							handleClickCancelButton	= {this.handleClickCancelButton}
-							customStyle				= 'mBig'
+							customStyle				= 'mBig mFullWidth'
 			>
 				<EventEditForm binding={binding.sub('eventEditForm')}/>
 			</ConfirmPopup>
