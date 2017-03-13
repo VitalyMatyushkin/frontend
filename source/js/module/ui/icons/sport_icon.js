@@ -33,7 +33,8 @@ const SportIcon = React.createClass({
 				icon = "football_five";
 				break;
 			case 	sport === 'rugby union' ||
-					sport === 'tag rugby':
+					sport === 'tag rugby' ||
+					sport === 'rugby league':
 				icon = "rugby_union";
 				break;
 			case 	sport === 'rugby sevens':
@@ -72,7 +73,7 @@ const SportIcon = React.createClass({
 					sport === 'table tennis doubles':
 				icon = "table_tennis";
 				break;
-			case 	sport === 'high 5 netball':
+			case 	sport === 'netball high 5':
 				icon = "netball_five";
 				break;
 			case 	sport === 'hockey indoor':
@@ -109,12 +110,11 @@ const SportIcon = React.createClass({
 			case 	sport === 'sports hall athletics':
 				icon = "athletics";
 				break;
-			//maybe
 			case 	sport === 'hammer throw':
 				icon = "hammer_throw";
 				break;
 			case 	sport === 'water polo':
-				icon = "water polo";
+				icon = "water_polo";
 				break;
 			case 	sport === 'mini golf':
 				icon = "mini_golf";
@@ -133,6 +133,60 @@ const SportIcon = React.createClass({
 				break;
 			case 	sport === 'high jump':
 				icon = "high_jump";
+				break;
+			case 	sport === 'cycling':
+				icon = "bicycling";
+			break;
+			case 	sport === 'swimming relays':
+				icon = "swimming";
+			break;
+			case 	sport === 'bowling (individual)' ||
+					sport === 'bowling (team)':
+				icon = "bowling";
+				break;
+			case 	sport === 'darts (individual)' ||
+					sport === 'darts (team)':
+				icon = "darts";
+				break;
+			case 	sport === 'mini golf (individual)' ||
+					sport === 'mini golf (team)':
+				icon = "mini_golf";
+				break;
+			case 	sport === 'rowing (individual)' ||
+					sport === 'rowing (team)':
+				icon = "rowing";
+				break;
+			case 	sport === 'shooting (individual)' ||
+					sport === 'shooting (team)':
+				icon = "shooting";
+				break;
+			case 	sport === 'dressage' ||
+					sport === 'cross-country equestrianism' ||
+					sport === 'show jumping':
+				icon = "equestrian";
+				break;
+			case 	sport === 'road running (5 kilometres, 3.1 mi)' ||
+					sport === 'road running (8 kilometres, 5.0 mi)' ||
+					sport === 'road running (10 kilometres, 6.2 mi)' ||
+					sport === 'road running (12 kilometres, 7.5 mi)' ||
+					sport === 'road running (15 kilometres, 9.3 mi)' ||
+					sport === 'road running (16 kilometres, 10 mi)' ||
+					sport === 'road running (20 kilometres, 12 mi)' ||
+					sport === 'road running (half-marathon)' ||
+					sport === 'road running (25 kilometres, 16 mi)' ||
+					sport === 'road running (30 kilometres, 19 mi)' ||
+					sport === 'road running (marathon)':
+				icon = "road_running";
+				break;
+			case 	sport === 'fives (eton)' ||
+					sport === 'fives (rugby)':
+				icon = "fives";
+				break;
+			case 	sport === 'hockey sevens':
+				icon = "hockey_sevens";
+				break;
+			case 	sport === 'cross-country running':
+				icon = "cross-country";
 				break;
 			default:
 				icon = sport;
