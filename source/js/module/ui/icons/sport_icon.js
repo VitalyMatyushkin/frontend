@@ -110,7 +110,6 @@ const SportIcon = React.createClass({
 			case 	sport === 'sports hall athletics':
 				icon = "athletics";
 				break;
-			//maybe
 			case 	sport === 'hammer throw':
 				icon = "hammer_throw";
 				break;
