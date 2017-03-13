@@ -318,8 +318,20 @@ const EventTeamsView = React.createClass({
 			}
 		}
 	},
+	sortPlayersByScore: function(players) {
+		players.forEach( player => {
+			player.result = this.getPointsByStudent(this.getBinding('event').toJS(), player.userId);
+		});
+		return players = players.sort( (player1, player2) => {
+			return player2.result - player1.result;
+		});
+	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
+		//we sort player by score only in view mode, because in edit mode binding change every change input field
+		if (self.getBinding('mode').toJS() !== 'closing') {
+			this.sortPlayersByScore(players);
+		}
 
 		return players.map((player, playerIndex) => {
 			const 	mode						= self.getBinding('mode').toJS(),
