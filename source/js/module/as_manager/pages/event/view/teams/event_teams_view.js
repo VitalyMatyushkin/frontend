@@ -318,20 +318,38 @@ const EventTeamsView = React.createClass({
 			}
 		}
 	},
+	/**
+	 * Return array of players sorted by individual score
+	 */
 	sortPlayersByScore: function(players) {
-		players.forEach( player => {
-			player.result = this.getPointsByStudent(this.getBinding('event').toJS(), player.userId);
-		});
+		const 	rootBinding = this.getMoreartyContext().getBinding(),
+				isEventInitResult = Boolean(rootBinding.get('events.model.initResults')),
+			 	mode = this.getBinding('mode').toJS();
+		
+		//we add individual score in array of players (player.result) and then sort array by DESC
+		//we get individual score from different source, because when we change score, immediately triggered sort
+		if (!isEventInitResult || mode !== 'closing') {
+			players.forEach( player => {
+				player.result = this.getPointsByStudent(this.getBinding('event').toJS(), player.userId);
+			});
+		} else {
+			players.forEach( player => {
+				const 	initResults = rootBinding.get('events.model.initResults.individualScore').toJS(),
+						userScoreDataIndex = initResults.findIndex(userScoreData => userScoreData.userId === player.userId);
+				
+				player.result = userScoreDataIndex === -1 ? 0 : initResults[userScoreDataIndex].score;
+			});
+		}
+		
 		return players = players.sort( (player1, player2) => {
 			return player2.result - player1.result;
 		});
 	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
-		//we sort player by score only in view mode, because in edit mode binding change every change input field
-		if (self.getBinding('mode').toJS() !== 'closing') {
-			this.sortPlayersByScore(players);
-		}
+
+		//we sort array of players by individual score
+		this.sortPlayersByScore(players);
 
 		return players.map((player, playerIndex) => {
 			const 	mode						= self.getBinding('mode').toJS(),
