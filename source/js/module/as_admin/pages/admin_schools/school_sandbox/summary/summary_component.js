@@ -1,6 +1,6 @@
-const	React 							= require('react'),
+const	React 					= require('react'),
 		schoolSummaryStyles		= require('styles/pages/schools/b_school_summary.scss'),
-		If										= require('module/ui/if/if');
+		If						= require('module/ui/if/if');
 
 const SummaryComponent = React.createClass({
 
@@ -21,22 +21,20 @@ const SummaryComponent = React.createClass({
 	},
 
 	render: function() {
-		const self	= this,
-				school	= self.props.school;
-
+		const school	= this.props.school;
 
 		let text, linkText, schoolImage;
 
 			if (typeof school !== 'undefined') {
 				schoolImage = school.pic + '?sizing=minvalue&value=170';
 				if (this.state.expanded) {
-						text = school.description;
+						text = typeof school.description !== 'undefined' ? school.description : '';
 						linkText = 'Show Less';
 					} else {
-						if (school.description.length > 200) {
+						if (Boolean(school.description && school.description.length > 200)) {
 							text = school.description.slice(0, 200) + '...';
 						} else {
-							text = school.description;
+							text = typeof school.description !== 'undefined' ? school.description : '';
 						}
 						linkText = 'Read More';
 					}
@@ -70,8 +68,8 @@ const SummaryComponent = React.createClass({
 								<div className="eTextKey">Description</div>
 								<div className="eTextValue">
 									{text}
-									<If condition={school.description !== '' && school.description.length > 200}>
-										<a className="eDescription_link" onClick={self.expandedText}> {linkText} </a>
+									<If condition={Boolean(school.description && school.description.length > 200)}>
+										<a className="eDescription_link" onClick={this.expandedText}> {linkText} </a>
 									</If>
 								</div>
 							</div>
