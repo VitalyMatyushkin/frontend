@@ -267,17 +267,11 @@ class StudentListClass{
 				}
 			}
 		];
-<<<<<<< HEAD:source/js/module/as_manager/pages/school_admin/students/list/student-list-class.js
 	}
 	
-	init(){
-		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
-			if(schoolHelper.schoolSubscriptionPlanIsFull(this)) {
-				
-=======
-	},
+
 	//We add icon star only captain (flag isCaptain === true)
-	getCaptainStar: function(item){
+	getCaptainStar(item){
 		//In service student we don't get field 'isCaptain', because we search it in playerData
 		//Player MUST be always found
 		const student = this.playerData.find(player => item.id === player.userId);
@@ -292,9 +286,9 @@ class StudentListClass{
 			return null;
 		}
 		
-	},
+	}
 	//For team view we want display column 'Captain'
-	getColumnsCaptain: function(){
+	getColumnsCaptain(){
 		this.columns.splice(1, 0,
 			{
 				text: 'Captain',
@@ -307,15 +301,14 @@ class StudentListClass{
 				}
 			}
 		);
-	},
-	init: function(){
+	}
+	init(){
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
 			if(schoolHelper.schoolSubscriptionPlanIsFull(this)) {
 				//if we view team, we want display column 'Captain'
 				if (this.team) {
 					this.getColumnsCaptain();
 				}
->>>>>>> master:source/js/module/as_manager/pages/school_admin/students/list/student-list-model.js
 				this.grid = new GridModel({
 					actionPanel: {
 						title: this.title,
