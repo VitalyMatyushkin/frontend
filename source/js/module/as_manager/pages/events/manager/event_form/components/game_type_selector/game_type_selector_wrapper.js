@@ -1,9 +1,8 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-
-		RadioButtonCustom	= require('../../../../../../ui/radio_button_custom/radio_button_custom'),
-		ControlPanel		= require('../../../../../../ui/control_panel/control_panel');
+		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
+		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel');
 
 const GameTypeSelectorWrapper = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -1,27 +1,33 @@
+// Main components
 const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable');
+		Immutable						= require('immutable'),
+		propz							= require('propz'),
+		If								= require('../../../../../ui/if/if'),
+		Autocomplete					= require('../../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		SchoolItemList					= require('../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item');
 
-const	If								= require('../../../../ui/if/if'),
-		Autocomplete					= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		SchoolItemList					= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		EventVenue						= require('./event_venue'),
-		TimeInputWrapper				= require('./time_input_wrapper');
+// EventForm React components
+const	DateSelectorWrapper				= require('./components/date_selector/date_selector_wrapper'),
+		GenderSelectorWrapper			= require('./components/gender_selector/gender_selector_wrapper'),
+		GameTypeSelectorWrapper			= require('./components/game_type_selector/game_type_selector_wrapper'),
+		AgeMultiselectDropdownWrapper	= require('./components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
+		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
+		TimeInputWrapper				= require('../time_input_wrapper'),
+		EventVenue						= require('../event_venue');
 
-const	DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
-		GenderSelectorWrapper			= require('./manager_components/gender_selector/gender_selector_wrapper'),
-		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
-		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper');
+// Helpers
+const	EventFormActions				= require('./event_form_actions'),
+		EventHelper						= require('../../eventHelper'),
+		GeoSearchHelper					= require('../../../../../helpers/geo_search_helper');
 
-const	EventHelper						= require('../eventHelper'),
-		GeoSearchHelper					= require('../../../../helpers/geo_search_helper');
-
-const	InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
-		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
-		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
-		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
-		HouseAutocompleteStyle			= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss'),
-		SmallCheckboxBlockStyle			= require('./../../../../../../styles/ui/b_small_checkbox_block.scss');
+// Styles
+const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
+		InputLabelStyles				= require('../../../../../../../styles/ui/b_input_label.scss'),
+		TextInputStyles					= require('../../../../../../../styles/ui/b_text_input.scss'),
+		DropdownStyles					= require('../../../../../../../styles/ui/b_dropdown.scss'),
+		HouseAutocompleteStyle			= require('../../../../../../../styles/ui/b_house_autocomplete_wrapper.scss'),
+		SmallCheckboxBlockStyle			= require('../../../../../../../styles/ui/b_small_checkbox_block.scss');
 
 const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -36,15 +42,13 @@ const EventForm = React.createClass({
 		binding.atomically()
 			.set('isShowAllSports', !isSchoolHaveFavoriteSports )
 			.set('isSchoolHaveFavoriteSports', isSchoolHaveFavoriteSports)
-			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.generateOpponentSchoolInputKey()))
-			.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
+			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.getRandomString()))
 			.commit();
 	},
-	generateOpponentSchoolInputKey: function() {
-		// just current date in timestamp view
-		return + new Date();
+	getActiveSchoolId: function() {
+		return this.getDefaultBinding().toJS('schoolInfo.id');
 	},
-	generateSportSelectorKey: function() {
+	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
 	},
@@ -163,42 +167,14 @@ const EventForm = React.createClass({
 		};
 		return window.Server.publicSchools.get(filter);
 	},
-	changeCompleteSport: function (event) {
-		const 	binding			= this.getDefaultBinding(),
-				sportsBinding	= this.getBinding('sports'),
-				sportId			= event.target.value,
-				sportIndex		= sportsBinding.get('models').findIndex( model => model.get('id') === sportId );
-
-		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
-
-		binding.atomically()
-			.set('model.sportId',    event.target.value)
-			.set('model.sportModel', Immutable.fromJS(sportModel))
-			.set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
-			.commit();
-	},
 	handleChangeFartherThan: function (eventDescriptor) {
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
 			.set('rivals.1',					undefined)
-			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(this.generateOpponentSchoolInputKey()))
+			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(this.getRandomString()))
 			.set('fartherThen',					eventDescriptor.target.value)
 			.commit();
-	},
-	getDefaultGender: function(sportModel) {
-		switch (true) {
-			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && sportModel.genders.mixed:
-				return undefined;
-			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && !sportModel.genders.mixed:
-				return undefined;
-			case sportModel.genders.femaleOnly:
-				return 'femaleOnly';
-			case sportModel.genders.maleOnly:
-				return 'maleOnly';
-			case sportModel.genders.mixed:
-				return undefined;
-		}
 	},
 	changeCompleteAges: function (selections) {
 		const binding = this.getDefaultBinding();
@@ -257,28 +233,6 @@ const EventForm = React.createClass({
 
 		return sports.filter(s => s.isFavorite).length > 0;
 	},
-	handleChangeShowAllSports: function() {
-		const binding = this.getDefaultBinding();
-
-		const	isShowAllSports	= binding.get('isShowAllSports'),
-				currentSport	= binding.toJS('model.sportModel');
-
-		// so, if isShowAllSports was true, now it's false
-		// and it means that we should clear sportId if that sport isn't favorite.
-		if(isShowAllSports && typeof currentSport !== 'undefined' && !currentSport.isFavorite) {
-			binding.atomically()
-				.set('model.sportModel', Immutable.fromJS(undefined))
-				.set('model.sportId', Immutable.fromJS(undefined))
-				.set('isShowAllSports', !isShowAllSports)
-				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
-				.commit()
-		} else {
-			binding.atomically()
-				.set('isShowAllSports', !isShowAllSports)
-				.set('eventFormSportSelectorKey', Immutable.fromJS(this.generateSportSelectorKey()))
-				.commit()
-		}
-	},
 	isShowDistanceSelector: function() {
 		const	binding			= this.getDefaultBinding(),
 				type			= binding.get('model.type'),
@@ -291,15 +245,14 @@ const EventForm = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding();
 
-		const	sportId						= binding.get('model.sportId'),
-				isShowAllSports				= binding.get('model.isShowAllSports'),
+		const	event						= binding.toJS('model'),
 				fartherThen					= binding.get('fartherThen'),
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
 				services					= {
 					'inter-schools': self.schoolService,
 					'houses': self.serviceHouseFilter
 				},
-				type						= binding.get('model.type');
+				type						= event.type;
 
 		return(
 			<div className="eManager_base">
@@ -310,36 +263,7 @@ const EventForm = React.createClass({
 					</div>
 					<TimeInputWrapper binding={binding.sub('model.startTime')}/>
 				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
-						Game
-					</div>
-						<select	key				= {binding.toJS('eventFormSportSelectorKey')}
-								className		= "bDropdown"
-								defaultValue	= "not-selected-sport"
-								value			= {sportId}
-								onChange		= {self.changeCompleteSport}
-						>
-							<option	key			= "not-selected-sport"
-									value		= "not-selected-sport"
-									disabled	= "disabled"
-							>
-								Please select
-							</option>
-							{self.getSports()}
-						</select>
-						<If condition={isSchoolHaveFavoriteSports}>
-							<div className="bSmallCheckboxBlock">
-								<div className="eSmallCheckboxBlock_label">
-									Show all sports
-								</div>
-								<div className="eForm_fieldInput">
-									<input className="eSwitch" type="checkbox" checked={isShowAllSports} onChange={this.handleChangeShowAllSports} />
-									<label/>
-								</div>
-							</div>
-						</If>
-				</div>
+				<SportSelectorWrapper binding={binding}/>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
 						Genders

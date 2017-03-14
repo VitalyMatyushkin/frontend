@@ -1,10 +1,8 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
-
-		DateSelector				= require('./date_selector'),
-
-		DateSelectorWrapperStyle	= require('./../../../../../../../../styles/ui/b_date_selector_wrapper.scss');
+		DateSelector				= require('../../../../../../../ui/date_selector/date_selector'),
+		DateSelectorWrapperStyle	= require('../../../../../../../../../styles/ui/b_date_selector_wrapper.scss');
 
 const DateSelectorWrapper = React.createClass({
 	mixins: [Morearty.Mixin],

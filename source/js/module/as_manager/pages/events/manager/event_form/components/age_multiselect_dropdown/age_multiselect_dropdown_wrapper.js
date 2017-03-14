@@ -2,7 +2,7 @@ const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
 
-		MultiselectDropdown	= require('./../../../../../../ui/multiselect-dropdown/multiselect-dropdown');
+		MultiselectDropdown	= require('../../../../../../../ui/multiselect-dropdown/multiselect-dropdown');
 
 const AgeMultiselectDropdownWrapper = React.createClass({
 	mixins: [Morearty.Mixin],

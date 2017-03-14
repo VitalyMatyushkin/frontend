@@ -1,14 +1,17 @@
+// Main components
 const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable');
+		Morearty			= require('morearty');
 
-const	DateSelector		= require('./../../../events/manager/manager_components/date_selector/date_selector'),
-		FullTimeInput		= require('./../../../../../ui/full_time_input/full_time_input'),
+// EditEventForm React components
+const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
+		FullTimeInput		= require('../../../../../ui/full_time_input/full_time_input'),
 		EventVenue			= require('../../../events/manager/event_venue');
 
+// Helpers
 const	EventHelper			= require('../../../events/eventHelper'),
 		SchoolHelper		= require('../../../../../helpers/school_helper');
 
+// Styles
 const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scss'),
 		InputWrapperStyle	= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyle		= require('../../../../../../../styles/ui/b_input_label.scss');
