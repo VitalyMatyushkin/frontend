@@ -342,7 +342,7 @@ const EventTeamsView = React.createClass({
 			});
 		}
 		//Depending on the sport, we change the order of sorting the results of players (desc or asc)
-		if (scoring === 'MORE_SCORES' || scoring === 'MORE_TIME' || scoring === 'MORE_RESULT') {
+		if (scoring === 'MORE_SCORES' || scoring === 'MORE_TIME' || scoring === 'MORE_RESULT' || 'FIRST_TO_N_POINTS') {
 			this.sortPlayersByScoreDesc(players);
 		} else {
 			this.sortPlayersByScoreAsc(players);
