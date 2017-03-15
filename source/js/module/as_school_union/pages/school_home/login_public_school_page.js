@@ -20,8 +20,12 @@ const LoginPublicSchoolPage = React.createClass({
 				binding.set('isPasswordPopupOpen', true);
 				break;
 			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['PUBLIC_AVAILABLE']:
-				// if it wasn't protected, we will redirect user to public page
-				document.location.hash = 'home';
+				// if it wasn't protected, we will redirect user to the page which he request
+				if (typeof binding.toJS('hash') !== 'undefined' && binding.toJS('hash') !== '') {
+					document.location.hash = binding.toJS('hash');
+				} else {
+					document.location.hash = 'home';
+				}
 				break;
 			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['DISABLED']:
 				document.location.hash = '404';
@@ -38,7 +42,12 @@ const LoginPublicSchoolPage = React.createClass({
 			data
 		).then(response => {
 			if(response.isMatch) {
-				document.location.hash = 'home';
+				//if user enter correct password we will redirect user to the page which he request
+				if (typeof binding.toJS('hash') !== 'undefined' && binding.toJS('hash') !== '') {
+					document.location.hash = binding.toJS('hash');
+				} else {
+					document.location.hash = 'home';
+				}
 			} else {
 				binding.meta().set('password.error',		Immutable.fromJS('Wrong Password'));
 				binding.meta().set('password.showError',	Immutable.fromJS('true'));

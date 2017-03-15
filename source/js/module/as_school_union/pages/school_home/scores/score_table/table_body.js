@@ -3,7 +3,7 @@ const	React		= require('react'),
 
 const TableBody = React.createClass({
 	propTypes: {
-		scores: React.PropTypes.array.isRequired
+		scores: React.PropTypes.object.isRequired
 	},
 	renderRows: function() {
 		const scores = this.props.scores;
@@ -14,7 +14,7 @@ const TableBody = React.createClass({
 			let index = 1;
 			for(let schoolId in scores) {
 				xmlScore.push(
-					<tr>
+					<tr key={schoolId}>
 						<th scope="row">{index++}</th>
 						<td>{scores[schoolId].schoolName}</td>
 						<td>{scores[schoolId].total}</td>

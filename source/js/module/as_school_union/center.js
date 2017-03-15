@@ -15,8 +15,7 @@ const Center = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	render: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				currentPage	= binding.get('routing.currentPageName') || '',
 				mainClass	= 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
@@ -24,7 +23,7 @@ const Center = React.createClass({
 			<div className={mainClass}>
 				<div className="bPageWrap">
 					<RouterView routes={binding.sub('routing')} binding={binding}>
-						<Route	path		= "/ /home"
+						<Route	path		= "/ /home /fixtures /calendar /news /results /scores /schools"
 								binding		= {binding.sub('schoolHomePage')}
 								component	= {PublicSchoolUnionPage}
 						/>

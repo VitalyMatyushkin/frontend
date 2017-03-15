@@ -33,16 +33,24 @@ const SchoolHomePage = React.createClass({
 
 		switch (hash) {
 			case '#calendar':
-				ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
+				if (ReactDOM.findDOMNode(this.refs.calendar) !== null) {
+					ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
+				}
 				break;
 			case '#fixtures':
-				ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
+				if (ReactDOM.findDOMNode(this.refs.fixtures) !== null) {
+					ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
+				}
 				break;
 			case '#news':
-				ReactDOM.findDOMNode(this.refs.news).scrollIntoView();
+				if (ReactDOM.findDOMNode(this.refs.news) !== null) {
+					ReactDOM.findDOMNode(this.refs.news).scrollIntoView();
+				}
 				break;
 			case '#results':
-				ReactDOM.findDOMNode(this.refs.results).scrollIntoView();
+				if (ReactDOM.findDOMNode(this.refs.results) !== null) {
+					ReactDOM.findDOMNode(this.refs.results).scrollIntoView();
+				}
 				break;
 		}
 	},
