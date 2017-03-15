@@ -27,9 +27,8 @@ const HomeHeader = React.createClass({
 	mixins:[Morearty.Mixin],
 	
 	componentWillMount:function() {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				rootBinding 	= self.getMoreartyContext().getBinding(),
+		const 	binding 		= this.getDefaultBinding(),
+				rootBinding 	= this.getMoreartyContext().getBinding(),
 				currentSchool 	= this.getMoreartyContext().getBinding().get('activeSchool'),
 				defaultAlbumId 	= currentSchool.get('defaultAlbumId'),
 				activeSchoolId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
@@ -64,8 +63,7 @@ const HomeHeader = React.createClass({
 	},
 	
 	render: function(){
-		const 	activeSchool	= this.getMoreartyContext().getBinding().get('activeSchool'),
-				photos 			= this.getDefaultBinding().get('___photosToShow').toArray() || [];
+		const photos = this.getDefaultBinding().get('___photosToShow').toArray() || [];
 		
 		return(
 			<div className="bSchoolHeader">
