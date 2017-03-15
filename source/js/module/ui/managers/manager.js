@@ -67,7 +67,7 @@ const Manager = React.createClass({
 		defaultBinding
 			.atomically()
 			.set('isSync', true)
-			.set('TeamBundle', Immutable.fromJS(
+			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
 					players: self.getInitPlayers(),
@@ -193,26 +193,26 @@ const Manager = React.createClass({
 		const event = self.getDefaultBinding().toJS('model');
 
 		self.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
-			binding.set('TeamBundle.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
+			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
 		}));
-		self.listeners.push(binding.sub('TeamBundle.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
 			self.validate(0);
 		}));
-		self.listeners.push(binding.sub('TeamBundle.teamWrapper.0.teamName.name').addListener(() => {
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
 			self.validate(0);
 		}));
 		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
-			self.listeners.push(binding.sub('TeamBundle.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
 				self.validate(1);
 			}));
-			self.listeners.push(binding.sub('TeamBundle.teamWrapper.1.teamName.name').addListener(() => {
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
 				self.validate(1);
 			}));
 		}
-		self.listeners.push(binding.sub('TeamBundle.teamWrapper.0.isSetTeamLater').addListener(() => {
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
 			self.validate(0);
 		}));
-		self.listeners.push(binding.sub('TeamBundle.teamWrapper.1.isSetTeamLater').addListener(() => {
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
 			self.validate(1);
 		}));
 
@@ -228,14 +228,14 @@ const Manager = React.createClass({
 	addListenerToIsLoadingTeamByIndex: function(index) {
 		const binding = this.getDefaultBinding();
 
-		binding.sub(`TeamBundle.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
+		binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
 			// team wrapper is loading data
 			if(eventDescriptor.getCurrentValue()) {
 				binding.set('isSync', false);
 			}
 
 			// team wrapper isn't loading data
-			if(!eventDescriptor.getCurrentValue() && !binding.get(`TeamBundle.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
 				binding.set('isSync', true);
 			}
 		});
@@ -243,14 +243,14 @@ const Manager = React.createClass({
 	addListenerToTeamManagerIsSearchByIndex: function(index) {
 		const binding = this.getDefaultBinding();
 
-		binding.sub(`TeamBundle.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
+		binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
 			// player selector is loading data
 			if(eventDescriptor.getCurrentValue()) {
 				binding.set('isSync', false);
 			}
 
 			// player selector isn't loading data
-			if(!eventDescriptor.getCurrentValue() && !binding.get(`TeamBundle.teamWrapper.${index}.isLoadingTeam`)) {
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
 				binding.set('isSync', true);
 			}
 		});
@@ -259,7 +259,7 @@ const Manager = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
-		const	isSetTeamLater		= binding.toJS(`TeamBundle.teamWrapper.${rivalIndex}.isSetTeamLater`),
+		const	isSetTeamLater		= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
 				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan'),
 				errorBinding		= self.getBinding('error');
 
@@ -292,15 +292,15 @@ const Manager = React.createClass({
 				switch (true) {
 					case TeamHelper.isNonTeamSport(event):
 						result = TeamPlayersValidator.validate(
-							binding.toJS(`TeamBundle.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 							limits,
 							subscriptionPlan
 						);
 						break;
 					case TeamHelper.isTeamSport(event):
 						if (
-							binding.toJS(`TeamBundle.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-							binding.toJS(`TeamBundle.teamWrapper.${rivalIndex}.teamName.name`) === ''
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
 						) {
 							result = {
 								isError:	true,
@@ -308,7 +308,7 @@ const Manager = React.createClass({
 							};
 						} else {
 							result = TeamPlayersValidator.validate(
-								binding.toJS(`TeamBundle.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 								limits,
 								subscriptionPlan,
 								true
@@ -362,7 +362,7 @@ const Manager = React.createClass({
 		const	defaultBinding		= this.getDefaultBinding(),
 				binding				= this.getBinding(),
 				teamBundleBinding	= {
-					default:	defaultBinding.sub(`TeamBundle`),
+					default:	defaultBinding.sub(`teamModeView`),
 					schoolInfo:	defaultBinding.sub('schoolInfo'),
 					model:		defaultBinding.sub('model'),
 					rivals:		defaultBinding.sub('rivals'),
