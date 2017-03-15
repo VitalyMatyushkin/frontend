@@ -30,19 +30,23 @@ const Scores = React.createClass({
 			});
 
 		this.getDefaultBinding().sub('currentSport').addListener(eventDescriptor => {
-			const activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId');
-
-			window.Server.publicSchoolUnionStats.get({schoolUnionId: activeSchoolId}, {
-				filter: {
-					where: {
-						sportId: eventDescriptor.getCurrentValue().toJS().id
+			const 	activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId'),
+					sportId = binding.get('isSyncSports') ? eventDescriptor.getCurrentValue().toJS().id : null;
+			
+			if (sportId !== null) {
+				window.Server.publicSchoolUnionStats.get({schoolUnionId: activeSchoolId}, {
+					filter: {
+						where: {
+							sportId: sportId
+						}
 					}
-				}
-			}).then(scores => {
-				binding.atomically()
+				}).then(scores => {
+					binding.atomically()
 					.set('scores',			Immutable.fromJS(scores))
 					.commit();
-			});
+				});
+			}
+
 		});
 	},
 	renderSportSelector: function() {
@@ -58,10 +62,13 @@ const Scores = React.createClass({
 	},
 	renderScoreTable: function() {
 		const binding = this.getDefaultBinding();
-
-		return (
-			<ScoreTable scores={binding.toJS('scores')}/>
-		);
+		if (typeof binding.toJS('scores') !== 'undefined') {
+			return (
+				<ScoreTable scores={binding.toJS('scores')}/>
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function(){
 		return (

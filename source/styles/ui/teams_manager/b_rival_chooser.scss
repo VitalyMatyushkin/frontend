@@ -1,10 +1,8 @@
-@import "../../!variables";
-
-.bChooserRival {
+.bRivalChooser {
   display: flex;
 }
 
-.eChooser_item {
+.eRivalChooser_item {
   padding: 10px 10px 0px 0px;
   cursor: pointer;
 
@@ -18,8 +16,8 @@
 
   &.mOnce {
     cursor: default;
-	padding: 0px;
-	margin-bottom: 0px;
+    padding: 0px;
+    margin-bottom: 0px;
     &:hover {
       background: none;
     }
@@ -44,7 +42,7 @@
   }
 }
 
-.eChooser_separator {
+.eRivalChooser_separator {
   padding: 10px 10px 0px 10px;
   cursor: pointer;
 
@@ -53,27 +51,4 @@
   font-size: 1.5625rem;
   text-align: center;
   text-overflow: ellipsis;
-}
-
-/* mLong */
-.bChooser.mLong .eChooser_item {
-  padding: 10px 0;
-  margin: 5px 0;
-  width: 50%;
-  text-align: center;
-  color: #000;
-  background-color: rgba(238, 238, 238, .4);
-  font-size: 18px;
-  border: 1px solid transparent;
-  &:hover {
-    background-color: #eee;
-  }
-  &.mActive {
-    color: #fff;
-    background-color: $blueColor;
-  }
-  &.mDisable {
-    border-color: #ddd;
-    background-color: #eee;
-  }
 }
