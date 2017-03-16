@@ -2,24 +2,6 @@ const	ScoreCRUD	= require('./score_crud'),
 		Promise		= require('bluebird');
 
 const ScoreChangesHelper = {
-	//TODO need correct implementation
-	deleteNonExistentIndividualScore: function(schoolId, eventId, teamId, initialPlayers, players) {
-		const promises = [];
-
-		initialPlayers.forEach(initialPlayer =>
-			// If player wasn't find - add delete promise to promise array
-			!Lazy(players).findWhere({id:initialPlayer.id}) &&
-			promises.push(
-				this.deleteIndividualScorePoint(
-					schoolId,
-					eventId,
-					initialPlayer.id
-				)
-			)
-		);
-
-		return promises;
-	},
 	correctTeamScoreByRemovedPlayers: function(schoolId, event, removedPlayers) {
 		const individualScore = event.results.individualScore;
 
@@ -68,24 +50,27 @@ const ScoreChangesHelper = {
 			return Promise.resolve(true);
 		}
 	},
-	convertTeamScoreToSchoolScoreByEventAndTeamId: function(schoolId, event, teamId) {
+	moveTeamScoreToSchoolScoreByEventAndTeamId: function(schoolId, event, teamId) {
 		const	score		= event.result.teamScore.find(s => s.teamId === teamId),
 				postData	= {
 					schoolId:	schoolId,
 					score:		score.value
 				};
 
-		return ScoreCRUD.addSchoolScore(schoolId, event.id, postData);
+		return ScoreCRUD.addSchoolScore(schoolId, event.id, postData).then(() => {
+			return ScoreChangesHelper.deleteTeamScoreByEventAndTeamId(schoolId, event, teamId);
+		});
 	},
-	convertTeamScoreToHousesScoreByEventAndTeamId: function(schoolId, event, teamId) {
+	moveTeamScoreToHousesScoreByEventAndTeamId: function(schoolId, houseId, event, teamId) {
 		const	score		= event.result.teamScore.find(s => s.teamId === teamId),
-		//TODO need houseID
 				postData	= {
 					houseId:	houseId,
 					score:		score.value
 				};
 
-		return ScoreCRUD.addHouseScore(schoolId, event.id, postData);
+		return ScoreCRUD.addHouseScore(schoolId, event.id, postData).then(() => {
+			return ScoreChangesHelper.deleteTeamScoreByEventAndTeamId(schoolId, event, teamId);
+		});
 	},
 	deleteTeamScoreByEventAndTeamId: function(schoolId, event, teamId) {
 		const scoreId = event.result.teamScore.find(s => s.teamId === teamId).id;
@@ -108,6 +93,28 @@ const ScoreChangesHelper = {
 			.then(() => {
 				return ScoreCRUD.deleteTeamScore(schoolId, eventId, fromTeamId);
 			});
+	},
+	moveSchoolScoreToTeamScoreBySchoolId: function(fromSchoolId, toTeamId, event) {
+		const	eventId			= event.id,
+				fromSchoolScore	= event.result.schoolScores.find(scoreData => scoreData.schoolId === fromSchoolId);
+
+		const dataToPost = {
+			teamId: toTeamId,
+			score: fromSchoolScore.value
+		};
+		return ScoreCRUD.addTeamScore(fromSchoolId, eventId, dataToPost)
+			.then(() => ScoreCRUD.deleteSchoolScore(fromSchoolId, eventId, fromSchoolScore.id));
+	},
+	moveHouseScoreToTeamScoreByHouseId: function(schoolId, fromHouseId, toTeamId, event) {
+		const	eventId			= event.id,
+				fromHouseScore	= event.result.houseScore.find(scoreData => scoreData.houseId === fromHouseId);
+
+		const dataToPost = {
+			teamId: toTeamId,
+			score: fromHouseScore.value
+		};
+		return ScoreCRUD.addTeamScore(fromHouseId, eventId, dataToPost)
+			.then(() => ScoreCRUD.deleteSchoolScore(fromHouseId, eventId, fromHouseScore.id));
 	}
 };
 

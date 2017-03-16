@@ -32,6 +32,13 @@ const ScoreCRUD = {
 			data
 		);
 	},
+	deleteSchoolScore: function(schoolId, eventId, scoreId) {
+		return window.Server.schoolEventResultSchoolScore.delete({
+				schoolId:	schoolId,
+				eventId:	eventId,
+				scoreId:	scoreId
+			});
+	},
 	deleteTeamScore: function(schoolId, eventId, scoreId) {
 		return window.Server.schoolEventResultTeamScore.delete({
 				schoolId:	schoolId,
