@@ -1,8 +1,8 @@
-const	Immutable	= require('immutable'),
-		Promise		= require('bluebird'),
-
-		EventHelper	= require('../../../../helpers/eventHelper'),
-		TeamHelper	= require('../../../../ui/managers/helpers/team_helper');
+const	Immutable			= require('immutable'),
+		Promise				= require('bluebird'),
+		EventHelper			= require('../../../../helpers/eventHelper'),
+		ScoreChangesHelper	= require('../../../../helpers/score/score_changes_helper'),
+		TeamHelper			= require('../../../../ui/managers/helpers/team_helper');
 
 /**
  * Function check user changes, and if team name was changed by user, then function submit these changes to server.
@@ -89,6 +89,130 @@ function commitPlayersChanges(activeSchoolId, binding) {
 	return Promise.all(promises);
 };
 
+function changeEventScoreAfterChanges(activeSchoolId, binding) {
+	const event = binding.toJS('model');
+
+	let promises = [];
+
+	if(TeamHelper.isNonTeamSport(event)) {
+		promises = promises.concat(changeIndividualScore(activeSchoolId, binding));
+	} else {
+		promises = promises.concat(correctTeamScoreByPlayerChanges(0, activeSchoolId, binding));
+		!EventHelper.isInterSchoolsEvent(event) && (promises = promises.concat(correctTeamScoreByPlayerChanges(1, activeSchoolId, binding)));
+	}
+
+	return Promise.all(promises);
+};
+
+function changeIndividualScore(activeSchoolId, binding) {
+	const event = binding.toJS('model');
+
+	const	eventId			= event.id,
+			players			= getCommitPlayersForIndividualEvent(event, binding),
+			initialPlayers	= getInitPlayersForIndividualEvent(event, binding);
+
+	return Promise.all(ScoreChangesHelper.deleteNonExistentIndividualScore(activeSchoolId, eventId, initialPlayers, players));
+};
+
+function correctTeamScoreByPlayerChanges(order, activeSchoolId, binding) {
+	let promises = [];
+
+	switch (true) {
+		// Team was deleted and isSetTeamLater was setted true.
+		// So, we should:
+		// 1) Converts team score to school score or houses score it depends on event type.
+		// 2) Delete all individual score for removed team.
+		// 3) Set IndividualScoreAvailable to false.
+		case isSetTeamLaterByOrder(order, binding) && isTeamWasDeletedByOrder(order, binding):
+			const teamId = getPrevTeamIdByOrder(order, binding);
+			promises = promises.concat(convertTeamScoreByTeamId(teamId, activeSchoolId, binding));
+			promises = promises.concat(deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding));
+			// TODO must implement this. but now, waiting for server.
+			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
+			break;
+		//TODO when isSetTeamLater was setted to false.
+		case !isSetTeamLaterByOrder(order, binding) && isTeamWasCreatedByOrder(order, binding):
+
+			break;
+		// Team was just changed.
+		// 1) Moves team score from prev team to current team
+		// 2) Delete all individual score for removed team.
+		// 3) Set IndividualScoreAvailable to false.
+		case !isSetTeamLaterByOrder(order, binding) && isTeamChangedByOrder(order, binding):
+			const	prevTeamId		= getPrevTeamIdByOrder(order, binding),
+					currentTeamId	= getTeamIdByOrder(order, binding);
+
+			promises = promises.concat(moveTeamScoreFromPrevTeamToCurrentTeam(prevTeamId, currentTeamId, activeSchoolId, binding));
+			promises = promises.concat(deleteAllIndividualScoreByTeamId(prevTeamId, activeSchoolId, binding));
+			// TODO must implement this. but now, waiting for server.
+			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
+			break;
+		// Team players was changed.
+		// 1) Corrects team score by depend on player changes. I mean, if player was removed and he has some score points
+		// we should delete these points from team score.
+		// 2) Corrects individual score by depend on player changes. I mean, if player was removed and he has some score points
+		// we should delete these points from individual score.
+		case !isSetTeamLaterByOrder(order, binding) && !isTeamChangedByOrder(order, binding):
+			const teamId = getTeamIdByOrder(order, binding);
+
+			promises = promises.concat(correctScoreByRemovedPlayers(order, teamId, activeSchoolId, binding));
+			break;
+	}
+
+	return promises;
+};
+
+function correctScoreByRemovedPlayers(order, teamId, activeSchoolId, binding) {
+	const	event			= binding.toJS('model'),
+			tw				= binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`),
+			prevPlayers		= tw.prevPlayers,
+			currentPlayers	= tw.___teamManagerBinding.teamStudents;
+
+	const removedPlayers = TeamHelper.getRemovedPlayers(prevPlayers, currentPlayers);
+
+	let promises = [];
+	promises = promises.concat(
+		ScoreChangesHelper.correctTeamScoreByRemovedPlayers(activeSchoolId, event, teamId, removedPlayers)
+	);
+	promises = promises.concat(
+		ScoreChangesHelper.correctIndividualScoreByRemovedPlayers(activeSchoolId, event, teamId, removedPlayers)
+	);
+
+	return promises;
+};
+
+function moveTeamScoreFromPrevTeamToCurrentTeam(prevTeamId, currentTeamId, activeSchoolId, binding) {
+	const	event		= binding.toJS('model'),
+			teamScore	= event.result.teamScore;
+
+	return ScoreChangesHelper.moveTeamScoreToOtherTeam(prevTeamId, currentTeamId, activeSchoolId, event.id, teamScore);
+};
+
+function convertTeamScoreByTeamId(teamId, activeSchoolId, binding) {
+	const	event	= binding.toJS('model');
+
+	let promises = [];
+
+	promises = promises.concat(ScoreChangesHelper.deleteTeamScoreByEventAndTeamId(activeSchoolId, event, teamId));
+	switch (true) {
+		case EventHelper.isInterSchoolsEvent(event):
+			promises = promises.concat(ScoreChangesHelper.convertTeamScoreToSchoolScoreByEventAndTeamId(activeSchoolId, event, teamId));
+			break;
+		case EventHelper.isHousesEvent(event):
+			promises = promises.concat(ScoreChangesHelper.convertTeamScoreToHousesScoreByEventAndTeamId(activeSchoolId, event, teamId));
+			break;
+	}
+
+	return promises;
+};
+
+function deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding) {
+	const	event			= binding.toJS('model'),
+			individualScore	= event.result.individualScore;
+
+	return ScoreChangesHelper.deleteAllIndividualScoreByTeamId(activeSchoolId, event.id, teamId, individualScore);
+}
+
 /**
  * Submit players changes for individual game
  */
@@ -157,10 +281,25 @@ function removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding) 
 	);
 };
 
+function getTeamIdByOrder(order, binding) {
+	return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`);
+};
+
+function getPrevTeamIdByOrder(order, binding) {
+	return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+};
+
 function isTeamWasDeletedByOrder(order, binding) {
 	return (
 		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !== 'undefined' &&
 		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'
+	);
+};
+
+function isTeamWasCreatedByOrder(order, binding) {
+	return (
+		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) === 'undefined' &&
+		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) !== 'undefined'
 	);
 };
 
@@ -209,12 +348,15 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 };
 
 function submitAllChanges(activeSchoolId, binding) {
-	return changeTeamNames(activeSchoolId, binding).then(() => commitPlayersChanges(activeSchoolId, binding));
+	return changeTeamNames(activeSchoolId, binding)
+		.then(() => commitPlayersChanges(activeSchoolId, binding))
+		.then(() => changeEventScoreAfterChanges(activeSchoolId, binding));
 };
 
-module.exports.changeTeamNames			= changeTeamNames;
-module.exports.isSetTeamLaterByOrder	= isSetTeamLaterByOrder;
-module.exports.isTeamChangedByOrder		= isTeamChangedByOrder;
-module.exports.isNameTeamChangedByOrder	= isNameTeamChangedByOrder;
-module.exports.commitPlayersChanges		= commitPlayersChanges;
-module.exports.submitAllChanges			= submitAllChanges;
+module.exports.changeTeamNames				= changeTeamNames;
+module.exports.isSetTeamLaterByOrder		= isSetTeamLaterByOrder;
+module.exports.isTeamChangedByOrder			= isTeamChangedByOrder;
+module.exports.isNameTeamChangedByOrder		= isNameTeamChangedByOrder;
+module.exports.commitPlayersChanges			= commitPlayersChanges;
+module.exports.changeEventScoreAfterChanges	= changeEventScoreAfterChanges;
+module.exports.submitAllChanges				= submitAllChanges;
