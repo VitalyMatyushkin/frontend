@@ -128,9 +128,8 @@ const 	eventEvent		= require('../styles/pages/event/b_event.scss'),
 		eventSport		= require('../styles/pages/event/b_event_sport.scss'),
 		eventTeam		= require('../styles/pages/event/b_team.scss');
 
-const 	eventsChallenge		= require('../styles/pages/events/b_challenge.scss'),
+const	eventsChallenge		= require('../styles/pages/events/b_challenge.scss'),
 		eventsChallengeDate	= require('../styles/pages/events/b_challenge_date.scss'),
-		eventsChooser		= require('../styles/pages/events/b_chooser.scss'),
 		eventsEvent			= require('../styles/pages/events/b_event.scss'),
 		eventsEvents		= require('../styles/pages/events/b_events.scss'),
 		eventsCalendar		= require('../styles/pages/events/b_events_calendar.scss'),

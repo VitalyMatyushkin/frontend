@@ -1,10 +1,9 @@
 const	React				= require('react'),
-		TeamManager			= require('./../team_manager/team_manager'),
-		TeamName			= require('./../team_name'),
+		TeamManager			= require('./team_manager/team_manager'),
+		TeamName			= require('./team_name'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		classNames			= require('classnames'),
-		If					= require('module/ui/if/if'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable');
 

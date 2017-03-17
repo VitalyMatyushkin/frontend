@@ -6,7 +6,7 @@ const	React							= require('react'),
 
 const ScoreTable = React.createClass({
 	propTypes: {
-		scores: React.PropTypes.array.isRequired
+		scores: React.PropTypes.object.isRequired
 	},
 	render: function(){
 		return (

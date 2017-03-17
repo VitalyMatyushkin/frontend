@@ -89,6 +89,7 @@ const PlainPoints = React.createClass({
 
 		return (
 			<div className={bScoreClassNames}>
+				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
 				<input	type		= "text"
 						className	= {bScorePointClassNames}
 						title		= {title}
@@ -97,6 +98,7 @@ const PlainPoints = React.createClass({
 						onFocus		= {this.onFocus}
 						onBlur		= {this.onBlur}
 				/>
+				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
 			</div>
 		);
 
