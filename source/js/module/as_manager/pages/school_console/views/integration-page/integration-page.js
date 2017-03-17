@@ -68,12 +68,12 @@ const IntegrationPage = React.createClass({
 							<div className="eHeader">Choose integration and click it!</div>
 							<Button
 								onClick				= { this.onClickGoogleCalendar }
-								text				= { [<i className='fa fa-google' ariaHidden='true'></i>, " ", "Google Calendar"] }
+								text				= { [<i key="Google Calendar" className='fa fa-google' aria-hidden='true'></i>, " ", "Google Calendar"] }
 								extraStyleClasses 	= 'eGoogleCalendar'
 							/>
 							<Button
 								onClick				= { this.onClickTwitter }
-								text				= { [<i className='fa fa-twitter' ariaHidden='true'></i>, " ", "Twitter"] }
+								text				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Twitter"] }
 								extraStyleClasses 	= 'eTwitter'
 							/>
 						</ConfirmPopup>

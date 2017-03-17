@@ -17,7 +17,10 @@ function Button(props) {
 }
 
 Button.propTypes = {
-	text: 				React.PropTypes.string,		// text to display in button
+	text: React.PropTypes.oneOfType([				// text to display in button
+		React.PropTypes.string,
+		React.PropTypes.array 						//if we want use tags (ex. <i> font awesome)
+	]),
 	onClick:			React.PropTypes.func,		// function to be called on click
 	href:				React.PropTypes.string,		// hyperlink if need
 	extraStyleClasses: 	React.PropTypes.string,		// if one need to add extra styles to button.

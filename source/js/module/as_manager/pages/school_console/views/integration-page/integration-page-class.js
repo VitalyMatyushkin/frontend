@@ -67,9 +67,9 @@ class IntegrationPageClass{
 	getLogoIntegration(item){
 		switch(true) {
 			case item.type === 'google':
-				return  <i className="fa fa-google" ariaHidden="true"></i>;
+				return  <i className="fa fa-google" aria-hidden="true"></i>;
 			case item.type === 'twitter':
-				return <i className="fa fa-twitter" ariaHidden="true"></i>;
+				return <i className="fa fa-twitter" aria-hidden="true"></i>;
 			default: return null
 		}
 		
