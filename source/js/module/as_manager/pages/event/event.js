@@ -181,13 +181,15 @@ const Event = React.createClass({
 
 			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
-				.set('model',							Immutable.fromJS(eventData))
-				.set('gallery.photos',					Immutable.fromJS(photos))
-				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-				.set('gallery.isSync',					true)
-				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-				.set('mode',							Immutable.fromJS('general'))
+				.set('model',								Immutable.fromJS(eventData))
+				.set('gallery.photos',						Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',		Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',						true)
+				.set('tasksTab.tasks',						Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+				.set('isUserCanWriteComments',				Immutable.fromJS(settings.commentsEnabled))
+				.set('mode',								Immutable.fromJS('general'))
+				.set('individualScoreAvailable.0.value',	this.getInitValueForIndividualScoreAvailableFlag(eventData))
+				.set('individualScoreAvailable.1.value',	this.getInitValueForIndividualScoreAvailableFlag(eventData))
 				.commit();
 
 			self.initTabs();
@@ -201,6 +203,13 @@ const Event = React.createClass({
 
 			return eventData;
 		});
+	},
+	getInitValueForIndividualScoreAvailableFlag: function(event) {
+		if(TeamHelper.isTeamSport(event)) {
+			return false;
+		} else if(TeamHelper.isNonTeamSport(event)) {
+			return true;
+		}
 	},
 	//For different roles we use different service
 	getServiceForEvent: function(role) {
