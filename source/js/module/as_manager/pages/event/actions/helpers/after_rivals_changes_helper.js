@@ -1,4 +1,4 @@
-const TeamHelper = require('../../../../ui/managers/helpers/team_helper');
+const TeamHelper = require('module/ui/managers/helpers/team_helper');
 
 const AfterRivalsChangesHelper = {
 	isSetTeamLaterByOrder: function(order, binding) {

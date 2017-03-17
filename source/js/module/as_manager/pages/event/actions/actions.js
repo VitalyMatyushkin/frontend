@@ -178,8 +178,5 @@ function submitAllChanges(activeSchoolId, binding) {
 };
 
 module.exports.changeTeamNames				= changeTeamNames;
-module.exports.isSetTeamLaterByOrder		= isSetTeamLaterByOrder;
-module.exports.isTeamChangedByOrder			= isTeamChangedByOrder;
-module.exports.isNameTeamChangedByOrder		= isNameTeamChangedByOrder;
 module.exports.commitPlayersChanges			= commitPlayersChanges;
 module.exports.submitAllChanges				= submitAllChanges;

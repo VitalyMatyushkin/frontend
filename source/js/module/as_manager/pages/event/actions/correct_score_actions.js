@@ -35,50 +35,54 @@ const CorrectScoreActions = {
 	correctTeamScoreByChanges: function(order, activeSchoolId, binding) {
 		let promises = [];
 
-		switch (true) {
-			// Team was deleted and isSetTeamLater was setted true.
+		if(
+			AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
+			AfterRivalsChangesHelper.isTeamWasDeletedByOrder(order, binding)
+		) {
+			// Team was deleted and isSetTeamLater was set true.
 			// So, we should:
 			// 1) Converts team score to school score or houses score it depends on event type.
 			// 2) Delete all individual score for removed team.
 			// 3) Set IndividualScoreAvailable to false.
-			case AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) && AfterRivalsChangesHelper.isTeamWasDeletedByOrder(order, binding):
-				const teamId = AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding);
-				promises = promises.concat(this.moveTeamScoreToGeneralScoreByTeamId(order, teamId, activeSchoolId, binding));
-				promises = promises.concat(this.deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding));
-				// TODO must implement this. but now, waiting for server.
-				//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
-				break;
-
+			const teamId = AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding);
+			promises = promises.concat(this.moveTeamScoreToGeneralScoreByTeamId(order, teamId, activeSchoolId, binding));
+			promises = promises.concat(this.deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding));
+			// TODO must implement this. but now, waiting for server.
+			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
+		} else if(
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
+			AfterRivalsChangesHelper.isTeamWasCreatedByOrder(order, binding)
+		) {
 			// New team was added to event instead SetTeamsLater.
 			// So, we need move school or house scores to new team.
-			case !AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) && AfterRivalsChangesHelper.isTeamWasCreatedByOrder(order, binding):
-				promises = promises.concat(this.moveGeneralScoreTypeToTeamScoreByOrder(order, activeSchoolId, binding));
-				break;
-
+			promises = promises.concat(this.moveGeneralScoreTypeToTeamScoreByOrder(order, activeSchoolId, binding));
+		} else if(
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
+			AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)
+		) {
 			// Team was just changed.
 			// 1) Moves team score from prev team to current team
 			// 2) Delete all individual score for removed team.
 			// 3) Set IndividualScoreAvailable to false.
-			case !AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) && AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding):
-				const	prevTeamId		= AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding),
-						currentTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
+			const	prevTeamId		= AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding),
+				currentTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
 
-				promises = promises.concat(this.moveTeamScoreFromPrevTeamToCurrentTeam(prevTeamId, currentTeamId, activeSchoolId, binding));
-				promises = promises.concat(this.deleteAllIndividualScoreByTeamId(prevTeamId, activeSchoolId, binding));
-				// TODO must implement this. but now, waiting for server.
-				//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
-				break;
-
+			promises = promises.concat(this.moveTeamScoreFromPrevTeamToCurrentTeam(prevTeamId, currentTeamId, activeSchoolId, binding));
+			promises = promises.concat(this.deleteAllIndividualScoreByTeamId(prevTeamId, activeSchoolId, binding));
+			// TODO must implement this. but now, waiting for server.
+			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
+		} else if(
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
+			!AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)
+		) {
 			// Team players was changed.
 			// 1) Corrects team score by depend on player changes. I mean, if player was removed and he has some score points
 			// we should delete these points from team score.
 			// 2) Corrects individual score by depend on player changes. I mean, if player was removed and he has some score points
 			// we should delete these points from individual score.
-			case !AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) && !AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding):
-				const teamId = AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
+			const teamId = AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
 
-				promises = promises.concat(this.correctScoreByRemovedPlayers(order, teamId, activeSchoolId, binding));
-				break;
+			promises = promises.concat(this.correctScoreByRemovedPlayers(order, teamId, activeSchoolId, binding));
 		}
 
 		return promises;

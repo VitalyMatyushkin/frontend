@@ -2,7 +2,7 @@ const	ScoreCRUD	= require('./score_crud'),
 		Promise		= require('bluebird');
 
 const ScoreChangesHelper = {
-	correctTeamScoreByRemovedPlayers: function(schoolId, event, removedPlayers) {
+	correctTeamScoreByRemovedPlayers: function(schoolId, event, teamId, removedPlayers) {
 		const individualScore = event.results.individualScore;
 
 		let removedPlayersScore = 0;
