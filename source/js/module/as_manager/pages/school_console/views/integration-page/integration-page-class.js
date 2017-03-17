@@ -54,7 +54,7 @@ class IntegrationPageClass{
 		event.stopPropagation();
 	}
 	
-	getTypeIntegration(item){
+	getIntegrationType(item){
 		switch(true) {
 			case item.type === 'google':
 				return  'Google Calendar';
@@ -64,7 +64,7 @@ class IntegrationPageClass{
 		}
 	}
 	
-	getLogoIntegration(item){
+	getIntegrationLogo(item){
 		switch(true) {
 			case item.type === 'google':
 				return  <i className="fa fa-google" aria-hidden="true"></i>;
@@ -90,7 +90,7 @@ class IntegrationPageClass{
 					dataField:'type',
 					type:'custom',
 					typeOptions:{
-						parseFunction:this.getLogoIntegration.bind(this)
+						parseFunction:this.getIntegrationLogo.bind(this)
 					}
 				}
 			},
@@ -101,7 +101,7 @@ class IntegrationPageClass{
 					dataField:'type',
 					type:'custom',
 					typeOptions:{
-						parseFunction:this.getTypeIntegration.bind(this)
+						parseFunction:this.getIntegrationType.bind(this)
 					}
 				}
 			},

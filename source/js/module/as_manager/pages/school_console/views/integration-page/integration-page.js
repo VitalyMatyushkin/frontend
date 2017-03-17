@@ -19,7 +19,7 @@ const IntegrationPage = React.createClass({
 	componentWillMount: function () {
 		this.model = new IntegrationPageClass(this);
 	},
-	onClickTwitter: function(){
+	onTwitterClick: function(){
 		const 	activeSchoolId 	= SchoolHelper.getActiveSchoolId(this),
 				binding 		= this.getDefaultBinding();
 		//it dirty way, but browser blocked opening window in async request
@@ -32,7 +32,7 @@ const IntegrationPage = React.createClass({
 		});
 	},
 	
-	onClickGoogleCalendar: function(){
+	onGoogleCalendarClick: function(){
 		const 	activeSchoolId 	= SchoolHelper.getActiveSchoolId(this),
 				binding 		= this.getDefaultBinding();
 		//it dirty way, but browser blocked opening window in async request
@@ -67,12 +67,12 @@ const IntegrationPage = React.createClass({
 							</div>
 							<div className="eHeader">Choose integration and click it!</div>
 							<Button
-								onClick				= { this.onClickGoogleCalendar }
+								onClick				= { this.onGoogleCalendarClick }
 								text				= { [<i key="Google Calendar" className='fa fa-google' aria-hidden='true'></i>, " ", "Google Calendar"] }
 								extraStyleClasses 	= 'eGoogleCalendar'
 							/>
 							<Button
-								onClick				= { this.onClickTwitter }
+								onClick				= { this.onTwitterClick }
 								text				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Twitter"] }
 								extraStyleClasses 	= 'eTwitter'
 							/>
