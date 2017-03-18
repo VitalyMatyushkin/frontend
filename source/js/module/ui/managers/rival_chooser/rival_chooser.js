@@ -94,11 +94,8 @@ const RivalChooser = React.createClass({
 	isShowRivals: function() {
 		const event = this.getDefaultBinding().toJS('model');
 
-		return !this.props.isInviteMode &&
-			!(
-				TeamHelper.isIndividualSport(event) &&
-				TeamHelper.getEventType(event) !== 'houses'
-			);
+		return 	!this.props.isInviteMode &&
+				!TeamHelper.isInternalEventForIndividualSport(event);
 	},
 	render: function() {
 		return (

@@ -81,7 +81,7 @@ const SummaryPanel = React.createClass({
 			text = description;
 			linkText = 'Show Less';
 		} else {
-			text = description !== '' ? description.slice(0, 200) + '...' : '';
+			text = description !== '' && description.length > 200 ? description.slice(0, 200) + '...' : description;
 			linkText = 'Read More';
 		}
 		return (

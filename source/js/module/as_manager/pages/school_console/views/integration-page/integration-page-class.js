@@ -39,10 +39,6 @@ class IntegrationPageClass{
 		};
 	}
 	
-	getStringGoogleCalendar(){
-		return "Google calendar";
-	}
-	
 	onRemove(item, event){
 		window.confirmAlert(
 			`Are you sure you want to remove this integration?`,
@@ -58,25 +54,54 @@ class IntegrationPageClass{
 		event.stopPropagation();
 	}
 	
-	onClick(){
-		//it dirty way, but browser blocked opening window in async request
-		const googleWindow = window.open("","_blank");
+	getIntegrationType(item){
+		switch(true) {
+			case item.type === 'google':
+				return  'Google Calendar';
+			case item.type === 'twitter':
+				return 'Twitter';
+			default: return null
+		}
+	}
+	
+	getIntegrationLogo(item){
+		switch(true) {
+			case item.type === 'google':
+				return  <i className="fa fa-google" aria-hidden="true"></i>;
+			case item.type === 'twitter':
+				return <i className="fa fa-twitter" aria-hidden="true"></i>;
+			default: return null
+		}
 		
-		window.Server.integrationGoogleCalendar.post({schoolId: this.activeSchoolId}).then( link => {
-			const linkGoogleCalendar = link.url;
-			googleWindow.location.href = linkGoogleCalendar;
-		});
+	}
+	
+	onClick(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isPopupOpen', true);
 	}
 	
 	getGrid(){
 		const columns = [
 			{
+				text:'',
+				isSorted:false,
+				cell:{
+					dataField:'type',
+					type:'custom',
+					typeOptions:{
+						parseFunction:this.getIntegrationLogo.bind(this)
+					}
+				}
+			},
+			{
 				text:'Integration',
 				isSorted:false,
 				cell:{
+					dataField:'type',
 					type:'custom',
-					typeOptions: {
-						parseFunction: this.getStringGoogleCalendar
+					typeOptions:{
+						parseFunction:this.getIntegrationType.bind(this)
 					}
 				}
 			},
