@@ -89,9 +89,20 @@ const ViewNewsItem = React.createClass({
 	},
 	
 	onPopupOkClick: function(){
-		const binding	= this.getDefaultBinding();
-		console.log(binding.toJS('twitterIds'));
+		const 	binding			= this.getDefaultBinding(),
+				activeSchoolId 	= SchoolHelper.getActiveSchoolId(this),
+				twitterId 		= binding.toJS('twitterIds');
+		let data = {};
+		data.text = this.refs.tweetText.value;
+		window.Server.integrationTwitterTweet.post({
+			schoolId:	activeSchoolId,
+			twitterId:	twitterId[0]
+		}, data).then( response => {
+			console.log(response);
+			binding.set('isPopupOpen', false);
+		})
 	},
+	
 	
 	renderNews: function(news) {
 		const 	binding			= this.getDefaultBinding(),
@@ -155,9 +166,7 @@ const ViewNewsItem = React.createClass({
 						handleClickCancelButton 	= { this.onPopupCancelClick }
 					>
 						<div>You want tweet it? You are crazy?</div>
-						<form>
-							<textarea className="eTextArea" value={textForTwitter + ' ' + domainForTwitter}></textarea>
-						</form>
+						<textarea ref="tweetText" name="text" className="eTextArea" value={textForTwitter + ' ' + domainForTwitter + '/#news'}></textarea>
 					</ConfirmPopup>
 				</If>
 			</div>
