@@ -318,8 +318,53 @@ const EventTeamsView = React.createClass({
 			}
 		}
 	},
+	/**
+	 * Return array of players sorted by individual score
+	 */
+	sortPlayersByScore: function(players) {
+		const 	rootBinding 		= this.getMoreartyContext().getBinding(),
+				isEventInitResult 	= Boolean(rootBinding.get('events.model.initResults')),
+			 	mode 				= this.getBinding('mode').toJS(),
+				scoring 			= rootBinding.toJS('events.model.sport.scoring');
+		
+		//we add individual score in array of players (player.result) and then sort array by DESC
+		//we get individual score from different source, because when we change score, immediately triggered sort
+		if (!isEventInitResult || mode !== 'closing') {
+			players.forEach( player => {
+				player.result = this.getPointsByStudent(this.getBinding('event').toJS(), player.userId);
+			});
+		} else {
+			players.forEach( player => {
+				const 	initResults = rootBinding.get('events.model.initResults.individualScore').toJS(),
+						userScoreDataIndex = initResults.findIndex(userScoreData => userScoreData.userId === player.userId);
+				
+				player.result = userScoreDataIndex === -1 ? 0 : initResults[userScoreDataIndex].score;
+			});
+		}
+		//Depending on the sport, we change the order of sorting the results of players (desc or asc)
+		if (scoring === 'MORE_SCORES' || scoring === 'MORE_TIME' || scoring === 'MORE_RESULT' || scoring === 'FIRST_TO_N_POINTS') {
+			this.sortPlayersByScoreDesc(players);
+		} else {
+			this.sortPlayersByScoreAsc(players);
+		}
+		
+		return players;
+	},
+	sortPlayersByScoreDesc: function (players){
+		return players = players.sort( (player1, player2) => {
+			return player2.result - player1.result;
+		});
+	},
+	sortPlayersByScoreAsc: function (players){
+		return players = players.sort( (player1, player2) => {
+			return player1.result - player2.result;
+		});
+	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
+
+		//we sort array of players by individual score
+		this.sortPlayersByScore(players);
 
 		return players.map((player, playerIndex) => {
 			const 	mode						= self.getBinding('mode').toJS(),

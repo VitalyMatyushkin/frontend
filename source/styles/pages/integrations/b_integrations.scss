@@ -1,0 +1,23 @@
+.bIntegrations {
+
+  .ePopup {
+	min-width:0px;
+  }
+  .eGoogleCalendar {
+	display: block;
+	margin-top: 10px;
+	width: 100%;
+  }
+  .eTwitter {
+	margin-top: 10px;
+	width: 100%;
+  }
+  .eClose {
+	text-align: right;
+	cursor: pointer;
+	margin-bottom: 5px;
+	.bIcon {
+	  color: #ccc;
+	}
+  }
+}

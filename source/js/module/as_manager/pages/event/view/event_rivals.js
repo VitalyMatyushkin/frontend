@@ -331,7 +331,7 @@ const EventRival = React.createClass({
 				status	= binding.toJS('model.status');
 
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
+			if(EventHelper.isNotFinishedEventByBinding(binding) && mode !== 'closing') {
 				return (
 					<div className="eEventRival_score">
 					</div>
