@@ -45,7 +45,7 @@ const IntegrationPage = React.createClass({
 		});
 	},
 	
-	onClickClose: function(){
+	onCloseClick: function(){
 		const binding = this.getDefaultBinding();
 		binding.set('isPopupOpen', false);
 	},
@@ -62,7 +62,7 @@ const IntegrationPage = React.createClass({
 							customStyle={'ePopup'}
 							isShowButtons={false}
 						>
-							<div className="eClose" onClick={this.onClickClose}>
+							<div className="eClose" onClick={this.onCloseClick}>
 								<SVG icon="icon_delete"/>
 							</div>
 							<div className="eHeader">Choose integration and click it!</div>

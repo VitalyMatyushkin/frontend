@@ -3,9 +3,15 @@
  */
 const	React 			= require('react'),
 		Immutable 		= require('immutable'),
-		Morearty        = require('morearty'),
+		Morearty 		= require('morearty'),
 		DateTimeMixin	= require('module/mixins/datetime'),
-		NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
+		Button			= require('module/ui/button/button'),
+		If				= require('module/ui/if/if'),
+		ConfirmPopup 	= require('module/ui/confirm_popup'),
+		SchoolHelper 	= require('module/helpers/school_helper'),
+		DomainHelper	= require('module/helpers/domain_helper');
+
+const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
 		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
 
 const ViewNewsItem = React.createClass({
@@ -59,9 +65,39 @@ const ViewNewsItem = React.createClass({
 			binding.set('selectedNewsItem', Immutable.fromJS(id));
 		}
 	},
-	renderNews: function(news) {
+	onTwitterClick: function(news){
 		const 	binding		= this.getDefaultBinding(),
-				imgStyle 	= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'};
+				rootBinding = this.getMoreartyContext().getBinding();
+		const activeSchoolId = SchoolHelper.getActiveSchoolId(this);
+		//TODO Make wrap promise.all
+		SchoolHelper.loadActiveSchoolInfo(this)
+		.then( data => {
+			binding.set('schoolDomain', data.domain);
+			return window.Server.integrations.get({schoolId:activeSchoolId})
+		})
+		.then( integrations => {
+			integrations = integrations.filter( integration => {return integration.type === 'twitter'}).map( integration => {return integration.id});
+			binding.set('twitterIds', Immutable.fromJS(integrations));
+			binding.set('isPopupOpen', true);
+		});
+	},
+	
+	onPopupCancelClick: function(){
+		const binding	= this.getDefaultBinding();
+
+		binding.set('isPopupOpen', false);
+	},
+	
+	onPopupOkClick: function(){
+		const binding	= this.getDefaultBinding();
+		console.log(binding.toJS('twitterIds'));
+	},
+	
+	renderNews: function(news) {
+		const 	binding			= this.getDefaultBinding(),
+				imgStyle 		= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
+				textForTwitter 	= typeof news !== 'undefined' && typeof news.body !== 'undefined' ? news.body.slice(0, 129) : '',
+				domainForTwitter= typeof binding.toJS('schoolDomain') !== 'undefined' ? DomainHelper.getSubDomain(binding.get('schoolDomain')) : '';
 
 		let	text, linkText, iconStyle;
 		if(binding.toJS('selectedNewsItem') == news.id) {
@@ -92,15 +128,38 @@ const ViewNewsItem = React.createClass({
 											{text}
 										</div>
 									</div>
-					<span className="eSchoolNews_more" onClick={this._newsItemMoreInfo.bind(this, news.id)}>
-						<i className={iconStyle} aria-hidden="true"></i>
-						{linkText}
-					</span>
+									<div className="eSchoolNewsItem_twitter">
+										<Button
+											onClick				= { () => {this.onTwitterClick(news)} }
+											text				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
+											extraStyleClasses 	= 'eTwitter'
+										/>
+									</div>
+									<If condition={Boolean(news && news.body && news.body.length > 100)}>
+										<span className="eSchoolNews_more" onClick={this._newsItemMoreInfo.bind(this, news.id)}>
+											<i className={iconStyle} aria-hidden="true"></i>
+											{linkText}
+										</span>
+									</If>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<If condition={Boolean(binding.toJS('isPopupOpen'))}>
+					<ConfirmPopup
+						customStyle 				= { 'ePopup' }
+						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
+						cancelButtonText 			= { 'Cancel' }
+						handleClickOkButton 		= { this.onPopupOkClick }
+						handleClickCancelButton 	= { this.onPopupCancelClick }
+					>
+						<div>You want tweet it? You are crazy?</div>
+						<form>
+							<textarea className="eTextArea" value={textForTwitter + ' ' + domainForTwitter}></textarea>
+						</form>
+					</ConfirmPopup>
+				</If>
 			</div>
 		);
 	},
