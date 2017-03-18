@@ -517,7 +517,7 @@ function isShowEditEventButton(thiz) {
 	const	self	= this,
 			binding	= thiz.getDefaultBinding();
 
-	return EventHelper.isNotFinishedEvent(binding) &&
+	return EventHelper.isNotFinishedEventByBinding(binding) &&
 		binding.get('mode') === 'general' &&
 		RoleHelper.isUserSchoolWorker(thiz);
 }
