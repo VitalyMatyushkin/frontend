@@ -9,7 +9,8 @@ const	React 				= require('react'),
 		If					= require('module/ui/if/if'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		SchoolHelper 		= require('module/helpers/school_helper'),
-		DomainHelper		= require('module/helpers/domain_helper'),
+		DomainHelper 		= require('module/helpers/domain_helper'),
+		RoleHelper 			= require('module/helpers/role_helper'),
 		classNames 			= require('classnames'),
 		Promise 			= require('bluebird'),
 		RadioButtonCustom 	= require('module/ui/radio_button_custom/radio_button_custom');
@@ -32,6 +33,42 @@ const ViewNewsItem = React.createClass({
 					{this.getTimeFromIso(news.date)}
 				</div>
 			)
+		}
+	},
+	//Load all user integrations from server, because we want button "tweet" only user with twitter integration
+	componentWillMount: function(){
+		const 	binding 		= this.getDefaultBinding(),
+				activeSchoolId 	= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
+				role 			= typeof RoleHelper.getLoggedInUserRole(this) !== 'undefined' ? RoleHelper.getLoggedInUserRole(this) : '',
+				protocol 		= document.location.protocol + '//';
+		
+		let promises = [];
+		if (activeSchoolId !== '' && role === RoleHelper.USER_ROLES.ADMIN) {
+			promises.push(
+				window.Server.integrations.get({ schoolId : activeSchoolId }).then( integrations => {
+					//we choose only twitter integrations
+					integrations = integrations.filter( integration => {return integration.type === 'twitter'});
+					if (integrations.length > 0) {
+						binding.set('twitterData', Immutable.fromJS(integrations));
+						binding.set('twitterId', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
+					}
+					return true;
+				})
+			);
+			
+			promises.push(
+				SchoolHelper.loadActiveSchoolInfo(this).then( data => {
+					if (data.publicSite.status === 'PUBLIC_AVAILABLE') {
+						binding.set('domainForTweet', protocol + DomainHelper.getSubDomain(data.domain) + '/#news');
+					} else {
+						binding.set('domainForTweet', '');
+					}
+					return true;
+				}));
+			
+			Promise.all(promises).then( () => {
+				return true;
+			})
 		}
 	},
 	
@@ -81,47 +118,22 @@ const ViewNewsItem = React.createClass({
 		}
 	},
 	
-	//When the user clicks on the "Tweet" button, we get the news text, school domain and Twitter id, then open the popup window
+	//When the user clicks on the "Tweet" button, we get the news text, then open the popup window
 	onTwitterButtonClick: function(news){
-		const 	binding 		= this.getDefaultBinding(),
-				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
-				protocol 			= document.location.protocol + '//',
-				textNewsChanged 	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '';
-		
-		if (activeSchoolId !== '') {
-			
-			let textNews;
-			let promises = [];
-			
-			if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.body !== 'undefined') {
-				textNews = news.body + ' ';
-			} else {
-				textNews = textNewsChanged;
-			}
-			
-			promises.push(
-				SchoolHelper.loadActiveSchoolInfo(this).then( data => {
-					const domainSchool	= textNewsChanged === '' && typeof data.domain !== 'undefined' && data.publicSite.status === 'PUBLIC_AVAILABLE' ? protocol + DomainHelper.getSubDomain(data.domain) + '/#news' : '';
-					binding.set('textForTweet', textNews + domainSchool);
-					return true;
-				})
-			);
-			promises.push(
-				window.Server.integrations.get({ schoolId : activeSchoolId }).then( integrations => {
-					integrations = integrations.filter( integration => {return integration.type === 'twitter'});
-					binding.set('twitterData', Immutable.fromJS(integrations));
-					binding.set('twitterId', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
-					binding.set('isPopupOpen', true);
-					return true;
-				})
-			);
-			Promise.all(promises).then(() => {
-				return true;
-			});
-			
+		const 	binding 			= this.getDefaultBinding(),
+				textNewsChanged 	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
+				domainSchool 		= textNewsChanged === '' ? binding.toJS('domainForTweet') : '';
+
+		let textNews;
+
+		if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.body !== 'undefined') {
+			textNews = news.body + ' ';
 		} else {
-			console.log('activeSchoolId undefined');
+			textNews = textNewsChanged;
 		}
+
+		binding.set('textForTweet', textNews + domainSchool);
+		binding.set('isPopupOpen', true);
 	},
 	
 	//Just close popup window
@@ -194,6 +206,7 @@ const ViewNewsItem = React.createClass({
 				imgStyle 			= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
 				textForTweet 		= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
 				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
+				isTwitterAccount 	= Boolean(binding.toJS('twitterData')),
 				isTwitterAccountSet = Boolean(binding.toJS('twitterId'));
 		
 		const stylesTweetLength = classNames({
@@ -230,7 +243,7 @@ const ViewNewsItem = React.createClass({
 											{text}
 										</div>
 									</div>
-									<If condition={Boolean(activeSchoolId)}>
+									<If condition={ Boolean(activeSchoolId) && isTwitterAccount }>
 										<div className="eSchoolNewsItem_twitter">
 											<Button
 												onClick				= { () => {this.onTwitterButtonClick(news)} }
@@ -239,7 +252,7 @@ const ViewNewsItem = React.createClass({
 											/>
 										</div>
 									</If>
-									<If condition={Boolean(news && news.body && news.body.length > 100)}>
+									<If condition={ Boolean(news && news.body && news.body.length > 100) }>
 										<span className="eSchoolNews_more" onClick={this.newsItemMoreInfo.bind(this, news.id)}>
 											<i className={iconStyle} aria-hidden="true"></i>
 											{linkText}
@@ -252,7 +265,7 @@ const ViewNewsItem = React.createClass({
 				</div>
 				<If condition={Boolean(binding.toJS('isPopupOpen'))}>
 					<ConfirmPopup
-						isOkButtonDisabled			= { Boolean(textForTweet.length > 140) || !isTwitterAccountSet }
+						isOkButtonDisabled			= { textForTweet.length < 1 || textForTweet.length > 140 || !isTwitterAccountSet }
 						customStyle 				= { 'ePopup' }
 						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
 						cancelButtonText 			= { 'Cancel' }
