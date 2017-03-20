@@ -76,6 +76,9 @@
     top: 0;
     left: 10px;
   }
+  p {
+	margin-bottom: 0;
+  }
 }
 
 .eSchoolNews_more{
@@ -88,6 +91,37 @@
     font-size: 1.3rem;
     padding-right: 5px;
     vertical-align: bottom;
+  }
+}
+.bSchoolNewsItem {
+  .eTwitter{
+	padding:5px 10px;
+	line-height:1;
+	height: auto;
+	font-size: 14px;
+	margin-left: 10px;
+  }
+  .eTextArea{
+	resize: none;
+	width: 500px;
+	height: 150px;
+  }
+  .eTweetLength{
+	margin-bottom: 0px;
+  }
+  .eTweetTitle{
+	text-align: center;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	font-weight: bold;
+  }
+  .mInvalid{
+	color: $INVALID_COLOR;
+  }
+  .eTweetAccountChooserItem {
+	margin-bottom: 5px;
+	cursor: pointer;
+	color: $COLOR;
   }
 }
 
