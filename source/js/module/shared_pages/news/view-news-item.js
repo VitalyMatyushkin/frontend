@@ -1,17 +1,18 @@
 /**
  * Created by Anatoly on 18.08.2016.
  */
-const	React 			= require('react'),
-		Immutable 		= require('immutable'),
-		Morearty 		= require('morearty'),
-		DateTimeMixin	= require('module/mixins/datetime'),
-		Button			= require('module/ui/button/button'),
-		If				= require('module/ui/if/if'),
-		ConfirmPopup 	= require('module/ui/confirm_popup'),
-		SchoolHelper 	= require('module/helpers/school_helper'),
-		DomainHelper	= require('module/helpers/domain_helper'),
-		classNames 		= require('classnames'),
-		Promise 		= require('bluebird');
+const	React 				= require('react'),
+		Immutable 			= require('immutable'),
+		Morearty 			= require('morearty'),
+		DateTimeMixin		= require('module/mixins/datetime'),
+		Button				= require('module/ui/button/button'),
+		If					= require('module/ui/if/if'),
+		ConfirmPopup 		= require('module/ui/confirm_popup'),
+		SchoolHelper 		= require('module/helpers/school_helper'),
+		DomainHelper		= require('module/helpers/domain_helper'),
+		classNames 			= require('classnames'),
+		Promise 			= require('bluebird'),
+		RadioButtonCustom 	= require('module/ui/radio_button_custom/radio_button_custom');
 
 const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
 		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
@@ -33,6 +34,7 @@ const ViewNewsItem = React.createClass({
 			)
 		}
 	},
+	
 	//We save cursor position in binding, and when component rerender we display right cursor position
 	//I don't know, how make it better
 	componentDidUpdate: function(){
@@ -106,8 +108,9 @@ const ViewNewsItem = React.createClass({
 			);
 			promises.push(
 				window.Server.integrations.get({ schoolId : activeSchoolId }).then( integrations => {
-					integrations = integrations.filter( integration => {return integration.type === 'twitter'}).map( integration => {return integration.id});
-					binding.set('twitterIds', Immutable.fromJS(integrations));
+					integrations = integrations.filter( integration => {return integration.type === 'twitter'});
+					binding.set('twitterData', Immutable.fromJS(integrations));
+					binding.set('twitterId', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
 					binding.set('isPopupOpen', true);
 					return true;
 				})
@@ -120,32 +123,40 @@ const ViewNewsItem = React.createClass({
 			console.log('activeSchoolId undefined');
 		}
 	},
+	
 	//Just close popup window
 	onPopupCancelClick: function(){
 		const binding	= this.getDefaultBinding();
 
 		binding.set('isPopupOpen', false);
 	},
-	//When the user clicks on the "Tweet" button in popup window, we send tweet text on server
+	
+	//When the user clicks on the "Tweet" button in popup window, we send tweet text on server and then display alert "Success"
 	onPopupOkClick: function(){
 		const 	binding			= this.getDefaultBinding(),
 				activeSchoolId 	= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
-				twitterId 		= binding.toJS('twitterIds');
-		
+				twitterId 		= binding.toJS('twitterId');
+
 		if (activeSchoolId !== '') {
 			let data = {};
 			
 			data.text = this.refs.tweetText.value;
 			window.Server.integrationTwitterTweet.post({
 				schoolId:	activeSchoolId,
-				twitterId:	twitterId[0]
+				twitterId:	twitterId
 			}, data).then( () => {
 				binding.set('isPopupOpen', false);
+				window.simpleAlert(
+					'Success published!',
+					'Ok',
+					() => {}
+				);
 			});
 		} else {
 			console.log('activeSchoolId undefined');
 		}
 	},
+	
 	//When field textarea change, we save tweet text, because we want to save the edited text by pressing the tweet button again
 	//When field textarea change, we save cursor position, because Because changing the binding causes the component to rerender and then cursor jump in end of field textarea
 	onPopupTextareaChange: function(event){
@@ -155,12 +166,36 @@ const ViewNewsItem = React.createClass({
 		binding.set('textForTweet', event.target.value);
 	},
 	
+	onTweetAccountChange: function(twitterItem){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('twitterId', twitterItem.id);
+	},
+	//If a user has more than one twitter account, we give him the choice of which account to make a tweet
+	renderTwitterAccountChooser: function(){
+		const 	binding			= this.getDefaultBinding(),
+				twitterData 	= typeof binding.toJS('twitterData') !== 'undefined' ? binding.toJS('twitterData') : [];
+		
+		return twitterData.map( twitterItem => {
+			return(
+				<RadioButtonCustom
+					key			= { twitterItem.id }
+					text 		= { twitterItem.name }
+					onClick 	= { this.onTweetAccountChange.bind(null, twitterItem) }
+					isChecked 	= { binding.toJS('twitterId') ===  twitterItem.id }
+					customCSS 	= "eTweetAccountChooserItem"
+				/>
+			);
+		});
+	},
+	
 	renderNews: function(news) {
 		const 	binding				= this.getDefaultBinding(),
 				imgStyle 			= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
 				textForTweet 		= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
-				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '';
-
+				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
+				isTwitterAccountSet = Boolean(binding.toJS('twitterId'));
+		
 		const stylesTweetLength = classNames({
 			mInvalid: 		textForTweet.length > 140,
 			eTweetLength: 	true
@@ -217,7 +252,7 @@ const ViewNewsItem = React.createClass({
 				</div>
 				<If condition={Boolean(binding.toJS('isPopupOpen'))}>
 					<ConfirmPopup
-						isOkButtonDisabled			= { Boolean(textForTweet.length > 140) }
+						isOkButtonDisabled			= { Boolean(textForTweet.length > 140) || !isTwitterAccountSet }
 						customStyle 				= { 'ePopup' }
 						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
 						cancelButtonText 			= { 'Cancel' }
@@ -225,6 +260,9 @@ const ViewNewsItem = React.createClass({
 						handleClickCancelButton 	= { this.onPopupCancelClick }
 					>
 						<div className="eTweetTitle">New tweet</div>
+						<div className="eTweetAccountChooser">
+							{this.renderTwitterAccountChooser()}
+						</div>
 						<textarea
 							ref			= "tweetText"
 							name		= "text"

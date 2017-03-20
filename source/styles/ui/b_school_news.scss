@@ -118,6 +118,11 @@
   .mInvalid{
 	color: $INVALID_COLOR;
   }
+  .eTweetAccountChooserItem {
+	margin-bottom: 5px;
+	cursor: pointer;
+	color: $COLOR;
+  }
 }
 
 /* Small Devices, Phones */
