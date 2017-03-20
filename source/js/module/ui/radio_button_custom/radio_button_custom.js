@@ -1,3 +1,5 @@
+//@flow
+
 const	React					= require('react'),
 
 		RadioButtonCircle		= require('./radio_button_custom_circle'),
