@@ -104,7 +104,19 @@
   .eTextArea{
 	resize: none;
 	width: 500px;
-	height: 50px;
+	height: 150px;
+  }
+  .eTweetLength{
+	margin-bottom: 0px;
+  }
+  .eTweetTitle{
+	text-align: center;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	font-weight: bold;
+  }
+  .mInvalid{
+	color: $INVALID_COLOR;
   }
 }
 
