@@ -1,7 +1,7 @@
 const	React				= require('react'),
-		DateHelper			= require('./../../../../../../helpers/date_helper'),
+		DateHelper			= require('../../helpers/date_helper'),
 		Dropdown			= require('./dropdown/dropdown'),
-		DateSelectorStyle	= require('./../../../../../../../../styles/ui/b_date_selector.scss');
+		DateSelectorStyle	= require('../../../../styles/ui/b_date_selector.scss');
 
 const DateSelector = React.createClass({
 

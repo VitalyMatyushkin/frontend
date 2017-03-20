@@ -1,6 +1,5 @@
 const	React			= require('react'),
-
-		DropdownStyle	= require('./../../../../../../../../../styles/ui/b_dropdown.scss');
+		DropdownStyle	= require('../../../../../styles/ui/b_dropdown.scss');
 
 const Dropdown = React.createClass({
 	propTypes: {
