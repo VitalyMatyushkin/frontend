@@ -1,8 +1,9 @@
-const	Immutable	= require('immutable'),
-		Promise		= require('bluebird'),
-
-		EventHelper	= require('../../../../helpers/eventHelper'),
-		TeamHelper	= require('../../../../ui/managers/helpers/team_helper');
+const	Immutable					= require('immutable'),
+		Promise						= require('bluebird'),
+		EventHelper					= require('../../../../helpers/eventHelper'),
+		CorrectScoreActions			= require('./correct_score_actions'),
+		TeamHelper					= require('../../../../ui/managers/helpers/team_helper'),
+		AfterRivalsChangesHelper	= require('./helpers/after_rivals_changes_helper');
 
 /**
  * Function check user changes, and if team name was changed by user, then function submit these changes to server.
@@ -17,9 +18,9 @@ function changeTeamNames(activeSchoolId, binding) {
 
 	if(!TeamHelper.isNonTeamSport(event)) {
 		if(
-			!isSetTeamLaterByOrder(0, binding) &&
-			!isTeamChangedByOrder(0, binding) &&
-			isNameTeamChangedByOrder(0, binding)
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(0, binding) &&
+			!AfterRivalsChangesHelper.isTeamChangedByOrder(0, binding) &&
+			AfterRivalsChangesHelper.isNameTeamChangedByOrder(0, binding)
 		) {
 			promises = promises.concat(TeamHelper.updateTeam(
 				activeSchoolId,
@@ -32,9 +33,9 @@ function changeTeamNames(activeSchoolId, binding) {
 
 		if(
 			!EventHelper.isInterSchoolsEvent(event) &&
-			!isSetTeamLaterByOrder(1, binding) &&
-			!isTeamChangedByOrder(1, binding) &&
-			isNameTeamChangedByOrder(1, binding)
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(1, binding) &&
+			!AfterRivalsChangesHelper.isTeamChangedByOrder(1, binding) &&
+			AfterRivalsChangesHelper.isNameTeamChangedByOrder(1, binding)
 		) {
 			promises = promises.concat(TeamHelper.updateTeam(
 				activeSchoolId,
@@ -49,28 +50,6 @@ function changeTeamNames(activeSchoolId, binding) {
 	return Promise.all(promises);
 };
 
-function isSetTeamLaterByOrder(order, binding) {
-	return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.isSetTeamLater`);
-};
-
-function isTeamChangedByOrder(order, binding) {
-	return (
-		// if selected team undefined then player create addHoc team or team was deleted
-		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'||
-		(
-			binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !==
-			binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`)
-		)
-	);
-};
-
-function isNameTeamChangedByOrder(order, binding) {
-	const	initName	= binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.teamName.initName`),
-			name		= binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.teamName.name`);
-
-	return  initName !== name;
-};
-
 /**
  * Submit team player changes
  */
@@ -82,8 +61,7 @@ function commitPlayersChanges(activeSchoolId, binding) {
 	if(TeamHelper.isNonTeamSport(event)) {
 		promises = promises.concat(commitIndividualPlayerChanges(activeSchoolId, binding));
 	} else {
-		promises = promises.concat(commitTeamChangesByOrder(0, activeSchoolId, binding));
-		!EventHelper.isInterSchoolsEvent(event) && (promises = promises.concat(commitTeamChangesByOrder(1, activeSchoolId, binding)));
+		promises = promises.concat(commitTeamChangesByOrder(binding.toJS('selectedRivalIndex'), activeSchoolId, binding));
 	}
 
 	return Promise.all(promises);
@@ -96,34 +74,10 @@ function commitIndividualPlayerChanges(activeSchoolId, binding) {
 	const event = binding.toJS('model');
 
 	const	eventId			= event.id,
-			players			= getCommitPlayersForIndividualEvent(event, binding),
-			initialPlayers	= getInitPlayersForIndividualEvent(event, binding);
+			players			= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding),
+			initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding);
 
 	return Promise.all(TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players));
-};
-
-function getCommitPlayersForIndividualEvent(event, binding) {
-	if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-		return getTeamPlayersByOrder(0, binding);
-	} else {
-		return getTeamPlayersByOrder(0, binding).concat(getTeamPlayersByOrder(1, binding));
-	}
-};
-
-function getTeamPlayersByOrder(order, binding) {
-	return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.___teamManagerBinding.teamStudents`);
-};
-
-function getInitPlayersForIndividualEvent(event, binding) {
-	if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-		return getInitialTeamPlayersByOrder(0, binding);
-	} else {
-		return getInitialTeamPlayersByOrder(0, binding).concat(getInitialTeamPlayersByOrder(1, binding));
-	}
-};
-
-function getInitialTeamPlayersByOrder(order, binding) {
-	return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevPlayers`);
 };
 
 /** Submit team players changes for team game.
@@ -132,11 +86,11 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 	let promises = [];
 
 	switch (true) {
-		case isSetTeamLaterByOrder(order, binding) && isTeamWasDeletedByOrder(order, binding):
+		case AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) && AfterRivalsChangesHelper.isTeamWasDeletedByOrder(order, binding):
 			promises = promises.concat(removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding));
 			break;
-		case !isSetTeamLaterByOrder(order, binding):
-			if(isTeamChangedByOrder(order, binding)) {
+		case !AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding):
+			if(AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)) {
 				promises = promises.concat(changeTeamByOrder(order, activeSchoolId, binding));
 			} else {
 				promises = promises.concat(commitTeamPlayerChangesByOrder(order, activeSchoolId, binding));
@@ -148,19 +102,13 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 };
 
 function removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding) {
-	const prevSelectedTeamId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+	const prevSelectedTeamId =
+		binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
 
 	return TeamHelper.deleteTeamFromEvent(
 		activeSchoolId,
 		binding.toJS('model').id,
 		prevSelectedTeamId
-	);
-};
-
-function isTeamWasDeletedByOrder(order, binding) {
-	return (
-		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !== 'undefined' &&
-		typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'
 	);
 };
 
@@ -176,7 +124,8 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 		.then(_team => {
 			team = _team;
 
-			const prevSelectedTeamId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+			const prevSelectedTeamId =
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
 
 			if(typeof prevSelectedTeamId !== 'undefined') {
 				return TeamHelper.deleteTeamFromEvent(
@@ -192,7 +141,13 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 			activeSchoolId,
 			binding.toJS('model'),
 			[team]
-		));
+		))
+		.then(() => {
+			binding.set(
+				`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`,
+				Immutable.fromJS(team.id)
+			);
+		});
 };
 
 function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
@@ -208,13 +163,19 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 	);
 };
 
+//TODO rename it
 function submitAllChanges(activeSchoolId, binding) {
-	return changeTeamNames(activeSchoolId, binding).then(() => commitPlayersChanges(activeSchoolId, binding));
+	return changeTeamNames(activeSchoolId, binding)
+		.then(() => commitPlayersChanges(activeSchoolId, binding))
+		.then(() => {
+			if(EventHelper.isNotFinishedEvent(binding.toJS('model'))) {
+				return Promise.resolve(true);
+			} else {
+				return CorrectScoreActions.correctEventScoreByChanges(activeSchoolId, binding);
+			}
+		});
 };
 
-module.exports.changeTeamNames			= changeTeamNames;
-module.exports.isSetTeamLaterByOrder	= isSetTeamLaterByOrder;
-module.exports.isTeamChangedByOrder		= isTeamChangedByOrder;
-module.exports.isNameTeamChangedByOrder	= isNameTeamChangedByOrder;
-module.exports.commitPlayersChanges		= commitPlayersChanges;
-module.exports.submitAllChanges			= submitAllChanges;
+module.exports.changeTeamNames				= changeTeamNames;
+module.exports.commitPlayersChanges			= commitPlayersChanges;
+module.exports.submitAllChanges				= submitAllChanges;

@@ -183,6 +183,26 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 	return promises;
 };
 
+/**
+ * Just returns array with removed players.
+ * Removed after some
+ * @param prevPlayers
+ * @param currentPlayers
+ */
+function getRemovedPlayers(prevPlayers, currentPlayers) {
+	const removedPlayers = [];
+
+	prevPlayers.forEach(prevPlayer => {
+		const currentPlayer = currentPlayers.find(currentPlayer => currentPlayer.id === prevPlayer.id);
+
+		if(typeof currentPlayer === 'undefined') {
+			removedPlayers.push(prevPlayer);
+		}
+	});
+
+	return removedPlayers;
+};
+
 function addPlayer(schoolId, teamId, player) {
 	return window.Server.teamPlayers.post(
 		{
@@ -514,12 +534,9 @@ function isShowScoreEventButtonsBlock(thiz) {
  * @private
  */
 function isShowEditEventButton(thiz) {
-	const	self	= this,
-			binding	= thiz.getDefaultBinding();
+	const isGeneralMode = thiz.getDefaultBinding().get('mode') === 'general';
 
-	return EventHelper.isNotFinishedEventByBinding(binding) &&
-		binding.get('mode') === 'general' &&
-		RoleHelper.isUserSchoolWorker(thiz);
+	return isGeneralMode && RoleHelper.isUserSchoolWorker(thiz);
 }
 
 function isSchoolHaveIndividualPlayers(event, schoolId) {
@@ -1279,6 +1296,7 @@ function clearIndividualScore(event, teamId) {
 
 	scores.forEach(s => s.score = 0);
 }
+
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -1316,7 +1334,7 @@ const TeamHelper = {
 	isTeamDataCorrect:						isTeamDataCorrect,
 	isTeamSport:							isTeamSport,
 	isShowEditEventButton:					isShowEditEventButton,
-	isShowScoreEventButtonsBlock:					isShowScoreEventButtonsBlock,
+	isShowScoreEventButtonsBlock:			isShowScoreEventButtonsBlock,
 	isSchoolHaveIndividualPlayers:			isSchoolHaveIndividualPlayers,
 	isHouseHaveIndividualPlayers:			isHouseHaveIndividualPlayers,
 	callFunctionForRightContext:			callFunctionForRightContext,
@@ -1345,7 +1363,8 @@ const TeamHelper = {
 	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit,
 	getParametersForLeftContext: 			getParametersForLeftContext,
 	getParametersForRightContext: 			getParametersForRightContext,
-	clearIndividualScore:					clearIndividualScore
+	clearIndividualScore:					clearIndividualScore,
+	getRemovedPlayers:						getRemovedPlayers
 };
 
 module.exports = TeamHelper;
