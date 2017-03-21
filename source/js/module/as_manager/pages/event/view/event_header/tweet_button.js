@@ -72,14 +72,24 @@ const TweetButton = React.createClass({
 		});
 	},
 	
-	onPopupTextareaChange: function(event){
-		this.setState({
-			textForTweet: event.target.value
-		});
+	onPopupTextareaChange: function(event : Event){
+		if (event.target instanceof HTMLInputElement) {
+			this.setState({
+				textForTweet: (event.target: window.HTMLInputElement).value
+			});
+		} else {
+			console.log('Flow error in event.target');
+		}
 	},
 	
-	onSelectChange: function(event){
-		this.setState({twitterId: event.target.value});
+	onSelectChange: function(event : Event){
+		if (event.target instanceof HTMLInputElement) {
+			this.setState({
+				textForTweet: (event.target: window.HTMLInputElement).value
+			});
+		} else {
+			console.log('Flow error in event.target');
+		}
 	},
 	
 	render: function(){
