@@ -47,7 +47,7 @@ const SportSelector = React.createClass({
 		switch (true) {
 			case !isSchoolHaveFavoriteSports:
 				return false;
-			case binding.get('isShowAllSports'):
+			case !binding.get('isShowAllSports'):
 				return true;
 		}
 	},
