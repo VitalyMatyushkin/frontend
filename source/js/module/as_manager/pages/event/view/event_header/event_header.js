@@ -3,8 +3,10 @@ const	React				= require('react');
 const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
+		DomainHelper 		= require('module/helpers/domain_helper'),
 		Buttons				= require('./buttons'),
-		PencilButton		= require('../../../../../ui/pencil_button');
+		PencilButton		= require('../../../../../ui/pencil_button'),
+		TweetButton 		= require('./tweet_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
@@ -20,7 +22,14 @@ const EventHeader = React.createClass({
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
-		onClickEditEventButton:			React.PropTypes.func.isRequired
+		onClickEditEventButton:			React.PropTypes.func.isRequired,
+		
+		//prop for tweet button
+		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
+		twitterData: 					React.PropTypes.array.isRequired,
+		schoolDomain: 					React.PropTypes.string.isRequired,
+		activeSchoolId: 				React.PropTypes.string.isRequired,
+		twitterIdDefault: 				React.PropTypes.string.isRequired
 	},
 	render: function() {
 		const 	event 				= this.props.event,
@@ -28,7 +37,13 @@ const EventHeader = React.createClass({
 				name				= event.name,
 				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
 				time				= event.time,
-				sport				= event.sport;
+				sport				= event.sport,
+				protocol 			= document.location.protocol + '//',
+				eventId				= event.id,
+				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
+				linkForTweet 		= protocol + schoolDomain + '/#event/' + eventId,
+				score 				= event.isFinished && typeof event.score !== 'undefined' && event.score !== '' ? `Score: ${event.score}` : '',
+				textForTweet 		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
 
 		return (
 			<div className="bEventHeader">
@@ -48,6 +63,14 @@ const EventHeader = React.createClass({
 						</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
+						<TweetButton
+							isTweetButtonRender 	= { this.props.isTweetButtonRender }
+							twitterData 			= { this.props.twitterData }
+							textForTweet 			= { textForTweet }
+							linkForTweet 			= { linkForTweet }
+							activeSchoolId 			= { this.props.activeSchoolId }
+							twitterIdDefault 		= { this.props.twitterIdDefault }
+						/>
 					</div>
 					<div className="eEventHeader_rightSide">
 						<Buttons	eventId							= { event.id }

@@ -105,6 +105,7 @@
 	resize: none;
 	width: 500px;
 	height: 150px;
+	padding: 5px 3px;
   }
   .eTweetLength{
 	margin-bottom: 0px;
@@ -118,10 +119,12 @@
   .mInvalid{
 	color: $INVALID_COLOR;
   }
-  .eTweetAccountChooserItem {
-	margin-bottom: 5px;
-	cursor: pointer;
-	color: $COLOR;
+  .eTweetAccountChooser {
+	display: block;
+	height: auto;
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 5px 3px;
   }
 }
 

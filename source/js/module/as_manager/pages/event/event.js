@@ -204,6 +204,25 @@ const Event = React.createClass({
 			return eventData;
 		});
 	},
+	
+	//Load all user integrations from server, because we want button "tweet" only user with twitter integration
+	//Note: We do not care when promises are made, because we use this data only if user click button "tweet"
+	componentDidMount: function(){
+		const 	binding 		= this.getDefaultBinding(),
+				role 			= typeof RoleHelper.getLoggedInUserRole(this) !== 'undefined' ? RoleHelper.getLoggedInUserRole(this) : '';
+		
+		if (role === RoleHelper.USER_ROLES.ADMIN) { //TODO When the server is ready, delete it
+			window.Server.integrations.get({ schoolId : this.props.activeSchoolId }).then( integrations => {
+				//we choose only twitter integrations
+				integrations = integrations.filter( integration => {return integration.type === 'twitter'});
+				if (integrations.length > 0) {
+					binding.set('twitterData', Immutable.fromJS(integrations));
+					binding.set('twitterIdDefault', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
+				}
+				return true;
+			});
+		}
+	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
 			return false;

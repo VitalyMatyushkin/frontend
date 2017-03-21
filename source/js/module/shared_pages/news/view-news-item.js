@@ -11,9 +11,7 @@ const	React 				= require('react'),
 		SchoolHelper 		= require('module/helpers/school_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		RoleHelper 			= require('module/helpers/role_helper'),
-		classNames 			= require('classnames'),
-		Promise 			= require('bluebird'),
-		RadioButtonCustom 	= require('module/ui/radio_button_custom/radio_button_custom');
+		classNames 			= require('classnames');
 
 const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
 		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
@@ -49,8 +47,10 @@ const ViewNewsItem = React.createClass({
 				//we choose only twitter integrations
 				integrations = integrations.filter( integration => {return integration.type === 'twitter'});
 				if (integrations.length > 0) {
-					binding.set('twitterData', Immutable.fromJS(integrations));
-					binding.set('twitterId', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
+					binding.atomically()
+						.set('twitterData', 	Immutable.fromJS(integrations))
+						.set('twitterId', 		Immutable.fromJS(integrations[0].id)) // while we wait isFavorite from server, we made isFavorite first id
+						.commit();
 				}
 				return true;
 			});
@@ -172,10 +172,10 @@ const ViewNewsItem = React.createClass({
 		binding.set('textForTweet', event.target.value);
 	},
 	
-	onTweetAccountChange: function(twitterItem){
+	onTweetAccountChange: function(event){
 		const binding = this.getDefaultBinding();
 		
-		binding.set('twitterId', twitterItem.id);
+		binding.set('twitterId', event.target.value);
 	},
 	//If a user has more than one twitter account, we give him the choice of which account to make a tweet
 	renderTwitterAccountChooser: function(){
@@ -184,13 +184,12 @@ const ViewNewsItem = React.createClass({
 		
 		return twitterData.map( twitterItem => {
 			return(
-				<RadioButtonCustom
+				<option
 					key			= { twitterItem.id }
-					text 		= { twitterItem.name }
-					onClick 	= { this.onTweetAccountChange.bind(null, twitterItem) }
-					isChecked 	= { binding.toJS('twitterId') ===  twitterItem.id }
-					customCSS 	= "eTweetAccountChooserItem"
-				/>
+					value 		= { twitterItem.id }
+				>
+					{ twitterItem.name }
+				</option>
 			);
 		});
 	},
@@ -200,9 +199,9 @@ const ViewNewsItem = React.createClass({
 				imgStyle 			= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
 				textForTweet 		= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
 				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
-				isTwitterAccount 	= Boolean(binding.toJS('twitterData')),
-				isTwitterAccountSet = Boolean(binding.toJS('twitterId'));
-		
+				twitterId 			= typeof binding.toJS('twitterId') !== 'undefined' ? binding.toJS('twitterId') : '',
+				isTwitterAccount 	= Boolean(binding.toJS('twitterId'));
+
 		const stylesTweetLength = classNames({
 			mInvalid: 		textForTweet.length > 140,
 			eTweetLength: 	true
@@ -259,7 +258,7 @@ const ViewNewsItem = React.createClass({
 				</div>
 				<If condition={Boolean(binding.toJS('isPopupOpen'))}>
 					<ConfirmPopup
-						isOkButtonDisabled			= { textForTweet.length < 1 || textForTweet.length > 140 || !isTwitterAccountSet }
+						isOkButtonDisabled			= { textForTweet.length < 1 || textForTweet.length > 140 }
 						customStyle 				= { 'ePopup' }
 						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
 						cancelButtonText 			= { 'Cancel' }
@@ -267,9 +266,13 @@ const ViewNewsItem = React.createClass({
 						handleClickCancelButton 	= { this.onPopupCancelClick }
 					>
 						<div className="eTweetTitle">New tweet</div>
-						<div className="eTweetAccountChooser">
+						<select
+							value 		= { twitterId }
+							className 	= "eTweetAccountChooser"
+							onChange 	= { this.onTweetAccountChange }
+						>
 							{this.renderTwitterAccountChooser()}
-						</div>
+						</select>
 						<textarea
 							ref			= "tweetText"
 							name		= "text"
