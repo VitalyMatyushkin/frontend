@@ -144,6 +144,7 @@ const EventManager = React.createClass({
 			schoolId	: this.activeSchoolId,
 			eventId		: eventId
 		}).then(event => {
+			delete event.status;
 			// It's a convertation event data to EventForm component format,
 			// because event
 			event.gender = this.convertServerGenderConstToClient(event);

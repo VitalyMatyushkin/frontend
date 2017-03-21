@@ -14,14 +14,16 @@ const IndividualScoreAvailableBlockHelper = {
 				break;
 		}
 
-		const team = event[params.bundleName][params.order];
-		// Team is undefined when "set team later" is true and event type is inter-schools.
-		// If bundleName isn't teamsData team doesn't have players.
-		if(
-			params.bundleName === "teamsData" && typeof team !== 'undefined' &&
-			typeof team.players !== 'undefined' && team.players.length !== 0
-		) {
-			hasTeamPlayers = true;
+		if(typeof params !== 'undefined') {
+			const team = event[params.bundleName][params.order];
+			// Team is undefined when "set team later" is true and event type is inter-schools.
+			// If bundleName isn't teamsData team doesn't have players.
+			if(
+				params.bundleName === "teamsData" && typeof team !== 'undefined' &&
+				typeof team.players !== 'undefined' && team.players.length !== 0
+			) {
+				hasTeamPlayers = true;
+			}
 		}
 
 		return hasTeamPlayers;

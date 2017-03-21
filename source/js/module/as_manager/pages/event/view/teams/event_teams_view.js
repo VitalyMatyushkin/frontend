@@ -367,8 +367,8 @@ const EventTeamsView = React.createClass({
 		this.sortPlayersByScore(players);
 
 		return players.map((player, playerIndex) => {
-			const 	mode						= self.getBinding('mode').toJS(),
-					event						= self.getBinding('event').toJS();
+			const 	mode	= self.getBinding('mode').toJS(),
+					event	= self.getBinding('event').toJS();
 
 			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
 				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
@@ -382,9 +382,9 @@ const EventTeamsView = React.createClass({
 						<span>{player.lastName}</span>
 					</span>
 					<If condition = {Boolean(player.isCaptain)}>
-							<span className="ePlayer_star">
-								<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
-							</span>
+						<span className="ePlayer_star">
+							<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
+						</span>
 					</If>
 					<If condition={
 						!self.isNonInternalEventForOneOnOneSport(event)
