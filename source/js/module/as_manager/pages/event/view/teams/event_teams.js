@@ -36,7 +36,10 @@ const EventTeams = React.createClass({
 		const self = this;
 
 		return (
-			<EventTeamsView binding={self.getViewPlayersBinding()}/>
+			<EventTeamsView
+				activeSchoolId	= { this.props.activeSchoolId }
+				binding			= { self.getViewPlayersBinding() }
+			/>
 		);
 	}
 });

@@ -13,6 +13,13 @@ const FixtureItem = React.createClass({
 		activeSchoolId	: React.PropTypes.string.isRequired,
 		onClick			: React.PropTypes.func
 	},
+	getActiveSchoolId: function() {
+		if(typeof this.props.event.child !== "undefined") {
+			return this.props.event.child.schoolId;
+		} else {
+			return this.props.activeSchoolId;
+		}
+	},
 	/**
 	 * Render game type column
 	 * @param {ChallengeModel} model - ChallengeModel object
@@ -40,20 +47,13 @@ const FixtureItem = React.createClass({
 	},
 	onClickChallenge: function (e) {
 		if(typeof this.props.onClick === "function") {
-			// if child isn't undefined, then it's parent fixture
-			// and we must add schoolId for fixture item click handler
-			if(typeof this.props.event.child !== "undefined") {
-				this.props.onClick(this.props.event.id, this.props.event.child.schoolId);
-			} else {
-				//we need in activeSchoolId in student access, i dont know how distinguish student and no-student events
-				this.props.onClick(this.props.event.id, this.props.activeSchoolId);
-			}
+			this.props.onClick(this.props.event.id, this.getActiveSchoolId());
 		}
 		e.stopPropagation();
 	},
 	render: function () {
 		const	event			= this.props.event,
-				model			= new ChallengeModel(event, this.props.activeSchoolId),
+				model			= new ChallengeModel(event, this.getActiveSchoolId()),
 				scoreClasses	= classNames({eChallenge_results: true, mDone: model.isFinished}),
 				isCancelled		= event.status === 'CANCELED',
 				isRejected		= event.status === 'REJECTED',
