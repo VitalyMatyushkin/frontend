@@ -91,6 +91,7 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
+		console.log(this.props.activeSchoolId);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
