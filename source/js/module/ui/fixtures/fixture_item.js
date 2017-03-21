@@ -10,7 +10,7 @@ const 	React 			= require('react'),
 const FixtureItem = React.createClass({
 	propTypes: {
 		event			: React.PropTypes.object.isRequired,
-		activeSchoolId	: React.PropTypes.string.isRequired,
+		activeSchoolId	: React.PropTypes.string,
 		onClick			: React.PropTypes.func
 	},
 	getActiveSchoolId: function() {
