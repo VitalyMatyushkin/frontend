@@ -1,5 +1,6 @@
 const	React				= require('react'),
 		TeamManager			= require('./team_manager/team_manager'),
+		SetTeamsLaterBlock	= require('./set_teams_later_block/set_teams_later_block'),
 		TeamName			= require('./team_name'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
@@ -403,27 +404,6 @@ const TeamWrapper = React.createClass({
 				);
 		}
 	},
-	isSetTeamLater: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return binding.toJS('isSetTeamLater');
-	},
-	changeIsSetTeamLater: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		typeof self.props.handleIsSelectTeamLater !== 'undefined' && self.props.handleIsSelectTeamLater();
-
-		binding
-			.atomically()
-			.set('teamName.name',						Immutable.fromJS(undefined))
-			.set('teamName.prevName',					Immutable.fromJS(undefined))
-			.set('___teamManagerBinding.teamStudents',	Immutable.fromJS([]))
-			.set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
-			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
-			.commit();
-	},
 	getRevertButtonStyle: function() {
 		return classNames({
 			bButton		: true,
@@ -431,36 +411,32 @@ const TeamWrapper = React.createClass({
 			mDisable	: !this.isShowRevertChangesButton()
 		});
 	},
+	isSetTeamLater: function() {
+		return this.getDefaultBinding().toJS('isSetTeamLater');
+	},
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = self.getBinding('model').toJS();
+		const event = this.getBinding('model').toJS();
 
 		const plugClass = classNames({
 			eTeamWrapper_plug:	true,
-			mDisabled:			!self.isSetTeamLater()
+			mDisabled:			!this.isSetTeamLater()
 		});
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
-				<div className="eManager_group">
-					<div className="eManager_label">{'Select Team Later'}</div>
-					<div className="eManager_radiogroup">
-						<input	onChange={self.changeIsSetTeamLater}
-								checked={self.isSetTeamLater()}
-								type="checkbox"
-						/>
-					</div>
-				</div>
+				<SetTeamsLaterBlock
+					binding					=	{ this.getDefaultBinding() }
+					event					=	{ event }
+					handleIsSelectTeamLater	=	{ this.props.handleIsSelectTeamLater }
+				/>
 				<div className={plugClass}>
 				</div>
-				{ self.renderTeamNameComponent() }
+				{ this.renderTeamNameComponent() }
 				<TeamManager	isNonTeamSport	= {TeamHelper.isNonTeamSport(event)}
 								binding			= {this.getTeamManagerBinding()}
 				/>
 				<div className="eTeamWrapper_footer">
-					<div className={this.getRevertButtonStyle()} onClick={self._onRevertChangesButtonClick}>
+					<div className={this.getRevertButtonStyle()} onClick={this._onRevertChangesButtonClick}>
 						{'Revert changes'}
 					</div>
 				</div>
