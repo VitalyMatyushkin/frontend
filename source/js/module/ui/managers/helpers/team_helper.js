@@ -627,9 +627,6 @@ function getRival(event, activeSchoolId, forLeftContext){
 					break;
 				case isOneOnOne:
 					houseId = student && student.houseId;
-					if(!houseId){
-						houseId = individData.length > 0 ? event.houses.find(id => id !== individData[0].houseId) : null;
-					}
 					break;
 			}
 			house = houseId ? housesData.find(h => h && h.id === houseId) : housesData[index];

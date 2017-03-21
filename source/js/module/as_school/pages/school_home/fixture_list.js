@@ -75,14 +75,15 @@ const FixtureList = React.createClass({
 	},
 	render: function(){
 		return (
-			<div className="bSchoolFixtures" id={"eSchool" + this.props.title }>
-					<h1 className="eSchoolFixtures_title">{ this.props.title }</h1>
+			<div className="bSchoolFixtures">
+				<h1 className="eSchoolFixtures_title">
+					{ this.props.title }
+				</h1>
 				{ this.renderFixtureList() }
 				{ this.renderShowAllItemsButton() }
 			</div>
 		);
 	}
 });
-
 
 module.exports = FixtureList;
