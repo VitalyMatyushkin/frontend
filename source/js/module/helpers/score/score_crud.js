@@ -7,8 +7,8 @@ const ScoreCRUD = {
 			data
 		);
 	},
-	addHouseScore: function(schoolId, houseId, eventId, data) {
-		return window.Server.schoolEventResultSchoolScores.post({
+	addHouseScore: function(schoolId, eventId, data) {
+		return window.Server.schoolEventResultHousesScores.post({
 				schoolId:	schoolId,
 				eventId:	eventId
 			},
@@ -16,7 +16,7 @@ const ScoreCRUD = {
 		);
 	},
 	addTeamScore: function(schoolId, eventId, data) {
-		return window.Server.schoolEventResultSchoolScores.post({
+		return window.Server.schoolEventResultTeamScores.post({
 				schoolId:	schoolId,
 				eventId:	eventId
 			},
@@ -24,7 +24,7 @@ const ScoreCRUD = {
 		);
 	},
 	updateTeamScore: function(schoolId, eventId, scoreId, data) {
-		return window.Server.schoolEventResultSchoolScore.put({
+		return window.Server.schoolEventResultTeamScore.put({
 				schoolId:	schoolId,
 				eventId:	eventId,
 				scoreId:	scoreId
@@ -34,6 +34,13 @@ const ScoreCRUD = {
 	},
 	deleteSchoolScore: function(schoolId, eventId, scoreId) {
 		return window.Server.schoolEventResultSchoolScore.delete({
+				schoolId:	schoolId,
+				eventId:	eventId,
+				scoreId:	scoreId
+			});
+	},
+	deleteHouseScore: function(schoolId, eventId, scoreId) {
+		return window.Server.schoolEventResultHousesScore.delete({
 				schoolId:	schoolId,
 				eventId:	eventId,
 				scoreId:	scoreId

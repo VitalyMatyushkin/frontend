@@ -193,7 +193,7 @@ function getRemovedPlayers(prevPlayers, currentPlayers) {
 	const removedPlayers = [];
 
 	prevPlayers.forEach(prevPlayer => {
-		const currentPlayer = currentPlayers.find(currentPlayer => currentPlayer.id === prevPlayer);
+		const currentPlayer = currentPlayers.find(currentPlayer => currentPlayer.id === prevPlayer.id);
 
 		if(typeof currentPlayer === 'undefined') {
 			removedPlayers.push(prevPlayer);

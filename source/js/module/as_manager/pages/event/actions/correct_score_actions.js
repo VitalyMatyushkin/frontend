@@ -13,9 +13,8 @@ const CorrectScoreActions = {
 		if(TeamHelper.isNonTeamSport(event)) {
 			promises = promises.concat(this.correctIndividualScoreByChanges(activeSchoolId, binding));
 		} else {
-			promises = promises.concat(this.correctTeamScoreByChanges(0, activeSchoolId, binding));
-			!EventHelper.isInterSchoolsEvent(event) && (
-				promises = promises.concat(this.correctTeamScoreByChanges(1, activeSchoolId, binding))
+			promises = promises.concat(
+				this.correctTeamScoreByChanges(binding.toJS('selectedRivalIndex'), activeSchoolId, binding)
 			);
 		}
 
@@ -43,12 +42,9 @@ const CorrectScoreActions = {
 			// So, we should:
 			// 1) Converts team score to school score or houses score it depends on event type.
 			// 2) Delete all individual score for removed team.
-			// 3) Set IndividualScoreAvailable to false.
 			const teamId = AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding);
 			promises = promises.concat(this.moveTeamScoreToGeneralScoreByTeamId(order, teamId, activeSchoolId, binding));
 			promises = promises.concat(this.deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding));
-			// TODO must implement this. but now, waiting for server.
-			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
 		} else if(
 			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
 			AfterRivalsChangesHelper.isTeamWasCreatedByOrder(order, binding)
@@ -63,14 +59,11 @@ const CorrectScoreActions = {
 			// Team was just changed.
 			// 1) Moves team score from prev team to current team
 			// 2) Delete all individual score for removed team.
-			// 3) Set IndividualScoreAvailable to false.
 			const	prevTeamId		= AfterRivalsChangesHelper.getPrevTeamIdByOrder(order, binding),
-				currentTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
+					currentTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
 
 			promises = promises.concat(this.moveTeamScoreFromPrevTeamToCurrentTeam(prevTeamId, currentTeamId, activeSchoolId, binding));
 			promises = promises.concat(this.deleteAllIndividualScoreByTeamId(prevTeamId, activeSchoolId, binding));
-			// TODO must implement this. but now, waiting for server.
-			//promises = promises.concat(setIndividualScoreAvailableByTeamId(teamId));
 		} else if(
 			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding) &&
 			!AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)
@@ -100,14 +93,14 @@ const CorrectScoreActions = {
 			ScoreChangesHelper.correctTeamScoreByRemovedPlayers(activeSchoolId, event, teamId, removedPlayers)
 		);
 		promises = promises.concat(
-			ScoreChangesHelper.correctIndividualScoreByRemovedPlayers(activeSchoolId, event, teamId, removedPlayers)
+			ScoreChangesHelper.correctIndividualScoreByRemovedPlayers(activeSchoolId, event, removedPlayers)
 		);
 
 		return promises;
 	},
 	moveTeamScoreFromPrevTeamToCurrentTeam: function(prevTeamId, currentTeamId, activeSchoolId, binding) {
 		const	event		= binding.toJS('model'),
-				teamScore	= event.result.teamScore;
+				teamScore	= event.results.teamScore;
 
 		return ScoreChangesHelper.moveTeamScoreToOtherTeam(prevTeamId, currentTeamId, activeSchoolId, event.id, teamScore);
 	},
@@ -122,7 +115,7 @@ const CorrectScoreActions = {
 				promises = promises.concat(ScoreChangesHelper.moveTeamScoreToSchoolScoreByEventAndTeamId(activeSchoolId, event, teamId));
 				break;
 			case EventHelper.isHousesEvent(event):
-				const houseId = AfterRivalsChangesHelper.getHouseIdByOrder(order);
+				const houseId = AfterRivalsChangesHelper.getHouseIdByOrder(order, binding);
 				promises = promises.concat(ScoreChangesHelper.moveTeamScoreToHousesScoreByEventAndTeamId(activeSchoolId, houseId, event, teamId));
 				break;
 		}
@@ -132,22 +125,22 @@ const CorrectScoreActions = {
 
 	moveGeneralScoreTypeToTeamScoreByOrder: function(order, activeSchoolId, binding) {
 		const	event		= binding.toJS('model'),
-				newTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order);
+				newTeamId	= AfterRivalsChangesHelper.getTeamIdByOrder(order, binding);
 
 		switch (true) {
 			case EventHelper.isInterSchoolsEvent(event):
-				return ScoreChangesHelper.moveSchoolScoreToTeamScoreBySchoolId(activeSchoolId, event, newTeamId);
+				return ScoreChangesHelper.moveSchoolScoreToTeamScoreBySchoolId(activeSchoolId, newTeamId, event);
 			case EventHelper.isHousesEvent(event):
-				const houseId = AfterRivalsChangesHelper.getHouseIdByOrder(order);
-				return ScoreChangesHelper.moveHouseScoreToTeamScoreByHouseId(activeSchoolId, houseId, event, newTeamId);
+				const houseId = AfterRivalsChangesHelper.getHouseIdByOrder(order, binding);
+				return ScoreChangesHelper.moveHouseScoreToTeamScoreByHouseId(activeSchoolId, houseId, newTeamId, event);
 		}
 	},
 	deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding) {
 		const	event			= binding.toJS('model'),
-				individualScore	= event.result.individualScore;
+				individualScore	= event.results.individualScore;
 
 		return ScoreChangesHelper.deleteAllIndividualScoreByTeamId(activeSchoolId, event.id, teamId, individualScore);
 	}
 };
 
-module.exports.CorrectScoreActions = CorrectScoreActions;
+module.exports = CorrectScoreActions;

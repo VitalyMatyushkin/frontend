@@ -44,7 +44,7 @@ const AfterRivalsChangesHelper = {
 		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`);
 	},
 	getHouseIdByOrder: function(order, binding) {
-		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.filter.houseId`);
+		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.___teamManagerBinding.filter.houseId`);
 	},
 	getPrevTeamIdByOrder: function(order, binding) {
 		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
@@ -63,4 +63,4 @@ const AfterRivalsChangesHelper = {
 	}
 };
 
-module.exports.AfterRivalsChangesHelper = AfterRivalsChangesHelper;
+module.exports = AfterRivalsChangesHelper;

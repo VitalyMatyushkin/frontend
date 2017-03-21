@@ -61,8 +61,7 @@ function commitPlayersChanges(activeSchoolId, binding) {
 	if(TeamHelper.isNonTeamSport(event)) {
 		promises = promises.concat(commitIndividualPlayerChanges(activeSchoolId, binding));
 	} else {
-		promises = promises.concat(commitTeamChangesByOrder(0, activeSchoolId, binding));
-		!EventHelper.isInterSchoolsEvent(event) && (promises = promises.concat(commitTeamChangesByOrder(1, activeSchoolId, binding)));
+		promises = promises.concat(commitTeamChangesByOrder(binding.toJS('selectedRivalIndex'), activeSchoolId, binding));
 	}
 
 	return Promise.all(promises);
@@ -169,7 +168,7 @@ function submitAllChanges(activeSchoolId, binding) {
 	return changeTeamNames(activeSchoolId, binding)
 		.then(() => commitPlayersChanges(activeSchoolId, binding))
 		.then(() => {
-			if(EventHelper.isNotFinishedEvent(binding)) {
+			if(EventHelper.isNotFinishedEvent(binding.toJS('model'))) {
 				return Promise.resolve(true);
 			} else {
 				return CorrectScoreActions.correctEventScoreByChanges(activeSchoolId, binding);
