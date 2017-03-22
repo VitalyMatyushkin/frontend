@@ -214,12 +214,11 @@ const Event = React.createClass({
 		if (role === RoleHelper.USER_ROLES.ADMIN) { //TODO When the server is ready, delete it
 			window.Server.integrations.get({ schoolId : this.props.activeSchoolId }).then( integrations => {
 				//we choose only twitter integrations
-				integrations = integrations.filter( integration => {return integration.type === 'twitter'});
+				integrations = integrations.filter( integration => integration.type === 'twitter');
 				if (integrations.length > 0) {
 					binding.set('twitterData', Immutable.fromJS(integrations));
 					binding.set('twitterIdDefault', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
 				}
-				return true;
 			});
 		}
 	},

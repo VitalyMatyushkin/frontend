@@ -8,6 +8,8 @@ const	React 				= require('react'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 
+const TWEET_LENGTH_WITHOUT_LINK = 110;
+
 const TweetButton = React.createClass({
 	propTypes: {
 		isTweetButtonRender: 	React.PropTypes.bool.isRequired,
@@ -48,8 +50,9 @@ const TweetButton = React.createClass({
 	},
 	
 	onPopupOkClick: function(){
-		let data = {};
-		data.text = this.state.textForTweet;
+		const data = {
+			text: this.state.textForTweet
+		};
 		
 		window.Server.integrationTwitterTweet.post({
 			schoolId:	this.props.activeSchoolId,
@@ -99,7 +102,7 @@ const TweetButton = React.createClass({
 				textWithoutLink = startLinkPos !== - 1 ? textForTweet.substring(startLinkPos + 1, endLinkPos + 1) : textForTweet;
 
 		const stylesTweetLength = classNames({
-			mInvalid: 		textWithoutLink.length > 110,
+			mInvalid: 		textWithoutLink.length > TWEET_LENGTH_WITHOUT_LINK,
 			eTweetLength: 	true
 		});
 		
@@ -130,7 +133,6 @@ const TweetButton = React.createClass({
 							{this.renderTwitterAccountChooser()}
 						</select>
 						<textarea
-							ref			= "tweetText"
 							name		= "text"
 							className	= "eTextArea"
 							value		= { textForTweet }
@@ -138,7 +140,7 @@ const TweetButton = React.createClass({
 						>
 						</textarea>
 						<p className = {stylesTweetLength}>
-							{ 110 - textWithoutLink.length }
+							{ TWEET_LENGTH_WITHOUT_LINK - textWithoutLink.length }
 						</p>
 					</ConfirmPopup>
 				</If>
