@@ -4,21 +4,26 @@ const	React			= require('react'),
 
 const Footer = React.createClass({
 	propTypes: {
-		event:			React.PropTypes.object.isRequired,
+		event:			React.PropTypes.object,
 		activeSchoolId:	React.PropTypes.string.isRequired
 	},
 
 	render: function() {
-		const model = new ChallengeModel(
-			this.props.event,
-			this.props.activeSchoolId
-		);
+		if (typeof this.props.event !== 'undefined') {
+			const model = new ChallengeModel(
+				this.props.event,
+				this.props.activeSchoolId
+			);
+			
+			return (
+				<div className="bFooter">
+					{`Upcoming: ${model.time} / ${model.sport} / ${model.rivals[0].value} vs. ${model.rivals[1].value}`}
+				</div>
+			);
+		} else {
+			return null
+		}
 
-		return (
-			<div className="bFooter">
-				{`Upcoming: ${model.time} / ${model.sport} / ${model.rivals[0].value} vs. ${model.rivals[1].value}`}
-			</div>
-		);
 	}
 });
 
