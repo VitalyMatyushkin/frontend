@@ -78,3 +78,44 @@
     }
   }
 }
+
+.bEventHeaderTwitter {
+  .eTwitter{
+	padding:5px 10px;
+	line-height:1;
+	height: auto;
+	font-size: 14px;
+	background-color: #ffffff;
+	color: $blueColor;
+	border-color: $blueColor;
+	&:hover{
+	  color: #fff;
+	  background-color: $blueColor;
+	}
+  }
+  .eTextArea{
+	resize: none;
+	width: 500px;
+	height: 150px;
+	padding: 5px 3px;
+  }
+  .eTweetLength{
+	margin-bottom: 0px;
+  }
+  .eTweetTitle{
+	text-align: center;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	font-weight: bold;
+  }
+  .mInvalid{
+	color: $INVALID_COLOR;
+  }
+  .eTweetAccountChooser {
+	display: block;
+	height: auto;
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 5px 3px;
+  }
+}
