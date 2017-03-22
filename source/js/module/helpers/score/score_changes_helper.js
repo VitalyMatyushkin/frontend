@@ -96,7 +96,7 @@ const ScoreChangesHelper = {
 	},
 	moveSchoolScoreToTeamScoreBySchoolId: function(fromSchoolId, toTeamId, event) {
 		const	eventId			= event.id,
-				fromSchoolScore	= event.results.schoolScores.find(scoreData => scoreData.schoolId === fromSchoolId);
+				fromSchoolScore	= event.results.schoolScore.find(scoreData => scoreData.schoolId === fromSchoolId);
 
 		const dataToPost = {
 			teamId: toTeamId,
