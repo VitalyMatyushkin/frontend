@@ -41,7 +41,7 @@ const EventHeader = React.createClass({
 				protocol 			= document.location.protocol + '//',
 				eventId				= event.id,
 				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
-				linkForTweet 		= protocol + schoolDomain + '/#event/' + eventId,
+				linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
 				score 				= event.isFinished && typeof event.score !== 'undefined' && event.score !== '' ? `Score: ${event.score}` : '',
 				textForTweet 		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
 
