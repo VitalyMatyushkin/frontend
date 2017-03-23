@@ -117,7 +117,7 @@ const EventForm = React.createClass({
 					},
 					name: { like: schoolName }
 				},
-				limit: 20
+				limit: 40
 			}
 		};
 	},
