@@ -325,7 +325,7 @@ const EventTeamsView = React.createClass({
 		const 	rootBinding 		= this.getMoreartyContext().getBinding(),
 				isEventInitResult 	= Boolean(rootBinding.get('events.model.initResults')),
 			 	mode 				= this.getBinding('mode').toJS(),
-				scoring 			= rootBinding.toJS('events.model.sport.scoring');
+				scoring 			= this.getBinding('event').toJS('sport.scoring');
 		
 		//we add individual score in array of players (player.result) and then sort array by DESC
 		//we get individual score from different source, because when we change score, immediately triggered sort
