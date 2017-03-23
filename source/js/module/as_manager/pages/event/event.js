@@ -3,7 +3,8 @@ const	React							= require('react'),
 		Immutable						= require('immutable'),
 		Lazy							= require('lazy.js'),
 		If								= require('module/ui/if/if'),
-		classNames						= require('classnames');
+		classNames						= require('classnames'),
+		Promise 						= require('bluebird');
 
 const	Tabs							= require('./../../../ui/tabs/tabs'),
 		CreateOtherEventPanel			= require('./view/create_other_event_panel/create_other_event_panel'),
