@@ -170,9 +170,6 @@ const  RoleList = React.createClass({
 				listOpen    = binding.toJS('listOpen'),
 				show        = !!binding.toJS('permissions').length && !!role;
 
-		if(listOpen) {
-			this.refs.role_list.focus();
-		}
 
 		return(
 			<div className={classNames({bRoleList:true, mLogout:!show})}>
