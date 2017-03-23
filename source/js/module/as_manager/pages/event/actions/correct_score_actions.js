@@ -135,7 +135,7 @@ const CorrectScoreActions = {
 				return ScoreChangesHelper.moveHouseScoreToTeamScoreByHouseId(activeSchoolId, houseId, newTeamId, event);
 		}
 	},
-	deleteAllIndividualScoreByTeamId(teamId, activeSchoolId, binding) {
+	deleteAllIndividualScoreByTeamId: function(teamId, activeSchoolId, binding) {
 		const	event			= binding.toJS('model'),
 				individualScore	= event.results.individualScore;
 
