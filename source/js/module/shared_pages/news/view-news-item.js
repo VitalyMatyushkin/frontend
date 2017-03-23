@@ -16,10 +16,13 @@ const	React 				= require('react'),
 const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
 		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
 
+const 	TWEET_LENGTH 		= 140,
+		TWEET_LINK_LENGTH 	= 30; //usually it value get from twitter api, but we go to easy way
+
 const ViewNewsItem = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	propTypes: {
-		value: React.PropTypes.object
+		value: React.PropTypes.object.isRequired
 	},
 
 	//Temporarily remove img from news body
@@ -45,7 +48,7 @@ const ViewNewsItem = React.createClass({
 			
 			window.Server.integrations.get({ schoolId : activeSchoolId }).then( integrations => {
 				//we choose only twitter integrations
-				integrations = integrations.filter( integration => {return integration.type === 'twitter'});
+				integrations = integrations.filter( integration => integration.type === 'twitter');
 				if (integrations.length > 0) {
 					binding.atomically()
 						.set('twitterData', 	Immutable.fromJS(integrations))
@@ -57,13 +60,17 @@ const ViewNewsItem = React.createClass({
 			
 			SchoolHelper.loadActiveSchoolInfo(this).then( data => {
 				if (data.publicSite.status === 'PUBLIC_AVAILABLE') {
-					binding.set('domainForTweet', protocol + DomainHelper.getSubDomain(data.domain) + '/#news');
+					binding.set('linkForTweet', protocol + DomainHelper.getSubDomain(data.domain) + '/#news');
 				} else {
-					binding.set('domainForTweet', '');
+					binding.set('linkForTweet', '');
 				}
 				return true;
 			});
 		}
+	},
+	componentWillUnmount: function(){
+		const binding = this.getDefaultBinding();
+		binding.clear();
 	},
 	
 	//We save cursor position in binding, and when component rerender we display right cursor position
@@ -101,14 +108,17 @@ const ViewNewsItem = React.createClass({
 		}
 	},
 	
-	newsItemMoreInfo: function(id){
+	newsItemMoreInfo: function(){
 		const	binding			= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				newsId 			= routingData.id,
 				currentNewsId	= binding.toJS('selectedNewsItem');
 
-		if(currentNewsId == id) {
+		if(currentNewsId === newsId) {
 			binding.set('selectedNewsItem', Immutable.fromJS(''));
 		} else {
-			binding.set('selectedNewsItem', Immutable.fromJS(id));
+			binding.set('selectedNewsItem', Immutable.fromJS(newsId));
 		}
 	},
 	
@@ -116,7 +126,7 @@ const ViewNewsItem = React.createClass({
 	onTwitterButtonClick: function(news){
 		const 	binding 			= this.getDefaultBinding(),
 				textNewsChanged 	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
-				domainSchool 		= textNewsChanged === '' ? binding.toJS('domainForTweet') : '';
+				linkForTweet 		= textNewsChanged === '' ? binding.toJS('linkForTweet') : '';
 
 		let textNews;
 
@@ -126,7 +136,7 @@ const ViewNewsItem = React.createClass({
 			textNews = textNewsChanged;
 		}
 
-		binding.set('textForTweet', textNews + domainSchool);
+		binding.set('textForTweet', textNews + linkForTweet);
 		binding.set('isPopupOpen', true);
 	},
 	
@@ -164,7 +174,7 @@ const ViewNewsItem = React.createClass({
 	},
 	
 	//When field textarea change, we save tweet text, because we want to save the edited text by pressing the tweet button again
-	//When field textarea change, we save cursor position, because Because changing the binding causes the component to rerender and then cursor jump in end of field textarea
+	//When field textarea change, we save cursor position, because changing the binding causes the component to rerender and then cursor jump in end of field textarea
 	onPopupTextareaChange: function(event){
 		const 	binding = this.getDefaultBinding();
 
@@ -177,6 +187,13 @@ const ViewNewsItem = React.createClass({
 		
 		binding.set('twitterId', event.target.value);
 	},
+	
+	getNumberLinksInTweet: function(textForTweet){
+		const count = textForTweet !== '' ? textForTweet.match(/https?:\/\//g) : [];
+		
+		return count.length !== null ? count.length : '';
+	},
+	
 	//If a user has more than one twitter account, we give him the choice of which account to make a tweet
 	renderTwitterAccountChooser: function(){
 		const 	binding			= this.getDefaultBinding(),
@@ -197,13 +214,19 @@ const ViewNewsItem = React.createClass({
 	renderNews: function(news) {
 		const 	binding				= this.getDefaultBinding(),
 				imgStyle 			= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
-				textForTweet 		= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
 				activeSchoolId 		= typeof SchoolHelper.getActiveSchoolId(this) !== 'undefined' ? SchoolHelper.getActiveSchoolId(this) : '',
 				twitterId 			= typeof binding.toJS('twitterId') !== 'undefined' ? binding.toJS('twitterId') : '',
-				isTwitterAccount 	= Boolean(binding.toJS('twitterId'));
+				isTwitterAccount 	= Boolean(binding.toJS('twitterId')),
+				textForTweetFull	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
+				numberLinksInTweet 	= this.getNumberLinksInTweet(textForTweetFull),
+				textForTweetLength 	= textForTweetFull.length + (TWEET_LINK_LENGTH * numberLinksInTweet);
+		
+		if (textForTweetFull === '') {
+			binding.set('textForTweet', textForTweetFull);
+		}
 
 		const stylesTweetLength = classNames({
-			mInvalid: 		textForTweet.length > 140,
+			mInvalid: 		textForTweetLength > TWEET_LENGTH,
 			eTweetLength: 	true
 		});
 		
@@ -246,7 +269,7 @@ const ViewNewsItem = React.createClass({
 										</div>
 									</If>
 									<If condition={ Boolean(news && news.body && news.body.length > 100) }>
-										<span className="eSchoolNews_more" onClick={this.newsItemMoreInfo.bind(this, news.id)}>
+										<span className="eSchoolNews_more" onClick={this.newsItemMoreInfo}>
 											<i className={iconStyle} aria-hidden="true"></i>
 											{linkText}
 										</span>
@@ -258,7 +281,7 @@ const ViewNewsItem = React.createClass({
 				</div>
 				<If condition={Boolean(binding.toJS('isPopupOpen'))}>
 					<ConfirmPopup
-						isOkButtonDisabled			= { textForTweet.length < 1 || textForTweet.length > 140 }
+						isOkButtonDisabled			= { textForTweetLength < 1 || textForTweetLength > TWEET_LENGTH }
 						customStyle 				= { 'ePopup' }
 						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
 						cancelButtonText 			= { 'Cancel' }
@@ -277,12 +300,12 @@ const ViewNewsItem = React.createClass({
 							ref			= "tweetText"
 							name		= "text"
 							className	= "eTextArea"
-							value		= { textForTweet }
+							value		= { textForTweetFull }
 							onChange	= { this.onPopupTextareaChange }
 						>
 						</textarea>
 						<p className = {stylesTweetLength}>
-							{textForTweet.length <= 140 ? textForTweet.length : 140 - textForTweet.length}
+							{TWEET_LENGTH - textForTweetLength}
 						</p>
 					</ConfirmPopup>
 				</If>
@@ -291,9 +314,7 @@ const ViewNewsItem = React.createClass({
 	},
 	
 	render: function() {
-		const	self	= this;
-
-		return self.renderNews(self.props.value) || null;
+		return this.renderNews(this.props.value);
 	}
 });
 
