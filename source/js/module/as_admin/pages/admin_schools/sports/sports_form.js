@@ -1,7 +1,7 @@
 const   Form            = require('module/ui/form/form'),
         FormField       = require('module/ui/form/form_field'),
         FormColumn      = require('module/ui/form/form_column'),
-        FormPlaceholder = require('module/ui/form/form_placeholder'),
+        FormBlock       = require('module/ui/form/form_block'),
         classNames      = require('classnames'),
         SportsHelpers   = require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
         SVG             = require('module/ui/svg'),
@@ -468,7 +468,7 @@ const SportsForm = React.createClass({
                             </FormField>
 
                             <div className="eForm_fieldName">Limits</div>
-                            <FormPlaceholder>
+                            <FormBlock>
                                 <FormField type="text"
                                            field="minPlayers"
                                     >
@@ -489,10 +489,10 @@ const SportsForm = React.createClass({
                                     >
                                     Maximum substitutions
                                 </FormField>
-                            </FormPlaceholder>
+                            </FormBlock>
 
                             <div className="eForm_fieldName">Genders</div>
-                            <FormPlaceholder>
+                            <FormBlock>
                                 <FormField type="checkbox"
                                            field="genders.maleOnly"
                                     >
@@ -508,10 +508,10 @@ const SportsForm = React.createClass({
                                     >
                                     Mixed
                                 </FormField>
-                            </FormPlaceholder>
+                            </FormBlock>
 
                             <div className="eForm_fieldName">Points</div>
-                            <FormPlaceholder>
+                            <FormBlock>
                                 <FormField type="text"
                                            field="pointsName"
                                            validation="required"
@@ -543,7 +543,7 @@ const SportsForm = React.createClass({
                                     >
                                     Points input mask
                                 </FormField>
-                            </FormPlaceholder>
+                            </FormBlock>
 
                             <div className="eForm_fieldName mMarginTop">Game Field Picture</div>
                             <FormField labelText="Upload Game Field Picture" type="imageFile" field="fieldPic"/>

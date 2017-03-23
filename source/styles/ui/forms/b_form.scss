@@ -118,6 +118,10 @@ select {
   background-color: #e1e1e1;
   margin-top:       5px;
   margin-bottom:    5px;
+
+  &.mInvisible {
+    display: none;
+  }
 }
 
 .eForm_fieldSet textarea{
@@ -163,6 +167,9 @@ select {
     align-items: flex-start;
 
     max-width: 190px;
+  }
+  &.mInvisible {
+    display: none;
   }
   p{
     font-size: 12px;
@@ -237,7 +244,7 @@ select {
   width: 100%;
   justify-content: flex-end;
   box-sizing: border-box;
-  padding: 0 0 15px 0;
+  padding: 20px 15px 20px 0;
 }
 
 .eForm_atCenter{
