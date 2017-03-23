@@ -192,7 +192,7 @@ const ViewNewsItem = React.createClass({
 	getNumberLinksInTweet: function(textForTweet){
 		const count = textForTweet !== '' ? textForTweet.match(/https?:\/\//g) : [];
 		
-		return count.length !== null ? count.length : 0;
+		return typeof count !== 'undefined' && count !== null ? count.length : 0;
 	},
 	/**
 	 * Function return length of tweet without links
