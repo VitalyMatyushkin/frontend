@@ -108,11 +108,8 @@ const ViewNewsItem = React.createClass({
 		}
 	},
 	
-	newsItemMoreInfo: function(){
+	newsItemMoreInfo: function(newsId){
 		const	binding			= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding(),
-				routingData 	= globalBinding.sub('routing.parameters').toJS(),
-				newsId 			= routingData.id,
 				currentNewsId	= binding.toJS('selectedNewsItem');
 
 		if(currentNewsId === newsId) {
@@ -304,7 +301,7 @@ const ViewNewsItem = React.createClass({
 										</div>
 									</If>
 									<If condition={ Boolean(news && news.body && news.body.length > 100) }>
-										<span className="eSchoolNews_more" onClick={this.newsItemMoreInfo}>
+										<span className="eSchoolNews_more" onClick={() => {this.newsItemMoreInfo(news.id)}}>
 											<i className={iconStyle} aria-hidden="true"></i>
 											{linkText}
 										</span>
