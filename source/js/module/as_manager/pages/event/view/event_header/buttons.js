@@ -42,7 +42,7 @@ const Buttons = React.createClass({
 		}
 
 		if(this.isChangeScoreEventActionAvailable()) {
-			actionList.push({id:'change', text:'Change Score'});
+			actionList.push({id:'change', text:'Update Scores'});
 		}
 
 		if(this.isCancelEventActionAvailable()) {
