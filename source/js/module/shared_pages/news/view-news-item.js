@@ -187,11 +187,46 @@ const ViewNewsItem = React.createClass({
 		
 		binding.set('twitterId', event.target.value);
 	},
-	
+	/**
+	 * Function return count links from text for tweet
+	 * @param {string} - text for tweet
+	 * @returns {number} - count links
+	 */
 	getNumberLinksInTweet: function(textForTweet){
 		const count = textForTweet !== '' ? textForTweet.match(/https?:\/\//g) : [];
 		
-		return count.length !== null ? count.length : '';
+		return count.length !== null ? count.length : 0;
+	},
+	/**
+	 * Function return length of tweet without links
+	 * @param {string} - text for tweet
+	 * @param {number} - count links
+	 * @return {number} - length of tweet without links
+	 */
+	getTextWithoutLinkLength: function(textForTweet, numberLinksInTweet){
+
+		for (let i = 0; i < numberLinksInTweet; i++) {
+			let startPos, endPos, startStr, endStr;
+			if (i === numberLinksInTweet - 1) {
+				startPos = textForTweet.match(/https?:\/\//).index;
+				endPos = textForTweet.indexOf(' ', startPos);
+				if (endPos === -1) {
+					textForTweet = textForTweet.substring(0, startPos);
+				} else {
+					startStr = textForTweet.substring(0, startPos - 1);
+					endStr = textForTweet.substring(endPos + 1);
+					textForTweet = startStr + endStr;
+				}
+			} else {
+				startPos = textForTweet.match(/https?:\/\//).index;
+				endPos = textForTweet.indexOf(' ', startPos);
+				startStr = textForTweet.substring(0, startPos - 1);
+				endStr = textForTweet.substring(endPos + 1);
+				textForTweet = startStr + endStr;
+			}
+		}
+
+		return textForTweet.length;
 	},
 	
 	//If a user has more than one twitter account, we give him the choice of which account to make a tweet
@@ -219,8 +254,8 @@ const ViewNewsItem = React.createClass({
 				isTwitterAccount 	= Boolean(binding.toJS('twitterId')),
 				textForTweetFull	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
 				numberLinksInTweet 	= this.getNumberLinksInTweet(textForTweetFull),
-				textForTweetLength 	= textForTweetFull.length + (TWEET_LINK_LENGTH * numberLinksInTweet);
-		
+				textForTweetLength 	= numberLinksInTweet > 0 ? this.getTextWithoutLinkLength(textForTweetFull, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweetFull.length;
+
 		if (textForTweetFull === '') {
 			binding.set('textForTweet', textForTweetFull);
 		}
