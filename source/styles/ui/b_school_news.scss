@@ -8,7 +8,7 @@
 
 .eSchoolNewsContainer_title {
   width: 100%;
-  padding: 35px 0;
+  padding: 35px 0 20px 0;
 
   text-align: center;
 
@@ -21,7 +21,8 @@
   display: flex;
   flex-flow: row wrap;
 
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  margin-top: 15px;
 
   background: #fff;
   border: $mainBorder;
