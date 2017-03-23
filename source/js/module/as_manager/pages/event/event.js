@@ -2,6 +2,8 @@ const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
 		Lazy						= require('lazy.js'),
+		classNames						= require('classnames'),
+		Promise 						= require('bluebird');
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
