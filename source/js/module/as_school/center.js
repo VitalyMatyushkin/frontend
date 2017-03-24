@@ -5,6 +5,7 @@ const	Morearty				= require('morearty'),
 		PublicLogin				= require('module/ui/menu/public_login'),
 		HomeComponent			= require("module/as_school/pages/school_home/home"),
 		EventPageComponent		= require("./pages/event/public_event_page"),
+		NewsPageComponent		= require("./pages/news/public_news"),
 		LoginPublicSchoolPage	= require("./../as_school/pages/school_home/login_public_school_page"),
 		Page404					= require("./../ui/404_page"),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
@@ -33,14 +34,19 @@ const Center = React.createClass({
 								binding		= {binding.sub('schoolEvent')}
 								component	= {EventPageComponent}
 						/>
+						
+						<Route	path		= "/news_view /news_view/:newsId"
+								binding		= {binding.sub('schoolHomePage')}
+								component	= {NewsPageComponent}
+						/>
 
-						<Route path			= "/ /loginPublicSchool"
-							   binding		= {binding.sub('loginPublicSchool')}
-							   component	= {LoginPublicSchoolPage}/>
+						<Route 	path		= "/ /loginPublicSchool"
+								binding		= {binding.sub('loginPublicSchool')}
+							 	component	= {LoginPublicSchoolPage}/>
 
-						<Route path			= "/ /404"
-							   binding		= { binding }
-							   component	= { Page404 }/>
+						<Route 	path		= "/ /404"
+								binding		= { binding }
+								component	= { Page404 }/>
 					</RouterView>
 				</div>
 				<NotificationAlert binding={binding.sub('notificationAlertData')} />

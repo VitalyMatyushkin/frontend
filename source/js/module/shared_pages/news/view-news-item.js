@@ -110,7 +110,7 @@ const ViewNewsItem = React.createClass({
 		}
 	},
 	
-	newsItemMoreInfo: function(newsId){
+	newsItemMoreInfo: function(newsId, event){
 		const	binding			= this.getDefaultBinding(),
 				currentNewsId	= binding.toJS('selectedNewsItem');
 
@@ -119,6 +119,7 @@ const ViewNewsItem = React.createClass({
 		} else {
 			binding.set('selectedNewsItem', Immutable.fromJS(newsId));
 		}
+		event.stopPropagation();
 	},
 	
 	//When the user clicks on the "Tweet" button, we get the news text, then open the popup window
@@ -204,6 +205,12 @@ const ViewNewsItem = React.createClass({
 		});
 	},
 	
+	onNewsItemClick: function(activeSchoolId, newsId){
+		if (activeSchoolId === '') {
+			document.location.hash = 'news_view/' + newsId;
+		}
+	},
+	
 	renderNews: function(news) {
 		const 	binding				= this.getDefaultBinding(),
 				imgStyle 			= news.picUrl ? {backgroundImage: 'url(' + news.picUrl + ')'} : {display: 'none'},
@@ -239,7 +246,7 @@ const ViewNewsItem = React.createClass({
 				<div className="eSchoolNewsItem_container">
 					<div className="eSchoolNewsItem_row">
 						<div className="eSchoolNewsItem_col_medium_10">
-							<div className="eSchoolNewsItem">
+							<div className="eSchoolNewsItem" onClick={() => {this.onNewsItemClick(activeSchoolId, news.id)}}>
 								<div className="eSchoolNewsImage" style={imgStyle}>
 								</div>
 								<div className="eSchoolNewsItemDescription">
@@ -262,7 +269,7 @@ const ViewNewsItem = React.createClass({
 										</div>
 									</If>
 									<If condition={ Boolean(news && news.body && news.body.length > 100) }>
-										<span className="eSchoolNews_more" onClick={() => {this.newsItemMoreInfo(news.id)}}>
+										<span className="eSchoolNews_more" onClick={ event => {this.newsItemMoreInfo(news.id, event)} }>
 											<i className={iconStyle} aria-hidden="true"></i>
 											{linkText}
 										</span>
