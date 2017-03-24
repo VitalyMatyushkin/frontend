@@ -1,4 +1,3 @@
-// @flow
 /**
  * Created by Woland on 21.03.2017.
  */
@@ -8,7 +7,10 @@ const	React 				= require('react'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 
-const TWEET_LENGTH_WITHOUT_LINK = 110;
+const 	TwitterHelper 		= require('module/helpers/twitter_helper');
+
+const 	TWEET_LENGTH 		= 140,
+		TWEET_LINK_LENGTH 	= 30; //usually it value get from twitter api, but we go to easy way
 
 const TweetButton = React.createClass({
 	propTypes: {
@@ -88,13 +90,12 @@ const TweetButton = React.createClass({
 	},
 	
 	render: function(){
-		const 	textForTweet = this.state.textForTweet,
-				startLinkPos = textForTweet.indexOf(' http'),
-				endLinkPos = textForTweet.indexOf(' ', startLinkPos + 1),
-				textWithoutLink = startLinkPos !== - 1 ? textForTweet.substring(startLinkPos + 1, endLinkPos + 1) : textForTweet;
+		const 	textForTweet 		= this.state.textForTweet,
+				numberLinksInTweet 	= TwitterHelper.getNumberLinksInTweet(textForTweet),
+				textForTweetLength 	= numberLinksInTweet > 0 ? TwitterHelper.getTextWithoutLinkLength(textForTweet, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweet.length;
 
 		const stylesTweetLength = classNames({
-			mInvalid: 		textWithoutLink.length > TWEET_LENGTH_WITHOUT_LINK,
+			mInvalid: 		textForTweetLength > TWEET_LENGTH,
 			eTweetLength: 	true
 		});
 		
@@ -109,7 +110,7 @@ const TweetButton = React.createClass({
 				</If>
 				<If condition={this.state.isPopupOpen}>
 					<ConfirmPopup
-						isOkButtonDisabled			= { textWithoutLink.length < 1 || textWithoutLink.length > 110 /*|| !isTwitterAccountSet*/ }
+						isOkButtonDisabled			= { textForTweetLength < 1 || textForTweetLength > TWEET_LENGTH }
 						customStyle 				= { 'ePopup' }
 						okButtonText 				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Tweet"] }
 						cancelButtonText 			= { 'Cancel' }
@@ -132,7 +133,7 @@ const TweetButton = React.createClass({
 						>
 						</textarea>
 						<p className = {stylesTweetLength}>
-							{ TWEET_LENGTH_WITHOUT_LINK - textWithoutLink.length }
+							{ TWEET_LENGTH - textForTweetLength }
 						</p>
 					</ConfirmPopup>
 				</If>
