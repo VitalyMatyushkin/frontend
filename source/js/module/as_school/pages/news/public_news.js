@@ -5,7 +5,8 @@ const 	React 				= require('react'),
 		Immutable 			= require('immutable'),
 		Morearty			= require('morearty');
 
-const 	NewsItem 			= require('module/shared_pages/news/view-news-item');
+const 	NewsItem 			= require('module/shared_pages/news/view-news-item'),
+		Button 				= require('module/ui/button/button');
 
 const 	SchoolNewsItemStyle 	= require('styles/pages/public_news/b_public_school_news.scss');
 
@@ -32,6 +33,10 @@ const NewsPageComponent = React.createClass({
 		}
 	},
 	
+	handleClickHome: function() {
+		document.location.hash = 'home';
+	},
+	
 	render: function(){
 		const 	binding	= this.getDefaultBinding(),
 				isSync 	= Boolean(binding.toJS('isSync'));
@@ -41,6 +46,14 @@ const NewsPageComponent = React.createClass({
 			
 			return (
 				<div className="bPublicSchoolNewsItem">
+					<div className="eButtonHome">
+						<Button
+							onClick 			= { this.handleClickHome }
+							extraStyleClasses 	= "mCancel"
+							text 				= {"Home"}
+						>
+						</Button>
+					</div>
 					<NewsItem value={news} binding={binding.sub('viewItem')} />
 				</div>
 			)
