@@ -155,6 +155,13 @@ select {
 
     max-width: 190px;
   }
+  &.mWideSingleLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    width: 90%;
+  }
   &.mInvisible {
     display: none;
   }
