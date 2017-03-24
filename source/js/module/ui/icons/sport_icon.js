@@ -188,6 +188,34 @@ const SportIcon = React.createClass({
 			case 	sport === 'cross-country running':
 				icon = "cross-country";
 				break;
+			case 	sport === 'canoeing (individual)':
+				icon = "canoening";
+				break;
+			case 	sport === 'canoeing (team)':
+				icon = "canoening_2";
+				break;
+			case 	sport === 'boccia (1x1)':
+				icon = "boccia_1x1";
+				break;
+			case 	sport === 'boccia (2x2)':
+				icon = "boccia_2x2";
+				break;
+			case 	sport === 'boccia (boccia_team)':
+				icon = "boccia_team";
+				break;
+			case 	sport === 'stoolball':
+				icon = "stoolball";
+				break;
+			case 	sport === 'cricket t20':
+				icon = "cricket_2";
+				break;
+			case 	sport === 'golf sixes (individual)' ||
+					sport === 'golf sixes (team)':
+				icon = "golf_sixes";
+				break;
+			case 	sport === 'new age kurling':
+				icon = "curling_newage";
+				break;
 			default:
 				icon = sport;
 				break;
