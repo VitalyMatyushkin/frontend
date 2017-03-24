@@ -8,10 +8,12 @@ const	React 				= require('react'),
 		Button				= require('module/ui/button/button'),
 		If					= require('module/ui/if/if'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
-		SchoolHelper 		= require('module/helpers/school_helper'),
+		classNames 			= require('classnames');
+
+const 	SchoolHelper 		= require('module/helpers/school_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		RoleHelper 			= require('module/helpers/role_helper'),
-		classNames 			= require('classnames');
+		TwitterHelper 		= require('module/helpers/twitter_helper');
 
 const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
 		Bootstrap		= require('./../../../../styles/bootstrap-custom.scss');
@@ -184,47 +186,6 @@ const ViewNewsItem = React.createClass({
 		
 		binding.set('twitterId', event.target.value);
 	},
-	/**
-	 * Function return count links from text for tweet
-	 * @param {string} - text for tweet
-	 * @returns {number} - count links
-	 */
-	getNumberLinksInTweet: function(textForTweet){
-		const count = textForTweet !== '' ? textForTweet.match(/https?:\/\//g) : [];
-		
-		return typeof count !== 'undefined' && count !== null ? count.length : 0;
-	},
-	/**
-	 * Function return length of tweet without links
-	 * @param {string} - text for tweet
-	 * @param {number} - count links
-	 * @return {number} - length of tweet without links
-	 */
-	getTextWithoutLinkLength: function(textForTweet, numberLinksInTweet){
-
-		for (let i = 0; i < numberLinksInTweet; i++) {
-			let startPos, endPos, startStr, endStr;
-			if (i === numberLinksInTweet - 1) {
-				startPos = textForTweet.match(/https?:\/\//).index;
-				endPos = textForTweet.indexOf(' ', startPos);
-				if (endPos === -1) {
-					textForTweet = textForTweet.substring(0, startPos);
-				} else {
-					startStr = textForTweet.substring(0, startPos - 1);
-					endStr = textForTweet.substring(endPos + 1);
-					textForTweet = startStr + endStr;
-				}
-			} else {
-				startPos = textForTweet.match(/https?:\/\//).index;
-				endPos = textForTweet.indexOf(' ', startPos);
-				startStr = textForTweet.substring(0, startPos - 1);
-				endStr = textForTweet.substring(endPos + 1);
-				textForTweet = startStr + endStr;
-			}
-		}
-
-		return textForTweet.length;
-	},
 	
 	//If a user has more than one twitter account, we give him the choice of which account to make a tweet
 	renderTwitterAccountChooser: function(){
@@ -250,8 +211,8 @@ const ViewNewsItem = React.createClass({
 				twitterId 			= typeof binding.toJS('twitterId') !== 'undefined' ? binding.toJS('twitterId') : '',
 				isTwitterAccount 	= Boolean(binding.toJS('twitterId')),
 				textForTweetFull	= typeof binding.toJS('textForTweet') !== 'undefined' ? binding.toJS('textForTweet') : '',
-				numberLinksInTweet 	= this.getNumberLinksInTweet(textForTweetFull),
-				textForTweetLength 	= numberLinksInTweet > 0 ? this.getTextWithoutLinkLength(textForTweetFull, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweetFull.length;
+				numberLinksInTweet 	= TwitterHelper.getNumberLinksInTweet(textForTweetFull),
+				textForTweetLength 	= numberLinksInTweet > 0 ? TwitterHelper.getTextWithoutLinkLength(textForTweetFull, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweetFull.length;
 
 		if (textForTweetFull === '') {
 			binding.set('textForTweet', textForTweetFull);

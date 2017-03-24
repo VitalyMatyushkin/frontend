@@ -7,6 +7,8 @@ const	React 				= require('react'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 
+const 	TwitterHelper 		= require('module/helpers/twitter_helper');
+
 const 	TWEET_LENGTH 		= 140,
 		TWEET_LINK_LENGTH 	= 30; //usually it value get from twitter api, but we go to easy way
 
@@ -87,52 +89,10 @@ const TweetButton = React.createClass({
 		});
 	},
 	
-	/**
-	 * Function return count links from text for tweet
-	 * @param {string} - text for tweet
-	 * @returns {number} - count links
-	 */
-	getNumberLinksInTweet: function(textForTweet){
-		const count = textForTweet !== '' ? textForTweet.match(/https?:\/\//g) : [];
-		
-		return typeof count !== 'undefined' && count !== null ? count.length : 0;
-	},
-	/**
-	 * Function return length of tweet without links
-	 * @param {string} - text for tweet
-	 * @param {number} - count links
-	 * @return {number} - length of tweet without links
-	 */
-	getTextWithoutLinkLength: function(textForTweet, numberLinksInTweet){
-		
-		for (let i = 0; i < numberLinksInTweet; i++) {
-			let startPos, endPos, startStr, endStr;
-			if (i === numberLinksInTweet - 1) {
-				startPos = textForTweet.match(/https?:\/\//).index;
-				endPos = textForTweet.indexOf(' ', startPos);
-				if (endPos === -1) {
-					textForTweet = textForTweet.substring(0, startPos);
-				} else {
-					startStr = textForTweet.substring(0, startPos - 1);
-					endStr = textForTweet.substring(endPos + 1);
-					textForTweet = startStr + endStr;
-				}
-			} else {
-				startPos = textForTweet.match(/https?:\/\//).index;
-				endPos = textForTweet.indexOf(' ', startPos);
-				startStr = textForTweet.substring(0, startPos - 1);
-				endStr = textForTweet.substring(endPos + 1);
-				textForTweet = startStr + endStr;
-			}
-		}
-		
-		return textForTweet.length;
-	},
-	
 	render: function(){
 		const 	textForTweet 		= this.state.textForTweet,
-				numberLinksInTweet 	= this.getNumberLinksInTweet(textForTweet),
-				textForTweetLength 	= numberLinksInTweet > 0 ? this.getTextWithoutLinkLength(textForTweet, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweet.length;
+				numberLinksInTweet 	= TwitterHelper.getNumberLinksInTweet(textForTweet),
+				textForTweetLength 	= numberLinksInTweet > 0 ? TwitterHelper.getTextWithoutLinkLength(textForTweet, numberLinksInTweet) + (TWEET_LINK_LENGTH * numberLinksInTweet) : textForTweet.length;
 
 		const stylesTweetLength = classNames({
 			mInvalid: 		textForTweetLength > TWEET_LENGTH,
