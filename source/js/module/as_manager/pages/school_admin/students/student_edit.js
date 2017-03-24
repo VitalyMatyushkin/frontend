@@ -1,109 +1,127 @@
-const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/student_form'),
-		React 			= require('react'),
-		Immutable 		= require('immutable'),
-		Morearty		= require('morearty'),
-		Promise			= require('bluebird');
+const 	React 				= require('react'),
+		Immutable 			= require('immutable'),
+		Morearty			= require('morearty'),
+		Promise				= require('bluebird'),
+		StudentsFormHelper	= require('./students_form_helper'),
+		StudentForm 		= require('module/as_manager/pages/school_admin/students/student_form');
 
 /** Page to edit student details */
 const StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId'),
-				routingData 	= globalBinding.sub('routing.parameters').toJS(),
-				studentId 		= routingData.id;
-
-		self.activeSchoolId = activeSchoolId;
-		binding.clear();
+		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				studentId 		= this.getStudentIdFromUrl();
 
 		// loading student data
-		if(activeSchoolId && studentId) {
-			window.Server.schoolStudent.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
-				const 	formPromise		= studentUser.formId ? window.Server.schoolForm.get({schoolId: activeSchoolId, formId: studentUser.formId}) : Promise.resolve(undefined),
-						housePromise	= studentUser.houseId ? window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId}) : Promise.resolve(undefined);
+		if(
+			typeof activeSchoolId !== 'undefined' &&
+			typeof studentId !== 'undefined'
+		) {
+			this.activeSchoolId = activeSchoolId;
+			this.studentId = studentId;
+
+			this.setStudentData();
+		}
+	},
+	getStudentIdFromUrl: function() {
+		return this.getMoreartyContext().getBinding().sub('routing.parameters').toJS().id;
+	},
+	setStudentData: function() {
+		const	binding		= this.getDefaultBinding(),
+				studentId	= this.getStudentIdFromUrl();
+
+		let student;
+
+		window.Server.schoolStudent.get(
+				{
+					schoolId:	this.activeSchoolId,
+					studentId:	studentId
+				}
+			)
+			.then(_student => {
+				student = _student;
+
+				const formPromise = (
+						student.formId ?
+							window.Server.schoolForm.get(
+								{
+									schoolId:	this.activeSchoolId,
+									formId:		student.formId
+								}
+							):
+							Promise.resolve(undefined)
+					),
+					housePromise = (
+						student.houseId ?
+							window.Server.schoolHouse.get(
+								{
+									schoolId:	this.activeSchoolId,
+									houseId:	student.houseId
+								}
+							):
+							Promise.resolve(undefined)
+					);
 
 				return Promise.all([
 					formPromise,
 					housePromise
-				]).then( formAndHouseArray => {
-					// TODO: populate house and form details
-					studentUser.form 	= formAndHouseArray[0];
-					studentUser.house 	= formAndHouseArray[1];
-					self.initNextOfKin(studentUser);
-					binding.set(Immutable.fromJS(studentUser));
-					return studentUser;
-				});
+				]);
+			})
+			.then(formAndHouseArray => {
+				// TODO: populate house and form details
+				student.form 	= formAndHouseArray[0];
+				student.house 	= formAndHouseArray[1];
+				StudentsFormHelper.convertNextOfKinToClientFormat(student);
 
-			}).catch( err => {
-				window.simpleAlert(
-					`${err.errorThrown} server error occurred while getting student data`,
-					'Ok',
-					() => {}
-				);
+				binding.atomically()
+					.set('isSync', true)
+					.set(
+						'countNextOfKinBlocks',
+						Immutable.fromJS(
+							StudentsFormHelper.getInitValueNextOfKinCount(student)
+						)
+					)
+					.set(
+						'formData',
+						Immutable.fromJS(student)
+					)
+					.commit();
+
+				return true;
 			});
-
-			self.activeSchoolId = activeSchoolId;
-			self.studentId = studentId;
-		}
-	},
-	initNextOfKin:function(student){
-		const nok = student.nextOfKin;
-
-		if(nok && !nok.length){
-			nok.push({
-				relationship:   '',
-				firstName:      '',
-				lastName:       '',
-				phone:          '',
-				email:          ''
-			});
-		}
-
-		for(let key in nok[0]){
-			student['nok_'+key] = nok[0][key];
-		}
-	},
-	saveNextOfKin:function(student){
-		const 	self 	= this,
-				binding = self.getDefaultBinding(),
-				nok 	= binding.toJS('nextOfKin');
-
-		for(let key in nok[0]){
-			nok[0][key] = student['nok_'+key];
-		}
-		student.nextOfKin = nok;
 	},
 	submitEdit: function(data) {
-		const 	self = this,
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
+		const	binding					= this.getDefaultBinding(),
+				globalBinding			= this.getMoreartyContext().getBinding(),
+				activeSchoolId			= globalBinding.get('userRules.activeSchoolId'),
+				countNextOfKinBlocks	= binding.toJS('countNextOfKinBlocks');
 
-		self.saveNextOfKin(data);
-		window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
-			self.isMounted() && (document.location.hash = 'school_admin/students');
-			return;
-		});
-
+		StudentsFormHelper.convertNextOfKinToServerFormat(countNextOfKinBlocks, data);
+		return window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: this.studentId}, data)
+			.then(() => {
+				document.location.hash = 'school_admin/students';
+				return true;
+			});
 	},
-
 	render: function() {
-		const 	self 				= this,
-				binding 			= self.getDefaultBinding(),
-				initialForm 		= binding.toJS('form'),
-				initialHouse		= binding.toJS('house');
+		const	binding			= this.getDefaultBinding(),
+				initialForm		= binding.toJS('formData.form'),
+				initialHouse	= binding.toJS('formData.house');
 
-		return (
-			<StudentForm
-				title				= "Student"
-				initialForm			= {initialForm}
-				initialHouse		= {initialHouse}
-				onFormSubmit		= {self.submitEdit}
-				schoolId			= {self.activeSchoolId}
-				binding				= {binding}
-			/>
-		)
+		if(binding.toJS('isSync')) {
+			return (
+				<StudentForm
+					title				= "Student"
+					initialForm			= {initialForm}
+					initialHouse		= {initialHouse}
+					onFormSubmit		= {this.submitEdit}
+					schoolId			= {this.activeSchoolId}
+					binding				= {binding}
+				/>
+			)
+		} else {
+			return null;
+		}
 	}
 });
 

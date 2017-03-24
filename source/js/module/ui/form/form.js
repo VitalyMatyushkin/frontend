@@ -74,7 +74,7 @@ const Form = React.createClass({
 
 		function processChildren(parent) {
 			React.Children.forEach(parent.props.children, function (child) {
-				if (child.props.type === 'column') { // but we need to go deeper..
+				if (child.props.type === 'column' || child.props.type === 'block') { // but we need to go deeper..
 					processChildren(child); // processing all current child children
 				}
 				if (child.props.field) {
@@ -235,7 +235,7 @@ const Form = React.createClass({
 		 */
 		function processChildren(parent) {
 			return React.Children.map(parent.props.children, function (child) {
-				if (child.props.type === 'column' || child.props.type === 'placeholder') { // but we need to go deeper..
+				if (child.props.type === 'column' || child.props.type === 'block') { // but we need to go deeper..
 					var nestedChildren = processChildren(child); // processing all current child children
 					return React.cloneElement(
 						child,
@@ -245,7 +245,7 @@ const Form = React.createClass({
 						},
 						nestedChildren                            // and setting them back to clone.
 					);
-				} else if(child.props.type === 'title' || child.props.type === 'manager') {
+				} else if(child.props.type === 'simpleElement') {
 					return React.cloneElement(child);
 				} else {
 					return React.cloneElement(child, {

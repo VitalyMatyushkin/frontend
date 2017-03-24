@@ -1,17 +1,18 @@
-const 	Form				= require('module/ui/form/form'),
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
+		Promise 			= require('bluebird'),
+		Form				= require('module/ui/form/form'),
 		FormField			= require('module/ui/form/form_field'),
 		FormColumn			= require('module/ui/form/form_column'),
-		FormBlock			= require('module/ui/form/form_block'),
+		FormBlock			= require('module/ui/form/form_block/form_block'),
 		FormElementManager	= require('module/ui/form/form_element_manager'),
 		FormTitle			= require('module/ui/form/form_title'),
-		Promise 			= require('bluebird'),
-		Morearty			= require('morearty'),
-		React 				= require('react');
+		StudentsFormHelper	= require('./students_form_helper');
 
 /** Tiny student-related Form wrapper */
 const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
-	MAX_COUNT_NEXT_KIN_BLOCK: 5,
 	propTypes: {
 		schoolId: 		React.PropTypes.string.isRequired,
 		title: 			React.PropTypes.string.isRequired,
@@ -20,10 +21,17 @@ const StudentForm = React.createClass({
 		initialHouse: 	React.PropTypes.object
 	},
 	componentWillMount: function() {
+		this.initCountNextOfKinBlocks();
+	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().sub('formData').clear();
+	},
+	initCountNextOfKinBlocks: function() {
 		const binding = this.getDefaultBinding();
 
-		//TODO set right count of nextOfKin
-		binding.set('countNextOfKinBlocks', 1);
+		if(typeof binding.toJS('countNextOfKinBlocks') === 'undefined') {
+			binding.set('countNextOfKinBlocks', StudentsFormHelper.DEF_COUNT_NEXT_KIN_BLOCK);
+		}
 	},
 	getClassService: function () {
 		const self = this;
@@ -73,38 +81,67 @@ const StudentForm = React.createClass({
 
 		return Promise.resolve(gendersArray);
 	},
-	addNextOfKinItem: function() {
+	clearNextOfKinByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		const fieldData = {
+			active:	true,
+			error:	false,
+			value:	''
+		};
+
+		binding.meta()
+			.atomically()
+			.set(`nok_${index}_email`,			Immutable.fromJS(fieldData))
+			.set(`nok_${index}_firstName`,		Immutable.fromJS(fieldData))
+			.set(`nok_${index}_lastName`,		Immutable.fromJS(fieldData))
+			.set(`nok_${index}_phone`,			Immutable.fromJS(fieldData))
+			.set(`nok_${index}_relationship`,	Immutable.fromJS(fieldData))
+			.commit();
+
+		this.forceUpdate();
+	},
+	onClickAddNextOfKinItem: function() {
 		const	binding					= this.getDefaultBinding(),
 				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
 
 		binding.set('countNextOfKinBlocks', countNextOfKinBlocks + 1);
 	},
+	onClickRemoveNextOfKinBlock: function(index) {
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
+
+		binding.set('countNextOfKinBlocks', countNextOfKinBlocks - 1);
+
+		this.clearNextOfKinByIndex(index);
+	},
 	renderNextOfKin: function(index) {
 		const	binding					= this.getDefaultBinding(),
 				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
 
-		const	isVisible				= index <= countNextOfKinBlocks;
+		const	isVisible				= index < countNextOfKinBlocks;
 
 		return (
-			<FormBlock isVisible={ isVisible }>
+			<FormBlock
+				isVisible			= { isVisible }
+				isShowCloseButton	= { index !== 0 }
+				onClickClose		= { this.onClickRemoveNextOfKinBlock.bind(this, index) }
+			>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_relationship` }
-					isVisible	= { isVisible }
 				>
 					Relationship
 				</FormField>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_firstName` }
-					isVisible	= { isVisible }
 				>
 					Name
 				</FormField>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_lastName` }
-					isVisible	= { isVisible }
 				>
 					Surname
 				</FormField>
@@ -112,7 +149,6 @@ const StudentForm = React.createClass({
 					type		='phone'
 					field		={`nok_${index}_phone`}
 					validation	='phone'
-					isVisible	= { isVisible }
 				>
 					Phone
 				</FormField>
@@ -120,7 +156,6 @@ const StudentForm = React.createClass({
 					type		= 'text'
 					field		= { `nok_${index}_email` }
 					validation	= 'email'
-					isVisible	= { isVisible }
 				>
 					Email
 				</FormField>
@@ -133,7 +168,7 @@ const StudentForm = React.createClass({
 
 		const nextOfKins = [];
 
-		for(let i = 1; i <= this.MAX_COUNT_NEXT_KIN_BLOCK; i++) {
+		for(let i = 0; i < StudentsFormHelper.MAX_COUNT_NEXT_KIN_BLOCK; i++) {
 			nextOfKins.push(
 				this.renderNextOfKin(i)
 			);
@@ -148,7 +183,7 @@ const StudentForm = React.createClass({
 				{ nextOfKins }
 				<FormElementManager
 					text	= { 'Add new "Next of kin" item' }
-					onClick	= { this.addNextOfKinItem }
+					onClick	= { this.onClickAddNextOfKinItem }
 				/>
 			</FormColumn>
 		);
@@ -156,12 +191,14 @@ const StudentForm = React.createClass({
 	render: function () {
 		const binding = this.getDefaultBinding();
 
+		console.log(binding.sub('formData').meta().toJS());
+
 		return (
 			<div className='eStudentForm container'>
 				<Form
 					formStyleClass	= 'row'
 					onSubmit		= { this.props.onFormSubmit }
-					binding			= { binding }
+					binding			= { binding.sub('formData') }
 					submitOnEnter	= { false }
 				>
 					<FormColumn

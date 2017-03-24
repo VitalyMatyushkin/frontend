@@ -1,7 +1,7 @@
 const   Form            = require('module/ui/form/form'),
         FormField       = require('module/ui/form/form_field'),
         FormColumn      = require('module/ui/form/form_column'),
-        FormBlock       = require('module/ui/form/form_block'),
+        FormBlock       = require('module/ui/form/form_block/form_block'),
         classNames      = require('classnames'),
         SportsHelpers   = require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
         SVG             = require('module/ui/svg'),

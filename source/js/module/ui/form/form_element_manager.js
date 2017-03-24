@@ -11,7 +11,7 @@ const FormElementManager = React.createClass({
 	},
 	getDefaultProps: function () {
 		return {
-			type:		'manager',
+			type:		'simpleElement',
 			isVisible:	true
 		};
 	},

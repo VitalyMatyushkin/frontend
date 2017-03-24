@@ -8,7 +8,7 @@ const FormTitle = React.createClass({
 	},
 	getDefaultProps: function () {
 		return {
-			type: 'title'
+			type: 'simpleElement'
 		};
 	},
 	render: function () {
