@@ -129,8 +129,8 @@ const ViewNewsItem = React.createClass({
 
 		let textNews;
 
-		if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.body !== 'undefined') {
-			textNews = news.body + ' ';
+		if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.title !== 'undefined') {
+			textNews = news.title + ' ';
 		} else {
 			textNews = textNewsChanged;
 		}
