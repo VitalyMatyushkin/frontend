@@ -101,6 +101,10 @@
 	height: auto;
 	font-size: 14px;
 	margin-left: 10px;
+	&:hover{
+	  color: $blueColor;
+	  background-color: #ffffff;
+	}
   }
   .eTextArea{
 	resize: none;
