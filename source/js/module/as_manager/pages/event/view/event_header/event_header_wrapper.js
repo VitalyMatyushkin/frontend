@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Woland on 10.01.2017.
  */
@@ -20,6 +21,13 @@ const EventHeaderWrapper = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
 
+	handleClickDownloadPdf: function() {
+		const 	binding		= this.getDefaultBinding(),
+				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				eventId 	= binding.toJS('model.id');
+
+		EventHeaderActions.downloadPdf(schoolId, eventId);
+	},
 	/**
 	 * The event handler when clicking the button "Cancel"
 	 */
@@ -79,7 +87,7 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isEditEventPopupOpen', true);
 	},
-	isTweetButtonRender: function(role, twitterData){
+	isTweetButtonRender: function(role, twitterData: any){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0;
 	},
 	/**
@@ -111,6 +119,7 @@ const EventHeaderWrapper = React.createClass({
 						isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
 						handleClickCancelEvent			= { this.handleClickCancelEvent }
 						handleClickCloseEvent			= { this.handleClickCloseEvent }
+						handleClickDownloadPdf			= { this.handleClickDownloadPdf }
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
 						onClickEditEventButton			= { this.onClickEditEventButton }

@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Woland on 11.01.2017.
  */
@@ -6,7 +7,17 @@ const 	Immutable 			= require('immutable'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		Promise				= require('bluebird');
 
-function cancelEvent(schoolId, eventId){
+function downloadPdf(schoolId: string, eventId: string) {
+	/*
+	 * Currently there is no one good way (or even just a way) to download file with JS.
+	 * So, I disable server-side authorization for this method and just opening new window
+	 * with proper link. Not very clever solution, but..
+	 */
+	const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
+	window.open(url, 'Download');
+}
+
+function cancelEvent(schoolId: string, eventId: string){
 	window.confirmAlert(
 		"You are going to cancel the fixture. Are you sure?",
 		"Ok",
@@ -14,38 +25,38 @@ function cancelEvent(schoolId, eventId){
 		() => { cancelEventOnServer(schoolId, eventId); },
 		() => {}
 	);
-};
+}
 
-function cancelEventOnServer(schoolId, eventId){
+function cancelEventOnServer(schoolId: string, eventId: string){
 	window.Server.eventCancel.post({
 		schoolId: schoolId,
 		eventId: eventId
 	})
-		.then(function(){
+		.then(() => {
 			document.location.hash = 'events/calendar';
 		});
-};
+}
 
-function setModeClosing(binding) {
+function setModeClosing(binding: any) {
 	binding.set('mode', 'closing');
-};
+}
 
-function setModeGeneral(binding){
+function setModeGeneral(binding: any){
 	binding.set('mode', 'general');
-};
+}
 
 /**
  * Set init state of score. See to component will mount function of Event React Component.
  */
-function revertScore(binding) {
+function revertScore(binding: any) {
 	const updEvent = binding.toJS('model');
 
 	updEvent.results = updEvent.initResults;
 	updEvent.initResults = undefined;
 	binding.set('model', Immutable.fromJS(updEvent));
-};
+}
 
-function submitScore(activeSchoolId, event, binding) {
+function submitScore(activeSchoolId: string, event: any, binding: any) {
 	if(TeamHelper.isNonTeamSport(event)) {
 		return submitResultsForIndividualSport(activeSchoolId, event)
 			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
@@ -55,20 +66,20 @@ function submitScore(activeSchoolId, event, binding) {
 	}
 };
 
-function submitResultsForIndividualSport(activeSchoolId, event) {
+function submitResultsForIndividualSport(activeSchoolId: string, event: any) {
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitIndividualResults(activeSchoolId, event));
 };
 
-function submitResultsForTeamsSport(activeSchoolId, event){
+function submitResultsForTeamsSport(activeSchoolId: string, event: any){
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitTeamResults(activeSchoolId, event))
 		.then(() => submitIndividualResults(activeSchoolId, event));
 };
 
-function submitSchoolResults(activeSchoolId, event){
+function submitSchoolResults(activeSchoolId: string, event: any){
 	const body = event.results.schoolScore;
 
 	switch (true) {
@@ -125,7 +136,7 @@ function submitSchoolResults(activeSchoolId, event){
 	}
 };
 
-function submitHouseResults(activeSchoolId, event) {
+function submitHouseResults(activeSchoolId: string, event: any) {
 	const score = event.results.houseScore;
 
 	switch (true) {
@@ -182,7 +193,7 @@ function submitHouseResults(activeSchoolId, event) {
 	}
 };
 
-function submitTeamResults(activeSchoolId, event) {
+function submitTeamResults(activeSchoolId: string, event: any) {
 	const score = event.results.teamScore;
 
 	switch (true) {
@@ -238,7 +249,7 @@ function submitTeamResults(activeSchoolId, event) {
 	}
 };
 
-function submitIndividualResults(activeSchoolId, event) {
+function submitIndividualResults(activeSchoolId: string, event: any) {
 	const score = event.results.individualScore;
 
 	let promises = [];
@@ -311,7 +322,7 @@ function isResultItemChanged(resultItem) {
  * And update result and status
  * Also got event editing page to GENERAL mode
  */
-function doActionsAfterCloseEvent(activeSchoolId, event, binding){
+function doActionsAfterCloseEvent(activeSchoolId: string, event: any, binding: any){
 
 	// Get updated event from server, and update some data in binding.
 	// 1) Set new results, it's important, because server results contain id's of each result point and event component
@@ -334,7 +345,7 @@ function doActionsAfterCloseEvent(activeSchoolId, event, binding){
 /**
  * Event closing process started after click save button
  */
-function closeMatch(activeSchoolId, event, binding){
+function closeMatch(activeSchoolId: string, event: any, binding: any){
 	if(TeamHelper.isNonTeamSport(event)) {
 		closeMatchForIndividualSport(activeSchoolId, event, binding);
 	} else {
@@ -386,6 +397,7 @@ function submitMatchReport(activeSchoolId, event){
 	);
 };
 
+module.exports.downloadPdf 		= downloadPdf;
 module.exports.cancelEvent 		= cancelEvent;
 module.exports.setModeClosing 	= setModeClosing;
 module.exports.setModeGeneral 	= setModeGeneral;

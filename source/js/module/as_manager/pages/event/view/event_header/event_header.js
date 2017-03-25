@@ -1,3 +1,5 @@
+// @flow
+
 const	React				= require('react');
 
 const	Lazy				= require('lazy.js'),
@@ -12,7 +14,7 @@ const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_even
 
 const EventHeader = React.createClass({
 	propTypes: {
-		event: 							React.PropTypes.object,
+		event: 							React.PropTypes.object.isRequired,
 		mode:							React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
@@ -20,6 +22,7 @@ const EventHeader = React.createClass({
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
+		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
 		onClickEditEventButton:			React.PropTypes.func.isRequired,
@@ -80,6 +83,7 @@ const EventHeader = React.createClass({
 									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
 									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+									handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
 									onClickCloseCancel				= { this.props.onClickCloseCancel }
 									onClickOk						= { this.props.onClickOk }
 						/>
