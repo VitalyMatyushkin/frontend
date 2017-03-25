@@ -1,9 +1,14 @@
-const 	Form		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		Promise 	= require('bluebird'),
-		Morearty	= require('morearty'),
-		React 		= require('react');
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
+		Promise 			= require('bluebird'),
+		Form				= require('module/ui/form/form'),
+		FormField			= require('module/ui/form/form_field'),
+		FormColumn			= require('module/ui/form/form_column'),
+		FormBlock			= require('module/ui/form/form_block/form_block'),
+		FormElementManager	= require('module/ui/form/form_element_manager'),
+		FormTitle			= require('module/ui/form/form_title'),
+		StudentsFormHelper	= require('./students_form_helper');
 
 /** Tiny student-related Form wrapper */
 const StudentForm = React.createClass({
@@ -13,8 +18,20 @@ const StudentForm = React.createClass({
 		title: 			React.PropTypes.string.isRequired,
 		onFormSubmit: 	React.PropTypes.func,
 		initialForm: 	React.PropTypes.object,
-		initialHouse: 	React.PropTypes.object,
-		binding: 		React.PropTypes.any
+		initialHouse: 	React.PropTypes.object
+	},
+	componentWillMount: function() {
+		this.initCountNextOfKinBlocks();
+	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().sub('formData').clear();
+	},
+	initCountNextOfKinBlocks: function() {
+		const binding = this.getDefaultBinding();
+
+		if(typeof binding.toJS('countNextOfKinBlocks') === 'undefined') {
+			binding.set('countNextOfKinBlocks', StudentsFormHelper.DEF_COUNT_NEXT_KIN_BLOCK);
+		}
 	},
 	getClassService: function () {
 		const self = this;
@@ -64,40 +81,200 @@ const StudentForm = React.createClass({
 
 		return Promise.resolve(gendersArray);
 	},
-	render: function () {
-		const self = this,
-			binding = self.getDefaultBinding();
+	clearNextOfKinByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		const fieldData = {
+			active:	true,
+			error:	false,
+			value:	''
+		};
+
+		binding.meta()
+			.atomically()
+			.set(`nok_${index}_email`,			Immutable.fromJS(fieldData))
+			.set(`nok_${index}_firstName`,		Immutable.fromJS(fieldData))
+			.set(`nok_${index}_lastName`,		Immutable.fromJS(fieldData))
+			.set(`nok_${index}_phone`,			Immutable.fromJS(fieldData))
+			.set(`nok_${index}_relationship`,	Immutable.fromJS(fieldData))
+			.commit();
+
+		this.forceUpdate();
+	},
+	onClickAddNextOfKinItem: function() {
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
+
+		binding.set('countNextOfKinBlocks', countNextOfKinBlocks + 1);
+	},
+	onClickRemoveNextOfKinBlock: function(index) {
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
+
+		binding.set('countNextOfKinBlocks', countNextOfKinBlocks - 1);
+
+		this.clearNextOfKinByIndex(index);
+	},
+	renderNextOfKin: function(index) {
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
+
+		const	isVisible				= index < countNextOfKinBlocks;
 
 		return (
-			<div className="eStudentForm container">
-				<Form formStyleClass="row" onSubmit={self.props.onFormSubmit} binding={binding} submitOnEnter={false}>
-					<FormColumn customStyle="col-md-5 col-md-offset-1">
-						<h3>SUMMARY</h3>
-						<FormField labelText="+" type="imageFile" field="avatar"/>
-						<FormField type="text" field="firstName" validation="required">Name</FormField>
-						<FormField type="text" field="lastName" validation="required">Surname</FormField>
-						<FormField type="radio" field="gender" sourcePromise={self.getGender} validation="required">Gender</FormField>
-						<FormField type="date" field="birthday" validation="birthday">Date of birth</FormField>
-						<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId"
-								   defaultItem={self.props.initialForm} >Form</FormField>
-						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId"
-								   defaultItem={self.props.initialHouse} >House</FormField>
-						<FormField classNames="mSingleLine" type="checkbox" field="unwell" >Injured/Unwell</FormField>
-						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
+			<FormBlock
+				isVisible			= { isVisible }
+				isShowCloseButton	= { index !== 0 }
+				onClickClose		= { this.onClickRemoveNextOfKinBlock.bind(this, index) }
+			>
+				<FormField
+					type		= 'text'
+					field		= { `nok_${index}_relationship` }
+				>
+					Relationship
+				</FormField>
+				<FormField
+					type		= 'text'
+					field		= { `nok_${index}_firstName` }
+				>
+					Name
+				</FormField>
+				<FormField
+					type		= 'text'
+					field		= { `nok_${index}_lastName` }
+				>
+					Surname
+				</FormField>
+				<FormField
+					type		='phone'
+					field		={`nok_${index}_phone`}
+					validation	='phone'
+				>
+					Phone
+				</FormField>
+				<FormField
+					type		= 'text'
+					field		= { `nok_${index}_email` }
+					validation	= 'email'
+				>
+					Email
+				</FormField>
+			</FormBlock>
+		);
+	},
+	renderNextOfKinColumn: function() {
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
+
+		const nextOfKins = [];
+
+		for(let i = 0; i < StudentsFormHelper.MAX_COUNT_NEXT_KIN_BLOCK; i++) {
+			nextOfKins.push(
+				this.renderNextOfKin(i)
+			);
+		}
+
+		return (
+			<FormColumn
+				key			= 'next_of_kin_column'
+				customStyle	= 'col-md-5 col-md-offset-1'
+			>
+				<FormTitle text={'Next of kin'}/>
+				{ nextOfKins }
+				<FormElementManager
+					text	= { 'Add new "Next of kin" item' }
+					onClick	= { this.onClickAddNextOfKinItem }
+				/>
+			</FormColumn>
+		);
+	},
+	render: function () {
+		const binding = this.getDefaultBinding();
+
+		console.log(binding.sub('formData').meta().toJS());
+
+		return (
+			<div className='eStudentForm container'>
+				<Form
+					formStyleClass	= 'row'
+					onSubmit		= { this.props.onFormSubmit }
+					binding			= { binding.sub('formData') }
+					submitOnEnter	= { false }
+				>
+					<FormColumn
+						key			= 'main_column'
+						customStyle	= 'col-md-5 col-md-offset-1'
+					>
+						<FormTitle text={'Summary'}/>
+						<FormField
+							labelText	='+'
+							type		= 'imageFile'
+							field		= 'avatar'
+						/>
+						<FormField
+							type		= 'text'
+							field		= 'firstName'
+							validation	= 'required'
+						>
+							Name
+						</FormField>
+						<FormField
+							type		= 'text'
+							field		= 'lastName'
+							validation	= 'required'
+						>
+							Surname
+						</FormField>
+						<FormField
+							type			= 'radio'
+							field			= 'gender'
+							sourcePromise	= { this.getGender }
+							validation		= 'required'
+						>
+							Gender
+						</FormField>
+						<FormField
+							type		= 'date'
+							field		= 'birthday'
+							validation	= 'birthday'
+						>
+							Date of birth
+						</FormField>
+						<FormField
+							type			= 'autocomplete'
+							serviceFullData	= { this.getClassService() }
+							field			= 'formId'
+							defaultItem		= { this.props.initialForm }
+						>
+							Form
+						</FormField>
+						<FormField
+							type			= 'autocomplete'
+							serviceFullData	= { this.getHouseService() }
+							field			= 'houseId'
+							defaultItem		= { this.props.initialHouse }
+						>
+							House
+						</FormField>
+						<FormField
+							classNames	= 'mSingleLine'
+							type		= 'checkbox'
+							field		= 'unwell'
+						>
+							Injured/Unwell
+						</FormField>
+						<FormField
+							type	= 'textarea'
+							field	= 'medicalInfo'
+						>
+							Medical Information
+						</FormField>
 					</FormColumn>
-					<FormColumn customStyle="col-md-5">
-						<h3>NEXT OF KIN</h3>
-						<FormField type="text" field="nok_relationship">Relationship</FormField>
-						<FormField type="text" field="nok_firstName">Name</FormField>
-						<FormField type="text" field="nok_lastName">Surname</FormField>
-						<FormField type="phone" field="nok_phone" validation="phone">Phone</FormField>
-						<FormField type="text" field="nok_email" validation="email">Email</FormField>
-					</FormColumn>
+					{ this.renderNextOfKinColumn() }
 				</Form>
 			</div>
 		)
 	}
 });
-
 
 module.exports = StudentForm;
