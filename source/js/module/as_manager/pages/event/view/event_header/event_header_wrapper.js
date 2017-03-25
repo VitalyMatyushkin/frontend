@@ -24,9 +24,10 @@ const EventHeaderWrapper = React.createClass({
 	handleClickDownloadPdf: function() {
 		const 	binding		= this.getDefaultBinding(),
 				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				event		= binding.toJS('model'),
 				eventId 	= binding.toJS('model.id');
 
-		EventHeaderActions.downloadPdf(schoolId, eventId);
+		EventHeaderActions.downloadPdf(schoolId, eventId, event);
 	},
 	/**
 	 * The event handler when clicking the button "Cancel"
