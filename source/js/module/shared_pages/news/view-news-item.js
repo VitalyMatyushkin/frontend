@@ -62,7 +62,7 @@ const ViewNewsItem = React.createClass({
 			
 			SchoolHelper.loadActiveSchoolInfo(this).then( data => {
 				if (data.publicSite.status === 'PUBLIC_AVAILABLE') {
-					binding.set('linkForTweet', protocol + DomainHelper.getSubDomain(data.domain) + '/#news');
+					binding.set('linkForTweet', protocol + DomainHelper.getSubDomain(data.domain) + '/#news_view/' + this.props.value.id);
 				} else {
 					binding.set('linkForTweet', '');
 				}
@@ -129,8 +129,8 @@ const ViewNewsItem = React.createClass({
 
 		let textNews;
 
-		if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.body !== 'undefined') {
-			textNews = news.body + ' ';
+		if (textNewsChanged === '' && typeof news !== 'undefined' && typeof news.title !== 'undefined') {
+			textNews = news.title + ' ';
 		} else {
 			textNews = textNewsChanged;
 		}

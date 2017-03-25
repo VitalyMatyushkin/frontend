@@ -85,12 +85,11 @@
 	line-height:1;
 	height: auto;
 	font-size: 14px;
-	background-color: #ffffff;
-	color: $blueColor;
-	border-color: $blueColor;
+	background-color: $blueColor;
+	color: #ffffff;
 	&:hover{
-	  color: #fff;
-	  background-color: $blueColor;
+	  color: $blueColor;
+	  background-color: #ffffff;
 	}
   }
   .eTextArea{

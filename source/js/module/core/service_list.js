@@ -88,6 +88,7 @@ const serviceList = {
         serviceList.schoolNews = new Service('/i/schools/{schoolId}/news', binding);
         serviceList.schoolNewsCount = new Service('/i/schools/{schoolId}/news/count', binding);
         serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
+        serviceList.publicSchoolNewsItem = new Service('/public/schools/{schoolId}/news/{newsId}',binding);
         serviceList.schoolNewsItem = new Service('/i/schools/{schoolId}/news/{newsId}',binding);
 
         //Permission Requests
