@@ -8,7 +8,13 @@ const 	Immutable 			= require('immutable'),
 		Promise				= require('bluebird');
 
 function downloadPdf(schoolId: string, eventId: string) {
-	window.Server.schoolEventPdf.get({schoolId, eventId});
+	/*
+	 * Currently there is no one good way (or even just a way) to download file with JS.
+	 * So, I disable server-side authorization for this method and just opening new window
+	 * with proper link. Not very clever solution, but.. 
+	 */
+	const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
+	window.open(url, 'Download');
 }
 
 function cancelEvent(schoolId: string, eventId: string){
