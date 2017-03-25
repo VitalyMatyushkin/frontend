@@ -17,7 +17,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
-		SportsPage								= require('./views/sports_page/sport_page_wrapper'),
+		FavouriteSportPageWrapper				= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
 		PlacesPage								= require('./views/places_page/places_page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
@@ -164,7 +164,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
 						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
-						<Route path='/school_console/sports' binding={binding.sub('sports')} component={SportsPage}/>
+						<Route path='/school_console/sports' binding={binding.sub('sports')} component={FavouriteSportPageWrapper}/>
 						<Route path='/school_console/venues' binding={binding.sub('places')} component={PlacesPage}/>
 					</RouterView>
 				</div>

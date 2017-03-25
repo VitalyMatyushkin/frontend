@@ -8,6 +8,8 @@ const	React							= require('react'),
 const Scores = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
+		const activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId');
+
 		const binding = this.getDefaultBinding();
 		binding.atomically()
 			.set('currentSport',	undefined)
@@ -20,18 +22,26 @@ const Scores = React.createClass({
 			}
 		};
 
-		window.Server.sports.get(filter)
+		window.Server.publicSchoolSports.get(activeSchoolId, filter)
 			.then(sports => {
+				const favouriteSports = this.getFavouriteSports(sports);
+
+				let resultSports;
+				if(favouriteSports.length > 0) {
+					resultSports = favouriteSports;
+				} else {
+					resultSports = sports;
+				}
+
 				binding.atomically()
-					.set('sports',			Immutable.fromJS(sports))
-					.set('currentSport',	Immutable.fromJS(sports[0]))
+					.set('sports',			Immutable.fromJS(resultSports))
+					.set('currentSport',	Immutable.fromJS(resultSports[0]))
 					.set('isSyncSports',	true)
 					.commit();
 			});
 
 		this.getDefaultBinding().sub('currentSport').addListener(eventDescriptor => {
-			const 	activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					sportId = binding.get('isSyncSports') ? eventDescriptor.getCurrentValue().toJS().id : null;
+			const sportId = binding.get('isSyncSports') ? eventDescriptor.getCurrentValue().toJS().id : null;
 			
 			if (sportId !== null) {
 				window.Server.publicSchoolUnionStats.get({schoolUnionId: activeSchoolId}, {
@@ -48,6 +58,9 @@ const Scores = React.createClass({
 			}
 
 		});
+	},
+	getFavouriteSports: function(sports) {
+		return sports.filter(s => s.isFavourite);
 	},
 	renderSportSelector: function() {
 		const binding = this.getDefaultBinding();

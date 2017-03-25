@@ -102,8 +102,9 @@ const serviceList = {
         serviceList.schoolUserPermission = new Service('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
 
         // sports
+		serviceList.sport = new Service('/public/sports/{sportId}', binding);
         serviceList.sports = new Service('/public/sports', binding);
-        serviceList.sport = new Service('/public/sports/{sportId}', binding);
+        serviceList.publicSchoolSports = new Service('/public/schools/{schoolId}/sports ', binding);
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);

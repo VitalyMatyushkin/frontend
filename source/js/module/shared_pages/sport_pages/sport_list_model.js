@@ -1,7 +1,7 @@
-const	React			= require('react'),
-		Sport			= require('module/ui/icons/sport_icon'),
-		DataLoader		= require('module/ui/grid/data-loader'),
-		GridModel		= require('module/ui/grid/grid-model');
+const	React		= require('react'),
+		Sport		= require('module/ui/icons/sport_icon'),
+		DataLoader	= require('module/ui/grid/data-loader'),
+		GridModel	= require('module/ui/grid/grid-model');
 
 const SportListModel = function(page, schoolId, onReload){
 	this.getDefaultBinding = page.getDefaultBinding;
