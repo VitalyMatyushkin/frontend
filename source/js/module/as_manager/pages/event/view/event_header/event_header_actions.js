@@ -7,14 +7,20 @@ const 	Immutable 			= require('immutable'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		Promise				= require('bluebird');
 
-function downloadPdf(schoolId: string, eventId: string) {
+function downloadPdf(schoolId: string, eventId: string, event: any) {
 	/*
 	 * Currently there is no one good way (or even just a way) to download file with JS.
 	 * So, I disable server-side authorization for this method and just opening new window
 	 * with proper link. Not very clever solution, but..
+	 *
+	 * Also, there is only one template available, so handling that case too
 	 */
-	const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
-	window.open(url, 'Download');
+	if(event.eventType === "EXTERNAL_SCHOOLS" && event.sport.players === 'TEAM') {
+		const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
+		window.open(url);
+	} else {
+		window.simpleAlert('Sorry, there is no pdf template for this kind of event');
+	}
 }
 
 function cancelEvent(schoolId: string, eventId: string){
