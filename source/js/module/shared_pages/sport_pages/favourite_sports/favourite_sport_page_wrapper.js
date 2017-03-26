@@ -1,7 +1,7 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
-		SportList	= require('./sports_page');
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
+		FavouriteSportsPage	= require('module/shared_pages/sport_pages/favourite_sports/favourite_sports_page');
 
 const SportListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,10 +17,10 @@ const SportListWrapper = React.createClass({
 	},
 	render: function () {
 		return (
-			<SportList
-				key			= {this.getDefaultBinding().toJS('key')}
-				binding		= {this.getDefaultBinding()}
-				onReload	= {this.onReload}
+			<FavouriteSportsPage
+				key			= { this.getDefaultBinding().toJS('key') }
+				binding		= { this.getDefaultBinding() }
+				onReload	= { this.onReload }
 			/>
 		);
 	}
