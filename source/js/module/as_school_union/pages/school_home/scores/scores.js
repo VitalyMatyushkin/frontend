@@ -22,13 +22,13 @@ const Scores = React.createClass({
 			}
 		};
 
-		window.Server.publicSchoolSports.get(activeSchoolId, filter)
+		window.Server.publicSchoolSports.get('57b6c9a6dd69264b6c5ba82d', filter)
 			.then(sports => {
-				const favouriteSports = this.getFavouriteSports(sports);
+				const favoriteSports = this.filterFavoriteSports(sports);
 
 				let resultSports;
-				if(favouriteSports.length > 0) {
-					resultSports = favouriteSports;
+				if(favoriteSports.length > 0) {
+					resultSports = favoriteSports;
 				} else {
 					resultSports = sports;
 				}
@@ -59,8 +59,8 @@ const Scores = React.createClass({
 
 		});
 	},
-	getFavouriteSports: function(sports) {
-		return sports.filter(s => s.isFavourite);
+	filterFavoriteSports: function(sports) {
+		return sports.filter(s => s.isFavorite);
 	},
 	renderSportSelector: function() {
 		const binding = this.getDefaultBinding();
