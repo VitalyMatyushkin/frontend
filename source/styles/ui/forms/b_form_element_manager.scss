@@ -1,3 +1,7 @@
 .bFormElementManager {
   margin-top: 10px;
+
+  &.mInvisible {
+    display: none;
+  }
 }
