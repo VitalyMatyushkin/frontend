@@ -29,7 +29,9 @@ const StudentForm = React.createClass({
 	initCountNextOfKinBlocks: function() {
 		const binding = this.getDefaultBinding();
 
-		if(typeof binding.toJS('countNextOfKinBlocks') === 'undefined') {
+		const countNextOfKinBlocks = binding.toJS('countNextOfKinBlocks');
+
+		if(typeof countNextOfKinBlocks === 'undefined' || countNextOfKinBlocks === 0) {
 			binding.set('countNextOfKinBlocks', StudentsFormHelper.DEF_COUNT_NEXT_KIN_BLOCK);
 		}
 	},
