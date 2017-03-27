@@ -101,6 +101,26 @@ const StudentForm = React.createClass({
 
 		this.forceUpdate();
 	},
+	isShowFormElementManager: function() {
+		const	binding					= this.getDefaultBinding(),
+				formDataBinding			= this.getDefaultBinding().sub('formData'),
+				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks'),
+				index					= countNextOfKinBlocks - 1;
+
+		const	email			= formDataBinding.meta().toJS(`nok_${index}_email.value`),
+				firstName		= formDataBinding.meta().toJS(`nok_${index}_firstName.value`),
+				lastName		= formDataBinding.meta().toJS(`nok_${index}_lastName.value`),
+				phone			= formDataBinding.meta().toJS(`nok_${index}_phone.value`),
+				relationship	= formDataBinding.meta().toJS(`nok_${index}_relationship.value`);
+
+		return (
+			(typeof email !== 'undefined' && email !== '') ||
+			(typeof firstName !== 'undefined' && firstName !== '') ||
+			(typeof lastName !== 'undefined' && lastName !== '') ||
+			(typeof phone !== 'undefined' && phone !== '') ||
+			(typeof relationship !== 'undefined' && relationship !== '')
+		);
+	},
 	onClickAddNextOfKinItem: function() {
 		const	binding					= this.getDefaultBinding(),
 				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
@@ -181,17 +201,21 @@ const StudentForm = React.createClass({
 			>
 				<FormTitle text={'Next of kin'}/>
 				{ nextOfKins }
-				<FormElementManager
-					text	= { 'Add new "Next of kin" item' }
-					onClick	= { this.onClickAddNextOfKinItem }
-				/>
+				{ this.renderFormElementManager() }
 			</FormColumn>
+		);
+	},
+	renderFormElementManager: function() {
+		return (
+			<FormElementManager
+				isVisible	= { this.isShowFormElementManager() }
+				text		= { 'Add new "Next of kin" item' }
+				onClick		= { this.onClickAddNextOfKinItem }
+			/>
 		);
 	},
 	render: function () {
 		const binding = this.getDefaultBinding();
-
-		console.log(binding.sub('formData').meta().toJS());
 
 		return (
 			<div className='eStudentForm container'>
