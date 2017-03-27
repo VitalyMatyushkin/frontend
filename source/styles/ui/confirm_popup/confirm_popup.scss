@@ -14,9 +14,19 @@
   &.mBig {
     max-width: 700px;
   }
+  &.mSmallWidth {
+    min-width: 390px !important;
+    width: 390px;
+  }
   &.mFullWidth {
     width: 100%;
   }
+}
+
+.eConfirmPopup_title {
+  color: #007abf;
+  font-size: 1.5625rem;
+  margin-bottom: 20px;
 }
 
 .eConfirmPopup_body {
