@@ -46,70 +46,58 @@ const SchoolUnionConsole = React.createClass({
 			})
 			.then(() => {
 				this.getDefaultBinding().set('isSync', true);
-				this.addListeners();
 			});
 	},
-	addListeners: function() {
-		const globalBinding = this.getMoreartyContext().getBinding();
+	setSubMenuItems: function(count) {
+		const binding = this.getDefaultBinding();
 
-		this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
+		let menuItems = [{
+			href	: '/#school_union_console/users',
+			name	: 'Users & Permissions',
+			key		: 'Users'
+		},{
+			href	: '/#school_union_console/requests',
+			name	: 'New Requests',
+			key		: 'requests',
+			num		: '(' + count + ')'
+		},{
+			href	: '/#school_union_console/archive',
+			name	: 'Requests Archive',
+			key		: 'archive'
+		}];
+
+		if (this.activeSchoolInfo.canEditFavoriteSports) {
+			menuItems.push({
+				href:	'/#school_union_console/sports',
+				name:	'Sports',
+				key:	'sports'
+			});
+		}
+
+		binding.set('subMenuItems', Immutable.fromJS(menuItems));
 	},
 	createSubMenu: function() {
 		const self = this;
 
-		const binding = self.getDefaultBinding();
-
-		const _createSubMenuData = function(count) {
-			let menuItems = [{
-				href	: '/#school_union_console/users',
-				name	: 'Users & Permissions',
-				key		: 'Users'
-			},{
-				href	: '/#school_union_console/requests',
-				name	: 'New Requests',
-				key		: 'requests',
-				num		: '(' + count + ')'
-			},{
-				href	: '/#school_union_console/archive',
-				name	: 'Requests Archive',
-				key		: 'archive'
-			}];
-
-			if (self.activeSchoolInfo.canEditFavoriteSports) {
-				menuItems.push({
-					href:	'/#school_union_console/sports',
-					name:	'Sports',
-					key:	'sports'
-				});
-			}
-
-			binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-		};
-
-		let requestFilter = {
-			status: 'NEW'
-		};
-
-		// drawing placeholder
-		_createSubMenuData('*');
-
 		//Get the total number of permissions (Notification badge) in submenu
 		return window.Server.permissionRequests.get(
-			MoreartyHelper.getActiveSchoolId(self),
-			{
-				filter: {
-					limit: 1000,
-					where: requestFilter
+				MoreartyHelper.getActiveSchoolId(self),
+				{
+					filter: {
+						limit: 1000,
+						where: {
+							status: 'NEW'
+						}
+					}
 				}
-			}
 			)
 			.then(permissions => {
-				_createSubMenuData(permissions.length);
+				this.setSubMenuItems(permissions.length);
+
 				// yep, always i'm right
 				return true;
 			});
 	},
-
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				globalBinding	= this.getMoreartyContext().getBinding();
