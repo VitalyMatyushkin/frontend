@@ -84,7 +84,7 @@ const StudentForm = React.createClass({
 		return Promise.resolve(gendersArray);
 	},
 	clearNextOfKinByIndex: function(index) {
-		const binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding().sub('formData');
 
 		const fieldData = {
 			active:	true,
