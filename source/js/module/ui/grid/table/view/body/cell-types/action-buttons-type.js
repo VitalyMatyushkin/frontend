@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Anatoly on 26.07.2016.
  */
@@ -11,10 +12,9 @@ const ActionButtonsType = React.createClass({
 		dataItem:	React.PropTypes.object.isRequired
 	},
 	getButtons:function(){
-		const 	self = this,
-				itemButtons = [],
-				item = self.props.dataItem,
-				options = self.props.cell.typeOptions;
+		const	itemButtons = [],
+				item		= this.props.dataItem,
+				options		= this.props.cell.typeOptions;
 
 		options.onItemEdit && itemButtons.push(
 			<span key={item.id+'edit'} onClick={options.onItemEdit.bind(null, item)} className="bLinkLike bTooltip"
