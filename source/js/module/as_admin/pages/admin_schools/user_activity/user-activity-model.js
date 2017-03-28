@@ -1,13 +1,15 @@
+// @flow
 /**
  * Created by Anatoly on 21.11.2016.
  */
 
 const 	DataLoader 		= require('module/ui/grid/data-loader'),
-    React 			= require('react'),
-    Morearty		= require('morearty'),
-    GridModel 		= require('module/ui/grid/grid-model'),
-    DateHelper      = require('module/helpers/date_helper'),
-    RoleHelper 		= require('module/helpers/role_helper');
+        React 			= require('react'),
+        Morearty		= require('morearty'),
+        GridModel 		= require('module/ui/grid/grid-model'),
+        DateHelper      = require('module/helpers/date_helper'),
+        RoleHelper 		= require('module/helpers/role_helper'),
+        Timezone		= require('moment-timezone');
 
 /**
  * UserActivityModel
@@ -15,7 +17,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
  * @param {object} page
  *
  * */
-const UserActivityModel = function(page){
+const UserActivityModel = function(page: any){
     this.getDefaultBinding = page.getDefaultBinding;
     this.getMoreartyContext = page.getMoreartyContext;
     this.props = page.props;
@@ -26,7 +28,7 @@ const UserActivityModel = function(page){
     this.setColumns();
 };
 
-UserActivityModel.prototype.getUserName = function(item){
+UserActivityModel.prototype.getUserName = function(item): string {
     let name = '';
 
     if (typeof item.user !== 'undefined'){
@@ -36,8 +38,8 @@ UserActivityModel.prototype.getUserName = function(item){
     return name;
 };
 
-UserActivityModel.prototype.getDateTime = function(item){
-     return DateHelper.getDateTimeUTCString(item.finishedAt);
+UserActivityModel.prototype.getDateTime = function(item): string {
+	return Timezone.tz(item.finishedAt, window.timezone).format('HH:mm:ss DD.MM');
  };
 
 UserActivityModel.prototype.getMethodList = function(){
