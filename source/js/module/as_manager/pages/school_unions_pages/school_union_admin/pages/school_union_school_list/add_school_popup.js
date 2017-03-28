@@ -1,5 +1,6 @@
 const	React			= require('react'),
 		ComboBox		= require('../../../../../../ui/autocomplete2/ComboBox2'),
+		SchoolListItem	= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		ConfirmPopup	= require('../../../../../../ui/confirm_popup');
 
 /**
@@ -51,7 +52,7 @@ const AddSchoolPopup = React.createClass({
 		return window.Server.publicSchools.get({
 			filter: {
 				where: {
-					_id: {
+					id: {
 						$nin: this.props.blackList
 					},
 					name: {
@@ -84,29 +85,28 @@ const AddSchoolPopup = React.createClass({
 								isOkButtonDisabled		= {this.isOkButtonDisabled()}
 								handleClickOkButton		= {this.handleClickOkButton}
 								handleClickCancelButton	= {this.props.handleClickCancelButton}
+								customStyle				= {'mSmallWidth'}
 				>
-					<div className="bForm mZeroPadding">
-						<div className="eForm_atCenter">
-							<h2>Add school to school union</h2>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									School
-								</div>
-								<div className="eForm_fieldSet">
-									<ComboBox	placeholder			= {'Please, select a school'}
-												searchFunction		= {this.searchSchoolWrapper}
-												onSelect			= {this.handleSelectSchool}
-												getElementTitle		= {this.getElementTitle}
-												getElementTooltip	= {this.getElementTooltip}
-												onEscapeSelection	= {() => {}}
-												clearAfterSelect	= {false}
-												extraCssStyle		= {''}
-												isBlocked			= {false}
-									/>
-								</div>
-							</div>
+					<h3 className="eConfirmPopup_title">Add school to school union</h3>
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
+							School
+						</div>
+						<div className="eForm_fieldSet">
+							<ComboBox	placeholder			= {'Please, select a school'}
+										customListItem		= { SchoolListItem }
+										searchFunction		= {this.searchSchoolWrapper}
+										onSelect			= {this.handleSelectSchool}
+										getElementTitle		= {this.getElementTitle}
+										getElementTooltip	= {this.getElementTooltip}
+										onEscapeSelection	= {() => {}}
+										clearAfterSelect	= {false}
+										extraCssStyle		= {'mBigSize mWidth350 mWhiteBG'}
+										isBlocked			= {false}
+							/>
 						</div>
 					</div>
+
 				</ConfirmPopup>
 			);
 		} else {

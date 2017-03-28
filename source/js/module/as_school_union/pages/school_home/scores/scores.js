@@ -22,7 +22,7 @@ const Scores = React.createClass({
 			}
 		};
 
-		window.Server.publicSchoolSports.get('57b6c9a6dd69264b6c5ba82d', filter)
+		window.Server.publicSchoolSports.get(activeSchoolId, filter)
 			.then(sports => {
 				const favoriteSports = this.filterFavoriteSports(sports);
 
