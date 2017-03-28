@@ -1,7 +1,10 @@
-const	React			= require('react'),
-		ComboBox		= require('../../../../../../ui/autocomplete2/ComboBox2'),
-		SchoolListItem	= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		ConfirmPopup	= require('../../../../../../ui/confirm_popup');
+const	React					= require('react'),
+		PostcodeSelector		= require('module/ui/postcode_selector/postcode_selector'),
+		ComboBox				= require('module/ui/autocomplete2/ComboBox2'),
+		SchoolListItem			= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		ConfirmPopup			= require('module/ui/confirm_popup'),
+		GeoSearchHelper			= require('module/helpers/geo_search_helper'),
+		PermissionDetailsHelper	= require('module/ui/register/user/permission_details/permission_detail_helper');
 
 /**
  * Wrapper for add school to school union.
@@ -15,7 +18,8 @@ const AddSchoolPopup = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			school: undefined
+			school:		undefined,
+			postcode:	undefined
 		};
 	},
 	/**
@@ -37,34 +41,67 @@ const AddSchoolPopup = React.createClass({
 	 * @param searchText
 	 * @returns {{sync: Array, async: *}}
 	 */
-	searchSchoolWrapper: function(searchText) {
+	searchSchoolWrapper: function(schoolName) {
 		return {
 			sync:  [],
-			async: this.searchSchools(searchText)
+			async: this.searchSchools(schoolName)
 		};
 	},
-	/**
-	 * Just search schools. Call server.
-	 * @param searchText
-	 * @returns {*}
-	 */
-	searchSchools: function(searchText) {
-		return window.Server.publicSchools.get({
-			filter: {
-				where: {
-					id: {
-						$nin: this.props.blackList
+	searchSchools: function (schoolName) {
+		if(typeof this.state.postcode === 'undefined') {
+			return this.searchSchool(schoolName);
+		} else {
+			return this.searchSchoolNearCurrentPostcode(schoolName);
+		}
+	},
+	searchSchool: function(schoolName) {
+		return window.Server.publicSchools.get(
+			{
+				filter: {
+					where: {
+						id: {
+							$nin: this.props.blackList
+						},
+						name: {
+							like: schoolName
+						}
 					},
-					name: {
-						like	: searchText
-					}
-				},
-				limit	: 20
+					limit	: 20
+				}
 			}
-		});
+		);
+	},
+	searchSchoolNearCurrentPostcode: function(schoolName) {
+		return window.Server.publicSchools.get(
+			{
+				filter: {
+					where: {
+						id: {
+							$nin: this.props.blackList
+						},
+						'postcode.point': GeoSearchHelper.getUnlimitedGeoSchoolFilter(this.state.postcode.point),
+						name: {
+							like: schoolName,
+							options: 'i'
+						}
+					},
+					limit: 40
+				}
+			}
+		);
 	},
 	isOkButtonDisabled: function() {
 		return typeof this.state.school === 'undefined';
+	},
+	handleSelectPostcode: function(id, postcode) {
+		this.setState({
+			postcode: postcode
+		});
+	},
+	handleEscapePostcode: function() {
+		this.setState({
+			postcode: undefined
+		});
 	},
 	handleSelectSchool: function(id, school) {
 		this.setState({
@@ -90,6 +127,16 @@ const AddSchoolPopup = React.createClass({
 					<h3 className="eConfirmPopup_title">Add school to school union</h3>
 					<div className="eForm_field">
 						<div className="eForm_fieldName">
+							Postcode
+						</div>
+						<PostcodeSelector	currentPostcode			= { this.state.postcode }
+											handleSelectPostcode	= { this.handleSelectPostcode }
+											handleEscapePostcode	= { this.handleEscapePostcode }
+											extraCssStyle			= { 'mSchoolUnionPostcode' }
+						/>
+					</div>
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
 							School
 						</div>
 						<div className="eForm_fieldSet">
@@ -101,12 +148,11 @@ const AddSchoolPopup = React.createClass({
 										getElementTooltip	= {this.getElementTooltip}
 										onEscapeSelection	= {() => {}}
 										clearAfterSelect	= {false}
-										extraCssStyle		= {'mBigSize mWidth350 mWhiteBG'}
+										extraCssStyle		= {'mBigSize mWidth350'}
 										isBlocked			= {false}
 							/>
 						</div>
 					</div>
-
 				</ConfirmPopup>
 			);
 		} else {
