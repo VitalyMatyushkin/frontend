@@ -88,13 +88,6 @@
   padding-top: 9px;
 }
 
-.eManager_container {
-  display: flex;
-  max-width: 1130px;
-  margin: 0 auto;
-  flex-direction: column;
-}
-
 .eManager_chooser {
   display: flex;
   width: 100%;
@@ -105,14 +98,6 @@
 
 .eManager_plug {
   width: 500px;
-}
-
-.eManager_containerTeam {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-
-  margin: 10px 0;
 }
 
 .eManager_teamModeViewContainer {

@@ -69,9 +69,13 @@ const MenuMixin = {
 			menuItems = this.props.items;
 		}
 
-		//rendering menu
-		const MenuItemsViews = menuItems.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
-		return MenuItemsViews;
+		if(typeof menuItems.map === 'function' ) {
+			//rendering menu
+			const MenuItemsViews = menuItems.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
+			return MenuItemsViews;
+		} else {
+			return null;
+		}
 	}
 };
 

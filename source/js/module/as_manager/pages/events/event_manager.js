@@ -12,7 +12,7 @@ const	classNames						= require('classnames'),
 
 // Special components
 const	Manager							= require('../../../ui/managers/manager'),
-		EventForm						= require('./manager/event_form'),
+		EventForm						= require('./manager/event_form/event_form'),
 		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
 
 // Helpers
@@ -144,6 +144,7 @@ const EventManager = React.createClass({
 			schoolId	: this.activeSchoolId,
 			eventId		: eventId
 		}).then(event => {
+			delete event.status;
 			// It's a convertation event data to EventForm component format,
 			// because event
 			event.gender = this.convertServerGenderConstToClient(event);

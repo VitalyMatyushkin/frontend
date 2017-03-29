@@ -23,49 +23,49 @@ const defaultPhotos = [
  *
  **/
 const HomeHeader = React.createClass({
-	
+
 	mixins:[Morearty.Mixin],
-	
+
 	componentWillMount:function() {
 		const 	binding 		= this.getDefaultBinding(),
 				rootBinding 	= this.getMoreartyContext().getBinding(),
 				currentSchool 	= this.getMoreartyContext().getBinding().get('activeSchool'),
 				defaultAlbumId 	= currentSchool.get('defaultAlbumId'),
 				activeSchoolId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
-		
+
 		rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
 		//we already have current school data so lets use it - at least for the school details
 		binding.set('school', Immutable.fromJS(currentSchool));
 		// setting empty photos to show. Will use them in render
 		binding.set('___photosToShow', Immutable.fromJS([]));
-		
+
 		if(defaultAlbumId){
 			//if we have album id we do some logic here - TBC
 			//TODO: Reuse code below when photos method and view has been implemented on server
-			window.Server.publicSchoolAlbumPhotos.get({
-				schoolId:  activeSchoolId,
-				albumId:   defaultAlbumId
-			})
-			.then(photos => {
-				if(photos.length != 0) {
-					binding.set('___photosToShow', Immutable.fromJS(photos.map(photo => photo.picUrl)));
-				} else {
-					binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
-				}
-			});
+			 window.Server.publicSchoolAlbumPhotos.get({
+				 schoolId:  activeSchoolId,
+				 albumId:   defaultAlbumId
+			 })
+			 .then(photos => {
+				 if(photos.length != 0) {
+					 binding.set('___photosToShow', Immutable.fromJS(photos.map(photo => photo.picUrl)));
+				 } else {
+					 binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+				 }
+			 });
 		} else {
 			binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
 		}
 	},
-	
+
 	componentWillUnmount: function(){
 		clearInterval(this.intervalId);
 		this.getDefaultBinding().remove('___photosToShow'); // wiping out that shit
 	},
-	
+
 	render: function(){
 		const photos = this.getDefaultBinding().get('___photosToShow').toArray() || [];
-		
+
 		return(
 			<div className="bSchoolHeader">
 				<Slider items={photos} />

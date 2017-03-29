@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Woland on 10.01.2017.
  */
@@ -20,6 +21,14 @@ const EventHeaderWrapper = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
 
+	handleClickDownloadPdf: function() {
+		const 	binding		= this.getDefaultBinding(),
+				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				event		= binding.toJS('model'),
+				eventId 	= binding.toJS('model.id');
+
+		EventHeaderActions.downloadPdf(schoolId, eventId, event);
+	},
 	/**
 	 * The event handler when clicking the button "Cancel"
 	 */
@@ -79,6 +88,9 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isEditEventPopupOpen', true);
 	},
+	isTweetButtonRender: function(role, twitterData: any){
+		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0;
+	},
 	/**
 	 * The function render's component EventHeaderWrapper
 	 * @returns {XML}
@@ -91,6 +103,12 @@ const EventHeaderWrapper = React.createClass({
 				eventAges						= binding.toJS('model.ages'),
 				isUserSchoolWorker 				= RoleHelper.isUserSchoolWorker(this),
 				isShowScoreEventButtonsBlock 	= TeamHelper.isShowScoreEventButtonsBlock(this);
+		//const for tweet button
+		const 	twitterData 				= typeof binding.toJS('twitterData') !== 'undefined' ? binding.toJS('twitterData') : [],
+				twitterIdDefault 			= typeof binding.toJS('twitterIdDefault') !== 'undefined' ? binding.toJS('twitterIdDefault') : '',
+				role 						= RoleHelper.getLoggedInUserRole(this),
+				isPublicAvailableDomain 	= binding.toJS('activeSchoolInfo.publicSite.status') === 'PUBLIC_AVAILABLE',
+				schoolDomain 				= isPublicAvailableDomain && typeof binding.toJS('activeSchoolInfo.domain') !== 'undefined' ? binding.toJS('activeSchoolInfo.domain') : '';
 
 		return (
 					<EventHeader
@@ -102,9 +120,16 @@ const EventHeaderWrapper = React.createClass({
 						isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
 						handleClickCancelEvent			= { this.handleClickCancelEvent }
 						handleClickCloseEvent			= { this.handleClickCloseEvent }
+						handleClickDownloadPdf			= { this.handleClickDownloadPdf }
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
 						onClickEditEventButton			= { this.onClickEditEventButton }
+						//props for tweet button
+						twitterData 					= { twitterData }
+						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData) }
+						schoolDomain 					= { schoolDomain }
+						activeSchoolId 					= { this.props.activeSchoolId }
+						twitterIdDefault 				= { twitterIdDefault }
 					/>
 		);
 	}

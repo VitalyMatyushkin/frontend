@@ -74,20 +74,20 @@ const SummaryPanel = React.createClass({
 	},
 
 	renderDescription: function () {
-		const description = this.props.description;
+		const description = typeof this.props.description !== 'undefined' ? this.props.description : '';
 		let linkText, text;
 
 		if (this.state.expanded) {
 			text = description;
 			linkText = 'Show Less';
 		} else {
-			text = typeof description !== 'undefined' ? description.slice(0, 200) + '...' : undefined;
+			text = description !== '' && description.length > 200 ? description.slice(0, 200) + '...' : description;
 			linkText = 'Read More';
 		}
 		return (
 			<div className="eDescription">
 				{ text }
-			<If condition={description && description.length > 200}>
+			<If condition={Boolean(description && description.length > 200)}>
 				<a className="eDescription_link" onClick={this.expandedText}> { linkText } </a>
 			</If>
 		</div>

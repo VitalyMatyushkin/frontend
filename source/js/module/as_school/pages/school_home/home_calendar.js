@@ -1,11 +1,12 @@
 /* @flow */
 const 	React			= require('react'),
 		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
 		Challenges		= require('module/ui/challenges/challenges'),
 		MonthCalendar	= require('module/ui/calendar/month_calendar'),
-		CalendarActions	= require('./CalendarActions'),
-		Morearty		= require('morearty'),
-		CalendarStyle	= require('./../../../../../styles/ui/b_home_calender.scss');
+		CalendarActions	= require('./CalendarActions');
+
+const 	CalendarStyle	= require('./../../../../../styles/ui/b_home_calender.scss');
 
 /** Show calendar section: month calendar and events for selected date */
 const HomeCalender = React.createClass({
@@ -30,9 +31,9 @@ const HomeCalender = React.createClass({
 		const 	binding 					= this.getDefaultBinding().sub('events'),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				todayDate					= binding.get('todayDate'),
-				monthDate					= binding.get('monthDate'),
 				selectedDate				= binding.get('selectedDate'),
 				isDistinctDatesInSync		= binding.get('distinctEventDatesData.isSync'),
+				monthDate					= isDistinctDatesInSync? binding.get('monthDate') : new Date(),
 				distinctDates				= binding.get('distinctEventDatesData.dates'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				selectedDateEvents			= binding.get('selectedDateEventsData.events');
@@ -68,7 +69,7 @@ const HomeCalender = React.createClass({
 								activeSchoolId	= {activeSchoolId}
 								isSync			= {isSelectedDateEventsInSync}
 								isDaySelected	= {true}
-								events			= {selectedDateEvents.toJS()}
+								events			= {isSelectedDateEventsInSync ? selectedDateEvents.toJS() : {}}
 								onClick			= {this.handleClickEvent}
 							/>
 						</div>

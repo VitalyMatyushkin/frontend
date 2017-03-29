@@ -51,7 +51,9 @@ const ChallengeModel = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getName = function(event, activeSchoolId){
-	return typeof activeSchoolId !== 'undefined' && typeof event.generatedNames[activeSchoolId] !== 'undefined' ? event.generatedNames[activeSchoolId] : event.generatedNames.official;
+	return typeof activeSchoolId !== 'undefined' && typeof event.generatedNames[activeSchoolId] !== 'undefined' ?
+		event.generatedNames[activeSchoolId] :
+		event.generatedNames.official;
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){

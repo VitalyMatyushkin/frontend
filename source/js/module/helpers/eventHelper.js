@@ -113,16 +113,21 @@ const EventHelper = {
 	_isShowEventButtons: function(thiz) {
 		return RoleHelper.isUserSchoolWorker(thiz);
 	},
-	isNotFinishedEvent: function(binding) {
+	isNotFinishedEventByBinding: function(binding) {
+		const self = this;
+
+		return self.isNotFinishedEvent(binding.toJS('model'));
+	},
+	isNotFinishedEvent: function(event) {
 		const self = this;
 
 		return (
-			binding.get('model.status') === self.EVENT_STATUS.COLLECTING_INVITE_RESPONSE ||
-			binding.get('model.status') === self.EVENT_STATUS.SENDING_INVITES ||
-			binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-			binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
-			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED ||
-			binding.get('model.status') === self.EVENT_STATUS.INVITES_SENT
+			event.status === self.EVENT_STATUS.COLLECTING_INVITE_RESPONSE ||
+			event.status === self.EVENT_STATUS.SENDING_INVITES ||
+			event.status === self.EVENT_STATUS.NOT_FINISHED ||
+			event.status === self.EVENT_STATUS.DRAFT ||
+			event.status === self.EVENT_STATUS.ACCEPTED ||
+			event.status === self.EVENT_STATUS.INVITES_SENT
 		);
 	},
 	isGeneralMode: function(binding) {
