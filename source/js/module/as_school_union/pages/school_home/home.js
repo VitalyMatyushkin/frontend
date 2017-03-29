@@ -33,31 +33,36 @@ const SchoolHomePage = React.createClass({
 			case '#scores':
 				if (ReactDOM.findDOMNode(this.refs.scores) !== null) {
 					ReactDOM.findDOMNode(this.refs.scores).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#calendar':
 				if (ReactDOM.findDOMNode(this.refs.calendar) !== null) {
-				ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
+					ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#fixtures':
 				if (ReactDOM.findDOMNode(this.refs.fixtures) !== null) {
-				ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
+					ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#news':
 				if (ReactDOM.findDOMNode(this.refs.news) !== null) {
-				ReactDOM.findDOMNode(this.refs.news).scrollIntoView();
+					ReactDOM.findDOMNode(this.refs.news).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#results':
 				if (ReactDOM.findDOMNode(this.refs.results) !== null) {
-				ReactDOM.findDOMNode(this.refs.results).scrollIntoView();
+					ReactDOM.findDOMNode(this.refs.results).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#schools':
 				if (ReactDOM.findDOMNode(this.refs.schools) !== null) {
-				ReactDOM.findDOMNode(this.refs.schools).scrollIntoView();
+					ReactDOM.findDOMNode(this.refs.schools).scrollIntoView();
 				}
 				break;
 		}
