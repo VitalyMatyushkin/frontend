@@ -23,7 +23,7 @@ const StudentsFormHelper = {
 	 * Copy next of kin data(server side format) to form next of kin data(client side format).
 	 * @param data
 	 */
-	convertNextOfKinToClientFormat:function(data){
+	convertNextOfKinToClientFormat: function(data){
 		this.initEmptyNextOfKin(data);
 
 		data.nextOfKin.forEach((nextOfKinItem, index) => {
@@ -37,23 +37,33 @@ const StudentsFormHelper = {
 	},
 	convertNextOfKinToServerFormat: function(countNextOfKinBlocks, data){
 		const nok = [];
-		for(let index = 0; index < countNextOfKinBlocks; index++) {
-			nok.push({
-				relationship:	'',
-				firstName:		'',
-				lastName:		'',
-				phone:			'',
-				email:			''
-			});
 
-			for(let key in nok[index]){
-				const value = data[`nok_${index}_${key}`];
-				if(typeof value !== 'undefined') {
-					nok[index][key] = value;
+		for(let index = 0; index < countNextOfKinBlocks; index++) {
+			const emptyNextOfKin = {};
+
+			// iterate next of kin fields for current index
+			// data fields looks like:
+			// nok_0_relationship
+			// ...
+			// nok_0_email
+			// ...
+			// nok_N_relationship
+			// ...
+			// nok_N_email
+			// N = MAX_COUNT_NEXT_KIN_BLOCK
+			this.nextOfKinFields.forEach(field => {
+				const value = data[`nok_${index}_${field}`];
+
+				if(typeof value !== 'undefined' && value !== '') {
+					emptyNextOfKin[field] = value;
 					// it's a little trick - delete old form data
 					// because this should not be in post data
-					data[`nok_${index}_${key}`] = undefined;
+					data[`nok_${index}_${field}`] = undefined;
 				}
+			});
+
+			if(Object.keys(emptyNextOfKin).length > 0) {
+				nok.push(emptyNextOfKin);
 			}
 		}
 
