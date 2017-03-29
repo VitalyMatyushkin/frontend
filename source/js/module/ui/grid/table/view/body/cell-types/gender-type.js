@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Anatoly on 21.07.2016.
  */
@@ -10,7 +11,7 @@ const GenderType = React.createClass({
 		cell: 		React.PropTypes.object.isRequired,
 		dataItem:	React.PropTypes.object.isRequired
 	},
-	getGender: function (gender) {
+	getGender: function (gender: string) {
 		if(gender) {
 			return <GenderIcon classes="bIcon-gender" gender={gender}/>;
 		} else

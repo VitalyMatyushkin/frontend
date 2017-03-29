@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * Created by Anatoly on 20.07.2016.
  */
@@ -14,7 +16,9 @@ const Row = React.createClass({
 	},
 
 	onClickRow: function(){
-		this.props.handleClick(this.props.dataItem.id, this.props.dataItem.name);
+		if(this.props.handleClick) {
+			this.props.handleClick(this.props.dataItem.id, this.props.dataItem.name);
+		}
 	},
 	
 	render: function() {
