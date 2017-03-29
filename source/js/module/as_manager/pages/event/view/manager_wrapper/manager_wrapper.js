@@ -208,8 +208,8 @@ const ManagerWrapper = React.createClass({
 				/>
 				<div className="eTeamManagerWrapper_footer">
 					<Button	text				= "Cancel"
-							   onClick				= {this.handleClickCancelButton}
-							   extraStyleClasses	= {"mCancel"}
+							onClick				= {this.handleClickCancelButton}
+							extraStyleClasses	= {"mCancel"}
 						/>
 					<Button	text				= "Save"
 							onClick				= {this.handleClickSubmitButton}

@@ -5,6 +5,7 @@ const	React 			= require ('react'),
 const PermissionDetails = React.createClass({
 	propTypes: {
 		currentPostcode			: React.PropTypes.object,
+		extraCssStyle			: React.PropTypes.string,
 		handleSelectPostcode	: React.PropTypes.func.isRequired,
 		handleEscapePostcode	: React.PropTypes.func.isRequired
 	},
@@ -38,6 +39,9 @@ const PermissionDetails = React.createClass({
 		});
 		this.props.handleEscapePostcode();
 	},
+	getExtraCssStyle: function() {
+		return typeof this.props.extraCssStyle !== 'undefined' ? this.props.extraCssStyle : '';
+	},
 	render: function() {
 		return (
 				<div>
@@ -47,7 +51,7 @@ const PermissionDetails = React.createClass({
 									serverField		= "postcode"
 									onSelect		= {this.props.handleSelectPostcode}
 									defaultItem		= {this.props.currentPostcode}
-									extraCssStyle	= {'mRegistrationPostcode'}
+									extraCssStyle	= {this.getExtraCssStyle()}
 					/>
 					<CrossButton	onClick={this.handleEscapePostcode}/>
 				</div>

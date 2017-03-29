@@ -7,7 +7,10 @@ const ConfirmPopup = React.createClass({
 
 	propTypes: {
 		isOkButtonDisabled:			React.PropTypes.bool,
-		okButtonText:				React.PropTypes.string,
+		okButtonText:				React.PropTypes.oneOfType([
+			React.PropTypes.string,
+			React.PropTypes.array //if we want use tags (ex. <i> font awesome)
+		]),
 		cancelButtonText:			React.PropTypes.string,
 		handleClickOkButton:		React.PropTypes.func,
 		handleClickCancelButton:	React.PropTypes.func,

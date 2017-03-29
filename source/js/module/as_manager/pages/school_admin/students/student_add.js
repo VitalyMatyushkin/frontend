@@ -1,42 +1,30 @@
-const 	StudentForm = require('module/as_manager/pages/school_admin/students/student_form'),
-		Morearty	= require('morearty'),
-		React 		= require('react');
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		StudentForm			= require('module/as_manager/pages/school_admin/students/student_form'),
+		StudentsFormHelper	= require('./students_form_helper');
 
 /** Page to add new student to school */
 const StudentAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
+		const	self			= this,
+				globalBinding	= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= globalBinding.get('userRules.activeSchoolId');
 
 		self.activeSchoolId = activeSchoolId;
 	},
-	saveNextOfKin:function(student){
-		const nok = [];
+	submitAdd: function(data){
+		const	binding					= this.getDefaultBinding(),
+				countNextOfKinBlocks	= binding.toJS('countNextOfKinBlocks');
 
-		nok.push({
-			relationship:   '',
-			firstName:      '',
-			lastName:       '',
-			phone:          '',
-			email:          ''
-		});
+		StudentsFormHelper.convertNextOfKinToServerFormat(countNextOfKinBlocks, data);
+		return window.Server.schoolStudents.post(this.activeSchoolId, data)
+			.then(() => {
+				document.location.hash = 'school_admin/students';
 
-		for(let key in nok[0]){
-			nok[0][key] = student['nok_'+key];
-		}
-		student.nextOfKin = nok;
+				return true;
+			});
 	},
-
-    submitAdd: function(data){
-		this.saveNextOfKin(data);
-        return window.Server.schoolStudents.post(this.activeSchoolId, data).then(() => {
-            document.location.hash = 'school_admin/students';   // TODO: holly cow!
-			document.location.reload();
-        })
-    },
-    
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();

@@ -42,12 +42,16 @@ module.exports = {
 						"transform-es2015-template-literals",   // allow string interpolation
 						"transform-es2015-classes",				// allow class syntax
 						"transform-class-properties",
-						"transform-es2015-parameters"			// transforming default values 
+						"transform-es2015-parameters",			// transforming default values
+						"transform-es2015-shorthand-properties"
 					]
 				}
 			}, {
 				test: /\.scss$/,
 				loader: ExtractTextPlugin.extract('css!postcss!sass')
+			}, {
+				include: /\.json$/,
+				loaders: ["json-loader"]
 			}
 		]
 	},

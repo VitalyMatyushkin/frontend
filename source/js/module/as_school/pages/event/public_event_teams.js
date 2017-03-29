@@ -69,8 +69,9 @@ const PublicEventTeams = React.createClass({
 	},
 	render: function() {
 		return (
-			<EventTeamsView	binding		= { this.getViewPlayersBinding() }
-
+			<EventTeamsView
+				binding			= { this.getViewPlayersBinding() }
+				activeSchoolId 	= { this.props.activeSchoolId }
 			/>
 		);
 	}

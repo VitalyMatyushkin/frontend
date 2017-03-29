@@ -44,6 +44,7 @@ const serviceList = {
         serviceList.schoolSettings = new Service('/i/schools/{schoolId}/settings', binding);
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
+		serviceList.publicSchoolSports = new Service('/public/schools/{schoolId}/sports', binding);
         serviceList.publicSchoolCheckPassword = new Service('/public/schools/{schoolId}/publicSite/password/check', binding);
 
 		serviceList.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
@@ -88,6 +89,7 @@ const serviceList = {
         serviceList.schoolNews = new Service('/i/schools/{schoolId}/news', binding);
         serviceList.schoolNewsCount = new Service('/i/schools/{schoolId}/news/count', binding);
         serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
+        serviceList.publicSchoolNewsItem = new Service('/public/schools/{schoolId}/news/{newsId}',binding);
         serviceList.schoolNewsItem = new Service('/i/schools/{schoolId}/news/{newsId}',binding);
 
         //Permission Requests
@@ -101,8 +103,8 @@ const serviceList = {
         serviceList.schoolUserPermission = new Service('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
 
         // sports
+		serviceList.sport = new Service('/public/sports/{sportId}', binding);
         serviceList.sports = new Service('/public/sports', binding);
-        serviceList.sport = new Service('/public/sports/{sportId}', binding);
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
@@ -118,6 +120,7 @@ const serviceList = {
         serviceList.schoolEventTeam = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
         serviceList.schoolEventPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/photos/{photoId}', binding);
         serviceList.schoolEventPhotos = new Service('/i/schools/{schoolId}/events/{eventId}/photos', binding);
+        // serviceList.schoolEventPdf = new Service('/i/schools/{schoolId}/events/{eventId}/pdf', binding);
 
 		// event individuals
 		serviceList.schoolEventIndividual = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/{individualId}', binding);
@@ -205,6 +208,8 @@ const serviceList = {
 		
 		// Integrations
 		serviceList.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
+		serviceList.integrationTwitter = new Service('/i/schools/{schoolId}/integrations/twitter', binding);
+		serviceList.integrationTwitterTweet = new Service('/i/schools/{schoolId}/integrations/twitter/{twitterId}/tweet', binding);
 		serviceList.integrations = new Service('/i/schools/{schoolId}/integrations', binding);
 		serviceList.integration = new Service('/i/schools/{schoolId}/integrations/{integrationId}', binding);
 

@@ -54,13 +54,19 @@ const LoginPublicSchoolPage = React.createClass({
 			}
 		});
 	},
+	
+	handleClickClosePopup: function(){
+		const binding = this.getDefaultBinding();
+		binding.set('isPasswordPopupOpen', false);
+	},
+	
 	render: function(){
 		const binding = this.getDefaultBinding();
 
 		return (
-				<Popup	isOpened				= { binding.toJS('isPasswordPopupOpen') }
+				<Popup	isOpened				= { Boolean(binding.toJS('isPasswordPopupOpen')) }
 						isShowCloseButton		= { false }
-						handleClickCloseButton	= { this.handleClickCloseChangePhonePopup }
+						handleClickCloseButton	= { this.handleClickClosePopup }
 				>
 					<div className="bPublicSchoolFormLogin">
 						<h2 className="ePublicSchoolFormLogin_header">Public School Site</h2>

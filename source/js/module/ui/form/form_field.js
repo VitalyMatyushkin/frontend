@@ -17,7 +17,13 @@ const FormField = React.createClass({
 		isDisabled:			React.PropTypes.bool, 	//false - show field like disabled
 		placeHolder:		React.PropTypes.string,
 		onSelect:			React.PropTypes.func,
+		isVisible:			React.PropTypes.bool,
 		binding:			React.PropTypes.any
+	},
+	getDefaultProps: function() {
+		return {
+			isVisible: true
+		};
 	},
 	getErrorText: function() {
 		const error = this.getDefaultBinding().get('error');
@@ -44,7 +50,8 @@ const FormField = React.createClass({
 		const fieldStyleClass = classNames('eForm_field',
 			self.props.classNames, {
 				mInvalid: binding.get('showError'),
-				mValid: binding.get('showSuccess')
+				mValid: binding.get('showSuccess'),
+				mInvisible: !this.props.isVisible
 			});
 		//If a specific class has been provided for styling error messages then use it
 		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName),

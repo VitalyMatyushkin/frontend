@@ -8,6 +8,7 @@ const	React							= require('react'),
 		SchoolUnionSchoolListWrapper	= require('./pages/school_union_school_list/school_union_school_list_wrapper'),
 		SchoolUnionSchoolViewWrapper	= require('./pages/school_union_school_view/school_union_school_view_wrapper'),
 		SchoolUnionNews					= require('./pages/school_union_news/school_union_news'),
+		SchoolUnionGallery				= require('./pages/school_union_gallery/school_union_gallery'),
 		SubMenu							= require('module/ui/menu/sub_menu'),
 		SchoolUnionStyle				= require('styles/ui/b_school_union.scss');
 
@@ -54,6 +55,10 @@ const SchoolUnionAdmin = React.createClass({
 			href	: '/#school_union_admin/news',
 			name	: 'News',
 			key		: 'News'
+		}, {
+			href	: '/#school_union_admin/gallery',
+			name	: 'Gallery',
+			key		: 'Gallery'
 		}];
 	},
 	render: function() {
@@ -84,6 +89,10 @@ const SchoolUnionAdmin = React.createClass({
 						<Route	path		= "/school_union_admin/news /school_union_admin/news/:mode"
 								binding		= {binding.sub('schoolUnionNews')}
 								component	= {SchoolUnionNews}
+						/>
+						<Route	path		= "/school_union_admin/gallery /school_union_admin/gallery/:mode"
+								  binding	= {binding.sub('schoolUnionGallery')}
+								  component	= {SchoolUnionGallery}
 						/>
 
 						<Route	path		= "/school_union_admin/school /school_union_admin/school/:schoolId"

@@ -1,60 +1,68 @@
 /**
  * Created by bridark on 04/08/15.
  */
-const   TypeMixin   = require('module/ui/form/types/type_mixin'),
-        Morearty    = require('morearty'),
-        React       = require('react');
+const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
+		Morearty 	= require('morearty'),
+		React 		= require('react');
 
-const TypeTextArea =  React.createClass({
-    propTypes: {
-        textType: React.PropTypes.string
-    },
-    mixins: [Morearty.Mixin, TypeMixin],
-    componentWillMount: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
+const TypeTextArea = React.createClass({
+	propTypes: {
+		textType: React.PropTypes.string
+	},
+	mixins: [Morearty.Mixin, TypeMixin],
+	
+	//when we change value in textarea, component rerender and reset current position scroll and cursor,
+	//so we store current scroll and cursor position and prevent reset
+	componentWillMount: function() {
+		const binding = this.getDefaultBinding();
 
-        // На случай, если форма заполняется асинхронно
-        binding.addListener('defaultValue', function() {
-            self._forceNewValue(binding.get('defaultValue'));
-        });
-    },
-    _forceNewValue: function(value) {
-        var self = this,
-            oldValue;
+		// На случай, если форма заполняется асинхронно
+		binding.addListener('defaultValue', () => {
+			this.forceNewValue(binding.get('defaultValue'));
+		});
+		this.scrollPosition = 0;
+	},
+	componentDidUpdate: function () {
 
-        if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.value === '') {
-            self.refs.fieldInput.value = value;
-            self.fullValidate(value);
-        }
-    },
-    handeBlur: function(event) {
-        var self = this;
+		if(this.cursorPosition >= 0){
+			this.refs.fieldInput.setSelectionRange(this.cursorPosition, this.cursorPosition);
+		}
+	},
+	forceNewValue: function(value) {
 
-        self.setValue(self.refs.fieldInput.value);
-    },
-    handleChange: function(event) {
-        var self = this;
+		if (value !== undefined && this.refs.fieldInput && this.refs.fieldInput.value === '') {
+			this.refs.fieldInput.value = value;
+			this.fullValidate(value);
+		}
+	},
+	handleBlur: function() {
 
-        self.changeValue(self.refs.fieldInput.value);
-    },
-    render: function () {
-        var self = this,
-            defaultValue	= self.getDefaultBinding().get('defaultValue'),
-			value			= self.getDefaultBinding().get('value');
+		this.cursorPosition = -1;	//it is necessary to block the installation of the cursor after a loss of focus.
+		this.setValue(this.refs.fieldInput.value);
+	},
+	handleChange: function(event) {
 
-        return (
+		this.cursorPosition = event.target.selectionStart;
+		this.scrollPosition = this.refs.fieldInput.scrollTop;
+		this.changeValue(this.refs.fieldInput.value);
+	},
+	render: function () {
+		const 	defaultValue	= this.getDefaultBinding().get('defaultValue'),
+				value			= this.getDefaultBinding().get('value');
+		if (typeof this.refs.fieldInput !== 'undefined') {
+			this.refs.fieldInput.scrollTop = this.scrollPosition;
+		}
+		return (
 			<textarea	ref			= "fieldInput"
-						value		= {value}
-						type		= {self.props.textType || 'textarea'}
-						placeholder	= {self.props.placeholder}
-						onBlur		= {self.handeBlur}
-						onChange	= {self.handleChange}
+						value		= { value }
+						type		= { this.props.textType || 'textarea' }
+						placeholder	= { this.props.placeholder }
+						onBlur		= { this.handleBlur }
+						onChange	= { this.handleChange }
 			>
 			</textarea>
-        )
-    }
+		)
+	}
 });
-
 
 module.exports = TypeTextArea;

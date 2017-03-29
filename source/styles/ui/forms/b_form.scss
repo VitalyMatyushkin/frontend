@@ -111,15 +111,6 @@ select {
   height:   40px;
 }
 
-.eForm_placeholder {
-  padding:          5px;
-  border:           solid 1px #c2c2c2;
-  border-radius:    4px;
-  background-color: #e1e1e1;
-  margin-top:       5px;
-  margin-bottom:    5px;
-}
-
 .eForm_fieldSet textarea{
   resize: vertical;
   min-height: 67px;
@@ -163,6 +154,16 @@ select {
     align-items: flex-start;
 
     max-width: 190px;
+  }
+  &.mWideSingleLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    width: 90%;
+  }
+  &.mInvisible {
+    display: none;
   }
   p{
     font-size: 12px;
@@ -237,7 +238,7 @@ select {
   width: 100%;
   justify-content: flex-end;
   box-sizing: border-box;
-  padding: 0 0 15px 0;
+  padding: 20px 15px 20px 0;
 }
 
 .eForm_atCenter{
