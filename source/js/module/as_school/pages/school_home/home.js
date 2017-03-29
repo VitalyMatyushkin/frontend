@@ -32,24 +32,29 @@ const SchoolHomePage = React.createClass({
 		const hash = document.location.hash;
 
 		switch (hash) {
+			//we scroll page on 70px to top, because top menu has width 70px
 			case '#calendar':
 				if (ReactDOM.findDOMNode(this.refs.calendar) !== null) {
 					ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#fixtures':
 				if (ReactDOM.findDOMNode(this.refs.fixtures) !== null) {
 					ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#news':
 				if (ReactDOM.findDOMNode(this.refs.news) !== null) {
 					ReactDOM.findDOMNode(this.refs.news).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 			case '#results':
 				if (ReactDOM.findDOMNode(this.refs.results) !== null) {
 					ReactDOM.findDOMNode(this.refs.results).scrollIntoView();
+					window.scrollBy(0, -70);
 				}
 				break;
 		}
