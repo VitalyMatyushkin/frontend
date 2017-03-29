@@ -7,3 +7,9 @@
 
 .eTeamManagerWrapper_footer {
 }
+
+@media screen and (max-width:1130px) {
+  .bTeamManagerWrapper {
+	width: 100%; // remove horizontal scrollbar on mobile and tablet
+  }
+}
