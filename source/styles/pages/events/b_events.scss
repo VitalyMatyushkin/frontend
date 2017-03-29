@@ -14,7 +14,7 @@
   &_row {
     @include make-row();
     display: flex;//added flexbox for equal height columns
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-content:stretch;
   }
 
