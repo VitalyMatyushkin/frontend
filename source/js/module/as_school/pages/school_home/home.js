@@ -32,6 +32,7 @@ const SchoolHomePage = React.createClass({
 		const hash = document.location.hash;
 
 		switch (hash) {
+			//we scroll page on 70px to top, because top menu has width 70px
 			case '#calendar':
 				if (ReactDOM.findDOMNode(this.refs.calendar) !== null) {
 					ReactDOM.findDOMNode(this.refs.calendar).scrollIntoView();
