@@ -1,11 +1,11 @@
 /**
  * Created by wert on 06.09.16.
  */
-
+/* @flow */
 const Immutable = require('immutable');
 
 /** Load in binding data for all dates which have events */
-function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
+function loadMonthDistinctEventDatesToBinding(monthDate: Date, activeSchoolId: string, eventsBinding: any){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
@@ -51,7 +51,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 }
 
 /** Load in binding data for all dates which have events */
-function loadMonthDistinctEventDatesToBindingForUnion(monthDate, activeUnionlId, eventsBinding){
+function loadMonthDistinctEventDatesToBindingForUnion(monthDate: Date, activeUnionlId: string, eventsBinding: any){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			 monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
@@ -78,7 +78,7 @@ function loadMonthDistinctEventDatesToBindingForUnion(monthDate, activeUnionlId,
 
 }
 
-function loadDailyEventsForUnion(date, activeUnionId, eventsBinding) {
+function loadDailyEventsForUnion(date: Date, activeUnionId: string, eventsBinding: any) {
 	const 	dayStart	= new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
 			dayEnd		= new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
 
@@ -104,7 +104,7 @@ function loadDailyEventsForUnion(date, activeUnionId, eventsBinding) {
 		});
 }
 
-function loadDailyEvents(date, activeSchoolId, eventsBinding) {
+function loadDailyEvents(date: Date, activeSchoolId: string, eventsBinding: any) {
 	const 	dayStart	= new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
 			dayEnd		= new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
 
@@ -149,7 +149,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 	});
 }
 
-function setNextMonth(activeSchoolId, eventsBinding) {
+function setNextMonth(activeSchoolId: string, eventsBinding: any) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			nextMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1);
 
@@ -158,7 +158,7 @@ function setNextMonth(activeSchoolId, eventsBinding) {
 	loadMonthDistinctEventDatesToBinding(nextMonthDate, activeSchoolId, eventsBinding);
 }
 
-function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
+function setNextSevenDaysEvents(activeSchoolId: string, eventsBinding: any) {
 	const dayStart = new Date(); // current day
 
 	// create end day = start day + 7 days
@@ -186,7 +186,7 @@ function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
-function setNextSevenDaysEventsForUnion(activeUnionId, eventsBinding) {
+function setNextSevenDaysEventsForUnion(activeUnionId: string, eventsBinding: any) {
 	const dayStart = new Date(); // current day
 
 	// create end day = start day + 7 days
@@ -215,16 +215,16 @@ function setNextSevenDaysEventsForUnion(activeUnionId, eventsBinding) {
 	});
 }
 
-function setPrevSevenDaysFinishedEventsForUnion(activeUnionId, eventsBinding) {
+function setPrevSevenDaysFinishedEventsForUnion(activeUnionId: string, eventsBinding: any, optDates: number = 7) {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
-	dayStart.setDate(dayStart.getDate() - 7);
+	dayStart.setDate(dayStart.getDate() - optDates);
 
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 
 	const filter = {
-		limit: 100,
+		limit: 10,
 		order: "startTime DESC",
 		where: {
 			startTime: {
@@ -244,7 +244,7 @@ function setPrevSevenDaysFinishedEventsForUnion(activeUnionId, eventsBinding) {
 	});
 }
 
-function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
+function setPrevSevenDaysFinishedEvents(activeSchoolId: string, eventsBinding: any) {
 	const	dayStart	= new Date(),
 			 dayEnd		= new Date();
 
@@ -272,7 +272,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 	});
 }
 
-function setPrevMonth(activeSchoolId, eventsBinding) {
+function setPrevMonth(activeSchoolId: string, eventsBinding: any) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			prevMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1);
 
@@ -281,13 +281,13 @@ function setPrevMonth(activeSchoolId, eventsBinding) {
 	loadMonthDistinctEventDatesToBinding(prevMonthDate, activeSchoolId, eventsBinding);
 }
 
-function setSelectedDate(date, activeSchoolId, eventsBinding) {
+function setSelectedDate(date: Date, activeSchoolId: string, eventsBinding: any) {
 	eventsBinding.set('selectedDate', date);
 
 	return loadDailyEvents(date, activeSchoolId, eventsBinding);
 }
 
-function setSelectedDateForUnion(date, activeUnionId, eventsBinding) {
+function setSelectedDateForUnion(date: Date, activeUnionId: string, eventsBinding: any) {
 	eventsBinding.set('selectedDate', date);
 	return loadDailyEventsForUnion(date, activeUnionId, eventsBinding);
 }
