@@ -141,6 +141,7 @@ const AddPermissionRequest = React.createClass({
 					<PostcodeSelector	currentPostcode			= {binding.toJS('postcode')}
 										handleSelectPostcode	= {this.handleSelectPostcode}
 										handleEscapePostcode	= {this.handleEscapePostcode}
+										extraCssStyle 			= {'mInline mRightMargin mWidth250'}
 					/>
 				</div>
 				<FormField
