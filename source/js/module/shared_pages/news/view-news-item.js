@@ -162,7 +162,7 @@ const ViewNewsItem = React.createClass({
 			}, data).then( () => {
 				binding.set('isPopupOpen', false);
 				window.simpleAlert(
-					'Success published!',
+					'Your tweet was published successfully!',
 					'Ok',
 					() => {}
 				);
