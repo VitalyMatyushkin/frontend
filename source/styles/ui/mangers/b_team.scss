@@ -151,3 +151,9 @@
   color: #FF0000;
   display: none;
 }
+
+@media screen and (max-width:1130px) {
+  .eManager_gameFieldContainer {
+	display: none; // we no display image with game field on tablet and mobile
+  }
+}
