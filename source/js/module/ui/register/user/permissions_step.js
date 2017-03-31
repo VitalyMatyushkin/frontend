@@ -56,13 +56,15 @@ const PermissionsStep = React.createClass({
 	checkSchoolAvailibleForRegistrationStudent: function() {
 		const 	binding = this.getDefaultBinding(),
 				schoolId = binding.get('fields.0.schoolId');
-
-		window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
-			if (school.studentSelfRegistrationEnabled !== true) {
-				binding.sub('fields.0.schoolId').remove();
-				binding.sub('fields.0.schoolName').remove();
-			}
-		});
+		
+		if (typeof schoolId !== "undefined") {
+			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
+				if (school.studentSelfRegistrationEnabled !== true) {
+					binding.sub('fields.0.schoolId').remove();
+					binding.sub('fields.0.schoolName').remove();
+				}
+			});
+		}
 	},
 	/**
 	 * For Parent permission request only. It will add items to array to make
