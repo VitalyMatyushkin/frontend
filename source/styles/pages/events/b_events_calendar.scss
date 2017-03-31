@@ -122,6 +122,7 @@
 .eChallenge_childName{
   padding-top: 5px;
   width: 20%;
+  text-align: center;
 }
 .eChildFixturesAll {
   width: 80%;
@@ -134,6 +135,12 @@
   margin: 15px auto;
   max-width: 1060px;
   width: 100%;
+}
+
+.eChallenge_all {
+  display: flex;
+  align-items: center;
+  @include border-gradient($borderColor, $secondBackgroundColor);
 }
 
 @media screen and (max-width: 480px) {

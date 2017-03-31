@@ -21,7 +21,7 @@ const SchoolChallenges = function(props){
 		}).toArray();
 
 		return (
-			<div className= "eChallenge eChallenge_all">
+			<div className= "eChallenge_all">
 				<div className="eChildFixturesAll"> {schoolFixtures}</div>
 				<div className="eChallenge_childName">{`${school.get('name')}`}</div>
 			</div>
