@@ -1,6 +1,9 @@
 .bConfirmPopup {
-  position: relative;
+  position: absolute;
   display: inline-block;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
 
   min-width: 500px;
   min-height: 50px;
