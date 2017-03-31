@@ -71,8 +71,8 @@ var validationsSet = {
 		}
 	},
 	domain: function(value){
-		if (/[^a-z\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
-			return 'Should contain only lowercase characters';
+		if (/[^a-z0-9\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
+			return 'Should contain only lowercase characters and digits';
 		} else {
 			return false;
 		}
