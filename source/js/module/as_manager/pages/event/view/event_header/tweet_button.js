@@ -64,7 +64,7 @@ const TweetButton = React.createClass({
 				isPopupOpen: false
 			});
 			window.simpleAlert(
-				'Success published!',
+				'Your tweet was published successfully!',
 				'Ok',
 				() => {}
 			);

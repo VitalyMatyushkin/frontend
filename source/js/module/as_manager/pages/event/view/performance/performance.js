@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
+		Promise 		= require('bluebird'),
 
 		PerformanceView	= require('./performance_view'),
 		PerformanceEdit	= require('./performance_edit');

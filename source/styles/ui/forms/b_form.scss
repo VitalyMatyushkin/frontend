@@ -70,6 +70,9 @@ $labelColor:              #8c8c8c;
     background: $inputBg url("/images/arrow_down.svg") no-repeat 98% center;
     background-size: 10px;
   }
+  select::-ms-expand {
+	display: none;
+  }
   input.eDateInput{
     width: 100px;
   }
@@ -79,6 +82,10 @@ select {
   appearance: none;
   background: url("/images/arrow_down.svg") no-repeat 98% center;
   background-size: 10px;
+}
+
+select::-ms-expand {
+  display: none;
 }
 
 .mDetails {

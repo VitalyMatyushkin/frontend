@@ -267,17 +267,24 @@ function ColorPicker(slideElement, pickerElement, callback) {
 
 		var hsvRect = slideClone.getElementsByTagName('rect')[0];
 
-		hsvGradient.id = 'gradient-hsv-' + uniqID;
-		hsvRect.setAttribute('fill', 'url(#' + hsvGradient.id + ')');
+		if (hsvGradient !== null) {
+			hsvGradient.id = 'gradient-hsv-' + uniqID;
+			hsvRect.setAttribute('fill', 'url(#' + hsvGradient.id + ')');
+		}
 
 		var blackAndWhiteGradients = [pickerClone.getElementById('gradient-black'), pickerClone.getElementById('gradient-white')];
 		var whiteAndBlackRects = pickerClone.getElementsByTagName('rect');
+		
+		if (blackAndWhiteGradients[0] !== null && blackAndWhiteGradients[1] !== null) {
+			blackAndWhiteGradients[0].id = 'gradient-black-' + uniqID;
+			blackAndWhiteGradients[1].id = 'gradient-white-' + uniqID;
+		}
+		
+		if (blackAndWhiteGradients[0] !== null && blackAndWhiteGradients[1] !== null) {
+			whiteAndBlackRects[0].setAttribute('fill', 'url(#' + blackAndWhiteGradients[1].id + ')');
+			whiteAndBlackRects[1].setAttribute('fill', 'url(#' + blackAndWhiteGradients[0].id + ')');
+		}
 
-		blackAndWhiteGradients[0].id = 'gradient-black-' + uniqID;
-		blackAndWhiteGradients[1].id = 'gradient-white-' + uniqID;
-
-		whiteAndBlackRects[0].setAttribute('fill', 'url(#' + blackAndWhiteGradients[1].id + ')');
-		whiteAndBlackRects[1].setAttribute('fill', 'url(#' + blackAndWhiteGradients[0].id + ')');
 
 		this.slideElement.appendChild(slideClone);
 		this.pickerElement.appendChild(pickerClone);
