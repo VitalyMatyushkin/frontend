@@ -116,10 +116,24 @@ const PermissionAcceptPage = React.createClass({
 					houseId: {
 						$in: houseIdArray
 					},
-					lastName: {
+					$or: [
+						{
+							firstName: {
+								like: lastName,
+								options: 'i'
+							}
+						},
+						{
+							lastName: {
+								like: lastName,
+								options: 'i'
+							}
+						}
+					]
+					/*lastName: {
 						like: lastName,
 						options: 'i'
-					}
+					}*/
 				}
 			}
 		}
