@@ -130,10 +130,6 @@ const PermissionAcceptPage = React.createClass({
 							}
 						}
 					]
-					/*lastName: {
-						like: lastName,
-						options: 'i'
-					}*/
 				}
 			}
 		}
