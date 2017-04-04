@@ -4,9 +4,12 @@
 const	React			= require('react'),
 		DomainHelper	= require('../../helpers/domain_helper'),
 		Auth			= require('../../core/services/AuthorizationServices'),
+		Morearty    	= require('morearty'),
+		SchoolHelper 	= require('module/helpers/school_helper'),
 		RSC				= require('./RoleSelectorComponent');
 
 const RoleSelector = React.createClass({
+	mixins: [Morearty.Mixin],
 	componentWillMount:function() {
 		const availableRoles = this.props.availableRoles;
 
@@ -26,7 +29,11 @@ const RoleSelector = React.createClass({
 	 * @param role
 	 */
 	getSchoolKindFromRole: function(role) {
-		return role.permissions[0].school.kind;
+		const 	activeSchoolId 		= SchoolHelper.getActiveSchoolId(this),
+				activeSchoolIndex 	= role.permissions.findIndex(permission => {
+					return permission.schoolId === activeSchoolId;
+				});
+		return activeSchoolIndex === -1 ? role.permissions[0].school.kind : role.permissions[activeSchoolIndex].school.kind;
 	},
 	render: function(){
 		const availableRoles = this.props.availableRoles;

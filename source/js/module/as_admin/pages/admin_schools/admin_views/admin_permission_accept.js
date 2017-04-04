@@ -24,19 +24,18 @@ const PermissionAcceptPage = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			routingData = globalBinding.sub('routing.parameters').toJS(),
-			prId = routingData.prId,
-            schoolId = routingData.schoolId;
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				prId 			= routingData.prId,
+				schoolId 		= routingData.schoolId;
 
 		binding.clear();
-        binding.set('prId', prId);
-        binding.set('schoolId', schoolId);
+		binding.set('prId', prId);
+		binding.set('schoolId', schoolId);
 
 		if (prId) {
-			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
+			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then( data => {
 				binding
 					.atomically()
 					.set('comment', data.requestedPermission.comment)
@@ -45,9 +44,8 @@ const PermissionAcceptPage = React.createClass({
 		}
 	},
 	serviceFormFilter: function(fromName) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-            schoolId = binding.get('schoolId');
+		const 	binding 	= this.getDefaultBinding(),
+				schoolId 	= binding.get('schoolId');
 
 		return window.Server.schoolForms.get(schoolId, {
 			filter: {
@@ -61,15 +59,13 @@ const PermissionAcceptPage = React.createClass({
 		});
 	},
 	onSelectForm: function(formId) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('formId', formId);
 	},
 	serviceHouseFilter: function(houseName) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-            schoolId = binding.get('schoolId');
+		const 	binding 	= this.getDefaultBinding(),
+				schoolId 	= binding.get('schoolId');
 
 		return window.Server.schoolHouses.get(schoolId, {
 			filter: {
@@ -83,18 +79,18 @@ const PermissionAcceptPage = React.createClass({
 		});
 	},
 	onSelectHouse: function(houseId) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('houseId', houseId);
 	},
-	serviceStudentsFilter: function(lastName) {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
+	serviceStudentsFilter: function(name) {
+		const	binding	= this.getDefaultBinding(),
 				formIdArray = [binding.get('formId')],
 				houseIdArray = [binding.get('houseId')];
+		
 		let filter;
-		if (lastName === '') {
+		
+		if (name === '') {
 			filter = {
 				limit: 100,
 				where: {
@@ -116,10 +112,20 @@ const PermissionAcceptPage = React.createClass({
 					houseId: {
 						$in: houseIdArray
 					},
-					lastName: {
-						like: lastName,
-						options: 'i'
-					}
+					$or: [
+						{
+							firstName: {
+								like: name,
+								options: 'i'
+							}
+						},
+						{
+							lastName: {
+								like: name,
+								options: 'i'
+							}
+						}
+					]
 				}
 			}
 		}
@@ -140,26 +146,23 @@ const PermissionAcceptPage = React.createClass({
 		);
 	},
 	onSelectStudent: function(studentId) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('studentId', studentId);
 	},
 	onAcceptPermission: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            prId = binding.get('prId'),
-            schoolId = binding.get('schoolId'),
-            studentId = binding.get('studentId');
+		const 	binding 	= this.getDefaultBinding(),
+				prId 		= binding.get('prId'),
+				schoolId 	= binding.get('schoolId'),
+				studentId 	= binding.get('studentId');
 
-        window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED', studentId:studentId})
-            .then(function(){
-				document.location.hash = self.props.afterSubmitPage;
+		window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED', studentId:studentId})
+			.then( () => {
+				document.location.hash = this.props.afterSubmitPage;
 			});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
 			<div className='bForm'>
@@ -167,9 +170,9 @@ const PermissionAcceptPage = React.createClass({
 				<h3>{binding.get('comment')}</h3>
 				<div className='eForm_field'>
 					<Autocomplete
-						serviceFilter={self.serviceFormFilter}
+						serviceFilter={this.serviceFormFilter}
 						serverField='name'
-						onSelect={self.onSelectForm}
+						onSelect={this.onSelectForm}
 						binding={binding.sub('_formAutocomplete')}
 						placeholder='form name'
 					/>
@@ -177,9 +180,9 @@ const PermissionAcceptPage = React.createClass({
 				<If condition={binding.get('formId') !== undefined}>
 					<div className='eForm_field'>
 						<Autocomplete
-							serviceFilter={self.serviceHouseFilter}
+							serviceFilter={this.serviceHouseFilter}
 							serverField='name'
-							onSelect={self.onSelectHouse}
+							onSelect={this.onSelectHouse}
 							binding={binding.sub('_houseAutocomplete')}
 							placeholder='house name'
 						/>
@@ -188,16 +191,16 @@ const PermissionAcceptPage = React.createClass({
 				<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined}>
 					<div className='eForm_field'>
 						<Autocomplete
-							serviceFilter={self.serviceStudentsFilter}
+							serviceFilter={this.serviceStudentsFilter}
 							serverField='name'
-							onSelect={self.onSelectStudent}
+							onSelect={this.onSelectStudent}
 							binding={binding.sub('_studentAutocomplete')}
 							placeholder='Student name'
 						/>
 					</div>
 				</If>
 				<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined && binding.get('studentId') !== undefined}>
-					<div className="bButton" onClick={self.onAcceptPermission}>Accept permission</div>
+					<div className="bButton" onClick={this.onAcceptPermission}>Accept permission</div>
 				</If>
 			</div>
 		)

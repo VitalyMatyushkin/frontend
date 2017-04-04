@@ -26,7 +26,8 @@ const StarRatingBar = React.createClass({
 		const ratingStarClassName = classNames({
 			bRatingStar	: true,
 			mBlue		: self.props.isChecked,
-			mGray		: !self.props.isChecked && !self.props.isEditMode
+			mGray		: !self.props.isChecked && !self.props.isEditMode,
+			mEditMode 	: self.props.isEditMode
 		});
 
 		return (
