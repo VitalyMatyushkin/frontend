@@ -130,9 +130,8 @@ const Performance = React.createClass({
 	},
 	onCancel: function() {
 		this.restorePerformanceData();
-		this.clearBackupPerformanceDate().then(() => {
-			this.changeViewMode();
-		});
+		this.clearBackupPerformanceDate();
+		this.changeViewMode();
 	},
 	render: function() {
 		switch (true) {
