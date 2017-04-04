@@ -41,32 +41,62 @@ const GrantRole = React.createClass({
 		ids = ids && typeof ids === 'string' ? [ids] : ids;
 
 		ids.forEach(currentId => {
-			let body;
+			if (typeof model.preset !== 'undefined') {
+				let body;
+				switch(model.preset) {
+					case 'parent':
+						body = {
+							//without uppercase don't work
+							preset: 	model.preset.toUpperCase(),
+							schoolId: 	model.schoolId,
+							studentId: 	model.studentId
+						};
+						break;
+					default:
+						body = {
+							//without uppercase don't work
+							preset: 	model.preset.toUpperCase(),
+							schoolId: 	model.schoolId
+						};
+						break;
+				}
 
-			switch(model.preset) {
-				case 'parent':
-					body = {
-						//without uppercase don't work
-						preset: 	model.preset.toUpperCase(),
-						schoolId: 	model.schoolId,
-						studentId: 	model.studentId
-					};
-					break;
-				default:
-					body = {
-						//without uppercase don't work
-						preset: 	model.preset.toUpperCase(),
-						schoolId: 	model.schoolId
-					};
-					break;
-			}
-
-			if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
-				window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
+				if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
+					window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
 					.then(result => this.props.onSuccess && this.props.onSuccess(result));
+				}
 			}
+
 
 		});
+	},
+	getFormFieldStudent(isParent){
+		if (isParent === true) {
+			return (
+				<FormField
+					type			= "autocomplete"
+					field			= "studentId"
+					serverField		= "fullName"
+					serviceFullData	= { this.getStudents }
+					placeholder 	= "required"
+				>
+					Student
+				</FormField>
+			)
+		} else {
+			return (
+				<FormField
+					type			= "autocomplete"
+					field			= "studentId"
+					serverField		= "fullName"
+					serviceFullData	= { this.getStudents }
+					isDisabled		= { true }
+					placeholder 	= "available only for parent role"
+				>
+					Student
+				</FormField>
+			)
+		}
 	},
 	render:function(){
 		const 	self 		= this,
@@ -87,18 +117,11 @@ const GrantRole = React.createClass({
 					type		= "select"
 					field		= "preset"
 					sourceArray	= { roleList }
+					validation 	= "required"
 				>
 					Role
 				</FormField>
-				<FormField
-					type			= "autocomplete"
-					field			= "studentId"
-					serverField		= "fullName"
-					isDisabled		= { !isParent }
-					serviceFullData	= { self.getStudents }
-				>
-					Student
-				</FormField>
+				{this.getFormFieldStudent(isParent)}
 				<FormField
 					type		= "textarea"
 					field		= "comment"
