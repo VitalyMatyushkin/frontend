@@ -12,8 +12,9 @@ const 	Form 		= require('module/ui/form/form'),
 const GrantRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
-		userIdsBinding: React.PropTypes.object,
-		onSuccess: 		React.PropTypes.func
+		userIdsBinding: 	React.PropTypes.object,
+		onSuccess: 			React.PropTypes.func,
+		handleClickCancel: 	React.PropTypes.func
 	},
 	componentWillMount:function(){
 		const 	self 	= this,
@@ -75,7 +76,8 @@ const GrantRole = React.createClass({
 		return (
 			<Form
 				name			= "New Permission"
-				updateBinding	= { true}
+				updateBinding	= { true }
+				onCancel 		= { this.props.handleClickCancel }
 				binding			= { binding }
 				onSubmit		= { self.continueButtonClick }
 				formStyleClass	= "bGrantContainer"
