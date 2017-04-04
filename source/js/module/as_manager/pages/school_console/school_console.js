@@ -165,7 +165,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
 						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
 						<Route path='/school_console/sports' binding={binding.sub('sports')} component={FavouriteSportPageWrapper}/>
-						<Route path='/school_console/venues' binding={binding.sub('places')} component={PlacesPage}/>
+						<Route path='/school_console/venues /school_console/venues/:subPage' binding={binding.sub('places')} component={PlacesPage}/>
 					</RouterView>
 				</div>
 			</div>

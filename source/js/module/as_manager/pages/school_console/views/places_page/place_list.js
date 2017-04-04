@@ -5,6 +5,10 @@ const	React			= require('react'),
 
 const PlaceList = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		//The function, which will call when user click on <Row> in Grid
+		handleClick: React.PropTypes.func
+	},
 	componentWillMount: function () {
 		this.model = new PlaceListModel(this);
 	},
