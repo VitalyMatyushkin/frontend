@@ -15,6 +15,7 @@ const RegistrationPermissions = React.createClass({
 		isFormFilled:				React.PropTypes.bool,
 		onSuccess:		 			React.PropTypes.func.isRequired,
 		addFieldArray:				React.PropTypes.func.isRequired,
+		deleteFieldArray:			React.PropTypes.func.isRequired,
 		handleSchoolSelect: 		React.PropTypes.func.isRequired,
 		handleHouseSelect: 			React.PropTypes.func.isRequired,
 		handleFormSelect: 			React.PropTypes.func.isRequired,
@@ -168,9 +169,6 @@ const RegistrationPermissions = React.createClass({
 					/>
 				</If>
 				<div>
-					<If condition={this.props.isFormFilled}>
-						<div className="bButton bButton_reg" onClick={this.onSuccess}>Continue</div>
-					</If>
 					{/**
 					 * Show button "Add child" only for parent, when form with permission details filled and number of child less 3
 					 */}
@@ -182,6 +180,20 @@ const RegistrationPermissions = React.createClass({
 							}
 					>
 						<div className="bButton bButton_reg" onClick={this.props.addFieldArray}>Add child</div>
+					</If>
+					{/**
+					 * Show button "Delete child" only for parent, when number of child more 1
+					 */}
+					<If condition=
+							{
+								this.props.currentType === 'parent' &&
+								this.props.currentFieldArray > 0
+							}
+					>
+						<div className="bButton bButton_reg" onClick={this.props.deleteFieldArray}>Delete child</div>
+					</If>
+					<If condition={this.props.isFormFilled}>
+						<div className="bButton bButton_reg" onClick={this.onSuccess}>Continue</div>
 					</If>
 				</div>
 			</div>
