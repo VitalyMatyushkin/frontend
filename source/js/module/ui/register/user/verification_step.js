@@ -186,7 +186,7 @@ const VerificationStep = React.createClass({
                         handleClickCloseButton  = { this.props.handleClickEmailPopupClose }
                         isShowCloseButton       = { true }
                 >
-                    <span className="ePopupText">Email verification letter was sent to your address.</span>
+                    <span className="ePopupText">We have resent your email verification code</span>
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangeEmailPopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangeEmailPopup }
