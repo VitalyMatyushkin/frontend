@@ -66,6 +66,15 @@ const PermissionDetails = React.createClass({
 				limit: 40
 			}
 		};
+		
+		switch (this.props.type) {
+			case "admin":
+				filter.filter.where.kind = {$in: ['School', 'SchoolUnion']};
+				break;
+			case "student":
+				filter.filter.where.studentSelfRegistrationEnabled = true;
+				break;
+		}
 
 		return window.Server.publicSchools.get(filter);
 	},

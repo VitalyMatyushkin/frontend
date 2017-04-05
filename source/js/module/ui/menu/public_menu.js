@@ -33,6 +33,12 @@ const PublicMenu = React.createClass({
 		}
 	},
 	onClick: function(node) {
+		/**
+		 * If there is a link in the hash, then clicking on the link in the top menu will not do anything
+		 * So, we manually call event hashchange, for function of scroll in component <Home />
+		 * It's no best practice, but I don't see another option
+		 */
+		document.location.hash = `home`;
 		document.location.hash = `${node.toLowerCase()}`;
 	},
 	menuToggle:function(){
