@@ -3,8 +3,9 @@
  */
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
-		StudentListModel  	= require('./student-list-model'),
-		Grid 				= require('module/ui/grid/grid');
+		StudentListClass  	= require('./student-list-class'),
+		Grid 				= require('module/ui/grid/grid'),
+		Immutable			= require('immutable');
 
 const StudentList = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,9 +14,22 @@ const StudentList = React.createClass({
 		handleClick: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		this.model = new StudentListModel(this).init();
+		const 	binding 	= this.getDefaultBinding(),
+				grid 		= binding.toJS('grid');
+		
+		if (grid) {
+			this.model = new StudentListClass(this).loadFilter(grid);
+		} else {
+			this.model = new StudentListClass(this).init();
+		}
 	},
 	render: function () {
+		const binding = this.getDefaultBinding();
+		
+		if (typeof this.model.grid !== 'undefined') {
+			//this.model.grid.table.data = (binding.toJS('data'));
+			binding.set('grid', Immutable.fromJS(this.model.grid));
+		}
 		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });

@@ -3,7 +3,7 @@
  */
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
-		StudentListModel  	= require('module/as_manager/pages/school_admin/students/list/student-list-model'),
+		StudentListClass  	= require('module/as_manager/pages/school_admin/students/list/student-list-class'),
 		Grid 				= require('module/ui/grid/grid');
 
 const HouseStudents = React.createClass({
@@ -17,7 +17,7 @@ const HouseStudents = React.createClass({
 				id 			= rootBinding.get('routing.parameters.id'),
 				name 		= rootBinding.get('routing.parameters.name');
 
-		this.model = new StudentListModel(this);
+		this.model = new StudentListClass(this);
 		this.model.title = `Students of ${name} form`;
 		this.model.filters = {where:{formId:id}};
 		this.model.columns.splice(3, 2);
