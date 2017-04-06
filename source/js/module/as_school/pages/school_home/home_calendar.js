@@ -19,7 +19,7 @@ const HomeCalender = React.createClass({
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
-		CalendarActions.setNextDaysEvents(activeSchoolId, binding);
+		CalendarActions.setNextDaysEvents(activeSchoolId, binding, 365);
 		CalendarActions.setPrevDaysFinishedEvents(activeSchoolId, binding, 365);
 	},
 
