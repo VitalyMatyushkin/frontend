@@ -12,7 +12,7 @@ const ClassForm = React.createClass({
 	},
 	getAllAges: function() {
 		/** it should really be a server call */
-		const ages = Lazy.range(3, 14).map(i => {
+		const ages = Lazy.range(1, 14).map(i => {
 			return {
 				value: 'Y' + i,
 				age: i,
