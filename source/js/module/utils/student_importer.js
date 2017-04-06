@@ -4,10 +4,10 @@
 
 'use strict';
 
-const 	papa	= require('papaparse'),
-		Promise	= require('bluebird'),
-		Lazy	= require('lazy.js'),
-    	dateParser = require('./date_parser');
+const 	papa		= require('papaparse'),
+		Promise		= require('bluebird'),
+		Lazy		= require('lazy.js'),
+    	dateParser	= require('./date_parser');
 
 /** Tiny wrapper for Papa parse to return Promise.
  * Note, it is impossible to wrap it with Bluebird's converters as it use custom config.
