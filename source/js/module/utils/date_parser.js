@@ -1,18 +1,21 @@
-const   moment = require('moment'),
-        assert = require('assert');
+const   moment = require('moment');
+
+const thisYear = moment().year();	// for example, 2017
 
 /**
- * Creates Date Object for date as input string
+ * Parses string to Date taking in account fact that there is no any single user in system who born in future.
  * @param {string} date
- * @returns {Date} recognized date
+ * @returns {Date} recognized date or undefined if date cannot be parsed
  */
 const getBdayDateFormat = (date) => {
-    const formatDate = moment(date, ["DD/MM/YYYY", "DD/MM/YY", "DD/M/YY", "DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]);
-    const getTwoDigitYear = parseInt(formatDate.year().toString().slice(-2));
+    const	parsedDate	= moment(date, ["DD/MM/YYYY", "DD/MM/YY", "DD/M/YY", "DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]),
+    		parsedYear	= parsedDate.year();
 
-    if (getTwoDigitYear > 52) formatDate.year(parseInt("19" + getTwoDigitYear));
+    if(parsedYear > thisYear) {				// rolling back 100 years if date in future. 2018 -> 1918
+		parsedDate.year(parsedYear - 100);
+	}
 
-    return formatDate.isValid() ? formatDate.toDate() : undefined;
+    return parsedDate.isValid() ? parsedDate.toDate() : undefined;
 };
 
 
