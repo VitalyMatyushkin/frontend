@@ -6,7 +6,8 @@
 
 const 	papa	= require('papaparse'),
 		Promise	= require('bluebird'),
-		Lazy	= require('lazy.js');
+		Lazy	= require('lazy.js'),
+    	dateParser = require('./date_parser');
 
 /** Tiny wrapper for Papa parse to return Promise.
  * Note, it is impossible to wrap it with Bluebird's converters as it use custom config.
@@ -29,7 +30,7 @@ const guessTable = {
 	firstName:	['name', 'firstname'],
 	lastName:	['surname', 'lastname'],
 	gender: 	['gender'],
-	birthday: 	['birthday', 'bday', 'dob'],
+	birthday: 	['birthday', 'bday', 'dob', 'date of birth'],
 	form: 		['form'],
 	house: 		['house']
 };
@@ -77,12 +78,14 @@ const guessGender = function (genderValue) {
 const objectToStudent = function(headers, obj) {
 	const 	firstName	= obj[headers.firstName],
 			lastName	= obj[headers.lastName],
-			gender		= obj[headers.gender];
+			gender		= obj[headers.gender],
+    		birthday    = obj[headers.birthday];
+
 	return {
 		firstName:	firstName ? firstName.trim() : undefined,
 		lastName:	lastName ? lastName.trim() : undefined,
 		gender: 	gender ? guessGender(gender) : undefined,
-		birthday:	obj[headers.birthday],
+		birthday:	birthday ? dateParser(birthday) : undefined,
 		form:		obj[headers.form],
 		house: 		obj[headers.house]
 	};
