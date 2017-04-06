@@ -30,7 +30,7 @@ const ClassEditPage = React.createClass({
         //Don't submit if the name field of the data is empty
 		//Server will respond with failure causing button to stop at loading
 		if(data.name !=''){
-			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
+			data.name = data.name;
 
 			window.Server.schoolForm.put({formId:formId, schoolId:schoolId}, data).then(function() {
 				document.location.hash = `school_sandbox/${schoolId}/forms`;
