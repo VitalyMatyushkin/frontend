@@ -7,13 +7,10 @@ const   moment = require('moment'),
  * @returns {Date} recognized date
  */
 const getBdayDateFormat = (date) => {
-    assert(typeof date === 'string', 'date is not a string');
-
-    moment.parseTwoDigitYear = (input) => {
-        return parseInt(input) + (parseInt(input) > 54 ? 1900 : 2000);
-    };
-
     const formatDate = moment(date, ["DD/MM/YYYY", "DD/MM/YY", "DD/M/YY", "DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]);
+    const getTwoDigitYear = parseInt(formatDate.year().toString().slice(-2));
+
+    if (getTwoDigitYear > 52) formatDate.year(parseInt("19" + getTwoDigitYear));
 
     return formatDate.isValid() ? formatDate.toDate() : undefined;
 };
