@@ -234,10 +234,17 @@ const TeamForm = React.createClass({
 
 		if(availableAges) {
 			ageItems = availableAges.sort((first,last)=>{return first - last}).map(function (age) {
-				return {
-					id: age,
-					text: 'Y' + age
-				};
+				if (age === 0) {
+					return {
+						id: age,
+						text: 'Reception'
+					};
+				} else {
+					return {
+						id: age,
+						text: 'Y' + age
+					};
+				}
 			});
 		}
 

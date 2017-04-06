@@ -16,9 +16,8 @@ const ControlPanel = React.createClass({
 				'eControlPanel_section': true,
 				'mLast':				index === this.props.controlArray.length - 1
 			});
-
 			return (
-				<div className={sectionStyle}>
+				<div key={index} className={sectionStyle}>
 					{control}
 				</div>
 			);

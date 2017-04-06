@@ -68,8 +68,8 @@ TeamListModel.prototype = {
 
 		if(ages !== undefined) {
 			result = ages.map(elem => {
-				return `Y${elem}`;
-			}).join(";");
+				return elem === 0 ? 'Reception' : `Y${elem}`;
+			}).join(", ");
 		}
 
 		return result;

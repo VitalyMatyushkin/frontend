@@ -34,9 +34,13 @@ const EventHeader = React.createClass({
 		activeSchoolId: 				React.PropTypes.string.isRequired,
 		twitterIdDefault: 				React.PropTypes.string.isRequired
 	},
+	getEventAges: function(){
+		const ages = Lazy(this.props.eventAges).sort().toArray().map(age => {return age === 0 ? 'Reception' : age}).join(', ');
+		return ages;
+	},
 	render: function() {
 		const 	event 				= this.props.event,
-				eventAges			= Lazy(this.props.eventAges).sort(),
+				eventAges			= this.getEventAges(),
 				name				= event.name,
 				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
 				time				= event.time,

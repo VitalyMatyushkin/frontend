@@ -43,7 +43,7 @@ const InviteView = React.createClass({
 
 	getAges: function (data) {
 		data = data || [];
-		return data.map(elem => 'Y' + elem).join(", ");
+		return data.map(elem =>{return elem === 0 ? 'Reception' : 'Y' + elem}).join(", ");
 	},
 
 	getGender: function (gender) { //TODO Move this method into helpers
