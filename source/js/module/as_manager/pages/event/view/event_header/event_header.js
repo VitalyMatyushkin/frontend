@@ -34,9 +34,19 @@ const EventHeader = React.createClass({
 		activeSchoolId: 				React.PropTypes.string.isRequired,
 		twitterIdDefault: 				React.PropTypes.string.isRequired
 	},
+	/**
+	 * Function return string with all Age Groups
+	 * @example <caption>Example usage of getEventAges</caption>
+	 * //Reception, 5, 6, 7
+	 * getEventAges();
+	 * @returns {string}
+	 */
 	getEventAges: function(){
-		const ages = Lazy(this.props.eventAges).sort().toArray().map(age => {return age === 0 ? 'Reception' : age}).join(', ');
-		return ages;
+		return Lazy(this.props.eventAges)
+			.sort()
+			.toArray()
+			.map(age => {return age === 0 ? 'Reception' : age})
+			.join(', ');
 	},
 	render: function() {
 		const 	event 				= this.props.event,

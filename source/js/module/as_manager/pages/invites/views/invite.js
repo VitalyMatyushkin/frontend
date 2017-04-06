@@ -40,7 +40,14 @@ const InviteView = React.createClass({
 	addZeroToFirst: function (num) {
 		return String(num).length === 1 ? '0' + num : num;
 	},
-
+	/**
+	 * Function return string with all Age Groups
+	 * @example <caption>Example usage of getAges()</caption>
+	 * //Reception, 5, 6
+	 * getAges([0, 5, 6]);
+	 * @params {array} - array of event age groups
+	 * @returns {string}
+	 */
 	getAges: function (data) {
 		data = data || [];
 		return data.map(elem =>{return elem === 0 ? 'Reception' : 'Y' + elem}).join(", ");

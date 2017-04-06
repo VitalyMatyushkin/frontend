@@ -227,28 +227,30 @@ const TeamForm = React.createClass({
 
 		return genderOptions;
 	},
+	/** Function return sorted array of object with age groups
+	 * @returns {array}
+	 */
 	getAgeItems: function() {
 		const	self			= this,
 				availableAges	= self.getDefaultBinding().toJS('availableAges');
-		let		ageItems		= [];
 
 		if(availableAges) {
-			ageItems = availableAges.sort((first,last)=>{return first - last}).map(function (age) {
-				if (age === 0) {
-					return {
-						id: age,
-						text: 'Reception'
-					};
-				} else {
-					return {
-						id: age,
-						text: 'Y' + age
-					};
-				}
-			});
+			return availableAges
+				.sort( (first,last) => {return first - last})
+				.map( age => {
+					if (age === 0) {
+						return {
+							id: age,
+							text: 'Reception'
+						};
+					} else {
+						return {
+							id: age,
+							text: 'Y' + age
+						};
+					}
+				});
 		}
-
-		return ageItems;
 	},
 	getSelectedAges: function() {
 		const	self	= this,
