@@ -45,7 +45,7 @@ const EventHeader = React.createClass({
 		return Lazy(this.props.eventAges)
 			.sort()
 			.toArray()
-			.map(age => {return age === 0 ? 'Reception' : age})
+			.map(age => age === 0 ? 'Reception' : age)
 			.join(', ');
 	},
 	render: function() {

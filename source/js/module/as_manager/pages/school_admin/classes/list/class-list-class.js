@@ -98,7 +98,7 @@ class ClassListClass{
 					dataField:'age',
 					type:'custom',
 					typeOptions:{
-						parseFunction: item => {return this.getAllAges(item)}
+						parseFunction: item => this.getAllAges(item)
 					}
 				}
 			},
