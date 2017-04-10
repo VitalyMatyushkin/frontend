@@ -1,13 +1,14 @@
-const	If				= require('module/ui/if/if'),
-		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+const	React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+
+		Players			= require('module/as_manager/pages/event/view/rivals/players'),
+		If				= require('module/ui/if/if'),
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		eventConst		= require('module/helpers/consts/events'),
 		Score			= require('./../../../../../ui/score/score'),
-		React			= require('react'),
-		Immutable		= require('immutable'),
-		Morearty		= require('morearty'),
-
 		classNames		= require('classnames');
 
 
@@ -79,6 +80,7 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
+				mode	= this.getBinding('mode').toJS(),
 				player	= self.getDefaultBinding().toJS(`players.${order}`),
 				players	= player ? [ player ] : [];
 
@@ -86,9 +88,14 @@ const EventTeamsView = React.createClass({
 			return self.renderText(this.SELECT_PLAYERS_LATER);
 		} else {
 			return (
-				<div className="bEventTeams_team">
-					{self.renderPlayers(undefined, players, true, true)}
-				</div>
+				<Players
+					players						= {players}
+					isOwner						= {true}
+					individualScoreAvailable	= {true}
+					mode						= {mode}
+					event						= {event}
+					customCss					= {this.props.customCss}
+				/>
 			);
 		}
 	},
@@ -96,15 +103,21 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
+				mode	= this.getBinding('mode').toJS(),
 				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
 			return self.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
 			return (
-				<div className="bEventTeams_team">
-					{self.renderPlayers(undefined, players, true, individualScoreAvailable)}
-				</div>
+				<Players
+					players						= {players}
+					isOwner						= {true}
+					individualScoreAvailable	= {individualScoreAvailable}
+					mode						= {mode}
+					event						= {event}
+					customCss					= {this.props.customCss}
+				/>
 			);
 		}
 	},
@@ -129,16 +142,22 @@ const EventTeamsView = React.createClass({
 	renderIndividualPlayersByHouseId: function(houseId, individualScoreAvailable) {
 		const self = this;
 
-		const	event	= self.getBinding('event').toJS(),
-				players	= self.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
+		const	event	= this.getBinding('event').toJS(),
+				mode	= this.getBinding('mode').toJS(),
+				players	= this.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
 
 		if(players.length === 0) {
 			return self.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
 			return (
-				<div className="bEventTeams_team">
-					{self.renderPlayers(undefined, players, true, individualScoreAvailable)}
-				</div>
+				<Players
+					players						= {players}
+					isOwner						= {true}
+					individualScoreAvailable	= {individualScoreAvailable}
+					mode						= {mode}
+					event						= {event}
+					customCss					= {this.props.customCss}
+				/>
 			);
 		}
 	},
@@ -351,76 +370,36 @@ const EventTeamsView = React.createClass({
 		return players;
 	},
 	sortPlayersByScoreDesc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player2.result - player1.result;
 		});
 	},
 	sortPlayersByScoreAsc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player1.result - player2.result;
-		});
-	},
-	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
-		const self = this;
-
-		//we sort array of players by individual score
-		this.sortPlayersByScore(players);
-
-		return players.map((player, playerIndex) => {
-			const 	mode	= self.getBinding('mode').toJS(),
-					event	= self.getBinding('event').toJS();
-
-			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
-				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
-			});
-
-			return (
-				<div key={playerIndex} className={eventPlayerCss}>
-					<span className="ePlayer_name">
-						<span>{`${playerIndex + 1}. `}</span>
-						<span>{player.firstName}</span>
-						<span>{player.lastName}</span>
-					</span>
-					<If condition = {Boolean(player.isCaptain)}>
-						<span className="ePlayer_star">
-							<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
-						</span>
-					</If>
-					<If condition={
-						!self.isNonInternalEventForOneOnOneSport(event)
-						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
-						&& individualScoreAvailable
-					}>
-						<span className="ePlayer_scoreContainer">
-							<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-									plainPoints		= {self.getPointsByStudent(event, player.userId)}
-									pointsStep		= {event.sport.points.pointsStep}
-									pointsType		= {event.sport.points.display}
-									pointsMask		= {event.sport.points.inputMask}
-									onChange		= {self.handleChangeScore.bind(self, event, teamId, player)}
-							/>
-						</span>
-					</If>
-				</div>
-			);
 		});
 	},
 	isNonInternalEventForOneOnOneSport: function(event) {
 		return TeamHelper.isOneOnOneSport(event) && !EventHelper.isInternalEvent(event);
 	},
 	renderIndividualPlayersForInternalEventForIndividualSport: function() {
-		const self = this;
-
-		const	event	= self.getBinding('event').toJS(),
-				players	= self.getDefaultBinding().toJS('players');
+		const	event	= this.getBinding('event').toJS(),
+				mode	= this.getBinding('mode').toJS(),
+				players	= this.getDefaultBinding().toJS('players');
 
 		if(players.length === 0) {
-			return self.renderText(this.SELECT_PLAYERS_LATER);
+			return this.renderText(this.SELECT_PLAYERS_LATER);
 		} else {
 			return (
-				<div className="bEventTeams_team">
-					{self.renderPlayers(undefined, players, true, true)}
-				</div>)
+				<Players
+					players						= {players}
+					isOwner						= {true}
+					individualScoreAvailable	= {true}
+					mode						= {mode}
+					event						= {event}
+					customCss					= {this.props.customCss}
+				/>
+			)
 		}
 	},
 	renderTeamPlayersByOrder: function(order, individualScoreAvailable) {
@@ -435,21 +414,21 @@ const EventTeamsView = React.createClass({
 				xmlPlayers = this.renderText(this.MEMBERS_NOT_ADDED);
 			} else {
 				const	event	= this.getBinding('event').toJS(),
+						mode	= this.getBinding('mode').toJS(),
 						isOwner	= event.eventType === 'inter-schools' ?
 							event.teamsData[order].schoolId === this._getActiveSchoolId() :
 							true;
 
 				xmlPlayers = (
-					<div className="bEventTeams_team">
-						{
-							this.renderPlayers(
-								event.teamsData[order].id,
-								playersData,
-								isOwner,
-								individualScoreAvailable
-							)
-						}
-					</div>
+					<Players
+						players						= {playersData}
+						teamId						= {event.teamsData[order].id}
+						isOwner						= {isOwner}
+						individualScoreAvailable	= {individualScoreAvailable}
+						mode						= {mode}
+						event						= {event}
+						customCss					= {this.props.customCss}
+					/>
 				);
 			}
 		}
@@ -459,9 +438,13 @@ const EventTeamsView = React.createClass({
 	render: function() {
 		const self = this;
 
-		let eventTeamsCss = classNames('bEventTeams', this.props.customCss, {
-			mIndividuals: TeamHelper.isInternalEventForIndividualSport(self.getBinding('event').toJS())
-		});
+		let eventTeamsCss = classNames(
+			'bEventTeams',
+			this.props.customCss,
+			{
+				mIndividuals: TeamHelper.isInternalEventForIndividualSport(self.getBinding('event').toJS())
+			}
+		);
 
 		if(self.getBinding('isSync').toJS()) {
 			return (

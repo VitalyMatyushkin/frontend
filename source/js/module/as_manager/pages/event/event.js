@@ -6,13 +6,14 @@ const	React							= require('react'),
 		classNames						= require('classnames'),
 		Promise 						= require('bluebird');
 
-const	Tabs							= require('./../../../ui/tabs/tabs'),
+const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals'),
+		Tabs							= require('./../../../ui/tabs/tabs'),
 		CreateOtherEventPanel			= require('./view/create_other_event_panel/create_other_event_panel'),
 		EventHeaderWrapper				= require('./view/event_header/event_header_wrapper'),
 		IndividualScoreAvailableBlock	= require('./view/individual_scores_available_block/individual_score_available_block'),
 		EventRivals						= require('./view/event_rivals'),
 		EditingTeamsButtons 			= require('./view/editing_teams_buttons'),
-		EventTeams						= require('./view/teams/event_teams'),
+		EventTeams						= require('./view/rivals/event_teams'),
 		Performance						= require('./view/performance/performance'),
 		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
 		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
@@ -881,19 +882,8 @@ const Event = React.createClass({
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<EventRivals	binding			= {binding}
-											onReload		= {this.props.onReload}
-											activeSchoolId	= {this.props.activeSchoolId}
-							/>
-							{ this.renderEditTeamButtons() }
-							<IndividualScoreAvailableBlock
-								binding			= { this.getDefaultBinding() }
-								activeSchoolId	= { this.props.activeSchoolId }
-								mode			= { mode }
-								event			= { event }
-							/>
-							<EventTeams	binding			= {self.getEventTeamsBinding()}
-										activeSchoolId	= {this.props.activeSchoolId}
+							<Rivals	binding			= {binding}
+									activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<If condition={this.isShowMap()}>
 								<div className="bEventMap">

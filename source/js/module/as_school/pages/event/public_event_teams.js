@@ -1,5 +1,5 @@
 const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		EventTeamsView			= require('./../../../as_manager/pages/event/view/teams/event_teams_view'),
+		EventTeamsView			= require('./../../../as_manager/pages/event/view/rivals/event_teams_view'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 
 		React					= require('react'),
