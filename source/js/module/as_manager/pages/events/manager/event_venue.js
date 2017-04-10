@@ -355,7 +355,7 @@ const EventVenue = React.createClass({
 		return typeof postcode !== 'undefined' ? this.isPlace(postcode) : false;
 	},
 	isShowPlacePopup: function() {
-		return this.getDefaultBinding().get('isShowPlacePopup');
+		return Boolean(this.getDefaultBinding().get('isShowPlacePopup'));
 	},
 	showPlacePopup: function() {
 		this.getDefaultBinding().set('isShowPlacePopup', true);

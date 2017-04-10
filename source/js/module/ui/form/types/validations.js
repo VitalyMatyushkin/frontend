@@ -104,8 +104,12 @@ var validationsSet = {
 		return false;
 	},
 	required: function(value) {
-		var self = this,
+		var self = this;
+		//Because has case, where value === 0 and it must be true
+		if (value !== 0) {
 			value = value || '';
+		}
+		
 		if (value.trim && value.trim() === '' ) {
 			switch (self.props.name) {
 				case 'Name':

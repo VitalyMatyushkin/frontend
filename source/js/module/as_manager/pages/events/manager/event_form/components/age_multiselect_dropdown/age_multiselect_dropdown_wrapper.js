@@ -8,7 +8,7 @@ const AgeMultiselectDropdownWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	getAgeView: function(age) {
-		return 'Y' + age;
+		return age === 0 ? 'Reception' : 'Y' + age;
 	},
 	getAgeArray: function(ages) {
 		return ages.map(age => {

@@ -62,17 +62,19 @@ TeamListModel.prototype = {
 		);
 		event.stopPropagation();
 	},
+	/**
+	 * Function return string with all Age Groups
+	 * @param {object} object of team
+	 * @returns {string}
+	 */
 	_getAges: function(item) {
 		const ages = item.ages;
-		let result = '';
 
-		if(ages !== undefined) {
-			result = ages.map(elem => {
-				return `Y${elem}`;
-			}).join(";");
+		if(typeof ages !== 'undefined') {
+			return ages
+				.map( elem => elem === 0 ? 'Reception' : `Y${elem}`)
+				.join(", ");
 		}
-
-		return result;
 	},
 	_getGender: function (item) {
 		return <GenderIcon classes="bIcon-gender" gender={item.gender}/>;
