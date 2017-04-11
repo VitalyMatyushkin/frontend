@@ -9,7 +9,8 @@ const  	RouterView 	= require('module/core/router'),
 		AlbumEditComponent 		= require("module/ui/gallery/album/album_edit"),
 		AlbumCreateComponent 	= require("module/ui/gallery/album/album_create"),
 		AlbumViewComponent 		= require("module/ui/gallery/album/album_view"),
-		PhotoEditComponent 		= require("module/ui/gallery/photo/photo_edit");
+		PhotoEditComponent 		= require("module/ui/gallery/photo/photo_edit"),
+		PhotoAddComponent 		= require("module/ui/gallery/photo/photo_add");
 
 
 /**
@@ -41,6 +42,7 @@ const AlbumRoutes = React.createClass({
 				<Route path={"/" + self.props.basePath + "/edit/:albumId"} binding={binding} service={self.props.service} component={AlbumEditComponent}  />
 				<Route path={"/" + self.props.basePath + "/create"} binding={binding} service={self.props.service} component={AlbumCreateComponent}  />
 				<Route path={"/" + self.props.basePath + "/view/:albumId"} binding={binding} service={self.props.service} component={AlbumViewComponent}  />
+				<Route path={"/" + self.props.basePath + "/view/:albumId/add"} binding={binding} service={self.props.service} component={PhotoAddComponent}  />
 				<Route path={"/" + self.props.basePath + "/:albumId/photo-edit/:photoId"} service={self.props.service} binding={binding} component={PhotoEditComponent}  />
 			</RouterView>
 		);

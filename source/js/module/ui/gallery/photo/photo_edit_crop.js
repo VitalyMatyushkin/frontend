@@ -9,6 +9,7 @@ const 	React 			= require('react'),
 const 	ReactCropStylesCustom 	= require('styles/ui/gallery/b_react_crop.scss'),
 		ReactCropStyles			= require('react-image-crop/lib/ReactCrop.scss');
 
+//Documentation: https://github.com/DominicTobias/react-image-crop
 const 	ReactCropConfig = {
 	width : 100,
 	aspect: 16/9
@@ -25,12 +26,6 @@ const PhotoEditCrop = React.createClass({
 		const 	imageObject = this.refs.imageSrc,
 				canvas 		= this.refs.canvasImage;
 		
-		/*imageObject.crossOrigin = 'anonymous';
-		imageObject.src = this.props.src;*/
-		
-		/*this.toDataUrl(this.props.src, (result) => {
-			console.log(result);
-		});*/
 		imageObject.style.display = 'none';
 		canvas.style.display = 'none';
 	},
@@ -85,21 +80,6 @@ const PhotoEditCrop = React.createClass({
 			return this.props.service.photos.post(albumId, model);
 		});
 	},
-	
-	/*toDataUrl: function (url, callback) {
-		const xhr = new XMLHttpRequest();
-		
-		xhr.onload = function() {
-			const reader = new window.FileReader();
-			reader.onloadend = function() {
-				callback(reader.result);
-			};
-			reader.readAsDataURL(xhr.response);
-		};
-		xhr.open('GET', url);
-		xhr.responseType = 'blob';
-		xhr.send();
-	},*/
 	
 	render: function(){
 		return (
