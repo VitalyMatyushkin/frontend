@@ -1,9 +1,10 @@
-const 	Form 		= require('module/ui/form/form'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		FormField 	= require('module/ui/form/form_field'),
-		React 		= require('react'),
-		Immutable 	= require('immutable'),
-		Morearty    = require('morearty');
+const 	Form 			= require('module/ui/form/form'),
+		FormColumn 		= require('module/ui/form/form_column'),
+		FormField 		= require('module/ui/form/form_field'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		Morearty    	= require('morearty'),
+		PhotoEditCrop 	= require('./photo_edit_crop');
 
 const PhotoEdit = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -40,14 +41,17 @@ const PhotoEdit = React.createClass({
 	render: function() {
 		var self = this,
 		binding = self.getDefaultBinding();
+		
+		const 	picUrl = typeof binding.toJS('picUrl') !== 'undefined' ? binding.toJS('picUrl') : '';
 
-		return (
+		{/**return (
 				<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={self.onFormSubmit} binding={binding} >
 					<FormColumn>
 						<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
 					</FormColumn>
 				</Form>
-		);
+		);*/}
+		return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;
 	}
 });
 
