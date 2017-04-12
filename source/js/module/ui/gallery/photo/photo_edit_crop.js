@@ -4,9 +4,9 @@
 const 	React 			= require('react'),
 		ReactCrop 		= require('react-image-crop'),
 		Button 			= require('module/ui/button/button'),
-		StorageHelper 	= require('module/helpers/storage');
+		CropImageHelper = require('module/helpers/crop_image_helper');
 
-const 	ReactCropStylesCustom 	= require('styles/ui/gallery/b_react_crop.scss'),
+const 	ReactCropStylesCustom 	= require('styles/ui/gallery/b_photo_edit.scss'),
 		ReactCropStyles			= require('react-image-crop/lib/ReactCrop.scss');
 
 //Documentation: https://github.com/DominicTobias/react-image-crop
@@ -20,14 +20,6 @@ const PhotoEditCrop = React.createClass({
 		src: 		React.PropTypes.string.isRequired,
 		albumId: 	React.PropTypes.string.isRequired,
 		service: 	React.PropTypes.object.isRequired
-	},
-	
-	componentDidMount: function(){
-		const 	imageObject = this.refs.imageSrc,
-				canvas 		= this.refs.canvasImage;
-		
-		imageObject.style.display = 'none';
-		canvas.style.display = 'none';
 	},
 	
 	onCancelClick: function(){
@@ -45,32 +37,13 @@ const PhotoEditCrop = React.createClass({
 			.getContext("2d")
 			.drawImage(imageObject, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
 	},
-	/**
-	 * Function return new file, created from canvas, for sending to server
-	 * @param {string} dataurl
-	 * @param {string} filename
-	 * @returns {File}
-	 */
-	dataURLtoFile: function(dataurl, filename) {
-		const 	arr 	= dataurl.split(','),
-				mime 	= arr[0].match(/:(.*?);/)[1],
-				bstr 	= window.atob(arr[1]);
-		
-		let 	n 		= bstr.length,
-				u8arr 	= new window.Uint8Array(n);
-		
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n);
-		}
-		
-		return new window.File([u8arr], filename, {type:mime});
-	},
 	
 	onCropClick: function(){
 		const 	canvas 	= this.refs.canvasImage,
-				file 	= this.dataURLtoFile(canvas.toDataURL("image/jpeg"), 'image-squadintouch.jpeg');
+				file 	= CropImageHelper.dataURLtoFile(canvas.toDataURL("image/jpeg"), 'image-squadintouch.jpeg');
 		
-		window.Server.images.upload(file).then( picUrl => {
+		window.Server.images.upload(file)
+		.then( picUrl => {
 			const 	albumId = this.props.albumId,
 					model 	= {
 						name:           "",
@@ -78,12 +51,22 @@ const PhotoEditCrop = React.createClass({
 						picUrl:         picUrl
 					};
 			return this.props.service.photos.post(albumId, model);
+		})
+		.then( () => {
+			window.simpleAlert(
+				'Your image has successfully crop!',
+				'Ok',
+				() => {
+					window.history.back();
+					window.location.reload();
+				}
+			);
 		});
 	},
 	
 	render: function(){
 		return (
-			<div className="bReactCrop">
+			<div className="bImageCrop">
 				<ReactCrop
 					src 			= { this.props.src }
 					minWidth 		= { 10 }
@@ -92,11 +75,15 @@ const PhotoEditCrop = React.createClass({
 					keepSelection 	= { true }
 					onComplete 		= { this.onCropComplete }
 				/>
-				<canvas ref="canvasImage">
+				<canvas
+					ref 		= "canvasImage"
+					className 	= "mDisplayNone"
+				>
 					<img
 						src 		= { this.props.src }
 						crossOrigin = "anonymous"
 						ref 		= "imageSrc"
+						className 	= "mDisplayNone"
 					/>
 				</canvas>
 				<div className="bReactCropButtons">
