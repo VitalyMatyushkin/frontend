@@ -57,6 +57,7 @@ const PhotoEditCrop = React.createClass({
 				'Your image has successfully crop!',
 				'Ok',
 				() => {
+					//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 					window.history.back();
 					window.location.reload();
 				}

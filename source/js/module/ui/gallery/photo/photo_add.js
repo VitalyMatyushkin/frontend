@@ -47,6 +47,7 @@ const PhotoAddComponent = React.createClass({
 				'Your image has successfully upload!',
 				'Ok',
 				() => {
+					//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 					window.history.back();
 					window.location.reload();
 				}
@@ -75,13 +76,15 @@ const PhotoAddComponent = React.createClass({
 		
 		const reader = new window.FileReader();
 		
-		reader.onload = (e2) => {
-			this.setState({fileImage: e2.target.result});
+		reader.onload = (eventOnLoad) => {
+			this.setState({
+				fileImage: eventOnLoad.target.result
+			});
 		};
 		
 		reader.readAsDataURL(file);
 	},
-	isFileImage: function(){
+	isFileImageSelectInInput: function(){
 		return this.state.fileImage !== '';
 	},
 	
@@ -103,7 +106,7 @@ const PhotoAddComponent = React.createClass({
 						onChange	= { this.onInputFileImageChange }
 					/>
 				</div>
-				<If condition={this.isFileImage()}>
+				<If condition={this.isFileImageSelectInInput()}>
 					<div>
 						<ReactCrop
 							src 			= { this.state.fileImage }
@@ -131,7 +134,7 @@ const PhotoAddComponent = React.createClass({
 						extraStyleClasses 	= "mMarginRight mCancel"
 						onClick 			= { this.onCancelButtonClick }
 					/>
-					<If condition={this.isFileImage()}>
+					<If condition={this.isFileImageSelectInInput()}>
 						<Button
 							text		= "Crop & Upload image"
 							onClick		= { this.onCropButtonClick }

@@ -1,8 +1,6 @@
 /**
  * Created by Woland on 12.04.2017.
  */
-const TypeCheckHelper = require('module/helpers/type_check_helper');
-
 const CropImageHelper = {
 	/**
 	 * Function return new file, created from canvas.toDataURL method, for sending to server
@@ -11,18 +9,18 @@ const CropImageHelper = {
 	 * @returns {File}
 	 */
 	dataURLtoFile: function(dataurl, filename) {
-		const 	arr 	= dataurl.split(','),
-				mime 	= arr[0].match(/:(.*?);/)[1],
-				bstr 	= window.atob(arr[1]);
+		const 	arrayFromDataUrl	= dataurl.split(','),
+				mimeType 			= arrayFromDataUrl[0].match(/:(.*?);/)[1], //mime type: image/jpeg
+				stringFromDataUrl	= window.atob(arrayFromDataUrl[1]); //function decodes a string of data which has been encoded using base-64 encoding
+
+		let 	stringFromDataUrlLength		= stringFromDataUrl.length,
+				u8arr 						= new window.Uint8Array(stringFromDataUrlLength);
 		
-		let 	n 		= bstr.length,
-				u8arr 	= new window.Uint8Array(n);
-		
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n);
+		while (stringFromDataUrlLength--) {
+			u8arr[stringFromDataUrlLength] = stringFromDataUrl.charCodeAt(stringFromDataUrlLength);
 		}
 		
-		return new window.File([u8arr], filename, {type:mime});
+		return new window.File([u8arr], filename, {type:mimeType});
 	}
 };
 

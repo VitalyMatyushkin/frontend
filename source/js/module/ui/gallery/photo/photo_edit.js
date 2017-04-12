@@ -31,6 +31,7 @@ const PhotoEdit = React.createClass({
 	
 	onFormSubmit: function(data) {
 		this.service.photo.put(this.albumId, this.photoId, data).then( () => {
+			//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 			window.history.back();
 		});
 	},
