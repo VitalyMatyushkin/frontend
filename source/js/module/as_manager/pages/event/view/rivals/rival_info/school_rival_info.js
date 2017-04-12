@@ -4,14 +4,17 @@ const	React			= require('react'),
 		ScoreConsts		= require('module/ui/score/score_consts'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		propz			= require('propz');
 
 const SchoolRivalInfo = React.createClass({
 	propTypes: {
-		rival:			React.PropTypes.object.isRequired,
-		event:			React.PropTypes.object.isRequired,
-		mode:			React.PropTypes.string.isRequired,
-		activeSchoolId:	React.PropTypes.string.isRequired
+		rival:						React.PropTypes.object.isRequired,
+		event:						React.PropTypes.object.isRequired,
+		mode:						React.PropTypes.string.isRequired,
+		individualScoreAvailable:	React.PropTypes.bool.isRequired,
+		onChangeScore:				React.PropTypes.func.isRequired,
+		activeSchoolId:				React.PropTypes.string.isRequired
 	},
 	isShowChangeSchoolButton: function() {
 		return (
@@ -38,6 +41,33 @@ const SchoolRivalInfo = React.createClass({
 	},
 	getSchoolName: function () {
 		return this.props.rival.school.name;
+	},
+	getPoints: function() {
+		const	schoolResults	= this.props.event.results.schoolScore,
+				teamResults		= this.props.event.results.teamScore,
+				teamId			= this.props.rival.team.id,
+				schoolId		= this.props.rival.school.id;
+
+		const schoolScoreData = schoolResults.find(scoreData => scoreData.schoolId === schoolId);
+
+		let points = 0;
+		if(typeof schoolScoreData !== 'undefined') {
+			points = schoolScoreData.score;
+		} else {
+			const teamScoreData = teamResults.find(scoreData => scoreData.teamId === teamId);
+			if(typeof teamScoreData !== 'undefined') {
+				points = teamScoreData.score;
+			}
+		}
+
+		return points;
+	},
+	onChangeScore: function(scoreData) {
+		if(typeof this.props.rival.team === 'undefined') {
+			this.props.onChangeScore('schoolScore', scoreData);
+		} else {
+			this.props.onChangeScore('teamScore', scoreData);
+		}
 	},
 	renderPencilButton: function() {
 		if(this.isShowChangeSchoolButton()) {
@@ -75,17 +105,23 @@ const SchoolRivalInfo = React.createClass({
 	renderCountPoints: function() {
 		const event = this.props.event;
 
-		const points = 13;
+		const points = this.getPoints();
+
+		const isChangeMode = RivalHelper.isShowScoreButtons(
+			event,
+			this.props.mode,
+			true
+		) && !this.props.individualScoreAvailable;
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {false}
-						plainPoints		= {points}
-						pointsStep		= {event.sport.points.pointsStep}
-						pointsType		= {event.sport.points.display}
-						pointsMask		= {event.sport.points.inputMask}
-						onChange		= {() => {}}
-						modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
+				<Score	isChangeMode	= { isChangeMode }
+						plainPoints		= { points }
+						pointsStep		= { event.sport.points.pointsStep }
+						pointsType		= { event.sport.points.display }
+						pointsMask		= { event.sport.points.inputMask }
+						onChange		= { this.onChangeScore }
+						modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
 				/>
 			</div>
 		);

@@ -12,11 +12,11 @@ const Player = React.createClass({
 	propTypes: {
 		playerIndex					: React.PropTypes.number.isRequired,
 		player						: React.PropTypes.object.isRequired,
-		teamId						: React.PropTypes.string.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
+		onChangeScore				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired
 	},
 	isNonInternalEventForOneOnOneSport: function(event) {
@@ -25,7 +25,6 @@ const Player = React.createClass({
 	render: function() {
 		const	playerIndex					= this.props.playerIndex,
 				player						= this.props.player,
-				teamId						= this.props.teamId,
 				mode						= this.props.mode,
 				event						= this.props.event,
 				individualScoreAvailable	= this.props.individualScoreAvailable,
@@ -49,18 +48,18 @@ const Player = React.createClass({
 					<CaptainStar/>
 				</If>
 				<If condition={
-					!this.isNonInternalEventForOneOnOneSport(event)
-					&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
-					&& individualScoreAvailable}
+						!this.isNonInternalEventForOneOnOneSport(event) &&
+						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing') &&
+						individualScoreAvailable
+					}
 				>
 					<PlayerScore
 						player						= {player}
 						event						= {event}
 						mode						= {mode}
-						teamId						= {teamId}
 						isOwner						= {isOwner}
 						individualScoreAvailable	= {individualScoreAvailable}
-						onChange					= {() => {}}
+						onChange					= {this.props.onChangeScore}
 					/>
 				</If>
 			</div>

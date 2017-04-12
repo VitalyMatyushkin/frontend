@@ -104,7 +104,6 @@ const 	adminButtons	= require('../styles/ui/admin_buttons.scss'),
 		fulltimeInput	= require('../styles/ui/bFullTimeInput.scss'),
 		smalltimeInput	= require('../styles/ui/bSmallTimeInput.scss'),
 		colorPicker		= require('../styles/ui/color_picker.scss'),
-		switchCheckbox	= require('../styles/ui/e_switch_checkbox.scss'),
 		loader			= require('../styles/ui/loader.scss'),
 		simpleAlert		= require('../styles/ui/simple_alert.scss');
 

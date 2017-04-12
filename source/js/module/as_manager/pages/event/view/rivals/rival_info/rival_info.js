@@ -4,20 +4,24 @@ const	React			= require('react'),
 
 const RivalInfo = React.createClass({
 	propTypes: {
-		rival:			React.PropTypes.object.isRequired,
-		event:			React.PropTypes.object.isRequired,
-		mode:			React.PropTypes.string.isRequired,
-		activeSchoolId:	React.PropTypes.string.isRequired
+		rival:						React.PropTypes.object.isRequired,
+		event:						React.PropTypes.object.isRequired,
+		mode:						React.PropTypes.string.isRequired,
+		individualScoreAvailable:	React.PropTypes.bool.isRequired,
+		onChangeScore:				React.PropTypes.func.isRequired,
+		activeSchoolId:				React.PropTypes.string.isRequired
 	},
 	render: function() {
 		switch (true) {
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 				return (
 					<SchoolRivalInfo
-						rival			= { this.props.rival }
-						event			= { this.props.event }
-						mode			= { this.props.mode }
-						activeSchoolId	= { this.props.activeSchoolId }
+						rival						= { this.props.rival }
+						event						= { this.props.event }
+						mode						= { this.props.mode }
+						individualScoreAvailable	= { this.props.individualScoreAvailable }
+						onChangeScore				= { this.props.onChangeScore }
+						activeSchoolId				= { this.props.activeSchoolId }
 					/>
 				);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']:

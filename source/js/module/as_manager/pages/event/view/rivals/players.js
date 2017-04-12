@@ -9,6 +9,7 @@ const Players = React.createClass({
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
+		onChangeScore				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired
 	},
 	renderPlayers: function() {
@@ -28,6 +29,7 @@ const Players = React.createClass({
 					individualScoreAvailable	= {this.props.individualScoreAvailable}
 					mode						= {this.props.mode}
 					event						= {this.props.event}
+					onChangeScore				= {this.props.onChangeScore}
 					customCss					= {this.props.customCss}
 				/>
 			);

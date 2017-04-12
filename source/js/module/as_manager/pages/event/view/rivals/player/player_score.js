@@ -1,13 +1,12 @@
 const	React		= require('react'),
 		Score		= require('module/ui/score/score'),
-		EventHelper	= require('module/helpers/eventHelper');
+		RivalHelper	= require('module/as_manager/pages/event/view/rivals/rival_helper');
 
 const PlayerScore = React.createClass({
 	propTypes: {
 		player						: React.PropTypes.object.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		mode						: React.PropTypes.string.isRequired,
-		teamId						: React.PropTypes.string.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		onChange					: React.PropTypes.func.isRequired
@@ -17,23 +16,24 @@ const PlayerScore = React.createClass({
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
+	onChange: function(scoreData) {
+		this.props.onChange(scoreData, this.props.player);
+	},
 	render: function() {
 		const	event						= this.props.event,
 				player						= this.props.player,
-				teamId						= this.props.teamId,
 				mode						= this.props.mode,
 				isOwner						= this.props.isOwner,
 				individualScoreAvailable	= this.props.individualScoreAvailable;
 
-		//onChange		= {this.handleChangeScore.bind(this, event, teamId, player)}
 		return (
 			<span className="ePlayer_scoreContainer">
-				<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
+				<Score	isChangeMode	= {RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable}
 						plainPoints		= {this.getPointsByStudent(event, player.userId)}
 						pointsStep		= {event.sport.points.pointsStep}
 						pointsType		= {event.sport.points.display}
 						pointsMask		= {event.sport.points.inputMask}
-						onChange		= {this.props.onChange}
+						onChange		= {this.onChange}
 				/>
 			</span>
 		);
