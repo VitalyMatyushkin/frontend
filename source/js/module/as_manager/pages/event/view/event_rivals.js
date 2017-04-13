@@ -51,6 +51,14 @@ const EventRival = React.createClass({
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 				const house = event.housesData[order];
 				team = teamsData.find(t => house && house.id === t.houseId);
+				pic = 	typeof binding.toJS('model.schoolsData.0') !== 'undefined' ?
+						binding.toJS('model.schoolsData.0.pic') :
+						undefined;
+			break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				pic = 	typeof binding.toJS('model.schoolsData.0') !== 'undefined' ?
+						binding.toJS('model.schoolsData.0.pic') :
+						undefined;
 			break;
 		};
 
@@ -331,7 +339,7 @@ const EventRival = React.createClass({
 				status	= binding.toJS('model.status');
 
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
+			if(EventHelper.isNotFinishedEventByBinding(binding) && mode !== 'closing') {
 				return (
 					<div className="eEventRival_score">
 					</div>

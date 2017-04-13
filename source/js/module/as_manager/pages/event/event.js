@@ -1,34 +1,35 @@
-const	React						= require('react'),
-		Morearty					= require('morearty'),
-		Immutable					= require('immutable'),
-		Lazy						= require('lazy.js'),
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
+		Lazy							= require('lazy.js'),
+		If								= require('module/ui/if/if'),
+		classNames						= require('classnames'),
+		Promise 						= require('bluebird');
 
-		If							= require('module/ui/if/if'),
-		Tabs						= require('./../../../ui/tabs/tabs'),
-		CreateOtherEventPanel		= require('./view/create_other_event_panel/create_other_event_panel'),
-		EventHeaderWrapper			= require('./view/event_header/event_header_wrapper'),
-		EventRivals					= require('./view/event_rivals'),
-		IndividualScoreAvailable	= require('./view/individual_score_available'),
-		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
-		EventTeams					= require('./view/teams/event_teams'),
-		Performance					= require('./view/performance/performance'),
-		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
-		TasksWrapper				= require('./view/tasks/tasks_wrapper'),
-		EventGallery				= require('./new_gallery/event_gallery'),
-		ManagerWrapper				= require('./view/manager_wrapper/manager_wrapper'),
-		Comments					= require('./view/event_blog'),
-		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
-		classNames					= require('classnames'),
-		EventResultHelper			= require('./../../../helpers/event_result_helper'),
-		DetailsWrapper				= require('./view/details/details_wrapper'),
-		MatchReport					= require('./view/match-report/report'),
-		Map							= require('../../../ui/map/map2'),
-		EditEventPopup				= require('./view/edit_event_popup/edit_event_popup'),
-		GalleryActions				= require('./new_gallery/event_gallery_actions'),
-		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
-		Button						= require('../../../ui/button/button'),
-
-		RoleHelper					= require('./../../../helpers/role_helper');
+const	Tabs							= require('./../../../ui/tabs/tabs'),
+		CreateOtherEventPanel			= require('./view/create_other_event_panel/create_other_event_panel'),
+		EventHeaderWrapper				= require('./view/event_header/event_header_wrapper'),
+		IndividualScoreAvailableBlock	= require('./view/individual_scores_available_block/individual_score_available_block'),
+		EventRivals						= require('./view/event_rivals'),
+		EditingTeamsButtons 			= require('./view/editing_teams_buttons'),
+		EventTeams						= require('./view/teams/event_teams'),
+		Performance						= require('./view/performance/performance'),
+		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
+		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
+		EventGallery					= require('./new_gallery/event_gallery'),
+		ManagerWrapper					= require('./view/manager_wrapper/manager_wrapper'),
+		Comments						= require('./view/event_blog'),
+		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
+		EventResultHelper				= require('./../../../helpers/event_result_helper'),
+		DetailsWrapper					= require('./view/details/details_wrapper'),
+		MatchReport						= require('./view/match-report/report'),
+		Map								= require('../../../ui/map/map2'),
+		EditEventPopup					= require('./view/edit_event_popup/edit_event_popup'),
+		GalleryActions					= require('./new_gallery/event_gallery_actions'),
+		AddPhotoButton					= require('../../../ui/new_gallery/add_photo_button'),
+		Button							= require('../../../ui/button/button'),
+		EventHelper						= require('module/helpers/eventHelper'),
+		RoleHelper						= require('./../../../helpers/role_helper');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -91,6 +92,7 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
+		console.log(this.props.activeSchoolId);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
@@ -181,19 +183,21 @@ const Event = React.createClass({
 
 			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
-				.set('model',							Immutable.fromJS(eventData))
-				.set('gallery.photos',					Immutable.fromJS(photos))
-				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-				.set('gallery.isSync',					true)
-				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-				.set('mode',							Immutable.fromJS('general'))
+				.set('model',								Immutable.fromJS(eventData))
+				.set('gallery.photos',						Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',		Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',						true)
+				.set('tasksTab.tasks',						Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+				.set('isUserCanWriteComments',				Immutable.fromJS(settings.commentsEnabled))
+				.set('mode',								Immutable.fromJS('general'))
+				.set('individualScoreAvailable.0.value',	this.getInitValueForIndividualScoreAvailableFlag(0, eventData))
+				.set('individualScoreAvailable.1.value',	this.getInitValueForIndividualScoreAvailableFlag(1, eventData))
 				.commit();
 
 			self.initTabs();
 
 			if(TeamHelper.isTeamSport(eventData)) {
-				this.initIsIndividualScoreAvailable();
+				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
 
@@ -201,6 +205,120 @@ const Event = React.createClass({
 
 			return eventData;
 		});
+	},
+	
+	//Load all user integrations from server, because we want button "tweet" only user with twitter integration
+	//Note: We do not care when promises are made, because we use this data only if user click button "tweet"
+	componentDidMount: function(){
+		const 	binding 		= this.getDefaultBinding(),
+				role 			= typeof RoleHelper.getLoggedInUserRole(this) !== 'undefined' ? RoleHelper.getLoggedInUserRole(this) : '';
+		
+		if (role === RoleHelper.USER_ROLES.ADMIN) { //TODO When the server is ready, delete it
+			window.Server.integrations.get({ schoolId : this.props.activeSchoolId }).then( integrations => {
+				//we choose only twitter integrations
+				integrations = integrations.filter( integration => integration.type === 'twitter');
+				if (integrations.length > 0) {
+					binding.set('twitterData', Immutable.fromJS(integrations));
+					binding.set('twitterIdDefault', integrations[0].id); // while we wait isFavorite from server, we made isFavorite first id
+				}
+			});
+		}
+	},
+	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
+		if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+			return false;
+		} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+			return true;
+		} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+			return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+		} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+			return true;
+		}
+	},
+	hasTeamPlayersByOrder: function(event, order) {
+		let hasTeamPlayers = false;
+
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(this.props.activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(this.props.activeSchoolId, event);
+				break;
+		}
+
+		const team = event[params.bundleName][params.order];
+		// Team is undefined when "set team later" is true and event type is inter-schools.
+		// If bundleName isn't teamsData team doesn't have players.
+		if(
+			params.bundleName === "teamsData" && typeof team !== 'undefined' &&
+			typeof team.players !== 'undefined' && team.players.length !== 0
+		) {
+			hasTeamPlayers = true;
+		}
+
+		return hasTeamPlayers;
+	},
+	isTeamHasGeneralScoreByOrder: function(order, event) {
+		const activeSchoolId = this.props.activeSchoolId;
+
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
+
+		const team = event[params.bundleName][params.order];
+		// team is undefined when "set team later" is true and event type is inter-schools.
+		if(typeof team !== 'undefined') {
+			// id of school, house or team.
+			const id = team.id;
+			switch (params.bundleName) {
+				case "schoolsData":
+					return typeof event.results.schoolScore.find(scoreData => scoreData.schoolId === id) !== 'undefined';
+				case "housesData":
+					return typeof event.results.houseScore.find(scoreData => scoreData.houseId === id) !== 'undefined';
+				case "teamsData":
+					return typeof event.results.teamScore.find(scoreData => scoreData.teamId === id) !== 'undefined';
+			}
+		} else {
+			return false;
+		}
+	},
+	isTeamHasIndividualScoreByOrder: function(order, event) {
+		const activeSchoolId = this.props.activeSchoolId;
+
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
+
+		const team = event[params.bundleName][params.order];
+		// team is undefined when "set team later" is true and event type is inter-schools.
+		if(typeof team !== 'undefined') {
+			// id of school, house or team.
+			const id = team.id;
+			switch (params.bundleName) {
+				case "schoolsData":
+					return false;
+				case "housesData":
+					return false;
+				case "teamsData":
+					return event.results.individualScore.filter(scoreData => scoreData.teamId === id).length !== 0;
+			}
+		} else {
+			return false;
+		}
 	},
 	//For different roles we use different service
 	getServiceForEvent: function(role) {
@@ -220,11 +338,11 @@ const Event = React.createClass({
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
-	initIsIndividualScoreAvailable: function() {
-		this.initIsIndividualScoreAvailableByOrder(0);
-		this.initIsIndividualScoreAvailableByOrder(1);
+	initTeamIdForIndividualScoreAvailableFlag: function() {
+		this.initTeamIdForIndividualScoreAvailableFlagByOrder(0);
+		this.initTeamIdForIndividualScoreAvailableFlagByOrder(1);
 	},
-	initIsIndividualScoreAvailableByOrder: function(order) {
+	initTeamIdForIndividualScoreAvailableFlagByOrder: function(order) {
 		const binding = this.getDefaultBinding();
 
 		const	activeSchoolId	= this.props.activeSchoolId,
@@ -606,8 +724,8 @@ const Event = React.createClass({
 		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
 	isaLeftShow:function (activeSchoolId, event, mode) {
-		const 	isClosingMode 	= mode === 'closing',
-				params 			= isClosingMode && TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+		const	isClosingMode	= mode === 'closing',
+				params			= isClosingMode && TeamHelper.getParametersForLeftContext(activeSchoolId, event);
 
 		return params && params.bundleName === 'teamsData';
 	},
@@ -715,6 +833,19 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	renderEditTeamButtons: function() {
+		if(TeamHelper.isShowEditEventButton(this)) {
+			return (
+				<div className="bEventMiddleSideContainer">
+					<div className="bEventMiddleSideContainer_row">
+						<EditingTeamsButtons binding={this.getDefaultBinding()}/>
+					</div>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -723,15 +854,10 @@ const Event = React.createClass({
 				showingComment	= binding.get('showingComment'),
 				activeTab		= this.getActiveTab(),
 				mode			= binding.toJS('mode'),
-				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
-				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent'),
-				//If team don't have players we don't display checkbox "Individual Score"
-				isLeftPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.0') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.0').length) : false,
-				isRightPlayers	= typeof binding.toJS('eventTeams.viewPlayers.players.1') !== 'undefined' ? Boolean(binding.toJS('eventTeams.viewPlayers.players.1').length) : false;
-		
+				isNewEvent		= binding.get('isNewEvent');
+
 		const EventContainerStyle = classNames({
 			bEventContainer	: true,
 			mTopMargin		: !isNewEvent
@@ -759,21 +885,13 @@ const Event = React.createClass({
 											onReload		= {this.props.onReload}
 											activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<div className="bEventMiddleSideContainer">
-								<div className="bEventMiddleSideContainer_row">
-									<EditingTeamsButtons binding={binding} />
-									<div className="col-md-5 col-md-offset-1 col-sm-6">
-										<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
-																	isVisible	= {isLeftPlayers && isaLeftShow}
-											/>
-									</div>
-									<div className="col-md-5 col-sm-6">
-										<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-																  isVisible={isRightPlayers && isaRightShow}
-											/>
-									</div>
-								</div>
-							</div>
+							{ this.renderEditTeamButtons() }
+							<IndividualScoreAvailableBlock
+								binding			= { this.getDefaultBinding() }
+								activeSchoolId	= { this.props.activeSchoolId }
+								mode			= { mode }
+								event			= { event }
+							/>
 							<EventTeams	binding			= {self.getEventTeamsBinding()}
 										activeSchoolId	= {this.props.activeSchoolId}
 							/>

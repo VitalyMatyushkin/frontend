@@ -7,7 +7,7 @@ const	React 					= require('react'),
 		SchoolListItem			= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		PostcodeSelector		= require('../../../postcode_selector/postcode_selector'),
 		GeoSearchHelper			= require('../../../../helpers/geo_search_helper'),
-		PermissionDetailsHelper	= require('./permission_detail_helper');
+		PermissionDetailsHelper	= require('module/ui/register/user/permission_details/permission_detail_helper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -66,6 +66,15 @@ const PermissionDetails = React.createClass({
 				limit: 40
 			}
 		};
+		
+		switch (this.props.type) {
+			case "admin":
+				filter.filter.where.kind = {$in: ['School', 'SchoolUnion']};
+				break;
+			case "student":
+				filter.filter.where.studentSelfRegistrationEnabled = true;
+				break;
+		}
 
 		return window.Server.publicSchools.get(filter);
 	},
@@ -195,6 +204,7 @@ const PermissionDetails = React.createClass({
 						<PostcodeSelector	currentPostcode			= {this.state.postcode}
 											handleSelectPostcode	= {this.handleSelectPostcode}
 											handleEscapePostcode	= {this.handleEscapePostcode}
+											extraCssStyle			= {'mRegistrationPostcode'}
 						/>
 						<AutoComplete
 							serviceFilter	= { this.serviceSchoolFilter }

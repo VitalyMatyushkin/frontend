@@ -11,7 +11,8 @@ const	Promise		= require('bluebird'),
 		storage		= require('./module/helpers/storage'),
 		loadSVG		= require('./module/helpers/svg_loader'),
 		es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts'),
-		styleLoader	= require('./style_loader');
+		styleLoader	= require('./style_loader'),
+		timezone	= require('moment-timezone');
 
 
 const	asAdmin			= require('./module/start_as_admin'),
@@ -47,6 +48,8 @@ window.apiImg	= api.img;
 
 window.logLevel	= log; //Make this global for usage
 
+window.timezone = timezone.tz.guess() ? timezone.tz.guess() : 'Europe/London';
+console.log('Guessed timezone is: ' + window.timezone);
 
 switch(startModule) {
 	case 'module/start_as_admin':		asAdmin();		break;

@@ -56,13 +56,15 @@ const PermissionsStep = React.createClass({
 	checkSchoolAvailibleForRegistrationStudent: function() {
 		const 	binding = this.getDefaultBinding(),
 				schoolId = binding.get('fields.0.schoolId');
-
-		window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
-			if (school.studentSelfRegistrationEnabled !== true) {
-				binding.sub('fields.0.schoolId').remove();
-				binding.sub('fields.0.schoolName').remove();
-			}
-		});
+		
+		if (typeof schoolId !== "undefined") {
+			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
+				if (school.studentSelfRegistrationEnabled !== true) {
+					binding.sub('fields.0.schoolId').remove();
+					binding.sub('fields.0.schoolName').remove();
+				}
+			});
+		}
 	},
 	/**
 	 * For Parent permission request only. It will add items to array to make
@@ -75,6 +77,27 @@ const PermissionsStep = React.createClass({
 		currentFieldArray++;
 		binding.set('currentFieldArray', currentFieldArray);
 	},
+	/**
+	 * For Parent permission request only. It will delete items from array to make
+	 * possible having delete children for parent
+	 */
+	deleteFieldArray: function(){
+		const 	binding 			= this.getDefaultBinding();
+		let 	currentFieldArray 	= binding.get('currentFieldArray');
+		
+		binding.sub('fields.' + currentFieldArray + '.schoolId').remove();
+		binding.sub('fields.' + currentFieldArray + '.schoolName').remove();
+		binding.sub('fields.' + currentFieldArray + '.firstName').remove();
+		binding.sub('fields.' + currentFieldArray + '.lastName').remove();
+		binding.sub('fields.' + currentFieldArray + '.formId').remove();
+		binding.sub('fields.' + currentFieldArray + '.formName').remove();
+		binding.sub('fields.' + currentFieldArray + '.houseId').remove();
+		binding.sub('fields.' + currentFieldArray + '.houseName').remove();
+		binding.sub('fields.' + currentFieldArray + '.comment').remove();
+		
+		currentFieldArray--;
+		binding.set('currentFieldArray', currentFieldArray);
+	},
 
 	/**
 	 * Check if form filled for provided permission type (currentType)
@@ -84,15 +107,42 @@ const PermissionsStep = React.createClass({
 	isFormFilled: function (currentType) {
 		const 	binding						= this.getDefaultBinding(),
 				rolesRequiredSchoolIdOnly	= Lazy(['admin', 'manager', 'teacher', 'coach', 'student']),
-				isSchoolPresented			= typeof binding.get('fields.0.schoolId') !== 'undefined';
+				isSchoolPresented			= typeof binding.get('fields.0.schoolId') !== 'undefined',
+				currentFieldArray			= Number(binding.get('currentFieldArray'));
 
-		return (rolesRequiredSchoolIdOnly.contains(currentType) && isSchoolPresented) || (
-				currentType === 'parent' &&
-				binding.get('fields.0.schoolId') && binding.get('fields.0.houseId') &&
-				binding.get('fields.0.formId') && binding.get('fields.0.firstName') &&
-				binding.get('fields.0.lastName')
-			);
+	
+		return 	(rolesRequiredSchoolIdOnly.contains(currentType) && isSchoolPresented) ||
+				(currentType === 'parent' && this.isFormFilledForParent(currentFieldArray, binding));
 	},
+	/**
+	 * Check if form filled for parent
+	 * Return true, if fill all fields in form
+	 * @param {number} currentFieldArray
+	 * @param {any} binding
+	 * @returns {boolean}
+	 */
+	isFormFilledForParent: function(currentFieldArray, binding){
+		/**
+		 * Results is array ex. [true, false, true]
+		 * @type {Array}
+		 */
+		let results = [];
+		
+		for (let i=0; i<=currentFieldArray; i++) {
+			results.push(Boolean(
+				binding.get('fields.' + i + '.schoolId') && binding.get('fields.' + i + '.houseId') &&
+				binding.get('fields.' + i + '.formId') && binding.get('fields.' + i + '.firstName') &&
+				binding.get('fields.' + i + '.lastName')
+				)
+			);
+		}
+		
+		return results.reduce((prevResult, currentResult) => {
+			return prevResult && currentResult;
+		});
+	
+	},
+	
 
 	/**
 	 * Trigger on school selection.
@@ -184,6 +234,7 @@ const PermissionsStep = React.createClass({
 						isFormFilled			= { isShowFinishButton }
 						onSuccess				= { this.props.onSuccess }
 						addFieldArray			= { this.addFieldArray }
+						deleteFieldArray		= { this.deleteFieldArray }
 						handleSchoolSelect 		= { this.handleSchoolSelect }
 						handleHouseSelect		= { this.handleHouseSelect }
 						handleFormSelect		= { this.handleFormSelect }

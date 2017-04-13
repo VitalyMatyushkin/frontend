@@ -71,8 +71,8 @@ var validationsSet = {
 		}
 	},
 	domain: function(value){
-		if (/[^a-z\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
-			return 'Should contain only lowercase characters';
+		if (/[^a-z0-9\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
+			return 'Should contain only lowercase characters and digits';
 		} else {
 			return false;
 		}
@@ -104,8 +104,12 @@ var validationsSet = {
 		return false;
 	},
 	required: function(value) {
-		var self = this,
+		var self = this;
+		//Because has case, where value === 0 and it must be true
+		if (value !== 0) {
 			value = value || '';
+		}
+		
 		if (value.trim && value.trim() === '' ) {
 			switch (self.props.name) {
 				case 'Name':

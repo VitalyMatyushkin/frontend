@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
+		Promise 		= require('bluebird'),
 
 		PerformanceView	= require('./performance_view'),
 		PerformanceEdit	= require('./performance_edit');
@@ -129,9 +130,8 @@ const Performance = React.createClass({
 	},
 	onCancel: function() {
 		this.restorePerformanceData();
-		this.clearBackupPerformanceDate().then(() => {
-			this.changeViewMode();
-		});
+		this.clearBackupPerformanceDate();
+		this.changeViewMode();
 	},
 	render: function() {
 		switch (true) {

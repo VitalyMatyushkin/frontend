@@ -9,37 +9,37 @@ const 	NewsItem 	= require('module/shared_pages/news/view-news-item'),
 const NewsViewPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding(),
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
 				routingData 	= globalBinding.sub('routing.parameters').toJS(),
 				newsId 			= routingData.id,
 				schoolId		= globalBinding.get('userRules.activeSchoolId');
 
-		binding.clear();
-
+		binding.set('isSync', false);
+		
 		if (newsId) {
 			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
-				.then(function (data) {
-					binding.set(Immutable.fromJS(data));
+				.then(data => {
+					binding.set('news', Immutable.fromJS(data));
+					binding.set('isSync', true);
 			});
-
-			self.newsId 	= newsId;
-			self.schoolId 	= schoolId;
 		}
 	},
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding(),
-				news = binding.toJS();
-
-		return (
-			<div className="eSchoolNewsContainer">
-				<div className="eSchoolNewsItems">
-					{news ? <NewsItem value={news} binding={binding.sub('viewItem')} /> : 'loading...'}
+		const 	binding = this.getDefaultBinding();
+		
+		if (binding.toJS('isSync') === true) {
+			const news = binding.toJS('news');
+			return (
+				<div className="eSchoolNewsContainer">
+					<div className="eSchoolNewsItems">
+						<NewsItem value={news} binding={binding.sub('viewItem')} />
+					</div>
 				</div>
-			</div>
-		);
+			);
+		} else {
+			return null
+		}
 	}
 });
 

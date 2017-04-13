@@ -114,7 +114,7 @@ const ImportStudentsModule = React.createClass({
 				firstName:	student.firstName,
 				lastName:	student.lastName,
 				gender:		student.gender,
-				birthday:	this.getBirthdayInServerFormat(student.birthday),
+				birthday:	student.birthday ? this.getBirthdayInServerFormat(student.birthday) : undefined,
 				formId: 	student.formId,
 				houseId: 	student.houseId
 			});

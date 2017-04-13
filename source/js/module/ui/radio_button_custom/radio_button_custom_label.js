@@ -1,3 +1,5 @@
+//@flow
+
 const	React					= require('react'),
 
 		RadioButtonCustomStyle	= require('./../../../../styles/ui/radio_button_custom/radio_button_custom.scss');

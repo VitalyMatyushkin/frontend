@@ -5,6 +5,10 @@
   margin: 0 5px;
   background-size: cover;
 
+  &.mEditMode{
+	cursor: pointer;
+  }
+
   &.mBlue {
     color: #007abf;
   }

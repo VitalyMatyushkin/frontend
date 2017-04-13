@@ -43,7 +43,7 @@ const Select = React.createClass({
 				binding 	= self.getDefaultBinding(),
 				defaultId 	= binding.get('defaultId');
 
-		if (defaultId) {
+		if (typeof defaultId !== 'undefined' && defaultId !== null) {
 			this.handleSelect(defaultId);
 		}
 	},

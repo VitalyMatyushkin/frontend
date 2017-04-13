@@ -1,3 +1,5 @@
+// @flow
+
 const	React			= require('react');
 
 const	ActionList		= require('../../../../../ui/action_list/action_list');
@@ -18,6 +20,7 @@ const Buttons = React.createClass({
 		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
 		handleClickCancelEvent			: React.PropTypes.func.isRequired,
 		handleClickCloseEvent			: React.PropTypes.func.isRequired,
+		handleClickDownloadPdf			: React.PropTypes.func.isRequired,
 		onClickCloseCancel				: React.PropTypes.func.isRequired,
 		onClickOk						: React.PropTypes.func.isRequired
 	},
@@ -42,12 +45,14 @@ const Buttons = React.createClass({
 		}
 
 		if(this.isChangeScoreEventActionAvailable()) {
-			actionList.push({id:'change', text:'Change Score'});
+			actionList.push({id:'change', text:'Update Scores'});
 		}
 
 		if(this.isCancelEventActionAvailable()) {
 			actionList.push({id:'cancel', text:'Cancel Event'});
 		}
+
+		actionList.push({id: 'download_pdf', text: 'Download Pdf'});
 
 		return actionList;
 	},
@@ -76,7 +81,7 @@ const Buttons = React.createClass({
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
-	handleClickActionItem: function(id) {
+	handleClickActionItem: function(id: string) {
 		switch (id) {
 			// create event like this
 			case 'create':
@@ -91,6 +96,9 @@ const Buttons = React.createClass({
 				break;
 			case 'cancel':
 				this.props.handleClickCancelEvent();
+				break;
+			case 'download_pdf':
+				this.props.handleClickDownloadPdf();
 				break;
 		}
 	},

@@ -16,7 +16,7 @@ const TypePassword =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<input type="password" onBlur={self.handleBlur} onChange={self.handleChange} value={value} />
+				<input autoCapitalize="none" type="password" onBlur={self.handleBlur} onChange={self.handleChange} value={value} />
 			</div>
 		)
 	}

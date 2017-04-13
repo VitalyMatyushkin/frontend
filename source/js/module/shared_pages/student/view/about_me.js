@@ -9,15 +9,16 @@ const AboutMeBlock = React.createClass({
 		title: React.PropTypes.string
 	},
 	_getAboutNode: function() {
-		const 	binding 		= this.getDefaultBinding(),
-				studentBirthday = DateHelper.toLocal(binding.get('student.birthday'));
+		const 	binding 				= this.getDefaultBinding(),
+				studentBirthday 		= DateHelper.toLocal(binding.get('student.birthday')),
+				studentBirthdayArray 	= studentBirthday.split('.');
 		/**
 		 * Arrays holding icon names and data fields, moves away from pushing all of data onto a component array
 		 * that was not being cleared and causing page to render details twice
 		 */
 		const icons = ['icon_office', 'icon_home', 'icon_library', 'icon_age', 'icon_shot', 'icon_trophy', 'icon_score'],
 			fields = ['schoolData.name', 'houseData.name', 'classData.name', 'student.age', 'numOfGamesScoredIn','numOfGamesWon','numberOfGamesPlayed'],
-			titles = ['School', 'House','Form', `Age. Birthday - ${studentBirthday}`, 'Count of games scored in','Count of won games','Count of played games'];
+			titles = ['School', 'House','Form', `Age. Date of birth: - ${studentBirthdayArray[0]}/${studentBirthdayArray[1]}/${studentBirthdayArray[2]}`, 'Number of games scored in','Number of games won','Number of games played'];
 		return icons.map(function(icon,i){
 			let bindingResult = binding.get(fields[i]);
 			if (bindingResult||bindingResult === 0) {

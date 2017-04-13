@@ -10,11 +10,9 @@ const	PlaceList	= require('./place_list'),
 
 const PlacesPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	handleClickForm: function(formId, formName) {
-		document.location.hash = 'school_admin/forms/students?id=' + formId + '&name=' + formName;
-	},
-	handleClickStudent: function(studentId) {
-		document.location.hash = 'school_admin/students/stats?id=' + studentId;
+	//The function, which will call when user click on <Row> in Grid
+	handleClick: function(place) {
+		document.location.hash += `/edit?id=${place}`;
 	},
 	render: function() {
 		const	binding 		= this.getDefaultBinding(),
@@ -28,7 +26,7 @@ const PlacesPage = React.createClass({
 					path		= "/school_console/venues"
 					binding		= { binding.sub('placeList') }
 					component	= { PlaceList }
-					handleClick	= { this.handleClickForm }
+					handleClick	= { this.handleClick }
 				/>
 				<Route
 					path		= "/school_console/venues/add"

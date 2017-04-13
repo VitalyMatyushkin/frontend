@@ -36,12 +36,11 @@ const TermsCheckbox = React.createClass({
                 <div>
                     <input name="Terms" type="checkbox" value="Terms" onClick={self._checkBoxClicked}/>
                     <label style={{fontSize:12+'px'}} htmlFor="Terms">I have read and agree to the
-                        <a href="docs/pdf/privacy_policy_v1.0_2016_05_10.pdf" target="_blank"> Privacy
+                        <a href="docs/pdf/privacy_policy.pdf" target="_blank"> Privacy
                             Policy</a>,
-                        <a href="docs/pdf/terms_of_website_use_2016_05_10.pdf" target="_blank"> Terms
-                            and Conditions</a> and<br/>
-                        <a href="docs/pdf/acceptable_use_policy_v_1.1_2016_05_10.pdf" target="_blank">
-                            Acceptable Use Policy</a>
+                        <a href="docs/pdf/terms_of_website_use.pdf" target="_blank"> Terms
+                            and Conditions</a> and
+                        <a href="docs/pdf/acceptable_use_policy.pdf" target="_blank"> Acceptable Use Policy</a>
                     </label>
                 </div>
                 <div className="mNotRequired">

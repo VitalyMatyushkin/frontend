@@ -8,7 +8,7 @@
 
 .eSchoolNewsContainer_title {
   width: 100%;
-  padding: 35px 0;
+  padding: 35px 0 20px 0;
 
   text-align: center;
 
@@ -21,7 +21,8 @@
   display: flex;
   flex-flow: row wrap;
 
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  margin-top: 15px;
 
   background: #fff;
   border: $mainBorder;
@@ -76,6 +77,9 @@
     top: 0;
     left: 10px;
   }
+  p {
+	margin-bottom: 0;
+  }
 }
 
 .eSchoolNews_more{
@@ -88,6 +92,44 @@
     font-size: 1.3rem;
     padding-right: 5px;
     vertical-align: bottom;
+  }
+}
+.bSchoolNewsItem {
+  .eTwitter{
+	padding:5px 10px;
+	line-height:1;
+	height: auto;
+	font-size: 14px;
+	margin-left: 10px;
+	&:hover{
+	  color: $blueColor;
+	  background-color: #ffffff;
+	}
+  }
+  .eTextArea{
+	resize: none;
+	width: 500px;
+	height: 150px;
+	padding: 5px 3px;
+  }
+  .eTweetLength{
+	margin-bottom: 0px;
+  }
+  .eTweetTitle{
+	text-align: center;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	font-weight: bold;
+  }
+  .mInvalid{
+	color: $INVALID_COLOR;
+  }
+  .eTweetAccountChooser {
+	display: block;
+	height: auto;
+	width: 33%;
+	margin-bottom: 10px;
+	padding: 5px 3px;
   }
 }
 

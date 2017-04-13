@@ -1,6 +1,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Morearty	= require('morearty'),
+		Promise 	= require('bluebird'),
 		RoleHelper	= require('../../../../../helpers/role_helper'),
 		Discipline	= require('./discipline');
 

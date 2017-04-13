@@ -118,24 +118,26 @@ const EventVenue = React.createClass({
 		};
 	},
 	getResultForEmptySearchString: function() {
-		const	gameType	= this.props.eventType;
+		return window.Server.schoolPlaces.get(this.props.activeSchoolInfo.id)
+			.then(places => {
+				let result = [];
 
-		const promises = [];
+				// set home postcode
+				const homePostCode = this.getHomeSchoolPostCode();
+				typeof homePostCode !== "undefined" && result.push(homePostCode);
 
-		// set home postcode
-		const homePostCode = this.getHomeSchoolPostCode();
-		typeof homePostCode !== "undefined" && promises.push(homePostCode);
+				// set opponent postcode
+				if(this.props.eventType === 'inter-schools') {
+					const opponentSchoolPostCode = this.getOpponentSchoolPostCode();
+					typeof opponentSchoolPostCode !== "undefined" && result.push(opponentSchoolPostCode);
+				}
 
-		// set opponent postcode
-		if(gameType === 'inter-schools') {
-			const opponentSchoolPostCode = this.getOpponentSchoolPostCode();
-			typeof opponentSchoolPostCode !== "undefined" && promises.push(opponentSchoolPostCode);
-		}
+				// set TBD plug - it's fake postcode
+				result.push(this.getTBDPostcode());
+				result = result.concat(places);
 
-		// set TBD plug - it's fake postcode
-		promises.push(this.getTBDPostcode());
-
-		return Promise.resolve(promises);
+				return Promise.resolve(result);
+			});
 	},
 	getResultForNotEmptySearchString: function(postcode) {
 		const	gameType	= this.props.eventType;
@@ -353,7 +355,7 @@ const EventVenue = React.createClass({
 		return typeof postcode !== 'undefined' ? this.isPlace(postcode) : false;
 	},
 	isShowPlacePopup: function() {
-		return this.getDefaultBinding().get('isShowPlacePopup');
+		return Boolean(this.getDefaultBinding().get('isShowPlacePopup'));
 	},
 	showPlacePopup: function() {
 		this.getDefaultBinding().set('isShowPlacePopup', true);
@@ -440,8 +442,8 @@ const EventVenue = React.createClass({
 									isBlocked			= { this.isPostcodeInputBlocked() }
 									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin mWhiteBG' }
 					/>
-					<StarButton	handleClick	= {this.onClickStarButton}
-								isEnable	= {this.isStarButtonEnable()}
+					<StarButton	handleClick	= { this.onClickStarButton }
+								isEnable	= { this.isStarButtonEnable() }
 					/>
 				</div>
 				<If condition={this.isShowMap()}>

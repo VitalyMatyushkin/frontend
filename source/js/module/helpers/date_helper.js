@@ -1,6 +1,9 @@
+// @flow
 /**
  * Created by Anatoly on 28.03.2016.
  */
+
+const Moment = require('moment');
 
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 const DateHelper = {
@@ -12,18 +15,8 @@ const DateHelper = {
 	 * @param date
 	 * @returns {*}
 	 */
-	getDateStringFromDateObject: function(date) {
-		const copyDate = new Date(date);
-
-		const	day		= copyDate.getDate() < 10 ?
-						'0' + copyDate.getDate() :
-						copyDate.getDate(),
-				month	= (copyDate.getMonth() + 1) < 10 ?
-						'0' + (copyDate.getMonth() + 1) :
-						copyDate.getMonth() + 1,
-				year	= copyDate.getFullYear();
-
-		return `${day}.${month}.${year}`;
+	getDateStringFromDateObject: function(date: Date): string {
+		return Moment(date).format('DD.MM.YYYY');
 	},
 
 	/**
@@ -33,31 +26,34 @@ const DateHelper = {
 	 * @param date
 	 * @returns {*}
 	 */
-	getTimeStringFromDateObject: function(date) {
+	getTimeStringFromDateObject: function(date: Date): string {
+		// $FlowFixMe
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
-	getTimeUTCStringFromDateObject: function(date) {
+	getTimeUTCStringFromDateObject: function(date: Date): string {
+		// $FlowFixMe
 		return new Date(date).toUTCString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
-	getShortTimeStringFromDateObject: function(date) {
+	getShortTimeStringFromDateObject: function(date: Date): string {
+		// $FlowFixMe
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}/i)[0];
 	},
 
-	getDateTimeUTCString: function(dateTime){
+	getDateTimeUTCString: function(dateTime: Date): string {
 		const 	date = this.getDateStringFromDateObject(dateTime),
 				time = this.getTimeUTCStringFromDateObject(dateTime);
 
 		return `${date}, ${time}`;
 	},
 
-	getDateTimeString: function(dateTime){
+	getDateTimeString: function(dateTime: Date): string {
 		const 	date = this.getDateStringFromDateObject(dateTime),
 				time = this.getTimeStringFromDateObject(dateTime);
 
 		return `${date}, ${time}`;
 	},
 
-	getDateShortTimeString: function(dateTime){
+	getDateShortTimeString: function(dateTime: Date): string {
 		const 	date = this.getDateStringFromDateObject(dateTime),
 				time = this.getShortTimeStringFromDateObject(dateTime);
 
@@ -65,37 +61,35 @@ const DateHelper = {
 	},
 
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
-	toLocal:function(str){
+	toLocal:function(str: string): string {
 		return this.getDateStringFromDateObject(new Date(str));
 	},
 
 	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
-	toLocalDateTime:function(str){
+	toLocalDateTime:function(str: string): string {
 		return this.getDateShortTimeString(new Date(str));
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
 	/** convert date from UTC-string to 'dd/mm/yyyy' format */
-	getDate: function (str) {
+	getDate: function (str: string): string {
 		return this.toLocal(str).replace(/[.]/g, '/');
 	},
 
 	/** convert date from UTC-string to 'dd mmm yyyy' format */
-	toLocalWithMonthName:function(utcStr){
-		var self = this;
-		if(utcStr){
-			// TODO birthday?? WTF??
-			var	birthday = new Date(utcStr),
-				date = self.zeroFill(birthday.getDate()),
-				month = birthday.getMonth(),
-				year = birthday.getFullYear();
+	toLocalWithMonthName:function(utcStr: string): string {
+		// TODO birthday?? WTF??
+		const 	birthday	= new Date(utcStr),
+				date		= this.zeroFill(birthday.getDate()),
+				month		= birthday.getMonth(),
+				year		= birthday.getFullYear();
 
-			return [date, self.getMonthName(month), year].join(' ');
-		}
+		return [date, this.getMonthName(month), year].join(' ');
+
 	},
 
 	/** convert local date format 'dd.mm.yyyy' to ISO-string */
-	toIso: function(dotString) {
+	toIso: function(dotString: string): string {
 		const dateParts = dotString ? dotString.split('.'):[],
 		//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
 			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
@@ -103,7 +97,7 @@ const DateHelper = {
 		return isoStr;
 	},
 
-	toIsoDateTime: function(dotString) {
+	toIsoDateTime: function(dotString: string): string {
 		const dateTimeParts = dotString ? dotString.split('/'):[],
 				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
 				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
@@ -114,7 +108,7 @@ const DateHelper = {
 	},
 
 	/** validation date ISO-format or 'yyyy-mm-dd' */
-	isValid:function(value){
+	isValid:function(value: any): boolean {
 		let result = false;
 		
 		if(Date.parse(value)){
@@ -130,7 +124,7 @@ const DateHelper = {
 		return result;
 	},
 
-		isValidDateTime:function(value){
+		isValidDateTime:function(value: any): boolean {
 		let result = false;
 		
 		if(Date.parse(value)){
@@ -158,7 +152,7 @@ const DateHelper = {
 	 * @param monthIndex month index. STARTS FROM 0
 	 * @returns {String} month name
 	 */
-	getMonthName: function(monthIndex) {
+	getMonthName: function(monthIndex: number): string {
 		return this.monthNames[monthIndex];
 	},
 
@@ -166,12 +160,12 @@ const DateHelper = {
 	 * @param dayOfWeekIndex day of week index. STARTS FROM 0
 	 * @returns {String} month name
 	 */
-	getDayOfWeekName: function(dayOfWeekIndex) {
+	getDayOfWeekName: function(dayOfWeekIndex: number): string {
 		return this.daysOfWeek[dayOfWeekIndex];
 	},
 
 	/** converts int with leading 0 if int is less than 10 */
-	zeroFill: function(i) {
+	zeroFill: function(i: number): string {
 		return (i < 10 ? '0' : '') + i;
 	},
 
@@ -179,7 +173,7 @@ const DateHelper = {
      * @param string {String} any date string which can be parsed by `new Date(...)` constructor
      * @returns {string} string in 'hh:mm' format
      */
-    getTime: function(string){
+    getTime: function(string: string){
         const   date        = new Date(string),
                 zeroFill    = (i) => (i < 10 ? '0' : '') + i;
 
@@ -189,32 +183,28 @@ const DateHelper = {
      * Return date time for first day of current month.
      * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
      */
-    getStartDateTimeOfMonth: function(date) {
-        const self = this;
+    getStartDateTimeOfMonth: function(date: Date) {
+		const _date = new Date(date);
 
-        const _date = new Date(date);
-
-        return `${_date.getFullYear()}-${self.getMonthString(date)}-01T${self.getZeroTimeString()}`;
+        return `${_date.getFullYear()}-${this.getMonthString(date)}-01T${this.getZeroTimeString()}`;
     },
     /**
      * Return date time for last day of current month.
      * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
      */
-    getEndDateTimeOfMonth: function(date) {
-        const self = this;
-
+    getEndDateTimeOfMonth: function(date: Date): string {
         const _date = new Date(date);
 
-        return `${_date.getFullYear()}-${self.getMonthString(date)}-${self.getLastDayOfMonth(date)}T${self.getEndDayTimeString()}`;
+        return `${_date.getFullYear()}-${this.getMonthString(date)}-${this.getLastDayOfMonth(date)}T${this.getEndDayTimeString()}`;
     },
-    getMonthNumber: function(date) {
+    getMonthNumber: function(date: Date): number {
         return new Date(date).getMonth() + 1;
     },
 	/**
      * Return month in string format for current date.
      * If number of month less then 10, then add "0" to start of month string, for example "7" => "07".
      */
-    getMonthString: function(date) {
+    getMonthString: function(date: Date) {
         const self = this;
 
         const monthNumber = self.getMonthNumber(date);
@@ -245,7 +235,7 @@ const DateHelper = {
      * Return last date of month
      * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
      */
-    getLastDayOfMonth: function(date) {
+    getLastDayOfMonth: function(date: Date) {
         const _date = new Date(date);
 
         const lastDayOfMonthDateTime = new Date(_date.getFullYear(), _date.getMonth() + 1, 0);
@@ -254,14 +244,14 @@ const DateHelper = {
 
     },
 
-	getShortDateString: function(date) {
+	getShortDateString: function(date: Date) {
 		const	dayString	= this.zeroFill(date.getDate()),
 				monthString	= this.getMonthName(date.getMonth());
 
 		return `${dayString} ${monthString}`;
 	},
 
-	isToday: function(date) {
+	isToday: function(date: Date) {
 		return this.getDate(new Date()) === this.getDate(date);
 	},
 
@@ -272,7 +262,7 @@ const DateHelper = {
 		return tomorrow;
 	},
 
-	isTomorrow: function(date) {
+	isTomorrow: function(date: Date) {
 		return this.getDate(this.getTomorrow()) === this.getDate(date);
 	},
 
@@ -282,7 +272,7 @@ const DateHelper = {
 	 * @param {Number} month 0-based as in date
 	 * @returns {Array.<Number>}
 	 */
-	getDaysFromCurrentMonth: function(year, month) {
+	getDaysFromCurrentMonth: function(year: number, month: number) {
 		const countMonthDays = new Date(year, month + 1, 0).getDate();
 
 		const daysArray = [];

@@ -67,6 +67,15 @@ class ClassListClass{
 		event.stopPropagation();
 	}
 	
+	/**
+	 * Function return string with Age Group
+	 * @param item {object}
+	 * @returns {string}
+	 */
+	getAllAges(item) {
+		return item.age === 0 ? "Reception" : "Y" + item.age;
+	}
+	
 	setColumns(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -89,7 +98,7 @@ class ClassListClass{
 					dataField:'age',
 					type:'custom',
 					typeOptions:{
-						parseFunction: function(item) {return 'Y' + item.age;}
+						parseFunction: item => this.getAllAges(item)
 					}
 				}
 			},
@@ -113,7 +122,7 @@ class ClassListClass{
 
 	}
 	
-	init(){
+	createGrid(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
@@ -146,20 +155,9 @@ class ClassListClass{
 		return this;
 	}
 	
-	loadFilter(grid){
+	createGridFromExistingData(grid){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
-		
-		/*this.badges = new BadgeModel({
-			field: {
-				text: grid.filterPanel.filterFields["0"].field.text,
-				name: grid.filterPanel.filterFields["0"].field.name
-			},
-			type: grid.filterPanel.filterFields["0"].type,
-			badgeArea: grid.filterPanel.filterFields["0"].badgeArea,
-		 	values: grid.filterPanel.badgeArea.badges.name.values
-			
-		});*/
 		
 		this.grid = new GridModel({
 			actionPanel:{

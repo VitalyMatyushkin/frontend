@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by Anatoly on 20.07.2016.
  */
@@ -11,13 +12,12 @@ const Cell = React.createClass({
 		dataItem:	React.PropTypes.object.isRequired
 	},
 	render: function() {
-		const self = this,
-			cell = self.props.column.cell,
-			width = self.props.column.width,
-			CellType = TypeList[cell.type];
+		const 	cell		= this.props.column.cell,
+				width		= this.props.column.width,
+				CellType	= TypeList[cell.type];
 
 		return (
-				<CellType cell={cell} dataItem={self.props.dataItem}  width={width} />
+				<CellType cell={cell} dataItem={this.props.dataItem}  width={width} />
 		);
 	}
 });

@@ -1,9 +1,10 @@
-const 	Form 		= require('module/ui/form/form'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		FormField 	= require('module/ui/form/form_field'),
-		React 		= require('react'),
-		Immutable 	= require('immutable'),
-		Morearty    = require('morearty');
+const 	Form 			= require('module/ui/form/form'),
+		FormColumn 		= require('module/ui/form/form_column'),
+		FormField 		= require('module/ui/form/form_field'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		Morearty 		= require('morearty'),
+		PhotoEditCrop 	= require('./photo_edit_crop');
 
 const PhotoEdit = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -12,42 +13,34 @@ const PhotoEdit = React.createClass({
 	},
 
 	componentWillMount: function() {
-		const 	self 		= this,
-				binding		= self.getDefaultBinding(),
-				rootBinding = self.getMoreartyContext().getBinding(),
-				params      = rootBinding.toJS('routing.pathParameters'),
+		const 	binding		= this.getDefaultBinding(),
+				rootBinding = this.getMoreartyContext().getBinding(),
+				params 		= rootBinding.toJS('routing.pathParameters'),
 				albumId 	= params && params.length ? params[params.length-3] : null,
 				photoId 	= params && params.length ? params[params.length-1] : null;
-
-		self.albumId = albumId;
-		self.photoId = photoId;
-		self.service = self.props.service;
-        binding.clear();
-
-		self.service.photo.get(self.albumId, self.photoId).then(function(data) {
+		
+		this.albumId = albumId;
+		this.photoId = photoId;
+		this.service = this.props.service;
+		binding.clear();
+		
+		this.service.photo.get(this.albumId, this.photoId).then( data => {
 			binding.set(Immutable.fromJS(data));
 		});
 	},
-
+	
 	onFormSubmit: function(data) {
-		var self = this;
-
-		self.service.photo.put(self.albumId, self.photoId, data).then(function() {
+		this.service.photo.put(this.albumId, this.photoId, data).then( () => {
+			//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 			window.history.back();
 		});
 	},
 
 	render: function() {
-		var self = this,
-		binding = self.getDefaultBinding();
+		const 	binding = this.getDefaultBinding(),
+				picUrl = typeof binding.toJS('picUrl') !== 'undefined' ? binding.toJS('picUrl') : '';
 
-		return (
-				<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={self.onFormSubmit} binding={binding} >
-					<FormColumn>
-						<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
-					</FormColumn>
-				</Form>
-		);
+		return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;
 	}
 });
 

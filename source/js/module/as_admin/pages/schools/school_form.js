@@ -84,8 +84,11 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField type="text" field="notificationEmail" validation="email" fieldClassName="mLarge">
 						Notification Email
 					</FormField>
-					<FormField type="checkbox" field="studentImportForAdminAllowed">
+					<FormField classNames="mWideSingleLine" type="checkbox" field="studentImportForAdminAllowed">
 						Allow student import for Admin
+					</FormField>
+					<FormField classNames="mWideSingleLine" type="checkbox" field="studentSelfRegistrationEnabled">
+						Student registration
 					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
@@ -132,7 +135,7 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField type="dropdown" field="subscriptionPlan" options={subscriptionPlanOptions}>
 						Subscription Plan
 					</FormField>
-					<FormField type="checkbox" field="canEditFavoriteSports">
+					<FormField classNames="mWideSingleLine" type="checkbox" field="canEditFavoriteSports">
 						Can Admin Edit Favorite Sports
 					</FormField>
 				</FormColumn>

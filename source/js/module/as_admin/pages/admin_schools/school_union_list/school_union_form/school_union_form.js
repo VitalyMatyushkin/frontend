@@ -57,14 +57,13 @@ const SchoolUnionForm = React.createClass({
 				];
 
 		return (
-			<Form	name			= {this.props.title}
-					binding			= {this.getDefaultBinding()}
+			<Form	name			= { this.props.title }
+					binding			= { this.getDefaultBinding() }
 					service			= "i/schools/domains"
-					onSubmit		= {this.props.onSubmit}
-					submitOnEnter	= {false}
-					formStyleClass	= "mNarrow"
+					onSubmit		= { this.props.onSubmit }
+					submitOnEnter	= { false }
 			>
-				<FormColumn>
+				<FormColumn customStyle='col-md-6'>
 					<FormField	type		= "imageFile"
 								field		= "pic"
 								labelText	= "+"
@@ -88,7 +87,8 @@ const SchoolUnionForm = React.createClass({
 						Notification Email
 					</FormField>
 				</FormColumn>
-				<FormColumn>
+
+				<FormColumn customStyle='col-md-6'>
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
@@ -104,21 +104,24 @@ const SchoolUnionForm = React.createClass({
 						Public Site Access
 					</FormField>
 					<FormField	type			= "password"
-								  field			= "publicSite.password"
-								  condition={passActive}
-								  validation="required"
+								field			= "publicSite.password"
+								condition={passActive}
+								validation="required"
 					>
 						Public Site Access Password
 					</FormField>
 					<FormField	type				= "dropdown"
-								  field				= "availableForRegistration"
-								  options				= {yesNoOptions}
-								  onBeforeValueSet	= { value => value === 'true' /*casting back string to boolean*/}
+								field				= "availableForRegistration"
+								options				= {yesNoOptions}
+								onBeforeValueSet	= { value => value === 'true' /*casting back string to boolean*/}
 					>
 						Available For Reg.
 					</FormField>
 					<FormField type="dropdown" field="subscriptionPlan" options={subscriptionPlanOptions}>
 						Subscription Plan
+					</FormField>
+					<FormField type="checkbox" field="canEditFavoriteSports">
+						Can Admin Edit Favorite Sports
 					</FormField>
 				</FormColumn>
 			</Form>

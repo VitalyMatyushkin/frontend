@@ -1,16 +1,20 @@
+// @flow
+
 const	React				= require('react');
 
 const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
+		DomainHelper 		= require('module/helpers/domain_helper'),
 		Buttons				= require('./buttons'),
-		PencilButton		= require('../../../../../ui/pencil_button');
+		PencilButton		= require('../../../../../ui/pencil_button'),
+		TweetButton 		= require('./tweet_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
 	propTypes: {
-		event: 							React.PropTypes.object,
+		event: 							React.PropTypes.object.isRequired,
 		mode:							React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
@@ -18,17 +22,45 @@ const EventHeader = React.createClass({
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
+		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
-		onClickEditEventButton:			React.PropTypes.func.isRequired
+		onClickEditEventButton:			React.PropTypes.func.isRequired,
+		
+		//prop for tweet button
+		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
+		twitterData: 					React.PropTypes.array.isRequired,
+		schoolDomain: 					React.PropTypes.string.isRequired,
+		activeSchoolId: 				React.PropTypes.string.isRequired,
+		twitterIdDefault: 				React.PropTypes.string.isRequired
+	},
+	/**
+	 * Function return string with all Age Groups
+	 * @example <caption>Example usage of getEventAges</caption>
+	 * //Reception, 5, 6, 7
+	 * getEventAges();
+	 * @returns {string}
+	 */
+	getEventAges: function(){
+		return Lazy(this.props.eventAges)
+			.sort()
+			.toArray()
+			.map(age => age === 0 ? 'Reception' : age)
+			.join(', ');
 	},
 	render: function() {
 		const 	event 				= this.props.event,
-				eventAges			= Lazy(this.props.eventAges).sort(),
+				eventAges			= this.getEventAges(),
 				name				= event.name,
 				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
 				time				= event.time,
-				sport				= event.sport;
+				sport				= event.sport,
+				protocol 			= document.location.protocol + '//',
+				eventId				= event.id,
+				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
+				linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
+				score 				= event.isFinished && typeof event.score !== 'undefined' && event.score !== '' ? `Score: ${event.score}` : '',
+				textForTweet 		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
 
 		return (
 			<div className="bEventHeader">
@@ -48,6 +80,14 @@ const EventHeader = React.createClass({
 						</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
+						<TweetButton
+							isTweetButtonRender 	= { this.props.isTweetButtonRender }
+							twitterData 			= { this.props.twitterData }
+							textForTweet 			= { textForTweet }
+							linkForTweet 			= { linkForTweet }
+							activeSchoolId 			= { this.props.activeSchoolId }
+							twitterIdDefault 		= { this.props.twitterIdDefault }
+						/>
 					</div>
 					<div className="eEventHeader_rightSide">
 						<Buttons	eventId							= { event.id }
@@ -57,6 +97,7 @@ const EventHeader = React.createClass({
 									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
 									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+									handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
 									onClickCloseCancel				= { this.props.onClickCloseCancel }
 									onClickOk						= { this.props.onClickOk }
 						/>
