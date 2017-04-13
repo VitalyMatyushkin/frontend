@@ -48,9 +48,9 @@ const AlbumView = React.createClass({
 			 // who can't upload photo to album
 			//if (isOwner) {
 				self.menuItems.push({
-					key: 		'file',
-					name: 		'Add Photo',
-					onChange: 	self.handleFile
+					href: `/#school-albums/view/${albumId}/add`,
+					name: 'Add photo',
+					key: 'addPhoto'
 				});
 			//}
 
@@ -61,18 +61,6 @@ const AlbumView = React.createClass({
 				.set('sync', true)
 				.commit();
 		});
-	},
-
-	/** Will trigger on submenu 'Add Photo' click
-	 * TODO: Какого хрена? этот обработчик перестает вызываться после удаления последней фотографии в альбоме
-	 * как и почему это происходит - тайна покрытая мраком.
-	 * Bug #1281 Add photo. http://tracker.squadintouch.com/issues/1281
-	 * */
-	handleFile: function(e) {
-		const 	file 		= e.target.files[0],
-				isUploading = this.getDefaultBinding().sub('isUploading');
-
-		this.service.photos.upload(file, isUploading);
 	},
 
 	onPhotoClick: function(photo) {
