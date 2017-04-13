@@ -33,9 +33,10 @@ const Rivals = React.createClass({
 					teamsData.forEach(t => {
 						if(t.schoolId === school.id) {
 							rival.team = t;
-							rivals.push(rival);
 						}
 					});
+
+					rivals.push(rival);
 				});
 
 				rivals = rivals.sort((rival1, rival2) => {
@@ -53,10 +54,10 @@ const Rivals = React.createClass({
 
 		binding.set('rivals', Immutable.fromJS(rivals));
 
-		//console.log('EVENT: ');
-		//console.log(event);
-		//console.log('RIVALS: ');
-		//console.log(rivals);
+		console.log('EVENT: ');
+		console.log(event);
+		console.log('RIVALS: ');
+		console.log(rivals);
 	},
 	isSync: function() {
 		const	self	= this,
@@ -165,6 +166,13 @@ const Rivals = React.createClass({
 
 		binding.set('model', Immutable.fromJS(event));
 	},
+	onClickEditTeam: function(rivalIndex) {
+		this.getDefaultBinding()
+			.atomically()
+			.set('mode',				'edit_squad')
+			.set('selectedRivalIndex',	rivalIndex)
+			.commit();
+	},
 	onChangeIndividualScoreAvailable: function(order) {
 		const binding = this.getDefaultBinding();
 
@@ -213,6 +221,7 @@ const Rivals = React.createClass({
 					isIndividualScoreAvailable			= {binding.toJS(`individualScoreAvailable.${rivalIndex}.value`)}
 					onChangeIndividualScoreAvailable	= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
 					onChangeScore						= {this.onChangeScore.bind(this, rivalIndex)}
+					onClickEditTeam						= {this.onClickEditTeam.bind(this, rivalIndex)}
 					activeSchoolId						= {this.props.activeSchoolId}
 				/>
 			);

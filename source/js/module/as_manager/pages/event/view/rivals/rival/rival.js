@@ -13,6 +13,7 @@ const Rival = React.createClass({
 		isIndividualScoreAvailable:			React.PropTypes.bool.isRequired,
 		onChangeIndividualScoreAvailable:	React.PropTypes.func.isRequired,
 		onChangeScore:						React.PropTypes.func.isRequired,
+		onClickEditTeam:					React.PropTypes.func.isRequired,
 		activeSchoolId:						React.PropTypes.string.isRequired
 	},
 	hasTeamPlayers: function() {
@@ -52,12 +53,14 @@ const Rival = React.createClass({
 				/>
 				{ this.renderIndividualScoreAvailable() }
 				<Players
-					players						= { this.props.rival.team.players }
+					rival						= { this.props.rival }
 					isOwner						= { true }
 					individualScoreAvailable	= { this.props.isIndividualScoreAvailable }
 					mode						= { this.props.mode }
 					event						= { this.props.event }
+					activeSchoolId				= { this.props.activeSchoolId }
 					onChangeScore				= { this.props.onChangeScore.bind(this, 'individualData') }
+					onClickEditTeam				= { this.props.onClickEditTeam }
 					customCss					= { '' }
 				/>
 			</div>

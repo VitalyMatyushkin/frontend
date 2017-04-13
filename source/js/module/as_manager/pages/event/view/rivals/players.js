@@ -1,44 +1,107 @@
-const	React	= require('react'),
-		Player	= require('module/as_manager/pages/event/view/rivals/player/player');
+const	React			= require('react'),
+		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		PencilButton	= require('module/ui/pencil_button'),
+		propz			= require('propz');
 
 const Players = React.createClass({
 	propTypes: {
-		players						: React.PropTypes.array.isRequired,
-		teamId						: React.PropTypes.string,
+		rival						: React.PropTypes.object.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
+		activeSchoolId				: React.PropTypes.string.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
+		onClickEditTeam				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired
 	},
+	SELECT_PLAYERS_LATER:	'Select players later...',
+	MEMBERS_NOT_ADDED:		'Team members have not been added yet',
+	ACCEPTED_BY_OPPONENT:	'Accepted by opponent',
+	AWAITING_OPPONENT:		'Awaiting opponent...',
+	renderContent: function() {
+		const	event		= this.props.event,
+				eventType	= event.eventType;
+
+		if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+			return this.renderPlayersForInterSchoolsEvent();
+		}
+	},
+	renderText: function(text) {
+		return (
+			<div className="eEventTeams_awaiting">
+				{text}
+			</div>
+		);
+	},
+	renderPlayersForInterSchoolsEvent: function() {
+		const	rival			= this.props.rival,
+				eventStatus		= this.props.event.status,
+				players			= propz.get(this.props.rival, ['team', 'players']),
+				activeSchoolId	= this.props.activeSchoolId;
+
+		if(
+			typeof players === 'undefined' &&
+			activeSchoolId === rival.school.id
+		) {
+			return this.renderText(this.MEMBERS_NOT_ADDED);
+		} else if(
+			typeof players === 'undefined' &&
+			activeSchoolId !== rival.school.id &&
+			(
+				eventStatus === EventHelper.EVENT_STATUS.ACCEPTED ||
+				eventStatus === EventHelper.EVENT_STATUS.FINISHED
+			)
+		) {
+			return this.renderText(this.ACCEPTED_BY_OPPONENT);
+		} else if(
+			typeof players === 'undefined' &&
+			activeSchoolId !== rival.school.id
+		) {
+			return this.renderText(this.AWAITING_OPPONENT);
+		} else if(typeof players !== 'undefined') {
+			return this.renderPlayers();
+		}
+	},
+	renderEditButton: function() {
+		const	event			= this.props.event,
+				rivalSchoolId	= this.props.rival.school.id,
+				mode			= this.props.mode;
+
+		if(EventHelper.isInterSchoolsEvent(event) && rivalSchoolId !== this.props.activeSchoolId) {
+			return null;
+		} else if(mode !== 'closing') {
+			return (
+				<PencilButton handleClick={this.props.onClickEditTeam}/>
+			);
+		}
+	},
 	renderPlayers: function() {
-		const players = this.props.players;
+		const players = this.props.rival.team.players;
 
 		//we sort array of players by individual score
 		//this.sortPlayersByScore(players);
 
-		return players.map((player, playerIndex) => {
-			return (
-				<Player
-					key							= {playerIndex}
-					playerIndex					= {playerIndex}
-					player						= {player}
-					teamId						= {this.props.teamId}
-					isOwner						= {this.props.isOwner}
-					individualScoreAvailable	= {this.props.individualScoreAvailable}
-					mode						= {this.props.mode}
-					event						= {this.props.event}
-					onChangeScore				= {this.props.onChangeScore}
-					customCss					= {this.props.customCss}
-				/>
-			);
-		});
+		return players.map((player, playerIndex) =>
+			<Player
+				key							= {playerIndex}
+				playerIndex					= {playerIndex}
+				player						= {player}
+				isOwner						= {this.props.isOwner}
+				individualScoreAvailable	= {this.props.individualScoreAvailable}
+				mode						= {this.props.mode}
+				event						= {this.props.event}
+				onChangeScore				= {this.props.onChangeScore}
+				customCss					= {this.props.customCss}
+			/>
+		);
 	},
 	render: function() {
 		return (
 			<div className="bEventTeams_team">
-				{this.renderPlayers()}
+				{ this.renderEditButton() }
+				{ this.renderContent() }
 			</div>
 		);
 	}
