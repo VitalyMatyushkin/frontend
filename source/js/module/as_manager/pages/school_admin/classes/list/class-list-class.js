@@ -122,7 +122,7 @@ class ClassListClass{
 
 	}
 	
-	init(){
+	createGrid(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
@@ -155,20 +155,9 @@ class ClassListClass{
 		return this;
 	}
 	
-	loadFilter(grid){
+	createGridFromExistingData(grid){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
-		
-		/*this.badges = new BadgeModel({
-			field: {
-				text: grid.filterPanel.filterFields["0"].field.text,
-				name: grid.filterPanel.filterFields["0"].field.name
-			},
-			type: grid.filterPanel.filterFields["0"].type,
-			badgeArea: grid.filterPanel.filterFields["0"].badgeArea,
-		 	values: grid.filterPanel.badgeArea.badges.name.values
-			
-		});*/
 		
 		this.grid = new GridModel({
 			actionPanel:{

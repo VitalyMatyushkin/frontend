@@ -4,7 +4,8 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		HouseListModel  	= require('./house-list-model'),
-		Grid 				= require('module/ui/grid/grid');
+		Grid 				= require('module/ui/grid/grid'),
+		Immutable			= require('immutable');
 
 const HouseList = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,12 +14,20 @@ const HouseList = React.createClass({
 		handleClick: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		this.model = new HouseListModel(this);
+		const 	binding 	= this.getDefaultBinding(),
+			grid 		= binding.toJS('grid');
+		
+		if (grid) {
+			this.model = new HouseListModel(this).createGridFromExistingData(grid);
+		} else {
+			this.model = new HouseListModel(this).createGrid();
+		}
 	},
 	render: function () {
-		return (
-			<Grid model={this.model.grid}/>
-		);
+		const binding = this.getDefaultBinding();
+		
+		binding.set('grid', Immutable.fromJS(this.model.grid));
+		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 
