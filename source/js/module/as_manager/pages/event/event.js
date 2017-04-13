@@ -13,7 +13,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		IndividualScoreAvailableBlock	= require('./view/individual_scores_available_block/individual_score_available_block'),
 		EventRivals						= require('./view/event_rivals'),
 		EditingTeamsButtons 			= require('./view/editing_teams_buttons'),
-		EventTeams						= require('./view/rivals/event_teams'),
+		EventTeams						= require('./view/teams/event_teams'),
 		Performance						= require('./view/performance/performance'),
 		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
 		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
@@ -847,6 +847,44 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	// It's temp function
+	renderRivalsStuff: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				mode			= binding.toJS('mode'),
+				point 			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
+
+		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+			return (
+				<Rivals	binding			= {binding}
+						activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			);
+		} else {
+			return (
+				<span>
+					<EventRivals	binding         = {binding}
+									onReload        = {this.props.onReload}
+									activeSchoolId  = {this.props.activeSchoolId}
+					/>
+					{ this.renderEditTeamButtons() }
+					<IndividualScoreAvailableBlock
+						binding         = { this.getDefaultBinding() }
+						activeSchoolId  = { this.props.activeSchoolId }
+						mode            = { mode }
+						event           = { event }
+					/>
+					<EventTeams binding         = {self.getEventTeamsBinding()}
+								activeSchoolId  = {this.props.activeSchoolId}
+					/>
+				</span>
+			);
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -882,9 +920,7 @@ const Event = React.createClass({
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<Rivals	binding			= {binding}
-									activeSchoolId	= {this.props.activeSchoolId}
-							/>
+							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>
 								<div className="bEventMap">
 									<div className="bEventMap_row">
