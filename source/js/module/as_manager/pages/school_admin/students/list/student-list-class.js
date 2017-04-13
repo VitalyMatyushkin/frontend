@@ -31,36 +31,7 @@ class StudentListClass{
 		this.setAddButton();
 		this.setColumns();
 	}
-	
-	/*loadFilter(){
-		const 	self	= this,
-				binding = self.getDefaultBinding();
-		
-		this.grid = new GridModel({
-			actionPanel: {
-				title: 'sams',
-				showStrip: true,
-				btnAdd: this.btnAdd
-			},
-			columns: this.columns,
-			handleClick: this.props.handleClick,
-			filters: {
-				where: binding.toJS('grid.filter.where'),
-				order: binding.toJS('grid.filter.order')
-			},
-			badges: binding.toJS('grid.filterPanel.badgeArea')
-		});
-		console.log(binding.toJS('grid.filterPanel.badgeArea'));
-		this.dataLoader = new DataLoader({
-			serviceName: 'schoolStudents',
-			params: {schoolId: this.activeSchoolId},
-			grid: this.grid,
-			onLoad: this.getDataLoadedHandle()
-		});
-		
-		return this;
-	}*/
-	
+
 	reloadData(){
 		this.dataLoader.loadData();
 	}
@@ -153,7 +124,7 @@ class StudentListClass{
 	
 	setColumns(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.columns = [
 			{
@@ -305,32 +276,10 @@ class StudentListClass{
 			}
 		);
 	}
-	init() {
-		const self = this,
-			binding = self.getDefaultBinding();
-		//console.log(binding.toJS('grid'));
-		if (typeof binding.toJS('grid') !== 'undefined') {
-			this.grid = new GridModel({
-				actionPanel: {
-					title: this.title,
-					showStrip: true,
-					btnAdd: this.btnAdd
-				},
-				columns: this.columns,
-				handleClick: this.props.handleClick,
-				filters: {
-					where: typeof binding.toJS('grid.filter.where') !== 'undefined' ? binding.toJS('grid.filter.where') : undefined,
-					order: typeof binding.toJS('grid.filter.order') !== 'undefined' ? binding.toJS('grid.filter.order') : undefined
-				},
-				badges: typeof binding.toJS('grid.filterPanel.badgeArea') !== 'undefined' ? binding.toJS('grid.filterPanel.badgeArea') : {}
-			});
-			this.dataLoader = new DataLoader({
-				serviceName: 'schoolStudents',
-				params: {schoolId: this.activeSchoolId},
-				grid: this.grid,
-				onLoad: this.getDataLoadedHandle()
-			});
-		} else {
+	createGrid() {
+		const 	self = this,
+				binding = self.getDefaultBinding();
+		
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
 			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
 				//if we view team, we want display column 'Captain'
@@ -356,8 +305,44 @@ class StudentListClass{
 				});
 			}
 		});
+		
+		return this;
 	}
-	console.log(this.filters.badges);
+	
+	createGridFromExistingData(grid) {
+		const 	self = this,
+				binding = self.getDefaultBinding();
+		
+		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
+			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
+				//if we view team, we want display column 'Captain'
+				if (this.team) {
+					this.getColumnsCaptain();
+				}
+				this.grid = new GridModel({
+					actionPanel: {
+						title: this.title,
+						showStrip: true,
+						btnAdd: this.btnAdd
+					},
+					columns: this.columns,
+					handleClick: this.props.handleClick,
+					filters: {
+						where: grid.filter.where,
+						order: grid.filter.order
+					},
+					badges: grid.filterPanel.badgeArea
+				});
+				
+				this.dataLoader = new DataLoader({
+					serviceName: 'schoolStudents',
+					params: {schoolId: this.activeSchoolId},
+					grid: this.grid,
+					onLoad: this.getDataLoadedHandle()
+				});
+			}
+		});
+		
 		return this;
 	}
 	

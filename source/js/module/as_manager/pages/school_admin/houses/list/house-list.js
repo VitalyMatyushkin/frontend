@@ -15,7 +15,7 @@ const HouseList = React.createClass({
 	},
 	componentWillMount: function () {
 		const 	binding 	= this.getDefaultBinding(),
-			grid 		= binding.toJS('grid');
+				grid 		= binding.toJS('grid');
 		
 		if (grid) {
 			this.model = new HouseListModel(this).createGridFromExistingData(grid);
