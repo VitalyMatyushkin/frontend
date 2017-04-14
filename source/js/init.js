@@ -46,6 +46,15 @@ log.info(`start module: ${startModule}` );
 window.apiBase	= api.main;
 window.apiImg	= api.img;
 
+//Check availability some server resource
+const URL_FOR_CHECK = "http://api.stage1.squadintouch.com/public/schools?filter=%7B%22limit%22%3A1%7D&{}";
+
+loaderUtils.sendGetRequestToHttpUrl(URL_FOR_CHECK)
+.then(
+	response => console.log(`Fulfilled: ${URL_FOR_CHECK}`),
+	error => console.log(`Rejected: ${URL_FOR_CHECK} \nResponse: ${error.response} \nStatus: ${error.code}`)
+);
+
 window.logLevel	= log; //Make this global for usage
 
 window.timezone = timezone.tz.guess() ? timezone.tz.guess() : 'Europe/London';
