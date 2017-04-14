@@ -35,7 +35,8 @@ const AuthorizationServices ={
 			}
 
             return authData;
-        });
+        },
+		error => console.log(`Login failed: \nResponse text: ${error.xhr.responseText} \nStatus: ${error.xhr.status} \nStatus text: ${error.xhr.statusText}`));
     },
     become:function(roleName){
         const   service = window.Server._become,
