@@ -43,7 +43,10 @@ const TypeText =  React.createClass({
 				onBlur={this.handleBlur}
 				onFocus={() => {}}
 				disabled={!!this.props.isDisabled}
-				onChange={this.handleChange} />
+				onChange={this.handleChange}
+				autoCorrect="off"
+				spellCheck="false"
+			/>
 		)
 	}
 });
