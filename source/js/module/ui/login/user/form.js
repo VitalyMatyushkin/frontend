@@ -38,7 +38,7 @@ const LoginUserForm = React.createClass({
 						hideCancelButton	= {true}
 						submitButtonId		= 'login_submit'
 				>
-					<FormField classNames="mWithoutPadding" type="text" placeholder="E-mail" field="email" validation="email required" id="login_email"/>
+					<FormField classNames="mWithoutPadding" type="text" textType="email" placeholder="E-mail" field="email" validation="email required" id="login_email"/>
 					<FormField classNames="mPaddingBottomOnly" type="text" textType="password" placeholder="Password" field="password" validation="required" binding={binding} id="login_password"/>
 				</Form>
 				<If condition={self.props.customName === 'default'}>

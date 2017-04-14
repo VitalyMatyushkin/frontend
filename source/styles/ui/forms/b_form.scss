@@ -36,6 +36,7 @@ $labelColor:              #8c8c8c;
 
   input[type="text"],
   input[type="password"],
+  input[type="email"],
   select {
     height: 40px;
     padding: 10px;
@@ -43,6 +44,7 @@ $labelColor:              #8c8c8c;
 
   input[type="text"],
   input[type="password"],
+  input[type="email"],
   textarea,
   select {
     max-width: 360px;
@@ -441,7 +443,8 @@ select::-ms-expand {
 }
 
 .bLoginForm input[type="text"],
-.bLoginForm input[type="password"] {
+.bLoginForm input[type="password"],
+.bLoginForm input[type="email"] {
   width: 200px;
 }
 
