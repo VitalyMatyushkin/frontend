@@ -1,23 +1,21 @@
 /**
- * Created by Anatoly on 16.08.2016.
+ * Created by Anatoly on 18.08.2016.
  */
 
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model'),
-		BadgeModel		= require('module/ui/grid/filter/model/badge-model');
+		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
- * ClassListModel
+ * NewsListClass
  *
  * @param {object} page
  *
  * */
-
-class ClassListClass{
-	constructor(page){
+class NewsListModel {
+	constructor(page) {
 		this.getDefaultBinding = page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
 		this.props = page.props;
@@ -26,80 +24,81 @@ class ClassListClass{
 		this.rootBinding = this.getMoreartyContext().getBinding();
 		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 		
-		this.setColumns();
+		this.getColumns();
 	}
 	
-	reloadData(){
+	reloadData() {
 		this.dataLoader.loadData();
 	}
 	
-	onEdit(data, event){
+	onEdit(data, event) {
 		document.location.hash += '/edit?id=' + data.id;
 		event.stopPropagation();
 	}
 	
-	onChildren(data, event){
-		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
+	onView(data, event) {
+		document.location.hash += '/view?id=' + data.id;
 		event.stopPropagation();
 	}
 	
-	onRemove(data, event){
+	onRemove(data, event) {
 		const 	self = this;
 		
 		if(typeof data !== 'undefined') {
+			const showAlert = function() {
+				window.simpleAlert(
+					'Sorry! You cannot perform this action. Please contact support',
+					'Ok',
+					() => {
+					}
+				);
+			};
+			
 			window.confirmAlert(
-				`Are you sure you want to remove form ${data.name}?`,
+				`Are you sure you want to remove news "${data.title}"?`,
 				"Ok",
 				"Cancel",
-				() => window.Server.schoolForm
-				.delete( {schoolId:self.activeSchoolId, formId:data.id} )
+				() => {window.Server.schoolNewsItem
+				.delete( {schoolId:self.activeSchoolId, newsId:data.id} )
 				.then(() => self.reloadData())
-				.catch(() => {
-					window.simpleAlert(
-						'Sorry! You cannot perform this action. Please contact support',
-						'Ok',
-						() => {}
-					);
-				}),
+				.catch(() => showAlert())},
 				() => {}
 			);
 		}
 		event.stopPropagation();
 	}
 	
-	/**
-	 * Function return string with Age Group
-	 * @param item {object}
-	 * @returns {string}
-	 */
-	getAllAges(item) {
-		return item.age === 0 ? "Reception" : "Y" + item.age;
-	}
-	
-	setColumns(){
+	getColumns() {
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.columns = [
 			{
-				text:'Name',
+				text:'Thumbnail',
+				cell:{
+					dataField:'picUrl',
+					type:'image'
+				}
+			},
+			{
+				text:'Title',
 				isSorted:true,
 				cell:{
-					dataField:'name'
+					dataField:'title'
 				},
 				filter:{
 					type:'string'
 				}
 			},
 			{
-				text:'Age group',
+				text:'Date',
 				isSorted:true,
 				cell:{
-					dataField:'age',
-					type:'custom',
-					typeOptions:{
-						parseFunction: item => this.getAllAges(item)
-					}
+					dataField:'date',
+					type:'date'
+				},
+				filter:{
+					type:'between-date'
 				}
 			},
 			{
@@ -108,67 +107,97 @@ class ClassListClass{
 					type:'action-buttons',
 					typeOptions:{
 						/**
-						 * Only school admin and manager can edit or delete students.
+						 * Only school admin and manager can edit news.
 						 * All other users should not see that button.
 						 * */
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
-						onItemSelect:	this.onChildren.bind(this),
+						onItemView:		this.onView.bind(this),
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
 			}
 		];
-		
-
 	}
 	
-	createGrid(){
+	createGrid() {
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.grid = new GridModel({
 			actionPanel:{
-				title:'Forms',
+				title:'News',
 				showStrip:true,
 				
-				/**Only school admin and manager can add new students. All other users should not see that button.*/
+				/**Only school admin and manager can add new news. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 					(
-						<div className="addButton bTooltip" data-description="Add Form" onClick={function(){document.location.hash += '/add';}}>
-							<SVG icon="icon_add_form" />
+						<div className="addButtonShort bTooltip" data-description="Add News"
+							 onClick={function(){document.location.hash += '/add';}}>
+							<SVG icon="icon_add_news" />
 						</div>
 					) : null
 			},
 			columns:this.columns,
-			handleClick: this.props.handleClick,
-			filters:{limit:30}
+			handleClick: this.props.handleClick
 		});
 		
 		this.dataLoader = new DataLoader({
-			serviceName:'schoolForms',
+			serviceName:'schoolNews',
 			params:		{schoolId:this.activeSchoolId},
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});
 		
+		return this;
+	}
+	
+	createGrid() {
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+		
+		this.grid = new GridModel({
+			actionPanel:{
+				title:'News',
+				showStrip:true,
+				
+				/**Only school admin and manager can add new news. All other users should not see that button.*/
+				btnAdd:changeAllowed ?
+					(
+						<div className="addButtonShort bTooltip" data-description="Add News"
+							 onClick={function(){document.location.hash += '/add';}}>
+							<SVG icon="icon_add_news" />
+						</div>
+					) : null
+			},
+			columns:this.columns,
+			handleClick: this.props.handleClick
+		});
+		
+		this.dataLoader = new DataLoader({
+			serviceName:'schoolNews',
+			params:		{schoolId:this.activeSchoolId},
+			grid:		this.grid,
+			onLoad: 	this.getDataLoadedHandle()
+		});
 		
 		return this;
 	}
 	
-	createGridFromExistingData(grid){
+	createGridFromExistingData(grid) {
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.grid = new GridModel({
 			actionPanel:{
-				title:'Forms',
+				title:'News',
 				showStrip:true,
 				
-				/**Only school admin and manager can add new students. All other users should not see that button.*/
+				/**Only school admin and manager can add new news. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 					(
-						<div className="addButton bTooltip" data-description="Add Form" onClick={function(){document.location.hash += '/add';}}>
-							<SVG icon="icon_add_form" />
+						<div className="addButtonShort bTooltip" data-description="Add News"
+							 onClick={function(){document.location.hash += '/add';}}>
+							<SVG icon="icon_add_news" />
 						</div>
 					) : null
 			},
@@ -182,7 +211,7 @@ class ClassListClass{
 		});
 		
 		this.dataLoader = new DataLoader({
-			serviceName:'schoolForms',
+			serviceName:'schoolNews',
 			params:		{schoolId:this.activeSchoolId},
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
@@ -191,7 +220,7 @@ class ClassListClass{
 		return this;
 	}
 	
-	getDataLoadedHandle(data){
+	getDataLoadedHandle(data) {
 		const self = this,
 			binding = self.getDefaultBinding();
 		
@@ -199,6 +228,7 @@ class ClassListClass{
 			binding.set('data', self.grid.table.data);
 		};
 	}
-}
+	
+};
 
-module.exports = ClassListClass;
+module.exports = NewsListModel;

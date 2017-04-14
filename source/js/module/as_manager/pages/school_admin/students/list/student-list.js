@@ -18,18 +18,15 @@ const StudentList = React.createClass({
 				grid 		= binding.toJS('grid');
 		
 		if (grid) {
-			this.model = new StudentListClass(this).loadFilter(grid);
+			this.model = new StudentListClass(this).createGridFromExistingData(grid);
 		} else {
-			this.model = new StudentListClass(this).init();
+			this.model = new StudentListClass(this).createGrid();
 		}
 	},
 	render: function () {
 		const binding = this.getDefaultBinding();
 		
-		if (typeof this.model.grid !== 'undefined') {
-			//this.model.grid.table.data = (binding.toJS('data'));
-			binding.set('grid', Immutable.fromJS(this.model.grid));
-		}
+		binding.set('grid', Immutable.fromJS(this.model.grid));
 		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });

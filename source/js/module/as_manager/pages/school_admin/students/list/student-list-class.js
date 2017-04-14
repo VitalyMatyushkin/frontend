@@ -31,33 +31,7 @@ class StudentListClass{
 		this.setAddButton();
 		this.setColumns();
 	}
-	
-	loadFilter(grid){
-		this.grid = new GridModel({
-			actionPanel: {
-				title: this.title,
-				showStrip: true,
-				btnAdd: this.btnAdd
-			},
-			columns: this.columns,
-			handleClick: this.props.handleClick,
-			filters: {
-				where: grid.filter.where,
-				order: grid.filter.order
-			},
-			badges: grid.filterPanel.badgeArea
-		});
-		
-		this.dataLoader = new DataLoader({
-			serviceName: 'schoolStudents',
-			params: {schoolId: this.activeSchoolId},
-			grid: this.grid,
-			onLoad: this.getDataLoadedHandle()
-		});
-		
-		return this;
-	}
-	
+
 	reloadData(){
 		this.dataLoader.loadData();
 	}
@@ -150,7 +124,7 @@ class StudentListClass{
 	
 	setColumns(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.columns = [
 			{
@@ -302,9 +276,12 @@ class StudentListClass{
 			}
 		);
 	}
-	init(){
+	createGrid() {
+		const 	self = this,
+				binding = self.getDefaultBinding();
+		
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
-			if(schoolHelper.schoolSubscriptionPlanIsFull(this)) {
+			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
 				//if we view team, we want display column 'Captain'
 				if (this.team) {
 					this.getColumnsCaptain();
@@ -318,6 +295,43 @@ class StudentListClass{
 					columns: this.columns,
 					handleClick: this.props.handleClick,
 					filters: this.filters
+				});
+				
+				this.dataLoader = new DataLoader({
+					serviceName: 'schoolStudents',
+					params: {schoolId: this.activeSchoolId},
+					grid: this.grid,
+					onLoad: this.getDataLoadedHandle()
+				});
+			}
+		});
+		
+		return this;
+	}
+	
+	createGridFromExistingData(grid) {
+		const 	self = this,
+				binding = self.getDefaultBinding();
+		
+		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
+			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
+				//if we view team, we want display column 'Captain'
+				if (this.team) {
+					this.getColumnsCaptain();
+				}
+				this.grid = new GridModel({
+					actionPanel: {
+						title: this.title,
+						showStrip: true,
+						btnAdd: this.btnAdd
+					},
+					columns: this.columns,
+					handleClick: this.props.handleClick,
+					filters: {
+						where: grid.filter.where,
+						order: grid.filter.order
+					},
+					badges: grid.filterPanel.badgeArea
 				});
 				
 				this.dataLoader = new DataLoader({

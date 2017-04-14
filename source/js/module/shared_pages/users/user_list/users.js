@@ -1,9 +1,10 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-		Actions			= require('./users-actions'),
+		UserActions		= require('./users-actions-class'),
 		Grid			= require('module/ui/grid/grid'),
 		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
-		ConfirmPopup	= require('../../../ui/confirm_popup');
+		ConfirmPopup	= require('../../../ui/confirm_popup'),
+		Immutable		= require('immutable');
 
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -23,11 +24,18 @@ const Users = React.createClass({
 		};
 	},
 	componentWillMount: function () {
-		this.actions = new Actions(this);
+		const 	binding 	= this.getDefaultBinding(),
+				grid 		= binding.toJS('grid');
+		
+		if (grid) {
+			this.model = new UserActions(this).createGridFromExistingData(grid);
+		} else {
+			this.model = new UserActions(this).createGrid();
+		}
 	},
 	handleSuccess: function() {
 		this.closePopup();
-		this.actions.reloadData();
+		this.model.reloadData();
 	},
 	closePopup: function () {
 		const binding = this.getDefaultBinding();
@@ -54,13 +62,18 @@ const Users = React.createClass({
 		}
 	},
 	render: function () {
-		return (
+		
+		const binding = this.getDefaultBinding();
+		
+		binding.set('grid', Immutable.fromJS(this.model.grid));
+		return this.model.grid ? (
 			<div className="eTable_view">
-				<Grid model={this.actions.grid}/>
+				<Grid model={this.model.grid}/>
 				{this.renderPopup()}
 			</div>
-		);
+		) : null;
 	}
+
 });
 
 module.exports = Users;
