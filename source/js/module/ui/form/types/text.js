@@ -16,16 +16,20 @@ const TypeText =  React.createClass({
 		});
 	},
 	componentDidUpdate: function () {
-		if(this.cursor >= 0){
+		if (this.props.textType !== 'email' && this.cursor >= 0){
 			this.refs.input.setSelectionRange(this.cursor, this.cursor);
 		}
 	},
 	handleBlur: function(event) {
-		this.cursor = -1;	//it is necessary to block the installation of the cursor after a loss of focus.
+		if (this.props.textType !== 'email') {
+			this.cursor = -1;	//it is necessary to block the installation of the cursor after a loss of focus.
+		}
 		this.setValue(event.target.value);
 	},
 	handleChange: function(event) {
-		this.cursor = event.target.selectionStart;
+		if (this.props.textType !== 'email') {
+			this.cursor = event.target.selectionStart;
+		}
 		this.changeValue(event.target.value);
 	},
 	render: function () {
@@ -43,7 +47,10 @@ const TypeText =  React.createClass({
 				onBlur={this.handleBlur}
 				onFocus={() => {}}
 				disabled={!!this.props.isDisabled}
-				onChange={this.handleChange} />
+				onChange={this.handleChange}
+				autoCorrect="off"
+				spellCheck="false"
+			/>
 		)
 	}
 });
