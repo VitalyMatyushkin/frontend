@@ -47,7 +47,7 @@ window.apiBase	= api.main;
 window.apiImg	= api.img;
 
 //Check availability some server resource
-const URL_FOR_CHECK = "http://api.stage1.squadintouch.com/public/schools?filter=%7B%22limit%22%3A1%7D&{}";
+const URL_FOR_CHECK = api.main + "/public/schools?filter=%7B%22limit%22%3A1%7D&{}";
 
 loaderUtils.sendGetRequestToHttpUrl(URL_FOR_CHECK)
 .then(
