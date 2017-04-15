@@ -14,7 +14,8 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 		AgeMultiselectDropdownWrapper	= require('./components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
 		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
 		TimeInputWrapper				= require('../time_input_wrapper'),
-		EventVenue						= require('../event_venue');
+		EventVenue						= require('../event_venue'),
+		SquareCrossButton				= require('module/ui/square_cross_button');
 
 // Helpers
 const	EventFormActions				= require('./event_form_actions'),
@@ -108,12 +109,12 @@ const EventForm = React.createClass({
 
 		return otherHouseId;
 	},
-	getMainSchoolFilter: function(activeSchoolId, schoolName) {
+	getMainSchoolFilter: function(rivals, schoolName) {
 		return {
 			filter: {
 				where: {
 					id: {
-						$nin: [activeSchoolId]
+						$nin: rivals.map(r => r.id)
 					},
 					name: { like: schoolName }
 				},
@@ -132,9 +133,10 @@ const EventForm = React.createClass({
 		const	activeSchool			= binding.toJS('schoolInfo'),
 				activeSchoolId			= activeSchool.id,
 				activeSchoolPostcode	= activeSchool.postcode,
+				rivals					= binding.toJS('rivals'),
 				fartherThen				= binding.toJS('fartherThen');
 
-		const filter = this.getMainSchoolFilter(activeSchoolId, schoolName);
+		const filter = this.getMainSchoolFilter(rivals, schoolName);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
 			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
@@ -168,10 +170,11 @@ const EventForm = React.createClass({
 		return window.Server.publicSchools.get(filter);
 	},
 	handleChangeFartherThan: function (eventDescriptor) {
-		const binding = this.getDefaultBinding();
+		const	binding	= this.getDefaultBinding(),
+				rivals	= binding.toJS('rivals');
 
 		binding.atomically()
-			.set('rivals.1',					undefined)
+			.set('rivals',						Immutable.fromJS([rivals[0]]))
 			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(this.getRandomString()))
 			.set('fartherThen',					eventDescriptor.target.value)
 			.commit();
@@ -241,6 +244,55 @@ const EventForm = React.createClass({
 
 		return type === 'inter-schools' && typeof postcode !== 'undefined';
 	},
+	onClickRemoveRivalSchool: function(rivalIndex) {
+		const	binding	= this.getDefaultBinding();
+		let		rivals	= binding.toJS('rivals');
+
+		rivals.splice(rivalIndex, 1);
+
+		binding.set('rivals', Immutable.fromJS(rivals));
+	},
+	renderSchoolChoosers: function() {
+		const	binding	= this.getDefaultBinding(),
+				rivals	= binding.toJS('rivals');
+
+		const choosers = rivals.filter((rival, rivalIndex) => rivalIndex !== 0).map((rival, rivalIndex) => {
+			return (
+				<span>
+					<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivalIndex + 1}`)}
+									serviceFilter	= {this.schoolService}
+									serverField		= "name"
+									placeholder		= "Enter school name"
+									onSelect		= {this.onSelectRival.bind(null, rivalIndex + 1)}
+									binding			= {binding.sub(`autocomplete.inter-schools.${rivalIndex}`)}
+									extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
+									customListItem	= {SchoolItemList}
+					/>
+					<SquareCrossButton
+						handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex + 1)}
+					/>
+				</span>
+			);
+		});
+
+		choosers.push(
+			<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivals.length}`)}
+							serviceFilter	= {this.schoolService}
+							serverField		= "name"
+							placeholder		= "Enter school name"
+							onSelect		= {this.onSelectRival.bind(null, rivals.length)}
+							binding			= {binding.sub(`autocomplete.inter-schools.${rivals.length}`)}
+							extraCssStyle	= "mBigSize mWhiteBG"
+							customListItem	= {SchoolItemList}
+			/>
+		);
+
+		return (
+			<span>
+				{choosers}
+			</span>
+		);
+	},
 	render: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -248,11 +300,8 @@ const EventForm = React.createClass({
 		const	event						= binding.toJS('model'),
 				fartherThen					= binding.get('fartherThen'),
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
-				services					= {
-					'inter-schools': self.schoolService,
-					'houses': self.serviceHouseFilter
-				},
-				type						= event.type;
+				type						= event.type,
+				opponentSchoolInfoArray		= binding.toJS('rivals').slice(1);
 
 		return(
 			<div className="eManager_base">
@@ -299,20 +348,11 @@ const EventForm = React.createClass({
 					</div>
 				</If>
 				<div className="bInputWrapper">
-					{type === 'inter-schools' ? <div className="bInputLabel">Choose school</div> : null}
+					{type === 'inter-schools' ? <div className="bInputLabel">Choose schools</div> : null}
 					<If	condition	= {type === 'inter-schools'}
 						key			= {'if-choose-school'}
 					>
-						<Autocomplete	key				= {binding.toJS('eventFormOpponentSchoolKey')}
-										defaultItem		= {binding.toJS('rivals.1')}
-										serviceFilter	= {services[type]}
-										serverField		= "name"
-										placeholder		= "Enter school name"
-										onSelect		= {self.onSelectRival.bind(null, 1)}
-										binding			= {binding.sub('autocomplete.inter-schools.0')}
-										extraCssStyle	= "mBigSize mWhiteBG"
-										customListItem	= {SchoolItemList}
-						/>
+						{ this.renderSchoolChoosers() }
 					</If>
 					{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
 					<If condition={type === 'houses'}>
@@ -340,11 +380,11 @@ const EventForm = React.createClass({
 						</div>
 					</If>
 				</div>
-				<EventVenue	binding				= {binding}
-							eventType			= {binding.toJS('model.type')}
-							activeSchoolInfo	= {binding.toJS('schoolInfo')}
-							opponentSchoolInfo	= {binding.toJS('rivals.1')}
-							isCopyMode			= {this.props.isCopyMode}
+				<EventVenue	binding					= { binding }
+							eventType				= { binding.toJS('model.type') }
+							activeSchoolInfo		= { binding.toJS('schoolInfo') }
+							opponentSchoolInfoArray	= { opponentSchoolInfoArray }
+							isCopyMode				= { this.props.isCopyMode }
 				/>
 			</div>
 		);

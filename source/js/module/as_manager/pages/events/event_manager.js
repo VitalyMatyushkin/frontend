@@ -501,8 +501,10 @@ const EventManager = React.createClass({
 		const rivals = binding.toJS('rivals');
 		switch (model.type) {
 			case 'inter-schools':
-				body.invitedSchoolIds = [rivals[1].id];
-				body.finishSchoolIds = 	[rivals[0].id, rivals[1].id];
+				const rivalIds = rivals.map(r => r.id);
+
+				body.invitedSchoolIds = rivalIds.slice(1);
+				body.finishSchoolIds = rivalIds;
 
 				break;
 			case 'houses':
@@ -642,7 +644,7 @@ const EventManager = React.createClass({
 		switch (binding.toJS('model.type')) {
 			case 'inter-schools':
 			case 'houses':
-				if(binding.toJS('rivals').length === 2) {
+				if(binding.toJS('rivals').length > 1) {
 					isStepComplete = true;
 				}
 				break;

@@ -10,10 +10,9 @@ const Rival = React.createClass({
 		rival:								React.PropTypes.object.isRequired,
 		event:								React.PropTypes.object.isRequired,
 		mode:								React.PropTypes.string.isRequired,
-		isIndividualScoreAvailable:			React.PropTypes.bool.isRequired,
-		onChangeIndividualScoreAvailable:	React.PropTypes.func.isRequired,
 		onChangeScore:						React.PropTypes.func.isRequired,
 		onClickEditTeam:					React.PropTypes.func.isRequired,
+		onChangeIndividualScoreAvailable:	React.PropTypes.func.isRequired,
 		activeSchoolId:						React.PropTypes.string.isRequired
 	},
 	hasTeamPlayers: function() {
@@ -32,7 +31,7 @@ const Rival = React.createClass({
 		if(this.isShowIndividualScoreAvailableManager()) {
 			return (
 				<IndividualScoreManager
-					value		= { this.props.isIndividualScoreAvailable }
+					value		= { this.props.rival.isIndividualScoreAvailable }
 					onChange	= { this.props.onChangeIndividualScoreAvailable }
 				/>
 			);
@@ -47,7 +46,7 @@ const Rival = React.createClass({
 					rival						= { this.props.rival }
 					event						= { this.props.event }
 					mode						= { this.props.mode }
-					individualScoreAvailable	= { this.props.isIndividualScoreAvailable }
+					individualScoreAvailable	= { this.props.rival.isIndividualScoreAvailable }
 					onChangeScore				= { this.props.onChangeScore }
 					activeSchoolId				= { this.props.activeSchoolId }
 				/>
@@ -55,7 +54,7 @@ const Rival = React.createClass({
 				<Players
 					rival						= { this.props.rival }
 					isOwner						= { true }
-					individualScoreAvailable	= { this.props.isIndividualScoreAvailable }
+					individualScoreAvailable	= { this.props.rival.isIndividualScoreAvailable }
 					mode						= { this.props.mode }
 					event						= { this.props.event }
 					activeSchoolId				= { this.props.activeSchoolId }

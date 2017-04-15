@@ -11,6 +11,10 @@ const Rivals = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	listeners: [],
+	componentWillUnmount: function() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
@@ -35,6 +39,9 @@ const Rivals = React.createClass({
 							rival.team = t;
 						}
 					});
+					rival.isTeamScoreWasChanged = false;
+					rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
+					this.initSchoolResults();
 
 					rivals.push(rival);
 				});
@@ -54,16 +61,105 @@ const Rivals = React.createClass({
 
 		binding.set('rivals', Immutable.fromJS(rivals));
 
+		this.addListenerForTeamScore();
+
 		console.log('EVENT: ');
 		console.log(event);
 		console.log('RIVALS: ');
 		console.log(rivals);
+	},
+	initSchoolResultsForRival: function(rival, event) {
+		if(!rival.isIndividualScoreAvailable) {
+			event.results.
+		}
+	},
+	getInitValueForIsIndividualScoreAvailable: function(rival) {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS(`model`);
+
+		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
+			return false;
+		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
+			const	schoolId		= rival.school.id,
+					foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
+
+			return typeof foundScoreData !== 'undefined';
+		}
+	},
+	addListenerForTeamScore: function() {
+		const binding = this.getDefaultBinding();
+
+		const	teamScoreBinding	= binding.sub(`model.results.teamScore`),
+				teamScores			= teamScoreBinding.toJS(),
+				rivals				= binding.toJS('rivals');
+
+		for(let i = 0; i < teamScores.length; i++) {
+			this.listeners.push(teamScoreBinding.sub(i).addListener(() => {
+				const teamId = teamScores[i].teamId;
+
+				const	foundRivalIndex	= rivals.findIndex(rival => rival.team.id === teamId),
+						foundRival		= rivals[foundRivalIndex];
+
+				if(
+					typeof foundRival !== 'undefined' &&
+					!foundRival.isIndividualScoreAvailable &&
+					!foundRival.isTeamScoreWasChanged
+				) {
+					rivals[foundRivalIndex].isTeamScoreWasChanged = true;
+					binding.set('rivals', Immutable.fromJS(rivals));
+
+					this.clearIndividualScoreByTeamId(teamId);
+				}
+			}));
+		}
 	},
 	isSync: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		return binding.toJS('sync');
+	},
+	/**
+	 * Function copy model.results.individualScore by teamId to model.individualScoreForRemove.
+	 * individualScoreForRemove - it's a array of scores. These scores will be removed after score submit.
+	 * @param teamId
+	 */
+	setIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const	individualScoreForRemove	= binding.toJS(`model.individualScoreForRemove`),
+				newIndividualScoreForRemove	= binding.toJS(`model.results.individualScore`).filter(s => s.teamId === teamId);
+
+		binding.set(
+			`model.individualScoreForRemove`,
+			Immutable.fromJS(individualScoreForRemove.concat(newIndividualScoreForRemove))
+		);
+	},
+	clearIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const individualScoreForRemove = binding.toJS(`model.individualScoreForRemove`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.individualScoreForRemove`, Immutable.fromJS(individualScoreForRemove));
+	},
+	clearIndividualScoreByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const updScore = binding.toJS(`model.results.individualScore`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.results.individualScore`, Immutable.fromJS(updScore));
+	},
+	clearTeamScoreByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const score = binding.toJS(`model.results.teamScore`);
+		score.forEach(s => {
+			if(s.teamId === teamId) {
+				s.score = 0;
+			}
+		});
+
+		binding.set(`model.results.teamScore`, Immutable.fromJS(score));
 	},
 	handlePlayerScoreChanges: function(teamId, player, score) {
 		const	binding = this.getDefaultBinding(),
@@ -166,17 +262,34 @@ const Rivals = React.createClass({
 
 		binding.set('model', Immutable.fromJS(event));
 	},
+	onChangeIndividualScoreAvailable: function(rivalIndex) {
+		const	binding	= this.getDefaultBinding(),
+				rivals	= binding.toJS('rivals'),
+				teamId	= rivals[rivalIndex].team.id;
+
+		const newValueIsIndividualScoreAvailable = !rivals[rivalIndex].isIndividualScoreAvailable;
+
+		rivals[rivalIndex].isIndividualScoreAvailable = newValueIsIndividualScoreAvailable;
+
+		if(newValueIsIndividualScoreAvailable) {
+			this.clearIndividualScoreForRemoveByTeamId(teamId)
+		} else {
+			this.setIndividualScoreForRemoveByTeamId(teamId);
+		}
+
+		if(rivals[rivalIndex].isTeamScoreWasChanged && newValueIsIndividualScoreAvailable) {
+			this.clearTeamScoreByTeamId(teamId);
+			rivals[rivalIndex].isTeamScoreWasChanged = false;
+		}
+
+		binding.set('rivals', Immutable.fromJS(rivals));
+	},
 	onClickEditTeam: function(rivalIndex) {
 		this.getDefaultBinding()
 			.atomically()
 			.set('mode',				'edit_squad')
 			.set('selectedRivalIndex',	rivalIndex)
 			.commit();
-	},
-	onChangeIndividualScoreAvailable: function(order) {
-		const binding = this.getDefaultBinding();
-
-		binding.set(`individualScoreAvailable.${order}.value`, !binding.get(`individualScoreAvailable.${order}.value`));
 	},
 	onChangeScore: function(rivalIndex, scoreBundleName, scoreData, player) {
 		//console.log(rivalIndex);
@@ -218,10 +331,9 @@ const Rivals = React.createClass({
 					rival								= {rival}
 					event								= {binding.toJS('model')}
 					mode								= {binding.toJS('mode')}
-					isIndividualScoreAvailable			= {binding.toJS(`individualScoreAvailable.${rivalIndex}.value`)}
-					onChangeIndividualScoreAvailable	= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
 					onChangeScore						= {this.onChangeScore.bind(this, rivalIndex)}
 					onClickEditTeam						= {this.onClickEditTeam.bind(this, rivalIndex)}
+					onChangeIndividualScoreAvailable	= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
 					activeSchoolId						= {this.props.activeSchoolId}
 				/>
 			);
@@ -229,6 +341,16 @@ const Rivals = React.createClass({
 	},
 	render: function() {
 		if(this.isSync()) {
+			const binding = this.getDefaultBinding();
+
+			const	event	= binding.toJS('model'),
+					rivals	= binding.toJS('rivals');
+
+			console.log('EVENT: ');
+			console.log(event);
+			console.log('RIVALS: ');
+			console.log(rivals);
+
 			return (
 				<div className="bEventTeams">
 					{this.renderRivals()}

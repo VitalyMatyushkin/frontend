@@ -93,7 +93,6 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
-		console.log(this.props.activeSchoolId);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
@@ -154,7 +153,9 @@ const Event = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			EventResultHelper.initializeEventResults(eventData);
+			if(!TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+				EventResultHelper.initializeEventResults(eventData);
+			}
 
 			// loading match report
 			return window.Server.schoolEventReport.get({
@@ -197,7 +198,7 @@ const Event = React.createClass({
 
 			self.initTabs();
 
-			if(TeamHelper.isTeamSport(eventData)) {
+			if(TeamHelper.isTeamSport(eventData) && !TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
@@ -378,10 +379,15 @@ const Event = React.createClass({
 		}
 	},
 	addListeners: function() {
-		this.addListenerToEventTeams();
-		this.addListenerForIndividualScoreAvailable();
+		const event = this.getDefaultBinding().toJS('model');
 
-		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
+		this.addListenerToEventTeams();
+
+		if(!TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+			this.addListenerForIndividualScoreAvailable();
+		}
+
+		if(TeamHelper.isTeamSport(event) && !TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			this.addListenerForTeamScore();
 		}
 	},
@@ -860,8 +866,9 @@ const Event = React.createClass({
 
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			return (
-				<Rivals	binding			= {binding}
-						activeSchoolId	= {this.props.activeSchoolId}
+				<Rivals	binding				= {binding}
+						activeSchoolId		= {this.props.activeSchoolId}
+						onClearTeamScore	= {this.clearTeamScoreByTeamId}
 				/>
 			);
 		} else {

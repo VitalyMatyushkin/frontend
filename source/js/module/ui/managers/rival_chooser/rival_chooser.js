@@ -22,19 +22,19 @@ const RivalChooser = React.createClass({
 	},
 	getRivals: function () {
 		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
-				rivalsBinding		= this.getBinding('rivals');
+				rivals				= this.getBinding('rivals').toJS();
 
 		const event = this.getDefaultBinding().toJS('model');
 
-		return rivalsBinding.get().map((rival, index) => {
+		return rivals.map((rival, index) => {
 			const	disable		= this.isRivalDisable(rival),
-				eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
+					eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
 
 			let text = '';
 			switch (eventType) {
 				case 'houses':
 				case 'inter-schools':
-					text = rival.get('name');
+					text = rival.name;
 					break;
 				case 'internal':
 					if(index == 0) {
@@ -52,10 +52,14 @@ const RivalChooser = React.createClass({
 			) {
 				const xmlRivals = [];
 
-				if(typeof this.props.indexOfDisplayingRival === 'undefined' && index === 1) {
+				if(
+					typeof this.props.indexOfDisplayingRival === 'undefined' &&
+					index !== 0 &&
+					index !== rivals.length
+				) {
 					xmlRivals.push(
 						<span	key			= 'team-index-separator'
-								 className	= 'eRivalChooser_separator'
+								className	= 'eRivalChooser_separator'
 						>
 							vs.
 						</span>
@@ -70,8 +74,8 @@ const RivalChooser = React.createClass({
 				});
 				xmlRivals.push(
 					<span	key			={`team-index-${index}`}
-							 className	={teamClasses}
-							 onClick		={!disable ? this.onChooseRival.bind(null, index) : null}
+							className	={teamClasses}
+							onClick		={!disable ? this.onChooseRival.bind(null, index) : null}
 					>
 						{text}
 					</span>
@@ -79,7 +83,7 @@ const RivalChooser = React.createClass({
 
 				return xmlRivals;
 			}
-		}).toArray();
+		});
 	},
 	isRivalDisable: function(rival) {
 		const	binding			= this.getDefaultBinding(),
@@ -87,7 +91,7 @@ const RivalChooser = React.createClass({
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.get('id') !== activeSchoolId &&
+			rival.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},
