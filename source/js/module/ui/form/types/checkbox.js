@@ -2,9 +2,10 @@
  * Created by Anatoly on 13.06.2016.
  */
 
-const	TypeMixin 	= require('module/ui/form/types/type_mixin'),
-		React		= require('react'),
-		Morearty	= require('morearty');
+const	React		= require('react'),
+		Morearty	= require('morearty'),
+		TypeMixin	= require('module/ui/form/types/type_mixin'),
+		Checkbox	= require('module/ui/checkbox/checkbox');
 
 const TypeCheckbox =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
@@ -20,10 +21,10 @@ const TypeCheckbox =  React.createClass({
 				value	= self.getDefaultBinding().get('value');
 
 		return (
-			<div className="eForm_fieldInput">
-				<input className="eSwitch" type="checkbox" checked={value} onChange={self.onChange} />
-				<label/>
-			</div>
+			<Checkbox
+				isChecked	= { value }
+				onChange	= { self.onChange }
+			/>
 		)
 	}
 });

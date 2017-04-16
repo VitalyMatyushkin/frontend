@@ -6,7 +6,8 @@ const	React							= require('react'),
 		classNames						= require('classnames'),
 		Promise 						= require('bluebird');
 
-const	Tabs							= require('./../../../ui/tabs/tabs'),
+const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals'),
+		Tabs							= require('./../../../ui/tabs/tabs'),
 		CreateOtherEventPanel			= require('./view/create_other_event_panel/create_other_event_panel'),
 		EventHeaderWrapper				= require('./view/event_header/event_header_wrapper'),
 		IndividualScoreAvailableBlock	= require('./view/individual_scores_available_block/individual_score_available_block'),
@@ -92,7 +93,6 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
-		console.log(this.props.activeSchoolId);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
@@ -153,7 +153,9 @@ const Event = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			EventResultHelper.initializeEventResults(eventData);
+			if(!TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+				EventResultHelper.initializeEventResults(eventData);
+			}
 
 			// loading match report
 			return window.Server.schoolEventReport.get({
@@ -196,7 +198,7 @@ const Event = React.createClass({
 
 			self.initTabs();
 
-			if(TeamHelper.isTeamSport(eventData)) {
+			if(TeamHelper.isTeamSport(eventData) && !TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
@@ -377,10 +379,15 @@ const Event = React.createClass({
 		}
 	},
 	addListeners: function() {
-		this.addListenerToEventTeams();
-		this.addListenerForIndividualScoreAvailable();
+		const event = this.getDefaultBinding().toJS('model');
 
-		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
+		this.addListenerToEventTeams();
+
+		if(!TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+			this.addListenerForIndividualScoreAvailable();
+		}
+
+		if(TeamHelper.isTeamSport(event) && !TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			this.addListenerForTeamScore();
 		}
 	},
@@ -846,6 +853,45 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	// It's temp function
+	renderRivalsStuff: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				mode			= binding.toJS('mode'),
+				point 			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
+
+		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+			return (
+				<Rivals	binding				= {binding}
+						activeSchoolId		= {this.props.activeSchoolId}
+						onClearTeamScore	= {this.clearTeamScoreByTeamId}
+				/>
+			);
+		} else {
+			return (
+				<span>
+					<EventRivals	binding         = {binding}
+									onReload        = {this.props.onReload}
+									activeSchoolId  = {this.props.activeSchoolId}
+					/>
+					{ this.renderEditTeamButtons() }
+					<IndividualScoreAvailableBlock
+						binding         = { this.getDefaultBinding() }
+						activeSchoolId  = { this.props.activeSchoolId }
+						mode            = { mode }
+						event           = { event }
+					/>
+					<EventTeams binding         = {self.getEventTeamsBinding()}
+								activeSchoolId  = {this.props.activeSchoolId}
+					/>
+				</span>
+			);
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -881,20 +927,7 @@ const Event = React.createClass({
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<EventRivals	binding			= {binding}
-											onReload		= {this.props.onReload}
-											activeSchoolId	= {this.props.activeSchoolId}
-							/>
-							{ this.renderEditTeamButtons() }
-							<IndividualScoreAvailableBlock
-								binding			= { this.getDefaultBinding() }
-								activeSchoolId	= { this.props.activeSchoolId }
-								mode			= { mode }
-								event			= { event }
-							/>
-							<EventTeams	binding			= {self.getEventTeamsBinding()}
-										activeSchoolId	= {this.props.activeSchoolId}
-							/>
+							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>
 								<div className="bEventMap">
 									<div className="bEventMap_row">

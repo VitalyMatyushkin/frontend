@@ -1,0 +1,12 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bRival {
+  @extend .col-md-5;
+  @extend .col-sm-6;
+  @extend .col-xs-12;
+
+  &.mLeft {
+    @include make-md-column-offset(1)
+  }
+}
