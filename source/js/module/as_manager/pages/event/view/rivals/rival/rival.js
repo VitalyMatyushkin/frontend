@@ -3,11 +3,14 @@ const	React					= require('react'),
 		Players					= require('module/as_manager/pages/event/view/rivals/players'),
 		IndividualScoreManager	= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
-		propz					= require('propz');
+		propz					= require('propz'),
+		classNames				= require('classnames'),
+		RivalStyle				= require('../../../../../../../../styles/ui/rivals/b_rival.scss');
 
 const Rival = React.createClass({
 	propTypes: {
 		rival:								React.PropTypes.object.isRequired,
+		rivalIndex:							React.PropTypes.number.isRequired,
 		event:								React.PropTypes.object.isRequired,
 		mode:								React.PropTypes.string.isRequired,
 		onChangeScore:						React.PropTypes.func.isRequired,
@@ -40,13 +43,17 @@ const Rival = React.createClass({
 		}
 	},
 	render: function() {
+		const rivalStyle = classNames({
+			bRival	: true,
+			mLeft	: this.props.rivalIndex % 2 === 0
+		});
+
 		return (
-			<div className="bEventTeams_col">
+			<div className={rivalStyle}>
 				<RivalInfo
 					rival						= { this.props.rival }
 					event						= { this.props.event }
 					mode						= { this.props.mode }
-					individualScoreAvailable	= { this.props.rival.isIndividualScoreAvailable }
 					onChangeScore				= { this.props.onChangeScore }
 					activeSchoolId				= { this.props.activeSchoolId }
 				/>
@@ -54,7 +61,6 @@ const Rival = React.createClass({
 				<Players
 					rival						= { this.props.rival }
 					isOwner						= { true }
-					individualScoreAvailable	= { this.props.rival.isIndividualScoreAvailable }
 					mode						= { this.props.mode }
 					event						= { this.props.event }
 					activeSchoolId				= { this.props.activeSchoolId }

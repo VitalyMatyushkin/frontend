@@ -4,7 +4,9 @@ const	React			= require('react'),
 		Rival			= require('module/as_manager/pages/event/view/rivals/rival/rival'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin');
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		classNames		= require('classnames'),
+		RivalsStyle		= require('../../../../../../../styles/ui/rivals/rivals.scss');
 
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -41,7 +43,7 @@ const Rivals = React.createClass({
 					});
 					rival.isTeamScoreWasChanged = false;
 					rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
-					this.initSchoolResults();
+					this.initSchoolResultsForRival(rival, event);
 
 					rivals.push(rival);
 				});
@@ -69,8 +71,34 @@ const Rivals = React.createClass({
 		console.log(rivals);
 	},
 	initSchoolResultsForRival: function(rival, event) {
-		if(!rival.isIndividualScoreAvailable) {
-			event.results.
+		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+			if(typeof rival.team === 'undefined') {
+				const	schoolId				= rival.school.id,
+						currentSchoolScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
+
+				if(typeof currentSchoolScoreData === 'undefined') {
+					event.results.schoolScore.push(
+						{
+							schoolId:	schoolId,
+							score:		0
+						}
+					);
+					this.getDefaultBinding().set('model', Immutable.fromJS(event));
+				}
+			} else {
+				const	teamId					= rival.team.id,
+						currentTeamScoreData	= event.results.teamScore.find(scoreData => scoreData.teamId === teamId);
+
+				if(typeof currentTeamScoreData === 'undefined') {
+					event.results.teamScore.push(
+						{
+							teamId:	teamId,
+							score:		0
+						}
+					);
+					this.getDefaultBinding().set('model', Immutable.fromJS(event));
+				}
+			}
 		}
 	},
 	getInitValueForIsIndividualScoreAvailable: function(rival) {
@@ -83,32 +111,45 @@ const Rivals = React.createClass({
 			const	schoolId		= rival.school.id,
 					foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
 
-			return typeof foundScoreData !== 'undefined';
+			const	team						= rival.team;
+			let		foundIndividualScoreData	= undefined;
+			if(typeof team !== 'undefined') {
+				foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
+			}
+
+			return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
 		}
 	},
 	addListenerForTeamScore: function() {
-		const binding = this.getDefaultBinding();
-
-		const	teamScoreBinding	= binding.sub(`model.results.teamScore`),
-				teamScores			= teamScoreBinding.toJS(),
-				rivals				= binding.toJS('rivals');
+		const	teamScoreBinding	= this.getDefaultBinding().sub(`model.results.teamScore`),
+				teamScores			= teamScoreBinding.toJS();
 
 		for(let i = 0; i < teamScores.length; i++) {
-			this.listeners.push(teamScoreBinding.sub(i).addListener(() => {
-				const teamId = teamScores[i].teamId;
+			this.listeners.push(teamScoreBinding.sub(i).addListener((eventDescriptor) => {
+				const binding = this.getDefaultBinding();
 
-				const	foundRivalIndex	= rivals.findIndex(rival => rival.team.id === teamId),
-						foundRival		= rivals[foundRivalIndex];
+				const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
+						currentValue	= eventDescriptor.getCurrentValue().toJS();
 
 				if(
-					typeof foundRival !== 'undefined' &&
-					!foundRival.isIndividualScoreAvailable &&
-					!foundRival.isTeamScoreWasChanged
+					binding.toJS('mode') === 'closing' &&
+					prevValue.score !== currentValue.score
 				) {
-					rivals[foundRivalIndex].isTeamScoreWasChanged = true;
-					binding.set('rivals', Immutable.fromJS(rivals));
+					const	rivals			= binding.toJS('rivals'),
+							teamId			= currentValue.teamId,
+							foundRivalIndex	= rivals.findIndex(rival => rival.team.id === teamId),
+							foundRival		= rivals[foundRivalIndex];
 
-					this.clearIndividualScoreByTeamId(teamId);
+					if(
+						typeof foundRival !== 'undefined' &&
+						!foundRival.isIndividualScoreAvailable &&
+						!foundRival.isTeamScoreWasChanged
+					) {
+						rivals[foundRivalIndex].isTeamScoreWasChanged = true;
+						binding.set('rivals', Immutable.fromJS(rivals));
+
+						this.clearIndividualScoreByTeamId(teamId);
+					}
 				}
 			}));
 		}
@@ -324,10 +365,14 @@ const Rivals = React.createClass({
 
 		const rivals = binding.toJS('rivals');
 
-		return rivals.map((rival, rivalIndex) => {
-			return (
+		const xmlRivals = [];
+		let row = [];
+
+		rivals.forEach((rival, rivalIndex) => {
+			row.push(
 				<Rival
 					key									= {`rival_${rivalIndex}`}
+					rivalIndex							= {rivalIndex}
 					rival								= {rival}
 					event								= {binding.toJS('model')}
 					mode								= {binding.toJS('mode')}
@@ -337,7 +382,26 @@ const Rivals = React.createClass({
 					activeSchoolId						= {this.props.activeSchoolId}
 				/>
 			);
+
+			if(
+				rivalIndex % 2 !== 0 ||
+				rivalIndex === rivals.length - 1
+			) {
+				const rivalRowStyle = classNames({
+					eRivals_row	: true,
+					mFirst		: this.props.rivalIndex  === 1
+				});
+
+				xmlRivals.push(
+					<div className={rivalRowStyle}>
+						{row}
+					</div>
+				);
+				row = [];
+			}
 		});
+
+		return xmlRivals;
 	},
 	render: function() {
 		if(this.isSync()) {
@@ -352,7 +416,7 @@ const Rivals = React.createClass({
 			console.log(rivals);
 
 			return (
-				<div className="bEventTeams">
+				<div className="bRivals">
 					{this.renderRivals()}
 				</div>
 			);

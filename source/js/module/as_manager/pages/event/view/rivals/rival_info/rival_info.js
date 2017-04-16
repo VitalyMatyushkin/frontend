@@ -7,7 +7,6 @@ const RivalInfo = React.createClass({
 		rival:						React.PropTypes.object.isRequired,
 		event:						React.PropTypes.object.isRequired,
 		mode:						React.PropTypes.string.isRequired,
-		individualScoreAvailable:	React.PropTypes.bool.isRequired,
 		onChangeScore:				React.PropTypes.func.isRequired,
 		activeSchoolId:				React.PropTypes.string.isRequired
 	},
@@ -19,7 +18,6 @@ const RivalInfo = React.createClass({
 						rival						= { this.props.rival }
 						event						= { this.props.event }
 						mode						= { this.props.mode }
-						individualScoreAvailable	= { this.props.individualScoreAvailable }
 						onChangeScore				= { this.props.onChangeScore }
 						activeSchoolId				= { this.props.activeSchoolId }
 					/>

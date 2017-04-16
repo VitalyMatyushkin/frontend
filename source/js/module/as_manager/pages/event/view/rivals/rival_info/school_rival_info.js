@@ -12,7 +12,6 @@ const SchoolRivalInfo = React.createClass({
 		rival:						React.PropTypes.object.isRequired,
 		event:						React.PropTypes.object.isRequired,
 		mode:						React.PropTypes.string.isRequired,
-		individualScoreAvailable:	React.PropTypes.bool.isRequired,
 		onChangeScore:				React.PropTypes.func.isRequired,
 		activeSchoolId:				React.PropTypes.string.isRequired
 	},
@@ -111,7 +110,7 @@ const SchoolRivalInfo = React.createClass({
 			event,
 			this.props.mode,
 			true
-		) && !this.props.individualScoreAvailable;
+		) && !this.props.rival.isIndividualScoreAvailable;
 
 		return (
 			<div className="eEventResult_PointSideWrapper">

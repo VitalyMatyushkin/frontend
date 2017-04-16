@@ -2,13 +2,13 @@ const	React			= require('react'),
 		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		PencilButton	= require('module/ui/pencil_button'),
-		propz			= require('propz');
+		propz			= require('propz'),
+		PlayersStyle	= require('../../../../../../../styles/ui/rivals/b_players.scss');
 
 const Players = React.createClass({
 	propTypes: {
 		rival						: React.PropTypes.object.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
-		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		activeSchoolId				: React.PropTypes.string.isRequired,
@@ -73,7 +73,9 @@ const Players = React.createClass({
 			return null;
 		} else if(mode !== 'closing') {
 			return (
-				<PencilButton handleClick={this.props.onClickEditTeam}/>
+				<div className="ePlayers_editButtonWrapper">
+					<PencilButton handleClick={this.props.onClickEditTeam}/>
+				</div>
 			);
 		}
 	},
@@ -89,7 +91,7 @@ const Players = React.createClass({
 				playerIndex					= {playerIndex}
 				player						= {player}
 				isOwner						= {this.props.isOwner}
-				individualScoreAvailable	= {this.props.individualScoreAvailable}
+				individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}
 				mode						= {this.props.mode}
 				event						= {this.props.event}
 				onChangeScore				= {this.props.onChangeScore}
@@ -99,7 +101,7 @@ const Players = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bPlayers">
 				{ this.renderEditButton() }
 				{ this.renderContent() }
 			</div>
