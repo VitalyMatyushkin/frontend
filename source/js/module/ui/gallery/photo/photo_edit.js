@@ -39,8 +39,17 @@ const PhotoEdit = React.createClass({
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
 				picUrl = typeof binding.toJS('picUrl') !== 'undefined' ? binding.toJS('picUrl') : '';
-
-		return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;
+		
+		//Disable crop on picture editing http://tracker.squadintouch.com/issues/2603
+		{/**return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;*/}
+		
+		return (
+			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={this.onFormSubmit} binding={binding} >
+				<FormColumn>
+					<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
+				</FormColumn>
+			</Form>
+		);
 	}
 });
 
