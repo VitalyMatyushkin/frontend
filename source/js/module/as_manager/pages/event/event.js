@@ -30,7 +30,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		AddPhotoButton					= require('../../../ui/new_gallery/add_photo_button'),
 		Button							= require('../../../ui/button/button'),
 		EventHelper						= require('module/helpers/eventHelper'),
-		RoleHelper						= require('./../../../helpers/role_helper');
+		RoleHelper						= require('./../../../helpers/role_helper'),
+		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -823,6 +824,22 @@ const Event = React.createClass({
 
 		binding.set("isEditEventPopupOpen", false);
 	},
+	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
+		const binding = this.getDefaultBinding();
+
+		const newValue = !binding.get('opponentSchoolManager.isOpen');
+
+		if(newValue) {
+			const opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`);
+
+			binding.atomically()
+				.set('opponentSchoolManager.isOpen',			newValue)
+				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
+				.commit();
+		} else {
+			binding.set('opponentSchoolManager.isOpen', newValue);
+		}
+	},
 	renderEditEventPopupOpen: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -866,17 +883,18 @@ const Event = React.createClass({
 
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			return (
-				<Rivals	binding				= {binding}
-						activeSchoolId		= {this.props.activeSchoolId}
-						onClearTeamScore	= {this.clearTeamScoreByTeamId}
+				<Rivals	binding									= { binding }
+						activeSchoolId							= { this.props.activeSchoolId }
+						onClearTeamScore						= { this.clearTeamScoreByTeamId }
+						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 				/>
 			);
 		} else {
 			return (
 				<span>
-					<EventRivals	binding         = {binding}
-									onReload        = {this.props.onReload}
-									activeSchoolId  = {this.props.activeSchoolId}
+					<EventRivals	binding									= {binding}
+									onReload								= {this.props.onReload}
+									activeSchoolId							= {this.props.activeSchoolId}
 					/>
 					{ this.renderEditTeamButtons() }
 					<IndividualScoreAvailableBlock
@@ -890,6 +908,26 @@ const Event = React.createClass({
 					/>
 				</span>
 			);
+		}
+	},
+	renderOpponentSchoolManager: function() {
+		const binding = this.getDefaultBinding();
+
+		const isOpen = binding.toJS('opponentSchoolManager.isOpen');
+
+		if(isOpen) {
+			const opponentSchoolId = binding.toJS('opponentSchoolManager.opponentSchoolId');
+
+			return (
+				<OpponentSchoolManager
+					activeSchoolId		= { this.props.activeSchoolId }
+					opponentSchoolId	= { opponentSchoolId }
+					onReload			= { this.props.onReload }
+					binding				= { binding }
+				/>
+			);
+		} else {
+			return null;
 		}
 	},
 	render: function() {
@@ -994,7 +1032,8 @@ const Event = React.createClass({
 								/>
 							</div>
 						</div>
-						{this.renderEditEventPopupOpen()}
+						{ this.renderOpponentSchoolManager() }
+						{ this.renderEditEventPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode

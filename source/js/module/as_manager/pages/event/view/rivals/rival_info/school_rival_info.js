@@ -9,16 +9,18 @@ const	React			= require('react'),
 
 const SchoolRivalInfo = React.createClass({
 	propTypes: {
-		rival:						React.PropTypes.object.isRequired,
-		event:						React.PropTypes.object.isRequired,
-		mode:						React.PropTypes.string.isRequired,
-		onChangeScore:				React.PropTypes.func.isRequired,
-		activeSchoolId:				React.PropTypes.string.isRequired
+		rival:									React.PropTypes.object.isRequired,
+		event:									React.PropTypes.object.isRequired,
+		mode:									React.PropTypes.string.isRequired,
+		onChangeScore:							React.PropTypes.func.isRequired,
+		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
+		activeSchoolId:							React.PropTypes.string.isRequired
 	},
 	isShowChangeSchoolButton: function() {
+		// TODO Waiting server fix
 		return (
 			this.props.event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-			this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED &&
+			//this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED &&
 			this.props.activeSchoolId !== this.props.rival.school.id
 		);
 	},
@@ -68,11 +70,11 @@ const SchoolRivalInfo = React.createClass({
 			this.props.onChangeScore('teamScore', scoreData);
 		}
 	},
-	renderPencilButton: function() {
+	renderOpponentSchoolManagerButton: function() {
 		if(this.isShowChangeSchoolButton()) {
 			return (
 				<div className="eEventRival_buttonContainer">
-					<PencilButton handleClick={this.handleClickChangeOpponentSchoolButton}/>
+					<PencilButton handleClick={this.props.handleClickOpponentSchoolManagerButton}/>
 				</div>
 			);
 		} else {
@@ -128,7 +130,7 @@ const SchoolRivalInfo = React.createClass({
 	render: function() {
 		return (
 			<div className="bEventRival">
-				{ this.renderPencilButton() }
+				{ this.renderOpponentSchoolManagerButton() }
 				<div className="eEventRival_logo">
 					<img	className="eEventRivals_logoPic"
 							src={this.props.rival.school.pic}
