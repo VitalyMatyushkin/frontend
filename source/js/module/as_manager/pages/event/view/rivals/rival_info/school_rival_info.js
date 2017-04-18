@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		PencilButton	= require('module/ui/pencil_button'),
 		Score			= require('module/ui/score/score'),
+		ScoreCricket	= require('module/ui/score/score_cricket'),
 		ScoreConsts		= require('module/ui/score/score_consts'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
@@ -112,18 +113,33 @@ const SchoolRivalInfo = React.createClass({
 			true
 		) && !this.props.rival.isIndividualScoreAvailable;
 
-		return (
-			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= { isChangeMode }
-						plainPoints		= { points }
-						pointsStep		= { event.sport.points.pointsStep }
-						pointsType		= { event.sport.points.display }
-						pointsMask		= { event.sport.points.inputMask }
-						onChange		= { this.onChangeScore }
-						modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
-				/>
-			</div>
-		);
+		if (event.sport.name.toLowerCase() === 'cricket') {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<ScoreCricket	isChangeMode	= { isChangeMode }
+									plainPoints		= { points }
+									pointsStep		= { event.sport.points.pointsStep }
+									pointsType		= { event.sport.points.display }
+									pointsMask		= { event.sport.points.inputMask }
+									onChange		= { this.onChangeScore }
+									modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
+					/>
+				</div>
+			);
+		} else {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<Score	isChangeMode	= { isChangeMode }
+							plainPoints		= { points }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.onChangeScore }
+							modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
+					/>
+				</div>
+			);
+		}
 	},
 	render: function() {
 		return (
