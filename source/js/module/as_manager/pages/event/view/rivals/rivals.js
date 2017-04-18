@@ -65,10 +65,10 @@ const Rivals = React.createClass({
 
 		this.addListenerForTeamScore();
 
-		console.log('EVENT: ');
+		/*console.log('EVENT: ');
 		console.log(event);
 		console.log('RIVALS: ');
-		console.log(rivals);
+		console.log(rivals);*/
 	},
 	initSchoolResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
@@ -410,10 +410,10 @@ const Rivals = React.createClass({
 			const	event	= binding.toJS('model'),
 					rivals	= binding.toJS('rivals');
 
-			console.log('EVENT: ');
+			/*console.log('EVENT: ');
 			console.log(event);
 			console.log('RIVALS: ');
-			console.log(rivals);
+			console.log(rivals);*/
 
 			return (
 				<div className="bRivals">
