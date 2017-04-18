@@ -397,7 +397,10 @@ const Rivals = React.createClass({
 				});
 
 				xmlRivals.push(
-					<div className={rivalRowStyle}>
+					<div
+						key			= {`rival_row_${rivalIndex}`}
+						className	= {rivalRowStyle}
+					>
 						{row}
 					</div>
 				);
