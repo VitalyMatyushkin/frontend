@@ -18,9 +18,9 @@ const ClassList = React.createClass({
 				grid 		= binding.toJS('grid');
 		
 		if (grid) {
-			this.model = new ClassListModel(this).loadFilter(grid);
+			this.model = new ClassListModel(this).createGridFromExistingData(grid);
 		} else {
-			this.model = new ClassListModel(this).init();
+			this.model = new ClassListModel(this).createGrid();
 		}
 	},
 	render: function () {

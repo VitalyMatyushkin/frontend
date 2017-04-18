@@ -7,7 +7,7 @@ const SetTeamsLater = React.createClass({
 	mixins: [Morearty.Mixin],
 	playersListener: undefined,
 	propTypes: {
-		event:						React.PropTypes.func.isRequired,
+		event:						React.PropTypes.object.isRequired,
 		handleIsSelectTeamLater:	React.PropTypes.func
 	},
 	isShowSetTeamsLater: function(event) {

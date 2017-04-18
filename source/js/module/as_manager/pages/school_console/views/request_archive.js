@@ -2,20 +2,33 @@
  * Created by Anatoly on 13.09.2016.
  */
 
-const   React 		= require('react'),
-		Morearty	= require('morearty'),
-		Model 		= require('module/shared_pages/permission_requests/request-archive-model'),
-		Grid 		= require('module/ui/grid/grid');
+const 	React 				= require('react'),
+		Morearty			= require('morearty'),
+		RequestArchive 		= require('module/shared_pages/permission_requests/request-archive-class'),
+		Grid 				= require('module/ui/grid/grid'),
+		Immutable			= require('immutable');
 
 const SchoolRequestArchive = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.model = new Model(this);
-		this.model.columns.splice(5,2);
-		this.model.init();
+		const 	binding 	= this.getDefaultBinding(),
+				grid 		= binding.toJS('grid');
+		
+		if (grid) {
+			this.model = new RequestArchive(this).createGridFromExistingData(grid);
+		} else {
+			this.model = new RequestArchive(this);
+			console.log(this.model.columns);
+			this.model.columns.splice(5, 2);
+			this.model.createGrid();
+			console.log(this.model.columns);
+		}
 	},
 	render: function () {
-		return <Grid model={this.model.grid}/>;
+		const binding = this.getDefaultBinding();
+		
+		binding.set('grid', Immutable.fromJS(this.model.grid));
+		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 

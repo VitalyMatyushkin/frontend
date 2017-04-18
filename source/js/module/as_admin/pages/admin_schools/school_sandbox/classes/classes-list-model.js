@@ -70,6 +70,10 @@ ClassesListModel.prototype.getEditFunction = function(itemId){
     document.location.hash = `school_sandbox/${schoolId}/forms/edit/${formId}`;
 };
 
+ClassesListModel.prototype.getAllAges = function(item) {
+	return item.age === 0 ? "Reception" : "Y" + item.age;
+};
+
 ClassesListModel.prototype.setColumns = function(){
     this.columns = [
         {
@@ -86,10 +90,13 @@ ClassesListModel.prototype.setColumns = function(){
         {
             text:'Age group',
             isSorted:false,
-            cell:{
-                dataField:'age',
-                type:'general'
-            },
+			cell:{
+				dataField:'age',
+				type:'custom',
+				typeOptions:{
+					parseFunction: item => {return this.getAllAges(item)}
+				}
+			},
             filter:{
                 type:'string'
             }
