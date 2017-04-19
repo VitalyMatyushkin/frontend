@@ -363,6 +363,8 @@ const EventTeamsView = React.createClass({
 	},
 	
 	renderScore: function(event, mode, isOwner, individualScoreAvailable, player, teamId){
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
 		if (event.sport.name.toLowerCase() === 'cricket') {
 			return (
 				<span className="ePlayer_scoreCricketContainer">
