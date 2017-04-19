@@ -9,7 +9,7 @@ const 	React 			= require('react'),
 		classNames 		= require('classnames'),
 		CricketPoint 	= require('./cricket-point'),
 	
-		ScoreConsts	= require('./score_consts');
+		ScoreConsts		= require('./score_consts');
 
 const CricketPoints = React.createClass({
 	
@@ -17,7 +17,15 @@ const CricketPoints = React.createClass({
 		plainPoints:	React.PropTypes.number.isRequired,
 		step:			React.PropTypes.number.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
-		modeView:		React.PropTypes.string
+		modeView:		React.PropTypes.string,
+		isPlayerScore: 	React.PropTypes.bool
+	},
+	
+	getDefaultProps: function(){
+		return {
+			modeView: 		ScoreConsts.SCORE_MODES_VIEW.SMALL,
+			isPlayerScore: 	false
+		}
 	},
 	
 	render: function(){
@@ -38,6 +46,7 @@ const CricketPoints = React.createClass({
 					onChange		= { this.props.onChange }
 					modeView		= { this.props.modeView }
 					type 			= { 'Runs' }
+					isPlayerScore 	= { this.props.isPlayerScore }
 				/>
 				<CricketPoint
 					initialPoints 	= { runs }
@@ -46,6 +55,7 @@ const CricketPoints = React.createClass({
 					onChange		= { this.props.onChange }
 					modeView		= { this.props.modeView }
 					type 			= { 'Wickets' }
+					isPlayerScore 	= { this.props.isPlayerScore }
 				/>
 			</div>
 		)

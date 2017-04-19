@@ -12,20 +12,20 @@ const	React			= require('react'),
 		MaskedPoints 	= require('./masked-points'),
 		ScoreConsts		= require('./score_consts');
 
-const Score = React.createClass({
+const ScoreCricket = React.createClass({
 	propTypes: {
 		isChangeMode:	React.PropTypes.bool,
 		plainPoints:	React.PropTypes.number.isRequired,
-		pointsType:		React.PropTypes.string.isRequired,
 		pointsStep:		React.PropTypes.number,
-		pointsMask:		React.PropTypes.string,
 		onChange:		React.PropTypes.func.isRequired,
-		modeView:		React.PropTypes.string
+		modeView:		React.PropTypes.string,
+		isPlayerScore: 	React.PropTypes.bool
 	},
 	getDefaultProps: function() {
 		return {
 			isChangeMode:	false,
-			modeView:		ScoreConsts.SCORE_MODES_VIEW.SMALL
+			modeView:		ScoreConsts.SCORE_MODES_VIEW.SMALL,
+			isPlayerScore: 	false
 		};
 	},
 	
@@ -42,17 +42,18 @@ const Score = React.createClass({
 			<div className={playerScoreClassName}>
 				<span>{`Runs ${runs}`}</span>
 				<span>{` / `}</span>
-				<span>{`Wikets ${wickets}`}</span>
+				<span>{`Wickets ${wickets}`}</span>
 			</div>
 		);
 	},
 	
 	renderScoreCricketChangeMode: function() {
 		return (
-			<CricketPoints	plainPoints	= { this.props.plainPoints }
-							step		= { this.props.pointsStep }
-							onChange	= { this.props.onChange }
-							modeView	= { this.props.modeView }
+			<CricketPoints	plainPoints		= { this.props.plainPoints }
+							step			= { this.props.pointsStep }
+							onChange		= { this.props.onChange }
+							modeView		= { this.props.modeView }
+							isPlayerScore 	= { this.props.isPlayerScore }
 			/>
 		);
 	},
@@ -66,6 +67,6 @@ const Score = React.createClass({
 	}
 });
 
-module.exports = Score;
+module.exports = ScoreCricket;
 
 

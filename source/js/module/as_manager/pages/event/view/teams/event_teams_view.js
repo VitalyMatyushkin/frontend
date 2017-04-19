@@ -366,24 +366,23 @@ const EventTeamsView = React.createClass({
 		if (event.sport.name.toLowerCase() === 'cricket') {
 			return (
 				<span className="ePlayer_scoreCricketContainer">
-					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-									plainPoints		= {this.getPointsByStudent(event, player.userId)}
-									pointsStep		= {event.sport.points.pointsStep}
-									pointsType		= {event.sport.points.display}
-									pointsMask		= {event.sport.points.inputMask}
-									onChange		= {this.handleChangeScore.bind(this, event, teamId, player)}
+					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+									plainPoints		= { this.getPointsByStudent(event, player.userId) }
+									pointsStep		= { event.sport.points.pointsStep }
+									onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
+									isPlayerScore 	= { true }
 					/>
 				</span>
 			);
 		} else {
 			return (
 				<span className="ePlayer_scoreContainer">
-					<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-							plainPoints		= {this.getPointsByStudent(event, player.userId)}
-							pointsStep		= {event.sport.points.pointsStep}
-							pointsType		= {event.sport.points.display}
-							pointsMask		= {event.sport.points.inputMask}
-							onChange		= {this.handleChangeScore.bind(this, event, teamId, player)}
+					<Score	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+							plainPoints		= { this.getPointsByStudent(event, player.userId) }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
 					/>
 				</span>
 			);

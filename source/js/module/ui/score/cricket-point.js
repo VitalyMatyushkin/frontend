@@ -17,12 +17,14 @@ const CricketPoint = React.createClass({
 		step:			React.PropTypes.number.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
 		modeView:		React.PropTypes.string,
-		type:			React.PropTypes.string.isRequired
+		type:			React.PropTypes.string.isRequired,
+		isPlayerScore: 	React.PropTypes.bool
 	},
 	
 	getDefaultProps: function() {
 		return {
-			modeView: ScoreConsts.SCORE_MODES_VIEW.SMALL
+			modeView: 		ScoreConsts.SCORE_MODES_VIEW.SMALL,
+			isPlayerScore: 	false
 		};
 	},
 	
@@ -34,50 +36,66 @@ const CricketPoint = React.createClass({
 	},
 	
 	onClick:function(operation){
-		const result = TeamHelper.operationByType(operation, this.props.plainPoints*1, 'plain', this.props.step);
+		const result = TeamHelper.operationByType(operation, Number(this.props.plainPoints), 'plain', Number(this.props.step));
 		
 		this.changeScore(result);
 	},
-	onFocus:function(e){
-		const 	value = e.target.value*1;
+	onFocus:function(event){
+		const value = Number(event.target.value);
 		
 		this.setState({
 			value: value === 0 ? '' : value // if value===0, then empty value for current mask, else value
 		});
 		
-		e.stopPropagation();
+		event.stopPropagation();
 	},
-	onChange:function(e){
-		this.changeScore(e.target.value);
+	onChange:function(event){
+		this.changeScore(Number(event.target.value));
 		
-		e.stopPropagation();
+		event.stopPropagation();
 	},
-	onBlur:function(e){
-		const 	value = e.target.value || 0,
-			error = this.state.error;
+	onBlur:function(event){
+		const value = Number(event.target.value) || 0;
 		
 		this.setState({
-			value: error ? value : value*1
+			value: value
 		});
 		
-		e.stopPropagation();
+		event.stopPropagation();
+	},
+	/**
+	 * Function check input value wickets for team (less 10) and players (0 or 1)
+	 * Also function check input value runs for team/player which can not be more 999
+	 * @param {number} value
+	 * @returns {boolean}
+	 */
+	checkValue: function(value){
+		if (this.props.isPlayerScore === true && this.props.type.toLowerCase() === 'wickets') {
+			return (/^[01]{1}$/.test(value) || value === ''); // Player can not have more than 1 wicket (0 or 1 wicket)
+		} else if(this.props.isPlayerScore === false && this.props.type.toLowerCase() === 'wickets') {
+			return (/^[0-9]{1}$/.test(value) || value === ''); // Team can not have more than 9 wicket
+		} else {
+			return (/^[0-9.]{1,3}$/.test(value) || value === '');
+		}
 	},
 	changeScore:function(value){
-		if(/^[0-9.]+$/.test(value) || value === ''){
-			const error = ScoreHelper.pointsPlainValidation(value, this.props.step);
+		if(this.checkValue(value)){
+			const error = ScoreHelper.pointsPlainValidation(value, Number(this.props.step));
 			
 			this.setState({
 				value: value,
 				error: error
 			});
 			
-			let result = !value ? 0 : error ? this.state.value*1 : value*1;
-			
+			let result = !value ? 0 : error ? this.state.value : value;
+			//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
+			//For wickets we add the fractional part to runs
+			//For runs we add the whole part to wickets
 			if (this.props.type.toLowerCase() === 'wickets') {
 				result = result / 10;
-				result = result + this.props.initialPoints;
+				result = result + Number(this.props.initialPoints);
 			} else {
-				result = result + (this.props.initialPoints / 10);
+				result = result + (Number(this.props.initialPoints) / 10);
 			}
 			
 			this.props.onChange({
