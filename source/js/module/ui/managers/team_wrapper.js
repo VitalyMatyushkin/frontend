@@ -12,7 +12,8 @@ const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	playersListener: undefined,
 	propTypes: {
-		handleIsSelectTeamLater: React.PropTypes.func
+		handleIsSelectTeamLater:	React.PropTypes.func,
+		otherTeamPlayers:			React.PropTypes.array.isRequired
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -36,7 +37,7 @@ const TeamWrapper = React.createClass({
 			self._initCreationModeBinding();
 			self._fillPlugBinding();
 			self._setPlayers(self.getBinding().players.toJS());
-			self._setBlackList(self.getBinding().otherTeamPlayers.toJS());
+			self._setBlackList(this.props.otherTeamPlayers);
 			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
 			binding.set('isSetTeamLater',	Immutable.fromJS(false));
 			binding.set('isTeamChanged',	false);
@@ -322,17 +323,6 @@ const TeamWrapper = React.createClass({
 			default	: binding.sub("___teamManagerBinding"),
 			error	: this.getBinding('error')
 		});
-	},
-	_getPlayerChooserBinding: function() {
-		const	self = this,
-				binding = self.getDefaultBinding();
-
-		return {
-			default:			binding.sub('playerChooser'),
-			otherTeamPlayers:	self.getBinding('otherTeamPlayers'),
-			teamPlayers:		self._getPlayersBinding(),
-			filter:				binding.sub('playerChooser.filter')
-		};
 	},
 	_onRemovePlayer: function(player) {
 		const self = this;

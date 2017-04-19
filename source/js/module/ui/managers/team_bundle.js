@@ -68,151 +68,151 @@ const TeamBundle = React.createClass({
 		teamWrappers.forEach((_, index) => self.addTeamPlayersListenerByTeamIndex(binding, index));
 	},
 	addTeamPlayersListenerByTeamIndex: function(binding, index) {
-		const self = this;
-
 		// if players were change
 		// add players from one team to blacklist of other team
 		binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
-			binding.set(
-				`teamWrapper.${self.getAnotherRivalIndex(index)}.___teamManagerBinding.blackList`,
-				descriptor.getCurrentValue()
-			)
+			const anotherRivalIndexArray = this.getAnotherRivalIndexArray(index);
+
+			anotherRivalIndexArray.forEach(index => {
+				binding.set(
+					`teamWrapper.${index}.___teamManagerBinding.blackList`,
+					descriptor.getCurrentValue()
+				)
+			});
 		});
 	},
 
 	/** HELPER FUNCTIONS **/
 	getTeamChooserBindings: function() {
-		const	binding				= this.getDefaultBinding(),
-				teamChooserBindings	= [];
+		const binding = this.getDefaultBinding();
 
-		for(let i = 0; i < this.TEAM_COUNT; i++) {
-			teamChooserBindings.push({
-				default:	binding.sub(`teamTable.${i}`),
+		const teamWrappers = binding.toJS(`teamWrapper`);
+
+		return teamWrappers.map((tw, index) => {
+			return ({
+				default:	binding.sub(`teamTable.${index}`),
 				model:		this.getBinding().model,
-				rival:		this.getBinding().rivals.sub(i)
+				rival:		this.getBinding().rivals.sub(index)
 			});
-		}
-
-		return teamChooserBindings;
+		});
 	},
 	getTeamWrapperBindings: function() {
-		const	binding					= this.getDefaultBinding(),
-				selectedRivalIndex		= binding.toJS('selectedRivalIndex'),
-				tableWrapperBindings	= [];
+		const	binding				= this.getDefaultBinding(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
 
-		for(let i = 0; i < this.TEAM_COUNT; i++) {
-			tableWrapperBindings.push({
-				default				: binding.sub(`teamWrapper.${i}`),
-				model				: this.getBinding().model,
-				rival				: this.getBinding().rivals.sub(i),
-				players				: binding.sub(`players.${i}`),
-				otherTeamPlayers	: binding.sub(`players.${this.getAnotherRivalIndex(i)}`),
-				error				: this.getBinding('error').sub(i)
-			});
-		}
+		const teamWrappers = binding.toJS(`teamWrapper`);
 
-		return tableWrapperBindings;
+		return teamWrappers.map((tw, index) => {
+			return {
+				default	: binding.sub(`teamWrapper.${index}`),
+				model	: this.getBinding().model,
+				rival	: this.getBinding().rivals.sub(index),
+				players	: binding.sub(`players.${index}`),
+				error	: this.getBinding('error').sub(index)
+			};
+		});
 	},
 	getClassNamesForTeamWrapper: function() {
 		const	binding				= this.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-				_classNames			= [];
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
 
-		for(let i = 0; i < this.TEAM_COUNT; i++) {
-			_classNames.push(
-				classNames({
-						bWrapperTeamWrapper: true,
-						mDisable: parseInt(selectedRivalIndex, 10) !== i
-					}
-				));
-		}
+		const teamWrappers = binding.toJS(`teamWrapper`);
 
-		return _classNames;
+		return teamWrappers.map((tw, index) => {
+			return classNames({
+					bWrapperTeamWrapper:	true,
+					mDisable:				parseInt(selectedRivalIndex, 10) !== index
+				}
+			);
+		});
 	},
-	getAnotherRivalIndex: function(rivalIndex) {
+	getAnotherTeamPlayersByRivalIndex: function(rivalIndex) {
+		const	binding	= this.getDefaultBinding(),
+				players	= binding.toJS('players');
 
-		return rivalIndex === 0 ? 1 : 0;
+		players.splice(rivalIndex, 1);
+
+		let anotherPlayers = [];
+		players.forEach(playersArray => {
+			anotherPlayers = anotherPlayers.concat(playersArray);
+		});
+
+		return anotherPlayers;
+	},
+	getAnotherRivalIndexArray: function(rivalIndex) {
+		const rivals = this.getBinding().rivals.toJS();
+
+		return rivals
+			.map((rival, rivalIndex) => rivalIndex)
+			.filter(number => number !== rivalIndex);
+	},
+	/**
+	 * Function adds teamId to black list of other rivals.
+	 * @param teamTable
+	 * @param currentRivalIndex
+	 * @param blackListTeamId
+	 * @returns {*}
+	 */
+	addTeamIdToOtherRivalsBlackList: function(teamTable, currentRivalIndex, blackListTeamId) {
+		const anotherRivalIndexArray = this.getAnotherRivalIndexArray(currentRivalIndex);
+
+		anotherRivalIndexArray.forEach(index => teamTable[index].teamIdBlackList.push(blackListTeamId));
+	},
+	/**
+	 * Function removes teamId from black list of other rivals.
+	 * @param teamTable
+	 * @param currentRivalIndex
+	 * @param blackListTeamId
+	 */
+	removeTeamIdToOtherRivalsBlackList: function(teamTable, currentRivalIndex, blackListTeamId) {
+		const anotherRivalIndexArray = this.getAnotherRivalIndexArray(currentRivalIndex);
+
+		anotherRivalIndexArray.forEach(index => {
+			const teamIdIndex = teamTable[index].teamIdBlackList.find(blackListTeamId);
+
+			teamTable[index].teamIdBlackList.splice(teamIdIndex, 1);
+		});
 	},
 	selectTeam: function(teamId, team) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamWrapper'),
+				teamTable	= binding.toJS('teamTable'),
+				rivalIndex	= binding.toJS('selectedRivalIndex');
 
-		const	rivalIndex			= binding.toJS('selectedRivalIndex'),
-				anotherRivalIndex	= self.getAnotherRivalIndex(rivalIndex);
+		teamWrapper[rivalIndex].selectedTeamId		= teamId;
+		teamWrapper[rivalIndex].teamType			= team.teamType;
+		teamWrapper[rivalIndex].selectedTeam		= team;
+		teamWrapper[rivalIndex].prevTeamName		= team.name;
+		teamWrapper[rivalIndex].teamName.name		= team.name;
+		teamWrapper[rivalIndex].teamName.prevName	= team.name;
+		teamTable[rivalIndex].selectedTeamId		= teamId;
+		this.addTeamIdToOtherRivalsBlackList(teamTable, rivalIndex, teamId);
 
 		binding
 			.atomically()
-			.set(
-				`teamWrapper.${rivalIndex}.selectedTeamId`,
-				Immutable.fromJS(teamId)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.teamType`,
-				Immutable.fromJS(team.teamType)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.selectedTeam`,
-				Immutable.fromJS(team)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.prevTeamName`,
-				Immutable.fromJS(team.name)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.teamName.name`,
-				Immutable.fromJS(team.name)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.teamName.prevName`,
-				Immutable.fromJS(team.name)
-			)
-			.set(
-				`teamTable.${rivalIndex}.selectedTeamId`,
-				Immutable.fromJS(teamId)
-			)
-			.set(
-				`teamTable.${anotherRivalIndex}.exceptionTeamId`,
-				Immutable.fromJS(teamId)
-			)
+			.set('teamWrapper',	Immutable.fromJS(teamWrapper))
+			.set('teamTable',	Immutable.fromJS(teamTable))
 			.commit();
 	},
 	deselectTeam: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamWrapper'),
+				teamTable	= binding.toJS('teamTable'),
+				rivalIndex	= binding.toJS('selectedRivalIndex'),
+				teamId		= String(teamWrapper[rivalIndex].selectedTeamId);
 
-		const	rivalIndex			= binding.toJS('selectedRivalIndex'),
-				anotherRivalIndex	= self.getAnotherRivalIndex(rivalIndex);
+		teamWrapper[rivalIndex].selectedTeamId		= undefined;
+		teamWrapper[rivalIndex].teamType			= undefined;
+		teamWrapper[rivalIndex].selectedTeam		= undefined;
+		teamWrapper[rivalIndex].prevTeamName		= undefined;
+		teamWrapper[rivalIndex].teamName.name		= undefined;
+		teamTable[rivalIndex].selectedTeamId		= undefined;
+		this.removeTeamIdToOtherRivalsBlackList(teamTable, rivalIndex, teamId);
 
 		binding
 			.atomically()
-			.set(
-				`teamWrapper.${rivalIndex}.selectedTeamId`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.teamType`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.selectedTeam`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.teamName.name`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamWrapper.${rivalIndex}.prevTeamName`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamTable.${rivalIndex}.selectedTeamId`,
-				Immutable.fromJS(undefined)
-			)
-			.set(
-				`teamTable.${anotherRivalIndex}.exceptionTeamId`,
-				Immutable.fromJS(undefined)
-			)
+			.set('teamWrapper',	Immutable.fromJS(teamWrapper))
+			.set('teamTable',	Immutable.fromJS(teamTable))
 			.commit();
 	},
 
@@ -274,6 +274,7 @@ const TeamBundle = React.createClass({
 						className	= { _classNames[index] }
 				>
 					<TeamWrapper	binding					= { binding }
+									otherTeamPlayers		= { this.getAnotherTeamPlayersByRivalIndex(index) }
 									handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
 					/>
 				</div>
