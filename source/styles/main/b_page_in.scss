@@ -1,4 +1,5 @@
 @import '../!variables';
+@import '../bootstrap-custom';
 
 .eSchoolHomePage{
   -webkit-font-smoothing: antialiased;
@@ -17,25 +18,59 @@
 
 .eSchoolHomeFooter{
   width: 100%;
-  padding: 20px 0;
+  height: 200px;
+  padding-top: 40px;
 
   position: relative;
+
+  border-top: solid 1px rgb(230,230,230);
+
   color:#898989;
+  font-size: 1.125rem;
 }
 
-.eSchoolHomeFooterCopyright {
+.eSchoolHomeFooter_container {
+  @extend .container;
+}
+
+.eSchoolHomeFooter_row {
+  @include make-row();
+}
+
+.eSchoolHomeFooter_col_size_4 {
+  @include make-sm-column(4);
+}
+
+.eSchoolHomeFooter_col_size_8 {
+  @include make-sm-column(8);
   text-align: right;
-  padding: 20px 0;
+}
+
+.eSchoolHomeFooter_logo {
+  max-width: 230px;
+  width: 100%;
+  height: auto;
+}
+
+.eSchoolHomeFooter_copyright {
+  padding: {
+    top: 40px;
+    bottom: 18px;
+  }
+  color: $blueColor;
+  font-family: Glober-Bold, sans-serif;
+}
+
+.eSchoolHomeFooter_link {
+  width: 100%;
+
+  text-decoration: underline;
 }
 
 .eSchoolBodyWrapper{
   position:relative;
   height: auto;
   margin: auto;
-
-   >div:nth-child(odd) {
-     background: $secondBackgroundColor;
-   }
 }
 
 .eSchoolBlog{
@@ -248,8 +283,11 @@
     background-attachment: scroll;
   }
   .eSchoolHomeFooter,
-  .eSchoolHomeFooterCopyright{
+  .eSchoolHomeFooter_col_size_8 {
     text-align: center;
+  }
+  .eSchoolHomeFooter_col_size_8 {
+    padding-bottom: 35px;
   }
 }
 

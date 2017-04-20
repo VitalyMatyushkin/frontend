@@ -1,6 +1,10 @@
 @import '../!variables';
 @import '../bootstrap-custom';
 
+.bSchoolNewsContainer {
+  background: $secondBackgroundColor;
+}
+
 .eSchoolNewsContainer{
   height: auto;
   position: relative;
