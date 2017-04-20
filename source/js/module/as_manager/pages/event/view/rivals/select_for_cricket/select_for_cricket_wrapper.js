@@ -4,7 +4,11 @@
 const 	React 				= require('react'),
 		SelectForCricket 	= require('./select_for_cricket');
 
-const 	EventHelper 		= require('module/helpers/eventHelper');
+const 	EventHelper 		= require('module/helpers/eventHelper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper');
+
+const RESULTS_FOR_CRICKET_TBD = ['TBD'];
+const RESULTS_FOR_CRICKET = ['Draw', 'No result', 'Match conceded', 'Match awarded'];
 
 const SelectForCricketWrapper = React.createClass({
 	propTypes: {
@@ -20,7 +24,9 @@ const SelectForCricketWrapper = React.createClass({
 
 	componentWillReceiveProps: function(nextProps){
 		if (nextProps.event !== this.props.event) {
-			let stateArray = this.state.results;
+			let stateArray = [];
+
+			stateArray = stateArray.concat(RESULTS_FOR_CRICKET_TBD, this.addTeamResultsInGameResultsMenu(nextProps.event), RESULTS_FOR_CRICKET);
 			
 			if (this.isTie(nextProps.event)) {
 				stateArray.push('Tie');
@@ -32,17 +38,42 @@ const SelectForCricketWrapper = React.createClass({
 		}
 	},
 	
+	addTeamResultsInGameResultsMenu: function(event){
+		const 	points 				= this.getPointsForCricket(event),
+				leftTeamId 			= this.getTeamsIdOrderByResults(event).leftTeamId,
+				rightTeamId 		= this.getTeamsIdOrderByResults(event).rightTeamId,
+				pointsForLeftTeam 	= TeamHelper.convertPointsCricket(points[0]),
+				pointsForRightTeam 	= TeamHelper.convertPointsCricket(points[1]),
+				runsForLeftTeam 	= pointsForLeftTeam.runs,
+				wicketsForLeftTeam 	= pointsForLeftTeam.wickets,
+				runsForRightTeam 	= pointsForRightTeam.runs,
+				wicketsForRightTeam = pointsForRightTeam.wickets;
+		
+		return [
+			`${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`,
+			`${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`,
+			`${this.getRivalName(leftTeamId)} won by ${wicketsForLeftTeam - wicketsForRightTeam} wickets`,
+			`${this.getRivalName(rightTeamId)} won by ${wicketsForRightTeam - wicketsForLeftTeam} wickets`
+		];
+	},
+	
 	componentDidMount: function(){
-		let stateArray = ['', 'Draw', 'No result', 'Match conceded', 'Match awarded'];
-
-		stateArray.push(`${this.getRivalName(0)} won`);
-		stateArray.push(`${this.getRivalName(1)} won`);
+		let stateArray = [];
+		
+		stateArray = stateArray.concat(RESULTS_FOR_CRICKET_TBD, this.addTeamResultsInGameResultsMenu(this.props.event), RESULTS_FOR_CRICKET);
 		
 		if (this.isTie(this.props.event)) {
 			stateArray.push('Tie');
 		}
 		
 		this.setState({results: stateArray});
+	},
+	
+	getTeamsIdOrderByResults: function(event){
+		return {
+			leftTeamId: event.results.teamScore["0"].teamId,
+			rightTeamId: event.results.teamScore["1"].teamId
+		}
 	},
 	
 	getPointsForCricket: function(event) {
@@ -59,8 +90,10 @@ const SelectForCricketWrapper = React.createClass({
 		
 		return points[0] === points[1];
 	},
-	getRivalName:function(order){
-		const eventType = this.props.event.eventType;
+	getRivalName: function(teamId){
+		const 	eventType = this.props.event.eventType,
+				order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+		
 		if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
 			return `${this.props.event.schoolsData[order].name} ${this.props.event.teamsData[order].name}`
 		} else {

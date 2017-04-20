@@ -20,6 +20,7 @@ const SelectForCricket = React.createClass({
 	
 	handleChange: function(event){
 		this.setState({value: event.target.value});
+		this.props.onChangeResult(event.target.value);
 	},
 	
 	renderOptions: function(){

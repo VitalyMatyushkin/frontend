@@ -876,6 +876,7 @@ const Event = React.createClass({
 		} else {
 			return (
 				<span>
+					{this.renderSelectWithGameResultForCricket()}
 					<EventRivals	binding         = {binding}
 									onReload        = {this.props.onReload}
 									activeSchoolId  = {this.props.activeSchoolId}
@@ -890,7 +891,6 @@ const Event = React.createClass({
 					<EventTeams binding         = {self.getEventTeamsBinding()}
 								activeSchoolId  = {this.props.activeSchoolId}
 					/>
-					{this.renderSelectWithGameResultForCricket()}
 				</span>
 			);
 		}
