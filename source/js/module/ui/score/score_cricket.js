@@ -40,9 +40,9 @@ const ScoreCricket = React.createClass({
 		
 		return (
 			<div className={playerScoreClassName}>
-				<span>{`Runs ${runs}`}</span>
+				<span className="ePlayer_score_runs">{`Runs ${runs}`}</span>
 				<span>{` / `}</span>
-				<span>{`Wickets ${wickets}`}</span>
+				<span className="ePlayer_score_wickets">{`Wickets ${wickets}`}</span>
 			</div>
 		);
 	},

@@ -55,6 +55,10 @@
   align-self: center;
   min-width: 45px;
   display: inline-block;
+  .ePlayer_score_runs,
+  .ePlayer_score_wickets{
+	color: #8c8c8c;
+  }
 
   &.mBig {
     color: #007abf;
@@ -63,6 +67,10 @@
   &.mMedium {
 	font-size: 26px;
 	color: #007abf;
+	.ePlayer_score_runs,
+	.ePlayer_score_wickets{
+	  color: #007abf;
+	}
   }
 }
 .ePlayer_scoreContainer {

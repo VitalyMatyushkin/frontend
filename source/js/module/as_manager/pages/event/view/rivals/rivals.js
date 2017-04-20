@@ -438,8 +438,8 @@ const Rivals = React.createClass({
 
 			return (
 				<div className="bRivals">
-					{ this.renderRivals() }
 					{ this.renderSelectWithGameResultForCricket() }
+					{ this.renderRivals() }
 				</div>
 			);
 		} else {
