@@ -12,17 +12,50 @@ const SelectForCricketWrapper = React.createClass({
 		onChangeResult: 	React.PropTypes.func
 	},
 	
-	getPointsForCricket: function() {
+	getInitialState: function(){
+		return {
+			results: []
+		};
+	},
+
+	componentWillReceiveProps: function(nextProps){
+		if (nextProps.event !== this.props.event) {
+			let stateArray = this.state.results;
+			if (this.isTie(nextProps.event)) {
+				stateArray.push('Tie');
+				this.setState({results: stateArray});
+			} else {
+				stateArray = stateArray.filter(elem => elem !== 'Tie');
+				this.setState({results: stateArray});
+			}
+		}
+	},
+	
+	componentDidMount: function(){
+		let stateArray = ['', 'Draw', 'No result', 'Match conceded', 'Match awarded'];
+
+		stateArray.push(`${this.getRivalName(0)} won`);
+		stateArray.push(`${this.getRivalName(1)} won`);
+		
+		if (this.isTie(this.props.event)) {
+			stateArray.push('Tie');
+		}
+		
+		this.setState({results: stateArray});
+	},
+	
+	getPointsForCricket: function(event) {
 		let points = [];
 		
-		points.push(Math.round(this.props.event.results.teamScore["0"].score * 10) / 10);
-		points.push(Math.round(this.props.event.results.teamScore["1"].score * 10) / 10);
-		
+		points.push(Math.round(event.results.teamScore["0"].score * 10) / 10);
+		points.push(Math.round(event.results.teamScore["1"].score * 10) / 10);
+
 		return points;
 	},
 	
-	isDraw: function(){
-		const points = this.getPointsForCricket();
+	isTie: function(event){
+		const points = this.getPointsForCricket(event);
+		
 		return points[0] === points[1];
 	},
 	getRivalName:function(order){
@@ -37,10 +70,8 @@ const SelectForCricketWrapper = React.createClass({
 	render: function(){
 		return (
 			<SelectForCricket
-				isDraw 			= { this.isDraw() }
+				results 		= { this.state.results }
 				onChangeResult 	= { this.props.onChangeResult }
-				leftRivalName 	= { this.getRivalName(0) }
-				rightRivalName 	= { this.getRivalName(1) }
 			/>
 		);
 	}

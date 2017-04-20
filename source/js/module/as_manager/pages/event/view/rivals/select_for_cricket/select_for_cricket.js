@@ -8,41 +8,14 @@ const SelectForCricketStyle = require('styles/ui/select_for_cricket/select_for_c
 
 const SelectForCricket = React.createClass({
 	propTypes: {
-		isDraw: 			React.PropTypes.bool.isRequired,
 		onChangeResult: 	React.PropTypes.func.isRequired,
-		leftRivalName: 		React.PropTypes.string.isRequired,
-		rightRivalName: 	React.PropTypes.string.isRequired
+		//array of <option> elements
+		results: 			React.PropTypes.array.isRequired
 	},
 	getInitialState: function(){
 		return {
-			results: 			[],
-			value: 				''
+			value: ''
 		};
-	},
-	componentWillReceiveProps: function(nextProps){
-		let stateArray = this.state.results;
-		if (nextProps.isDraw === true) {
-			stateArray.push('Tie');
-			this.setState({results: stateArray});
-		} else {
-			stateArray = stateArray.filter(elem => elem !== 'Tie');
-			this.setState({results: stateArray});
-		}
-	},
-	componentDidMount: function(){
-		const stateArray = this.state.results;
-		stateArray.push('');
-		stateArray.push('Draw');
-		stateArray.push('No result');
-		stateArray.push('Match conceded');
-		stateArray.push(`${this.props.leftRivalName} won`);
-		stateArray.push(`${this.props.rightRivalName} won`);
-		
-		if (this.props.isDraw === true) {
-			stateArray.push('Tie');
-			this.setState({results: stateArray});
-		}
-		this.setState({results: stateArray});
 	},
 	
 	handleChange: function(event){
@@ -50,7 +23,7 @@ const SelectForCricket = React.createClass({
 	},
 	
 	renderOptions: function(){
-		return this.state.results.map( (option, index) => {
+		return this.props.results.map( (option, index) => {
 			return (
 				<option
 					key 	= { index }
