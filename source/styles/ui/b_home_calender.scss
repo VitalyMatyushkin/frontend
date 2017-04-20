@@ -2,11 +2,13 @@
 .bHomeCalender {
   padding-bottom: 90px;
   position: relative;
+
+  background: $secondBackgroundColor;
 }
 
 .eHomeCalender_title {
   width: 100%;
-  padding: 35px 0;
+  padding: 35px 0 25px;
 
   text-align: center;
 

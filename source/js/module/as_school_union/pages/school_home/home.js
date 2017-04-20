@@ -101,13 +101,14 @@ const SchoolHomePage = React.createClass({
 					/>
 				</div>
 				<div className="eSchoolHomeFooter">
-					<div className="container">
-						<div className="row">
-							<div className="col-md-3 col-md-offset-1 col-sm-3">
-								<img src="images/logo.svg"/>
+					<div className="eSchoolHomeFooter_container">
+						<div className="eSchoolHomeFooter_row">
+							<div className="eSchoolHomeFooter_col_size_4">
+								<img className="eSchoolHomeFooter_logo" src="images/logo.svg"/>
 							</div>
-							<div className="col-md-7 col-sm-9 eSchoolHomeFooterCopyright">
-								&copy;All Rights Reserved, SquadInTouch.com &trade;
+							<div className="eSchoolHomeFooter_col_size_8">
+								<div className="eSchoolHomeFooter_copyright">Powered by Squad In Touch</div>
+								<a className="eSchoolHomeFooter_link" href="http://squadintouch.co.uk/">www.squadintouch.co.uk</a>
 							</div>
 						</div>
 					</div>
