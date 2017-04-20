@@ -9,6 +9,7 @@ const 	EventHelper 		= require('module/helpers/eventHelper'),
 
 const RESULTS_FOR_CRICKET_TBD = ['TBD'];
 const RESULTS_FOR_CRICKET = ['Draw', 'No result', 'Match conceded', 'Match awarded'];
+const CRICKET_WICKETS = 10;
 
 const SelectForCricketWrapper = React.createClass({
 	propTypes: {
@@ -39,6 +40,7 @@ const SelectForCricketWrapper = React.createClass({
 	},
 	
 	addTeamResultsInGameResultsMenu: function(event){
+		let teamResultsArray = [];
 		const 	points 				= this.getPointsForCricket(event),
 				leftTeamId 			= this.getTeamsIdOrderByResults(event).leftTeamId,
 				rightTeamId 		= this.getTeamsIdOrderByResults(event).rightTeamId,
@@ -49,12 +51,24 @@ const SelectForCricketWrapper = React.createClass({
 				runsForRightTeam 	= pointsForRightTeam.runs,
 				wicketsForRightTeam = pointsForRightTeam.wickets;
 		
-		return [
-			`${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`,
-			`${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`,
-			`${this.getRivalName(leftTeamId)} won by ${wicketsForLeftTeam - wicketsForRightTeam} wickets`,
-			`${this.getRivalName(rightTeamId)} won by ${wicketsForRightTeam - wicketsForLeftTeam} wickets`
-		];
+
+			if (runsForLeftTeam - runsForRightTeam > 0) {
+				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`);
+				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by an innings and ${runsForLeftTeam - runsForRightTeam} runs`);
+				if (wicketsForLeftTeam - wicketsForRightTeam > 0) {
+					teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${CRICKET_WICKETS - wicketsForLeftTeam} wickets`);
+				}
+			}
+
+			if (runsForLeftTeam - runsForRightTeam < 0) {
+				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`);
+				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by an innings and ${runsForRightTeam - runsForLeftTeam} runs`);
+				if (wicketsForLeftTeam - wicketsForRightTeam < 0) {
+					teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${CRICKET_WICKETS - wicketsForRightTeam} wickets`);
+				}
+			}
+		
+		return teamResultsArray;
 	},
 	
 	componentDidMount: function(){
