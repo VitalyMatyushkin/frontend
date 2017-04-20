@@ -31,7 +31,8 @@ const Manager = React.createClass({
 	componentWillMount: function () {
 		const self = this;
 
-		self.initBinding();
+		self.initDefaultBinding();
+		self.initErrorBinding();
 		self.addListeners();
 
 		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
@@ -49,7 +50,7 @@ const Manager = React.createClass({
 
 		self.listeners.forEach(l => binding.removeListener(l));
 	},
-	initBinding: function() {
+	initDefaultBinding: function() {
 		const	self			= this,
 				defaultBinding	= self.getDefaultBinding(),
 				binding			= self.getBinding();
@@ -74,6 +75,18 @@ const Manager = React.createClass({
 				}
 			))
 			.commit();
+	},
+	initErrorBinding: function() {
+		const rivals = this.getBinding('rivals').toJS();
+
+		const error = rivals.map(() => {
+			return {
+				isError:	false,
+				text:		''
+			}
+		});
+
+		this.getBinding('error').set(Immutable.fromJS(error));
 	},
 	getTeamWrappers: function() {
 		const binding = this.getBinding();
@@ -119,13 +132,11 @@ const Manager = React.createClass({
 	getTeamTableByRivalIndex: function(rivalIndex) {
 		const teamId = this.getTeamIdByOrder(rivalIndex);
 
-		return [
-			{
-				selectedTeamId	: teamId,
-				isSelectedTeam	: typeof team !== 'undefined',
-				teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
-			}
-		]
+		return {
+			selectedTeamId	: teamId,
+			isSelectedTeam	: typeof team !== 'undefined',
+			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
+		};
 	},
 	getTeamIdBlackListByRivalIndex: function(rivalIndex) {
 		const teamId = this.getTeamIdByOrder(rivalIndex);

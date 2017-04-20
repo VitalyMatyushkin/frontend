@@ -168,7 +168,7 @@ const TeamBundle = React.createClass({
 		const anotherRivalIndexArray = this.getAnotherRivalIndexArray(currentRivalIndex);
 
 		anotherRivalIndexArray.forEach(index => {
-			const teamIdIndex = teamTable[index].teamIdBlackList.find(blackListTeamId);
+			const teamIdIndex = teamTable[index].teamIdBlackList.find(id => id === blackListTeamId);
 
 			teamTable[index].teamIdBlackList.splice(teamIdIndex, 1);
 		});

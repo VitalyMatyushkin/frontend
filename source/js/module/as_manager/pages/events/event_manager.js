@@ -70,16 +70,7 @@ const EventManager = React.createClass({
 			},
 			rivals: [],
 			players: [[],[]],
-			error: [
-				{
-					isError: false,
-					text:    ''
-				},
-				{
-					isError: false,
-					text:    ''
-				}
-			],
+			error: [],
 			isEventManagerSync: false,
 			isSync: false,
 			isSavingChangesModePopupOpen: false,
@@ -597,15 +588,17 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 		let		isStepComplete	= false;
 
+		const hasError = binding.toJS('error').findIndex(err => err.isError) !== -1;
+
 		switch (step) {
 			case 1:
 				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
 				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 						// for any INTER-SCHOOLS events
-					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
-					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError										// for any other type of event
+					binding.toJS('model.type') === 'inter-schools' && !hasError || 						// for any INTER-SCHOOLS events
+					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !hasError ||	// for INDIVIDUAL INTERNAL events
+					!hasError// for any other type of event
 				) {
 					isStepComplete = true;
 				};
