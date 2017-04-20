@@ -21,13 +21,14 @@ const SelectForCricketWrapper = React.createClass({
 	componentWillReceiveProps: function(nextProps){
 		if (nextProps.event !== this.props.event) {
 			let stateArray = this.state.results;
+			
 			if (this.isTie(nextProps.event)) {
 				stateArray.push('Tie');
-				this.setState({results: stateArray});
 			} else {
 				stateArray = stateArray.filter(elem => elem !== 'Tie');
-				this.setState({results: stateArray});
 			}
+			
+			this.setState({results: stateArray});
 		}
 	},
 	
