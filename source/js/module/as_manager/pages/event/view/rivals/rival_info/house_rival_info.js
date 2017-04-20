@@ -7,53 +7,41 @@ const	React			= require('react'),
 		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		propz			= require('propz');
 
-const SchoolRivalInfo = React.createClass({
+const HouseRivalInfo = React.createClass({
 	propTypes: {
 		rival:									React.PropTypes.object.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
-		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired
-	},
-	isShowChangeSchoolButton: function() {
-		// TODO Waiting server fix
-		return (
-			this.props.event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-			//this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED &&
-			this.props.activeSchoolId !== this.props.rival.school.id
-		);
 	},
 	getRivalName: function() {
 		const	teamName	= this.getTeamName(),
-				schoolName	= this.getSchoolName();
+				houseName	= this.getHouseName();
 
-		switch (true) {
-			case typeof teamName === "undefined":
-				return schoolName;
-			case typeof schoolName === "undefined":
-				return teamName;
-			default:
-				return <div>{teamName} <span>/</span> {schoolName}</div>;
+		if(typeof teamName === "undefined") {
+			return houseName;
+		} else {
+			return <div>{teamName} <span>/</span> {houseName}</div>;
 		}
 	},
 	getTeamName: function() {
 		return propz.get(this.props.rival, ['team','name']); 
 	},
-	getSchoolName: function () {
-		return this.props.rival.school.name;
+	getHouseName: function () {
+		return this.props.rival.house.name;
 	},
 	getPoints: function() {
-		const	schoolResults	= this.props.event.results.schoolScore,
+		const	houseResults	= this.props.event.results.houseScore,
 				teamResults		= this.props.event.results.teamScore,
 				teamId			= propz.get(this.props.rival, ['team','id']),
-				schoolId		= this.props.rival.school.id;
+				houseId			= this.props.rival.house.id;
 
-		const schoolScoreData = schoolResults.find(scoreData => scoreData.schoolId === schoolId);
+		const houseScoreData = houseResults.find(scoreData => scoreData.houseId === houseId);
 
 		let points = 0;
-		if(typeof schoolScoreData !== 'undefined') {
-			points = schoolScoreData.score;
+		if(typeof houseScoreData !== 'undefined') {
+			points = houseScoreData.score;
 		} else if(typeof teamId !== 'undefined') {
 			const teamScoreData = teamResults.find(scoreData => scoreData.teamId === teamId);
 			if(typeof teamScoreData !== 'undefined') {
@@ -65,20 +53,9 @@ const SchoolRivalInfo = React.createClass({
 	},
 	onChangeScore: function(scoreData) {
 		if(typeof this.props.rival.team === 'undefined') {
-			this.props.onChangeScore('schoolScore', scoreData);
+			this.props.onChangeScore('houseScore', scoreData);
 		} else {
 			this.props.onChangeScore('teamScore', scoreData);
-		}
-	},
-	renderOpponentSchoolManagerButton: function() {
-		if(this.isShowChangeSchoolButton()) {
-			return (
-				<div className="eEventRival_buttonContainer">
-					<PencilButton handleClick={this.props.handleClickOpponentSchoolManagerButton}/>
-				</div>
-			);
-		} else {
-			return null;
 		}
 	},
 	renderPoints: function() {
@@ -130,7 +107,6 @@ const SchoolRivalInfo = React.createClass({
 	render: function() {
 		return (
 			<div className="bEventRival">
-				{ this.renderOpponentSchoolManagerButton() }
 				<div className="eEventRival_logo">
 					<img	className="eEventRivals_logoPic"
 							src={this.props.rival.school.pic}
@@ -145,4 +121,4 @@ const SchoolRivalInfo = React.createClass({
 	}
 });
 
-module.exports = SchoolRivalInfo;
+module.exports = HouseRivalInfo;

@@ -154,7 +154,11 @@ const Event = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			if(!TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+			//TODO it's temp. only for event refactoring period.
+			if(
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData)
+			) {
 				EventResultHelper.initializeEventResults(eventData);
 			}
 
@@ -199,7 +203,12 @@ const Event = React.createClass({
 
 			self.initTabs();
 
-			if(TeamHelper.isTeamSport(eventData) && !TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+			//TODO it's temp. only for event refactoring period.
+			if(
+				TeamHelper.isTeamSport(eventData) &&
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData)
+			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
@@ -228,14 +237,22 @@ const Event = React.createClass({
 		}
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
-		if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+		//TODO it's temp. only for event refactoring period.
+		if(
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event)
+		) {
+			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return false;
+			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+			} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			}
+		} else {
 			return false;
-		} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
-		} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
-			return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
-		} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
 		}
 	},
 	hasTeamPlayersByOrder: function(event, order) {
@@ -881,7 +898,11 @@ const Event = React.createClass({
 				point 			= binding.toJS('model.venue.postcodeData.point'),
 				isNewEvent		= binding.get('isNewEvent');
 
-		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+		//TODO it's temp. only for event refactoring period.
+		if(
+			TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+			TeamHelper.isHousesEventForTeamSport(event)
+		) {
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { this.props.activeSchoolId }

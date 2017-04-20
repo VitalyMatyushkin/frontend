@@ -61,14 +61,14 @@ const Rival = React.createClass({
 				/>
 				{ this.renderIndividualScoreAvailable() }
 				<Players
-					rival						= { this.props.rival }
-					isOwner						= { true }
-					mode						= { this.props.mode }
-					event						= { this.props.event }
-					activeSchoolId				= { this.props.activeSchoolId }
-					onChangeScore				= { this.props.onChangeScore.bind(this, 'individualData') }
-					onClickEditTeam				= { this.props.onClickEditTeam }
-					customCss					= { '' }
+					rival			= { this.props.rival }
+					isOwner			= { true }
+					mode			= { this.props.mode }
+					event			= { this.props.event }
+					activeSchoolId	= { this.props.activeSchoolId }
+					onChangeScore	= { this.props.onChangeScore.bind(this, 'individualData') }
+					onClickEditTeam	= { this.props.onClickEditTeam }
+					customCss		= { '' }
 				/>
 			</div>
 		);

@@ -233,7 +233,7 @@ const Manager = React.createClass({
 				// for index 0 always true
 			index === 0 ||
 			(
-				index > 1 &&
+				index > 0 &&
 					// condition for other indexes
 				(
 					!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)
@@ -411,19 +411,21 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-			return (
-				<div className="bTeamsManager">
-					<RivalChooser
-						binding					= { binding }
-						isInviteMode			= { this.props.isInviteMode }
-						indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
-					/>
-					<div className="eTeamsManager_body">
-						<TeamBundle binding={teamBundleBinding}/>
-						{this.renderGameField()}
-					</div>
+		console.log(this.getBinding('error').toJS());
+
+		return (
+			<div className="bTeamsManager">
+				<RivalChooser
+					binding					= { binding }
+					isInviteMode			= { this.props.isInviteMode }
+					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
+				/>
+				<div className="eTeamsManager_body">
+					<TeamBundle binding={teamBundleBinding}/>
+					{this.renderGameField()}
 				</div>
-			);
+			</div>
+		);
 	}
 });
 
