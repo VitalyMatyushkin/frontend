@@ -1,12 +1,13 @@
-const	React			= require('react'),
-		Immutable		= require('immutable'),
-		Morearty		= require('morearty'),
-		Rival			= require('module/as_manager/pages/event/view/rivals/rival/rival'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		classNames		= require('classnames'),
-		RivalsStyle		= require('../../../../../../../styles/ui/rivals/rivals.scss');
+const	React						= require('react'),
+		Immutable					= require('immutable'),
+		Morearty					= require('morearty'),
+		Rival						= require('module/as_manager/pages/event/view/rivals/rival/rival'),
+		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		EventHelper					= require('module/helpers/eventHelper'),
+		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		classNames					= require('classnames'),
+		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
 
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -403,6 +404,26 @@ const Rivals = React.createClass({
 
 		return xmlRivals;
 	},
+	
+	renderSelectWithGameResultForCricket: function(){
+		const 	binding 	= this.getDefaultBinding(),
+				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
+				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
+				event 		= binding.toJS('model'),
+				rivals 		= binding.toJS('rivals');
+		
+		if (sportName === 'cricket' && mode === 'closing') {
+			return (
+				<SelectForCricketWrapper
+					event 			= { event }
+					onChangeResult 	= { () =>{} } //changeResultForCricket, wait server
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
+	
 	render: function() {
 		if(this.isSync()) {
 			const binding = this.getDefaultBinding();
@@ -417,7 +438,8 @@ const Rivals = React.createClass({
 
 			return (
 				<div className="bRivals">
-					{this.renderRivals()}
+					{ this.renderRivals() }
+					{ this.renderSelectWithGameResultForCricket() }
 				</div>
 			);
 		} else {

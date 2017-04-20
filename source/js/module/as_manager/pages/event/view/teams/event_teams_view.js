@@ -363,27 +363,28 @@ const EventTeamsView = React.createClass({
 	},
 	
 	renderScore: function(event, mode, isOwner, individualScoreAvailable, player, teamId){
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
 		if (event.sport.name.toLowerCase() === 'cricket') {
 			return (
 				<span className="ePlayer_scoreCricketContainer">
-					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-									plainPoints		= {this.getPointsByStudent(event, player.userId)}
-									pointsStep		= {event.sport.points.pointsStep}
-									pointsType		= {event.sport.points.display}
-									pointsMask		= {event.sport.points.inputMask}
-									onChange		= {this.handleChangeScore.bind(this, event, teamId, player)}
+					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+									plainPoints		= { this.getPointsByStudent(event, player.userId) }
+									pointsStep		= { event.sport.points.pointsStep }
+									onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
+									isPlayerScore 	= { true }
 					/>
 				</span>
 			);
 		} else {
 			return (
 				<span className="ePlayer_scoreContainer">
-					<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-							plainPoints		= {this.getPointsByStudent(event, player.userId)}
-							pointsStep		= {event.sport.points.pointsStep}
-							pointsType		= {event.sport.points.display}
-							pointsMask		= {event.sport.points.inputMask}
-							onChange		= {this.handleChangeScore.bind(this, event, teamId, player)}
+					<Score	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+							plainPoints		= { this.getPointsByStudent(event, player.userId) }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
 					/>
 				</span>
 			);

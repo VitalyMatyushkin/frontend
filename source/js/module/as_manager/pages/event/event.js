@@ -30,7 +30,9 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		AddPhotoButton					= require('../../../ui/new_gallery/add_photo_button'),
 		Button							= require('../../../ui/button/button'),
 		EventHelper						= require('module/helpers/eventHelper'),
-		RoleHelper						= require('./../../../helpers/role_helper');
+		RoleHelper						= require('./../../../helpers/role_helper'),
+		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -888,8 +890,28 @@ const Event = React.createClass({
 					<EventTeams binding         = {self.getEventTeamsBinding()}
 								activeSchoolId  = {this.props.activeSchoolId}
 					/>
+					{this.renderSelectWithGameResultForCricket()}
 				</span>
 			);
+		}
+	},
+	renderSelectWithGameResultForCricket: function(){
+		const 	binding 	= this.getDefaultBinding(),
+				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
+				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
+				event 		= binding.toJS('model');
+		
+		if (sportName === 'cricket' && mode === 'closing') {
+			return (
+				<div className="eSelectForCricketWrapper">
+					<SelectForCricketWrapper
+						event 			= { event }
+						onChangeResult 	= { () =>{} } //changeResultForCricket, wait server
+					/>
+				</div>
+			);
+		} else {
+			return null;
 		}
 	},
 	render: function() {
