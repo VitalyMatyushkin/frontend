@@ -102,14 +102,18 @@ const EventVenue = React.createClass({
 	getOpponentSchoolPostCodes: function() {
 		const opponentSchoolInfoArray = this.props.opponentSchoolInfoArray;
 
-		return opponentSchoolInfoArray
-			.filter(school => typeof school.postcode !== 'undefined')
-			.map(school => {
-				const postcode = school.postcode;
-				postcode.tooltip = ` (${school.name})`;
+		if(typeof opponentSchoolInfoArray !== 'undefined') {
+			return opponentSchoolInfoArray
+				.filter(school => typeof school.postcode !== 'undefined')
+				.map(school => {
+					const postcode = school.postcode;
+					postcode.tooltip = ` (${school.name})`;
 
-				return postcode;
-			});
+					return postcode;
+				});
+		} else {
+			return [];
+		}
 	},
 	getTBDPostcode: function() {
 		return {

@@ -12,7 +12,8 @@ const	React						= require('react'),
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:							React.PropTypes.string.isRequired,
+		handleClickOpponentSchoolManagerButton:	React.PropTypes.func
 	},
 	listeners: [],
 	componentWillUnmount: function() {
@@ -36,7 +37,7 @@ const Rivals = React.createClass({
 					const rival = {};
 
 					rival.school = school;
-					// search all teams for current team
+					// search all teams for current school
 					teamsData.forEach(t => {
 						if(t.schoolId === school.id) {
 							rival.team = t;
@@ -44,7 +45,41 @@ const Rivals = React.createClass({
 					});
 					rival.isTeamScoreWasChanged = false;
 					rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
-					this.initSchoolResultsForRival(rival, event);
+					this.initResultsForRival(rival, event);
+
+					rivals.push(rival);
+				});
+
+				rivals = rivals.sort((rival1, rival2) => {
+					if(rival1.school.id === this.props.activeSchoolId && rival2.school.id !== this.props.activeSchoolId) {
+						return -1;
+					}
+					if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
+						return 1;
+					}
+
+					return 0;
+				});
+			} else if(EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType) {
+				const	schoolsData	= event.schoolsData,
+						housesData	= event.housesData,
+						teamsData	= event.teamsData;
+
+				// iterate all schools
+				housesData.forEach(house => {
+					const rival = {};
+
+					rival.school = schoolsData[0];
+					rival.house = house;
+					// search all teams for current house
+					teamsData.forEach(t => {
+						if(t.houseId === house.id) {
+							rival.team = t;
+						}
+					});
+					rival.isTeamScoreWasChanged = false;
+					rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
+					this.initResultsForRival(rival, event);
 
 					rivals.push(rival);
 				});
@@ -66,12 +101,12 @@ const Rivals = React.createClass({
 
 		this.addListenerForTeamScore();
 
-		console.log('EVENT: ');
-		console.log(event);
-		console.log('RIVALS: ');
-		console.log(rivals);
+		//console.log('EVENT: ');
+		//console.log(event);
+		//console.log('RIVALS: ');
+		//console.log(rivals);
 	},
-	initSchoolResultsForRival: function(rival, event) {
+	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			if(typeof rival.team === 'undefined') {
 				const	schoolId				= rival.school.id,
@@ -87,19 +122,39 @@ const Rivals = React.createClass({
 					this.getDefaultBinding().set('model', Immutable.fromJS(event));
 				}
 			} else {
-				const	teamId					= rival.team.id,
-						currentTeamScoreData	= event.results.teamScore.find(scoreData => scoreData.teamId === teamId);
+				this.initTeamResultsForRival(rival, event);
+			}
+		} else if(TeamHelper.isHousesEventForTeamSport(event)) {
+			if(typeof rival.team === 'undefined') {
+				const	houseId					= rival.house.id,
+						currentHouseScoreData	= event.results.houseScore.find(scoreData => scoreData.houseId === houseId);
 
-				if(typeof currentTeamScoreData === 'undefined') {
-					event.results.teamScore.push(
+				if(typeof currentHouseScoreData === 'undefined') {
+					event.results.houseScore.push(
 						{
-							teamId:	teamId,
+							houseId:	houseId,
 							score:		0
 						}
 					);
 					this.getDefaultBinding().set('model', Immutable.fromJS(event));
 				}
+			} else {
+				this.initTeamResultsForRival(rival, event);
 			}
+		}
+	},
+	initTeamResultsForRival: function(rival, event) {
+		const	teamId					= rival.team.id,
+				currentTeamScoreData	= event.results.teamScore.find(scoreData => scoreData.teamId === teamId);
+
+		if(typeof currentTeamScoreData === 'undefined') {
+			event.results.teamScore.push(
+				{
+					teamId:	teamId,
+					score:		0
+				}
+			);
+			this.getDefaultBinding().set('model', Immutable.fromJS(event));
 		}
 	},
 	getInitValueForIsIndividualScoreAvailable: function(rival) {
@@ -109,16 +164,29 @@ const Rivals = React.createClass({
 		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
-			const	schoolId		= rival.school.id,
-					foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
+			if(EventHelper.isInterSchoolsEvent(event)) {
+				const	schoolId		= rival.school.id,
+						foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
 
-			const	team						= rival.team;
-			let		foundIndividualScoreData	= undefined;
-			if(typeof team !== 'undefined') {
-				foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
+				const	team						= rival.team;
+				let		foundIndividualScoreData	= undefined;
+				if(typeof team !== 'undefined') {
+					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
+				}
+
+				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
+			} else if(EventHelper.isHousesEvent(event)) {
+				const	houseId			= rival.house.id,
+						foundScoreData	= event.results.houseScore.find(scoreData => scoreData.houseId === houseId);
+
+				const	team						= rival.team;
+				let		foundIndividualScoreData	= undefined;
+				if(typeof team !== 'undefined') {
+					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
+				}
+
+				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
 			}
-
-			return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
 		}
 	},
 	addListenerForTeamScore: function() {
@@ -239,6 +307,25 @@ const Rivals = React.createClass({
 
 		binding.set('model.results.schoolScore', Immutable.fromJS(results.schoolScore));
 	},
+	handleHouseScoreChanges: function(houseId, newScoreData) {
+		const	binding			= this.getDefaultBinding(),
+				results			= binding.toJS('model.results'),
+				houseScoreArray	= results.houseScore;
+
+		let scoreData = houseScoreArray.find(s => s.houseId === houseId);
+
+		if(typeof scoreData === 'undefined') {
+			scoreData = {
+				houseId:	houseId,
+				score:		newScoreData.value
+			};
+			houseScoreArray.push(scoreData);
+		} else {
+			scoreData.score = newScoreData.value;
+		}
+
+		binding.set('model.results.houseScore', Immutable.fromJS(results.houseScore));
+	},
 	changePointsForPlayer: function(teamId, player, score) {
 		const	binding					= this.getDefaultBinding(),
 				event					= binding.toJS('model'),
@@ -347,6 +434,10 @@ const Rivals = React.createClass({
 			const schoolId = rival.school.id;
 
 			this.handleSchoolScoreChanges(schoolId, scoreData);
+		} else if(scoreBundleName === 'houseScore') {
+			const houseId = rival.house.id;
+
+			this.handleHouseScoreChanges(houseId, scoreData);
 		} else if(scoreBundleName === 'teamScore') {
 			const teamId = rival.team.id;
 
@@ -372,15 +463,18 @@ const Rivals = React.createClass({
 		rivals.forEach((rival, rivalIndex) => {
 			row.push(
 				<Rival
-					key									= {`rival_${rivalIndex}`}
-					rivalIndex							= {rivalIndex}
-					rival								= {rival}
-					event								= {binding.toJS('model')}
-					mode								= {binding.toJS('mode')}
-					onChangeScore						= {this.onChangeScore.bind(this, rivalIndex)}
-					onClickEditTeam						= {this.onClickEditTeam.bind(this, rivalIndex)}
-					onChangeIndividualScoreAvailable	= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
-					activeSchoolId						= {this.props.activeSchoolId}
+					key										= {`rival_${rivalIndex}`}
+					rivalIndex								= {rivalIndex}
+					rival									= {rival}
+					event									= {binding.toJS('model')}
+					mode									= {binding.toJS('mode')}
+					onChangeScore							= {this.onChangeScore.bind(this, rivalIndex)}
+					onClickEditTeam							= {this.onClickEditTeam.bind(this, rivalIndex)}
+					onChangeIndividualScoreAvailable		= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
+					handleClickOpponentSchoolManagerButton	= {
+						this.props.handleClickOpponentSchoolManagerButton.bind(this, rivalIndex)
+					}
+					activeSchoolId							= {this.props.activeSchoolId}
 				/>
 			);
 
@@ -394,7 +488,10 @@ const Rivals = React.createClass({
 				});
 
 				xmlRivals.push(
-					<div className={rivalRowStyle}>
+					<div
+						key			= {`rival_row_${rivalIndex}`}
+						className	= {rivalRowStyle}
+					>
 						{row}
 					</div>
 				);
@@ -404,14 +501,14 @@ const Rivals = React.createClass({
 
 		return xmlRivals;
 	},
-	
+
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
 				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
 				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
 				event 		= binding.toJS('model'),
 				rivals 		= binding.toJS('rivals');
-		
+
 		if (sportName === 'cricket' && mode === 'closing') {
 			return (
 				<SelectForCricketWrapper
@@ -423,7 +520,7 @@ const Rivals = React.createClass({
 			return null;
 		}
 	},
-	
+
 	render: function() {
 		if(this.isSync()) {
 			const binding = this.getDefaultBinding();
@@ -431,10 +528,10 @@ const Rivals = React.createClass({
 			const	event	= binding.toJS('model'),
 					rivals	= binding.toJS('rivals');
 
-			console.log('EVENT: ');
-			console.log(event);
-			console.log('RIVALS: ');
-			console.log(rivals);
+			//console.log('EVENT: ');
+			//console.log(event);
+			//console.log('RIVALS: ');
+			//console.log(rivals);
 
 			return (
 				<div className="bRivals">

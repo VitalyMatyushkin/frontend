@@ -66,23 +66,21 @@ const GameTypeSelectorWrapper = React.createClass({
 	handleClick: function(radioButtonId) {
 		const binding = this.getDefaultBinding();
 
-		let rivals = Immutable.List();
+		let rivals = [];
 
 		switch (radioButtonId) {
 			case this.RADIO_BUTTON_IDS.INTER_SCHOOLS_RADIO_BUTTON:
-				rivals = rivals.push(binding.get('schoolInfo'));
+				rivals.push(binding.toJS('schoolInfo'));
 				break;
 			case this.RADIO_BUTTON_IDS.INTERNAL_RADIO_BUTTON:
-				rivals = Immutable.fromJS([
-					{
+				rivals.push({
 						id: null,
 						name: ''
 					},
 					{
 						id: null,
 						name: ''
-					}
-				]);
+					});
 				break;
 		}
 

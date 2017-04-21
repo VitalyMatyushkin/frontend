@@ -101,19 +101,31 @@ const	TeamChooser	= React.createClass({
 		self._closeTeamList();
 		self.props.onTeamClick(teamId, team);
 	},
+	isBlackListTeam: function(teamId) {
+		const	binding			= this.getDefaultBinding(),
+				teamIdBlackList	= binding.toJS('teamIdBlackList');
+
+		return Boolean(teamIdBlackList.find(t => t.id === teamId));
+	},
 	_renderTeamList: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				teams			= binding.toJS('teams'),
-				exceptionTeamId	= binding.toJS('exceptionTeamId'),
+				teamIdBlackList	= binding.toJS('teamIdBlackList'),
 				selectedTeamId	= binding.toJS('selectedTeamId');
 		let		teamItems		= [];
 
-		if(!teams ||
-			teams && (
-				teams.length === 0 ||
-				teams.length === 1 && teams[0].id === exceptionTeamId ||
-				teams.length === 1 && teams[0].id === selectedTeamId
+		if(
+			typeof teams === 'undefined' ||
+			(
+				typeof teams !== 'undefined' && (
+					// There are no teams
+					teams.length === 0 ||
+					// Only one team from blacklist
+					teams.length === 1 && this.isBlackListTeam(teams[0].id) ||
+					// Selected team is only one team
+					teams.length === 1 && teams[0].id === selectedTeamId
+				)
 			)
 		) {
 			teamItems.push((
@@ -124,8 +136,9 @@ const	TeamChooser	= React.createClass({
 				</div>
 			)) ;
 		} else if(teams && teams.length !== 0) {
-			// it doesn't show selected team and team selected for opponent
-			teamItems = teams.filter(team => team.id !== selectedTeamId && team.id !== exceptionTeamId)
+			teamItems = teams
+				// filter black list teams and selected team
+				.filter(team => team.id !== selectedTeamId && !this.isBlackListTeam(teams[0].id))
 				.map((team, index) => {
 					const teamClass = classNames({
 						eTeamChooser_team:	true,

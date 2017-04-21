@@ -54,7 +54,7 @@ const ConfirmPopup = React.createClass({
 
 		return (
 			<div>
-				<div className="eConfirmPopup_overlay">
+				<div className="bPopupOverlay">
 					<div className={this.getConfirmPopupStyle()}>
 						<div className={bodyStyle}>
 							{this.props.children}

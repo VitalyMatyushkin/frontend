@@ -15,7 +15,8 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
 		TimeInputWrapper				= require('../time_input_wrapper'),
 		EventVenue						= require('../event_venue'),
-		SquareCrossButton				= require('module/ui/square_cross_button');
+		SquareCrossButton				= require('module/ui/square_cross_button'),
+		HousesManager					= require('module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager');
 
 // Helpers
 const	EventFormActions				= require('./event_form_actions'),
@@ -52,62 +53,6 @@ const EventForm = React.createClass({
 	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
-	},
-	/**
-	 * House filtering service...
-	 * @param houseName
-	 * @returns {*}
-	 */
-	serviceHouseFilter: function(order, houseName) {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				schoolId	= binding.get('schoolInfo.id');
-
-		const filter = {
-			where: {
-				name: {
-					like: houseName,
-					options: 'i'
-				}
-			},
-			order:'name ASC'
-		};
-
-		const otherHouseId = self._getOtherHouseId(order);
-
-		if(otherHouseId !== undefined && otherHouseId !== null) {
-			filter.where.id = {
-				$nin: [otherHouseId]
-			};
-		}
-
-		return window.Server.schoolHouses.get(
-			{
-				schoolId: schoolId,
-				filter: filter
-			}
-		);
-	},
-	/**
-	 * Get house ID from other autocomplete
-	 * @param currHouseIndex -
-	 * @private
-	 */
-	_getOtherHouseId: function(currHouseIndex) {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-		let		otherHouseId;
-
-		switch (currHouseIndex) {
-			case 0:
-				otherHouseId = binding.toJS('rivals.1.id');
-				break;
-			case 1:
-				otherHouseId = binding.toJS('rivals.0.id');
-				break;
-		}
-
-		return otherHouseId;
 	},
 	getMainSchoolFilter: function(rivals, schoolName) {
 		return {
@@ -288,9 +233,12 @@ const EventForm = React.createClass({
 		);
 
 		return (
-			<span>
+			<div className="bInputWrapper">
+				<div className="bInputLabel">
+					Choose schools
+				</div>
 				{choosers}
-			</span>
+			</div>
 		);
 	},
 	render: function() {
@@ -347,39 +295,17 @@ const EventForm = React.createClass({
 						</select>
 					</div>
 				</If>
-				<div className="bInputWrapper">
-					{type === 'inter-schools' ? <div className="bInputLabel">Choose schools</div> : null}
-					<If	condition	= {type === 'inter-schools'}
-						key			= {'if-choose-school'}
-					>
-						{ this.renderSchoolChoosers() }
-					</If>
-					{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
-					<If condition={type === 'houses'}>
-						<div>
-							<div className="bHouseAutocompleteWrapper">
-								<Autocomplete
-									defaultItem		= {binding.toJS('rivals.0')}
-									serviceFilter	= {self.serviceHouseFilter.bind(null, 0)}
-									serverField		= "name"
-									placeholder		= {'Select the first house'}
-									onSelect		= {self.onSelectRival.bind(null, 0)}
-									binding			= {binding.sub('autocomplete.houses.0')}
-									extraCssStyle	= {'mBigSize mWhiteBG'}
-								/>
-							</div>
-							<Autocomplete
-								defaultItem		= {binding.toJS('rivals.1')}
-								serviceFilter	= {self.serviceHouseFilter.bind(null, 1)}
-								serverField		= "name"
-								placeholder		= "Select the second house"
-								onSelect		= {self.onSelectRival.bind(null, 1)}
-								binding			= {binding.sub('autocomplete.houses.1')}
-								extraCssStyle	= {'mBigSize mWhiteBG'}
-							/>
-						</div>
-					</If>
-				</div>
+				<If	condition	= {type === 'inter-schools'}
+					key			= {'if-choose-school'}
+				>
+					{ this.renderSchoolChoosers() }
+				</If>
+				<If condition={type === 'houses'}>
+					<HousesManager
+						binding			= { binding }
+						activeSchoolId	= { binding.get('schoolInfo.id') }
+					/>
+				</If>
 				<EventVenue	binding					= { binding }
 							eventType				= { binding.toJS('model.type') }
 							activeSchoolInfo		= { binding.toJS('schoolInfo') }

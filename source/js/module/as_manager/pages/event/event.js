@@ -31,6 +31,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		Button							= require('../../../ui/button/button'),
 		EventHelper						= require('module/helpers/eventHelper'),
 		RoleHelper						= require('./../../../helpers/role_helper'),
+		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
@@ -155,7 +156,11 @@ const Event = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			if(!TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+			//TODO it's temp. only for event refactoring period.
+			if(
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData)
+			) {
 				EventResultHelper.initializeEventResults(eventData);
 			}
 
@@ -200,7 +205,12 @@ const Event = React.createClass({
 
 			self.initTabs();
 
-			if(TeamHelper.isTeamSport(eventData) && !TeamHelper.isInterSchoolsEventForTeamSport(eventData)) {
+			//TODO it's temp. only for event refactoring period.
+			if(
+				TeamHelper.isTeamSport(eventData) &&
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData)
+			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
@@ -229,14 +239,22 @@ const Event = React.createClass({
 		}
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
-		if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+		//TODO it's temp. only for event refactoring period.
+		if(
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event)
+		) {
+			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return false;
+			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+			} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			}
+		} else {
 			return false;
-		} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
-		} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
-			return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
-		} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
 		}
 	},
 	hasTeamPlayersByOrder: function(event, order) {
@@ -825,6 +843,22 @@ const Event = React.createClass({
 
 		binding.set("isEditEventPopupOpen", false);
 	},
+	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
+		const binding = this.getDefaultBinding();
+
+		const newValue = !binding.get('opponentSchoolManager.isOpen');
+
+		if(newValue) {
+			const opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`);
+
+			binding.atomically()
+				.set('opponentSchoolManager.isOpen',			newValue)
+				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
+				.commit();
+		} else {
+			binding.set('opponentSchoolManager.isOpen', newValue);
+		}
+	},
 	renderEditEventPopupOpen: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -866,11 +900,16 @@ const Event = React.createClass({
 				point 			= binding.toJS('model.venue.postcodeData.point'),
 				isNewEvent		= binding.get('isNewEvent');
 
-		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+		//TODO it's temp. only for event refactoring period.
+		if(
+			TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+			TeamHelper.isHousesEventForTeamSport(event)
+		) {
 			return (
-				<Rivals	binding				= {binding}
-						activeSchoolId		= {this.props.activeSchoolId}
-						onClearTeamScore	= {this.clearTeamScoreByTeamId}
+				<Rivals	binding									= { binding }
+						activeSchoolId							= { this.props.activeSchoolId }
+						onClearTeamScore						= { this.clearTeamScoreByTeamId }
+						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 				/>
 			);
 		} else {
@@ -895,12 +934,32 @@ const Event = React.createClass({
 			);
 		}
 	},
+	renderOpponentSchoolManager: function() {
+		const binding = this.getDefaultBinding();
+
+		const isOpen = binding.toJS('opponentSchoolManager.isOpen');
+
+		if(isOpen) {
+			const opponentSchoolId = binding.toJS('opponentSchoolManager.opponentSchoolId');
+
+			return (
+				<OpponentSchoolManager
+					activeSchoolId		= { this.props.activeSchoolId }
+					opponentSchoolId	= { opponentSchoolId }
+					onReload			= { this.props.onReload }
+					binding				= { binding }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
 				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
 				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
 				event 		= binding.toJS('model');
-		
+
 		if (sportName === 'cricket' && mode === 'closing') {
 			return (
 				<div className="eSelectForCricketWrapper">
@@ -1016,7 +1075,8 @@ const Event = React.createClass({
 								/>
 							</div>
 						</div>
-						{this.renderEditEventPopupOpen()}
+						{ this.renderOpponentSchoolManager() }
+						{ this.renderEditEventPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode

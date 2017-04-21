@@ -1,20 +1,21 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
-		Autocomplete				= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		ConfirmPopup				= require('./../../../../ui/confirm_popup'),
-		GeoSearchHelper				= require('../../../../helpers/geo_search_helper'),
-		SchoolListItem				= require('./../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		EventHelper					= require('../../events/eventHelper'),
-		If							= require('../../../../ui/if/if'),
+		Autocomplete				= require('./../../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		ConfirmPopup				= require('./../../../../../ui/confirm_popup'),
+		GeoSearchHelper				= require('../../../../../helpers/geo_search_helper'),
+		SchoolListItem				= require('./../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		EventHelper					= require('../../../events/eventHelper'),
+		If							= require('../../../../../ui/if/if'),
 		propz						= require('propz'),
-		ChangeOpponentSchoolStyle	= require('../../../../../../styles/ui/b_change_opponent_school_popup.scss');
+		ChangeOpponentSchoolStyle	= require('../../../../../../../styles/ui/b_change_opponent_school_popup.scss');
 
-const ChangeOpponentSchoolPopup = React.createClass({
+const OpponentSchoolManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		onReload:		React.PropTypes.func.isRequired
+		activeSchoolId:		React.PropTypes.string.isRequired,
+		opponentSchoolId:	React.PropTypes.string.isRequired,
+		onReload:			React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
 		this.getDefaultBinding().atomically()
@@ -30,14 +31,13 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		const	binding				= this.getDefaultBinding(),
 				activeSchoolId		= this.props.activeSchoolId,
 				activeSchoolInfo	= binding.toJS('activeSchoolInfo'),
+				opponentSchoolId	= this.props.opponentSchoolId,
 				event				= binding.toJS('model'),
-				newSchool			= binding.toJS('autocompleteChangeOpponentSchool.school');
+				newSchool			= binding.toJS('opponentSchoolManager.opponentSchoolInput.school');
 
-		// change school in event
-		event.invitedSchools = [newSchool];
-		event.invitedSchoolIds = [newSchool.id];
-
-		binding.set('model', Immutable.fromJS(event));
+		const opponentSchoolIdIndex = event.invitedSchoolIds.find(schoolId => schoolId === opponentSchoolId);
+		event.invitedSchoolIds.splice(opponentSchoolIdIndex, 1);
+		event.invitedSchoolIds.push(newSchool.id);
 
 		// change school on server
 		window.Server.schoolEventChangeOpponent.post(
@@ -54,7 +54,11 @@ const ChangeOpponentSchoolPopup = React.createClass({
 					activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
 
 			switch (true) {
-				case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined' && typeof activeSchoolPostcodeId === 'undefined':
+				case (
+					venueType === 'AWAY' &&
+					typeof newSchoolPostcodeId === 'undefined' &&
+					typeof activeSchoolPostcodeId === 'undefined'
+				):
 					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
 				case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
 					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
@@ -105,12 +109,12 @@ const ChangeOpponentSchoolPopup = React.createClass({
 	closeSavingChangesModePopup: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.set('isChangeOpponentSchoolPopupOpen', false);
+		binding.set('opponentSchoolManager.isOpen', false);
 	},
 	handleChangeOpponentSchool: function(id, model) {
 		const binding = this.getDefaultBinding();
 
-		binding.set('autocompleteChangeOpponentSchool.school', Immutable.fromJS(model));
+		binding.set('opponentSchoolManager.opponentSchoolInput.school', Immutable.fromJS(model));
 	},
 	serviceSchoolFilter: function(schoolName) {
 		const	self				= this,
@@ -120,11 +124,13 @@ const ChangeOpponentSchoolPopup = React.createClass({
 				distance			= binding.toJS('distance'),
 				event				= binding.toJS('model');
 
+		const nin = event.invitedSchoolIds.concat(this.props.activeSchoolId);
+
 		const filter = {
 			filter: {
 				where: {
 					id: {
-						$nin: [this.props.activeSchoolId, event.invitedSchoolIds[0]]
+						$nin: nin
 					},
 					name: {
 						like: schoolName,
@@ -166,7 +172,7 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
-			.set('autocompleteChangeOpponentSchool.school',	undefined)
+			.set('opponentSchoolManager.opponentSchoolInput.school',	undefined)
 			.set('schoolSelectorKey',						Immutable.fromJS(this.getRandomString()))
 			.set('distance',								eventDescriptor.target.value)
 			.commit();
@@ -207,13 +213,13 @@ const ChangeOpponentSchoolPopup = React.createClass({
 							Opponent school
 						</div>
 						<Autocomplete	key				= {binding.toJS('schoolSelectorKey')}
-										defaultItem		= {binding.toJS('autocompleteChangeOpponentSchool.school')}
+										defaultItem		= {binding.toJS('opponentSchoolManager.school')}
 										customListItem	= { SchoolListItem }
 										serviceFilter	= {this.serviceSchoolFilter}
 										serverField		= "name"
 										placeholder		= "enter school name"
 										onSelect		= {this.handleChangeOpponentSchool}
-										binding			= {binding.sub('autocompleteChangeOpponentSchool')}
+										binding			= {binding.sub('opponentSchoolManager')}
 										extraCssStyle	= "ePopup mBigSize mWhiteBG"
 						/>
 					</div>
@@ -223,4 +229,4 @@ const ChangeOpponentSchoolPopup = React.createClass({
 	}
 });
 
-module.exports = ChangeOpponentSchoolPopup;
+module.exports = OpponentSchoolManager;
