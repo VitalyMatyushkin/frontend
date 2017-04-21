@@ -88,8 +88,8 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isEditEventPopupOpen', true);
 	},
-	isTweetButtonRender: function(role, twitterData: any){
-		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0;
+	isTweetButtonRender: function(role, twitterData, mode: any){
+		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
 	/**
 	 * The function render's component EventHeaderWrapper
@@ -126,7 +126,7 @@ const EventHeaderWrapper = React.createClass({
 						onClickEditEventButton			= { this.onClickEditEventButton }
 						//props for tweet button
 						twitterData 					= { twitterData }
-						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData) }
+						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }
 						schoolDomain 					= { schoolDomain }
 						activeSchoolId 					= { this.props.activeSchoolId }
 						twitterIdDefault 				= { twitterIdDefault }
