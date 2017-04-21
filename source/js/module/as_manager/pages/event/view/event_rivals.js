@@ -4,6 +4,7 @@ const	EventHelper					= require('module/helpers/eventHelper'),
 		PencilButton				= require('./../../../../ui/pencil_button'),
 		Sport						= require('module/ui/icons/sport_icon'),
 		Score						= require('./../../../../ui/score/score'),
+		ScoreCricket				= require('./../../../../ui/score/score_cricket'),
 		ScoreConsts					= require('./../../../../ui/score/score_consts'),
 		Morearty					= require('morearty'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
@@ -127,19 +128,36 @@ const EventRival = React.createClass({
 		const	mode						= binding.toJS('mode'),
 				status						= binding.toJS('model.status'),
 				isa 						= !individualScoreAvailable || teamBundleName != 'teamsData';
-
-		return (
-			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
-						plainPoints		= {points}
-						pointsStep		= {event.sport.points.pointsStep}
-						pointsType		= {event.sport.points.display}
-						pointsMask		= {event.sport.points.inputMask}
-						onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
-						modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
-				/>
-			</div>
-		);
+		
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
+		if (event.sport.name.toLowerCase() === 'cricket') {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
+									plainPoints		= {points}
+									pointsStep		= {event.sport.points.pointsStep}
+									pointsType		= {event.sport.points.display}
+									pointsMask		= {event.sport.points.inputMask}
+									onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
+									modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
+					/>
+				</div>
+			);
+		} else {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
+							plainPoints		= {points}
+							pointsStep		= {event.sport.points.pointsStep}
+							pointsType		= {event.sport.points.display}
+							pointsMask		= {event.sport.points.inputMask}
+							onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
+							modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
+					/>
+				</div>
+			);
+		}
 	},
 	getTeamScoreData: function(event, order) {
 		const	self	= this,

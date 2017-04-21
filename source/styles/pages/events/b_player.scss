@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: row;
   justify-content: left;
+  flex-wrap: wrap;
 
   max-width: 260px;
   padding: 15px 0;
@@ -54,10 +55,22 @@
   align-self: center;
   min-width: 45px;
   display: inline-block;
+  .ePlayer_score_runs,
+  .ePlayer_score_wickets{
+	color: #8c8c8c;
+  }
 
   &.mBig {
     color: #007abf;
     font-size: 43px;
+  }
+  &.mMedium {
+	font-size: 26px;
+	color: #007abf;
+	.ePlayer_score_runs,
+	.ePlayer_score_wickets{
+	  color: #007abf;
+	}
   }
 }
 .ePlayer_scoreContainer {

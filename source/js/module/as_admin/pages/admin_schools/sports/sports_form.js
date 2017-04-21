@@ -400,8 +400,7 @@ const SportsForm = React.createClass({
 							name			= { self.props.title }
 							onSubmit		= { self.props.onFormSubmit }
 							binding			= { binding }
-							formStyleClass	= 'mWide'
-							formStyleClass	= 'row'
+							formStyleClass	= 'mWide row'
 					>
 						<FormColumn customStyle='col-md-4'>
 							<FormTitle text={'Summary'}/>
@@ -439,6 +438,13 @@ const SportsForm = React.createClass({
 									field		= 'individualResultsAvailable'
 								>
 									Is individual results available
+								</FormField>
+								<FormField
+									classNames	= 'mWideSingleLine'
+									type		= 'checkbox'
+									field		= 'multiparty'
+								>
+									Is several teams available
 								</FormField>
 							</FormBlock>
 

@@ -1,6 +1,7 @@
-const	React		= require('react'),
-		Score		= require('module/ui/score/score'),
-		RivalHelper	= require('module/as_manager/pages/event/view/rivals/rival_helper');
+const	React			= require('react'),
+		Score			= require('module/ui/score/score'),
+		ScoreCricket	= require('module/ui/score/score_cricket'),
+		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper');
 
 const PlayerScore = React.createClass({
 	propTypes: {
@@ -26,17 +27,32 @@ const PlayerScore = React.createClass({
 				isOwner						= this.props.isOwner,
 				individualScoreAvailable	= this.props.individualScoreAvailable;
 
-		return (
-			<span className="ePlayer_scoreContainer">
-				<Score	isChangeMode	= {RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable}
-						plainPoints		= {this.getPointsByStudent(event, player.userId)}
-						pointsStep		= {event.sport.points.pointsStep}
-						pointsType		= {event.sport.points.display}
-						pointsMask		= {event.sport.points.inputMask}
-						onChange		= {this.onChange}
-				/>
-			</span>
-		);
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
+		if (event.sport.name.toLowerCase() === 'cricket') {
+			return (
+				<div className="ePlayer_scoreCricketContainer">
+					<ScoreCricket	isChangeMode	= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }
+									plainPoints		= { this.getPointsByStudent(event, player.userId) }
+									pointsStep		= { event.sport.points.pointsStep }
+									onChange		= { this.onChange }
+									isPlayerScore 	= { true }
+					/>
+				</div>
+			);
+		} else {
+			return (
+				<span className="ePlayer_scoreContainer">
+					<Score	isChangeMode	= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }
+							plainPoints		= { this.getPointsByStudent(event, player.userId) }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.onChange }
+					/>
+				</span>
+			);
+		}
 	}
 });
 

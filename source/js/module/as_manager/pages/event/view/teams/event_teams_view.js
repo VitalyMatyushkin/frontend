@@ -4,6 +4,7 @@ const	If				= require('module/ui/if/if'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		eventConst		= require('module/helpers/consts/events'),
 		Score			= require('./../../../../../ui/score/score'),
+		ScoreCricket	= require('./../../../../../ui/score/score_cricket'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
@@ -360,6 +361,36 @@ const EventTeamsView = React.createClass({
 			return player1.result - player2.result;
 		});
 	},
+	
+	renderScore: function(event, mode, isOwner, individualScoreAvailable, player, teamId){
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
+		if (event.sport.name.toLowerCase() === 'cricket') {
+			return (
+				<span className="ePlayer_scoreCricketContainer">
+					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+									plainPoints		= { this.getPointsByStudent(event, player.userId) }
+									pointsStep		= { event.sport.points.pointsStep }
+									onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
+									isPlayerScore 	= { true }
+					/>
+				</span>
+			);
+		} else {
+			return (
+				<span className="ePlayer_scoreContainer">
+					<Score	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+							plainPoints		= { this.getPointsByStudent(event, player.userId) }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
+					/>
+				</span>
+			);
+		}
+	},
+	
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
 
@@ -391,15 +422,7 @@ const EventTeamsView = React.createClass({
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
 						&& individualScoreAvailable
 					}>
-						<span className="ePlayer_scoreContainer">
-							<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-									plainPoints		= {self.getPointsByStudent(event, player.userId)}
-									pointsStep		= {event.sport.points.pointsStep}
-									pointsType		= {event.sport.points.display}
-									pointsMask		= {event.sport.points.inputMask}
-									onChange		= {self.handleChangeScore.bind(self, event, teamId, player)}
-							/>
-						</span>
+						{this.renderScore(event, mode, isOwner, individualScoreAvailable, player, teamId)}
 					</If>
 				</div>
 			);

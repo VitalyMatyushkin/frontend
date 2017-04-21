@@ -27,10 +27,34 @@ input[type="text"].eScore_Points {
       font-size: 43px;
       width: 100px;
     }
+
+	&.mMedium {
+	  color: #007abf;
+	  font-size: 20px;
+	  width: 100px;
+	}
   }
 
   &.mDistance{
     width: 75px;
+  }
+}
+
+.eScoreCricketPoint{
+  display: inline-block;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+.ePlayer_scoreCricketContainer{
+  width: 100%;
+}
+
+.eScoreCricketWrapper {
+  font-size: 16px;
+  width: 260px;
+
+  &.mTeam{
+	font-size: 20px;
   }
 }
 

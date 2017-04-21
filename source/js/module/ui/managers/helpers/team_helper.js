@@ -1011,6 +1011,20 @@ function convertPoints(countPoints, pointsType){
 
 	return result;
 }
+/**
+ * Convert count points of cricket to extended result
+ * @param {number} countPoints - count of points
+ * @returns {object} result - extended result(runs, wickets)
+ * */
+function convertPointsCricket(countPoints){
+	const 	runs 	= Math.floor(countPoints),
+			wickets = Math.round(countPoints*10) % 10;
+
+	return {
+		runs:runs,
+		wickets:wickets
+	};
+}
 
 /** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
 function getSchoolsData(event) {
@@ -1352,6 +1366,7 @@ const TeamHelper = {
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
 	convertPoints:							convertPoints,
+	convertPointsCricket:					convertPointsCricket,
 	updateTeam:								updateTeam,
 	operationByType:						operationByType,
 	decByType:								decByType,
