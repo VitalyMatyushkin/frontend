@@ -42,7 +42,7 @@ const SelectForCricketWrapper = React.createClass({
 		let matchAwardedArray = [];
 		const 	leftTeamId 			= this.getTeamsIdOrderByResults(event).leftTeamId,
 				rightTeamId 		= this.getTeamsIdOrderByResults(event).rightTeamId;
-		console.log('hmmm');
+
 		matchAwardedArray.push(`Match awarded to ${this.getRivalName(leftTeamId)}`);
 		matchAwardedArray.push(`Match awarded to ${this.getRivalName(rightTeamId)}`);
 		
