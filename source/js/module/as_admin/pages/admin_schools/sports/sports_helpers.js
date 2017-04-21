@@ -128,7 +128,8 @@ const SportsHelpers = {
 			performance:                    [],
             discipline:                     [],
             fieldPic:                       undefined,
-            individualResultsAvailable:     true
+            individualResultsAvailable:     true,
+			multiparty:						true
         };
     },
     convertServerDataToFormData: function(serverData) {
@@ -156,6 +157,7 @@ const SportsHelpers = {
         formData.field                      = self.getData(serverData, 'field');
         formData.fieldPic                   = self.getData(serverData, 'field.pic');
         formData.individualResultsAvailable = self.getData(serverData, 'individualResultsAvailable');
+        formData.multiparty 				= self.getData(serverData, 'multiparty');
 
         return formData;
     },
@@ -211,7 +213,8 @@ const SportsHelpers = {
                                         })),
             field:                      dataFromForm.field,
             icon:                       dataFromForm.icon,
-            individualResultsAvailable: dataFromForm.individualResultsAvailable
+            individualResultsAvailable: dataFromForm.individualResultsAvailable,
+			multiparty: 				dataFromForm.multiparty
         };
 
         dataToPost.field.positions = self.filterEmptyPositionsItems(dataFromForm.field.positions);
