@@ -15,6 +15,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		EditingTeamsButtons 			= require('./view/editing_teams_buttons'),
 		EventTeams						= require('./view/teams/event_teams'),
 		Performance						= require('./view/performance/performance'),
+		NewPerformance					= require('./view/new_performance/new_performance'),
 		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
 		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
 		EventGallery					= require('./new_gallery/event_gallery'),
@@ -47,6 +48,7 @@ const Event = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			isRivalsSync: false,
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
 			model: {},
@@ -973,6 +975,31 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	renderPerformance: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				mode			= binding.toJS('mode'),
+				point			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
+
+		//TODO it's temp. only for event refactoring period.
+		if(TeamHelper.isHousesEventForTeamSport(event)) {
+			return (
+				<NewPerformance	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return (
+				<Performance	binding			= {self.getPerformanceTabBinding()}
+								activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			);
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -1026,9 +1053,7 @@ const Event = React.createClass({
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<Performance	binding			= {self.getPerformanceTabBinding()}
-													activeSchoolId	= {this.props.activeSchoolId}
-									/>
+									{ this.renderPerformance() }
 								</div>
 							</If>
 							<If condition={activeTab === 'discipline'} >
