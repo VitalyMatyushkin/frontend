@@ -97,7 +97,10 @@ const Rivals = React.createClass({
 			}
 		}
 
-		binding.set('rivals', Immutable.fromJS(rivals));
+		binding.atomically()
+			.set('isRivalsSync',	true)
+			.set('rivals',			Immutable.fromJS(rivals))
+			.commit();
 
 		this.addListenerForTeamScore();
 

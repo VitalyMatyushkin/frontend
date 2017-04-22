@@ -411,8 +411,6 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-		console.log(this.getBinding('error').toJS());
-
 		return (
 			<div className="bTeamsManager">
 				<RivalChooser
