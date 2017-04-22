@@ -124,7 +124,6 @@ const SchoolRivalInfo = React.createClass({
 									plainPoints		= { points }
 									pointsStep		= { event.sport.points.pointsStep }
 									pointsType		= { event.sport.points.display }
-									pointsMask		= { event.sport.points.inputMask }
 									onChange		= { this.onChangeScore }
 									modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
 					/>

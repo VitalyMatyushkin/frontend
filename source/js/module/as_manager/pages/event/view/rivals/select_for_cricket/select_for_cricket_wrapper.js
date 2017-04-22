@@ -65,17 +65,13 @@ const SelectForCricketWrapper = React.createClass({
 			if (runsForLeftTeam - runsForRightTeam > 0) {
 				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`);
 				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by an innings and ${runsForLeftTeam - runsForRightTeam} runs`);
-				if (wicketsForLeftTeam - wicketsForRightTeam >= 0) {
-					teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${CRICKET_WICKETS - wicketsForLeftTeam} wickets`);
-				}
+				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${CRICKET_WICKETS - wicketsForLeftTeam} wickets`);
 			}
 
 			if (runsForLeftTeam - runsForRightTeam < 0) {
 				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`);
 				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by an innings and ${runsForRightTeam - runsForLeftTeam} runs`);
-				if (wicketsForLeftTeam - wicketsForRightTeam <= 0) {
-					teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${CRICKET_WICKETS - wicketsForRightTeam} wickets`);
-				}
+				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${CRICKET_WICKETS - wicketsForRightTeam} wickets`);
 			}
 		
 		return teamResultsArray;
