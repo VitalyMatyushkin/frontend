@@ -17,6 +17,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		Performance						= require('./view/performance/performance'),
 		NewPerformance					= require('./view/new_performance/new_performance'),
 		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
+		NewDiscipline					= require('module/as_manager/pages/event/view/new_discipline/new_discipline'),
 		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
 		EventGallery					= require('./new_gallery/event_gallery'),
 		ManagerWrapper					= require('./view/manager_wrapper/manager_wrapper'),
@@ -979,11 +980,7 @@ const Event = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				showingComment	= binding.get('showingComment'),
-				mode			= binding.toJS('mode'),
-				point			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent');
+		const	event			= binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
 		if(TeamHelper.isHousesEventForTeamSport(event)) {
@@ -996,6 +993,27 @@ const Event = React.createClass({
 			return (
 				<Performance	binding			= {self.getPerformanceTabBinding()}
 								activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			);
+		}
+	},
+	renderDiscipline: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model');
+
+		//TODO it's temp. only for event refactoring period.
+		if(TeamHelper.isHousesEventForTeamSport(event)) {
+			return (
+				<NewDiscipline	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return (
+				<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
+									activeSchoolId	= {this.props.activeSchoolId}
 				/>
 			);
 		}
@@ -1058,9 +1076,7 @@ const Event = React.createClass({
 							</If>
 							<If condition={activeTab === 'discipline'} >
 								<div className="bEventBottomContainer">
-									<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
-														activeSchoolId	= {this.props.activeSchoolId}
-									/>
+									{ this.renderDiscipline() }
 								</div>
 							</If>
 							<If condition={activeTab === 'tasks'} >
