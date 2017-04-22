@@ -588,20 +588,30 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 		let		isStepComplete	= false;
 
-		const hasError = binding.toJS('error').findIndex(err => err.isError) !== -1;
-
 		switch (step) {
 			case 1:
 				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
-				if(
-					binding.toJS('model.type') === 'inter-schools' && !hasError || 						// for any INTER-SCHOOLS events
-					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !hasError ||	// for INDIVIDUAL INTERNAL events
-					!hasError// for any other type of event
-				) {
+				const	event		= binding.toJS('model'),
+						eventType	= event.type,
+						hasError	= binding.toJS('error')
+							.filter((err, index) => {
+								// filter some error bundles
+								if(
+									eventType === 'inter-schools' ||
+									TeamHelper.isInternalEventForIndividualSport(event)
+								) {
+									return index === 0;
+								} else {
+									return true;
+								}
+							})
+							.findIndex(err => err.isError) !== -1;
+
+				if(!hasError) {
 					isStepComplete = true;
-				};
+				}
 				break;
 		}
 
