@@ -123,23 +123,23 @@ ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventT
 };
 
 ChallengeModel.prototype.getRunsForLeftSide = function(event, activeSchoolId){
-	const scoreForLeftSide = this._getScoreAr(event, activeSchoolId);
-	return scoreForLeftSide[0].split('/')[0];
+	const scoreArray = this.scoreAr;
+	return scoreArray[0].split('/')[0];
 };
 
 ChallengeModel.prototype.getRunsForRightSide = function(event, activeSchoolId){
-	const scoreForRightSide = this._getScoreAr(event, activeSchoolId);
-	return scoreForRightSide[1].split('/')[0];
+	const scoreArray = this.scoreAr;
+	return scoreArray[1].split('/')[0];
 };
 
 ChallengeModel.prototype.getWicketsForLeftSide = function(event, activeSchoolId){
-	const scoreForLeftSide = this._getScoreAr(event, activeSchoolId);
-	return scoreForLeftSide[0].split('/')[1];
+	const scoreArray = this.scoreAr;
+	return scoreArray[0].split('/')[1];
 };
 
 ChallengeModel.prototype.getWicketsForRightSide = function(event, activeSchoolId){
-	const scoreForRightSide = this._getScoreAr(event, activeSchoolId);
-	return scoreForRightSide[1].split('/')[1];
+	const scoreArray = this.scoreAr;
+	return scoreArray[1].split('/')[1];
 };
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
@@ -149,7 +149,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 					teamsData 		= event.teamsData,
 					schoolsData		= TeamHelper.getSchoolsData(event),
 					eventType 		= event.eventType,
-					lostInResults 	= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost,' : '',
+					lostInResults 	= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost, ' : '',
 					runsAbs 		= Math.abs(Number(this.getRunsForLeftSide(event, activeSchoolId) - Number(this.getRunsForRightSide(event, activeSchoolId)))),
 					wicketsLeft 	= Math.abs(CRICKET_WICKETS - Number(this.getWicketsForLeftSide(event, activeSchoolId))),
 					wicketsRight 	= Math.abs(CRICKET_WICKETS - Number(this.getWicketsForRightSide(event, activeSchoolId)));
@@ -164,13 +164,13 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				case result === 'won_by_wickets' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
 					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${wicketsLeft} wickets`;
 				case result === 'won_by_innings_and_runs' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
-					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by innings and ${runsAbs} runs`;
 				case result === 'won_by_runs' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
-					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+					return `${lostInResults}${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
 				case result === 'won_by_wickets' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
 					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${wicketsRight} wickets`;
 				case result === 'won_by_innings_and_runs' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
-					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+					return `${lostInResults}${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by innings and ${runsAbs} runs`;
 				case result === 'match_awarded' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
 					return `Match awarded to ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)}`;
 				case result === 'match_awarded' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
