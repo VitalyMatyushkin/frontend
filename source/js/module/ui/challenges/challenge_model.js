@@ -30,6 +30,9 @@ const   DateHelper  = require('module/helpers/date_helper'),
  * @property {array} scoreAr - array of event score strings. scoreAr[0] - left, scoreAr[1] - right context
  *
  * */
+
+const CRICKET_WICKETS = 10;
+
 const ChallengeModel = function(event, activeSchoolId){
 	this.id 		= event.id;
     this.name 		= this._getName(event, activeSchoolId);
@@ -47,7 +50,7 @@ const ChallengeModel = function(event, activeSchoolId){
     this.rivals 	= this._getRivals(event, activeSchoolId);
 	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
 	this.score 		= this._getScore(event);
-	this.textResult	= this._getTextResult(event);
+	this.textResult	= this._getTextResult(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getName = function(event, activeSchoolId){
@@ -80,7 +83,6 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 			result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
 		}
 
-
 		return [result1, result2];
 	} else {
 		return ['-','-'];
@@ -98,8 +100,87 @@ ChallengeModel.prototype._getScore = function(){
 	}
 };
 
-ChallengeModel.prototype._getTextResult = function(event){
-		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS") {
+ChallengeModel.prototype.isTeamFromActiveSchoolCricket = function(teamId, activeSchoolId, teamsData){
+	teamsData = teamsData.filter(team => team.schoolId === activeSchoolId);
+	return teamId === teamsData[0].id;
+};
+
+ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventType, schoolsData, housesData){
+	switch(true){
+		case eventType === 'EXTERNAL_SCHOOLS':
+			teamsData = teamsData.filter(team => {return team.id === teamId});
+			schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
+			return schoolsData[0].name;
+		case eventType === 'INTERNAL_TEAMS':
+			teamsData = teamsData.filter(team => {return team.id === teamId});
+			return teamsData[0].name;
+		case eventType === 'INTERNAL_HOUSES':
+			teamsData = teamsData.filter(team => {return team.id === teamId});
+			return teamsData[0].name;
+		default:
+			return 'undefined'
+	}
+};
+
+ChallengeModel.prototype.getRunsForLeftSide = function(event, activeSchoolId){
+	const scoreForLeftSide = this._getScoreAr(event, activeSchoolId);
+	return scoreForLeftSide[0].split('/')[0];
+};
+
+ChallengeModel.prototype.getRunsForRightSide = function(event, activeSchoolId){
+	const scoreForRightSide = this._getScoreAr(event, activeSchoolId);
+	return scoreForRightSide[1].split('/')[0];
+};
+
+ChallengeModel.prototype.getWicketsForLeftSide = function(event, activeSchoolId){
+	const scoreForLeftSide = this._getScoreAr(event, activeSchoolId);
+	return scoreForLeftSide[0].split('/')[1];
+};
+
+ChallengeModel.prototype.getWicketsForRightSide = function(event, activeSchoolId){
+	const scoreForRightSide = this._getScoreAr(event, activeSchoolId);
+	return scoreForRightSide[1].split('/')[1];
+};
+
+ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
+		if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
+			const 	teamId 			= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
+					result 			= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
+					teamsData 		= event.teamsData,
+					schoolsData		= TeamHelper.getSchoolsData(event),
+					eventType 		= event.eventType,
+					lostInResults 	= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost,' : '',
+					runsAbs 		= Math.abs(Number(this.getRunsForLeftSide(event, activeSchoolId) - Number(this.getRunsForRightSide(event, activeSchoolId)))),
+					wicketsLeft 	= Math.abs(CRICKET_WICKETS - Number(this.getWicketsForLeftSide(event, activeSchoolId))),
+					wicketsRight 	= Math.abs(CRICKET_WICKETS - Number(this.getWicketsForRightSide(event, activeSchoolId)));
+
+			switch (true) {
+				case result === 'tie' || result === 'draw' || result === 'tbd':
+					return result.toUpperCase();
+				case result === 'no_result':
+					return `No result`;
+				case result === 'won_by_runs' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+				case result === 'won_by_wickets' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${wicketsLeft} wickets`;
+				case result === 'won_by_innings_and_runs' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+				case result === 'won_by_runs' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+				case result === 'won_by_wickets' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${wicketsRight} wickets`;
+				case result === 'won_by_innings_and_runs' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `${lostInResults} ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)} won by ${runsAbs} runs`;
+				case result === 'match_awarded' && this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `Match awarded to ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)}`;
+				case result === 'match_awarded' && !this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData):
+					return `Match conceded to ${this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData)}`;
+				default:
+					return `No result yet`;
+			}
+		}
+	
+		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && event.sport.name.toLowerCase() !== 'cricket') {
 			const scoreArray = this.scoreAr;
 
 			switch (event.sport.scoring) {

@@ -25,11 +25,20 @@ const SelectForCricket = React.createClass({
 	
 	renderOptions: function(){
 		return this.props.results.map( (option, index) => {
-			if (typeof option.value !=='undefined' && typeof option.string !== 'undefined') {
+			if (typeof option.value !=='undefined' && typeof option.string !== 'undefined' && typeof option.teamId !== 'undefined') {
 				return (
 					<option
 						key 	= { index }
 						value 	= { `${option.value.toLowerCase()}/${option.teamId}` }
+					>
+						{ option.string }
+					</option>
+				);
+			} else if (typeof option.value !=='undefined' && typeof option.string !== 'undefined' && typeof option.teamId === 'undefined') {
+				return (
+					<option
+						key 	= { index }
+						value 	= { `${option.value.toLowerCase()}` }
 					>
 						{ option.string }
 					</option>
