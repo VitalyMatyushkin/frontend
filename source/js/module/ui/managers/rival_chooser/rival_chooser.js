@@ -16,6 +16,7 @@ const RivalChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
+		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
@@ -101,14 +102,14 @@ const RivalChooser = React.createClass({
 	isShowRivals: function() {
 		const event = this.getDefaultBinding().toJS('model');
 
-		return 	!this.props.isInviteMode &&
+		return	!this.props.isInviteMode &&
 				!TeamHelper.isInternalEventForIndividualSport(event);
 	},
 	renderAddRivalButton: function() {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
-		if(TeamHelper.isInternalEventForTeamSport(event)) {
+		if(TeamHelper.isInternalEventForTeamSport(event) && this.props.isShowAddTeamButton) {
 			return (
 				<Button
 					text	= "Add team"

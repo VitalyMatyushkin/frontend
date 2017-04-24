@@ -1,7 +1,8 @@
-const	React			= require('react'),
-		SchoolRivalInfo	= require('module/as_manager/pages/event/view/rivals/rival_info/school_rival_info'),
-		HouseRivalInfo	= require('module/as_manager/pages/event/view/rivals/rival_info/house_rival_info'),
-		EventHelper		= require('module/helpers/eventHelper');
+const	React				= require('react'),
+		SchoolRivalInfo		= require('module/as_manager/pages/event/view/rivals/rival_info/school_rival_info'),
+		HouseRivalInfo		= require('module/as_manager/pages/event/view/rivals/rival_info/house_rival_info'),
+		InternalRivalInfo	= require('module/as_manager/pages/event/view/rivals/rival_info/internal_rival_info'),
+		EventHelper			= require('module/helpers/eventHelper');
 
 const RivalInfo = React.createClass({
 	propTypes: {
@@ -37,9 +38,13 @@ const RivalInfo = React.createClass({
 				);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				return (
-					<div>
-						TEAM_RIVAL_INFO
-					</div>
+					<InternalRivalInfo
+						rival									= { this.props.rival }
+						event									= { this.props.event }
+						mode									= { this.props.mode }
+						onChangeScore							= { this.props.onChangeScore }
+						activeSchoolId							= { this.props.activeSchoolId }
+					/>
 				);
 			default:
 				return null;

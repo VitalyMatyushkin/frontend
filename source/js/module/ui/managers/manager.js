@@ -25,6 +25,7 @@ const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
+		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	listeners: [],
@@ -49,6 +50,11 @@ const Manager = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		self.listeners.forEach(l => binding.removeListener(l));
+	},
+	getDefaultProps: function(){
+		return {
+			isShowAddTeamButton: true
+		};
 	},
 	initDefaultBinding: function() {
 		const	self			= this,
@@ -471,6 +477,7 @@ const Manager = React.createClass({
 				<RivalChooser
 					binding					= { binding }
 					isInviteMode			= { this.props.isInviteMode }
+					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.handleClickAddTeam }
 				/>
