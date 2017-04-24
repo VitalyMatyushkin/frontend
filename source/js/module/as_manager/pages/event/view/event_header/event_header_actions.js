@@ -322,7 +322,7 @@ function submitCricketResults(activeSchoolId: string, event: any) {
 			result: event.results.cricketResult.result.toUpperCase()
 		};
 		
-		if (event.results.cricketResult.teamId !== '') {
+		if (event.results.cricketResult.who !== '') {
 			cricketResult.who = event.results.cricketResult.who
 		}
 		

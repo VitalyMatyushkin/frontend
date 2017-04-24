@@ -46,6 +46,9 @@ const ChallengeListItem = React.createClass({
 			case typeof model.textResult === 'undefined':
 				eventResult = model.score;
 				break;
+			case event.sport.name.toLowerCase() === 'cricket':
+				eventResult = <span>{model.textResult}</span>;
+				break;
 			default:
 				eventResult = <span>{model.textResult}<br/>{model.score}</span>
 		}

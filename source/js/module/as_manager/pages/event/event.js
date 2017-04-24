@@ -969,6 +969,11 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	onChangeCricketResult: function(result){
+		const binding = this.getDefaultBinding();
+
+		binding.set('model.results.cricketResult', Immutable.fromJS(result));
+	},
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
 				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
@@ -980,7 +985,7 @@ const Event = React.createClass({
 				<div className="eSelectForCricketWrapper">
 					<SelectForCricketWrapper
 						event 			= { event }
-						onChangeResult 	= { () =>{} } //changeResultForCricket, wait server
+						onChangeResult 	= { this.onChangeCricketResult }
 					/>
 				</div>
 			);
