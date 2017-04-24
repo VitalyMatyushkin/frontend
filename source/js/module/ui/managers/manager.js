@@ -68,6 +68,7 @@ const Manager = React.createClass({
 			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
+					rivalsCount:		Immutable.fromJS(this.getBinding('rivals').toJS().length),
 					selectedRivalIndex:	defaultBinding.get('selectedRivalIndex'),
 					players:			self.getInitPlayers(),
 					teamTable:			teamTable,
@@ -223,41 +224,43 @@ const Manager = React.createClass({
 		this.addTeamWrapperListeners();
 	},
 	addTeamWrapperListeners: function() {
-		const binding = this.getDefaultBinding();
-
-		const	event		= this.getDefaultBinding().toJS('model'),
+		const	binding		= this.getDefaultBinding(),
 				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-		teamWrapper.forEach((tw, index) => {
-			if(
-				// for index 0 always true
-			index === 0 ||
+		teamWrapper.forEach((tw, index) => this.addTeamWrapperListenersByIndex(index));
+	},
+	addTeamWrapperListenersByIndex: function(index) {
+		const	binding	= this.getDefaultBinding(),
+				event	= this.getDefaultBinding().toJS('model');
+
+		if(
+			// for index 0 always true
+		index === 0 ||
+		(
+			index > 0 &&
+				// condition for other indexes
 			(
-				index > 0 &&
-					// condition for other indexes
-				(
-					!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)
-				)
+				!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)
 			)
-			) {
-				this.listeners.push(
-					binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.teamStudents`)
-						.addListener(() => this.validate(index))
-				);
-
-				this.listeners.push(
-					binding.sub(`teamModeView.teamWrapper.${index}.teamName.name`)
-						.addListener(() => this.validate(index))
-				);
-			}
-
+		)
+		) {
 			this.listeners.push(
-				binding.sub(`teamModeView.teamWrapper.${index}.isSetTeamLater`)
+				binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.teamStudents`)
 					.addListener(() => this.validate(index))
 			);
 
-			this.addSyncListenersByTeamWrapperIndex(index);
-		});
+			this.listeners.push(
+				binding.sub(`teamModeView.teamWrapper.${index}.teamName.name`)
+					.addListener(() => this.validate(index))
+			);
+		}
+
+		this.listeners.push(
+			binding.sub(`teamModeView.teamWrapper.${index}.isSetTeamLater`)
+				.addListener(() => this.validate(index))
+		);
+
+		this.addSyncListenersByTeamWrapperIndex(index);
 	},
 	addSyncListenersByTeamWrapperIndex: function(index) {
 		this.addListenerToIsLoadingTeamByIndex(index);
@@ -386,6 +389,58 @@ const Manager = React.createClass({
 
 		self.getBinding('selectedRivalIndex').set(Immutable.fromJS(currentRivalIndex));
 	},
+	addNewEmptyRivalForInternalTeamSportEvent: function() {
+		const	binding			= this.getDefaultBinding(),
+				rivals			= this.getBinding().rivals.toJS(),
+				teamModeView	= binding.toJS('teamModeView');
+
+		//TODO add empty rival
+		rivals.push({
+			id:		null,
+			name:	''
+		});
+
+		this.getBinding().rivals.set(Immutable.fromJS(rivals));
+
+		const newRivalIndex = rivals.length - 1;
+		// push empty players array
+		teamModeView.players.push(
+			this.getInitPlayersByOrder(newRivalIndex)
+		);
+
+		// push empty team table model to team table array
+		teamModeView.teamTable.push(
+			this.getTeamTableByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.teamWrapper.push(
+			this.getTeamWrapperByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.rivalsCount = rivals.length;
+
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+
+		const error = this.getBinding('error').toJS();
+		error.push({
+			isError:	false,
+			text:		''
+		});
+		this.getBinding('error').set(Immutable.fromJS(error));
+
+		// add listeners
+		this.addTeamWrapperListenersByIndex(newRivalIndex);
+
+		this.validate(newRivalIndex);
+	},
+	handleClickAddTeam: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		if(TeamHelper.isInternalEventForTeamSport(event)) {
+			this.addNewEmptyRivalForInternalTeamSportEvent();
+		}
+	},
 	renderGameField: function() {
 		const binding = this.getDefaultBinding();
 
@@ -417,6 +472,7 @@ const Manager = React.createClass({
 					binding					= { binding }
 					isInviteMode			= { this.props.isInviteMode }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
+					handleClickAddTeam		= { this.handleClickAddTeam }
 				/>
 				<div className="eTeamsManager_body">
 					<TeamBundle binding={teamBundleBinding}/>

@@ -2,6 +2,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		Button				= require('module/ui/button/button'),
 		classNames			= require('classnames');
 
 // Helpers
@@ -15,6 +16,7 @@ const RivalChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
+		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	onChooseRival: function (index) {
@@ -37,10 +39,11 @@ const RivalChooser = React.createClass({
 					text = rival.name;
 					break;
 				case 'internal':
-					if(index == 0) {
-						text = "First team";
-					} else {
-						text = "Second team";
+					const names = ['First', 'Second', 'Third'];
+					if(index <= 2) {
+						text = `${names[index]} team`;
+					} else if(index > 2) {
+						text = `${index + 1} team`;
 					}
 					break;
 			}
@@ -101,10 +104,26 @@ const RivalChooser = React.createClass({
 		return 	!this.props.isInviteMode &&
 				!TeamHelper.isInternalEventForIndividualSport(event);
 	},
+	renderAddRivalButton: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		if(TeamHelper.isInternalEventForTeamSport(event)) {
+			return (
+				<Button
+					text	= "Add team"
+					onClick	= { this.props.handleClickAddTeam }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (
 			<div className="bRivalChooser">
-				{this.getRivals()}
+				{ this.getRivals() }
+				{ this.renderAddRivalButton() }
 			</div>
 		);
 	}
