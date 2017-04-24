@@ -7,14 +7,29 @@ const 	React 				= require('react'),
 const 	EventHelper 		= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper');
 
-const RESULTS_FOR_CRICKET_TBD = ['TBD'];
-const RESULTS_FOR_CRICKET = ['Draw', 'No result', 'Tie'];
+const 	RESULTS_FOR_CRICKET_WON_BY_RUNS 			= 'Won_by_runs',
+		RESULTS_FOR_CRICKET_WON_BY_WICKETS 			= 'Won_by_wickets',
+		RESULTS_FOR_CRICKET_WON_BY_INNINGS_AND_RUNS = 'Won_by_innings_and_runs',
+		RESULTS_FOR_CRICKET_MATCH_AWARDED 			= 'Match_awarded',
+		RESULTS_FOR_CRICKET_FOR_SELECT_TBD 			= ['TBD'],
+		RESULTS_FOR_CRICKET_FOR_SELECT_TIE 			= ['Tie'],
+		RESULTS_FOR_CRICKET_FOR_SELECT_DRAW 		= ['Draw'],
+		RESULTS_FOR_CRICKET_FOR_SELECT_NO_RESULT 	= [{
+			string: 'No result',
+			teamId: '',
+			value: 'No_result'
+		}];
+
 const CRICKET_WICKETS = 10;
+
+/**
+ * Calculates all possible options for cricket event based on provided scores
+ */
 
 const SelectForCricketWrapper = React.createClass({
 	propTypes: {
 		event: 				React.PropTypes.object,
-		onChangeResult: 	React.PropTypes.func
+		onChangeResult: 	React.PropTypes.func.isRequired
 	},
 	
 	getInitialState: function(){
@@ -28,9 +43,11 @@ const SelectForCricketWrapper = React.createClass({
 			let stateArray = [];
 
 			stateArray = stateArray.concat(
-				RESULTS_FOR_CRICKET_TBD,
+				RESULTS_FOR_CRICKET_FOR_SELECT_TBD,
 				this.addTeamResultsInGameResultsMenu(nextProps.event),
-				RESULTS_FOR_CRICKET,
+				RESULTS_FOR_CRICKET_FOR_SELECT_NO_RESULT,
+				RESULTS_FOR_CRICKET_FOR_SELECT_TIE,
+				RESULTS_FOR_CRICKET_FOR_SELECT_DRAW,
 				this.addMatchAwardedInGameResultMenu(nextProps.event)
 			);
 
@@ -43,8 +60,16 @@ const SelectForCricketWrapper = React.createClass({
 		const 	leftTeamId 			= this.getTeamsIdOrderByResults(event).leftTeamId,
 				rightTeamId 		= this.getTeamsIdOrderByResults(event).rightTeamId;
 
-		matchAwardedArray.push(`Match awarded to ${this.getRivalName(leftTeamId)}`);
-		matchAwardedArray.push(`Match awarded to ${this.getRivalName(rightTeamId)}`);
+		matchAwardedArray.push({
+			string: `Match awarded to ${this.getRivalName(leftTeamId)}`,
+			value: RESULTS_FOR_CRICKET_MATCH_AWARDED,
+			teamId: leftTeamId
+		});
+		matchAwardedArray.push({
+			string: `Match awarded to ${this.getRivalName(rightTeamId)}`,
+			value: RESULTS_FOR_CRICKET_MATCH_AWARDED,
+			teamId: rightTeamId
+		});
 		
 		return matchAwardedArray;
 	},
@@ -63,15 +88,45 @@ const SelectForCricketWrapper = React.createClass({
 		
 
 			if (runsForLeftTeam - runsForRightTeam > 0) {
-				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`);
-				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by an innings and ${runsForLeftTeam - runsForRightTeam} runs`);
-				teamResultsArray.push(`${this.getRivalName(leftTeamId)} won by ${CRICKET_WICKETS - wicketsForLeftTeam} wickets`);
+				
+				teamResultsArray.push({
+					string: `${this.getRivalName(leftTeamId)} won by ${runsForLeftTeam - runsForRightTeam} runs`,
+					value: RESULTS_FOR_CRICKET_WON_BY_RUNS,
+					teamId: leftTeamId
+				});
+
+				teamResultsArray.push({
+					string: `${this.getRivalName(leftTeamId)} won by ${CRICKET_WICKETS - wicketsForLeftTeam} wickets`,
+					value: RESULTS_FOR_CRICKET_WON_BY_WICKETS,
+					teamId: leftTeamId
+				});
+				
+				teamResultsArray.push({
+					string: `${this.getRivalName(leftTeamId)} won by an innings and ${runsForLeftTeam - runsForRightTeam} runs`,
+					value: RESULTS_FOR_CRICKET_WON_BY_INNINGS_AND_RUNS,
+					teamId: leftTeamId
+				});
 			}
 
 			if (runsForLeftTeam - runsForRightTeam < 0) {
-				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`);
-				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by an innings and ${runsForRightTeam - runsForLeftTeam} runs`);
-				teamResultsArray.push(`${this.getRivalName(rightTeamId)} won by ${CRICKET_WICKETS - wicketsForRightTeam} wickets`);
+				
+				teamResultsArray.push({
+					string: `${this.getRivalName(rightTeamId)} won by ${runsForRightTeam - runsForLeftTeam} runs`,
+					value: RESULTS_FOR_CRICKET_WON_BY_RUNS,
+					teamId: rightTeamId
+				});
+				
+				teamResultsArray.push({
+					string: `${this.getRivalName(rightTeamId)} won by ${CRICKET_WICKETS - wicketsForRightTeam} wickets`,
+					value: RESULTS_FOR_CRICKET_WON_BY_WICKETS,
+					teamId: rightTeamId
+				});
+				
+				teamResultsArray.push({
+					string: `${this.getRivalName(rightTeamId)} won by an innings and ${runsForRightTeam - runsForLeftTeam} runs`,
+					value: RESULTS_FOR_CRICKET_WON_BY_INNINGS_AND_RUNS,
+					teamId: rightTeamId
+				});
 			}
 		
 		return teamResultsArray;
@@ -81,9 +136,11 @@ const SelectForCricketWrapper = React.createClass({
 		let stateArray = [];
 		
 		stateArray = stateArray.concat(
-			RESULTS_FOR_CRICKET_TBD,
+			RESULTS_FOR_CRICKET_FOR_SELECT_TBD,
 			this.addTeamResultsInGameResultsMenu(this.props.event),
-			RESULTS_FOR_CRICKET,
+			RESULTS_FOR_CRICKET_FOR_SELECT_NO_RESULT,
+			RESULTS_FOR_CRICKET_FOR_SELECT_TIE,
+			RESULTS_FOR_CRICKET_FOR_SELECT_DRAW,
 			this.addMatchAwardedInGameResultMenu(this.props.event)
 		);
 		
@@ -116,12 +173,40 @@ const SelectForCricketWrapper = React.createClass({
 			return `${this.props.event.teamsData[order].name}`
 		}
 	},
+	onChangeResult: function(value){
+		let resultObject;
+		if (value.indexOf('/') !== -1) {
+			const resultArray = value.split('/');
+			resultObject = {
+				who: resultArray[1],
+				result: resultArray[0]
+			};
+		} else {
+			resultObject = {
+				result: value
+			};
+		}
+		this.props.onChangeResult(resultObject);
+	},
+	getActiveResult: function(){
+		const 	teamId = this.props.event.results.cricketResult.who,
+				result = this.props.event.results.cricketResult.result.toLowerCase();
+		
+		if (typeof teamId === 'undefined' && typeof result === 'undefined') {
+			return RESULTS_FOR_CRICKET_FOR_SELECT_TBD[0].toLowerCase();
+		} else if (typeof teamId === 'undefined' && typeof result !== 'undefined') {
+			return result;
+		} else {
+			return `${result}/${teamId}`
+		}
+	},
 	
 	render: function(){
 		return (
 			<SelectForCricket
 				results 		= { this.state.results }
-				onChangeResult 	= { this.props.onChangeResult }
+				activeResult 	= { this.getActiveResult() }
+				onChangeResult 	= { this.onChangeResult }
 			/>
 		);
 	}

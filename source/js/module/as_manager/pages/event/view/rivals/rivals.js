@@ -504,6 +504,12 @@ const Rivals = React.createClass({
 
 		return xmlRivals;
 	},
+	
+	onChangeCricketResult: function(result){
+		const binding = this.getDefaultBinding();
+
+		binding.set('model.results.cricketResult', Immutable.fromJS(result));
+	},
 
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
@@ -516,7 +522,7 @@ const Rivals = React.createClass({
 			return (
 				<SelectForCricketWrapper
 					event 			= { event }
-					onChangeResult 	= { () =>{} } //changeResultForCricket, wait server
+					onChangeResult 	= { this.onChangeCricketResult }
 				/>
 			);
 		} else {
