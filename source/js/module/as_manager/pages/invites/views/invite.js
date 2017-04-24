@@ -21,7 +21,7 @@ const InviteView = React.createClass({
 	 */
 	activeSchoolId: undefined,
 	propTypes: {
-		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
+		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']).isRequired,
 		onDecline	: React.PropTypes.func
 	},
 
@@ -88,11 +88,26 @@ const InviteView = React.createClass({
 	isShowComments: function() {
 		return this.getDefaultBinding().toJS('inviteComments.expandedComments');
 	},
+
+	/**
+	 * Detecting rival correctly
+	 * @returns {String}
+	 */
+	getRivalSchool: function(inviterSchool, invitedSchool, activeSchoolId) {
+		switch (this.props.type) {
+			case 'inbox':
+				return inviterSchool;
+			case 'outbox':
+				return invitedSchool;
+			case 'archive':
+				return activeSchoolId === inviterSchool.id ? invitedSchool : inviterSchool;
+		}
+	},
 	render: function() {
 		const binding			= this.getDefaultBinding(),
 				inviterSchool 	= binding.toJS('inviterSchool'),
 				invitedSchool 	= binding.toJS('invitedSchool'),
-				rival 			= invitedSchool.id === this.activeSchoolId ? inviterSchool : invitedSchool,
+			  	rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
 				inviteClasses 	= classNames({
 					bInvite: true,
 					mNotRedeemed: !binding.get('redeemed')
