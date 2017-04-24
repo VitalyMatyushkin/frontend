@@ -28,6 +28,8 @@ const Players = React.createClass({
 			return this.renderPlayersForInterSchoolsEvent();
 		} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
 			return this.renderPlayersForHousesEvent();
+		} if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
+			return this.renderPlayersForInternalEvent();
 		}
 	},
 	renderText: function(text) {
@@ -67,6 +69,18 @@ const Players = React.createClass({
 		}
 	},
 	renderPlayersForHousesEvent: function() {
+		const players = propz.get(this.props.rival, ['team', 'players']);
+
+		if(
+			typeof players === 'undefined' ||
+			players.length === 0
+		) {
+			return this.renderText(this.MEMBERS_NOT_ADDED);
+		} else {
+			return this.renderPlayers();
+		}
+	},
+	renderPlayersForInternalEvent: function() {
 		const players = propz.get(this.props.rival, ['team', 'players']);
 
 		if(

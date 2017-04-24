@@ -85,10 +85,38 @@ const Rivals = React.createClass({
 				});
 
 				rivals = rivals.sort((rival1, rival2) => {
-					if(rival1.school.id === this.props.activeSchoolId && rival2.school.id !== this.props.activeSchoolId) {
+					if(rival1.house.name < rival2.house.name) {
 						return -1;
 					}
-					if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
+					if(rival1.house.name > rival2.house.name) {
+						return 1;
+					}
+
+					return 0;
+				});
+			} else if(EventHelper.clientEventTypeToServerClientTypeMapping['internal'] === eventType) {
+				const	schoolsData	= event.schoolsData,
+						teamsData	= event.teamsData;
+
+				// iterate all schools
+				teamsData.forEach(team => {
+					const rival = {};
+
+					rival.school = schoolsData[0];
+					rival.team = team;
+
+					rival.isTeamScoreWasChanged = false;
+					rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
+					this.initResultsForRival(rival, event);
+
+					rivals.push(rival);
+				});
+
+				rivals = rivals.sort((rival1, rival2) => {
+					if(rival1.team.name < rival2.team.name) {
+						return -1;
+					}
+					if(rival1.team.name > rival2.team.name) {
 						return 1;
 					}
 
@@ -144,6 +172,8 @@ const Rivals = React.createClass({
 			} else {
 				this.initTeamResultsForRival(rival, event);
 			}
+		} if(TeamHelper.isInternalEventForTeamSport(event)) {
+			this.initTeamResultsForRival(rival, event);
 		}
 	},
 	initTeamResultsForRival: function(rival, event) {
@@ -189,6 +219,19 @@ const Rivals = React.createClass({
 				}
 
 				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
+			} else if(EventHelper.isInternalEvent(event)) {
+				const	teamId				= rival.team.id,
+						teamScoreData		= event.results.teamScore.find(scoreData =>
+							scoreData.teamId === teamId
+						),
+						individualScoreData	= event.results.individualScore.find(scoreData =>
+							scoreData.teamId === teamId
+						);
+
+				return (
+					typeof teamScoreData !== 'undefined' ||
+					typeof individualScoreData !== 'undefined'
+				);
 			}
 		}
 	},
@@ -504,7 +547,7 @@ const Rivals = React.createClass({
 
 		return xmlRivals;
 	},
-	
+
 	onChangeCricketResult: function(result){
 		const binding = this.getDefaultBinding();
 
@@ -529,7 +572,6 @@ const Rivals = React.createClass({
 			return null;
 		}
 	},
-
 	render: function() {
 		if(this.isSync()) {
 			const binding = this.getDefaultBinding();

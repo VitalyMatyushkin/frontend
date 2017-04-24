@@ -3,6 +3,7 @@ const	React				= require('react'),
 		Score				= require('module/ui/score/score'),
 		propz				= require('propz'),
 		SportConsts			= require('module/helpers/consts/sport'),
+		RivalPerformanceBlockHeader = require('module/as_manager/pages/event/view/new_performance/rival_performance_block_header'),
 		PerformanceStyle	= require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
 const RivalDisciplineBlock = React.createClass({
@@ -97,9 +98,10 @@ const RivalDisciplineBlock = React.createClass({
 	render: function() {
 		return (
 			<div className="eEventPerformance_col">
-				<div className="eEventPerformance_colHeader">
-					{ this.props.rival.house.name }
-				</div>
+				<RivalPerformanceBlockHeader
+					rival	= { this.props.rival }
+					event	= { this.props.event }
+				/>
 				{ this.renderPlayers() }
 			</div>
 		);

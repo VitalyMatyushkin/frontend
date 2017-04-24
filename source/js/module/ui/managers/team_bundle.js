@@ -66,6 +66,8 @@ const TeamBundle = React.createClass({
 
 		const teamWrappers = binding.toJS('teamWrapper');
 		teamWrappers.forEach((_, index) => self.addTeamPlayersListenerByTeamIndex(binding, index));
+
+		this.addRivalsCountListener();
 	},
 	addTeamPlayersListenerByTeamIndex: function(binding, index) {
 		// if players were change
@@ -74,14 +76,41 @@ const TeamBundle = React.createClass({
 			const anotherRivalIndexArray = this.getAnotherRivalIndexArray(index);
 
 			anotherRivalIndexArray.forEach(index => {
+				const blackList = binding.toJS(`teamWrapper.${index}.___teamManagerBinding.blackList`);
+
 				binding.set(
 					`teamWrapper.${index}.___teamManagerBinding.blackList`,
-					descriptor.getCurrentValue()
-				)
+					Immutable.fromJS(
+						blackList.concat(
+							descriptor.getCurrentValue().toJS()
+						)
+					)
+				);
 			});
 		});
 	},
+	/**
+	 * Function adds listener for teamWrapper count
+	 * That listener do some init operations for new team wrapper
+	 */
+	addRivalsCountListener: function() {
+		const binding = this.getDefaultBinding();
 
+		binding.sub(`rivalsCount`).addListener(descriptor => {
+			const	currentRivalsCount	= descriptor.getCurrentValue(),
+					prevRivalsCount		= descriptor.getPreviousValue();
+
+			if(currentRivalsCount > prevRivalsCount) {
+				const	rivals				= this.getBinding().rivals.toJS(),
+						// rivals and team wrappers are connected
+						// rival by index N corresponds to team wrapper by index N
+						teamWrapperIndex	= currentRivalsCount - 1;
+
+				this.initTeamWrapperFilterBinding(teamWrapperIndex, rivals[teamWrapperIndex]);
+				this.addTeamPlayersListenerByTeamIndex(binding, teamWrapperIndex);
+			}
+		});
+	},
 	/** HELPER FUNCTIONS **/
 	getTeamChooserBindings: function() {
 		const binding = this.getDefaultBinding();
@@ -126,9 +155,14 @@ const TeamBundle = React.createClass({
 			);
 		});
 	},
+	getAllPlayers: function() {
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamWrapper');
+
+		return teamWrapper.map(tw => tw.___teamManagerBinding.teamStudents);
+	},
 	getAnotherTeamPlayersByRivalIndex: function(rivalIndex) {
-		const	binding	= this.getDefaultBinding(),
-				players	= binding.toJS('players');
+		const players = this.getAllPlayers();
 
 		players.splice(rivalIndex, 1);
 

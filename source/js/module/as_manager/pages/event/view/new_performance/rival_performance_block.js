@@ -1,8 +1,9 @@
-const	React				= require('react'),
-		classNames			= require('classnames'),
-		StarRatingBar		= require('module/ui/star_rating_bar/star_rating_bar'),
-		propz				= require('propz'),
-		PerformanceStyle	= require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
+const	React						= require('react'),
+		classNames					= require('classnames'),
+		StarRatingBar				= require('module/ui/star_rating_bar/star_rating_bar'),
+		propz						= require('propz'),
+		RivalPerformanceBlockHeader = require('module/as_manager/pages/event/view/new_performance/rival_performance_block_header'),
+		PerformanceStyle			= require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
 const RivalPerformanceBlock = React.createClass({
 	propTypes: {
@@ -87,9 +88,10 @@ const RivalPerformanceBlock = React.createClass({
 	render: function() {
 		return (
 			<div className="eEventPerformance_col">
-				<div className="eEventPerformance_colHeader">
-					{ this.props.rival.house.name }
-				</div>
+				<RivalPerformanceBlockHeader
+					rival	= { this.props.rival }
+					event	= { this.props.event }
+				/>
 				{ this.renderPlayers() }
 			</div>
 		);
