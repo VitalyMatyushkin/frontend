@@ -70,20 +70,21 @@ function submitScore(activeSchoolId: string, event: any, binding: any) {
 		return submitResultsForTeamsSport(activeSchoolId, event)
 			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 	}
-};
+}
 
 function submitResultsForIndividualSport(activeSchoolId: string, event: any) {
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitIndividualResults(activeSchoolId, event));
-};
+}
 
 function submitResultsForTeamsSport(activeSchoolId: string, event: any){
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitTeamResults(activeSchoolId, event))
-		.then(() => submitIndividualResults(activeSchoolId, event));
-};
+		.then(() => submitIndividualResults(activeSchoolId, event))
+		.then(() => submitCricketResults(activeSchoolId, event));
+}
 
 function submitSchoolResults(activeSchoolId: string, event: any){
 	const body = event.results.schoolScore;
@@ -140,7 +141,7 @@ function submitSchoolResults(activeSchoolId: string, event: any){
 	} else {
 		return Promise.resolve(true);
 	}
-};
+}
 
 function submitHouseResults(activeSchoolId: string, event: any) {
 	const score = event.results.houseScore;
@@ -197,7 +198,7 @@ function submitHouseResults(activeSchoolId: string, event: any) {
 	} else {
 		return Promise.resolve(true);
 	}
-};
+}
 
 function submitTeamResults(activeSchoolId: string, event: any) {
 	const score = event.results.teamScore;
@@ -253,7 +254,7 @@ function submitTeamResults(activeSchoolId: string, event: any) {
 	} else {
 		return Promise.resolve(true);
 	}
-};
+}
 
 function submitIndividualResults(activeSchoolId: string, event: any) {
 	const score = event.results.individualScore;
@@ -313,15 +314,40 @@ function submitIndividualResults(activeSchoolId: string, event: any) {
 	);
 
 	return Promise.all(promises);
-};
+}
+
+function submitCricketResults(activeSchoolId: string, event: any) {
+	if (event.sport.name.toLowerCase() === 'cricket') {
+		const cricketResult = {
+			result: event.results.cricketResult.result.toUpperCase()
+		};
+		
+		if (event.results.cricketResult.teamId !== '') {
+			cricketResult.who = event.results.cricketResult.who
+		}
+		
+		let promises = [];
+		
+		promises = promises.concat(
+			window.Server.schoolEventResultCricket.post({
+				schoolId: activeSchoolId,
+				eventId: event.id
+			}, cricketResult)
+		);
+		
+		return Promise.all(promises);
+	} else {
+		return Promise.resolve(true);
+	}
+}
 
 function isNewResultItem(resultItem) {
 	return typeof resultItem._id === 'undefined';
-};
+}
 
 function isResultItemChanged(resultItem) {
 	return !isNewResultItem(resultItem) && resultItem.isChanged;
-};
+}
 
 /**
  * Get updated event from server
@@ -346,7 +372,7 @@ function doActionsAfterCloseEvent(activeSchoolId: string, event: any, binding: a
 			// yep i'm always true
 			return true;
 		});
-};
+}
 
 /**
  * Event closing process started after click save button
@@ -359,7 +385,7 @@ function closeMatch(activeSchoolId: string, event: any, binding: any){
 	}
 	// match report save
 	submitMatchReport(activeSchoolId, event);
-};
+}
 
 /**
  * Event closing process for individual sport
@@ -372,7 +398,7 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 	})
 	.then(() => submitResultsForIndividualSport(activeSchoolId, event))
 	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
-};
+}
 
 /**
  * Event closing process for team sport
@@ -385,7 +411,7 @@ function closeMatchForTeamsSport(activeSchoolId, event, binding) {
 	})
 	.then(() => submitResultsForTeamsSport(activeSchoolId, event))
 	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
-};
+}
 
 /**Save match report
  * @param {object} event
@@ -401,7 +427,7 @@ function submitMatchReport(activeSchoolId, event){
 			content: event.matchReport
 		}
 	);
-};
+}
 
 module.exports.downloadPdf 		= downloadPdf;
 module.exports.cancelEvent 		= cancelEvent;

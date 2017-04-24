@@ -141,6 +141,8 @@ const serviceList = {
 		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score/{scoreId}', binding);
         serviceList.schoolEventResultIndividualsScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
         serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score/{scoreId}', binding);
+        serviceList.schoolEventResultCricket = new Service('/i/schools/{schoolId}/events/{eventId}/results/cricket', binding);
+        
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
 		serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
 		serviceList.schoolEventReport = new Service('/i/schools/{schoolId}/events/{eventId}/report', binding);
