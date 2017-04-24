@@ -21,8 +21,10 @@ const NewManagerWrapperHelper = {
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
-				// TODO it's fake
-				return {};
+				rival = {
+					id:			null,
+					name:		null
+				};
 		}
 
 		// Add team players

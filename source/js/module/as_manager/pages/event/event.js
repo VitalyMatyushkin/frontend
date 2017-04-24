@@ -162,7 +162,8 @@ const Event = React.createClass({
 			//TODO it's temp. only for event refactoring period.
 			if(
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
-				!TeamHelper.isHousesEventForTeamSport(eventData)
+				!TeamHelper.isHousesEventForTeamSport(eventData) &&
+				!TeamHelper.isInternalEventForTeamSport(eventData)
 			) {
 				EventResultHelper.initializeEventResults(eventData);
 			}
@@ -212,7 +213,8 @@ const Event = React.createClass({
 			if(
 				TeamHelper.isTeamSport(eventData) &&
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
-				!TeamHelper.isHousesEventForTeamSport(eventData)
+				!TeamHelper.isHousesEventForTeamSport(eventData) &&
+				!TeamHelper.isInternalEventForTeamSport(eventData)
 			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
@@ -406,11 +408,20 @@ const Event = React.createClass({
 
 		this.addListenerToEventTeams();
 
-		if(!TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+		if(
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			this.addListenerForIndividualScoreAvailable();
 		}
 
-		if(TeamHelper.isTeamSport(event) && !TeamHelper.isInterSchoolsEventForTeamSport(event)) {
+		if(
+			TeamHelper.isTeamSport(event) &&
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			this.addListenerForTeamScore();
 		}
 	},
@@ -906,7 +917,8 @@ const Event = React.createClass({
 		//TODO it's temp. only for event refactoring period.
 		if(
 			TeamHelper.isInterSchoolsEventForTeamSport(event) ||
-			TeamHelper.isHousesEventForTeamSport(event)
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
 		) {
 			return (
 				<Rivals	binding									= { binding }
@@ -988,7 +1000,10 @@ const Event = React.createClass({
 		const	event			= binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
-		if(TeamHelper.isHousesEventForTeamSport(event)) {
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			return (
 				<NewPerformance	binding			= { binding }
 								activeSchoolId	= { this.props.activeSchoolId }
@@ -1009,7 +1024,10 @@ const Event = React.createClass({
 		const	event			= binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
-		if(TeamHelper.isHousesEventForTeamSport(event)) {
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			return (
 				<NewDiscipline	binding			= { binding }
 								activeSchoolId	= { this.props.activeSchoolId }

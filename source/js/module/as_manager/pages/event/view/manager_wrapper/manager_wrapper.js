@@ -77,7 +77,10 @@ const ManagerWrapper = React.createClass({
 			});
 	},
 	getRivals: function(event, rivals) {
-		if(TeamHelper.isHousesEventForTeamSport(event)) {
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {
 			return ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
@@ -207,6 +210,12 @@ const ManagerWrapper = React.createClass({
 			'mMarginLeftFixed'	: true
 		});
 	},
+	isShowRivals: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		return !TeamHelper.isInternalEventForTeamSport(event);
+	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
@@ -214,6 +223,8 @@ const ManagerWrapper = React.createClass({
 		return (
 			<div className="bTeamManagerWrapper">
 				<Manager	binding					= {managerBinding}
+							isInviteMode			= {!this.isShowRivals()}
+							isShowAddTeamButton		= {false}
 							indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
 				/>
 				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}
