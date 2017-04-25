@@ -524,7 +524,7 @@ function isShowScoreEventButtonsBlock(thiz) {
 				self.isHouseHaveIndividualPlayers(event, event.housesData[1].id)
 				: true
 		) &&
-		( self.isInternalEventForTeamSport(event) ? event.teamsData.length === 2 : true ) &&
+		( self.isInternalEventForTeamSport(event) ? event.teamsData.length >= 2 : true ) &&
 		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true );
 }
 

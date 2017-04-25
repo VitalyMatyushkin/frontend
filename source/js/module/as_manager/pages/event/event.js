@@ -176,6 +176,13 @@ const Event = React.createClass({
 		}).then(_report => {
 			report = _report;
 
+			return window.Server.schoolEventInvites.get({
+				schoolId: this.props.activeSchoolId,
+				eventId: self.eventId
+			});
+		}).then(invites => {
+			eventData.invites = invites;
+
 			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 		}).then(_photos => {
 			photos = _photos;

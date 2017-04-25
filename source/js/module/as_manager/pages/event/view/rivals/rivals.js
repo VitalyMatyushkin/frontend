@@ -37,6 +37,12 @@ const Rivals = React.createClass({
 					const rival = {};
 
 					rival.school = school;
+
+					const schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+					if(typeof schoolInvite !== 'undefined') {
+						rival.invite = schoolInvite;
+					}
+
 					// search all teams for current school
 					teamsData.forEach(t => {
 						if(t.schoolId === school.id) {

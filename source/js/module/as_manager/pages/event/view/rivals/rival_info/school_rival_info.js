@@ -17,12 +17,25 @@ const SchoolRivalInfo = React.createClass({
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired
 	},
+	isInviteAccepted: function() {
+		const inviteStatus = propz.get(this.props.rival, ['invite', 'status']);
+
+		return typeof inviteStatus !== 'undefined' ? inviteStatus === "ACCEPTED" : true;
+	},
 	isShowChangeSchoolButton: function() {
+		const	activeSchoolIsInviterSchool	= this.props.activeSchoolId === this.props.event.inviterSchoolId,
+				isInviteAccepted			= this.isInviteAccepted(),
+				isValidEventStatus			= (
+					this.props.event.status !== EventHelper.EVENT_STATUS.FINISHED &&
+					this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED
+				);
+
 		// TODO Waiting server fix
 		return (
-			this.props.event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-			//this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED &&
-			this.props.activeSchoolId !== this.props.rival.school.id
+			activeSchoolIsInviterSchool &&								// Active school is inviter school
+			this.props.activeSchoolId !== this.props.rival.school.id &&	// Current rival is not active school
+			!isInviteAccepted &&
+			isValidEventStatus
 		);
 	},
 	getRivalName: function() {
