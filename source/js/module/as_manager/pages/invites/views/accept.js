@@ -2,16 +2,13 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable');
 
-const	classNames						= require('classnames'),
-		Promise							= require('bluebird'),
-		Button							= require('../../../../ui/button/button'),
-		If								= require('../../../../ui/if/if');
+const	Promise							= require('bluebird'),
+		Button							= require('../../../../ui/button/button');
 
 const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		Manager							= require('../../../../ui/managers/manager');
 
 const	TeamHelper						= require('../../../../ui/managers/helpers/team_helper'),
-		ManagerHelper					= require('../../../../ui/managers/helpers/manager_helper'),
 		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
 		MoreartyHelper					= require('../../../../helpers/morearty_helper'),
 		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper');
@@ -249,8 +246,9 @@ const InviteAcceptView = React.createClass({
 			return (
 				<div className="bInviteAccept">
 					<div className="bTeamManagerWrapper">
-						<Manager	isInviteMode	= {true}
-									binding			= {managerBinding}
+						<Manager	isShowRivals		= { false }
+									isShowAddTeamButton	= { false }
+									binding				= {managerBinding}
 						/>
 						<div className="eTeamManagerWrapper_footer">
 							<Button	text				= "Accept"

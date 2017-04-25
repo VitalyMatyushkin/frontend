@@ -15,7 +15,7 @@ const	TeamChooserStyles	= require('../../../../../styles/ui/teams_manager/b_riva
 const RivalChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isInviteMode			: React.PropTypes.bool,
+		isShowRivals			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number
@@ -51,7 +51,7 @@ const RivalChooser = React.createClass({
 
 			if(
 				!TeamHelper.isInternalEventForIndividualSport(event) &&
-				this.isShowRivals() &&
+				this.props.isShowRivals &&
 				(typeof this.props.indexOfDisplayingRival !== 'undefined' ? index === this.props.indexOfDisplayingRival : true)
 			) {
 				const xmlRivals = [];
@@ -99,17 +99,11 @@ const RivalChooser = React.createClass({
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},
-	isShowRivals: function() {
-		const event = this.getDefaultBinding().toJS('model');
-
-		return	!this.props.isInviteMode &&
-				!TeamHelper.isInternalEventForIndividualSport(event);
-	},
 	renderAddRivalButton: function() {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
-		if(TeamHelper.isInternalEventForTeamSport(event) && this.props.isShowAddTeamButton) {
+		if(this.props.isShowAddTeamButton) {
 			return (
 				<Button
 					text	= "Add team"

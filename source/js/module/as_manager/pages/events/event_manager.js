@@ -105,6 +105,15 @@ const EventManager = React.createClass({
 					.commit();
 			});
 	},
+	isShowAddTeamButton: function() {
+		const	binding	= this.getDefaultBinding();
+
+		const	event	= binding.toJS('model'),
+				sport	= event.sportModel;
+
+
+		return TeamHelper.isInternalEventForTeamSport(event) && sport.multiparty;
+	},
 	/**
 	 * Get event from server by eventId and set date from this event to event form.
 	 * It needs for 'another' creation mode - when user create event by click "add another event" button.
@@ -683,6 +692,25 @@ const EventManager = React.createClass({
 			);
 		}
 	},
+	renderManager: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		const managerBinding	= {
+									default				: binding,
+									selectedRivalIndex	: binding.sub('selectedRivalIndex'),
+									rivals				: binding.sub('rivals'),
+									players				: binding.sub('players'),
+									error				: binding.sub('error')
+								};
+
+		return (
+			<Manager	isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
+						isShowAddTeamButton	= { this.isShowAddTeamButton() }
+						binding				= { managerBinding }
+			/>
+		);
+	},
 	render: function() {
 		const	binding				= this.getDefaultBinding(),
 				isEventManagerSync	= binding.get('isEventManagerSync'),
@@ -693,27 +721,17 @@ const EventManager = React.createClass({
 					bTeamManagerWrapper : step === 2
 				});
 
-		const	managerBinding	= {
-					default				: binding,
-					selectedRivalIndex	: binding.sub('selectedRivalIndex'),
-					rivals				: binding.sub('rivals'),
-					players				: binding.sub('players'),
-					error				: binding.sub('error')
-				};
-
 		return (
 			<div>
 				<div className={bManagerClasses}>
 					<If condition={step === 1}>
-						{this.renderEventManagerBase()}
+						{ this.renderEventManagerBase() }
 					</If>
 					<If condition={step === 2}>
-						<Manager	isInviteMode	= {false}
-									binding			= {managerBinding}
-						/>
+						{ this.renderManager() }
 					</If>
 					<If condition={isEventManagerSync}>
-						{this.renderStepButtons()}
+						{ this.renderStepButtons() }
 					</If>
 				</div>
 				<SavingPlayerChangesPopup	binding	= {binding}
