@@ -16,7 +16,6 @@ const 	RESULTS_FOR_CRICKET_WON_BY_RUNS 			= 'Won_by_runs',
 		RESULTS_FOR_CRICKET_FOR_SELECT_DRAW 		= ['Draw'],
 		RESULTS_FOR_CRICKET_FOR_SELECT_NO_RESULT 	= [{
 			string: 'No result',
-			teamId: '',
 			value: 'No_result'
 		}];
 
@@ -189,8 +188,9 @@ const SelectForCricketWrapper = React.createClass({
 		this.props.onChangeResult(resultObject);
 	},
 	getActiveResult: function(){
-		const 	teamId = this.props.event.results.cricketResult.who,
-				result = this.props.event.results.cricketResult.result.toLowerCase();
+		
+		const 	teamId = typeof this.props.event.results.cricketResult !== 'undefined' ? this.props.event.results.cricketResult.who : undefined,
+				result = typeof this.props.event.results.cricketResult !== 'undefined' ? this.props.event.results.cricketResult.result.toLowerCase() : undefined;
 		
 		if (typeof teamId === 'undefined' && typeof result === 'undefined') {
 			return RESULTS_FOR_CRICKET_FOR_SELECT_TBD[0].toLowerCase();

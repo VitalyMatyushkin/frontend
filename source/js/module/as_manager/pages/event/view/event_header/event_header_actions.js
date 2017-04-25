@@ -318,11 +318,11 @@ function submitIndividualResults(activeSchoolId: string, event: any) {
 
 function submitCricketResults(activeSchoolId: string, event: any) {
 	if (event.sport.name.toLowerCase() === 'cricket') {
-		const cricketResult = {
+		const cricketResult: { result?: string, who?: string } = {
 			result: event.results.cricketResult.result.toUpperCase()
 		};
 		
-		if (event.results.cricketResult.teamId !== '') {
+		if (event.results.cricketResult.who !== '') {
 			cricketResult.who = event.results.cricketResult.who
 		}
 		
