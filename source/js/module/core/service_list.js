@@ -113,6 +113,7 @@ const serviceList = {
 		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		serviceList.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+		serviceList.schoolEventInvites = new Service('/i/schools/{schoolId}/events/{eventId}/invites', binding);
 		serviceList.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
 		serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
