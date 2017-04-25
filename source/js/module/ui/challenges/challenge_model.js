@@ -115,40 +115,58 @@ ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventT
 	switch(true){
 		case eventType === 'EXTERNAL_SCHOOLS':
 			if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {//for case "match awarded" we need in our school name and school name of rival, because we have only teamId and result in cricket result
-				teamsData = teamsData.filter(team => {return team.id !== teamId});
-				schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
-				return schoolsData[0].name;
+				teamsData = teamsData.filter(team => team.id !== teamId);
+				if (teamsData.length !== 0) {
+					schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
+					return schoolsData[0].name;
+				} else {
+					return 'No school name'
+				}
 			} else {
-				teamsData = teamsData.filter(team => {return team.id === teamId});
-				schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
-				return schoolsData[0].name;
+				teamsData = teamsData.filter(team => team.id === teamId);
+				if (teamsData.length !== 0) {
+					schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
+					return schoolsData[0].name;
+				} else {
+					return 'No school name';
+				}
 			}
 		case eventType === 'INTERNAL_TEAMS':
-			teamsData = teamsData.filter(team => {return team.id === teamId});
-			return teamsData[0].name;
+			teamsData = teamsData.filter(team => team.id === teamId);
+			if (teamsData.length !== 0) {
+				return teamsData[0].name;
+			} else {
+				return 'No team name'
+			}
 		case eventType === 'INTERNAL_HOUSES':
-			teamsData = teamsData.filter(team => {return team.id === teamId});
-			return teamsData[0].name;
+			teamsData = teamsData.filter(team => team.id === teamId);
+			if (teamsData.length !== 0) {
+				return teamsData[0].name;
+			} else {
+				return 'No team name'
+			}
 		default:
 			return 'undefined'
 	}
 };
 
-ChallengeModel.prototype.getRunsForLeftSide = function(){
-	const scoreArray = this.scoreAr;
-	return scoreArray[0].split('/')[0];
+//We get the difference module of the runs, because we only care about this, then we display text result of game
+ChallengeModel.prototype.getRuns = function(teamsScore){
+	if (typeof teamsScore !== 'undefined') {
+		return Math.abs(Math.floor(teamsScore[0].score) - Math.floor(teamsScore[1].score));
+	} else {
+		return 0;
+	}
 };
 
-ChallengeModel.prototype.getRunsForRightSide = function(){
-	const scoreArray = this.scoreAr;
-	return scoreArray[1].split('/')[0];
-};
-
-
+//We get wickets from team score, as (10 - wickets winner team)
 ChallengeModel.prototype.getWickets = function(teamsScore, teamId){
 	teamsScore = teamsScore.filter(team => team.teamId === teamId);
-	
-	return CRICKET_WICKETS - (Math.round(teamsScore[0].score * 10) % 10);
+	if (teamsScore.length !== 0) {
+		return CRICKET_WICKETS - (Math.round(teamsScore[0].score * 10) % 10);
+	} else {
+		return 0;
+	}
 };
 
 
@@ -164,7 +182,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 					isMatchAwarded 					= result === 'match_awarded',
 					isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData),
 					teamName 						= this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket, isMatchAwarded),
-					runsAbs 						= Math.abs(Number(this.getRunsForLeftSide() - Number(this.getRunsForRightSide()))),
+					runsAbs 						= this.getRuns(teamsScore),
 					wickets		 					= this.getWickets(teamsScore, teamId);
 
 			switch (true) {
