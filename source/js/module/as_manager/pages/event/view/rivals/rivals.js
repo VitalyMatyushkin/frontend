@@ -7,6 +7,7 @@ const	React						= require('react'),
 		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames					= require('classnames'),
 		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		DivForCricketWithResult 	= require('module/as_manager/pages/event/view/rivals/div_for_cricket_with_result/div_for_cricket_with_result'),
 		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
 
 const Rivals = React.createClass({
@@ -562,10 +563,9 @@ const Rivals = React.createClass({
 
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
-				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
+				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
 				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
-				event 		= binding.toJS('model'),
-				rivals 		= binding.toJS('rivals');
+				event 		= binding.toJS('model');
 
 		if (sportName === 'cricket' && mode === 'closing') {
 			return (
@@ -578,6 +578,25 @@ const Rivals = React.createClass({
 			return null;
 		}
 	},
+	
+	renderGameResultForCricket: function(){
+		const 	binding 	= this.getDefaultBinding(),
+				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
+				event 		= binding.toJS('model'),
+				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '';
+
+		if (sportName === 'cricket' && mode === 'general') {
+			return (
+				<DivForCricketWithResult
+					event 			= { event }
+					activeSchoolId 	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
+	
 	render: function() {
 		if(this.isSync()) {
 			const binding = this.getDefaultBinding();
@@ -593,6 +612,7 @@ const Rivals = React.createClass({
 			return (
 				<div className="bRivals">
 					{ this.renderSelectWithGameResultForCricket() }
+					{ this.renderGameResultForCricket() }
 					{ this.renderRivals() }
 				</div>
 			);
