@@ -318,11 +318,12 @@ function submitIndividualResults(activeSchoolId: string, event: any) {
 
 function submitCricketResults(activeSchoolId: string, event: any) {
 	if (event.sport.name.toLowerCase() === 'cricket') {
+		const cricketTextResult = typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toUpperCase() : 'TBD';
 		const cricketResult: { result?: string, who?: string } = {
-			result: event.results.cricketResult.result.toUpperCase()
+			result: cricketTextResult
 		};
 		
-		if (event.results.cricketResult.who !== '') {
+		if (typeof event.results.cricketResult !== 'undefined' && event.results.cricketResult.who !== '') {
 			cricketResult.who = event.results.cricketResult.who
 		}
 		

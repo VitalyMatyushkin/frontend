@@ -61,15 +61,15 @@
   }
 
   &.mBig {
-    color: #007abf;
+    color: $blueColor;
     font-size: 43px;
   }
   &.mMedium {
 	font-size: 26px;
-	color: #007abf;
+	color: $blueColor;
 	.ePlayer_score_runs,
 	.ePlayer_score_wickets{
-	  color: #007abf;
+	  color: $blueColor;
 	}
   }
 }
