@@ -111,15 +111,15 @@ ChallengeModel.prototype.isTeamFromActiveSchoolCricket = function(teamId, active
 	}
 };
 
-ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket){
+ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket, isMatchAwarded){
 	switch(true){
 		case eventType === 'EXTERNAL_SCHOOLS':
-			if (isTeamFromActiveSchoolCricket === true) { 								//for case "match awarded" we need in our school name and school name of rival
-				teamsData = teamsData.filter(team => {return team.id === teamId});		//because we have only teamId and result in cricket result
+			if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {//for case "match awarded" we need in our school name and school name of rival, because we have only teamId and result in cricket result
+				teamsData = teamsData.filter(team => {return team.id !== teamId});
 				schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
 				return schoolsData[0].name;
 			} else {
-				teamsData = teamsData.filter(team => {return team.id !== teamId});
+				teamsData = teamsData.filter(team => {return team.id === teamId});
 				schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
 				return schoolsData[0].name;
 			}
@@ -144,29 +144,28 @@ ChallengeModel.prototype.getRunsForRightSide = function(){
 	return scoreArray[1].split('/')[0];
 };
 
-ChallengeModel.prototype.getWicketsForLeftSide = function(){
-	const scoreArray = this.scoreAr;
-	return scoreArray[0].split('/')[1];
+
+ChallengeModel.prototype.getWickets = function(teamsScore, teamId){
+	teamsScore = teamsScore.filter(team => team.teamId === teamId);
+	
+	return CRICKET_WICKETS - (Math.round(teamsScore[0].score * 10) % 10);
 };
 
-ChallengeModel.prototype.getWicketsForRightSide = function(){
-	const scoreArray = this.scoreAr;
-	return scoreArray[1].split('/')[1];
-};
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
 			const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
 					result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
 					teamsData 						= event.teamsData,
+					teamsScore 						= event.results.teamScore,
 					schoolsData						= TeamHelper.getSchoolsData(event),
 					eventType 						= event.eventType,
 					lostInResults 					= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost, ' : '',
+					isMatchAwarded 					= result === 'match_awarded',
 					isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData),
-					teamName 						= this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket),
+					teamName 						= this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket, isMatchAwarded),
 					runsAbs 						= Math.abs(Number(this.getRunsForLeftSide() - Number(this.getRunsForRightSide()))),
-					wicketsLeft 					= CRICKET_WICKETS - Number(this.getWicketsForLeftSide()),
-					wicketsRight 					= CRICKET_WICKETS - Number(this.getWicketsForRightSide());
+					wickets		 					= this.getWickets(teamsScore, teamId);
 
 			switch (true) {
 				case result === 'tie' || result === 'draw' || result === 'tbd':
@@ -176,19 +175,19 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				case result === 'won_by_runs' && isTeamFromActiveSchoolCricket:
 					return `${teamName} won by ${runsAbs} runs`;
 				case result === 'won_by_wickets' && isTeamFromActiveSchoolCricket:
-					return `${teamName} won by ${wicketsLeft} wickets`;
+					return `${teamName} won by ${wickets} wickets`;
 				case result === 'won_by_innings_and_runs' && isTeamFromActiveSchoolCricket:
 					return `${teamName} won by innings and ${runsAbs} runs`;
 				case result === 'won_by_runs' && !isTeamFromActiveSchoolCricket:
 					return `${lostInResults}${teamName} won by ${runsAbs} runs`;
 				case result === 'won_by_wickets' && !isTeamFromActiveSchoolCricket:
-					return `${lostInResults} ${teamName} won by ${wicketsRight} wickets`;
+					return `${lostInResults} ${teamName} won by ${wickets} wickets`;
 				case result === 'won_by_innings_and_runs' && !isTeamFromActiveSchoolCricket:
 					return `${lostInResults}${teamName} won by innings and ${runsAbs} runs`;
 				case result === 'match_awarded' && isTeamFromActiveSchoolCricket:
 					return `Match awarded to ${teamName}`;
 				case result === 'match_awarded' && !isTeamFromActiveSchoolCricket:
-					return `Match conceded to ${teamName}`;
+					return `Match conceded by ${teamName}`;
 				default:
 					return `No result yet`;
 			}
