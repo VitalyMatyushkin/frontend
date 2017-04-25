@@ -24,7 +24,7 @@ const	TeamsManagerStyles		= require('../../../../styles/ui/teams_manager/b_teams
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isInviteMode			: React.PropTypes.bool,
+		isShowRivals			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
@@ -53,7 +53,7 @@ const Manager = React.createClass({
 	},
 	getDefaultProps: function(){
 		return {
-			isShowAddTeamButton: true
+			isShowAddTeamButton: false
 		};
 	},
 	initDefaultBinding: function() {
@@ -476,7 +476,7 @@ const Manager = React.createClass({
 			<div className="bTeamsManager">
 				<RivalChooser
 					binding					= { binding }
-					isInviteMode			= { this.props.isInviteMode }
+					isShowRivals			= { this.props.isShowRivals }
 					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.handleClickAddTeam }

@@ -20,6 +20,7 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 
 // Helpers
 const	EventFormActions				= require('./event_form_actions'),
+		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
 		EventHelper						= require('../../eventHelper'),
 		GeoSearchHelper					= require('../../../../../helpers/geo_search_helper');
 
@@ -199,6 +200,8 @@ const EventForm = React.createClass({
 	},
 	renderSchoolChoosers: function() {
 		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model'),
+				sport	= event.sportModel,
 				rivals	= binding.toJS('rivals');
 
 		const choosers = rivals.filter((rival, rivalIndex) => rivalIndex !== 0).map((rival, rivalIndex) => {
@@ -220,17 +223,26 @@ const EventForm = React.createClass({
 			);
 		});
 
-		choosers.push(
-			<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivals.length}`)}
-							serviceFilter	= {this.schoolService}
-							serverField		= "name"
-							placeholder		= "Enter school name"
-							onSelect		= {this.onSelectRival.bind(null, rivals.length)}
-							binding			= {binding.sub(`autocomplete.inter-schools.${rivals.length}`)}
-							extraCssStyle	= "mBigSize mWhiteBG"
-							customListItem	= {SchoolItemList}
-			/>
-		);
+		if(
+			rivals.length === 1 ||
+			(
+				rivals.length >= 2 &&
+				typeof sport !== 'undefined' && sport.multiparty &&
+				TeamHelper.isTeamSport(event)
+			)
+		) {
+			choosers.push(
+				<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivals.length}`)}
+								serviceFilter	= {this.schoolService}
+								serverField		= "name"
+								placeholder		= "Enter school name"
+								onSelect		= {this.onSelectRival.bind(null, rivals.length)}
+								binding			= {binding.sub(`autocomplete.inter-schools.${rivals.length}`)}
+								extraCssStyle	= "mBigSize mWhiteBG"
+								customListItem	= {SchoolItemList}
+				/>
+			);
+		}
 
 		return (
 			<div className="bInputWrapper">

@@ -214,16 +214,20 @@ const ManagerWrapper = React.createClass({
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
-		return !TeamHelper.isInternalEventForTeamSport(event);
+		return (
+			!TeamHelper.isInternalEventForIndividualSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		)
 	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
 
+		// provide isShowRivals by isInviteMode is a trick
 		return (
 			<div className="bTeamManagerWrapper">
 				<Manager	binding					= {managerBinding}
-							isInviteMode			= {!this.isShowRivals()}
+							isShowRivals			= {this.isShowRivals()}
 							isShowAddTeamButton		= {false}
 							indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
 				/>

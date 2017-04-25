@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
 
@@ -54,6 +55,8 @@ const HousesManager = React.createClass({
 	},
 	render: function() {
 		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model'),
+				sport	= event.sportModel,
 				rivals	= binding.toJS('rivals');
 
 		const choosers = rivals.map((rival, rivalIndex) => {
@@ -75,15 +78,25 @@ const HousesManager = React.createClass({
 			);
 		});
 
-		choosers.push(
-			<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivals.length}`) }
-							serviceFilter	= { this.houseService }
-							serverField		= "name"
-							placeholder		= "Enter house name"
-							onSelect		= { this.onSelectRival.bind(null, rivals.length) }
-							extraCssStyle	= "mBigSize mWhiteBG"
-			/>
-		);
+		if(
+			rivals.length < 2 ||
+			(
+				rivals.length >= 2 &&
+				typeof sport !== 'undefined' &&
+				sport.multiparty &&
+				TeamHelper.isTeamSport(event)
+			)
+		) {
+			choosers.push(
+				<Autocomplete	defaultItem={ binding.toJS(`rivals.${rivals.length}`) }
+								serviceFilter={ this.houseService }
+								serverField="name"
+								placeholder="Enter house name"
+								onSelect={ this.onSelectRival.bind(null, rivals.length) }
+								extraCssStyle="mBigSize mWhiteBG"
+				/>
+			);
+		}
 
 		return (
 			<div className="bInputWrapper">
