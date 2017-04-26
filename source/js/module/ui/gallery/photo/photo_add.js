@@ -44,7 +44,7 @@ const PhotoAddComponent = React.createClass({
 		})
 		.then(() => {
 			window.simpleAlert(
-				'Your image has successfully upload!',
+				'The image has been successfully uploaded.',
 				'Ok',
 				() => {
 					//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops

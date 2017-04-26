@@ -1,9 +1,11 @@
 /**
  * Created by Anatoly on 28.03.2016.
  */
-const   DateHelper  = require('module/helpers/date_helper'),
-        EventHelper = require('module/helpers/eventHelper'),
-        TeamHelper  = require('module/ui/managers/helpers/team_helper');
+const   DateHelper				= require('module/helpers/date_helper'),
+        EventHelper				= require('module/helpers/eventHelper'),
+		SportHelper 			= require('module/helpers/sport_helper'),
+		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
+        TeamHelper				= require('module/ui/managers/helpers/team_helper');
 
 /**
  * This component contains the necessary information to render header or the event list.
@@ -43,8 +45,6 @@ const ChallengeModel = function(event, activeSchoolId){
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 
 	this.sport 				= event.sport ? event.sport.name : '';
-	this.sportModel			= event.sport;
-	this.isTeamSport		= TeamHelper.isTeamSport(event);
 	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
 	this.isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
@@ -77,7 +77,7 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 			points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
 				TeamHelper.getCountPoints.bind(TeamHelper, event));
 		let result1, result2;
-		if (event.sport.name.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(event.sport.name)) {
 			result1 = TeamHelper.convertPointsCricket(points1).runs + '/' + TeamHelper.convertPointsCricket(points1).wickets;
 			result2 = TeamHelper.convertPointsCricket(points2).runs + '/' + TeamHelper.convertPointsCricket(points2).wickets;
 		} else {
@@ -91,18 +91,19 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 	}
 };
 
-ChallengeModel.prototype._getScore = function() {
-	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+ChallengeModel.prototype._getScore = function(event) {
+	if(!this.isFinished) {
+		return '- : -';
+	} else if (
+		this.isFinished &&
+		TeamHelper.isTeamSport(event) &&
+		event.sport.multiparty
+	) {
 		return '';
-	} else {
-		switch (true) {
-			case !this.isFinished:
-				return '- : -';
-			case this.isFinished && this.isIndividualSport:
-				return '';
-			case this.isFinished && !this.isIndividualSport:
-				return this.scoreAr.join(' : ');
-		}
+	} else if(this.isFinished && this.isIndividualSport) {
+		return '';
+	} else if(this.isFinished && !this.isIndividualSport) {
+		return this.scoreAr.join(' : ');
 	}
 };
 
@@ -158,7 +159,7 @@ ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventT
 
 //We get the difference module of the runs, because we only care about this, then we display text result of game
 ChallengeModel.prototype.getRuns = function(teamsScore){
-	if (typeof teamsScore !== 'undefined') {
+	if (teamsScore.length !== 0) {
 		return Math.abs(Math.floor(teamsScore[0].score) - Math.floor(teamsScore[1].score));
 	} else {
 		return 0;
@@ -177,7 +178,7 @@ ChallengeModel.prototype.getWickets = function(teamsScore, teamId){
 
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
-	if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
+	if (this.isFinished && SportHelper.isCricket(event.sport.name)) { //то это полная жопа
 		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
 				result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
 				teamsData 						= event.teamsData,
@@ -217,11 +218,34 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		}
 	}
 
-	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+	if(
+		this.isFinished &&
+		TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+		event.sport.multiparty
+	) {
+		const places = ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(event);
+
+		if(places.length === 1) {
+			return 'Draw';
+		} else {
+			const activeSchoolPlace = places.find(p => {
+				return p.schoolIds.find(id => id === activeSchoolId);
+			});
+
+			return `${activeSchoolPlace.place}th place`;
+		}
+	}
+
+	if(
+		this.isFinished &&
+		!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+		TeamHelper.isTeamSport(event) &&
+		event.sport.multiparty
+	) {
 		return 'Multiple result'
 	}
 
-	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && event.sport.name.toLowerCase() !== 'cricket') {
+	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && !SportHelper.isCricket(event.sport.name)) {
 		const scoreArray = this.scoreAr;
 
 		switch (event.sport.scoring) {

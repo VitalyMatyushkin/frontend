@@ -8,6 +8,7 @@ const	EventHelper					= require('module/helpers/eventHelper'),
 		ScoreConsts					= require('./../../../../ui/score/score_consts'),
 		Morearty					= require('morearty'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
+		SportHelper					= require('module/helpers/sport_helper'),
 		Immutable					= require('immutable'),
 		React						= require('react'),
 
@@ -131,7 +132,7 @@ const EventRival = React.createClass({
 		
 		//For cricket we use separate component (because cricket no usual game, with very strange rules)
 		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
-		if (event.sport.name.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<div className="eEventResult_PointSideWrapper">
 					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}

@@ -6,6 +6,7 @@ const 	React				= require('react'),
 		propz				= require('propz'),
 		DateTimeMixin		= require('module/mixins/datetime'),
 		EventHelper			= require('module/helpers/eventHelper'),
+		SportHelper 		= require('module/helpers/sport_helper'),
 		SportIcon			= require('module/ui/icons/sport_icon'),
 		ChallengeModel		= require('module/ui/challenges/challenge_model'),
 		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
@@ -74,7 +75,9 @@ const FixtureItem = React.createClass({
 				sportName			= event.sport.name,
 				activeSchoolId		= this.props.activeSchoolId,
 				challengeModel		= new ChallengeModel(event, activeSchoolId),
-				isAwaitingOpponent	= event.status === 'INVITES_SENT';
+				isAwaitingOpponent	= event.status === 'INVITES_SENT',
+				score 				= SportHelper.isCricket(challengeModel.sport) ? challengeModel.textResult : challengeModel.score,
+				scoreText 			= SportHelper.isCricket(challengeModel.sport) ? '' : 'Score';
 
 		return (
 			<div className="bFixtureContainer">
@@ -92,8 +95,8 @@ const FixtureItem = React.createClass({
 							{this.renderLeftOpponentSide(event, challengeModel)}
 							<div className="eFixture_item mResult">
 								<div>
-									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : 'Score'}</div>
-									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${challengeModel.score}`}</div>
+									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : scoreText}</div>
+									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${score}`}</div>
 								</div>
 							</div>
 							{this.renderRightOpponentSide(event, challengeModel)}

@@ -8,9 +8,9 @@ const 	EventHelper = require('module/helpers/eventHelper'),
 
 const CRICKET_WICKETS = 10;
 
-const DivForCricketWithResultStyles = require('styles/ui/div_for_cricket_with_result/div_for_cricket_with_result.scss');
+const CricketResultBlockStyles = require('styles/ui/cricket_result_block/cricket_result_block.scss');
 
-const DivForCricketWithResult = React.createClass({
+const CricketResultBlock = React.createClass({
 	propTypes: {
 		event: 				React.PropTypes.object.isRequired,
 		activeSchoolId: 	React.PropTypes.string.isRequired
@@ -64,7 +64,7 @@ const DivForCricketWithResult = React.createClass({
 
 	//We get the difference module of the runs, because we only care about this, then we display text result of game
 	getRuns: function(teamsScore){
-		if (typeof teamsScore !== 'undefined') {
+		if (teamsScore.length !== 0) {
 			return Math.abs(Math.floor(teamsScore[0].score) - Math.floor(teamsScore[1].score));
 		} else {
 			return 0;
@@ -126,11 +126,11 @@ const DivForCricketWithResult = React.createClass({
 	
 	render: function(){
 		return (
-			<div className="eDivForCricketWithResult">
+			<div className="eCricketResultBlock">
 				{ this.getTextResult() }
 			</div>
 		);
 	}
 });
 
-module.exports = DivForCricketWithResult;
+module.exports = CricketResultBlock;
