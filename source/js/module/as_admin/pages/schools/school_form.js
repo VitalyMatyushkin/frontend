@@ -90,7 +90,7 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField classNames="mWideSingleLine" type="checkbox" field="studentSelfRegistrationEnabled">
 						Student registration
 					</FormField>
-					<FormField classNames="mWideSingleLine" type="checkbox" field="settings.notificationsEnabled">
+					<FormField classNames="mWideSingleLine" type="checkbox" field="notificationsEnabled">
 						Enable push notification
 					</FormField>
 				</FormColumn>
