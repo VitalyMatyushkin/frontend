@@ -1,10 +1,10 @@
 /**
  * Created by Anatoly on 28.03.2016.
  */
-const   DateHelper  = require('module/helpers/date_helper'),
-        EventHelper = require('module/helpers/eventHelper'),
+const   DateHelper				= require('module/helpers/date_helper'),
+        EventHelper				= require('module/helpers/eventHelper'),
 		SportHelper = require('module/helpers/sport_helper'),
-        TeamHelper  = require('module/ui/managers/helpers/team_helper');
+        TeamHelper				= require('module/ui/managers/helpers/team_helper');
 
 /**
  * This component contains the necessary information to render header or the event list.
@@ -44,8 +44,6 @@ const ChallengeModel = function(event, activeSchoolId){
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 
 	this.sport 				= event.sport ? event.sport.name : '';
-	this.sportModel			= event.sport;
-	this.isTeamSport		= TeamHelper.isTeamSport(event);
 	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
 	this.isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
@@ -92,18 +90,19 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 	}
 };
 
-ChallengeModel.prototype._getScore = function() {
-	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+ChallengeModel.prototype._getScore = function(event) {
+	if(!this.isFinished) {
+		return '- : -';
+	} else if (
+		this.isFinished &&
+		TeamHelper.isTeamSport(event) &&
+		event.sport.multiparty
+	) {
 		return '';
-	} else {
-		switch (true) {
-			case !this.isFinished:
-				return '- : -';
-			case this.isFinished && this.isIndividualSport:
-				return '';
-			case this.isFinished && !this.isIndividualSport:
-				return this.scoreAr.join(' : ');
-		}
+	} else if(this.isFinished && this.isIndividualSport) {
+		return '';
+	} else if(this.isFinished && !this.isIndividualSport) {
+		return this.scoreAr.join(' : ');
 	}
 };
 
@@ -218,7 +217,30 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		}
 	}
 
-	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+	if(
+		this.isFinished &&
+		TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+		event.sport.multiparty
+	) {
+		const places = ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(event);
+
+		if(places.length === 1) {
+			return 'Draw';
+		} else {
+			const activeSchoolPlace = places.find(p => {
+				return p.schoolIds.find(id => id === activeSchoolId);
+			});
+
+			return `${activeSchoolPlace.place}th place`;
+		}
+	}
+
+	if(
+		this.isFinished &&
+		!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+		TeamHelper.isTeamSport(event) &&
+		event.sport.multiparty
+	) {
 		return 'Multiple result'
 	}
 
