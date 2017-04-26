@@ -3,6 +3,7 @@ const	React			= require('react'),
 		ScoreCricket	= require('module/ui/score/score_cricket'),
 		ScoreConsts		= require('module/ui/score/score_consts'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		SportHelper 	= require('module/helpers/sport_helper'),
 		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		propz			= require('propz');
 
@@ -92,7 +93,7 @@ const HouseRivalInfo = React.createClass({
 		
 		//For cricket we use separate component (because cricket no usual game, with very strange rules)
 		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
-		if (event.sport.name.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<div className="eEventResult_PointSideWrapper">
 					<ScoreCricket	isChangeMode	= { isChangeMode }
@@ -107,13 +108,13 @@ const HouseRivalInfo = React.createClass({
 		} else {
 			return (
 				<div className="eEventResult_PointSideWrapper">
-					<Score isChangeMode={ isChangeMode }
-						   plainPoints={ points }
-						   pointsStep={ event.sport.points.pointsStep }
-						   pointsType={ event.sport.points.display }
-						   pointsMask={ event.sport.points.inputMask }
-						   onChange={ this.onChangeScore }
-						   modeView={ ScoreConsts.SCORE_MODES_VIEW.BIG }
+					<Score 	isChangeMode 	= { isChangeMode }
+							plainPoints 	= { points }
+							pointsStep 		= { event.sport.points.pointsStep }
+							pointsType 		= { event.sport.points.display }
+							pointsMask 		= { event.sport.points.inputMask }
+							onChange 		= { this.onChangeScore }
+							modeView 		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
 					/>
 				</div>
 			);

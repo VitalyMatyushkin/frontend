@@ -5,7 +5,8 @@ const 	React 					= require('react'),
 		ChallengeModel			= require('module/ui/challenges/challenge_model'),
 		Button 					= require('module/ui/button/button'),
 		TeamHelper 				= require('module/ui/managers/helpers/team_helper'),
-		DivForCricketWithResult = require('module/as_manager/pages/event/view/rivals/div_for_cricket_with_result/div_for_cricket_with_result');
+		SportHelper 			= require('module/helpers/sport_helper'),
+		CricketResultBlock 		= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
 
 const FixtureListItem = React.createClass({
 	
@@ -31,7 +32,7 @@ const FixtureListItem = React.createClass({
 	},
 	
 	renderOpponentSide: function (model, order) {
-		if (model.sport.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(model.sport)) {
 			//In model.scoreAr format score {string}: <Runs>999/<Wickets>9 (example 200/5, mean Runs: 200, Wickets: 5)
 			const 	runs 	= model.scoreAr[order].split('/')[0],
 					wickets = model.scoreAr[order].split('/')[1];
@@ -92,9 +93,9 @@ const FixtureListItem = React.createClass({
 	renderGameResultForCricket: function(){
 		const sportName = this.props.event.sport.name.toLowerCase();
 		
-		if (sportName === 'cricket') {
+		if (SportHelper.isCricket(sportName)) {
 			return (
-				<DivForCricketWithResult
+				<CricketResultBlock
 					event 			= { this.props.event }
 					activeSchoolId 	= { this.props.activeSchoolId }
 				/>
