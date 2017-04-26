@@ -43,6 +43,8 @@ const ChallengeModel = function(event, activeSchoolId){
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 
 	this.sport 				= event.sport ? event.sport.name : '';
+	this.sportModel			= event.sport;
+	this.isTeamSport		= TeamHelper.isTeamSport(event);
 	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
 	this.isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
@@ -89,14 +91,18 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 	}
 };
 
-ChallengeModel.prototype._getScore = function(){
-	switch (true) {
-		case !this.isFinished:
-			return '- : -';
-		case this.isFinished && this.isIndividualSport:
-			return '';
-		case this.isFinished && !this.isIndividualSport:
-			return this.scoreAr.join(' : ');
+ChallengeModel.prototype._getScore = function() {
+	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+		return '';
+	} else {
+		switch (true) {
+			case !this.isFinished:
+				return '- : -';
+			case this.isFinished && this.isIndividualSport:
+				return '';
+			case this.isFinished && !this.isIndividualSport:
+				return this.scoreAr.join(' : ');
+		}
 	}
 };
 
@@ -171,73 +177,77 @@ ChallengeModel.prototype.getWickets = function(teamsScore, teamId){
 
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
-		if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
-			const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
-					result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
-					teamsData 						= event.teamsData,
-					teamsScore 						= event.results.teamScore,
-					schoolsData						= TeamHelper.getSchoolsData(event),
-					eventType 						= event.eventType,
-					lostInResults 					= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost, ' : '',
-					isMatchAwarded 					= result === 'match_awarded',
-					isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData),
-					teamName 						= this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket, isMatchAwarded),
-					runsAbs 						= this.getRuns(teamsScore),
-					wickets		 					= this.getWickets(teamsScore, teamId);
+	if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
+		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
+				result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
+				teamsData 						= event.teamsData,
+				teamsScore 						= event.results.teamScore,
+				schoolsData						= TeamHelper.getSchoolsData(event),
+				eventType 						= event.eventType,
+				lostInResults 					= event.eventType === 'EXTERNAL_SCHOOLS' ? 'Lost, ' : '',
+				isMatchAwarded 					= result === 'match_awarded',
+				isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData),
+				teamName 						= this.getTeamNameCricket(teamId, teamsData, eventType, schoolsData, isTeamFromActiveSchoolCricket, isMatchAwarded),
+				runsAbs 						= this.getRuns(teamsScore),
+				wickets		 					= this.getWickets(teamsScore, teamId);
 
-			switch (true) {
-				case result === 'tie' || result === 'draw' || result === 'tbd':
-					return result.toUpperCase();
-				case result === 'no_result':
-					return `No result`;
-				case result === 'won_by_runs' && isTeamFromActiveSchoolCricket:
-					return `${teamName} won by ${runsAbs} runs`;
-				case result === 'won_by_wickets' && isTeamFromActiveSchoolCricket:
-					return `${teamName} won by ${wickets} wickets`;
-				case result === 'won_by_innings_and_runs' && isTeamFromActiveSchoolCricket:
-					return `${teamName} won by innings and ${runsAbs} runs`;
-				case result === 'won_by_runs' && !isTeamFromActiveSchoolCricket:
-					return `${lostInResults}${teamName} won by ${runsAbs} runs`;
-				case result === 'won_by_wickets' && !isTeamFromActiveSchoolCricket:
-					return `${lostInResults} ${teamName} won by ${wickets} wickets`;
-				case result === 'won_by_innings_and_runs' && !isTeamFromActiveSchoolCricket:
-					return `${lostInResults}${teamName} won by innings and ${runsAbs} runs`;
-				case result === 'match_awarded' && isTeamFromActiveSchoolCricket:
-					return `Match awarded to ${teamName}`;
-				case result === 'match_awarded' && !isTeamFromActiveSchoolCricket:
-					return `Match conceded by ${teamName}`;
-				default:
-					return `No result yet`;
-			}
+		switch (true) {
+			case result === 'tie' || result === 'draw' || result === 'tbd':
+				return result.toUpperCase();
+			case result === 'no_result':
+				return `No result`;
+			case result === 'won_by_runs' && isTeamFromActiveSchoolCricket:
+				return `${teamName} won by ${runsAbs} runs`;
+			case result === 'won_by_wickets' && isTeamFromActiveSchoolCricket:
+				return `${teamName} won by ${wickets} wickets`;
+			case result === 'won_by_innings_and_runs' && isTeamFromActiveSchoolCricket:
+				return `${teamName} won by innings and ${runsAbs} runs`;
+			case result === 'won_by_runs' && !isTeamFromActiveSchoolCricket:
+				return `${lostInResults}${teamName} won by ${runsAbs} runs`;
+			case result === 'won_by_wickets' && !isTeamFromActiveSchoolCricket:
+				return `${lostInResults} ${teamName} won by ${wickets} wickets`;
+			case result === 'won_by_innings_and_runs' && !isTeamFromActiveSchoolCricket:
+				return `${lostInResults}${teamName} won by innings and ${runsAbs} runs`;
+			case result === 'match_awarded' && isTeamFromActiveSchoolCricket:
+				return `Match awarded to ${teamName}`;
+			case result === 'match_awarded' && !isTeamFromActiveSchoolCricket:
+				return `Match conceded by ${teamName}`;
+			default:
+				return `No result yet`;
 		}
-	
-		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && event.sport.name.toLowerCase() !== 'cricket') {
-			const scoreArray = this.scoreAr;
+	}
 
-			switch (event.sport.scoring) {
-				case 'LESS_SCORES':
-				case 'LESS_TIME':
-				case 'LESS_RESULT':
-					if(scoreArray[0] < scoreArray[1]) {
-						return "Won";
-					} else if(scoreArray[0] > scoreArray[1]) {
-						return "Lost";
-					} else {
-						return "Draw";
-					}
-				case 'MORE_SCORES':
-				case 'MORE_TIME':
-				case 'MORE_RESULT':
-				case 'FIRST_TO_N_POINTS':
-					if(scoreArray[0] > scoreArray[1]) {
-						return "Won";
-					} else if(scoreArray[0] < scoreArray[1]) {
-						return "Lost";
-					} else {
-						return "Draw";
-					}
-			}
+	if(this.isFinished && this.isTeamSport && this.sportModel.multiparty) {
+		return 'Multiple result'
+	}
+
+	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && event.sport.name.toLowerCase() !== 'cricket') {
+		const scoreArray = this.scoreAr;
+
+		switch (event.sport.scoring) {
+			case 'LESS_SCORES':
+			case 'LESS_TIME':
+			case 'LESS_RESULT':
+				if(scoreArray[0] < scoreArray[1]) {
+					return "Won";
+				} else if(scoreArray[0] > scoreArray[1]) {
+					return "Lost";
+				} else {
+					return "Draw";
+				}
+			case 'MORE_SCORES':
+			case 'MORE_TIME':
+			case 'MORE_RESULT':
+			case 'FIRST_TO_N_POINTS':
+				if(scoreArray[0] > scoreArray[1]) {
+					return "Won";
+				} else if(scoreArray[0] < scoreArray[1]) {
+					return "Lost";
+				} else {
+					return "Draw";
+				}
 		}
+	}
 };
 
 module.exports = ChallengeModel;
