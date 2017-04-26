@@ -74,7 +74,9 @@ const FixtureItem = React.createClass({
 				sportName			= event.sport.name,
 				activeSchoolId		= this.props.activeSchoolId,
 				challengeModel		= new ChallengeModel(event, activeSchoolId),
-				isAwaitingOpponent	= event.status === 'INVITES_SENT';
+				isAwaitingOpponent	= event.status === 'INVITES_SENT',
+				score 				= challengeModel.sport.toLowerCase() === 'cricket' ? challengeModel.textResult : challengeModel.score,
+				scoreText 			= challengeModel.sport.toLowerCase() === 'cricket' ? '' : 'Score';
 
 		return (
 			<div className="bFixtureContainer">
@@ -92,8 +94,8 @@ const FixtureItem = React.createClass({
 							{this.renderLeftOpponentSide(event, challengeModel)}
 							<div className="eFixture_item mResult">
 								<div>
-									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : 'Score'}</div>
-									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${challengeModel.score}`}</div>
+									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : scoreText}</div>
+									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${score}`}</div>
 								</div>
 							</div>
 							{this.renderRightOpponentSide(event, challengeModel)}

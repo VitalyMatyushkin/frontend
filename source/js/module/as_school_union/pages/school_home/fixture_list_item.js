@@ -27,19 +27,38 @@ const FixtureListItem = React.createClass({
 			</div>
 		)
 	},
-
+	
 	renderOpponentSide: function (model, order) {
-		return (
-			<div>
-				<div className="eEventRival_logo">
-					<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
+		if (model.sport.toLowerCase() === 'cricket') {
+			//In model.scoreAr format score {string}: <Runs>999/<Wickets>9 (example 200/5, mean Runs: 200, Wickets: 5)
+			const 	runs 	= model.scoreAr[order].split('/')[0],
+					wickets = model.scoreAr[order].split('/')[1];
+			
+			return (
+				<div>
+					<div className="eEventRival_logo">
+						<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
+					</div>
+					<div className="eEventRival_rivalName">{model.rivals[order].value}</div>
+					<div className="eEventRival_score">
+						<div className="ePlayer_score mMedium">{`Runs ${runs} / Wickets ${wickets}`}</div>
+					</div>
 				</div>
-				<div className="eEventRival_rivalName">{model.rivals[order].value}</div>
-				<div className="eEventRival_score">
-					<div className="ePlayer_score mBig">{`${model.scoreAr[order]}`}</div>
+			);
+			
+		} else {
+			return (
+				<div>
+					<div className="eEventRival_logo">
+						<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
+					</div>
+					<div className="eEventRival_rivalName">{model.rivals[order].value}</div>
+					<div className="eEventRival_score">
+						<div className="ePlayer_score mBig">{`${model.scoreAr[order]}`}</div>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	},
 	
 	renderGameResultForCricket: function(){

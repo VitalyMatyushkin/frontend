@@ -158,7 +158,7 @@ ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, eventT
 
 //We get the difference module of the runs, because we only care about this, then we display text result of game
 ChallengeModel.prototype.getRuns = function(teamsScore){
-	if (typeof teamsScore !== 'undefined') {
+	if (teamsScore.length !== 0) {
 		return Math.abs(Math.floor(teamsScore[0].score) - Math.floor(teamsScore[1].score));
 	} else {
 		return 0;
