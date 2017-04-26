@@ -1,10 +1,11 @@
-const	React					= require('react'),
+const	React				= require('react'),
 		PencilButton			= require('module/ui/pencil_button'),
 		Score					= require('module/ui/score/score'),
 		ScoreCricket			= require('module/ui/score/score_cricket'),
 		ScoreConsts				= require('module/ui/score/score_consts'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		EventHelper				= require('module/helpers/eventHelper'),
+		SportHelper 			= require('module/helpers/sport_helper'),
 		RivalHelper				= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
 		classNames				= require('classnames'),
@@ -162,7 +163,7 @@ const SchoolRivalInfo = React.createClass({
 		
 		//For cricket we use separate component (because cricket no usual game, with very strange rules)
 		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
-		if (event.sport.name.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<div className="eEventResult_PointSideWrapper">
 					<ScoreCricket	isChangeMode	= { isChangeMode }

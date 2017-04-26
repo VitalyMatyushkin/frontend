@@ -4,10 +4,11 @@ const	React						= require('react'),
 		Rival						= require('module/as_manager/pages/event/view/rivals/rival/rival'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventHelper					= require('module/helpers/eventHelper'),
+		SportHelper					= require('module/helpers/sport_helper'),
 		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames					= require('classnames'),
 		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		DivForCricketWithResult 	= require('module/as_manager/pages/event/view/rivals/div_for_cricket_with_result/div_for_cricket_with_result'),
+		CricketResultBlock 			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
 
 const Rivals = React.createClass({
@@ -567,7 +568,7 @@ const Rivals = React.createClass({
 				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
 				event 		= binding.toJS('model');
 
-		if (sportName === 'cricket' && mode === 'closing') {
+		if (SportHelper.isCricket(sportName) && mode === 'closing') {
 			return (
 				<SelectForCricketWrapper
 					event 			= { event }
@@ -585,9 +586,9 @@ const Rivals = React.createClass({
 				event 		= binding.toJS('model'),
 				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '';
 
-		if (sportName === 'cricket' && mode === 'general') {
+		if (SportHelper.isCricket(sportName) && mode === 'general') {
 			return (
-				<DivForCricketWithResult
+				<CricketResultBlock
 					event 			= { event }
 					activeSchoolId 	= { this.props.activeSchoolId }
 				/>

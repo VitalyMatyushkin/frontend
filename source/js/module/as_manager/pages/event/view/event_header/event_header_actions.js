@@ -5,6 +5,7 @@
 const 	Immutable 			= require('immutable'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
+		SportHelper			= require('module/helpers/sport_helper'),
 		Promise				= require('bluebird');
 
 function downloadPdf(schoolId: string, eventId: string, event: any) {
@@ -317,7 +318,7 @@ function submitIndividualResults(activeSchoolId: string, event: any) {
 }
 
 function submitCricketResults(activeSchoolId: string, event: any) {
-	if (event.sport.name.toLowerCase() === 'cricket') {
+	if (SportHelper.isCricket(event.sport.name)) {
 		const cricketTextResult = typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toUpperCase() : 'TBD';
 		const cricketResult: { result?: string, who?: string } = {
 			result: cricketTextResult
