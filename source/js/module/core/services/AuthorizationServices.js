@@ -3,39 +3,45 @@
  */
 
 const   StorageHelper 	= require('module/helpers/storage'),
-		Immutable   	= require('immutable');
+		Immutable   	= require('immutable'),
+		Promise 		= require('bluebird');
 
 /** Authorization Services */
 const AuthorizationServices ={
     login: function(data){
         const   service = window.Server._login,
                 binding = service.binding;
-        return service.post(data).then(authData => {
-            if(authData.key) {
-                const authInfo = {
-                    id: authData.key,
-                    expireAt: authData.expireAt
-                };
-                if(authData.adminId)
-                    authInfo.adminId = authData.adminId;
-                else
-                    authInfo.userId = authData.userId;
-
-                binding.set(Immutable.fromJS(authInfo));
-				if(authData.userId){
-					return window.Server.roles.get().then(roles => {
-						if(roles && roles.length == 1){
-							return AuthorizationServices.become(roles[0].name);
-						}
-						else
-							return AuthorizationServices.become('NOBODY');
-					});
+		return service.post(data).then(
+			authData => {
+				if(authData.key) {
+					const authInfo = {
+						id: authData.key,
+						expireAt: authData.expireAt
+					};
+					if(authData.adminId)
+						authInfo.adminId = authData.adminId;
+					else
+						authInfo.userId = authData.userId;
+				
+					binding.set(Immutable.fromJS(authInfo));
+					if(authData.userId){
+						return window.Server.roles.get().then(roles => {
+							if(roles && roles.length == 1){
+								return AuthorizationServices.become(roles[0].name);
+							}
+							else
+								return AuthorizationServices.become('NOBODY');
+						});
+					}
+				
 				}
-
-			}
-
-            return authData;
-        });
+				
+				return authData;
+			},
+			error => {
+				console.log(`Login failed: \nResponse text: ${error.xhr.responseText} \nStatus: ${error.xhr.status} \nStatus text: ${error.xhr.statusText}`);
+				return Promise.reject(error);
+			});
     },
     become:function(roleName){
         const   service = window.Server._become,

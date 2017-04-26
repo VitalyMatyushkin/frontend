@@ -4,10 +4,10 @@ const	EventHelper					= require('module/helpers/eventHelper'),
 		PencilButton				= require('./../../../../ui/pencil_button'),
 		Sport						= require('module/ui/icons/sport_icon'),
 		Score						= require('./../../../../ui/score/score'),
+		ScoreCricket				= require('./../../../../ui/score/score_cricket'),
 		ScoreConsts					= require('./../../../../ui/score/score_consts'),
 		Morearty					= require('morearty'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
-		ChangeOpponentSchoolPopup	= require('./change_opponent_school_popup'),
 		Immutable					= require('immutable'),
 		React						= require('react'),
 
@@ -16,8 +16,9 @@ const	EventHelper					= require('module/helpers/eventHelper'),
 const EventRival = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		onReload:		React.PropTypes.func.isRequired
+		activeSchoolId:							React.PropTypes.string.isRequired,
+		handleClickChangeOpponentSchoolButton:	React.PropTypes.func.isRequired,
+		onReload:								React.PropTypes.func.isRequired
 	},
 	getPic: function (order) {
 		const	self = this,
@@ -127,19 +128,36 @@ const EventRival = React.createClass({
 		const	mode						= binding.toJS('mode'),
 				status						= binding.toJS('model.status'),
 				isa 						= !individualScoreAvailable || teamBundleName != 'teamsData';
-
-		return (
-			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
-						plainPoints		= {points}
-						pointsStep		= {event.sport.points.pointsStep}
-						pointsType		= {event.sport.points.display}
-						pointsMask		= {event.sport.points.inputMask}
-						onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
-						modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
-				/>
-			</div>
-		);
+		
+		//For cricket we use separate component (because cricket no usual game, with very strange rules)
+		//We save score in format {number}: <Runs>999.<Wickets>9 (example 200.5, mean Runs: 200, Wickets: 5)
+		if (event.sport.name.toLowerCase() === 'cricket') {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
+									plainPoints		= {points}
+									pointsStep		= {event.sport.points.pointsStep}
+									pointsType		= {event.sport.points.display}
+									pointsMask		= {event.sport.points.inputMask}
+									onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
+									modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
+					/>
+				</div>
+			);
+		} else {
+			return (
+				<div className="eEventResult_PointSideWrapper">
+					<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
+							plainPoints		= {points}
+							pointsStep		= {event.sport.points.pointsStep}
+							pointsType		= {event.sport.points.display}
+							pointsMask		= {event.sport.points.inputMask}
+							onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
+							modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
+					/>
+				</div>
+			);
+		}
 	},
 	getTeamScoreData: function(event, order) {
 		const	self	= this,
@@ -376,7 +394,7 @@ const EventRival = React.createClass({
 			<div className={eventRivalClassName}>
 				<If condition={this.isShowChangeSchoolButton(order)}>
 					<div className="eEventRival_buttonContainer">
-						<PencilButton handleClick={this.handleClickChangeOpponentSchoolButton}/>
+						<PencilButton handleClick={this.props.handleClickChangeOpponentSchoolButton}/>
 					</div>
 				</If>
 				<div className="eEventRival_logo">{ this.getPic(order) }</div>
@@ -384,12 +402,6 @@ const EventRival = React.createClass({
 				{ this._renderPoints(order) }
 			</div>
 		);
-	},
-	handleClickChangeOpponentSchoolButton: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('isChangeOpponentSchoolPopupOpen', !binding.get('isChangeOpponentSchoolPopupOpen'));
 	},
 	_renderTeamLeftSide: function() {
 		const	self	= this,
@@ -450,22 +462,6 @@ const EventRival = React.createClass({
 			return self._renderTeamByOrder(1);
 		}
 	},
-	renderChangeOpponentSchoolPopup: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		if(binding.toJS('isChangeOpponentSchoolPopupOpen')) {
-			return (
-				<ChangeOpponentSchoolPopup
-					activeSchoolId	= {this.props.activeSchoolId}
-					onReload		= {this.props.onReload}
-					binding			= {binding}
-				/>
-			);
-		} else {
-			return null;
-		}
-	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -486,7 +482,6 @@ const EventRival = React.createClass({
 							{self._renderTeamRightSide()}
 						</div>
 					</div>
-					{this.renderChangeOpponentSchoolPopup()}
 				</div>
 			);
 		} else {

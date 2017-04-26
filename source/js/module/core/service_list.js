@@ -113,6 +113,7 @@ const serviceList = {
 		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		serviceList.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+		serviceList.schoolEventInvites = new Service('/i/schools/{schoolId}/events/{eventId}/invites', binding);
 		serviceList.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
 		serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
@@ -141,6 +142,8 @@ const serviceList = {
 		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score/{scoreId}', binding);
         serviceList.schoolEventResultIndividualsScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
         serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score/{scoreId}', binding);
+        serviceList.schoolEventResultCricket = new Service('/i/schools/{schoolId}/events/{eventId}/results/cricket', binding);
+        
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
 		serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
 		serviceList.schoolEventReport = new Service('/i/schools/{schoolId}/events/{eventId}/report', binding);

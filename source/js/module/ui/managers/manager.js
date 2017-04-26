@@ -24,22 +24,25 @@ const	TeamsManagerStyles		= require('../../../../styles/ui/teams_manager/b_teams
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isInviteMode			: React.PropTypes.bool,
+		isShowRivals			: React.PropTypes.bool,
+		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	listeners: [],
 	componentWillMount: function () {
-		const	self = this;
+		const self = this;
 
-		self.initBinding();
-
+		self.initDefaultBinding();
+		self.initErrorBinding();
 		self.addListeners();
 
 		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
 			self.validate(this.props.indexOfDisplayingRival);
 		} else {
-			self.validate(0);
-			self.validate(1);
+			const	binding		= this.getDefaultBinding(),
+					teamWrapper	= binding.toJS('teamModeView.teamWrapper');
+
+			teamWrapper.forEach((tw, index) => self.validate(index));
 		}
 	},
 	componentWillUnmount: function() {
@@ -48,7 +51,12 @@ const Manager = React.createClass({
 
 		self.listeners.forEach(l => binding.removeListener(l));
 	},
-	initBinding: function() {
+	getDefaultProps: function(){
+		return {
+			isShowAddTeamButton: false
+		};
+	},
+	initDefaultBinding: function() {
 		const	self			= this,
 				defaultBinding	= self.getDefaultBinding(),
 				binding			= self.getBinding();
@@ -58,82 +66,106 @@ const Manager = React.createClass({
 			self.initRivalIndex();
 		}
 
-		const	firstTeam	= self.getTeamIdByOrder(0),
-				secondTeam	= self.getTeamIdByOrder(1);
-
-		const	firstTeamName	= self.getTeamNameByOrder(0),
-				secondTeamName	= self.getTeamNameByOrder(1);
+		const	teamTable	= this.getTeamTables(),
+				teamWrapper	= this.getTeamWrappers();
 
 		defaultBinding
 			.atomically()
 			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
-					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
-					players: self.getInitPlayers(),
-					teamTable: [
-						{
-							selectedTeamId	: firstTeam,
-							isSelectedTeam	: typeof firstTeam !== 'undefined',
-							exceptionTeamId	: secondTeam
-						},
-						{
-							selectedTeamId	: secondTeam,
-							isSelectedTeam	: typeof secondTeam !== 'undefined',
-							exceptionTeamId	: firstTeam
-						}
-					],
-					teamWrapper: [
-						{
-							isLoadingTeam: false,
-							filter: undefined,
-							prevSelectedTeamId: firstTeam,
-							selectedTeamId: firstTeam,
-							teamsSaveMode: undefined,
-							teamName: {
-								initName: firstTeamName,
-								name: firstTeamName,
-								mode: 'show'
-							},
-							___teamManagerBinding: {
-								teamStudents: [],
-								blackList: [],
-								positions: defaultBinding.get('model.sportModel.field.positions')
-							},
-							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
-							isSetTeamLater: false
-						},
-						{
-							isLoadingTeam: false,
-							filter: undefined,
-							prevSelectedTeamId: secondTeam,
-							selectedTeamId: secondTeam,
-							teamsSaveMode: undefined,
-							teamName: {
-								initName: secondTeamName,
-								name: secondTeamName,
-								mode: 'show'
-							},
-							___teamManagerBinding: {
-								teamStudents: [],
-								blackList: [],
-								positions: defaultBinding.get('model.sportModel.field.positions')
-							},
-							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
-							isSetTeamLater: false
-						}
-					]
+					rivalsCount:		Immutable.fromJS(this.getBinding('rivals').toJS().length),
+					selectedRivalIndex:	defaultBinding.get('selectedRivalIndex'),
+					players:			self.getInitPlayers(),
+					teamTable:			teamTable,
+					teamWrapper:		teamWrapper
 				}
 			))
 			.commit();
 	},
-	getInitPlayers: function() {
-		const self = this;
+	initErrorBinding: function() {
+		const rivals = this.getBinding('rivals').toJS();
 
-		return [
-			self.getInitPlayersByOrder(0),
-			self.getInitPlayersByOrder(1)
-		];
+		const error = rivals.map(() => {
+			return {
+				isError:	false,
+				text:		''
+			}
+		});
+
+		this.getBinding('error').set(Immutable.fromJS(error));
+	},
+	getTeamWrappers: function() {
+		const binding = this.getBinding();
+
+		const rivals = binding.rivals.toJS();
+
+		return rivals.map((rival, rivalIndex) => this.getTeamWrapperByRivalIndex(rivalIndex));
+	},
+	getTeamWrapperByRivalIndex: function(rivalIndex) {
+		const defaultBinding = this.getDefaultBinding();
+
+		const	teamId		= this.getTeamIdByOrder(rivalIndex),
+				teamName	= this.getTeamNameByOrder(rivalIndex);
+
+		return {
+			isLoadingTeam: false,
+			filter: undefined,
+			prevSelectedTeamId: teamId,
+			selectedTeamId: teamId,
+			teamsSaveMode: undefined,
+			teamName: {
+				initName: teamName,
+				name: teamName,
+				mode: 'show'
+			},
+			___teamManagerBinding: {
+				teamStudents: [],
+				blackList: [],
+				positions: defaultBinding.get('model.sportModel.field.positions')
+			},
+			savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
+			isSetTeamLater: false
+		};
+	},
+	getTeamTables: function() {
+		const	self			= this,
+				binding			= self.getBinding();
+
+		const rivals = binding.rivals.toJS();
+
+		return rivals.map((rival, rivalIndex) => this.getTeamTableByRivalIndex(rivalIndex));
+	},
+	getTeamTableByRivalIndex: function(rivalIndex) {
+		const teamId = this.getTeamIdByOrder(rivalIndex);
+
+		return {
+			selectedTeamId	: teamId,
+			isSelectedTeam	: typeof team !== 'undefined',
+			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
+		};
+	},
+	getTeamIdBlackListByRivalIndex: function(rivalIndex) {
+		const teamId = this.getTeamIdByOrder(rivalIndex);
+
+		let teamIdBlackList = [];
+		if(typeof teamId !== 'undefined') {
+			const rivals = this.getBinding().rivals.toJS();
+
+			teamIdBlackList = rivals
+				.filter(r => typeof r.team !== 'undefined')
+				.filter(r => r.team.id !== teamId)
+				.map(r => r.id);
+		}
+
+		return teamIdBlackList;
+	},
+	getInitPlayers: function() {
+		const binding = this.getBinding();
+
+		const rivals = binding.rivals.toJS();
+
+		return rivals.map((rival, rivalIndex) => this.getInitPlayersByOrder(rivalIndex));
 	},
 	getInitPlayersByOrder: function(order) {
 		const binding = this.getBinding();
@@ -187,73 +219,92 @@ const Manager = React.createClass({
 		return teamType;
 	},
 	addListeners: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-		const event = self.getDefaultBinding().toJS('model');
-
-		self.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
+		// set selected rival index for teamModeView
+		this.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
 			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
 		}));
-		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
-			self.validate(0);
-		}));
-		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
-			self.validate(0);
-		}));
-		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
-			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
-				self.validate(1);
-			}));
-			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
-				self.validate(1);
-			}));
-		}
-		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
-			self.validate(0);
-		}));
-		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
-			self.validate(1);
-		}));
 
-		this.addSyncListeners();
+		this.addTeamWrapperListeners();
 	},
-	addSyncListeners: function() {
-		this.addListenerToIsLoadingTeamByIndex(0);
-		this.addListenerToIsLoadingTeamByIndex(1);
+	addTeamWrapperListeners: function() {
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-		this.addListenerToTeamManagerIsSearchByIndex(0);
-		this.addListenerToTeamManagerIsSearchByIndex(1);
+		teamWrapper.forEach((tw, index) => this.addTeamWrapperListenersByIndex(index));
+	},
+	addTeamWrapperListenersByIndex: function(index) {
+		const	binding	= this.getDefaultBinding(),
+				event	= this.getDefaultBinding().toJS('model');
+
+		if(
+			// for index 0 always true
+		index === 0 ||
+		(
+			index > 0 &&
+				// condition for other indexes
+			(
+				!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)
+			)
+		)
+		) {
+			this.listeners.push(
+				binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.teamStudents`)
+					.addListener(() => this.validate(index))
+			);
+
+			this.listeners.push(
+				binding.sub(`teamModeView.teamWrapper.${index}.teamName.name`)
+					.addListener(() => this.validate(index))
+			);
+		}
+
+		this.listeners.push(
+			binding.sub(`teamModeView.teamWrapper.${index}.isSetTeamLater`)
+				.addListener(() => this.validate(index))
+		);
+
+		this.addSyncListenersByTeamWrapperIndex(index);
+	},
+	addSyncListenersByTeamWrapperIndex: function(index) {
+		this.addListenerToIsLoadingTeamByIndex(index);
+		this.addListenerToTeamManagerIsSearchByIndex(index);
 	},
 	addListenerToIsLoadingTeamByIndex: function(index) {
 		const binding = this.getDefaultBinding();
 
-		binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
-			// team wrapper is loading data
-			if(eventDescriptor.getCurrentValue()) {
-				binding.set('isSync', false);
-			}
+		this.listeners.push(
+			binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
+				// team wrapper is loading data
+				if(eventDescriptor.getCurrentValue()) {
+					binding.set('isSync', false);
+				}
 
-			// team wrapper isn't loading data
-			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
-				binding.set('isSync', true);
-			}
-		});
+				// team wrapper isn't loading data
+				if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
+					binding.set('isSync', true);
+				}
+			})
+		);
 	},
 	addListenerToTeamManagerIsSearchByIndex: function(index) {
 		const binding = this.getDefaultBinding();
 
-		binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
-			// player selector is loading data
-			if(eventDescriptor.getCurrentValue()) {
-				binding.set('isSync', false);
-			}
+		this.listeners.push(
+			binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
+				// player selector is loading data
+				if(eventDescriptor.getCurrentValue()) {
+					binding.set('isSync', false);
+				}
 
-			// player selector isn't loading data
-			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
-				binding.set('isSync', true);
-			}
-		});
+				// player selector isn't loading data
+				if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
+					binding.set('isSync', true);
+				}
+			})
+		);
 	},
 	validate: function(rivalIndex) {
 		const	self			= this,
@@ -344,6 +395,58 @@ const Manager = React.createClass({
 
 		self.getBinding('selectedRivalIndex').set(Immutable.fromJS(currentRivalIndex));
 	},
+	addNewEmptyRivalForInternalTeamSportEvent: function() {
+		const	binding			= this.getDefaultBinding(),
+				rivals			= this.getBinding().rivals.toJS(),
+				teamModeView	= binding.toJS('teamModeView');
+
+		//TODO add empty rival
+		rivals.push({
+			id:		null,
+			name:	''
+		});
+
+		this.getBinding().rivals.set(Immutable.fromJS(rivals));
+
+		const newRivalIndex = rivals.length - 1;
+		// push empty players array
+		teamModeView.players.push(
+			this.getInitPlayersByOrder(newRivalIndex)
+		);
+
+		// push empty team table model to team table array
+		teamModeView.teamTable.push(
+			this.getTeamTableByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.teamWrapper.push(
+			this.getTeamWrapperByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.rivalsCount = rivals.length;
+
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+
+		const error = this.getBinding('error').toJS();
+		error.push({
+			isError:	false,
+			text:		''
+		});
+		this.getBinding('error').set(Immutable.fromJS(error));
+
+		// add listeners
+		this.addTeamWrapperListenersByIndex(newRivalIndex);
+
+		this.validate(newRivalIndex);
+	},
+	handleClickAddTeam: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		if(TeamHelper.isInternalEventForTeamSport(event)) {
+			this.addNewEmptyRivalForInternalTeamSportEvent();
+		}
+	},
 	renderGameField: function() {
 		const binding = this.getDefaultBinding();
 
@@ -369,19 +472,21 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-			return (
-				<div className="bTeamsManager">
-					<RivalChooser
-						binding					= { binding }
-						isInviteMode			= { this.props.isInviteMode }
-						indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
-					/>
-					<div className="eTeamsManager_body">
-						<TeamBundle binding={teamBundleBinding}/>
-						{this.renderGameField()}
-					</div>
+		return (
+			<div className="bTeamsManager">
+				<RivalChooser
+					binding					= { binding }
+					isShowRivals			= { this.props.isShowRivals }
+					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
+					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
+					handleClickAddTeam		= { this.handleClickAddTeam }
+				/>
+				<div className="eTeamsManager_body">
+					<TeamBundle binding={teamBundleBinding}/>
+					{this.renderGameField()}
 				</div>
-			);
+			</div>
+		);
 	}
 });
 

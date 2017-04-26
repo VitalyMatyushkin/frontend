@@ -21,6 +21,13 @@ const ClassForm = React.createClass({
 				id: i
 			}
 		}).toArray();
+		ages.unshift(
+			{
+				value: "Reception",
+				age: 1,
+				id: 0
+			}
+		);
 		return ages;
 	},
 

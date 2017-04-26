@@ -61,9 +61,10 @@ const PlaceEdit = React.createClass({
 				<div className="container">
 					<PlaceForm
 						activeSchoolId	= { this.activeSchoolId }
-						title			= { 'Add new place' }
+						title			= { 'Edit place' }
 						onSubmit		= { this.onSubmit }
 						binding			= { this.getDefaultBinding() }
+						onCancel 		= { () => {window.history.back()} }
 					/>
 				</div>
 			);

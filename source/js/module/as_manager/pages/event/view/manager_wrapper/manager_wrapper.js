@@ -5,6 +5,7 @@ const	React 							= require('react'),
 const	Manager							= require('./../../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../../helpers/eventHelper'),
 		ManagerWrapperHelper			= require('./manager_wrapper_helper'),
+		NewManagerWrapperHelper			= require('./new_manager_wrapper_helper'),
 		Button							= require('../../../../../ui/button/button'),
 		classNames						= require('classnames'),
 		TeamHelper						= require('./../../../../../ui/managers/helpers/team_helper');
@@ -32,12 +33,15 @@ const ManagerWrapper = React.createClass({
 		binding.set('isTeamManagerSync', false);
 
 		const event = binding.toJS('model');
+
+		const rivals = this.getRivals(event, binding.toJS('rivals'));
+
 		binding.sub('teamManagerWrapper.default').atomically()
 			.set('isSubmitProcessing',				false)
 			.set('isSavingChangesModePopupOpen',	false)
 			.set('model',							Immutable.fromJS(event))
 			.set('model.sportModel',				Immutable.fromJS(event.sport))
-			.set('rivals',							Immutable.fromJS(ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false)))
+			.set('rivals',							Immutable.fromJS(rivals))
 			.set('schoolInfo',						Immutable.fromJS(event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
 			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
 			.set('error',							Immutable.fromJS([
@@ -51,6 +55,8 @@ const ManagerWrapper = React.createClass({
 														}
 													]))
 			.commit();
+
+		console.log(rivals);
 
 		this.addListeners();
 	},
@@ -69,6 +75,16 @@ const ManagerWrapper = React.createClass({
 				// Unlock submit button if team manager in searching state.
 				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
 			});
+	},
+	getRivals: function(event, rivals) {
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
+			return NewManagerWrapperHelper.getRivals(event, rivals);
+		} else {
+			return ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
+		}
 	},
 	getManagerBinding: function() {
 		const	self						= this,
@@ -194,13 +210,25 @@ const ManagerWrapper = React.createClass({
 			'mMarginLeftFixed'	: true
 		});
 	},
+	isShowRivals: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		return (
+			!TeamHelper.isInternalEventForIndividualSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		)
+	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
 
+		// provide isShowRivals by isInviteMode is a trick
 		return (
 			<div className="bTeamManagerWrapper">
 				<Manager	binding					= {managerBinding}
+							isShowRivals			= {this.isShowRivals()}
+							isShowAddTeamButton		= {false}
 							indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
 				/>
 				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}

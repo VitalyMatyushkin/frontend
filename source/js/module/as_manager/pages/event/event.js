@@ -6,7 +6,8 @@ const	React							= require('react'),
 		classNames						= require('classnames'),
 		Promise 						= require('bluebird');
 
-const	Tabs							= require('./../../../ui/tabs/tabs'),
+const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals'),
+		Tabs							= require('./../../../ui/tabs/tabs'),
 		CreateOtherEventPanel			= require('./view/create_other_event_panel/create_other_event_panel'),
 		EventHeaderWrapper				= require('./view/event_header/event_header_wrapper'),
 		IndividualScoreAvailableBlock	= require('./view/individual_scores_available_block/individual_score_available_block'),
@@ -14,7 +15,9 @@ const	Tabs							= require('./../../../ui/tabs/tabs'),
 		EditingTeamsButtons 			= require('./view/editing_teams_buttons'),
 		EventTeams						= require('./view/teams/event_teams'),
 		Performance						= require('./view/performance/performance'),
+		NewPerformance					= require('./view/new_performance/new_performance'),
 		DisciplineWrapper				= require('./view/discipline/discipline_wrapper'),
+		NewDiscipline					= require('module/as_manager/pages/event/view/new_discipline/new_discipline'),
 		TasksWrapper					= require('./view/tasks/tasks_wrapper'),
 		EventGallery					= require('./new_gallery/event_gallery'),
 		ManagerWrapper					= require('./view/manager_wrapper/manager_wrapper'),
@@ -29,7 +32,10 @@ const	Tabs							= require('./../../../ui/tabs/tabs'),
 		AddPhotoButton					= require('../../../ui/new_gallery/add_photo_button'),
 		Button							= require('../../../ui/button/button'),
 		EventHelper						= require('module/helpers/eventHelper'),
-		RoleHelper						= require('./../../../helpers/role_helper');
+		RoleHelper						= require('./../../../helpers/role_helper'),
+		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
+		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -43,6 +49,7 @@ const Event = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			isRivalsSync: false,
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
 			model: {},
@@ -92,7 +99,6 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
-		console.log(this.props.activeSchoolId);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
@@ -153,7 +159,14 @@ const Event = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			EventResultHelper.initializeEventResults(eventData);
+			//TODO it's temp. only for event refactoring period.
+			if(
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData) &&
+				!TeamHelper.isInternalEventForTeamSport(eventData)
+			) {
+				EventResultHelper.initializeEventResults(eventData);
+			}
 
 			// loading match report
 			return window.Server.schoolEventReport.get({
@@ -162,6 +175,13 @@ const Event = React.createClass({
 			});
 		}).then(_report => {
 			report = _report;
+
+			return window.Server.schoolEventInvites.get({
+				schoolId: this.props.activeSchoolId,
+				eventId: self.eventId
+			});
+		}).then(invites => {
+			eventData.invites = invites;
 
 			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 		}).then(_photos => {
@@ -196,7 +216,13 @@ const Event = React.createClass({
 
 			self.initTabs();
 
-			if(TeamHelper.isTeamSport(eventData)) {
+			//TODO it's temp. only for event refactoring period.
+			if(
+				TeamHelper.isTeamSport(eventData) &&
+				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
+				!TeamHelper.isHousesEventForTeamSport(eventData) &&
+				!TeamHelper.isInternalEventForTeamSport(eventData)
+			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
 			binding.set('sync', Immutable.fromJS(true));
@@ -225,14 +251,22 @@ const Event = React.createClass({
 		}
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
-		if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+		//TODO it's temp. only for event refactoring period.
+		if(
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event)
+		) {
+			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return false;
+			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+				return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+			} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+				return true;
+			}
+		} else {
 			return false;
-		} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
-		} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
-			return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
-		} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-			return true;
 		}
 	},
 	hasTeamPlayersByOrder: function(event, order) {
@@ -377,10 +411,24 @@ const Event = React.createClass({
 		}
 	},
 	addListeners: function() {
-		this.addListenerToEventTeams();
-		this.addListenerForIndividualScoreAvailable();
+		const event = this.getDefaultBinding().toJS('model');
 
-		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
+		this.addListenerToEventTeams();
+
+		if(
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		) {
+			this.addListenerForIndividualScoreAvailable();
+		}
+
+		if(
+			TeamHelper.isTeamSport(event) &&
+			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			!TeamHelper.isHousesEventForTeamSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event)
+		) {
 			this.addListenerForTeamScore();
 		}
 	},
@@ -816,6 +864,22 @@ const Event = React.createClass({
 
 		binding.set("isEditEventPopupOpen", false);
 	},
+	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
+		const binding = this.getDefaultBinding();
+
+		const newValue = !binding.get('opponentSchoolManager.isOpen');
+
+		if(newValue) {
+			const opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`);
+
+			binding.atomically()
+				.set('opponentSchoolManager.isOpen',			newValue)
+				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
+				.commit();
+		} else {
+			binding.set('opponentSchoolManager.isOpen', newValue);
+		}
+	},
 	renderEditEventPopupOpen: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -844,6 +908,144 @@ const Event = React.createClass({
 			);
 		} else {
 			return null;
+		}
+	},
+	// It's temp function
+	renderRivalsStuff: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				mode			= binding.toJS('mode'),
+				point 			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
+
+		//TODO it's temp. only for event refactoring period.
+		if(
+			TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
+			return (
+				<Rivals	binding									= { binding }
+						activeSchoolId							= { this.props.activeSchoolId }
+						onClearTeamScore						= { this.clearTeamScoreByTeamId }
+						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
+				/>
+			);
+		} else {
+			return (
+				<span>
+					{this.renderSelectWithGameResultForCricket()}
+					<EventRivals	binding         = {binding}
+									onReload        = {this.props.onReload}
+									activeSchoolId  = {this.props.activeSchoolId}
+					/>
+					{ this.renderEditTeamButtons() }
+					<IndividualScoreAvailableBlock
+						binding         = { this.getDefaultBinding() }
+						activeSchoolId  = { this.props.activeSchoolId }
+						mode            = { mode }
+						event           = { event }
+					/>
+					<EventTeams binding         = {self.getEventTeamsBinding()}
+								activeSchoolId  = {this.props.activeSchoolId}
+					/>
+				</span>
+			);
+		}
+	},
+	renderOpponentSchoolManager: function() {
+		const binding = this.getDefaultBinding();
+
+		const isOpen = binding.toJS('opponentSchoolManager.isOpen');
+
+		if(isOpen) {
+			const opponentSchoolId = binding.toJS('opponentSchoolManager.opponentSchoolId');
+
+			return (
+				<OpponentSchoolManager
+					activeSchoolId		= { this.props.activeSchoolId }
+					opponentSchoolId	= { opponentSchoolId }
+					onReload			= { this.props.onReload }
+					binding				= { binding }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
+	onChangeCricketResult: function(result){
+		const binding = this.getDefaultBinding();
+
+		binding.set('model.results.cricketResult', Immutable.fromJS(result));
+	},
+	renderSelectWithGameResultForCricket: function(){
+		const 	binding 	= this.getDefaultBinding(),
+				sportName 	= typeof binding.toJS('model.sport.name').toLowerCase() !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
+				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
+				event 		= binding.toJS('model');
+
+		if (sportName === 'cricket' && mode === 'closing') {
+			return (
+				<div className="eSelectForCricketWrapper">
+					<SelectForCricketWrapper
+						event 			= { event }
+						onChangeResult 	= { this.onChangeCricketResult }
+					/>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
+	renderPerformance: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model');
+
+		//TODO it's temp. only for event refactoring period.
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
+			return (
+				<NewPerformance	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return (
+				<Performance	binding			= {self.getPerformanceTabBinding()}
+								activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			);
+		}
+	},
+	renderDiscipline: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model');
+
+		//TODO it's temp. only for event refactoring period.
+		if(
+			TeamHelper.isHousesEventForTeamSport(event) ||
+			TeamHelper.isInternalEventForTeamSport(event)
+		) {
+			return (
+				<NewDiscipline	binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return (
+				<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
+									activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			);
 		}
 	},
 	render: function() {
@@ -881,20 +1083,7 @@ const Event = React.createClass({
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<EventRivals	binding			= {binding}
-											onReload		= {this.props.onReload}
-											activeSchoolId	= {this.props.activeSchoolId}
-							/>
-							{ this.renderEditTeamButtons() }
-							<IndividualScoreAvailableBlock
-								binding			= { this.getDefaultBinding() }
-								activeSchoolId	= { this.props.activeSchoolId }
-								mode			= { mode }
-								event			= { event }
-							/>
-							<EventTeams	binding			= {self.getEventTeamsBinding()}
-										activeSchoolId	= {this.props.activeSchoolId}
-							/>
+							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>
 								<div className="bEventMap">
 									<div className="bEventMap_row">
@@ -912,16 +1101,12 @@ const Event = React.createClass({
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<Performance	binding			= {self.getPerformanceTabBinding()}
-													activeSchoolId	= {this.props.activeSchoolId}
-									/>
+									{ this.renderPerformance() }
 								</div>
 							</If>
 							<If condition={activeTab === 'discipline'} >
 								<div className="bEventBottomContainer">
-									<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
-														activeSchoolId	= {this.props.activeSchoolId}
-									/>
+									{ this.renderDiscipline() }
 								</div>
 							</If>
 							<If condition={activeTab === 'tasks'} >
@@ -961,7 +1146,8 @@ const Event = React.createClass({
 								/>
 							</div>
 						</div>
-						{this.renderEditEventPopupOpen()}
+						{ this.renderOpponentSchoolManager() }
+						{ this.renderEditEventPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode

@@ -31,7 +31,15 @@ const FixtureItem = React.createClass({
 			</div>
 		)
 	},
-
+	cropOpponentName: function(name) {
+		if (name == null)
+			return;
+		var maxLength = 40;
+		if (name.length > maxLength) {
+			name = name.substr(0,maxLength-3) + "...";
+		}
+		return name;
+	},
 	renderLeftOpponentSide: function (event, model) {
 		const imgStyle = {
 			backgroundImage: 'url(' + model.rivals[0].schoolPic + ')'
@@ -42,7 +50,7 @@ const FixtureItem = React.createClass({
 				<div className="eFixture_item_imgContainer">
 					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
-				<div className="eFixture_item mSchoolName">{model.rivals[0].value}</div>
+				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[0].value)}</div>
 			</div>
 		);
 	},
@@ -56,7 +64,7 @@ const FixtureItem = React.createClass({
 				<div className="eFixture_item_imgContainer">
 					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
-				<div className="eFixture_item mSchoolName">{model.rivals[1].value}</div>
+				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[1].value)}</div>
 			</div>
 		);
 	},

@@ -21,7 +21,7 @@ const InviteView = React.createClass({
 	 */
 	activeSchoolId: undefined,
 	propTypes: {
-		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
+		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']).isRequired,
 		onDecline	: React.PropTypes.func
 	},
 
@@ -40,10 +40,19 @@ const InviteView = React.createClass({
 	addZeroToFirst: function (num) {
 		return String(num).length === 1 ? '0' + num : num;
 	},
-
+	/**
+	 * Function return string with all Age Groups
+	 * @example <caption>Example usage of getAges()</caption>
+	 * //Reception, 5, 6
+	 * getAges([0, 5, 6]);
+	 * @params {array} - array of event age groups
+	 * @returns {string}
+	 */
 	getAges: function (data) {
 		data = data || [];
-		return data.map(elem => 'Y' + elem).join(", ");
+		return data
+			.map(elem => elem === 0 ? 'Reception' : 'Y' + elem)
+			.join(", ");
 	},
 
 	getGender: function (gender) { //TODO Move this method into helpers
@@ -79,11 +88,26 @@ const InviteView = React.createClass({
 	isShowComments: function() {
 		return this.getDefaultBinding().toJS('inviteComments.expandedComments');
 	},
+
+	/**
+	 * Detecting rival correctly
+	 * @returns {String}
+	 */
+	getRivalSchool: function(inviterSchool, invitedSchool, activeSchoolId) {
+		switch (this.props.type) {
+			case 'inbox':
+				return inviterSchool;
+			case 'outbox':
+				return invitedSchool;
+			case 'archive':
+				return activeSchoolId === inviterSchool.id ? invitedSchool : inviterSchool;
+		}
+	},
 	render: function() {
 		const binding			= this.getDefaultBinding(),
 				inviterSchool 	= binding.toJS('inviterSchool'),
 				invitedSchool 	= binding.toJS('invitedSchool'),
-				rival 			= invitedSchool.id === this.activeSchoolId ? inviterSchool : invitedSchool,
+			  	rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
 				inviteClasses 	= classNames({
 					bInvite: true,
 					mNotRedeemed: !binding.get('redeemed')

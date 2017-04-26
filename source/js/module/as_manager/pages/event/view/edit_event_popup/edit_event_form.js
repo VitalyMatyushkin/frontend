@@ -24,12 +24,14 @@ const EditEventForm = React.createClass({
 	getActiveSchoolInfo: function() {
 		const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
 
-		return schoolsData.find(school => school.id === SchoolHelper.getActiveSchoolId(this));
+		return schoolsData.find(school => school.id === this.props.activeSchoolId);
 	},
-	getOpponentSchoolInfo: function() {
-		const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
+	getOpponentSchoolInfoArray: function() {
+		const invitedSchools = this.getDefaultBinding()
+			.toJS('model.schoolsData')
+			.filter(s => s.id !== this.props.activeSchoolId);
 
-		return schoolsData.find(school => school.id !== SchoolHelper.getActiveSchoolId(this));
+		return invitedSchools.length !== 0 ? invitedSchools : undefined;
 	},
 	handleChangeDate: function(date) {
 		this.getDefaultBinding().set('model.startTime', date);
@@ -83,10 +85,10 @@ const EditEventForm = React.createClass({
 					/>
 				</div>
 				<div className="bInputWrapper mZeroHorizontalMargin">
-					<EventVenue	binding				= {binding}
-								eventType			= {EventHelper.serverEventTypeToClientEventTypeMapping[binding.toJS('model.eventType')]}
-								activeSchoolInfo	= {this.getActiveSchoolInfo()}
-								opponentSchoolInfo	= {this.getOpponentSchoolInfo()}
+					<EventVenue	binding					= {binding}
+								eventType				= {EventHelper.serverEventTypeToClientEventTypeMapping[binding.toJS('model.eventType')]}
+								activeSchoolInfo		= {this.getActiveSchoolInfo()}
+								opponentSchoolInfoArray	= {this.getOpponentSchoolInfoArray()}
 					/>
 				</div>
 			</div>

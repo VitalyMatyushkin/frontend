@@ -2,6 +2,8 @@
  * Created by wert on 19.11.15.
  */
 
+const Promise = require('bluebird');
+
 const   specialModels   = ['app', 'parents', 'manager', 'admin', 'site', 'www', 'stage', 'playground', 'password', 'bigscreen'],
         defaultModel    = 'school',
         apiVersion      = 1;
@@ -90,12 +92,40 @@ function isDeveloperEnvironment(domainName){
 	return parsedDomain.env === 'stage2' || parsedDomain.env === 'stage1' || parsedDomain.rootDomain === 'squard';
 }
 
+function sendGetRequestToHttpUrl(url) {
+	
+	return new Promise( function(resolve, reject)  {
+		
+		const xhr = new XMLHttpRequest();
+		xhr.open('GET', url, true);
+		
+		xhr.onload = function() {
+			if (this.status == 200) {
+				resolve(this.response);
+			} else {
+				const error = new Error(this.statusText);
+				error.code = this.status;
+				error.response = this.response;
+				reject(error);
+			}
+		};
+		
+		xhr.onerror = function() {
+			reject(new Error("Network Error"));
+		};
+		
+		xhr.send();
+	});
+	
+}
+
 
 const loaderUtils = {
-    parseDomainName:        parseDomainName,
-    apiSelector:            apiSelector,
-    startModuleSelector:    startModuleSelector,
-	isDeveloperEnvironment: isDeveloperEnvironment
+    parseDomainName:        	parseDomainName,
+    apiSelector:            	apiSelector,
+    startModuleSelector:    	startModuleSelector,
+	isDeveloperEnvironment: 	isDeveloperEnvironment,
+	sendGetRequestToHttpUrl: 	sendGetRequestToHttpUrl
 };
 
 module.exports = loaderUtils;

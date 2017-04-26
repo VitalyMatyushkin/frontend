@@ -52,12 +52,21 @@ const SportSelector = React.createClass({
 		}
 	},
 	handleChangeCompleteSport: function (id, sport) {
-		const binding = this.getDefaultBinding();
+		const	binding		= this.getDefaultBinding(),
+				eventType	= binding.toJS('model.type');
+		let		rivals		= binding.toJS('rivals');
+
+		if(eventType === 'inter-schools') {
+			rivals = [rivals[0]];
+		} else if(eventType === 'houses') {
+			rivals = [];
+		}
 
 		binding.atomically()
 			.set('model.sportId',		id)
 			.set('model.sportModel',	Immutable.fromJS(sport))
 			.set('model.gender',		Immutable.fromJS(this.getDefaultGender(sport)))
+			.set('rivals',				Immutable.fromJS(rivals))
 			.commit();
 	},
 	handleChangeShowAllSports: function() {

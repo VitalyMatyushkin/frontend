@@ -148,7 +148,8 @@ const EventHelper = {
 					event.status === "INVITES_SENT"
 			) &&
 			mode === 'closing' &&
-			isOwner && individualScoreAvailable;
+			isOwner &&
+			individualScoreAvailable;
 	},
 	isInterSchoolsEvent: function(event) {
 		const self = this;

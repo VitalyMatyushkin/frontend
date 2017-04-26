@@ -59,7 +59,7 @@ const AlbumPhoto = React.createClass({
 		const 	self 		= this;
 
 		window.confirmAlert(
-			"Delete this photo?",
+			"The photo will be deleted.",
 			"Ok",
 			"Cancel",
 			() => self.props.service.photo.delete(self.albumId, self.photoId).then( () => self.props.onPhotoDelete() ),

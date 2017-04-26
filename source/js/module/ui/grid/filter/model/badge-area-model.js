@@ -9,11 +9,35 @@
  * @param {object} options
  *
  * */
-const BadgeAreaModel = function(filter){
+const BadgeAreaModel = function(filter, badge){
 	this.filter = filter;
-	this.badges = {};
+	this.initBadges(badge);
 
 	this.onChange = null;
+};
+
+BadgeAreaModel.prototype.initBadges = function(badge) {
+	if(typeof badge === 'undefined') {
+		this.badges = {};
+	} else {
+		this.badges = this.connectBadgesToCurrentBadgeArea(badge.badges);
+	}
+};
+
+/**
+ * BadgeAreaModel constructor has arg badge it's badge from old BadgeArea.
+ * Badge has reference to badge area.
+ * Function update reference to BadgeAreaModel.
+ * Change it from old BadgeAreaModel to current.
+ * @param badges
+ * @returns {*}
+ */
+BadgeAreaModel.prototype.connectBadgesToCurrentBadgeArea = function(badges) {
+	for(let fieldName in badges) {
+		badges[fieldName].badgeArea = this;
+	}
+
+	return badges;
 };
 
 BadgeAreaModel.prototype.changeBadge = function(badge) {

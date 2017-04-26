@@ -1,0 +1,17 @@
+@import "../../!variables";
+$inputBg: #f5f5f5;
+
+.eSelectForCricketContainer{
+  text-align: center;
+}
+.eSelectForCricket{
+  height: 40px;
+  min-width: 300px;
+  padding: 10px 20px 10px 10px;
+
+  background: $inputBg url("/images/arrow_down.svg") no-repeat 98% center;
+  background-size: 10px;
+  border: $borderColor $mainBorderStyle;
+  border-radius: $borderRadius;
+
+}

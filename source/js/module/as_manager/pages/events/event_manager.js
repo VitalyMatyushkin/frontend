@@ -70,16 +70,7 @@ const EventManager = React.createClass({
 			},
 			rivals: [],
 			players: [[],[]],
-			error: [
-				{
-					isError: false,
-					text:    ''
-				},
-				{
-					isError: false,
-					text:    ''
-				}
-			],
+			error: [],
 			isEventManagerSync: false,
 			isSync: false,
 			isSavingChangesModePopupOpen: false,
@@ -113,6 +104,15 @@ const EventManager = React.createClass({
 					.set('isEventManagerSync',	true)
 					.commit();
 			});
+	},
+	isShowAddTeamButton: function() {
+		const	binding	= this.getDefaultBinding();
+
+		const	event	= binding.toJS('model'),
+				sport	= event.sportModel;
+
+
+		return TeamHelper.isInternalEventForTeamSport(event) && sport.multiparty;
 	},
 	/**
 	 * Get event from server by eventId and set date from this event to event form.
@@ -501,8 +501,10 @@ const EventManager = React.createClass({
 		const rivals = binding.toJS('rivals');
 		switch (model.type) {
 			case 'inter-schools':
-				body.invitedSchoolIds = [rivals[1].id];
-				body.finishSchoolIds = 	[rivals[0].id, rivals[1].id];
+				const rivalIds = rivals.map(r => r.id);
+
+				body.invitedSchoolIds = rivalIds.slice(1);
+				body.finishSchoolIds = rivalIds;
 
 				break;
 			case 'houses':
@@ -600,13 +602,25 @@ const EventManager = React.createClass({
 				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
-				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 						// for any INTER-SCHOOLS events
-					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
-					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError										// for any other type of event
-				) {
+				const	event		= binding.toJS('model'),
+						eventType	= event.type,
+						hasError	= binding.toJS('error')
+							.filter((err, index) => {
+								// filter some error bundles
+								if(
+									eventType === 'inter-schools' ||
+									TeamHelper.isInternalEventForIndividualSport(event)
+								) {
+									return index === 0;
+								} else {
+									return true;
+								}
+							})
+							.findIndex(err => err.isError) !== -1;
+
+				if(!hasError) {
 					isStepComplete = true;
-				};
+				}
 				break;
 		}
 
@@ -642,7 +656,7 @@ const EventManager = React.createClass({
 		switch (binding.toJS('model.type')) {
 			case 'inter-schools':
 			case 'houses':
-				if(binding.toJS('rivals').length === 2) {
+				if(binding.toJS('rivals').length > 1) {
 					isStepComplete = true;
 				}
 				break;
@@ -678,6 +692,25 @@ const EventManager = React.createClass({
 			);
 		}
 	},
+	renderManager: function() {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		const managerBinding	= {
+									default				: binding,
+									selectedRivalIndex	: binding.sub('selectedRivalIndex'),
+									rivals				: binding.sub('rivals'),
+									players				: binding.sub('players'),
+									error				: binding.sub('error')
+								};
+
+		return (
+			<Manager	isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
+						isShowAddTeamButton	= { this.isShowAddTeamButton() }
+						binding				= { managerBinding }
+			/>
+		);
+	},
 	render: function() {
 		const	binding				= this.getDefaultBinding(),
 				isEventManagerSync	= binding.get('isEventManagerSync'),
@@ -688,27 +721,17 @@ const EventManager = React.createClass({
 					bTeamManagerWrapper : step === 2
 				});
 
-		const	managerBinding	= {
-					default				: binding,
-					selectedRivalIndex	: binding.sub('selectedRivalIndex'),
-					rivals				: binding.sub('rivals'),
-					players				: binding.sub('players'),
-					error				: binding.sub('error')
-				};
-
 		return (
 			<div>
 				<div className={bManagerClasses}>
 					<If condition={step === 1}>
-						{this.renderEventManagerBase()}
+						{ this.renderEventManagerBase() }
 					</If>
 					<If condition={step === 2}>
-						<Manager	isInviteMode	= {false}
-									binding			= {managerBinding}
-						/>
+						{ this.renderManager() }
 					</If>
 					<If condition={isEventManagerSync}>
-						{this.renderStepButtons()}
+						{ this.renderStepButtons() }
 					</If>
 				</div>
 				<SavingPlayerChangesPopup	binding	= {binding}

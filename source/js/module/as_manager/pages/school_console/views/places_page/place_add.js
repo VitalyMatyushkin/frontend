@@ -33,6 +33,7 @@ const PlaceAdd = React.createClass({
 					title			= { 'Add new place' }
 					onSubmit		= { this.onSubmit }
 					binding			= { this.getDefaultBinding() }
+					onCancel 		= { () => {window.history.back()} }
 				/>
 			</div>
 		);

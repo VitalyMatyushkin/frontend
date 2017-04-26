@@ -1,6 +1,10 @@
-@import "../!variables";
+@import "../../!variables";
 
-.eSwitch {
+.bCheckbox {
+  position: relative;
+}
+
+.eCheckbox_switch {
   margin: -4px 3px 0 7px;
   cursor: pointer;
   position: absolute;
@@ -10,11 +14,11 @@
   height: 17px !important;
 }
 
-.eSwitch + label {
+.eCheckbox_switch + label {
   position: relative;
   margin-left: 7px;
 }
-.eSwitch + label:before {
+.eCheckbox_switch + label:before {
   content: '';
   position: absolute;
   top: 0;
@@ -24,7 +28,7 @@
   border-radius: 8px;
   background: #CDD1DA;
 }
-.eSwitch + label:after {
+.eCheckbox_switch + label:after {
   content: '';
   position: absolute;
   top: 1px;
@@ -35,10 +39,10 @@
   background: #FFF;
   transition: all .2s;
 }
-.eSwitch:checked + label:before {
+.eCheckbox_switch:checked + label:before {
   background: $blueColor;
   transition: all .2s;
 }
-.eSwitch:checked + label:after {
+.eCheckbox_switch:checked + label:after {
   left: 10px;
 }
