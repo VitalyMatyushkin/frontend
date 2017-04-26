@@ -3,7 +3,8 @@
  */
 const   DateHelper				= require('module/helpers/date_helper'),
         EventHelper				= require('module/helpers/eventHelper'),
-		SportHelper = require('module/helpers/sport_helper'),
+		SportHelper 			= require('module/helpers/sport_helper'),
+		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
         TeamHelper				= require('module/ui/managers/helpers/team_helper');
 
 /**
