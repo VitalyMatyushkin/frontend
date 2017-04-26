@@ -1,13 +1,15 @@
-const	React			= require('react'),
-		PencilButton	= require('module/ui/pencil_button'),
-		Score			= require('module/ui/score/score'),
-		ScoreCricket	= require('module/ui/score/score_cricket'),
-		ScoreConsts		= require('module/ui/score/score_consts'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		SportHelper 	= require('module/helpers/sport_helper'),
-		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper'),
-		propz			= require('propz');
+const	React				= require('react'),
+		PencilButton			= require('module/ui/pencil_button'),
+		Score					= require('module/ui/score/score'),
+		ScoreCricket			= require('module/ui/score/score_cricket'),
+		ScoreConsts				= require('module/ui/score/score_consts'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		EventHelper				= require('module/helpers/eventHelper'),
+		SportHelper 			= require('module/helpers/sport_helper'),
+		RivalHelper				= require('module/as_manager/pages/event/view/rivals/rival_helper'),
+		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
+		classNames				= require('classnames'),
+		propz					= require('propz');
 
 const SchoolRivalInfo = React.createClass({
 	propTypes: {
@@ -85,6 +87,36 @@ const SchoolRivalInfo = React.createClass({
 			this.props.onChangeScore('teamScore', scoreData);
 		}
 	},
+	renderPlaceMedal: function() {
+		let medal = null;
+
+		if(!EventHelper.isNotFinishedEvent(this.props.event)) {
+			const	places		= ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(this.props.event),
+					placeData	= places.find(p => p.schoolIds.find(id => id === this.props.rival.school.id));
+
+			let placeNameStyle;
+			switch (placeData.place) {
+				case 1:
+					placeNameStyle = 'mFirstPlace';
+					break;
+				case 2:
+					placeNameStyle = 'mSecondPlace';
+					break;
+				case 3:
+					placeNameStyle = 'mThirdPlace';
+					break;
+			}
+
+			if(typeof placeNameStyle !== "undefined") {
+				medal = (
+					<div className={'eEventRival_medal ' + placeNameStyle}>
+					</div>
+				);
+			}
+		}
+
+		return medal;
+	},
 	renderOpponentSchoolManagerButton: function() {
 		if(this.isShowChangeSchoolButton()) {
 			return (
@@ -161,6 +193,7 @@ const SchoolRivalInfo = React.createClass({
 	render: function() {
 		return (
 			<div className="bEventRival">
+				{ this.renderPlaceMedal() }
 				{ this.renderOpponentSchoolManagerButton() }
 				<div className="eEventRival_logo">
 					<img	className="eEventRivals_logoPic"
