@@ -4,6 +4,7 @@
 
 const 	React				= require('react'),
 		SportIcon			= require('module/ui/icons/sport_icon'),
+		SportHelper 		= require('module/helpers/sport_helper'),
 		EventCalendarStyle	= require('../../../../styles/pages/events/b_events_calendar.scss');
 
 /** Object to draw event details in challenge list.
@@ -46,7 +47,7 @@ const ChallengeListItem = React.createClass({
 			case typeof model.textResult === 'undefined':
 				eventResult = model.score;
 				break;
-			case event.sport.name.toLowerCase() === 'cricket':
+			case SportHelper.isCricket(event.sport.name):
 				eventResult = <span>{model.textResult}</span>;
 				break;
 			default:

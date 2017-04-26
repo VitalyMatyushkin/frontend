@@ -32,6 +32,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		AddPhotoButton					= require('../../../ui/new_gallery/add_photo_button'),
 		Button							= require('../../../ui/button/button'),
 		EventHelper						= require('module/helpers/eventHelper'),
+		SportHelper 					= require('module/helpers/sport_helper'),
 		RoleHelper						= require('./../../../helpers/role_helper'),
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
@@ -987,7 +988,7 @@ const Event = React.createClass({
 				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
 				event 		= binding.toJS('model');
 
-		if (sportName === 'cricket' && mode === 'closing') {
+		if (SportHelper.isCricket(sportName) && mode === 'closing') {
 			return (
 				<div className="eSelectForCricketWrapper">
 					<SelectForCricketWrapper

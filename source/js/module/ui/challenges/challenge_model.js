@@ -3,7 +3,8 @@
  */
 const   DateHelper				= require('module/helpers/date_helper'),
         EventHelper				= require('module/helpers/eventHelper'),
-        ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
+		SportHelper 			= require('module/helpers/sport_helper'),
+		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
         TeamHelper				= require('module/ui/managers/helpers/team_helper');
 
 /**
@@ -76,7 +77,7 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 			points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
 				TeamHelper.getCountPoints.bind(TeamHelper, event));
 		let result1, result2;
-		if (event.sport.name.toLowerCase() === 'cricket') {
+		if (SportHelper.isCricket(event.sport.name)) {
 			result1 = TeamHelper.convertPointsCricket(points1).runs + '/' + TeamHelper.convertPointsCricket(points1).wickets;
 			result2 = TeamHelper.convertPointsCricket(points2).runs + '/' + TeamHelper.convertPointsCricket(points2).wickets;
 		} else {
@@ -177,7 +178,7 @@ ChallengeModel.prototype.getWickets = function(teamsScore, teamId){
 
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
-	if (this.isFinished && event.sport.name.toLowerCase() === 'cricket') { //то это полная жопа
+	if (this.isFinished && SportHelper.isCricket(event.sport.name)) { //то это полная жопа
 		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
 				result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
 				teamsData 						= event.teamsData,
@@ -244,7 +245,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		return 'Multiple result'
 	}
 
-	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && event.sport.name.toLowerCase() !== 'cricket') {
+	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && !SportHelper.isCricket(event.sport.name)) {
 		const scoreArray = this.scoreAr;
 
 		switch (event.sport.scoring) {
