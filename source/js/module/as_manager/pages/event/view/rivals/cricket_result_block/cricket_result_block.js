@@ -74,6 +74,7 @@ const CricketResultBlock = React.createClass({
 
 	//We get the difference module of the runs, because we only care about this, then we display text result of game
 	getRuns: function(scores){
+		console.log(scores);
 		if (scores.length !== 0) {
 			return Math.abs(Math.floor(scores[0].score) - Math.floor(scores[1].score));
 		} else {
@@ -175,11 +176,18 @@ const CricketResultBlock = React.createClass({
 	},
 	
 	render: function(){
-		return (
-			<div className="eCricketResultBlock">
-				{ this.getTextResult() }
-			</div>
-		);
+		const isFinished = this.props.event.status === EventHelper.EVENT_STATUS.FINISHED;
+		
+		if (isFinished === true) {
+			return (
+				<div className="eCricketResultBlock">
+					{ this.getTextResult() }
+				</div>
+			);
+		} else {
+			return null;
+		}
+
 	}
 });
 
