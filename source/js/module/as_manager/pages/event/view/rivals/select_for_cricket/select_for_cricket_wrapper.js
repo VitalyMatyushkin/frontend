@@ -157,7 +157,12 @@ const SelectForCricketWrapper = React.createClass({
 		
 		switch(eventType){
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if (teamScore.length !== 0) {
+				if (teamScore.length === 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].schoolId
+					};
+				} else if (teamScore.length > 1) {
 					return {
 						leftTeamId: scores['0'].teamId,
 						rightTeamId: scores['1'].teamId
@@ -169,7 +174,12 @@ const SelectForCricketWrapper = React.createClass({
 					};
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if (teamScore.length !== 0) {
+				if (teamScore.length === 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].houseId
+					};
+				} else if (teamScore.length > 1) {
 					return {
 						leftTeamId: scores['0'].teamId,
 						rightTeamId: scores['1'].teamId
@@ -190,21 +200,28 @@ const SelectForCricketWrapper = React.createClass({
 	},
 	
 	getScoreForCricket: function(eventType, teamScore, houseScore, schoolScore){
-		switch(eventType){
+		let score = [];
+		switch (eventType){
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if (teamScore.length === 0) {
+				if (teamScore.length === 0) { 					//school vs school
 					return schoolScore;
-				} else {
+				} else if (teamScore.length === 1) { 			//school vs team[school]
+					score.push(teamScore[0], schoolScore[0]);
+					return score;
+				} else {										//team[school] vs team[school]
 					return teamScore;
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if (teamScore.length === 0) {
+				if (teamScore.length === 0) {					//house vs house
 					return houseScore;
-				} else {
+				} else if (teamScore.length === 1) { 			//house vs team[house]
+					score.push(teamScore[0], houseScore[0]);
+					return score;
+				} else {										//team[house] vs team[house]
 					return teamScore;
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				return teamScore;
+				return teamScore; 								//team vs team
 		}
 	},
 	
@@ -230,20 +247,43 @@ const SelectForCricketWrapper = React.createClass({
 
 		switch(eventType){
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if (this.props.event.teamsData.length !== 0) {
+				if (this.props.event.teamsData.length === 1) {									// school vs team[school]
 					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					if (order === -1) {
+						teamName = this.props.event.schoolsData.find(school => school.id === teamId).name;
+					} else {
+						teamName = this.props.event.teamsData[order].name;
+					}
+					
+					return `${teamName}`
+				} else if (this.props.event.teamsData.length > 1) { 							//team[school] vs team[school]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
 					teamName = this.props.event.schoolsData.find(school => school.id === this.props.event.teamsData[order].schoolId).name;
-					return `${teamName.name} ${this.props.event.teamsData[order].name}`
-				} else {
+					return `${teamName} ${this.props.event.teamsData[order].name}`
+				} else {																		//school vs school
 					order = this.props.event.schoolsData.findIndex(school => school.id === teamId);
 					return `${this.props.event.schoolsData[order].name}`
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if (this.props.event.teamsData.length !== 0) {
+				if (this.props.event.teamsData.length === 1) { 									//house vs team[house]
 					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					if (order === -1) {
+						teamName = this.props.event.housesData.find(house => house.id === teamId).name;
+					} else {
+						teamName = this.props.event.teamsData[order].name;
+					}
+					
+					return `${teamName}`
+				} else if (this.props.event.teamsData.length > 1) { 							//team[house] vs team[house]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
 					teamName = this.props.event.housesData.find(house => house.id === this.props.event.teamsData[order].houseId).name;
+					
 					return `${teamName} ${this.props.event.teamsData[order].name}`
-				} else {
+				} else {																		//house vs house
 					order = this.props.event.housesData.findIndex(house => house.id === teamId);
 					return `${this.props.event.housesData[order].name}`
 				}

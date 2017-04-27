@@ -111,21 +111,28 @@ const CricketResultBlock = React.createClass({
 	},
 	
 	getScoreForCricket: function(eventType, teamScore, houseScore, schoolScore){
+		let score = [];
 		switch (eventType){
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if (teamScore.length === 0) {
+				if (teamScore.length === 0) { 					//school vs school
 					return schoolScore;
-				} else {
+				} else if (teamScore.length === 1) { 			//school vs team[school]
+					score.push(teamScore[0], schoolScore[0]);
+					return score;
+				} else {										//team[school] vs team[school]
 					return teamScore;
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if (teamScore.length === 0) {
+				if (teamScore.length === 0) {					//house vs house
 					return houseScore;
-				} else {
+				} else if (teamScore.length === 1) { 			//house vs team[house]
+					score.push(teamScore[0], houseScore[0]);
+					return score;
+				} else {										//team[house] vs team[house]
 					return teamScore;
 				}
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				return teamScore;
+				return teamScore; 								//team vs team
 		}
 	},
 	
