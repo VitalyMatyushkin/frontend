@@ -232,7 +232,8 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				return p.schoolIds.find(id => id === activeSchoolId);
 			});
 
-			return `${activeSchoolPlace.place}th place`;
+			const numberOfPlayers = event.invitedSchoolIds.length + 1;
+			return `Place ${activeSchoolPlace.place} of ${numberOfPlayers}`;
 		}
 	}
 
