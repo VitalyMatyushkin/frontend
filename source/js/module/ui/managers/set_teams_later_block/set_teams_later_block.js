@@ -1,6 +1,7 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Immutable	= require('immutable'),
+		TeamHelper	= require('module/ui/managers/helpers/team_helper'),
 		EventHelper	= require('module/helpers/eventHelper');
 
 const SetTeamsLater = React.createClass({
@@ -13,7 +14,10 @@ const SetTeamsLater = React.createClass({
 	isShowSetTeamsLater: function(event) {
 		const isFinishedEvent = typeof event.status !== 'undefined' ? !EventHelper.isNotFinishedEvent(event) : false;
 
-		return !(EventHelper.isInternalEvent(event) && isFinishedEvent);
+		return (
+			!(TeamHelper.isInternalEventForTeamSport(event) && event.sportModel.multiparty) &&
+			!(EventHelper.isInternalEvent(event) && isFinishedEvent)
+		);
 	},
 	isSetTeamLater: function() {
 		return this.getDefaultBinding().toJS('isSetTeamLater');
