@@ -16,10 +16,10 @@ const ChallengeModelHelper = {
 				case 'LESS_SCORES':
 				case 'LESS_TIME':
 				case 'LESS_RESULT':
-					if(scoreData1 < scoreData2) {
-						return 1;
-					} else if(scoreData1 > scoreData2) {
+					if(scoreData1.score < scoreData2.score) {
 						return -1;
+					} else if(scoreData1.score > scoreData2.score) {
+						return 1;
 					} else {
 						return 0;
 					}
@@ -27,10 +27,10 @@ const ChallengeModelHelper = {
 				case 'MORE_TIME':
 				case 'MORE_RESULT':
 				case 'FIRST_TO_N_POINTS':
-					if(scoreData1 > scoreData2) {
-						return -1;
-					} else if(scoreData1 < scoreData2) {
+					if(scoreData1.score < scoreData2.score) {
 						return 1;
+					} else if(scoreData1.score > scoreData2.score) {
+						return -1;
 					} else {
 						return 0;
 					}
