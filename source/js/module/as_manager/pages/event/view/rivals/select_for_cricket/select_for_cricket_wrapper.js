@@ -133,7 +133,7 @@ const SelectForCricketWrapper = React.createClass({
 	
 	componentDidMount: function(){
 		let stateArray = [];
-		
+
 		stateArray = stateArray.concat(
 			RESULTS_FOR_CRICKET_FOR_SELECT_TBD,
 			this.addTeamResultsInGameResultsMenu(this.props.event),
@@ -147,29 +147,149 @@ const SelectForCricketWrapper = React.createClass({
 	},
 	
 	getTeamsIdOrderByResults: function(event){
-		return {
-			leftTeamId: event.results.teamScore["0"].teamId,
-			rightTeamId: event.results.teamScore["1"].teamId
+		const 	eventType 	= event.eventType,
+				teamScore 	= typeof event.results.teamScore !== 'undefined' ? event.results.teamScore : [],
+				houseScore 	= typeof event.results.houseScore !== 'undefined' ? event.results.houseScore : [],
+				schoolScore = typeof event.results.schoolScore !== 'undefined' ? event.results.schoolScore : [],
+				scores 		= this.getScoreForCricket(eventType, teamScore, houseScore, schoolScore);
+		
+		let order;
+		
+		switch(eventType){
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if (teamScore.length === 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].schoolId
+					};
+				} else if (teamScore.length > 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].teamId
+					};
+				} else {
+					return {
+						leftTeamId: scores['0'].schoolId,
+						rightTeamId: scores['1'].schoolId
+					};
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				if (teamScore.length === 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].houseId
+					};
+				} else if (teamScore.length > 1) {
+					return {
+						leftTeamId: scores['0'].teamId,
+						rightTeamId: scores['1'].teamId
+					};
+				} else {
+					return {
+						leftTeamId: scores['0'].houseId,
+						rightTeamId: scores['1'].houseId
+					};
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return {
+					leftTeamId: scores['0'].teamId,
+					rightTeamId: scores['1'].teamId
+				};
+		}
+
+	},
+	
+	getScoreForCricket: function(eventType, teamScore, houseScore, schoolScore){
+		let score = [];
+		switch (eventType){
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if (teamScore.length === 0) { 					//school vs school
+					return schoolScore;
+				} else if (teamScore.length === 1) { 			//school vs team[school]
+					score.push(teamScore[0], schoolScore[0]);
+					return score;
+				} else {										//team[school] vs team[school]
+					return teamScore;
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				if (teamScore.length === 0) {					//house vs house
+					return houseScore;
+				} else if (teamScore.length === 1) { 			//house vs team[house]
+					score.push(teamScore[0], houseScore[0]);
+					return score;
+				} else {										//team[house] vs team[house]
+					return teamScore;
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return teamScore; 								//team vs team
 		}
 	},
 	
 	getPointsForCricket: function(event) {
 		let points = [];
 		
-		points.push(Math.round(event.results.teamScore["0"].score * 10) / 10);
-		points.push(Math.round(event.results.teamScore["1"].score * 10) / 10);
+		const 	eventType 	= event.eventType,
+				teamScore 	= typeof event.results.teamScore !== 'undefined' ? event.results.teamScore : [],
+				houseScore 	= typeof event.results.houseScore !== 'undefined' ? event.results.houseScore : [],
+				schoolScore = typeof event.results.schoolScore !== 'undefined' ? event.results.schoolScore : [],
+				scores 		= this.getScoreForCricket(eventType, teamScore, houseScore, schoolScore);
+		
+		points.push(Math.round(scores["0"].score * 10) / 10);
+		points.push(Math.round(scores["1"].score * 10) / 10);
 
 		return points;
 	},
 	
 	getRivalName: function(teamId){
-		const 	eventType = this.props.event.eventType,
-				order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+		const eventType = this.props.event.eventType;
 		
-		if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
-			return `${this.props.event.schoolsData[order].name} ${this.props.event.teamsData[order].name}`
-		} else {
-			return `${this.props.event.teamsData[order].name}`
+		let order, teamName;
+
+		switch(eventType){
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if (this.props.event.teamsData.length === 1) {									// school vs team[school]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					if (order === -1) {
+						teamName = this.props.event.schoolsData.find(school => school.id === teamId).name;
+					} else {
+						teamName = this.props.event.teamsData[order].name;
+					}
+					
+					return `${teamName}`
+				} else if (this.props.event.teamsData.length > 1) { 							//team[school] vs team[school]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					teamName = this.props.event.schoolsData.find(school => school.id === this.props.event.teamsData[order].schoolId).name;
+					return `${teamName} ${this.props.event.teamsData[order].name}`
+				} else {																		//school vs school
+					order = this.props.event.schoolsData.findIndex(school => school.id === teamId);
+					return `${this.props.event.schoolsData[order].name}`
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				if (this.props.event.teamsData.length === 1) { 									//house vs team[house]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					if (order === -1) {
+						teamName = this.props.event.housesData.find(house => house.id === teamId).name;
+					} else {
+						teamName = this.props.event.teamsData[order].name;
+					}
+					
+					return `${teamName}`
+				} else if (this.props.event.teamsData.length > 1) { 							//team[house] vs team[house]
+					order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+					
+					teamName = this.props.event.housesData.find(house => house.id === this.props.event.teamsData[order].houseId).name;
+					
+					return `${teamName} ${this.props.event.teamsData[order].name}`
+				} else {																		//house vs house
+					order = this.props.event.housesData.findIndex(house => house.id === teamId);
+					return `${this.props.event.housesData[order].name}`
+				}
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				order = this.props.event.teamsData.findIndex(team => team.id === teamId);
+				return `${this.props.event.teamsData[order].name}`
 		}
 	},
 	onChangeResult: function(value){
