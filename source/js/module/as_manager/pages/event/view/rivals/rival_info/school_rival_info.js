@@ -90,7 +90,7 @@ const SchoolRivalInfo = React.createClass({
 	renderPlaceMedal: function() {
 		let medal = null;
 
-		if(!EventHelper.isNotFinishedEvent(this.props.event)) {
+		if(!EventHelper.isNotFinishedEvent(this.props.event) && this.props.event.invitedSchoolIds.length > 1) {
 			const	places		= ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(this.props.event),
 					placeData	= places.find(p => p.schoolIds.find(id => id === this.props.rival.school.id));
 

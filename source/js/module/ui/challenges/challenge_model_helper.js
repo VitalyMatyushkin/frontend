@@ -12,14 +12,29 @@ const ChallengeModelHelper = {
 		let score = teamScore.concat(event.results.schoolScore);
 
 		score = score.sort((scoreData1, scoreData2) => {
-			if(scoreData1.score > scoreData2.score) {
-				return -1;
+			switch (event.sport.scoring) {
+				case 'LESS_SCORES':
+				case 'LESS_TIME':
+				case 'LESS_RESULT':
+					if(scoreData1 < scoreData2) {
+						return 1;
+					} else if(scoreData1 > scoreData2) {
+						return -1;
+					} else {
+						return 0;
+					}
+				case 'MORE_SCORES':
+				case 'MORE_TIME':
+				case 'MORE_RESULT':
+				case 'FIRST_TO_N_POINTS':
+					if(scoreData1 > scoreData2) {
+						return -1;
+					} else if(scoreData1 < scoreData2) {
+						return 1;
+					} else {
+						return 0;
+					}
 			}
-			if(scoreData1.score < scoreData2.score) {
-				return 1;
-			}
-
-			return 0;
 		});
 
 		return score
