@@ -11,7 +11,7 @@ const AddPhotoButton = React.createClass({
 		handleChange:			React.PropTypes.func.isRequired
 	},
 
-	handleClick: function() {
+	handleClick: function(eventDescriptor) {
 		if(this.props.isUserCanUploadPhotos) {
 			if(typeof this.fileInputRef !== 'undefined') {
 				let event;
@@ -26,6 +26,7 @@ const AddPhotoButton = React.createClass({
 					event = new MouseEvent('click');
 				}
 				this.fileInputRef.dispatchEvent(event);
+				eventDescriptor.stopPropagation();
 			}
 		} else {
 			window.simpleAlert(
@@ -55,10 +56,12 @@ const AddPhotoButton = React.createClass({
 
 
 		return (
-			<div	className	= 'bAddPhotoButton'
-					onClick		= { this.handleClick }
-			>
-				{'Add photo'}
+			<div className="bAddPhotoButtonWrapper">
+				<div	className	= 'bAddPhotoButton'
+						onClick		= { this.handleClick }
+				>
+					{'Add photo'}
+				</div>
 				{this.renderFileInput()}
 			</div>
 		);
