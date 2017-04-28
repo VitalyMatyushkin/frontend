@@ -140,11 +140,6 @@ const Rivals = React.createClass({
 			.commit();
 
 		this.addListenerForTeamScore();
-
-		//console.log('EVENT: ');
-		//console.log(event);
-		//console.log('RIVALS: ');
-		//console.log(rivals);
 	},
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
@@ -457,11 +452,6 @@ const Rivals = React.createClass({
 			.commit();
 	},
 	onChangeScore: function(rivalIndex, scoreBundleName, scoreData, player) {
-		//console.log(rivalIndex);
-		//console.log(scoreBundleName);
-		//console.log(scoreData);
-		//console.log(player);
-
 		const	binding	= this.getDefaultBinding(),
 				rivals	= binding.toJS('rivals'),
 				rival	= rivals[rivalIndex];
@@ -582,16 +572,6 @@ const Rivals = React.createClass({
 	
 	render: function() {
 		if(this.isSync()) {
-			const binding = this.getDefaultBinding();
-
-			const	event	= binding.toJS('model'),
-					rivals	= binding.toJS('rivals');
-
-			//console.log('EVENT: ');
-			//console.log(event);
-			//console.log('RIVALS: ');
-			//console.log(rivals);
-
 			return (
 				<div className="bRivals">
 					{ this.renderSelectWithGameResultForCricket() }

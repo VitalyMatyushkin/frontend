@@ -16,10 +16,11 @@ const Players = React.createClass({
 		onClickEditTeam				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired
 	},
-	SELECT_PLAYERS_LATER:	'Select players later...',
+	SELECT_TEAM_LATER:		'Select team later',
+	NO_TEAM_MEMBERS:		'No team members to display',
 	MEMBERS_NOT_ADDED:		'Team members have not been added yet',
-	ACCEPTED_BY_OPPONENT:	'Accepted by opponent',
-	AWAITING_OPPONENT:		'Awaiting opponent...',
+	ACCEPTED_BY_OPPONENT:	'Accepted by opponent but team members have not been added yet',
+	AWAITING_OPPONENT:		'Awaiting opponent',
 	renderContent: function() {
 		const	event		= this.props.event,
 				eventType	= event.eventType;
@@ -40,32 +41,71 @@ const Players = React.createClass({
 		);
 	},
 	renderPlayersForInterSchoolsEvent: function() {
-		const	rival			= this.props.rival,
-				eventStatus		= this.props.event.status,
+		const players = propz.get(this.props.rival, ['team', 'players']);
+
+		if(typeof players !== 'undefined' && players.length !== 0) {
+			return this.renderPlayers();
+		} else {
+			return this.renderNotificationTextForInterSchoolsEvent();
+		}
+	},
+	renderNotificationTextForInterSchoolsEvent: function() {
+		const	event			= this.props.event,
+				rival			= this.props.rival,
+				eventStatus		= event.status,
 				players			= propz.get(this.props.rival, ['team', 'players']),
 				activeSchoolId	= this.props.activeSchoolId;
 
-		if(
-			typeof players === 'undefined' &&
-			activeSchoolId === rival.school.id
-		) {
-			return this.renderText(this.MEMBERS_NOT_ADDED);
+		if(activeSchoolId === rival.school.id) {									// If rival is activeSchool
+			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {					// For finished event
+				if(typeof players === 'undefined') {								// Select team later
+					return this.renderText(this.NO_TEAM_MEMBERS);
+				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+					return this.renderText(this.NO_TEAM_MEMBERS);
+				}
+			} else {																// For not finished event
+				if(typeof players === 'undefined') {								// Select team later
+					return this.renderText(this.SELECT_TEAM_LATER);
+				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+					return this.renderText(this.MEMBERS_NOT_ADDED);
+				}
+			}
 		} else if(
-			typeof players === 'undefined' &&
-			activeSchoolId !== rival.school.id &&
-			(
-				eventStatus === EventHelper.EVENT_STATUS.ACCEPTED ||
-				eventStatus === EventHelper.EVENT_STATUS.FINISHED
-			)
+			rival.school.id === event.inviterSchoolId &&							// If rival is inviter school,
+			activeSchoolId !== rival.school.id										// but not active school
 		) {
-			return this.renderText(this.ACCEPTED_BY_OPPONENT);
-		} else if(
-			typeof players === 'undefined' &&
-			activeSchoolId !== rival.school.id
-		) {
-			return this.renderText(this.AWAITING_OPPONENT);
-		} else if(typeof players !== 'undefined') {
-			return this.renderPlayers();
+			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {					// For finished event
+				if(typeof players === 'undefined') {								// Select team later
+					return this.renderText(this.NO_TEAM_MEMBERS);
+				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+					return this.renderText(this.NO_TEAM_MEMBERS);
+				}
+			} else {																// For not finished event
+				if(typeof players === 'undefined') {								// Select team later
+					return this.renderText(this.ACCEPTED_BY_OPPONENT);
+				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+					return this.renderText(this.ACCEPTED_BY_OPPONENT);
+				}
+			}
+		} else {																	// Cases for other schools
+			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {
+				return this.renderText(this.NO_TEAM_MEMBERS);
+			} else {
+				if(rival.invite.status !== 'ACCEPTED') {							// Invite was not accepted yet
+					return this.renderText(this.AWAITING_OPPONENT);
+				} else if(
+					rival.invite.status === 'ACCEPTED' &&							// Select team later
+					typeof players === 'undefined'
+				) {
+					return this.renderText(this.ACCEPTED_BY_OPPONENT);
+				} else if(
+					rival.invite.status === 'ACCEPTED' &&							// Team was set, but empty
+					typeof players !== 'undefined' &&
+					players.length === 0
+				) {
+					return this.renderText(this.ACCEPTED_BY_OPPONENT);
+				}
+			}
 		}
 	},
 	renderPlayersForHousesEvent: function() {
