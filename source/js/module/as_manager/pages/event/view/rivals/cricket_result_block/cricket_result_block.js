@@ -29,23 +29,24 @@ const CricketResultBlock = React.createClass({
 
 	getTeamNameCricket: function(teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded){
 		switch(eventType){
-			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']: 	//for inter schools cricket we show only school name
-				if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {						//for case "match awarded" we need in our school name and school name of rival,
-					schoolsData = schoolsData.filter(school => school.id === teamId); 		//because we have only teamId and result in cricket result
-					if (schoolsData.length !== 0) {
-						return schoolsData[0].name;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']: 					//for inter schools cricket we show only school name
+				if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {										//for case "match awarded" we need in our school name and school name of rival,
+					const schoolsDataFiltered = schoolsData.filter(school => school.id === teamId); 		//because we have only teamId and result in cricket result
+					if (schoolsDataFiltered.length !== 0) {
+						return schoolsDataFiltered[0].name;
 					} else {
 						teamsData = teamsData.filter(team => team.id !== teamId);
 						schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
 						return schoolsData[0].name;
 					}
 				} else {
-					schoolsData = schoolsData.filter(school => school.id === teamId);
-					if (schoolsData.length !== 0) {
-						return schoolsData[0].name;
+					const schoolsDataFiltered = schoolsData.filter(school => school.id === teamId);
+					if (schoolsDataFiltered.length !== 0) {
+						return schoolsDataFiltered[0].name;
 					} else if (teamsData.length !== 0) {
 						teamsData = teamsData.filter(team => team.id === teamId);
-						return teamsData[0].name;
+						schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
+						return schoolsData[0].name;
 					} else {
 						return 'No school name';
 					}
@@ -68,7 +69,8 @@ const CricketResultBlock = React.createClass({
 					return 'No house name';
 				}
 			default:
-				return 'undefined';
+				console.log(`Error: Event type - ${eventType}`);
+				return '';
 		}
 	},
 
@@ -156,8 +158,12 @@ const CricketResultBlock = React.createClass({
 				wickets		 					= this.getWickets(scores, teamId, eventType);
 		
 		switch (true) {
-			case result === 'tie' || result === 'draw' || result === 'tbd':
+			case result === 'tbd':
 				return result.toUpperCase();
+			case result === 'tie':
+				return 'Tie';
+			case result === 'draw':
+				return 'Draw';
 			case result === 'no_result':
 				return `No result`;
 			case result === 'won_by_runs' && isTeamFromActiveSchoolCricket:
@@ -165,13 +171,13 @@ const CricketResultBlock = React.createClass({
 			case result === 'won_by_wickets' && isTeamFromActiveSchoolCricket:
 				return `${teamName} won by ${wickets} wickets`;
 			case result === 'won_by_innings_and_runs' && isTeamFromActiveSchoolCricket:
-				return `${teamName} won by innings and ${runsAbs} runs`;
+				return `${teamName} won by an innings and ${runsAbs} runs`;
 			case result === 'won_by_runs' && !isTeamFromActiveSchoolCricket:
 				return `${lostInResults}${teamName} won by ${runsAbs} runs`;
 			case result === 'won_by_wickets' && !isTeamFromActiveSchoolCricket:
 				return `${lostInResults} ${teamName} won by ${wickets} wickets`;
 			case result === 'won_by_innings_and_runs' && !isTeamFromActiveSchoolCricket:
-				return `${lostInResults}${teamName} won by innings and ${runsAbs} runs`;
+				return `${lostInResults}${teamName} won by an innings and ${runsAbs} runs`;
 			case result === 'match_awarded' && isTeamFromActiveSchoolCricket:
 				return `Match awarded to ${teamName}`;
 			case result === 'match_awarded' && !isTeamFromActiveSchoolCricket:
