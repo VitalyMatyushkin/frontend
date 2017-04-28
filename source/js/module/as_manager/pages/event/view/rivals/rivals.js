@@ -7,6 +7,7 @@ const	React						= require('react'),
 		SportHelper					= require('module/helpers/sport_helper'),
 		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames					= require('classnames'),
+		propz 						= require('propz'),
 		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
 		CricketResultBlock 			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
@@ -205,14 +206,19 @@ const Rivals = React.createClass({
 		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
-			const	teamId				= typeof rival.team !== 'undefined' ? rival.team.id : '',
-					teamScoreData		= event.results.teamScore.find(scoreData =>
-						scoreData.teamId === teamId
-					),
-					individualScoreData	= event.results.individualScore.find(scoreData =>
-						scoreData.teamId === teamId
-					);
-
+			let teamScoreData,
+				individualScoreData;
+			
+			const teamId = propz.get(rival,['team', 'id']);
+			if (typeof teamId !== 'undefined') {
+				teamScoreData = event.results.teamScore.find(scoreData =>
+					scoreData.teamId === teamId
+				);
+				individualScoreData	= event.results.individualScore.find(scoreData =>
+					scoreData.teamId === teamId
+				);
+			}
+			
 			return (
 				typeof teamScoreData !== 'undefined' &&
 				typeof individualScoreData !== 'undefined'
