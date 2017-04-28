@@ -205,42 +205,18 @@ const Rivals = React.createClass({
 		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
-			if(EventHelper.isInterSchoolsEvent(event)) {
-				const	schoolId		= rival.school.id,
-						foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
+			const	teamId				= rival.team.id,
+					teamScoreData		= event.results.teamScore.find(scoreData =>
+						scoreData.teamId === teamId
+					),
+					individualScoreData	= event.results.individualScore.find(scoreData =>
+						scoreData.teamId === teamId
+					);
 
-				const	team						= rival.team;
-				let		foundIndividualScoreData	= undefined;
-				if(typeof team !== 'undefined') {
-					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
-				}
-
-				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
-			} else if(EventHelper.isHousesEvent(event)) {
-				const	houseId			= rival.house.id,
-						foundScoreData	= event.results.houseScore.find(scoreData => scoreData.houseId === houseId);
-
-				const	team						= rival.team;
-				let		foundIndividualScoreData	= undefined;
-				if(typeof team !== 'undefined') {
-					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
-				}
-
-				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
-			} else if(EventHelper.isInternalEvent(event)) {
-				const	teamId				= rival.team.id,
-						teamScoreData		= event.results.teamScore.find(scoreData =>
-							scoreData.teamId === teamId
-						),
-						individualScoreData	= event.results.individualScore.find(scoreData =>
-							scoreData.teamId === teamId
-						);
-
-				return (
-					typeof teamScoreData !== 'undefined' ||
-					typeof individualScoreData !== 'undefined'
-				);
-			}
+			return (
+				typeof teamScoreData !== 'undefined' &&
+				typeof individualScoreData !== 'undefined'
+			);
 		}
 	},
 	addListenerForTeamScore: function() {
