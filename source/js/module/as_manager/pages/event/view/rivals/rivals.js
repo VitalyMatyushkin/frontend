@@ -205,7 +205,7 @@ const Rivals = React.createClass({
 		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
-			const	teamId				= rival.team.id,
+			const	teamId				= typeof rival.team !== 'undefined' ? rival.team.id : '',
 					teamScoreData		= event.results.teamScore.find(scoreData =>
 						scoreData.teamId === teamId
 					),
