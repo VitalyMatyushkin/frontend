@@ -109,6 +109,9 @@ select::-ms-expand {
   &.mMarginTop {
     margin-top: 10px;
   }
+  &.mInline {
+	display: inline-block;
+  }
 }
 
 .eForm_addButtonWrapper {
