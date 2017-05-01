@@ -164,7 +164,8 @@ const Event = React.createClass({
 			if(
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
 				!TeamHelper.isHousesEventForTeamSport(eventData) &&
-				!TeamHelper.isInternalEventForTeamSport(eventData)
+				!TeamHelper.isInternalEventForTeamSport(eventData) &&
+				!eventData.sport.multiparty
 			) {
 				EventResultHelper.initializeEventResults(eventData);
 			}
@@ -222,7 +223,8 @@ const Event = React.createClass({
 				TeamHelper.isTeamSport(eventData) &&
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
 				!TeamHelper.isHousesEventForTeamSport(eventData) &&
-				!TeamHelper.isInternalEventForTeamSport(eventData)
+				!TeamHelper.isInternalEventForTeamSport(eventData) &&
+				!eventData.sport.multiparty
 			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
@@ -255,7 +257,9 @@ const Event = React.createClass({
 		//TODO it's temp. only for event refactoring period.
 		if(
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
-			!TeamHelper.isHousesEventForTeamSport(event)
+			!TeamHelper.isHousesEventForTeamSport(event) &&
+			!TeamHelper.isInternalEventForTeamSport(event) &&
+			!event.sport.multiparty
 		) {
 			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
 				return false;
@@ -924,9 +928,11 @@ const Event = React.createClass({
 
 		//TODO it's temp. only for event refactoring period.
 		if(
-			TeamHelper.isInterSchoolsEventForTeamSport(event) ||
-			TeamHelper.isHousesEventForTeamSport(event) ||
-			TeamHelper.isInternalEventForTeamSport(event)
+			(
+				TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+				TeamHelper.isHousesEventForTeamSport(event) ||
+				TeamHelper.isInternalEventForTeamSport(event)
+			) && event.sport.multiparty
 		) {
 			return (
 				<Rivals	binding									= { binding }
