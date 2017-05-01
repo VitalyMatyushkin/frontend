@@ -63,7 +63,7 @@
 
 .eMultiSelectDropdown_item {
   display: flex;
-  flex-basis: 50%;
+  flex-basis: calc(50% - 20px);
 
   cursor: pointer;
   padding: 10px;
