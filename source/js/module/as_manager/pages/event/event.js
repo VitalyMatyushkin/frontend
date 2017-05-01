@@ -177,11 +177,18 @@ const Event = React.createClass({
 			});
 		}).then(_report => {
 			report = _report;
+			if (
+				RoleHelper.getLoggedInUserRole(this) === RoleHelper.USER_ROLES.PARENT ||
+				RoleHelper.getLoggedInUserRole(this) === RoleHelper.USER_ROLES.STUDENT
+			) {
+				return Promise.resolve(undefined);
+			} else {
+				return window.Server.schoolEventInvites.get({
+					schoolId: this.props.activeSchoolId,
+					eventId: self.eventId
+				});
+			}
 
-			return window.Server.schoolEventInvites.get({
-				schoolId: this.props.activeSchoolId,
-				eventId: self.eventId
-			});
 		}).then(invites => {
 			eventData.invites = invites;
 
