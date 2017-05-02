@@ -28,7 +28,8 @@ const Rival = React.createClass({
 		return (
 			this.props.mode === 'closing' &&
 			TeamHelper.isTeamSport(this.props.event) &&
-			this.hasTeamPlayers()
+			this.hasTeamPlayers() &&
+			this.props.event.sport.individualResultsAvailable === true
 		);
 	},
 	renderIndividualScoreAvailable: function() {

@@ -5,7 +5,8 @@
 const 	React 			= require('react'),
 		Sport           = require('module/ui/icons/sport_icon'),
 		classNames      = require('classnames'),
-		ChallengeModel  = require('module/ui/challenges/challenge_model');
+		ChallengeModel  = require('module/ui/challenges/challenge_model'),
+		SportHelper 	= require('module/helpers/sport_helper');
 
 const FixtureItem = React.createClass({
 	propTypes: {
@@ -78,6 +79,9 @@ const FixtureItem = React.createClass({
 				break;
 			case typeof model.textResult === 'undefined':
 				eventResult = model.score;
+				break;
+			case SportHelper.isCricket(event.sport.name):
+				eventResult = <span>{model.textResult}</span>;
 				break;
 			default:
 				eventResult = <span>{model.textResult}<br/>{model.score}</span>

@@ -7,6 +7,7 @@ const	React						= require('react'),
 		SportHelper					= require('module/helpers/sport_helper'),
 		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames					= require('classnames'),
+		propz 						= require('propz'),
 		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
 		CricketResultBlock 			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
@@ -139,11 +140,6 @@ const Rivals = React.createClass({
 			.commit();
 
 		this.addListenerForTeamScore();
-
-		//console.log('EVENT: ');
-		//console.log(event);
-		//console.log('RIVALS: ');
-		//console.log(rivals);
 	},
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
@@ -205,42 +201,23 @@ const Rivals = React.createClass({
 		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
-			if(EventHelper.isInterSchoolsEvent(event)) {
-				const	schoolId		= rival.school.id,
-						foundScoreData	= event.results.schoolScore.find(scoreData => scoreData.schoolId === schoolId);
-
-				const	team						= rival.team;
-				let		foundIndividualScoreData	= undefined;
-				if(typeof team !== 'undefined') {
-					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
-				}
-
-				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
-			} else if(EventHelper.isHousesEvent(event)) {
-				const	houseId			= rival.house.id,
-						foundScoreData	= event.results.houseScore.find(scoreData => scoreData.houseId === houseId);
-
-				const	team						= rival.team;
-				let		foundIndividualScoreData	= undefined;
-				if(typeof team !== 'undefined') {
-					foundIndividualScoreData = event.results.individualScore.find(scoreData => scoreData.teamId === team.id);
-				}
-
-				return typeof foundScoreData !== 'undefined' || typeof foundIndividualScoreData !== 'undefined';
-			} else if(EventHelper.isInternalEvent(event)) {
-				const	teamId				= rival.team.id,
-						teamScoreData		= event.results.teamScore.find(scoreData =>
-							scoreData.teamId === teamId
-						),
-						individualScoreData	= event.results.individualScore.find(scoreData =>
-							scoreData.teamId === teamId
-						);
-
-				return (
-					typeof teamScoreData !== 'undefined' ||
-					typeof individualScoreData !== 'undefined'
+			let teamScoreData,
+				individualScoreData;
+			
+			const teamId = propz.get(rival,['team', 'id']);
+			if (typeof teamId !== 'undefined') {
+				teamScoreData = event.results.teamScore.find(scoreData =>
+					scoreData.teamId === teamId
+				);
+				individualScoreData	= event.results.individualScore.find(scoreData =>
+					scoreData.teamId === teamId
 				);
 			}
+			
+			return (
+				typeof teamScoreData !== 'undefined' &&
+				typeof individualScoreData !== 'undefined'
+			);
 		}
 	},
 	addListenerForTeamScore: function() {
@@ -475,11 +452,6 @@ const Rivals = React.createClass({
 			.commit();
 	},
 	onChangeScore: function(rivalIndex, scoreBundleName, scoreData, player) {
-		//console.log(rivalIndex);
-		//console.log(scoreBundleName);
-		//console.log(scoreData);
-		//console.log(player);
-
 		const	binding	= this.getDefaultBinding(),
 				rivals	= binding.toJS('rivals'),
 				rival	= rivals[rivalIndex];
@@ -600,16 +572,6 @@ const Rivals = React.createClass({
 	
 	render: function() {
 		if(this.isSync()) {
-			const binding = this.getDefaultBinding();
-
-			const	event	= binding.toJS('model'),
-					rivals	= binding.toJS('rivals');
-
-			//console.log('EVENT: ');
-			//console.log(event);
-			//console.log('RIVALS: ');
-			//console.log(rivals);
-
 			return (
 				<div className="bRivals">
 					{ this.renderSelectWithGameResultForCricket() }
