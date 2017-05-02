@@ -111,14 +111,11 @@ const SportSelector = React.createClass({
 					serverField		= "name"
 					placeholder		= "Enter sport name"
 					onSelect		= { this.handleChangeCompleteSport }
-					extraCssStyle	= "mBigSize mWhiteBG"
+					extraCssStyle	= "mWidth250 mInline mWhiteBG"
 				/>
 				<If condition={isSchoolHaveFavoriteSports}>
 					<div className="bSmallCheckboxBlock">
-						<div className="eSmallCheckboxBlock_label">
-							Show all sports
-						</div>
-						<div className="eForm_fieldInput">
+						<div className="eForm_fieldInput mInline">
 							<input
 								className	= "eSwitch"
 								type		= "checkbox"
@@ -126,6 +123,9 @@ const SportSelector = React.createClass({
 								onChange	= { this.handleChangeShowAllSports }
 							/>
 							<label/>
+						</div>
+						<div className="eSmallCheckboxBlock_label">
+							Show all sports
 						</div>
 					</div>
 				</If>
