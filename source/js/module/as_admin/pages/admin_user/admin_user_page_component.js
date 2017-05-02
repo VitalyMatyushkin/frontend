@@ -40,7 +40,8 @@ const AdminUserPageComponent = React.createClass({
 	},
 	render: function(){
 		const 	binding 		= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding();
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				userId 			= globalBinding.get('routing.parameters.id');
 		
 		return (
 			<div>
@@ -56,6 +57,7 @@ const AdminUserPageComponent = React.createClass({
 							path 		= "user/notification-view"
 							binding 	= { binding.sub('userNotification') }
 							component 	= { AdminUserNotification }
+							userId 		= { userId }
 						/>
 					</RouterView>
 				</div>
