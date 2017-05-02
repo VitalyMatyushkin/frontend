@@ -72,6 +72,7 @@ $labelColor:              #8c8c8c;
     background: $inputBg url("/images/arrow_down.svg") no-repeat 98% center;
     background-size: 10px;
   }
+  input,
   select::-ms-expand {
 	display: none;
   }

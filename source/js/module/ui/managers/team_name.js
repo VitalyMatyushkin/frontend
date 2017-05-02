@@ -8,7 +8,8 @@ const TeamName = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			isFocused: false
+			isFocused: false,
+			name: ''
 		};
 	},
 	getDefaultProps: function() {
@@ -16,16 +17,16 @@ const TeamName = React.createClass({
 			isShowError: false
 		};
 	},
-	componentDidUpdate: function () {
-		const cursor = this.state && this.state.cursor;
-
-		if(cursor >= 0){
-			this.refs.name.setSelectionRange(cursor, cursor);
-		}
+	componentDidMount(){
+		this.setState({
+			name: this.props.name
+		});
 	},
-	handleChangeTeamName: function(e) {
-		this.props.handleChangeName(e.target.value);
-		this.setState({cursor:e.target.selectionStart})
+	handleChangeTeamName: function(event) {
+		this.setState({
+			name: event.target.value
+		});
+		this.props.handleChangeName(event.target.value);
 	},
 	handleFocus: function() {
 		this.setState({
@@ -34,8 +35,7 @@ const TeamName = React.createClass({
 	},
 	handleBlur: function() {
 		this.setState({
-			isFocused	: false,
-			cursor		: -1
+			isFocused	: false
 		});
 	},
 	renderInput: function() {
@@ -43,7 +43,6 @@ const TeamName = React.createClass({
 		if(this.props.isShowError && !this.state.isFocused) {
 			return (
 				<input	className	= 'eTeamName_nameForm mWarning'
-						ref 		= 'name'
 						type		= {'text'}
 						value		= {'Please enter team name'}
 						onFocus		= {this.handleFocus}
@@ -52,13 +51,12 @@ const TeamName = React.createClass({
 		} else {
 			return (
 				<input	className	= 'eTeamName_nameForm'
-						ref 		= 'name'
 						type		= { 'text' }
 						placeholder	= { 'Team name' }
 						onChange	= { this.handleChangeTeamName }
 						onFocus		= { this.handleFocus}
 						onBlur 		= { this.handleBlur }
-						value		= { typeof this.props.name !== 'undefined' ? this.props.name : '' }
+						value		= { this.state.name }
 				/>
 			);
 		}
