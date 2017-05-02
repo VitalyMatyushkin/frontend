@@ -1,6 +1,5 @@
 
 .eChallengeDate_date{
-  margin: auto 0;
   padding-top: 5px;
   text-align: center;
   width: 15%;
@@ -17,5 +16,6 @@
 
 .eChallengeDate_wrap{
   display: flex;
+  align-items: center;
   padding: 0 15px;
 }

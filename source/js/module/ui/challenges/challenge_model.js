@@ -249,8 +249,12 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				wickets		 					= this.getWickets(scores, teamId, eventType);
 
 		switch (true) {
-			case result === 'tie' || result === 'draw' || result === 'tbd':
+			case result === 'tbd':
 				return result.toUpperCase();
+			case result === 'tie':
+				return 'Tie';
+			case result === 'draw':
+				return 'Draw';
 			case result === 'no_result':
 				return `No result`;
 			case result === 'won_by_runs' && isTeamFromActiveSchoolCricket:

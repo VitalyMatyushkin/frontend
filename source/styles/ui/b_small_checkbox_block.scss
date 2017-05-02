@@ -1,11 +1,11 @@
 .bSmallCheckboxBlock {
-  display: flex;
-  justify-content: flex-start;
-  width: 113px;
+  display: inline-block;
   padding: 10px 0 0 2px;
 }
 
 .eSmallCheckboxBlock_label {
   color: black;
   font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
 }
