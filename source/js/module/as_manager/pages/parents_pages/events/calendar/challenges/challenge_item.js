@@ -13,11 +13,26 @@ const ChallengeItem = function(props){
 			eventName	= event.toJS().generatedNames.official,
 			time		= DateHelper.getTime(event.get('startTime')),
 			sport		= event.get('sport').get('name');
+	
+	const 	isCancelled	= event.get('status') === 'CANCELED';
+	
+	/* calculating styles. cancelled and rejected events have their own inactive style */
+	const	topClassName	= 'eChallenge ' + (isCancelled ? 'mInactive' : ''),
+			iconClassName	= 'bIcon_invites ' + (isCancelled ? 'mInactive' : '');
+	
+	// TODO: actually it shouldn't be here. Click event should be triggered on any event and dispatched on
+	// TODO: top levels of hierarchy. But this is faster solution.
+	const handler = () => {
+		if (!isCancelled) {
+			props.onClick && props.onClick(event.get('id'));
+		}
+	};
 
+	
 	return(
-		<div className={'eChallenge eChallenge_basicMod'} onClick={() => props.onClick && props.onClick(event.get('id'))}>
+		<div className={`eChallenge eChallenge_basicMod ${topClassName}`} onClick={handler}>
 			<span className="eChallenge_sport">
-				<Sport name={sport} title={sport} className="bIcon_invites" />
+				<Sport name={sport} title={sport} className={`bIcon_invites ${iconClassName}`} />
 			</span>
 			<span className="eChallenge_date">{time}</span>
 			<div className="eChallenge_name" title={eventName}>{eventName}</div>

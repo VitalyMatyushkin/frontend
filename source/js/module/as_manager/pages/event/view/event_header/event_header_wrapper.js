@@ -124,6 +124,7 @@ const EventHeaderWrapper = React.createClass({
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
 						onClickEditEventButton			= { this.onClickEditEventButton }
+						role 							= { role }
 						//props for tweet button
 						twitterData 					= { twitterData }
 						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }
