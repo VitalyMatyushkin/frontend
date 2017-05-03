@@ -56,9 +56,10 @@ const EventsCalendar = React.createClass({
 			const child = this.getChildById(children.toJS(), binding.toJS('activeChildId'));
 			if(typeof child !== 'undefined') {
 				challengesList = (
-					<Challenges	isSync	= {isSelectedDateEventsInSync}
-								events	= {selectedDateEvents.toJS()}
-								onClick	= {this.onEventClick.bind(null, child.schoolId)}
+					<Challenges	isSync			= {isSelectedDateEventsInSync}
+								events			= {selectedDateEvents.toJS()}
+								onClick			= {this.onEventClick.bind(null, child.schoolId)}
+								activeSchoolId 	= {child.schoolId}
 					/>
 				);
 			} else {
