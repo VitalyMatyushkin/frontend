@@ -191,7 +191,7 @@ const SportIcon = React.createClass({
 				icon = "cross-country";
 				break;
 			case 	sport === 'canoeing (individual)':
-				icon = "canoening_individual";
+				icon = "canoeing_individual";
 				break;
 			case 	sport === 'canoeing (team)':
 				icon = "canoening_team";
@@ -313,6 +313,12 @@ const SportIcon = React.createClass({
 				break;
 			case sport === 'tennis (mini tournament)':
 				icon="tennis_mini_tournament";
+				break;
+			case sport === 'table tennis (mini tournament)':
+				icon="table_tennis_mini_tournament";
+				break;
+			case sport === 'hockey sevens (mini tournament)':
+				icon="hockey_sevens_mini_tournament";
 				break;
 			default:
 				icon = sport;
