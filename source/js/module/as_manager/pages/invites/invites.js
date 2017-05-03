@@ -14,7 +14,11 @@ const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			inbox: {},
+			subMenuKey: this.getRandomString(),
+			inbox: {
+				models: [],
+				sync: false
+			},
 			outbox: {},
 			archive: {},
 			decline: {
@@ -46,6 +50,28 @@ const InvitesView = React.createClass({
 			name: 'Archive',
 			key: 'Archive'
 		}];
+
+		this.addListeners();
+	},
+	getRandomString: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+	addListeners: function() {
+		this.addListenerToInboxInviteCount();
+	},
+	addListenerToInboxInviteCount: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('inbox.models').addListener(descriptor => {
+			const	currentModels	= descriptor.getCurrentValue().toJS(),
+					prevModels		= descriptor.getPreviousValue().toJS();
+
+			if(currentModels.length !== prevModels.length) {
+				this.menuItems[0].name = `Inbox(${currentModels.length})`
+				binding.set('subMenuKey', Immutable.fromJS(this.getRandomString()));
+			}
+		});
 	},
 	render: function() {
 		const 	self 			= this,
@@ -53,11 +79,15 @@ const InvitesView = React.createClass({
 				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return <div>
-			<SubMenu binding={binding.sub('invitesRouting')} items={self.menuItems} />
+			<SubMenu
+				key		= {binding.toJS('subMenuKey')}
+				binding	= {binding.sub('invitesRouting')}
+				items	= {self.menuItems}
+			/>
 			<div className='bSchoolMaster'>
 				<div className='bInvites'>
 					<RouterView routes={ binding.sub('invitesRouting') } binding={globalBinding}>
-						<Route path='/invites /invites/inbox' 		binding={binding.sub('inbox')} 		component={InboxComponent} />
+						<Route path='/invites /invites/inbox'		binding={binding.sub('inbox')}		component={InboxComponent} />
 						<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
 						<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
 						<Route path='/invites/:inviteId/accept' 	binding={binding.sub('accept')} 	component={AcceptComponent} />

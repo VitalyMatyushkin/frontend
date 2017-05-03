@@ -16,12 +16,6 @@ const InviteList = React.createClass({
 	propTypes: {
 		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
 	},
-	getDefaultState: function () {
-		return Immutable.fromJS({
-			models: [],
-			sync: false
-		});
-	},
 	componentWillMount: function () {
 		const 	self 			= this,
 				binding 		= self.getDefaultBinding(),
@@ -76,9 +70,9 @@ const InviteList = React.createClass({
 		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText);
 	},
 	render: function() {
-		const 	self 	= this,
-			binding = self.getDefaultBinding(),
-			invites = self.getInvites();
+		const	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = self.getInvites();
 
 		return (
 			<div>
