@@ -141,11 +141,6 @@ const OneSchoolPage = React.createClass({
 							component={AdminUserListComponent}
 						/>
 						<Route
-							path="/user/view"
-							binding={binding.sub('userDetailPage')}
-							component={UserViewComponent}
-						/>
-						<Route
 							path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
 							binding={binding.sub('schools')}
 							component={AdminListComponent}
