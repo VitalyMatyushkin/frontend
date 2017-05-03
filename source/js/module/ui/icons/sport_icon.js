@@ -22,9 +22,11 @@ const SportIcon = React.createClass({
 		let icon;
 		sport = sport ? sport.trim().toLowerCase() : '';
 		switch (true){
-			case 	sport === 'football' ||
-					sport === 'football indoor':
+			case 	sport === 'football':
 				icon = "ball";
+				break;
+			case 	sport === 'football indoor':
+				icon = "ball_indoor";
 				break;
 			case 	sport === 'futsal':
 				icon = "footsal";
@@ -189,10 +191,10 @@ const SportIcon = React.createClass({
 				icon = "cross-country";
 				break;
 			case 	sport === 'canoeing (individual)':
-				icon = "canoening";
+				icon = "canoening_individual";
 				break;
 			case 	sport === 'canoeing (team)':
-				icon = "canoening_2";
+				icon = "canoening_team";
 				break;
 			case 	sport === 'boccia (1x1)':
 				icon = "boccia_1x1";
@@ -200,7 +202,7 @@ const SportIcon = React.createClass({
 			case 	sport === 'boccia (2x2)':
 				icon = "boccia_2x2";
 				break;
-			case 	sport === 'boccia (boccia_team)':
+			case 	sport === 'boccia (team)':
 				icon = "boccia_team";
 				break;
 			case 	sport === 'stoolball':
@@ -215,6 +217,102 @@ const SportIcon = React.createClass({
 				break;
 			case 	sport === 'new age kurling':
 				icon = "curling_newage";
+				break;
+			case sport === 'athletics (mini tournament)':
+				icon="athletics_mini_tournament";
+				break;
+			case sport === 'badminton (mini tournament)':
+				icon="badminton_mini_tournament";
+				break;
+			case sport === 'basketball (mini tournament)':
+				icon="basketball_mini_tournament";
+				break;
+			case sport === 'boccia (mini tournament)':
+				icon="boccia_mini_tournament";
+				break;
+			case sport === 'cricket (mini tournament)':
+				icon="cricket_mini_tournament";
+				break;
+			case sport === 'cricket sixes (mini tournament)':
+				icon="cricket_sixes_mini_tournament";
+				break;
+			case sport === 'cricket t20 (mini tournament)':
+				icon="cricket_2_mini_tournament";
+				break;
+			case sport === 'cross-country running (mini tournament)':
+				icon="cross-country_mini_tournament";
+				break;
+			case sport === 'football (mini tournament)':
+				icon="ball_mini_tournament";
+				break;
+			case sport === 'football 5-a-side (mini tournament)':
+				icon="football_five_mini_tournament";
+				break;
+			case sport === 'football indoor (mini tournament)':
+				icon="ball_indoor_mini_tournament";
+				break;
+			case sport === 'futsal (mini tournament)':
+				icon="footsal_mini_tournament";
+				break;
+			case sport === 'golf (mini tournament)':
+				icon="golf_mini_tournament";
+				break;
+			case sport === 'golf sixes (mini tournament)':
+				icon="golf_sixes_mini_tournament";
+				break;
+			case sport === 'hockey (mini tournament)':
+				icon="hockey_mini_tournament";
+				break;
+			case sport === 'hockey indoor (mini tournament)':
+				icon="hockey_indoor_mini_tournament";
+				break;
+			case sport === 'mini golf (mini tournament)':
+				icon="mini_golf_mini_tournament";
+				break;
+			case sport === 'mini olympic games (mini tournament)':
+				icon="mini_olympic_games_mini_tournament";
+				break;
+			case sport === 'netball (mini tournament)':
+				icon="netball_mini_tournament";
+				break;
+			case sport === 'netball high 5 (mini tournament)':
+				icon="netball_five_mini_tournament";
+				break;
+			case sport === 'new age kurling (mini tournament)':
+				icon="curling_newage_mini_tournament";
+				break;
+			case sport === 'rounders (mini tournament)':
+				icon="rounders_mini_tournament";
+				break;
+			case sport === 'rowing (mini tournament)':
+				icon="rowing_mini_tournament";
+				break;
+			case sport === 'rugby league (mini tournament)':
+				icon="rugby_mini_tournament";
+				break;
+			case sport === 'rugby union (mini tournament)':
+				icon="rugby_union_mini_tournament";
+				break;
+			case sport === 'rugby sevens (mini tournament)':
+				icon="rugby_sevens_mini_tournament";
+				break;
+			case sport === 'rugby tens (mini tournament)':
+				icon="rugby_tens_mini_tournament";
+				break;
+			case sport === 'sports hall athletics (mini tournament)':
+				icon="sports_hall_athletics_mini_tournament";
+				break;
+			case sport === 'stoolball (mini tournament)':
+				icon="stoolball_mini_tournament";
+				break;
+			case sport === 'streetball':
+				icon="streetball";
+				break;
+			case sport === 'swimming (mini tournament)':
+				icon="swimming_mini_tournament";
+				break;
+			case sport === 'tennis (mini tournament)':
+				icon="tennis_mini_tournament";
 				break;
 			default:
 				icon = sport;
