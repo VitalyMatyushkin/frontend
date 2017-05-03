@@ -7,12 +7,12 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
- * AdminUserNotificationModel
+ * AdminUserNotificationChannelClass
  *
  * @param {object} page
  *
  * */
-class AdminUserNotificationModel {
+class AdminUserNotificationChannelClass {
 	constructor(page){
 		this.getDefaultBinding = page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
@@ -24,7 +24,7 @@ class AdminUserNotificationModel {
 		this.setColumns();
 		this.grid = new GridModel({
 			actionPanel:{
-				title:'Notification',
+				title:'Notification Channel',
 				showStrip:true
 			},
 			columns:this.columns,
@@ -35,7 +35,7 @@ class AdminUserNotificationModel {
 				userId 			= this.props.userId;
 		
 		this.dataLoader = 	new DataLoader({
-			serviceName: 	'notifications',
+			serviceName: 	'notificationChannel',
 			params: 		{userId: userId},
 			grid: 			this.grid,
 			onLoad: 		this.getDataLoadedHandle()
@@ -84,4 +84,4 @@ class AdminUserNotificationModel {
 	}
 }
 
-module.exports = AdminUserNotificationModel;
+module.exports = AdminUserNotificationChannelClass;

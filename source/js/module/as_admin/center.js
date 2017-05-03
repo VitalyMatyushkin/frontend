@@ -19,7 +19,6 @@ const   RouterView 				= require('module/core/router'),
 		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox'),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert'),
-		AdminUserNotification 	= require('module/as_admin/pages/admin_user/admin_user_notification'),
 		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component');
 
 const Center = React.createClass({
@@ -73,7 +72,7 @@ const Center = React.createClass({
 							component	= { AdminDashboardComponent }
 						/>
 						<Route
-							path		= "/user/view /user/notification-view"
+							path		= "/user/view /user/notification-channel-view"
 							binding		= { binding.sub('adminUserPage') }
 							component	= { AdminUserPageComponent }
 						/>

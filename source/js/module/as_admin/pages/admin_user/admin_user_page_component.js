@@ -7,7 +7,7 @@ const	RouterView					= require('module/core/router'),
 		SubMenu						= require('module/ui/menu/sub_menu'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
-		AdminUserNotification 		= require('module/as_admin/pages/admin_user/admin_user_notification'),
+		AdminUserNotification 		= require('module/as_admin/pages/admin_user/admin_user_notification_channel'),
 		UserViewComponent 			= require('module/shared_pages/users/user_view');
 
 const AdminUserPageComponent = React.createClass({
@@ -29,10 +29,10 @@ const AdminUserPageComponent = React.createClass({
 					routes: 	[`/#user/view?id=${userId}`]
 				},
 				{
-					href: 		`/#user/notification-view?id=${userId}`,
-					name: 		'Notifications',
-					key: 		'Notifications',
-					routes: 	[`/#user/notification-view?id=${userId}`]
+					href: 		`/#user/notification-channel-view?id=${userId}`,
+					name: 		'Notification Channel',
+					key: 		'Notification Channel',
+					routes: 	[`/#user/notification-channel-view?id=${userId}`]
 				}
 			];
 		//Set sub menu items in default binding
@@ -54,7 +54,7 @@ const AdminUserPageComponent = React.createClass({
 							component 	= { UserViewComponent }
 						/>
 						<Route
-							path 		= "user/notification-view"
+							path 		= "user/notification-channel-view"
 							binding 	= { binding.sub('userNotification') }
 							component 	= { AdminUserNotification }
 							userId 		= { userId }

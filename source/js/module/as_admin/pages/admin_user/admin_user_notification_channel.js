@@ -3,10 +3,10 @@
  */
 const 	React 		= require('react'),
 		Morearty	= require('morearty'),
-		Model 		= require('module/as_admin/pages/admin_user/admin_user_notification_class'),
+		Model 		= require('module/as_admin/pages/admin_user/admin_user_notification_channel_class'),
 		Grid 		= require('module/ui/grid/grid');
 
-const AdminUserNotification = React.createClass({
+const AdminUserNotificationChannel = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		userId: React.PropTypes.string.isRequired
@@ -21,4 +21,4 @@ const AdminUserNotification = React.createClass({
 	}
 });
 
-module.exports = AdminUserNotification;
+module.exports = AdminUserNotificationChannel;
