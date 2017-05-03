@@ -1,26 +1,22 @@
 /**
  * Created by Woland on 02.05.2017.
  */
-const React = require('react');
+const 	React 		= require('react'),
+		Morearty	= require('morearty'),
+		Model 		= require('module/as_admin/pages/admin_user/admin_user_notification_class'),
+		Grid 		= require('module/ui/grid/grid');
 
 const AdminUserNotification = React.createClass({
+	mixins: [Morearty.Mixin],
 	propTypes: {
 		userId: React.PropTypes.string.isRequired
 	},
-	componentWillMount: function(){
-		console.log(this.props.userId);
-		window.Server.notifications.get({
-			userId: this.props.userId
-		}).then(
-			notification => {
-				console.log(notification);
-				return true;
-			}
-		);
+	componentWillMount: function () {
+		this.model = new Model(this);
 	},
-	render: function(){
+	render: function () {
 		return (
-			<h1>Hello world</h1>
+			<Grid model={this.model.grid}/>
 		);
 	}
 });
