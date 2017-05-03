@@ -14,7 +14,6 @@ const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			subMenuKey: this.getRandomString(),
 			inbox: {
 				models: [],
 				sync: false
@@ -53,13 +52,16 @@ const InvitesView = React.createClass({
 
 		this.addListeners();
 	},
-	getRandomString: function() {
-		// just current date in timestamp view
-		return + new Date();
-	},
 	addListeners: function() {
 		this.addListenerToInboxInviteCount();
 	},
+	/**
+	 * Function adds listener to count of inbox invites.
+	 * So, invites component listens count of inbox invites and update this value too.
+	 * Yes, it's shitty way because child component should not update data from his parent.
+	 * But there is no any other way to solve this problem while we don't have redux or something else from flux camp
+	 * frameworks.
+	 */
 	addListenerToInboxInviteCount: function() {
 		const binding = this.getDefaultBinding();
 
@@ -68,8 +70,13 @@ const InvitesView = React.createClass({
 					prevModels		= descriptor.getPreviousValue().toJS();
 
 			if(currentModels.length !== prevModels.length) {
-				this.menuItems[0].name = `Inbox(${currentModels.length})`
-				binding.set('subMenuKey', Immutable.fromJS(this.getRandomString()));
+				const	rootBinding		= this.getMoreartyContext().getBinding(),
+						topMenuItems	= rootBinding.toJS('topMenuItems');
+
+				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
+				topMenuItems[inviteItemIndex].name = `Invites(${currentModels.length})`;
+
+				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 			}
 		});
 	},
@@ -80,7 +87,6 @@ const InvitesView = React.createClass({
 
 		return <div>
 			<SubMenu
-				key		= {binding.toJS('subMenuKey')}
 				binding	= {binding.sub('invitesRouting')}
 				items	= {self.menuItems}
 			/>

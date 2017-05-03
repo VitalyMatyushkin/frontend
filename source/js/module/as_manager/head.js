@@ -1,15 +1,17 @@
 // @flow
 
-const	Logo		= require('module/as_manager/head/logo'),
-		TopMenu		= require('module/ui/menu/top_menu'),
-		UserBlock	= require('module/shared_pages/head/user_block'),
-		If			= require('module/ui/if/if'),
-		Morearty	= require('morearty'),
-		React		= require('react'),
-		TopNavStyle = require('styles/main/b_top_nav.scss'),
-		Bootstrap  	= require('styles/bootstrap-custom.scss'),
+const	Logo			= require('module/as_manager/head/logo'),
+		TopMenu			= require('module/ui/menu/top_menu'),
+		UserBlock		= require('module/shared_pages/head/user_block'),
+		If				= require('module/ui/if/if'),
+		Morearty		= require('morearty'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		React			= require('react'),
+		Immutable		= require('immutable'),
+		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
+		Bootstrap  		= require('styles/bootstrap-custom.scss'),
 
-		RoleHelper	= require('../helpers/role_helper');
+		RoleHelper		= require('../helpers/role_helper');
 
 const Head = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,6 +19,38 @@ const Head = React.createClass({
 		this.createTopMenu();
 		this.getMoreartyContext().getBinding().sub('userData.roleList.activePermission').addListener(() => {
 			this.createTopMenu();
+			this.initData();
+		});
+	},
+	initData: function() {
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				kindSchool	= RoleHelper.getActiveSchoolKind(this);
+
+		if(
+			(
+				role !== RoleHelper.USER_ROLES.PARENT ||
+				role !== RoleHelper.USER_ROLES.STUDENT
+			) && kindSchool === 'School'
+		) {
+			this.setInvitesCountToMenu();
+		}
+	},
+	/**
+	 * Function get's count of inbox invites from server and set it to Invites menu item.
+	 * Also invite-list component listens count of inbox invites and update this value too.
+	 * Yes, it's shitty way because child component should not update data from his parent.
+	 * But there is no any other way to solve this problem while we don't have redux or something else from flux camp
+	 * frameworks.
+	 */
+	setInvitesCountToMenu: function() {
+		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
+			const	rootBinding		= this.getMoreartyContext().getBinding(),
+					topMenuItems	= rootBinding.toJS('topMenuItems');
+
+			const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
+			topMenuItems[inviteItemIndex].name = `Invites(${data.length})`;
+
+			rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 		});
 	},
 	getMenuItems: function() {
@@ -189,18 +223,15 @@ const Head = React.createClass({
 	},
 	getHelpMenuItem: function() {
 		return {
-			href			: '/#help',
-			name			: 'Help',
-			key				: 'Help'
+			href	: '/#help',
+			name	: 'Help',
+			key		: 'Help'
 		};
-	},
-	createMenuItems: function() {
-		return this.getMenuItems();
 	},
 	createTopMenu: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.set('topMenuItems', this.createMenuItems());
+		binding.set('topMenuItems', this.getMenuItems());
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
