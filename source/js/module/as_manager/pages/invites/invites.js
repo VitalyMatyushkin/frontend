@@ -71,14 +71,28 @@ const InvitesView = React.createClass({
 
 			if(currentModels.length !== prevModels.length) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems');
+						topMenuItems	= rootBinding.toJS('topMenuItems'),
+						inviteItemIndex	= topMenuItems.findIndex(i => i.key === 'Invites');
 
-				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
-				topMenuItems[inviteItemIndex].name = `Invites(${currentModels.length})`;
+				let		name			= '';
+				if(currentModels.length > 0) {
+					name =`Invites(${currentModels.length})`;
+				} else {
+					name ='Invites';
+				}
+				topMenuItems[inviteItemIndex].name = name;
 
 				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 			}
 		});
+	},
+	getAcceptBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:	binding.sub('accept'),
+			models:		binding.sub('inbox.models')
+		};
 	},
 	render: function() {
 		const 	self 			= this,
@@ -96,7 +110,7 @@ const InvitesView = React.createClass({
 						<Route path='/invites /invites/inbox'		binding={binding.sub('inbox')}		component={InboxComponent} />
 						<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
 						<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
-						<Route path='/invites/:inviteId/accept' 	binding={binding.sub('accept')} 	component={AcceptComponent} />
+						<Route path='/invites/:inviteId/accept'		binding={this.getAcceptBinding()} 	component={AcceptComponent} />
 					</RouterView>
 				</div>
 			</div>
