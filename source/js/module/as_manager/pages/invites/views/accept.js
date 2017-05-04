@@ -167,6 +167,18 @@ const InviteAcceptView = React.createClass({
 	getTeamWrappers: function() {
 		return this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 	},
+	removeAcceptedInvite: function(inviteId) {
+		const	modelsBinding	= this.getBinding().models,
+				models			= modelsBinding.toJS();
+
+		const acceptedInviteIndex = models.findIndex(m => m.id === inviteId);
+
+		if(acceptedInviteIndex !== -1) {
+			models.splice(acceptedInviteIndex, 1);
+
+			modelsBinding.set(Immutable.fromJS(models));
+		}
+	},
     _submit: function() {
         const   self    = this,
                 binding = self.getDefaultBinding();
@@ -188,6 +200,7 @@ const InviteAcceptView = React.createClass({
                     })
                 )
                 .then(() => {
+					this.removeAcceptedInvite(binding.get('invite.id'));
                     document.location.hash = '#event/' + event.id;
 
                     return true;
@@ -219,6 +232,7 @@ const InviteAcceptView = React.createClass({
                     })
                 )
                 .then(() => {
+					this.removeAcceptedInvite(binding.get('invite.id'));
                     document.location.hash = '#event/' + event.id;
 
                     return true;

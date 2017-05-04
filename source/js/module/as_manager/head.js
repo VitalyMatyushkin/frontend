@@ -44,13 +44,15 @@ const Head = React.createClass({
 	 */
 	setInvitesCountToMenu: function() {
 		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
-			const	rootBinding		= this.getMoreartyContext().getBinding(),
-					topMenuItems	= rootBinding.toJS('topMenuItems');
+			if(data.length > 0) {
+				const	rootBinding		= this.getMoreartyContext().getBinding(),
+						topMenuItems	= rootBinding.toJS('topMenuItems');
 
-			const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
-			topMenuItems[inviteItemIndex].name = `Invites(${data.length})`;
+				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
+				topMenuItems[inviteItemIndex].name = `Invites(${data.length})`;
 
-			rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+			}
 		});
 	},
 	getMenuItems: function() {
