@@ -66,6 +66,7 @@ const serviceList = {
 		
 		//Notifications
 		serviceList.notificationChannel = new Service('/superadmin/users/{userId}/notifications/channels', binding);
+		serviceList.notifications = new Service('/superadmin/users/{userId}/notifications', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

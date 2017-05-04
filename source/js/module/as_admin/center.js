@@ -72,7 +72,7 @@ const Center = React.createClass({
 							component	= { AdminDashboardComponent }
 						/>
 						<Route
-							path		= "/user/view /user/notification-channel-view"
+							path		= "/user/view /user/notification-channel-view /user/notifications-view"
 							binding		= { binding.sub('adminUserPage') }
 							component	= { AdminUserPageComponent }
 						/>

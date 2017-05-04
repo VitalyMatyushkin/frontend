@@ -3,7 +3,7 @@
  */
 const 	React 		= require('react'),
 		Morearty	= require('morearty'),
-		Model 		= require('module/as_admin/pages/admin_user/admin_user_notification_channel_class'),
+		Model 		= require('module/as_admin/pages/admin_user/admin_user_notification_channel/admin_user_notification_channel_class'),
 		Grid 		= require('module/ui/grid/grid');
 
 const AdminUserNotificationChannel = React.createClass({
