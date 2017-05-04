@@ -2,14 +2,14 @@
  * Created by wert on 06.09.16.
  */
 
-const 	React				= require('react'),
-		propz				= require('propz'),
-		DateTimeMixin		= require('module/mixins/datetime'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		SportHelper 		= require('module/helpers/sport_helper'),
-		SportIcon			= require('module/ui/icons/sport_icon'),
-		ChallengeModel		= require('module/ui/challenges/challenge_model'),
-		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
+const 	React								= require('react'),
+		propz								= require('propz'),
+		FixtureItemMultipartyOpponentSide	= require('module/as_school/pages/school_home/fixture_item_multiparty_opponent_side'),
+		FixtureItemTwoTeamOpponentSide		= require('module/as_school/pages/school_home/fixture_item_two_team_opponent_side'),
+		DateTimeMixin						= require('module/mixins/datetime'),
+		EventHelper							= require('module/helpers/eventHelper'),
+		SportIcon							= require('module/ui/icons/sport_icon'),
+		FixtureItemStyle					= require('./../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureItem = React.createClass({
 
@@ -32,52 +32,29 @@ const FixtureItem = React.createClass({
 			</div>
 		)
 	},
-	cropOpponentName: function(name) {
-		if (name == null)
-			return;
-		var maxLength = 40;
-		if (name.length > maxLength) {
-			name = name.substr(0,maxLength-3) + "...";
+	renderOpponentSide: function() {
+		const	event				= this.props.event,
+				activeSchoolId		= this.props.activeSchoolId;
+
+		if(event.sport.multiparty) {
+			return (
+				<FixtureItemMultipartyOpponentSide
+					event			= { event }
+					activeSchoolId	= { activeSchoolId }
+				/>
+			);
+		} else {
+			return (
+				<FixtureItemTwoTeamOpponentSide
+					event			= { event }
+					activeSchoolId	= { activeSchoolId }
+				/>
+			);
 		}
-		return name;
 	},
-	renderLeftOpponentSide: function (event, model) {
-		const imgStyle = {
-			backgroundImage: 'url(' + model.rivals[0].schoolPic + ')'
-		};
-
-		return (
-			<div className="eFixture_item mOpponent">
-				<div className="eFixture_item_imgContainer">
-					<div className="eFixture_item_img" style={imgStyle}/>
-				</div>
-				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[0].value)}</div>
-			</div>
-		);
-	},
-
-	renderRightOpponentSide: function (event, model) {
-		const imgStyle = {
-			backgroundImage: 'url(' + model.rivals[1].schoolPic + ')'
-		};
-		return (
-			<div className="eFixture_item mOpponent">
-				<div className="eFixture_item_imgContainer">
-					<div className="eFixture_item_img" style={imgStyle}/>
-				</div>
-				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[1].value)}</div>
-			</div>
-		);
-	},
-
 	render: function() {
-		const 	event 				= this.props.event,
-				sportName			= event.sport.name,
-				activeSchoolId		= this.props.activeSchoolId,
-				challengeModel		= new ChallengeModel(event, activeSchoolId),
-				isAwaitingOpponent	= event.status === 'INVITES_SENT',
-				score 				= SportHelper.isCricket(challengeModel.sport) ? challengeModel.textResult : challengeModel.score,
-				scoreText 			= SportHelper.isCricket(challengeModel.sport) ? '' : 'Score';
+		const	event		= this.props.event,
+				sportName	= event.sport.name;
 
 		return (
 			<div className="bFixtureContainer">
@@ -91,16 +68,7 @@ const FixtureItem = React.createClass({
 								{this.getFixtureInfo(event)}
 							</div>
 						</div>
-						<div className="eFixture_rightSide">
-							{this.renderLeftOpponentSide(event, challengeModel)}
-							<div className="eFixture_item mResult">
-								<div>
-									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : scoreText}</div>
-									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${score}`}</div>
-								</div>
-							</div>
-							{this.renderRightOpponentSide(event, challengeModel)}
-						</div>
+						{this.renderOpponentSide()}
 					</div>
 				</div>
 			</div>
