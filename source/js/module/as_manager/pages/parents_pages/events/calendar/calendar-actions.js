@@ -19,7 +19,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBind
 				$lt: 	monthEndDate
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$in: ['ACCEPTED', 'FINISHED', 'CANCELED']
 			},
 			childIdList: childIdList
 		}
@@ -56,7 +56,7 @@ function loadDailyEvents(date, childIdList, eventsBinding) {
 				$lt: dayEnd
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$in: ['ACCEPTED', 'FINISHED', 'CANCELED']
 			},
 			childIdList: childIdList
 		}

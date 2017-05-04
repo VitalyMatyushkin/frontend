@@ -6,6 +6,7 @@ const	Lazy				= require('lazy.js'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
+		RoleHelper 			= require('module/helpers/role_helper'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button');
@@ -26,6 +27,7 @@ const EventHeader = React.createClass({
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
 		onClickEditEventButton:			React.PropTypes.func.isRequired,
+		role: 							React.PropTypes.string.isRequired,
 		
 		//prop for tweet button
 		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
@@ -47,6 +49,12 @@ const EventHeader = React.createClass({
 			.toArray()
 			.map(age => age === 0 ? 'Reception' : age)
 			.join(', ');
+	},
+	//We don't show the pencil (edit) button for parent, student and if event is finished
+	isShowPencilButton: function(){
+		const role = this.props.role;
+
+		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.eventStatus !== "FINISHED";
 	},
 	render: function() {
 		const 	event 				= this.props.event,
@@ -70,7 +78,7 @@ const EventHeader = React.createClass({
 							<div className="eEventHeader_fieldColumn">
 								{`${name}`}
 							</div>
-							<If condition={this.props.eventStatus !== "FINISHED"}>
+							<If condition={this.isShowPencilButton()}>
 								<div className="eEventHeader_fieldColumn mRelative">
 									<div className="eEventHeader_editLinkWrapper">
 										<PencilButton extraClassName="mLess" handleClick={this.props.onClickEditEventButton}/>

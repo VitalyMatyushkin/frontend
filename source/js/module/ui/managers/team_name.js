@@ -30,7 +30,8 @@ const TeamName = React.createClass({
 	},
 	handleFocus: function() {
 		this.setState({
-			isFocused : true
+			isFocused : true,
+			name: ''
 		});
 	},
 	handleBlur: function() {

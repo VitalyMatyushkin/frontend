@@ -40,8 +40,11 @@ const Rivals = React.createClass({
 					const rival = {};
 
 					rival.school = school;
-
-					const schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+					let schoolInvite = undefined;
+					if (typeof event.invites !== 'undefined') {
+						schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+					}
+					
 					if(typeof schoolInvite !== 'undefined') {
 						rival.invite = schoolInvite;
 					}
