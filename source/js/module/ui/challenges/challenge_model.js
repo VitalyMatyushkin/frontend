@@ -277,6 +277,13 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				return `No result yet`;
 		}
 	}
+	
+	if(
+		!this.isFinished &&
+		SportHelper.isCricket(event.sport.name)
+	) {
+		return `No result yet`;
+	}
 
 	if(
 		this.isFinished &&
