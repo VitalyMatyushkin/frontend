@@ -26,7 +26,7 @@ const CricketResultBlock = React.createClass({
 				return teamId === schoolsDataFiltered[0].id;
 			}
 		} else if (teamsDataFiltered.length === 1) { 	//for EXTERNAL_SCHOOLS matches only 1 team may be from active school
-			return teamId === teamsDataFiltered[0].schoolId;
+			return teamId === teamsDataFiltered[0].schoolId || teamId === teamsDataFiltered[0].id; //teamId maybe schoolId or just id
 		} else { 										//for INTERNAL_TEAMS and INTERNAL_HOUSES matches 2 teams may be from active school
 			return true; 								//for INTERNAL_TEAMS and INTERNAL_HOUSES we set flag isTeamFromActiveSchoolCricket in true
 		}
