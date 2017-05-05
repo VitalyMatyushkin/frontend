@@ -63,7 +63,7 @@ const BigScreenMainPage = React.createClass({
 
 		switch (binding.toJS('currentState')) {
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT:
-				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING));
+				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING:
 			 	binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT));
