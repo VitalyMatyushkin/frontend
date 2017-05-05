@@ -18,6 +18,7 @@ const CricketResultBlock = React.createClass({
 	
 	isTeamFromActiveSchoolCricket: function(teamId, activeSchoolId, teamsData, schoolsData){
 		const teamsDataFiltered = teamsData.filter(team => team.schoolId === activeSchoolId);
+		
 		if (teamsDataFiltered.length === 0) {
 			const schoolsDataFiltered = schoolsData.filter(school => school.id === activeSchoolId);
 			if (schoolsDataFiltered.length === 0) {			// if teamsData.length === 0 && schoolsDataFiltered.length === 0, we are on the public school union site
@@ -38,7 +39,13 @@ const CricketResultBlock = React.createClass({
 				if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {										//for case "match awarded" we need in our school name and school name of rival,
 					const schoolsDataFiltered = schoolsData.filter(school => school.id !== teamId); 		//because we have only teamId and result in cricket result
 					if (schoolsDataFiltered.length !== 0) {
-						return schoolsDataFiltered[0].name;
+						teamsData = teamsData.filter(team => team.id === teamId);
+						if (teamsData.length === 0) {
+							return schoolsDataFiltered[0].name;
+						} else {
+							schoolsData = schoolsData.filter(school => school.id !== teamsData[0].schoolId);
+							return schoolsDataFiltered[0].name;
+						}
 					} else {
 						teamsData = teamsData.filter(team => team.id !== teamId);
 						schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
