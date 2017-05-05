@@ -1,7 +1,7 @@
 const 	React 			= require('react'),
 		SportHelper 	= require('module/helpers/sport_helper');
 
-const EventResultViewStyles = require('styles/ui/bid_screen_fixtures/bEventResultCricketView.scss');
+const EventResultCricketViewStyles = require('styles/ui/bid_screen_fixtures/bEventResultCricketView.scss');
 
 const EventResultView = React.createClass({
 	propTypes: {
@@ -59,10 +59,7 @@ const EventResultView = React.createClass({
 	},
 
 	render: function() {
-
-		return (
-			this.renderResults()
-		);
+		return this.renderResults();
 	}
 });
 
