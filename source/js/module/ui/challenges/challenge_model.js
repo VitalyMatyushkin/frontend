@@ -123,7 +123,7 @@ ChallengeModel.prototype.isTeamFromActiveSchoolCricket = function(teamId, active
 	}
 };
 
-ChallengeModel.prototype.getTeamNameCricket = function(activeSchoolId, teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded){
+ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded, activeSchoolId){
 	switch(eventType){
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']: 					//for inter schools cricket we show only school name
 			if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {
@@ -244,7 +244,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				lostInResults 					= event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] ? 'Lost, ' : '', //for school union site we don't need in word 'Lost'
 				isMatchAwarded 					= result === 'match_awarded',
 				isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, activeSchoolId, teamsData, schoolsData),
-				teamName 						= typeof teamId !=='undefined' ? this.getTeamNameCricket(activeSchoolId, teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded) : '',
+				teamName 						= typeof teamId !=='undefined' ? this.getTeamNameCricket(teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded, activeSchoolId) : '',
 				runsAbs 						= this.getRuns(scores),
 				wickets		 					= this.getWickets(scores, teamId, eventType);
 
