@@ -1,7 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		FixtureListItem		= require('./../school_home/fixture_list_item'),
+		FixtureListItem		= require('module/as_school/pages/event/fixture_list_item'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),

@@ -105,7 +105,7 @@ const FixtureListItem = React.createClass({
 		}
 	},
 	render: function() {
-		const 	event 			= this.props.event,
+		const	event 			= this.props.event,
 				activeSchoolId	= this.props.activeSchoolId,
 				challengeModel	= new ChallengeModel(event, activeSchoolId);
 		

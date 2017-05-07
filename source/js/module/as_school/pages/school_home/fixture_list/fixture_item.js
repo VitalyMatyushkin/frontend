@@ -2,14 +2,14 @@
  * Created by wert on 06.09.16.
  */
 
-const 	React								= require('react'),
-		propz								= require('propz'),
-		FixtureItemMultipartyOpponentSide	= require('module/as_school/pages/school_home/fixture_item_multiparty_opponent_side'),
-		FixtureItemTwoTeamOpponentSide		= require('module/as_school/pages/school_home/fixture_item_two_team_opponent_side'),
-		DateTimeMixin						= require('module/mixins/datetime'),
-		EventHelper							= require('module/helpers/eventHelper'),
-		SportIcon							= require('module/ui/icons/sport_icon'),
-		FixtureItemStyle					= require('./../../../../../styles/main/b_school_fixtures.scss');
+const 	React					= require('react'),
+		propz					= require('propz'),
+		MultipartyOpponentSide	= require('module/as_school/pages/school_home/fixture_list/multiparty_opponent_side/multiparty_opponent_side'),
+		TwoTeamOpponentSide		= require('module/as_school/pages/school_home/fixture_list/two_team_opponent_side'),
+		DateTimeMixin			= require('module/mixins/datetime'),
+		EventHelper				= require('module/helpers/eventHelper'),
+		SportIcon				= require('module/ui/icons/sport_icon'),
+		FixtureItemStyle		= require('./../../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureItem = React.createClass({
 
@@ -38,14 +38,14 @@ const FixtureItem = React.createClass({
 
 		if(event.sport.multiparty) {
 			return (
-				<FixtureItemMultipartyOpponentSide
+				<MultipartyOpponentSide
 					event			= { event }
 					activeSchoolId	= { activeSchoolId }
 				/>
 			);
 		} else {
 			return (
-				<FixtureItemTwoTeamOpponentSide
+				<TwoTeamOpponentSide
 					event			= { event }
 					activeSchoolId	= { activeSchoolId }
 				/>

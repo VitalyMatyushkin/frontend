@@ -1,6 +1,6 @@
 const 	React			= require('react'),
 		Morearty        = require('morearty'),
-		FixtureList		= require('./fixture_list');
+		FixtureList		= require('module/as_school/pages/school_home/fixture_list/fixture_list');
 
 const HomeFixtures = React.createClass({
 	mixins: [ Morearty.Mixin ],
