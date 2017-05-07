@@ -1,7 +1,9 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		FixtureListItem		= require('./../school_home/fixture_list_item'),
+		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
+		FixtureListItem		= require('module/as_school/pages/event/fixture_list_item'),
+		NewEventHelper		= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
@@ -118,6 +120,29 @@ const PublicEvent = React.createClass({
 
 		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
 	},
+	renderTeams: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		//TODO it's temp. only for event refactoring period.
+		if(NewEventHelper.isNewEvent(event)) {
+			return (
+				<Rivals	binding									= { binding }
+						activeSchoolId							= { this.props.activeSchoolId }
+						handleClickOpponentSchoolManagerButton	= { () => {} }
+						isShowControlButtons					= { false }
+				/>
+			);
+		} else {
+			return (
+				<PublicEventTeams	binding			= { this._getEventTeamsBinding() }
+									activeSchoolId	= { this.props.activeSchoolId }
+				/>
+			);
+		}
+	},
 	render: function() {
 		const 	binding	= this.getDefaultBinding(),
 				isSync	= binding.get('sync');
@@ -128,9 +153,7 @@ const PublicEvent = React.createClass({
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
-					<PublicEventTeams	binding			= { this._getEventTeamsBinding() }
-										activeSchoolId	= { this.props.activeSchoolId }
-					/>
+					{ this.renderTeams() }
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
 					{this.renderMatchReport()}
 				</div>
