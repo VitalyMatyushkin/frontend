@@ -16,29 +16,30 @@ const CricketResultBlock = React.createClass({
 		activeSchoolId: 	React.PropTypes.string.isRequired
 	},
 	
-	isTeamFromActiveSchoolCricket: function(teamId, activeSchoolId, teamsData){
-		teamsData = teamsData.filter(team => team.schoolId === activeSchoolId);
-		if (teamsData.length === 0) { 			//if teamsData.length === 0, we are on the public school union site
-			return true; 						// for public school union site we set flag isTeamFromActiveSchoolCricket in true
-		} else if (teamsData.length === 1) { 	//for EXTERNAL_SCHOOLS matches only 1 team may be from active school
-			return teamId === teamsData[0].id;
-		} else { 								//for INTERNAL_TEAMS and INTERNAL_HOUSES matches 2 teams may be from active school
-			return true; 						//for INTERNAL_TEAMS and INTERNAL_HOUSES we set flag isTeamFromActiveSchoolCricket in true
+	isTeamFromActiveSchoolCricket: function(teamId, activeSchoolId, teamsData, schoolsData){
+		const teamsDataFiltered = teamsData.filter(team => team.schoolId === activeSchoolId);
+		
+		if (teamsDataFiltered.length === 0) {
+			const schoolsDataFiltered = schoolsData.filter(school => school.id === activeSchoolId);
+			if (schoolsDataFiltered.length === 0) {			// if teamsData.length === 0 && schoolsDataFiltered.length === 0, we are on the public school union site
+				return true; 								// for public school union site we set flag isTeamFromActiveSchoolCricket in true
+			} else {
+				return teamId === schoolsDataFiltered[0].id;
+			}
+		} else if (teamsDataFiltered.length === 1) { 	//for EXTERNAL_SCHOOLS matches only 1 team may be from active school
+			return teamId === teamsDataFiltered[0].schoolId || teamId === teamsDataFiltered[0].id; //teamId maybe schoolId or just id
+		} else { 										//for INTERNAL_TEAMS and INTERNAL_HOUSES matches 2 teams may be from active school
+			return true; 								//for INTERNAL_TEAMS and INTERNAL_HOUSES we set flag isTeamFromActiveSchoolCricket in true
 		}
 	},
 
 	getTeamNameCricket: function(teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded){
 		switch(eventType){
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']: 					//for inter schools cricket we show only school name
-				if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {										//for case "match awarded" we need in our school name and school name of rival,
-					const schoolsDataFiltered = schoolsData.filter(school => school.id === teamId); 		//because we have only teamId and result in cricket result
-					if (schoolsDataFiltered.length !== 0) {
-						return schoolsDataFiltered[0].name;
-					} else {
-						teamsData = teamsData.filter(team => team.id !== teamId);
-						schoolsData = schoolsData.filter(school => school.id === teamsData[0].schoolId);
-						return schoolsData[0].name;
-					}
+				if (isMatchAwarded && !isTeamFromActiveSchoolCricket) {
+					const 	activeSchoolId = this.props.activeSchoolId,
+							schoolsDataFiltered = schoolsData.filter(school => school.id === activeSchoolId);
+					return schoolsDataFiltered[0].name;
 				} else {
 					const schoolsDataFiltered = schoolsData.filter(school => school.id === teamId);
 					if (schoolsDataFiltered.length !== 0) {
@@ -152,7 +153,7 @@ const CricketResultBlock = React.createClass({
 				housesData						= typeof event.housesData !== 'undefined' ? event.housesData : [],
 				lostInResults 					= event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] ? 'Lost, ' : '', //for school union site we don't need in word 'Lost'
 				isMatchAwarded 					= result === 'match_awarded',
-				isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, this.props.activeSchoolId, teamsData),
+				isTeamFromActiveSchoolCricket 	= this.isTeamFromActiveSchoolCricket(teamId, this.props.activeSchoolId, teamsData, schoolsData),
 				teamName 						= typeof teamId !=='undefined' ? this.getTeamNameCricket(teamId, teamsData, housesData, schoolsData, eventType, isTeamFromActiveSchoolCricket, isMatchAwarded) : '',
 				runsAbs 						= this.getRuns(scores),
 				wickets		 					= this.getWickets(scores, teamId, eventType);

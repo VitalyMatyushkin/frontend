@@ -36,6 +36,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		RoleHelper						= require('./../../../helpers/role_helper'),
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		CricketResultBlock 				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
@@ -951,7 +952,8 @@ const Event = React.createClass({
 		} else {
 			return (
 				<span>
-					{this.renderSelectWithGameResultForCricket()}
+					{ this.renderSelectWithGameResultForCricket( )}
+					{ this.renderGameResultForCricket() }
 					<EventRivals	binding         = {binding}
 									onReload        = {this.props.onReload}
 									activeSchoolId  = {this.props.activeSchoolId}
@@ -994,6 +996,23 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.set('model.results.cricketResult', Immutable.fromJS(result));
+	},
+	renderGameResultForCricket: function(){
+		const 	binding 	= this.getDefaultBinding(),
+				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
+				event 		= binding.toJS('model'),
+				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '';
+		
+		if (SportHelper.isCricket(sportName) && mode === 'general') {
+			return (
+				<CricketResultBlock
+					event 			= { event }
+					activeSchoolId 	= { this.props.activeSchoolId }
+				/>
+			);
+		} else {
+			return null;
+		}
 	},
 	renderSelectWithGameResultForCricket: function(){
 		const 	binding 	= this.getDefaultBinding(),
