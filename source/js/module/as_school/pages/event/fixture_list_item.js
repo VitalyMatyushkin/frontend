@@ -1,10 +1,8 @@
 const 	React 					= require('react'),
 		DateTimeMixin			= require('module/mixins/datetime'),
-		EventHelper				= require('module/helpers/eventHelper'),
-		SportIcon				= require('module/ui/icons/sport_icon'),
 		ChallengeModel			= require('module/ui/challenges/challenge_model'),
 		Button 					= require('module/ui/button/button'),
-		TeamHelper 				= require('module/ui/managers/helpers/team_helper'),
+		NewEventHelper			= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		CricketResultBlock 		= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
 
@@ -65,10 +63,10 @@ const FixtureListItem = React.createClass({
 	},
 	
 	getEventRivals: function (model) {
-		if(!model.isEventWithOneIndividualTeam)
+		if(!model.isEventWithOneIndividualTeam && !NewEventHelper.isNewEvent(this.props.event)) {
 			return (
 				<div className="bEventRivals">
-					
+
 					<div className="bEventRivals_row">
 						<div className="bEventRivals_column mLeft">
 							<div className="bEventRival">
@@ -82,10 +80,10 @@ const FixtureListItem = React.createClass({
 						</div>
 					</div>
 				</div>
-			
 			);
-		
-		return null;
+		} else {
+			return null;
+		}
 	},
 	handleClickGoBack: function() {
 		document.location.hash = 'home';

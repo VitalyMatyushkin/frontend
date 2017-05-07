@@ -18,7 +18,8 @@ const SchoolRivalInfo = React.createClass({
 		mode:									React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
-		activeSchoolId:							React.PropTypes.string.isRequired
+		activeSchoolId:							React.PropTypes.string.isRequired,
+		isShowControlButtons:					React.PropTypes.bool
 	},
 	isInviteAccepted: function() {
 		const inviteStatus = propz.get(this.props.rival, ['invite', 'status']);
@@ -118,7 +119,7 @@ const SchoolRivalInfo = React.createClass({
 		return medal;
 	},
 	renderOpponentSchoolManagerButton: function() {
-		if(this.isShowChangeSchoolButton()) {
+		if(this.props.isShowControlButtons && this.isShowChangeSchoolButton()) {
 			return (
 				<div className="eEventRival_buttonContainer">
 					<PencilButton handleClick={this.props.handleClickOpponentSchoolManagerButton}/>
