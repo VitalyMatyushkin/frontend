@@ -12,36 +12,22 @@ const	Immutable					= require('immutable'),
  * @returns {Promise}
  */
 function changeTeamNames(activeSchoolId, binding) {
-	const event = binding.toJS('model');
+	const	event		= binding.toJS('model');
+	let		promises	= [];
 
-	let promises = [];
+	if(TeamHelper.isTeamSport(event)) {
+		const selectedRivalIndex = binding.toJS('selectedRivalIndex');
 
-	if(!TeamHelper.isNonTeamSport(event)) {
 		if(
-			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(0, binding) &&
-			!AfterRivalsChangesHelper.isTeamChangedByOrder(0, binding) &&
-			AfterRivalsChangesHelper.isNameTeamChangedByOrder(0, binding)
+			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(selectedRivalIndex, binding) &&
+			!AfterRivalsChangesHelper.isTeamChangedByOrder(selectedRivalIndex, binding) &&
+			AfterRivalsChangesHelper.isNameTeamChangedByOrder(selectedRivalIndex, binding)
 		) {
 			promises = promises.concat(TeamHelper.updateTeam(
 				activeSchoolId,
-				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${0}.selectedTeamId`),
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.selectedTeamId`),
 				{
-					name: binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${0}.teamName.name`)
-				}
-			));
-		}
-
-		if(
-			!EventHelper.isInterSchoolsEvent(event) &&
-			!AfterRivalsChangesHelper.isSetTeamLaterByOrder(1, binding) &&
-			!AfterRivalsChangesHelper.isTeamChangedByOrder(1, binding) &&
-			AfterRivalsChangesHelper.isNameTeamChangedByOrder(1, binding)
-		) {
-			promises = promises.concat(TeamHelper.updateTeam(
-				activeSchoolId,
-				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${1}.selectedTeamId`),
-				{
-					name: binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${1}.teamName.name`)
+					name: binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.teamName.name`)
 				}
 			));
 		}
