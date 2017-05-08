@@ -15,10 +15,10 @@ const	If				= require('module/ui/if/if'),
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	SELECT_PLAYERS_LATER: 'Select players later...',
-	MEMBERS_NOT_ADDED: 'Team members have not been added yet',
-	ACCEPTED_BY_OPPONENT: 'Accepted by opponent',
-	AWAITING_OPPONENT: 'Awaiting opponent...',
+	SELECT_PLAYERS_LATER:	'Select players later...',
+	MEMBERS_NOT_ADDED:		'Team members have not been added yet',
+	ACCEPTED_BY_OPPONENT:	'Accepted by opponent but team members have not been added yet',
+	AWAITING_OPPONENT:		'Awaiting opponent...',
 	propTypes: {
 		activeSchoolId	: React.PropTypes.string,
 		customCss		: React.PropTypes.string
