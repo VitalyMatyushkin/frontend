@@ -122,11 +122,6 @@ const SchoolSandbox = React.createClass({
                             binding={binding}
                             component={SportsComponent}
                         />
-                        <Route
-                            path="/school_sandbox/:schoolId/sports"
-                            binding={binding}
-                            component={SportsComponent}
-						/>
 					</RouterView>
 				</div>
 			</div>
