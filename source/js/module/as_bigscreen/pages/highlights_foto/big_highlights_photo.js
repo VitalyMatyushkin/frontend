@@ -1,6 +1,6 @@
-const	React			= require('react'),
+const	React				= require('react'),
 		BigScreenActions	= require('./../../actions/BigScreenActions'),
-		DefaultHeader	= require('./../default_header');
+		DefaultHeader		= require('./../default_header');
 
 const BigHighlightsPhoto = React.createClass({
 

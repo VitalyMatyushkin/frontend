@@ -27,10 +27,9 @@ const Head = React.createClass({
 				kindSchool	= RoleHelper.getActiveSchoolKind(this);
 
 		if(
-			(
-				role !== RoleHelper.USER_ROLES.PARENT ||
-				role !== RoleHelper.USER_ROLES.STUDENT
-			) && kindSchool === 'School'
+			role !== RoleHelper.USER_ROLES.PARENT &&
+			role !== RoleHelper.USER_ROLES.STUDENT &&
+			kindSchool === 'School'
 		) {
 			this.setInvitesCountToMenu();
 		}
