@@ -14,7 +14,8 @@ const Players = React.createClass({
 		activeSchoolId				: React.PropTypes.string.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
 		onClickEditTeam				: React.PropTypes.func.isRequired,
-		customCss					: React.PropTypes.string.isRequired
+		customCss					: React.PropTypes.string.isRequired,
+		isShowControlButtons		: React.PropTypes.bool
 	},
 	SELECT_TEAM_LATER:		'Select team later',
 	NO_TEAM_MEMBERS:		'No team members to display',
@@ -137,14 +138,17 @@ const Players = React.createClass({
 				rivalSchoolId	= this.props.rival.school.id,
 				mode			= this.props.mode;
 
-		if(EventHelper.isInterSchoolsEvent(event) && rivalSchoolId !== this.props.activeSchoolId) {
-			return null;
-		} else if(mode !== 'closing') {
-			return (
-				<div className="ePlayers_editButtonWrapper">
-					<PencilButton handleClick={this.props.onClickEditTeam}/>
-				</div>
-			);
+		switch (true) {
+			case !this.props.isShowControlButtons:
+				return null;
+			case this.props.isShowControlButtons && EventHelper.isInterSchoolsEvent(event) && rivalSchoolId !== this.props.activeSchoolId:
+				return null;
+			case this.props.isShowControlButtons && mode !== 'closing':
+				return (
+					<div className="ePlayers_editButtonWrapper">
+						<PencilButton handleClick={this.props.onClickEditTeam}/>
+					</div>
+				);
 		}
 	},
 	renderPlayers: function() {

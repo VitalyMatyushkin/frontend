@@ -311,6 +311,9 @@ const SportIcon = React.createClass({
 			case sport === 'swimming (mini tournament)':
 				icon="swimming_mini_tournament";
 				break;
+			case sport === 'swimming (team)':
+				icon="swimming_team";
+				break;
 			case sport === 'tennis (mini tournament)':
 				icon="tennis_mini_tournament";
 				break;
