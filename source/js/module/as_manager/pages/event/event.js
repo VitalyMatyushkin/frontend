@@ -1085,7 +1085,9 @@ const Event = React.createClass({
 			case !self.isSync():
 				return (
 					<div className="bEventContainer mTopMargin">
-						<span className="eEvent_loading">loading...</span>
+						<span className="eEvent_loading">
+							Loading...
+						</span>
 					</div>
 				);
 			// sync and any mode excluding edit_squad
