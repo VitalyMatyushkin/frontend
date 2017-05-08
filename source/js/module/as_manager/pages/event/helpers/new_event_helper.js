@@ -20,14 +20,16 @@ const NewEventHelper = {
 	},
 	/**
 	 * Function returns true when we should use new tab component
-	 * @param event
+	 * @param event - event model
 	 * @returns {*|boolean}
 	 */
 	isNewTabs: function(event) {
-		return (
+		const isEventTypeCorrect = (
 			TeamHelper.isHousesEventForTeamSport(event) ||
 			TeamHelper.isInternalEventForTeamSport(event)
 		);
+
+		return isEventTypeCorrect && event.sport.multiparty;
 	}
 };
 
