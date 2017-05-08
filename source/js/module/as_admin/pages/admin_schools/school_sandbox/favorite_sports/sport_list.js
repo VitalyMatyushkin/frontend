@@ -13,6 +13,7 @@ const SportList = React.createClass({
 			schoolId = globalBinding.get('routing.pathParameters.0');
 
 		this.model = new Model(this, schoolId, this.props.onReload);
+		this.model.createGrid();
 	},
 	render: function () {
 		return (
