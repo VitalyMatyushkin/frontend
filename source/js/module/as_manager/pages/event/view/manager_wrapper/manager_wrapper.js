@@ -78,8 +78,10 @@ const ManagerWrapper = React.createClass({
 	},
 	getRivals: function(event, rivals) {
 		if(
-			TeamHelper.isHousesEventForTeamSport(event) ||
-			TeamHelper.isInternalEventForTeamSport(event)
+			(
+				TeamHelper.isHousesEventForTeamSport(event) ||
+				TeamHelper.isInternalEventForTeamSport(event)
+			) && event.sport.multiparty
 		) {
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {
