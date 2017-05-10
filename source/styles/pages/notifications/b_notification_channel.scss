@@ -1,0 +1,24 @@
+.bNotificationChannel{
+	.ePopup {
+		min-width: 300px;
+	}
+	.eHeader {
+		text-align: center;
+	}
+
+	.eButtonIOS,
+	.eButtonAndroid,
+	.eButtonEmail{
+		margin-top: 10px;
+		width: 100%;
+	}
+
+	.eClose {
+		text-align: right;
+		cursor: pointer;
+		margin-bottom: 5px;
+		.bIcon {
+			color: #ccc;
+		}
+	}
+}

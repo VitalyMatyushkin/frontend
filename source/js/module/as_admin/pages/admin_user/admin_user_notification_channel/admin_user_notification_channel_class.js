@@ -4,7 +4,8 @@
 const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty 		= require('morearty'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		GridModel 		= require('module/ui/grid/grid-model'),
+		SVG				= require('module/ui/svg');
 
 /**
  * AdminUserNotificationChannelClass
@@ -25,7 +26,13 @@ class AdminUserNotificationChannelClass {
 		this.grid = new GridModel({
 			actionPanel:{
 				title:'Notification Channel',
-				showStrip:true
+				showStrip:true,
+				btnAdd:
+					(
+						<div className="addButton bTooltip" data-description="Add Notification Channel" onClick={() => {this.onClick()}}>
+							<SVG icon="icon_cog" />
+						</div>
+					)
 			},
 			columns:this.columns,
 			filters:{limit: 20}
@@ -41,7 +48,13 @@ class AdminUserNotificationChannelClass {
 			onLoad: 		this.getDataLoadedHandle()
 		});
 	}
-	
+
+	onClick(){
+		const binding = this.getDefaultBinding();
+
+		binding.set('isPopupOpen', true);
+	}
+
 	setColumns(){
 		this.columns = [
 			{
