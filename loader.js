@@ -18,12 +18,12 @@ var Loader = {
 		document.body.insertBefore(loader, siteWrapper);
 	},
 	removeLoaderFromDOM: function() {
-		//var self = this;
-		//
-		//var loaderWrapper = document.getElementsByClassName(self.LOADER_CLASS_NAME)[0];
-		//
-		//loaderWrapper.outerHTML = "";
-		//delete loaderWrapper;
+		var self = this;
+
+		var loaderWrapper = document.getElementsByClassName(self.LOADER_CLASS_NAME)[0];
+
+		loaderWrapper.outerHTML = "";
+		delete loaderWrapper;
 	}
 };
 
