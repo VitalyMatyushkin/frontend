@@ -71,6 +71,16 @@ class AdminUserNotificationsClass {
 					dataField:'deliveryStatus',
 					type: 'general'
 				}
+			},
+			{
+				text:'Created at',
+				cell:{
+					dataField:'createdAt',
+					type: 'date'
+				},
+				filter:{
+					type:'between-date'
+				}
 			}
 		];
 	}
