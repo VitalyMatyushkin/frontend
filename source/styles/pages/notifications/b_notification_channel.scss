@@ -1,0 +1,17 @@
+.bNotificationChannel{
+	.ePopup {
+		min-width: 300px;
+	}
+	.eHeader {
+		text-align: center;
+	}
+
+	.eClose {
+		text-align: right;
+		cursor: pointer;
+		margin-bottom: 5px;
+		.bIcon {
+			color: #ccc;
+		}
+	}
+}

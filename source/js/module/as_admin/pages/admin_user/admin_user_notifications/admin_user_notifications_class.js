@@ -52,9 +52,9 @@ class AdminUserNotificationsClass {
 				}
 			},
 			{
-				text:'Alert',
+				text:'Title',
 				cell:{
-					dataField:'alert',
+					dataField:'title',
 					type: 'general'
 				}
 			},
