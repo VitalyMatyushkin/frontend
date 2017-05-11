@@ -2,42 +2,42 @@ var Loader = {
 	SITE_WRAPPER_CLASS_NAME:	'bSiteWrap',
 	LOADER_CLASS_NAME:			'bPageLoaderWrapper',
 
-	isScriptLoaded:				false,
+	isScriptFound:				false,
 	intervalId:					undefined,
 	init: function() {
 		var self = this;
 
-		if(!self.isFinishMainScriptLoading()) {
-			self.addLoaderToDOM();
-			self.intervalId = setInterval(self.handleIntervalTick.bind(self), 500);
-		}
+		self.addLoaderToDOM();
+		document.addEventListener("DOMContentLoaded", self.removeLoaderFromDOM.bind(self));
+		//self.intervalId = setInterval(self.handleIntervalTick.bind(self), 500);
 	},
 	handleIntervalTick: function() {
 		var self = this;
 
-		// if script was found, but isScriptLoaded flag is still false.
-		if(self.isFinishMainScriptLoading() && !self.isScriptLoaded) {
-			self.isScriptLoaded = true;
+		var mainScript = self.getMainScript();
+		if(typeof mainScript !== 'undefined' && !self.isScriptFound) {
+			mainScript.onload = function() {
+				self.removeLoaderFromDOM();
+			};
 
-			self.removeLoaderFromDOM();
-
+			self.isScriptFound = true;
 			clearInterval(self.intervalId);
 		}
 	},
-	isFinishMainScriptLoading: function() {
-		var scripts = document.getElementsByTagName('script');
+	getMainScript: function() {
+		var	mainScript,
+			scripts = document.getElementsByTagName('script');
 
 		if(typeof scripts !== 'undefined') {
-			var script;
 			for(var i = 0; i < scripts.length; i++) {
 				if(scripts[i].src.search('bundle.js') !== -1) {
-					script = scripts[i];
+					mainScript = scripts[i];
 					break;
 				}
 			}
-
-			return typeof script !== 'undefined';
 		}
+
+		return mainScript;
 	},
 	addLoaderToDOM: function() {
 		var a = new Date();
@@ -46,7 +46,8 @@ var Loader = {
 		var self = this;
 
 		var loader = document.createElement("div");
-		loader.innerHTML = '<div class="bPageLoaderWrapper"><svg class="bPageLoader"><use xlink:href="#icon_spin-loader-black"></use></svg></div>';
+		loader.className = "bPageLoaderWrapper";
+		loader.innerHTML = '<svg class="bPageLoader"><use xlink:href="#icon_spin-loader-black"></use></svg>';
 
 		var siteWrapper = document.getElementsByClassName(self.SITE_WRAPPER_CLASS_NAME)[0];
 		document.body.insertBefore(loader, siteWrapper);
