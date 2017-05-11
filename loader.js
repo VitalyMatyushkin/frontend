@@ -47,7 +47,7 @@ var Loader = {
 
 		var loader = document.createElement("div");
 		loader.className = "bPageLoaderWrapper";
-		loader.innerHTML = '<svg class="bPageLoader"><use xlink:href="#icon_spin-loader-black"></use></svg>';
+		loader.innerHTML = '<div class="bPageLoader">Loading...</div>';
 
 		var siteWrapper = document.getElementsByClassName(self.SITE_WRAPPER_CLASS_NAME)[0];
 		document.body.insertBefore(loader, siteWrapper);
