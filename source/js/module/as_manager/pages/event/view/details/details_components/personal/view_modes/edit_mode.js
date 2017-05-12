@@ -57,7 +57,7 @@ const EditMode = React.createClass({
 				roles = ["COACH", "TEACHER"];
 				break;
 			case Consts.STAFF_ROLES.MEMBER_OF_STAFF:
-				roles = ["ADMIN","MANAGER","TEACHER","PARENT"];
+				roles = ["ADMIN","MANAGER","TEACHER"];
 				break;
 		};
 
