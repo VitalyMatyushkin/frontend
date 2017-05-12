@@ -15,10 +15,10 @@ var SOURCE 			= './source',
 	fs 				= require('fs'),
 	webpack			= require('webpack-stream');
 
-gulp.task('copyHelperScriptsToDist', function() {
+gulp.task('copyLoader', function() {
 		gulp
-			.src('loader')
-			.pipe(gulp.dest('dist'));
+			.src('loader/*')
+			.pipe(gulp.dest('dist/loader'));
 	}
 );
 
@@ -182,5 +182,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'svgSymbols', 'svgSymbolsIE', 'buildVersionFile', 'copyHelperScriptsToDist', 'webpack', callback);
+    run('clean', 'svgSymbols', 'svgSymbolsIE', 'buildVersionFile', 'copyLoader', 'webpack', callback);
 });
