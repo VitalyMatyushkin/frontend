@@ -17,7 +17,7 @@ var SOURCE 			= './source',
 
 gulp.task('copyHelperScriptsToDist', function() {
 		gulp
-			.src('loader.js')
+			.src('loader')
 			.pipe(gulp.dest('dist'));
 	}
 );
