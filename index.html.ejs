@@ -24,18 +24,31 @@
             position: relative;
         }
         .bPageLoader {
-            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            text-align: center;
+        }
+        .ePageLoader_logo {
+            display: block;
+
+            width: 200px;
+            height: 200px;
+        }
+        .ePageLoader_spinner {
+            display: block;
 
             width: 80px;
             height: 80px;
 
-            margin: 0 auto;
+            margin: 10px auto 0 auto;
         }
     </style>
 </head>
 <body>
     <div class="bSiteWrap" id="jsMain"></div>
-    <script type="text/javascript" src="dist/loader.js"></script>
+    <script type="text/javascript" src="dist/loader/loader.js"></script>
 </body>
 </html>
 
