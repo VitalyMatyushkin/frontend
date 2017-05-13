@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
 <head>
+    <title>SquadInTouch</title>
     <meta http-equiv="Content-script-Type" content="text/html/javascript;" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SquadInTouch</title>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF8e7tejbVojNg0nKcrdGoXJWUl0ENqjk&sensor=FALSE"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -13,11 +13,42 @@
 
         ga('create', 'UA-77360065-3', 'auto');
         ga('send', 'pageview');
-
     </script>
+    <style type="text/css">
+        .bPageLoaderWrapper {
+            clear: both;
+            margin: 0 auto;
+            height: 100%;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+        }
+        .bPageLoader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            text-align: center;
+        }
+        .ePageLoader_logo {
+            display: block;
+
+            width: 200px;
+            height: 200px;
+        }
+        .ePageLoader_spinner {
+            display: block;
+
+            width: 80px;
+            height: 80px;
+
+            margin: 10px auto 0 auto;
+        }
+    </style>
 </head>
 <body>
-<div class="bSiteWrap" id="jsMain"></div><!-- .bSiteWrap -->
+    <div class="bSiteWrap" id="jsMain"></div>
+    <script type="text/javascript" src="dist/loader/loader.js"></script>
 </body>
 </html>
 

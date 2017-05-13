@@ -5,7 +5,7 @@
 const	React						= require('react'),
 		FixtureItem					= require('./fixture_item'),
 		FixtureShowAllItemsButton	= require('./fixture_show_all_item_button'),
-		FixtureListStyle			= require('./../../../../../styles/main/b_school_fixtures.scss');
+		FixtureListStyle			= require('./../../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureList = React.createClass({
 	propTypes: {

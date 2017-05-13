@@ -62,7 +62,7 @@ const EditEventPopup = React.createClass({
 			body.venue = {
 				venueType: venue.venueType
 			};
-			if(venue.postcodeData.id !== 'TBD') {
+			if(venue.venueType !== 'TBD') {
 				const postcodeId = this.getPostcodeIdFromVenue(venue);
 				body.venue.postcodeId = postcodeId;
 			}

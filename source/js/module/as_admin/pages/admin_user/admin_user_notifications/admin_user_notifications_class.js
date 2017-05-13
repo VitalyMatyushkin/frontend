@@ -52,9 +52,9 @@ class AdminUserNotificationsClass {
 				}
 			},
 			{
-				text:'Alert',
+				text:'Title',
 				cell:{
-					dataField:'alert',
+					dataField:'title',
 					type: 'general'
 				}
 			},
@@ -70,6 +70,16 @@ class AdminUserNotificationsClass {
 				cell:{
 					dataField:'deliveryStatus',
 					type: 'general'
+				}
+			},
+			{
+				text:'Created at',
+				cell:{
+					dataField:'createdAt',
+					type: 'date'
+				},
+				filter:{
+					type:'between-date'
 				}
 			}
 		];

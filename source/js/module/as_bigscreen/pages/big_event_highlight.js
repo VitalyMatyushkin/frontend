@@ -23,7 +23,7 @@ const BigEventHighlight = React.createClass({
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					photos			= binding.toJS('lastFiveEvents.photos'),
+					photos			= typeof binding.toJS('lastFiveEvents.photos') !== 'undefined' ? binding.toJS('lastFiveEvents.photos') : [],
 					footerEvent		= this.getCurrentFooterEvent();
 
 			return (

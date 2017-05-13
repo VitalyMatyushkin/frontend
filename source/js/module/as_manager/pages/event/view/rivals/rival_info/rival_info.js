@@ -11,7 +11,8 @@ const RivalInfo = React.createClass({
 		mode:									React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		handleClickChangeOpponentSchoolButton:	React.PropTypes.func,
-		activeSchoolId:							React.PropTypes.string.isRequired
+		activeSchoolId:							React.PropTypes.string.isRequired,
+		isShowControlButtons:					React.PropTypes.bool
 	},
 	render: function() {
 		switch (true) {
@@ -24,6 +25,7 @@ const RivalInfo = React.createClass({
 						onChangeScore							= { this.props.onChangeScore }
 						handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 						activeSchoolId							= { this.props.activeSchoolId }
+						isShowControlButtons					= { this.props.isShowControlButtons }
 					/>
 				);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']:

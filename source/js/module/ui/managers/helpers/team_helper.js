@@ -743,7 +743,8 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 					event.individualsData.length === 1 ||
 					event.individualsData.length === 2
 				) {
-					return cb('individualsData', 0);
+					const orderLeft = event.individualsData.findIndex(individual => individual.houseId === housesData[0].id);
+					return cb('individualsData', orderLeft !== -1 ? orderLeft : 0);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
 				// for team sport show house[0] or team for house[0] on left side - ALWAYS!
@@ -855,7 +856,8 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 						event.individualsData[0].houseId === housesData[0].id ? 0 : 1
 					);
 				} else if(event.individualsData.length === 2) {
-					return cb('individualsData', 1);
+					const orderRight = event.individualsData.findIndex(individual => individual.houseId === housesData[1].id);
+					return cb('individualsData', orderRight !== -1 ? orderRight : 1);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
 				// for team sport show house[1] or team for house[1] on right side - ALWAYS!

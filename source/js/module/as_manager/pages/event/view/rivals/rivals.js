@@ -16,9 +16,15 @@ const Rivals = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
 		activeSchoolId:							React.PropTypes.string.isRequired,
+		isShowControlButtons:					React.PropTypes.bool,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func
 	},
 	listeners: [],
+	getDefaultProps: function(){
+		return {
+			isShowControlButtons: true
+		};
+	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
@@ -492,18 +498,19 @@ const Rivals = React.createClass({
 		rivals.forEach((rival, rivalIndex) => {
 			row.push(
 				<Rival
-					key										= {`rival_${rivalIndex}`}
-					rivalIndex								= {rivalIndex}
-					rival									= {rival}
-					event									= {binding.toJS('model')}
-					mode									= {binding.toJS('mode')}
-					onChangeScore							= {this.onChangeScore.bind(this, rivalIndex)}
-					onClickEditTeam							= {this.onClickEditTeam.bind(this, rivalIndex)}
-					onChangeIndividualScoreAvailable		= {this.onChangeIndividualScoreAvailable.bind(this, rivalIndex)}
+					key										= { `rival_${rivalIndex}` }
+					rivalIndex								= { rivalIndex }
+					rival									= { rival }
+					event									= { binding.toJS('model') }
+					mode									= { binding.toJS('mode') }
+					onChangeScore							= { this.onChangeScore.bind(this, rivalIndex) }
+					onClickEditTeam							= { this.onClickEditTeam.bind(this, rivalIndex) }
+					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable.bind(this, rivalIndex) }
 					handleClickOpponentSchoolManagerButton	= {
 						this.props.handleClickOpponentSchoolManagerButton.bind(this, rivalIndex)
 					}
-					activeSchoolId							= {this.props.activeSchoolId}
+					isShowControlButtons					= { this.props.isShowControlButtons }
+					activeSchoolId							= { this.props.activeSchoolId }
 				/>
 			);
 
