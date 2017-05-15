@@ -44,8 +44,14 @@ const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		onReload:		React.PropTypes.func.isRequired
+		activeSchoolId:			React.PropTypes.string.isRequired,
+		onReload:				React.PropTypes.func.isRequired,
+		isShowControlButtons:	React.PropTypes.bool.isRequired
+	},
+	getDefaultProps: function(){
+		return {
+			isShowControlButtons: true
+		};
 	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -930,6 +936,7 @@ const Event = React.createClass({
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { this.props.activeSchoolId }
+						isShowControlButtons					= { this.props.isShowControlButtons }
 						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 				/>
 			);
