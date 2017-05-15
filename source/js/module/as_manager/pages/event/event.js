@@ -259,7 +259,7 @@ const Event = React.createClass({
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
-		if(!NewEventHelper.isNewEvent()) {
+		if(!NewEventHelper.isNewEvent(event)) {
 			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
 				return false;
 			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
