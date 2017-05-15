@@ -75,18 +75,17 @@ const AddPermissionRequest = React.createClass({
 				return currentRoles.find(role => role === currentRole);
 			}
 		};
-		
-		// we filter array of roles, leaving unique to this school (but this restriction don't act on parent)
-		roleList.filter(role => {
-			return !hasUserCurrentRole(role.id);
-		});
+		// for school union we leave only admin role
+		if (fullSchoolData && fullSchoolData.kind === 'SchoolUnion') {
+			return roleList.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
+		}
 		
 		//if in school disabled registration student, we must cut role 'student' from role list
 		return roleList.filter(role => {
 			if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
 				return false;
 			} else {
-				return true;
+				return !hasUserCurrentRole(role.id);
 			}
 		});
 	},
@@ -99,7 +98,14 @@ const AddPermissionRequest = React.createClass({
 					name: {
 						like: schoolName,
 						options: 'i'
-					}
+					},
+					kind: {
+						$in: ['School', 'SchoolUnion']
+					},
+					/* this param was added later, so it is undefined on some schools. Default value is true.
+					 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
+					 */
+					availableForRegistration: { $ne: false }
 				},
 				limit: 20
 			}
