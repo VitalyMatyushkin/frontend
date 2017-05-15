@@ -234,7 +234,10 @@ const EventTeamsView = React.createClass({
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					if(event.status === eventConst.EVENT_STATUS.ACCEPTED || event.status === eventConst.EVENT_STATUS.FINISHED) {
+					if(
+						event.status === eventConst.EVENT_STATUS.ACCEPTED ||
+						event.status === eventConst.EVENT_STATUS.FINISHED
+					) {
 						const schoolId = event.inviterSchool.id !== activeSchoolId ?
 							event.inviterSchool.id :
 							event.invitedSchools[0].id;
@@ -242,7 +245,12 @@ const EventTeamsView = React.createClass({
 						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return self.renderText(this.ACCEPTED_BY_OPPONENT);
+							// if inviter school at right side
+							if(schoolId === event.inviterSchoolId) {
+								return self.renderText(this.MEMBERS_NOT_ADDED);
+							} else {
+								return self.renderText(this.ACCEPTED_BY_OPPONENT);
+							}
 						} else {
 							return self.renderIndividualPlayersBySchoolId(schoolId, individualScoreAvailable);
 						}
@@ -267,7 +275,12 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					// if inviter school at right side
+					if(activeSchoolId !== event.inviterSchoolId) {
+						return self.renderText(this.MEMBERS_NOT_ADDED);
+					} else {
+						return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					}
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
@@ -297,7 +310,12 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					// if inviter school at right side
+					if(activeSchoolId !== event.inviterSchoolId) {
+						return self.renderText(this.MEMBERS_NOT_ADDED);
+					} else {
+						return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					}
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
