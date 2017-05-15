@@ -58,7 +58,12 @@ const authСontroller = {
 			 the login view because they are not authenticated.
 			 */
 			window.location.href = domainHelper.getLoginUrl();
-			window.location.reload();
+
+			// We shouldn't reload page when user enter application by url without
+			// hash like this app.stage1.squadintouch.com
+			if(document.location.hash !== '') {
+				window.location.reload();
+			}
 		}
 	}
 };
