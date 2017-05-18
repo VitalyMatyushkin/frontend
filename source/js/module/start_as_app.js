@@ -130,8 +130,7 @@ function runManagerMode() {
 
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
-		binding: binding,
-		defaultPath: 'login'
+		binding: binding
 	});
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));

@@ -118,8 +118,7 @@ function runAdminMode() {
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
     authController.initialize({
-        binding: binding,
-        defaultPath: 'admin_schools'
+        binding: binding
     });
 
     window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
