@@ -1,70 +1,176 @@
-const domainHelper = require('module/helpers/domain_helper');
+const	DomainHelper	= require('module/helpers/domain_helper'),
+		propz			= require('propz');
 
 const authСontroller = {
-	nextPage: '',
-	_publicPages:['register', 'login', 'reset-request', 'reset'],
+	requestedPage: undefined,
+	publicPages:['register', 'login', 'reset-request', 'reset'],
 	initialize: function(options) {
-		var self = this;
-		if (!options || !options.binding) {
-			console.error('Error while initializing the authorization controller');
-		}
-		if (self.isPublicPage()) {
-			self.defaultPath = options.defaultPath || '#/';
-			self.nextPage = self.defaultPath;
-		} else {
-			self.nextPage = document.location.hash;
-		}
-		//By pass authentication for public home page for school
-		if (options.asSchool === true) {
-			//we save hash in binding, because we will use it in LoginPublicSchool component
-			options.binding.sub('loginPublicSchool').set('hash', self.nextPage);
-			self.nextPage = options.defaultPath;
-		}
-		self.binding = options.binding;
-		self.updateAuth();
-		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
-		/*
-			For reasons unknown the next page property ends up empty sometimes causing login to get stuck
-			The condition below tests the properties against an empty string and defaults the value to the
-			defaultPath passed to the initialize method of authController
-		 */
-		if(self.nextPage === ''){self.nextPage = options.defaultPath}
+		this.saveRequestedPage(options);
+		this.initBinding(options);
+		this.redirectUserByUserAuthData();
+
+		this.binding.addListener('userData.authorizationInfo', this.handleUpdateUserAuthData.bind(this));
 	},
+	saveRequestedPage: function(options) {
+		const isEmptyCurrentHash = document.location.hash === '';
+
+		if(typeof options.requestedPage !== 'undefined') {
+			this.requestedPage = options.requestedPage;
+		} else if(
+			!this.isPublicPage() &&
+			!isEmptyCurrentHash
+		) {
+			this.requestedPage = document.location.hash;
+
+			////By pass authentication for public home page for school
+			//if (options.asSchool === true) {
+			//	//we save hash in binding, because we will use it in LoginPublicSchool component
+			//	options.binding.sub('loginPublicSchool').set('hash', this.requestedPage);
+			//	this.requestedPage = options.defaultPath;
+			//}
+		}
+	},
+	initBinding: function(options) {
+		this.binding = options.binding;
+	},
+	redirectUserByUserAuthData: function() {
+		const	binding					= this.binding;
+
+		const	isRegistrationProcess	= binding.get('form.register.formFields'), //user not in registration process now
+				isUserAuth	= this.isUserAuth(),
+				isUserOnRole				= this.isUserOnRole(),
+				isSuperAdmin			= this.isSuperAdmin();
+
+		if(!isRegistrationProcess) {								// When user isn't in registration process
+			if (isSuperAdmin) {										// For superadmin
+				if(typeof this.requestedPage === 'undefined') {
+					this.redirectToDefaultPageForSuperAdmin();
+				} else {
+					this.redirectToRequestedPage();
+				}
+			} else if (												// When user is log in but doesn't have role
+				isUserAuth &&
+				!isUserOnRole
+			) {
+				// TODO i think it should be looks something else
+				// But now just don't do anything
+				// This case is processed by router
+				console.log('');
+			} else if (isUserOnRole) {								// When user under some role
+				if(typeof this.requestedPage === 'undefined') {
+					this.redirectToDefaultPage();
+				} else {
+					this.redirectToRequestedPage();
+				}
+			} else if(this.requestedPage === 'loginPublicSchool' || this.requestedPage === 'home') {
+				window.location.hash = this.requestedPage;			//Bypass authentication
+			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
+				window.location.href = DomainHelper.getLoginUrl();
+			}
+		}
+	},
+	/**
+	 * Function returns true when user has authenticated
+	 * @returns {boolean}
+	 */
+	isUserAuth: function() {
+		const	binding		= this.binding,
+				data		= binding.toJS('userData.authorizationInfo');
+
+		const id = propz.get(data, ['id']);
+
+		return typeof id !== 'undefined';
+	},
+	/**
+	 * Function returns true when user has been authorized
+	 * @returns {boolean}
+	 */
+	isUserOnRole: function() {
+		const	binding		= this.binding,
+				data		= binding.toJS('userData.authorizationInfo');
+
+		const	isBecome	= propz.get(data, ['isBecome']),
+				role		= propz.get(data, ['role']);
+
+		return	this.isUserAuth() &&
+				typeof isBecome !== 'undefined' &&
+				typeof role !== 'undefined';
+	},
+	/**
+	 * Function returns true when user is Super Admin
+	 * @returns {boolean}
+	 */
+	isSuperAdmin: function() {
+		const	binding		= this.binding,
+				data		= binding.toJS('userData.authorizationInfo');
+
+		const adminId = propz.get(data, ['adminId']);
+
+		return typeof adminId !== 'undefined';
+	},
+	/**
+	 * Function returns true when current page is one from public pages
+	 * @returns {boolean}
+	 */
 	isPublicPage: function() {
 		var self = this,
 			path = document.location.hash;
 
-		return self._publicPages.some(value => {return path.indexOf(value) !== -1});
+		return self.publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
-	updateAuth: function() {
-		var self = this,
-			binding = self.binding,
-			data = binding.toJS('userData.authorizationInfo'),
-			notRegister = !binding.get('form.register.formFields');//user not in registration process now
+	/**
+	 * Function redirects to requested page and clear field requested page
+	 */
+	redirectToRequestedPage: function() {
+		const requestedPage = String(this.requestedPage);
+		this.requestedPage = undefined;
 
-		// if we got auth data
-		if (data && data.id) {
-			// redirecting user to awaited page if user not in registration process now and
-			// he is a superAdmin or user after become authorization
-			if (notRegister && (data.adminId || data.isBecome)) {
-				document.location.hash = self.nextPage;
-			}
-		} else if(self.nextPage === 'loginPublicSchool' || self.nextPage === 'home') {
-			document.location.hash = self.nextPage;  //Bypass authentication
-		} else if(!self.isPublicPage()) {
-			/*
-			 Reset hash string to login, if authorisation fails or there is no authorised user,
-			 avoids users getting stuck if the current hash string is the same as the next one but are presented
-			 the login view because they are not authenticated.
-			 */
-			window.location.href = domainHelper.getLoginUrl();
+		window.location.hash = requestedPage;
+	},
+	/**
+	 * Function redirects to page default for current user role.
+	 */
+	redirectToDefaultPage: function() {
+		const	binding		= this.binding,
+				data		= binding.toJS('userData.authorizationInfo');
 
-			// We shouldn't reload page when user enter application by url without
-			// hash like this app.stage1.squadintouch.com
-			if(document.location.hash !== '') {
-				window.location.reload();
+		window.location.hash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
+			data.role.toLowerCase(),
+			this.getSchoolKind(data.role, binding.toJS('userData'))
+		);
+	},
+	/**
+	 * Function redirects to page default for superadmin.
+	 */
+	redirectToDefaultPageForSuperAdmin: function() {
+		window.location.hash = 'admin_schools';
+	},
+	/**
+	 * Functions returns school kind for current role from first active permission
+	 * which from permission list for current role
+	 * @param role
+	 * @param userData
+	 * @returns {undefined}
+	 */
+	getSchoolKind: function(role, userData) {
+		let schoolKind = undefined;
+
+		const permissionsData = userData.__allPermissions.find(data => data.name === role);
+		if(typeof permissionsData !== 'undefined' && typeof permissionsData.permissions !== 'undefined') {
+			const permission = permissionsData.permissions.find(item => item.status === 'ACTIVE');
+
+			if(typeof permission !== 'undefined') {
+				schoolKind = permission.school.kind;
 			}
 		}
+
+		return schoolKind;
+	},
+	/**
+	 * Handler for user auth update event
+	 */
+	handleUpdateUserAuthData: function() {
+		this.redirectUserByUserAuthData();
 	}
 };
 

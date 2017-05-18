@@ -20,9 +20,7 @@ const RoleSelector = React.createClass({
 		}
 	},
 	onRoleSelected: function(role) {
-		Auth.become(role.name).then(() => {
-			return DomainHelper.redirectToStartPage(role.name, this.getSchoolKindFromRole(role));
-		});
+		Auth.become(role.name);
 	},
 	/**
 	 * Get first permission from role and get school kind from it.

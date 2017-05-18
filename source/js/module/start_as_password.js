@@ -76,8 +76,7 @@ function runPasswordMode() {
     // Связывания контроллера, отвечающего за контроль за авторизацией с данными
     authController.initialize(
         {
-            binding: binding,
-            defaultPath: ''
+            binding: binding
         }
     );
 
