@@ -409,7 +409,9 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
-	
+	getPositionNameById: function(event, positionId) {
+		return event.sport.field.positions.find(p => p._id === positionId).name;
+	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
 
@@ -424,12 +426,17 @@ const EventTeamsView = React.createClass({
 				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
 			});
 
+			const positionName = typeof player.positionId !== 'undefined' ?
+				`(${this.getPositionNameById(event, player.positionId)})` :
+				'';
+
 			return (
 				<div key={playerIndex} className={eventPlayerCss}>
 					<span className="ePlayer_name">
 						<span>{`${playerIndex + 1}. `}</span>
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
+						<span>{positionName}</span>
 					</span>
 					<If condition = {Boolean(player.isCaptain)}>
 						<span className="ePlayer_star">
