@@ -9,7 +9,7 @@ const authСontroller = {
 		this.initBinding(options);
 		this.redirectUserByUserAuthData();
 
-		this.binding.addListener('userData.authorizationInfo', this.handleUpdateUserAuthData.bind(this));
+		this.binding.addListener('userData.authorizationInfo.id', this.handleUpdateUserAuthData.bind(this));
 	},
 	saveRequestedPage: function(options) {
 		const isEmptyCurrentHash = document.location.hash === '';
@@ -59,6 +59,11 @@ const authСontroller = {
 			} else if (isUserOnRole) {								// When user under some role
 				if(typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
+					// TODO it's a little hack for case when user change role by role list menu.
+					// If user current page is default page for this role
+					// and user change role to same role other school
+					// then url doesn't change, so page doesn't reload.
+					window.location.reload();
 				} else {
 					this.redirectToRequestedPage();
 				}
@@ -145,19 +150,28 @@ const authСontroller = {
 	redirectToDefaultPageForSuperAdmin: function() {
 		window.location.hash = 'admin_schools';
 	},
-	/**
-	 * Functions returns school kind for current role from first active permission
-	 * which from permission list for current role
-	 * @param role
-	 * @param userData
-	 * @returns {undefined}
-	 */
-	getSchoolKind: function(role, userData) {
-		let schoolKind = undefined;
+	getSchoolKind: function(role) {
+		const	binding = this.binding;
+		let		schoolKind;
 
-		const permissionsData = userData.__allPermissions.find(data => data.name === role);
-		if(typeof permissionsData !== 'undefined' && typeof permissionsData.permissions !== 'undefined') {
-			const permission = permissionsData.permissions.find(item => item.status === 'ACTIVE');
+		if(this.isFirstLogin()) {
+			schoolKind = this.getRandomSchoolKindByRole(role);
+		} else {
+			schoolKind = this.getSchoolKindByRoleAndSchoolId(
+				role,
+				binding.toJS('userRules.activeSchoolId')
+			);
+		}
+
+		return schoolKind;
+	},
+	getSchoolKindByRoleAndSchoolId: function(role, schoolId) {
+		const	binding = this.binding;
+		let		schoolKind;
+
+		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions']);
+		if(typeof permissions !== 'undefined') {
+			const permission = permissions.find(p => p.role === role && p.schoolId === schoolId);
 
 			if(typeof permission !== 'undefined') {
 				schoolKind = permission.school.kind;
@@ -165,6 +179,33 @@ const authСontroller = {
 		}
 
 		return schoolKind;
+	},
+	/**
+	 * Functions returns school kind for current role from first active permission
+	 * which from permission list for current role
+	 * @param role
+	 * @param userData
+	 * @returns {undefined}
+	 */
+	getRandomSchoolKindByRole: function(role) {
+		const	binding = this.binding;
+		let		schoolKind;
+
+		const	permissionsData	= binding.toJS('userData.__allPermissions').find(data => data.name === role),
+				permissions		= propz.get(permissionsData, ['permissions']);
+
+		if(typeof permissions !== 'undefined') {
+			const permission = permissions.find(item => item.status === 'ACTIVE');
+
+			if(typeof permission !== 'undefined') {
+				schoolKind = permission.school.kind;
+			}
+		}
+
+		return schoolKind;
+	},
+	isFirstLogin: function() {
+		return typeof propz.get(this.binding.toJS('userData'), ['roleList']) === 'undefined';
 	},
 	/**
 	 * Handler for user auth update event
