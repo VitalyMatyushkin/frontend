@@ -97,10 +97,8 @@ const  RoleList = React.createClass({
 		rootBinding.set('userRules.activeSchoolId', school.id);
 		this.roleBecome(roleName, school.kind);
 	},
-	roleBecome:function(roleName, schoolKind){
-		Auth.become(roleName).then(() => {
-			DomainHelper.redirectToStartPage(roleName, schoolKind);
-		});
+	roleBecome:function(roleName){
+		Auth.become(roleName);
 	},
 	renderRole:function(permission, active){
 		const	role			= permission.role,

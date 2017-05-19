@@ -48,7 +48,11 @@ const AuthorizationServices ={
                 binding = service.binding;
 		let authInfo;
 
+		//console.log(binding.toJS());
+
 		return service.post(roleName).then(authData => {
+			console.log(authInfo);
+
 			if(authData.key) {
 				authInfo = {
 					id			: authData.key,
