@@ -21,13 +21,6 @@ const authСontroller = {
 			!isEmptyCurrentHash
 		) {
 			this.requestedPage = document.location.hash;
-
-			////By pass authentication for public home page for school
-			//if (options.asSchool === true) {
-			//	//we save hash in binding, because we will use it in LoginPublicSchool component
-			//	options.binding.sub('loginPublicSchool').set('hash', this.requestedPage);
-			//	this.requestedPage = options.defaultPath;
-			//}
 		}
 	},
 	initBinding: function(options) {
