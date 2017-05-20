@@ -24,7 +24,10 @@ module.exports = {
 			'node_modules',
 			path.resolve(__dirname, 'source/js'),	// do we need both?
 			path.resolve(__dirname, 'source')
-		]
+		],
+		alias: {
+			director: path.resolve(__dirname, 'node_modules/director/build/director')
+		}
 	},
 	stats: {
 		children: false // not showing chatty logs from Child plugin
@@ -67,5 +70,8 @@ module.exports = {
 		publicPath: 'dist/',					// specifies the public URL address of the output files when referenced in a browser
 		path: 		path.resolve('./dist'),		// storing all results in this folder
 		filename: 	'bundle.js'					// with names like this
+	},
+	devServer: {
+		disableHostCheck: true
 	}
 };

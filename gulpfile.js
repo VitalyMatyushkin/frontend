@@ -13,7 +13,8 @@ var SOURCE 			= './source',
 	filenames 		= require('gulp-filenames'),
 	git 			= require('gulp-git'),
 	fs 				= require('fs'),
-	webpack			= require('webpack-stream');
+	webpack			= require('webpack'),
+	webpackStream	= require('webpack-stream');
 
 gulp.task('copyLoader', function() {
 		gulp
@@ -130,7 +131,7 @@ gulp.task('svgSymbolsIE', function () {
 /** let it be here at least for a while. A bit later it can be removed */
 gulp.task('webpack', function() {
 	return gulp.src([SOURCE + '/*.js', SOURCE + '/**/*.js'])
-		.pipe(webpack( require('./webpack.config')))
+		.pipe(webpackStream( require('./webpack.config'), webpack))
 		.pipe(gulp.dest('dist/'));
 });
 
