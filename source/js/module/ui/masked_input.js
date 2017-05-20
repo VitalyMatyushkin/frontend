@@ -75,7 +75,9 @@ const MaskedInput = React.createClass({
 				}
 				i++
 			} else {
+				/* eslint-disable no-cond-assign */
 				if ((nextChar = value.substr(j++, 1))) {
+				/* eslint-enable no-cond-assign */
 					if (rexps[newValue.length + 1].test(nextChar)) {
 						newValue += nextChar;
 						cursorMax = newValue.length;
