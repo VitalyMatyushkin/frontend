@@ -31,21 +31,6 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			// {
-			// 	test: /\.js$/,
-			// 	exclude: /(node_modules|bower_components)/,
-			// 	loader: 'eslint-loader',
-			// 	enforce: "pre"
-			// },
-			// {
-			// 	test: /\.js$/,
-			// 	exclude: /(node_modules|bower_components)/,
-			// 	loader: 'babel-loader',
-			// 	query: {
-			// 		"presets": ["react"],
-			// 		"plugins": babelPluginsList
-			// 	}
-			// },
 			{
 				test: /\.js$/,
 				exclude: /(node_modules|bower_components)/,
@@ -61,7 +46,7 @@ module.exports = {
 				test: /\.scss$/,
 				loader: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
-					use: ['css-loader'/*, 'postcss-loader'*/,'sass-loader']
+					use: ['css-loader', 'postcss-loader','sass-loader']
 				})
 			}
 		],
