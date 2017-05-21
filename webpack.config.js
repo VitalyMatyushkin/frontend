@@ -4,60 +4,59 @@ var 	webpack				= require("webpack"),
 		HtmlWebpackPlugin	= require('html-webpack-plugin'),
 		autoprefixer		= require('autoprefixer');
 
+var babelPluginsList = [
+	"transform-flow-strip-types",
+	"transform-es2015-arrow-functions",     // allowing arrow functions
+	"check-es2015-constants",               // checking const expressions to be really const
+	"transform-es2015-block-scoping",       // allowing block scope features
+	"transform-es2015-template-literals",   // allow string interpolation
+	"transform-es2015-classes",				// allow class syntax
+	"transform-class-properties",
+	"transform-es2015-parameters",			// transforming default values
+	"transform-es2015-shorthand-properties"
+];
+
+
 module.exports = {
 	entry: "./source/js/init",
 	resolve: {
-		root: [
-			path.resolve('./source')
-		],
-		modulesDirectories: [
+		modules: [
 			'node_modules',
-			'source/js',
-			'source'
-		]
+			path.resolve(__dirname, 'source/js'),	// do we need both?
+			path.resolve(__dirname, 'source')
+		],
+		alias: {
+			director: path.resolve(__dirname, 'node_modules/director/build/director')
+		}
 	},
 	stats: {
 		children: false // not showing chatty logs from Child plugin
 	},
 	module: {
-		preLoaders: [
+		rules: [
 			{
 				test: /\.js$/,
 				exclude: /(node_modules|bower_components)/,
-				loader: 'eslint'
+				use: [
+					{ loader: 'eslint-loader' },
+					{ loader: 'babel-loader', options: {
+							"presets": ["react"],
+							"plugins": babelPluginsList
+					}}
+				]
+			},
+			{
+				test: /\.scss$/,
+				loader: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: ['css-loader', 'postcss-loader','sass-loader']
+				})
 			}
 		],
-		loaders: [
-			{
-				test: /\.js$/,
-				exclude: /(node_modules|bower_components)/,
-				loader: 'babel',
-				query: {
-					"presets": ["react"],
-					"plugins": [
-						"transform-flow-strip-types",
-						"transform-es2015-arrow-functions",     // allowing arrow functions
-						"check-es2015-constants",               // checking const expressions to be really const
-						"transform-es2015-block-scoping",       // allowing block scope features
-						"transform-es2015-template-literals",   // allow string interpolation
-						"transform-es2015-classes",				// allow class syntax
-						"transform-class-properties",
-						"transform-es2015-parameters",			// transforming default values
-						"transform-es2015-shorthand-properties"
-					]
-				}
-			}, {
-				test: /\.scss$/,
-				loader: ExtractTextPlugin.extract('css!postcss!sass')
-			}, {
-				include: /\.json$/,
-				loaders: ["json-loader"]
-			}
-		]
 	},
-	postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
 	plugins: [
-		new ExtractTextPlugin('styles.css', {
+		new ExtractTextPlugin({
+			filename: 'styles.css',
 			allChunks: true
 		}),
 		new HtmlWebpackPlugin({
@@ -71,5 +70,8 @@ module.exports = {
 		publicPath: 'dist/',					// specifies the public URL address of the output files when referenced in a browser
 		path: 		path.resolve('./dist'),		// storing all results in this folder
 		filename: 	'bundle.js'					// with names like this
+	},
+	devServer: {
+		disableHostCheck: true
 	}
 };
