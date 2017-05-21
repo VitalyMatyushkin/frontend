@@ -109,7 +109,7 @@ const EventRival = React.createClass({
 					break;
 			}
 
-			if(scoreData.teamId){
+			if(scoreData.teamId && !SportHelper.isCricket(event.sport.name)){
 				TeamHelper.clearIndividualScore(event, scoreData.teamId)
 			}
 
@@ -135,7 +135,7 @@ const EventRival = React.createClass({
 		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<div className="eEventResult_PointSideWrapper">
-					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
+					<ScoreCricket	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, true)}
 									plainPoints		= {points}
 									pointsStep		= {event.sport.points.pointsStep}
 									pointsType		= {event.sport.points.display}

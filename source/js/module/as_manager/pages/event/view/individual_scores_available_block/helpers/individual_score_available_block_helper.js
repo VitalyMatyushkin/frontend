@@ -1,4 +1,5 @@
-const TeamHelper = require('../../../../../../ui/managers/helpers/team_helper');
+const	TeamHelper	= require('../../../../../../ui/managers/helpers/team_helper'),
+		SportHelper	= require('module/helpers/sport_helper');
 
 const IndividualScoreAvailableBlockHelper = {
 	hasTeamPlayersByOrder: function(activeSchoolId, event, order) {
@@ -35,7 +36,7 @@ const IndividualScoreAvailableBlockHelper = {
 	isShowIndividualScoresAvailableFlagByOrder: function(activeSchoolId, event, order) {
 		const hasTeamPlayers = this.hasTeamPlayersByOrder(activeSchoolId, event, order);
 
-		return TeamHelper.isTeamSport(event) && hasTeamPlayers;
+		return !SportHelper.isCricket(event.sport.name) && TeamHelper.isTeamSport(event) && hasTeamPlayers;
 	}
 };
 

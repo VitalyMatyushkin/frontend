@@ -20,7 +20,9 @@ const CricketPoint = React.createClass({
 		type:			React.PropTypes.string.isRequired,
 		isPlayerScore: 	React.PropTypes.bool
 	},
-	
+	componentWillReceiveProps: function(nextProps) {
+		this.setState({value: nextProps.plainPoints});
+	},
 	getDefaultProps: function() {
 		return {
 			modeView: 		ScoreConsts.SCORE_MODES_VIEW.SMALL,

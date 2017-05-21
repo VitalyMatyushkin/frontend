@@ -2,6 +2,7 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		EventHelper				= require('module/helpers/eventHelper'),
 		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		RoleHelper				= require('module/helpers/role_helper'),
+		SportHelper				= require('module/helpers/sport_helper'),
 		SportConsts				= require('module/helpers/consts/sport'),
 		propz					= require('propz'),
 		Lazy					= require('lazy.js'),

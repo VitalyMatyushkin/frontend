@@ -387,7 +387,7 @@ const EventTeamsView = React.createClass({
 		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<span className="ePlayer_scoreCricketContainer">
-					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, true) }
 									plainPoints		= { this.getPointsByStudent(event, player.userId) }
 									pointsStep		= { event.sport.points.pointsStep }
 									onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
@@ -446,7 +446,7 @@ const EventTeamsView = React.createClass({
 					<If condition={
 						!self.isNonInternalEventForOneOnOneSport(event)
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
-						&& individualScoreAvailable
+						&& (SportHelper.isCricket(event.sport.name) ? true : individualScoreAvailable)
 					}>
 						{this.renderScore(event, mode, isOwner, individualScoreAvailable, player, teamId)}
 					</If>
