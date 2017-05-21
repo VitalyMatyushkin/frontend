@@ -74,8 +74,12 @@ module.exports = {
 			}
 		],
 	},
+	devtool: 'source-map',
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.UglifyJsPlugin({
+			mangle:		false,	// I'm not sure if mangling can be enabled safely. So disabling it for a while
+			sourceMap:	true
+		}),
 		new ExtractTextPlugin({
 			filename: 'styles.css',
 			allChunks: true
