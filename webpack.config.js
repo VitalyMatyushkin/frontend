@@ -1,10 +1,10 @@
-var 	webpack				= require("webpack"),
+const 	webpack				= require("webpack"),
 		path				= require('path'),
 		ExtractTextPlugin	= require('extract-text-webpack-plugin'),
 		HtmlWebpackPlugin	= require('html-webpack-plugin'),
 		autoprefixer		= require('autoprefixer');
 
-var babelPluginsList = [
+const babelPluginsList = [
 	"transform-flow-strip-types",
 	"transform-es2015-arrow-functions",     // allowing arrow functions
 	"check-es2015-constants",               // checking const expressions to be really const
@@ -16,6 +16,19 @@ var babelPluginsList = [
 	"transform-es2015-shorthand-properties"
 ];
 
+/*
+ * White list of modules which should be transpiled with babel.
+ * This list is required to transpile some modules which are definitely not ES5
+ * @type {Array}
+ */
+const nodeModulesBabelWhiteList = [
+	'node_modules/propz'
+];
+
+/** Check whether provided value is in white list */
+nodeModulesBabelWhiteList.isWhiteListed = function(value) {
+	return this.findIndex(whiteItem => value.includes(whiteItem)) !== -1;
+};
 
 module.exports = {
 	entry: "./source/js/init",
@@ -36,7 +49,14 @@ module.exports = {
 		rules: [
 			{
 				test: /\.js$/,
-				exclude: /(node_modules|bower_components)/,
+				exclude: value => {
+					/* exclude if not whitelisted and in node_modules */
+					if(nodeModulesBabelWhiteList.isWhiteListed(value)) {
+						return false;
+					} else {
+						return /(node_modules)/.test(value);
+					}
+				},
 				use: [
 					{ loader: 'eslint-loader' },
 					{ loader: 'babel-loader', options: {
@@ -54,7 +74,12 @@ module.exports = {
 			}
 		],
 	},
+	devtool: 'source-map',
 	plugins: [
+		new webpack.optimize.UglifyJsPlugin({
+			mangle:		false,	// I'm not sure if mangling can be enabled safely. So disabling it for a while
+			sourceMap:	true
+		}),
 		new ExtractTextPlugin({
 			filename: 'styles.css',
 			allChunks: true
