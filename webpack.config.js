@@ -49,9 +49,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.js$/,
-				// exclude: /(node_modules|bower_components)/,
 				exclude: value => {
-					/* exclude if not whitelisted and in in node_modules */
+					/* exclude if not whitelisted and in node_modules */
 					if(nodeModulesBabelWhiteList.isWhiteListed(value)) {
 						return false;
 					} else {
@@ -76,7 +75,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		// new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.UglifyJsPlugin(),
 		new ExtractTextPlugin({
 			filename: 'styles.css',
 			allChunks: true
