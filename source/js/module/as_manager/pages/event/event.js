@@ -234,7 +234,8 @@ const Event = React.createClass({
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
 				!TeamHelper.isHousesEventForTeamSport(eventData) &&
 				!TeamHelper.isInternalEventForTeamSport(eventData) &&
-				!eventData.sport.multiparty
+				!eventData.sport.multiparty &&
+				!SportHelper.isCricket(eventData.sport.name)
 			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
@@ -428,7 +429,8 @@ const Event = React.createClass({
 		if(
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 			!TeamHelper.isHousesEventForTeamSport(event) &&
-			!TeamHelper.isInternalEventForTeamSport(event)
+			!TeamHelper.isInternalEventForTeamSport(event) &&
+			!SportHelper.isCricket(event.sport.name)
 		) {
 			this.addListenerForIndividualScoreAvailable();
 		}
@@ -437,7 +439,8 @@ const Event = React.createClass({
 			TeamHelper.isTeamSport(event) &&
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 			!TeamHelper.isHousesEventForTeamSport(event) &&
-			!TeamHelper.isInternalEventForTeamSport(event)
+			!TeamHelper.isInternalEventForTeamSport(event) &&
+			!SportHelper.isCricket(event.sport.name)
 		) {
 			this.addListenerForTeamScore();
 		}

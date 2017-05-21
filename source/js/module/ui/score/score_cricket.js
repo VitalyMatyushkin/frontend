@@ -53,7 +53,7 @@ const ScoreCricket = React.createClass({
 							step			= { this.props.pointsStep }
 							onChange		= { this.props.onChange }
 							modeView		= { this.props.modeView }
-							isPlayerScore 	= { this.props.isPlayerScore }
+							isPlayerScore	= { this.props.isPlayerScore }
 			/>
 		);
 	},
