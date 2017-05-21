@@ -639,8 +639,6 @@ const EventManager = React.createClass({
 				typeof binding.toJS('model.gender')					!== 'undefined' &&
 				binding.toJS('model.gender')						!== '' &&
 				binding.toJS('model.gender')						!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')					!== 'undefined' &&
-				binding.toJS('model.ages').length					!== 0 &&
 				typeof binding.toJS('model.type')					!== 'undefined' &&
 				binding.toJS('model.type')							!== '' &&
 				typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&

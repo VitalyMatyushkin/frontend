@@ -25,22 +25,23 @@ const Player = React.createClass({
 	render: function() {
 		const self = this;
 
-		const player = self.props.player;
-
-		const playerClass = classNames({
-			eTeam_player:	true,
-			mSelected:		self.state.isSelected
-		});
+		const	player = self.props.player,
+				playerClass = classNames({
+					eTeam_player:	true,
+					mSelected:		self.state.isSelected
+				}),
+				formName = typeof player.form !== 'undefined' ? player.form.name : '';
 
 		return (
-			<div	className={playerClass}
-					onClick={self.handleClickPlayer}
+			<div
+				className={playerClass}
+				onClick={self.handleClickPlayer}
 			>
-				<div	className="ePlayerChooser_playerName">
+				<div className="ePlayerChooser_playerName">
 					{`${player.firstName} ${player.lastName}`}
 				</div>
-				<div	className="ePlayerChooser_playerForm">
-					{player.form.name}
+				<div className="ePlayerChooser_playerForm">
+					{formName}
 				</div>
 			</div>
 		);

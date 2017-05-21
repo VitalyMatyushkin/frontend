@@ -94,7 +94,7 @@ const TeamManager = React.createClass({
 			.set("selectedPlayerIds",	Immutable.fromJS([]))
 			.set("removedPlayers",		Immutable.fromJS([]))
 			.set("isSync",				Immutable.fromJS(true))
-			.commit()
+			.commit();
 	},
 	/**
 	 * Search students by last name and set these to binding
@@ -108,7 +108,7 @@ const TeamManager = React.createClass({
 				.set("selectedStudentIds",	Immutable.fromJS([]))
 				.set("foundStudents",		Immutable.fromJS(students))
 				.set("isNeedSearch",		Immutable.fromJS(false))
-				.commit()
+				.commit();
 
 			return true;
 		});
@@ -132,14 +132,17 @@ const TeamManager = React.createClass({
 					where: {
 						_id: {
 							$nin: self.getNinUserId(binding)
-						},
-						formId: {
-							$in: filter.forms.map(form => form.id)
 						}
 					},
 					limit: 2000
 				}
 			};
+
+			if(typeof filter.forms !== 'undefined' && filter.forms.length > 0) {
+				requestFilter.filter.where.formId = {
+					$in: filter.forms.map(form => form.id)
+				}
+			}
 
 			if(typeof searchText !== 'undefined' && searchText !== null && searchText.length > 0) {
 				requestFilter.filter.where['$or'] = [
