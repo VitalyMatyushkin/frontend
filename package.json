@@ -71,8 +71,8 @@
     "webpack-stream": "^3.2.0"
   },
   "scripts": {
-    "dev":  "flow && webpack-dev-server",
-    "deploy": "flow && gulp deploy",
+    "dev":  "webpack-dev-server",
+    "deploy": "gulp deploy",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "repository": {
