@@ -1,10 +1,7 @@
 const 	Logo 			= require('module/as_school/head/logo'),
 		TopMenu 		= require('module/ui/menu/public_menu'),
 		Morearty 		= require('morearty'),
-		React 			= require('react'),
-		SchoolConsts 	= require('module/helpers/consts/schools'),
-		If 				= require('module/ui/if/if'),
-		Bootstrap  		= require('styles/bootstrap-custom.scss');
+		React 			= require('react');
 
 const Head = React.createClass({
 	mixins: [Morearty.Mixin],

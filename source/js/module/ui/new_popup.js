@@ -9,7 +9,7 @@ function Popup(props) {
 				<div className='bPopupBack mAcitve'>
 					<div className="bNewPopup">
 						<If condition={props.isShowCloseButton}>
-							<div className="ePopup_Close" onClick={props.handleClickCloseButton}></div>
+							<div className="ePopup_Close" onClick={props.handleClickCloseButton}/>
 						</If>
 						{props.children}
 					</div>
