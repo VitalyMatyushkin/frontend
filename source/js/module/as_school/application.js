@@ -2,7 +2,9 @@ const 	HeadView		= require('module/as_school/head'),
 		CenterView		= require('module/as_school/center'),
 		Morearty		= require('morearty'),
 		React			= require('react'),
-		SchoolConsts 	= require('module/helpers/consts/schools');
+		SchoolConsts 	= require('module/helpers/consts/schools'),
+		LoginPublicSchoolPage	= require('module/as_school/pages/school_home/login_public_school_page');
+
 
 const ApplicationView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -12,7 +14,7 @@ const ApplicationView = React.createClass({
 	 * True will be returned for both public and protected cases
 	 * @returns {boolean}
 	 */
-	isPublicSchoolDomainNotDisabled: function(){
+	isPublicSchoolDomainDisabled: function(){
 		const publicSiteStatus = this.getMoreartyContext().getBinding().toJS('activeSchool.publicSite.status');
 		return publicSiteStatus !== SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['DISABLED'];
 	},
@@ -20,7 +22,7 @@ const ApplicationView = React.createClass({
 	render: function() {
 		const binding = this.getDefaultBinding();
 
-		if(this.isPublicSchoolDomainNotDisabled()) {
+		if(this.isPublicSchoolDomainDisabled()) {
 			return (
 				<div>
 					<HeadView binding={binding} />
