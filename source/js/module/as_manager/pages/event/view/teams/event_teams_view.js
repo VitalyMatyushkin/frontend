@@ -9,7 +9,7 @@ const	If				= require('module/ui/if/if'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
-
+		propz			= require('propz'),
 		classNames		= require('classnames');
 
 
@@ -371,12 +371,12 @@ const EventTeamsView = React.createClass({
 		return players;
 	},
 	sortPlayersByScoreDesc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player2.result - player1.result;
 		});
 	},
 	sortPlayersByScoreAsc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player1.result - player2.result;
 		});
 	},
@@ -415,17 +415,25 @@ const EventTeamsView = React.createClass({
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
 		const self = this;
 
-		//we sort array of players by individual score
-		this.sortPlayersByScore(players);
+		const	mode			= this.getBinding('mode').toJS(),
+				event			= this.getBinding('event').toJS(),
+				sportName		= propz.get(event, ['sport', 'name'], ''),
+				isCricketLike	= sportName.toLowerCase().includes('cricket');
+
+		// not sorting players for cricket (this is part of business case).
+		// actually this condition must be check against some sport property, but
+		// we don't have such kind of property right now in sport. So, just cricket for a while.
+		if(!isCricketLike) {
+			//we sort array of players by individual score
+			this.sortPlayersByScore(players);
+		}
+
+		let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
+			mIndividuals: TeamHelper.isIndividualSport(event)
+		});
 
 		return players.map((player, playerIndex) => {
-			const 	mode	= self.getBinding('mode').toJS(),
-					event	= self.getBinding('event').toJS();
-
-			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
-				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
-			});
-
+			
 			const positionName = typeof player.positionId !== 'undefined' ?
 				`(${this.getPositionNameById(event, player.positionId)})` :
 				'';
@@ -440,7 +448,7 @@ const EventTeamsView = React.createClass({
 					</span>
 					<If condition = {Boolean(player.isCaptain)}>
 						<span className="ePlayer_star">
-							<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
+							<i className = "fa fa-star fa-lg" aria-hidden="true"/>
 						</span>
 					</If>
 					<If condition={
@@ -487,7 +495,7 @@ const EventTeamsView = React.createClass({
 						isOwner	= event.eventType === 'inter-schools' ?
 							event.teamsData[order].schoolId === this._getActiveSchoolId() :
 							true;
-
+				// TODO: XML ?????????????????????
 				xmlPlayers = (
 					<div className="bEventTeams_team">
 						{
