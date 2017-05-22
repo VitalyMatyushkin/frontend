@@ -28,6 +28,7 @@ const ApplicationView = React.createClass({
 				</div>
 			);
 		} else {
+			// TODO: need to show 404 page here
 			return null;
 		}
 
