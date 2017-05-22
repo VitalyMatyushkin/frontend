@@ -7,9 +7,8 @@ const   StatsView 			= require('module/shared_pages/student/statistic-view'),
 const StudentStatistic = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-                globalBinding   = self.getMoreartyContext().getBinding();
+        const 	binding         = this.getDefaultBinding(),
+                globalBinding   = this.getMoreartyContext().getBinding();
 
         const   studentId   = globalBinding.get('routing.parameters.id'),
                 schoolId    = globalBinding.get('userRules.activeSchoolId');
@@ -29,11 +28,8 @@ const StudentStatistic = React.createClass({
             });
     },
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding();
-        return (
-            <StatsView binding={binding} />
-        )
+        const binding = this.getDefaultBinding();
+        return <StatsView binding={binding} />;
     }
 });
 module.exports = StudentStatistic;
