@@ -27,9 +27,9 @@ const AboutMeBlock = React.createClass({
 		});
 	},
 	_getAboutParentNode:function(){
-		var self = this,
-			binding = self.getDefaultBinding(),
-			parents = binding.toJS('parents');
+		const	binding = this.getDefaultBinding(),
+				parents = binding.toJS('parents');
+
 		if(parents !== undefined && parents.length >= 1){
 			return parents.map(function(parent, i){
 				let icon = parent.gender === 'MALE'?'icon_dad':'icon_mom';
