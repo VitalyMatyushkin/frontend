@@ -413,17 +413,13 @@ const EventTeamsView = React.createClass({
 		return event.sport.field.positions.find(p => p._id === positionId).name;
 	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
-		const self = this;
-
-		const	mode			= this.getBinding('mode').toJS(),
-				event			= this.getBinding('event').toJS(),
-				sportName		= propz.get(event, ['sport', 'name'], ''),
-				isCricketLike	= sportName.toLowerCase().includes('cricket');
+		const	mode	= this.getBinding('mode').toJS(),
+				event	= this.getBinding('event').toJS();
 
 		// not sorting players for cricket (this is part of business case).
 		// actually this condition must be check against some sport property, but
 		// we don't have such kind of property right now in sport. So, just cricket for a while.
-		if(!isCricketLike) {
+		if(!SportHelper.isCricket(event.sport.name)) {
 			//we sort array of players by individual score
 			this.sortPlayersByScore(players);
 		}
@@ -452,7 +448,7 @@ const EventTeamsView = React.createClass({
 						</span>
 					</If>
 					<If condition={
-						!self.isNonInternalEventForOneOnOneSport(event)
+						!this.isNonInternalEventForOneOnOneSport(event)
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
 						&& (SportHelper.isCricket(event.sport.name) ? true : individualScoreAvailable)
 					}>
