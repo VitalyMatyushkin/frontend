@@ -22,7 +22,7 @@ const babelPluginsList = [
  * @type {Array}
  */
 const nodeModulesBabelWhiteList = [
-	'node_modules/propz'
+	path.join('node_modules', 'propz')
 ];
 
 /** Check whether provided value is in white list */
