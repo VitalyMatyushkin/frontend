@@ -23,6 +23,13 @@ const MaskedInput = React.createClass({
 		onFocus:		React.PropTypes.func
 	},
 	getInitialState: function(){
+		// It's just a variable for force component reload.
+		// Author of this component placed all data out of state.
+		// And use function forceUpdate for reload component.
+		// For some reason, i don't why. I think it's stupid solution.
+		// When i try to place value of input to state i get incorrect behaviour.
+		// Because i don't have time for solution search.
+		// So i just create variable for manual force update.
 		return {
 			trigger: this.getRandomString()
 		};
