@@ -6,7 +6,7 @@ const   React 				= require('react'),
 		StudentListClass  	= require('module/as_manager/pages/school_admin/students/list/student-list-class'),
 		Grid 				= require('module/ui/grid/grid');
 
-const HouseStudents = React.createClass({
+const FormStudents = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		//The function, which will call when user click on <Row> in Grid
@@ -22,11 +22,11 @@ const HouseStudents = React.createClass({
 		this.model.filters = {where:{formId:id}};
 		this.model.columns.splice(3, 2);
 		this.model.btnAdd = null;
-		this.model.init();
+		this.model.createGrid();
 	},
 	render: function () {
 		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 
-module.exports = HouseStudents;
+module.exports = FormStudents;

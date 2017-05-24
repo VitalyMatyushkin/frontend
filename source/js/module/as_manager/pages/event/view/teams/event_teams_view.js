@@ -9,7 +9,7 @@ const	If				= require('module/ui/if/if'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
-
+		propz			= require('propz'),
 		classNames		= require('classnames');
 
 
@@ -234,7 +234,10 @@ const EventTeamsView = React.createClass({
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					if(event.status === eventConst.EVENT_STATUS.ACCEPTED || event.status === eventConst.EVENT_STATUS.FINISHED) {
+					if(
+						event.status === eventConst.EVENT_STATUS.ACCEPTED ||
+						event.status === eventConst.EVENT_STATUS.FINISHED
+					) {
 						const schoolId = event.inviterSchool.id !== activeSchoolId ?
 							event.inviterSchool.id :
 							event.invitedSchools[0].id;
@@ -242,7 +245,12 @@ const EventTeamsView = React.createClass({
 						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return self.renderText(this.ACCEPTED_BY_OPPONENT);
+							// if inviter school at right side
+							if(schoolId === event.inviterSchoolId) {
+								return self.renderText(this.MEMBERS_NOT_ADDED);
+							} else {
+								return self.renderText(this.ACCEPTED_BY_OPPONENT);
+							}
 						} else {
 							return self.renderIndividualPlayersBySchoolId(schoolId, individualScoreAvailable);
 						}
@@ -267,7 +275,12 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					// if inviter school at right side
+					if(activeSchoolId !== event.inviterSchoolId) {
+						return self.renderText(this.MEMBERS_NOT_ADDED);
+					} else {
+						return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					}
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
@@ -297,7 +310,12 @@ const EventTeamsView = React.createClass({
 					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
 					event.status === EventHelper.EVENT_STATUS.FINISHED
 				) {
-					return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					// if inviter school at right side
+					if(activeSchoolId !== event.inviterSchoolId) {
+						return self.renderText(this.MEMBERS_NOT_ADDED);
+					} else {
+						return self.renderText(this.ACCEPTED_BY_OPPONENT);
+					}
 				} else {
 					return self.renderAwaitingOpponentTeam();
 				}
@@ -353,12 +371,12 @@ const EventTeamsView = React.createClass({
 		return players;
 	},
 	sortPlayersByScoreDesc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player2.result - player1.result;
 		});
 	},
 	sortPlayersByScoreAsc: function (players){
-		return players = players.sort( (player1, player2) => {
+		return players.sort( (player1, player2) => {
 			return player1.result - player2.result;
 		});
 	},
@@ -369,7 +387,7 @@ const EventTeamsView = React.createClass({
 		if (SportHelper.isCricket(event.sport.name)) {
 			return (
 				<span className="ePlayer_scoreCricketContainer">
-					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
+					<ScoreCricket	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, true) }
 									plainPoints		= { this.getPointsByStudent(event, player.userId) }
 									pointsStep		= { event.sport.points.pointsStep }
 									onChange		= { this.handleChangeScore.bind(this, event, teamId, player) }
@@ -391,20 +409,30 @@ const EventTeamsView = React.createClass({
 			);
 		}
 	},
-	
+	getPositionNameById: function(event, positionId) {
+		return event.sport.field.positions.find(p => p._id === positionId).name;
+	},
 	renderPlayers: function(teamId, players, isOwner, individualScoreAvailable) {
-		const self = this;
+		const	mode	= this.getBinding('mode').toJS(),
+				event	= this.getBinding('event').toJS();
 
-		//we sort array of players by individual score
-		this.sortPlayersByScore(players);
+		// not sorting players for cricket (this is part of business case).
+		// actually this condition must be check against some sport property, but
+		// we don't have such kind of property right now in sport. So, just cricket for a while.
+		if(!SportHelper.isCricket(event.sport.name)) {
+			//we sort array of players by individual score
+			this.sortPlayersByScore(players);
+		}
+
+		let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
+			mIndividuals: TeamHelper.isIndividualSport(event)
+		});
 
 		return players.map((player, playerIndex) => {
-			const 	mode	= self.getBinding('mode').toJS(),
-					event	= self.getBinding('event').toJS();
-
-			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
-				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
-			});
+			
+			const positionName = typeof player.positionId !== 'undefined' ?
+				`(${this.getPositionNameById(event, player.positionId)})` :
+				'';
 
 			return (
 				<div key={playerIndex} className={eventPlayerCss}>
@@ -412,16 +440,17 @@ const EventTeamsView = React.createClass({
 						<span>{`${playerIndex + 1}. `}</span>
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
+						<span>{positionName}</span>
 					</span>
 					<If condition = {Boolean(player.isCaptain)}>
 						<span className="ePlayer_star">
-							<i className = "fa fa-star fa-lg" aria-hidden="true"></i>
+							<i className = "fa fa-star fa-lg" aria-hidden="true"/>
 						</span>
 					</If>
 					<If condition={
-						!self.isNonInternalEventForOneOnOneSport(event)
+						!this.isNonInternalEventForOneOnOneSport(event)
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
-						&& individualScoreAvailable
+						&& (SportHelper.isCricket(event.sport.name) ? true : individualScoreAvailable)
 					}>
 						{this.renderScore(event, mode, isOwner, individualScoreAvailable, player, teamId)}
 					</If>
@@ -462,7 +491,7 @@ const EventTeamsView = React.createClass({
 						isOwner	= event.eventType === 'inter-schools' ?
 							event.teamsData[order].schoolId === this._getActiveSchoolId() :
 							true;
-
+				// TODO: XML ?????????????????????
 				xmlPlayers = (
 					<div className="bEventTeams_team">
 						{

@@ -49,15 +49,15 @@ const DomainHelper = {
 			case _roleName === 'no_body':
 				return `settings/general`;
 			case _roleName === 'owner' && schoolKind === 'School':
-				return `school_admin/summary`;
+				return `events/calendar`;
 			case _roleName === 'admin' && schoolKind === 'School':
-				return `school_admin/summary`;
+				return `events/calendar`;
 			case _roleName === 'manager' && schoolKind === 'School':
-				return `school_admin/summary`;
+				return `events/calendar`;
 			case _roleName === 'teacher' && schoolKind === 'School':
-				return `school_admin/summary`;
+				return `events/calendar`;
 			case _roleName === 'trainer' && schoolKind === 'School':
-				return `school_admin/summary`;
+				return `events/calendar`;
 			case _roleName === 'parent' && schoolKind === 'School':
 				return `events/calendar/all`;
 			case _roleName === 'student' && schoolKind === 'School':

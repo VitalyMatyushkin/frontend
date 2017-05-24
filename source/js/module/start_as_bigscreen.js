@@ -64,6 +64,7 @@ function initMainView(school) {
 	authController.initialize({
 		binding:		binding,
 		defaultPath:	'home',
+		requestedPage:	'home',
 		asSchool:		true //Flag for public school page
 	});
 

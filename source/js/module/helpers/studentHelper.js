@@ -19,15 +19,15 @@ const StudentHelper = {
 			.then(student => {
 				studentData = student;
 				studentData.student = {
-					firstName: student.firstName,
-					lastName: student.lastName,
-					medicalInfo: student.medicalInfo,
-					birthday: student.birthday,
-					age: this._calculateAge(student.birthday)
+					firstName:		student.firstName,
+					lastName:		student.lastName,
+					medicalInfo:	student.medicalInfo,
+					birthday:		student.birthday,
+					age:			this._calculateAge(student.birthday)
 				};
 				studentData.classData = student.form;
 				let formPromise;
-				if (!studentData.classData) {
+				if (!studentData.classData && typeof student.formId !== 'undefined') {
 					formPromise = window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId})
 						.then(classData => {
 							studentData.classData = classData;
@@ -38,7 +38,7 @@ const StudentHelper = {
 
 				studentData.houseData = student.house;
 				let housePromise;
-				if (!studentData.houseData) {
+				if (!studentData.houseData && typeof student.houseId !== 'undefined') {
 					housePromise = window.Server.schoolHouse.get({schoolId: student.schoolId, houseId: student.houseId})
 						.then(houseData => {
 							studentData.houseData = houseData;

@@ -16,8 +16,9 @@ const EventPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			<Event	binding			= {binding}
-					activeSchoolId	= {this.activeSchoolId}
+			<Event	binding					= {binding}
+					isShowControlButtons	= {false}
+					activeSchoolId			= {this.activeSchoolId}
 			/>
 		);
 	}

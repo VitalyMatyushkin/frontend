@@ -14,13 +14,12 @@ const   AboutMe             = require('module/shared_pages/student/view/about_me
 const StatisticView = React.createClass({
     mixins: [Morearty.Mixin],
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-			achievements = binding.sub('achievements'),
-			isLoading = !achievements.get();
+        const 	binding			= this.getDefaultBinding(),
+				achievements	= binding.sub('achievements'),
+				isLoading		= !achievements.get();
 
         return (
-			<div className={self.props.className}>
+			<div className={this.props.className}>
 				<div className="bUserColumn">
 					<div className="eUserColumnData">
 						<UserName binding={achievements}/>

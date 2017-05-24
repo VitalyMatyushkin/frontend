@@ -96,6 +96,7 @@ function initMainSchoolView(school) {
 	authController.initialize({
 		binding:		binding,
 		defaultPath:	'loginPublicSchool',
+		requestedPage:	'home',
 		asSchool:		true //Flag for public school page
 	});
 
@@ -200,6 +201,7 @@ function initMainSchoolUnionView(school) {
 	authController.initialize({
 		binding:		binding,
 		defaultPath:	'loginPublicSchool',
+		requestedPage:	'home',
 		asSchool:		true //Flag for public school page
 	});
 

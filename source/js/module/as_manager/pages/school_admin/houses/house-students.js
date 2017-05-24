@@ -22,7 +22,7 @@ const HouseStudents = React.createClass({
 		this.model.filters = {where:{houseId:id}};
 		this.model.columns.splice(5, 2);
 		this.model.btnAdd = null;
-		this.model.init();
+		this.model.createGrid();
 	},
 	render: function () {
 		return this.model.grid ? <Grid model={this.model.grid}/> : null;

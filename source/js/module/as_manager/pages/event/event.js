@@ -44,8 +44,14 @@ const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		onReload:		React.PropTypes.func.isRequired
+		activeSchoolId:			React.PropTypes.string.isRequired,
+		onReload:				React.PropTypes.func.isRequired,
+		isShowControlButtons:	React.PropTypes.bool.isRequired
+	},
+	getDefaultProps: function(){
+		return {
+			isShowControlButtons: true
+		};
 	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -228,7 +234,8 @@ const Event = React.createClass({
 				!TeamHelper.isInterSchoolsEventForTeamSport(eventData) &&
 				!TeamHelper.isHousesEventForTeamSport(eventData) &&
 				!TeamHelper.isInternalEventForTeamSport(eventData) &&
-				!eventData.sport.multiparty
+				!eventData.sport.multiparty &&
+				!SportHelper.isCricket(eventData.sport.name)
 			) {
 				this.initTeamIdForIndividualScoreAvailableFlag();
 			}
@@ -422,7 +429,8 @@ const Event = React.createClass({
 		if(
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 			!TeamHelper.isHousesEventForTeamSport(event) &&
-			!TeamHelper.isInternalEventForTeamSport(event)
+			!TeamHelper.isInternalEventForTeamSport(event) &&
+			!SportHelper.isCricket(event.sport.name)
 		) {
 			this.addListenerForIndividualScoreAvailable();
 		}
@@ -431,7 +439,8 @@ const Event = React.createClass({
 			TeamHelper.isTeamSport(event) &&
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 			!TeamHelper.isHousesEventForTeamSport(event) &&
-			!TeamHelper.isInternalEventForTeamSport(event)
+			!TeamHelper.isInternalEventForTeamSport(event) &&
+			!SportHelper.isCricket(event.sport.name)
 		) {
 			this.addListenerForTeamScore();
 		}
@@ -930,6 +939,7 @@ const Event = React.createClass({
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { this.props.activeSchoolId }
+						isShowControlButtons					= { this.props.isShowControlButtons }
 						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 				/>
 			);
