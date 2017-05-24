@@ -75,9 +75,15 @@ const MaskedDateTime =  React.createClass({
         const dateTime = this.state.dateTime;
 
 		return (
-            <MaskedInput title="Format date-time dd.mm.yyyy/hh:mm" value={dateTime} className="eDateTimeInput"
-                         onBlur={this.handleBlur} onChange={this.handleChange} mask="99.99.9999/99:99" />
-		)
+			<MaskedInput
+				title		= "Format date-time dd.mm.yyyy/hh:mm"
+				value		= {dateTime}
+				className	= "eDateTimeInput"
+				onBlur		= {this.handleBlur}
+				onChange	= {this.handleChange}
+				mask		= "99.99.9999/99:99"
+			/>
+		);
 	}
 });
 

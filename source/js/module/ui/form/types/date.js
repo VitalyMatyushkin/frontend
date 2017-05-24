@@ -55,6 +55,7 @@ const MaskedDate =  React.createClass({
 	},
 
 	handleBlur: function(e) {
+		console.log('ON BLUR');
 		const self = this;
 		let value = e.target.value;
 
@@ -66,6 +67,7 @@ const MaskedDate =  React.createClass({
         e.stopPropagation();
 	},
 	handleChange: function(e) {
+		console.log('ON CHANGE');
 		const self = this,
 			inputValue = e.target.value;
 
@@ -76,12 +78,17 @@ const MaskedDate =  React.createClass({
         e.stopPropagation();
 	},
 	render: function () {
-        const self = this,
-			date = self.state.date;
+		const date = this.state.date;
 
 		return (
-            <MaskedInput title="Format date dd.mm.yyyy" value={date} className="eDateInput"
-                         onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
+			<MaskedInput
+				title		= "Format date dd.mm.yyyy"
+				value		= {date}
+				className	= "eDateInput"
+				onBlur		= {this.handleBlur}
+				onChange	= {this.handleChange}
+				mask		= "99.99.9999"
+			/>
 		)
 	}
 });

@@ -6,27 +6,40 @@ var MASK_REGEX = {
 	MASK_CHARS = Object.keys(MASK_REGEX),
 	PTRN_REGEX = new RegExp('[' + MASK_CHARS.join(',') + ']', 'g');
 
-const 	React 		= require('react'),
+const	React		= require('react'),
 		Morearty	= require('morearty'),
-		ReactDOM 	= require('react-dom');
+		ReactDOM	= require('react-dom');
 
 const MaskedInput = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes:{
+		value:			React.PropTypes.string,
+		mask:			React.PropTypes.string.isRequired,
+		title:			React.PropTypes.string,
+		placeholder:	React.PropTypes.string,
+		className:		React.PropTypes.string,
+		onChange:		React.PropTypes.func,
+		onBlur:			React.PropTypes.func,
+		onFocus:		React.PropTypes.func
+	},
+	getInitialState: function(){
+		return {
+			trigger: this.getRandomString()
+		};
+	},
+	getRandomString: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
 	componentWillMount: function () {
 		this.init(this.props);
 	},
 	init:function(props){
 		this.mask = {
-			props: {
-				value: props.value,
-				onChange: this._onChange,
-				onKeyDown: this._onKeyDown,
-				onFocus: this._onFocus,
-				onBlur: this._onBlur
-			},
-			empty: true,
-			cursorPrev: 0,
-			cursor: 0
+			value:		props.value,
+			empty:		true,
+			cursorPrev:	0,
+			cursor:		0
 		};
 
 		if (props.value && props.mask) {
@@ -42,7 +55,9 @@ const MaskedInput = React.createClass({
 	componentWillReceiveProps:function(nextProps){
 		this.init(nextProps);
 	},
-
+	_forceUpdate: function() {
+		this.setState({trigger: this.getRandomString()});
+	},
 	processValue: function (value) {
 		var mask = this.props.mask;
 		var pattern = mask.replace(PTRN_REGEX, '_');
@@ -60,14 +75,14 @@ const MaskedInput = React.createClass({
 		var nextChar;
         var tmpCur;
 
-		for (i = 0; i < mask.length; i++) {
+		for (let i = 0; i < mask.length; i++) {
 			if (~MASK_CHARS.indexOf(mask[i])) {
 				cursorMin = i;
 				break
 			}
 		}
 
-		for (var i = 0, j = 0; i < mask.length;) {
+		for (let i = 0, j = 0; i < mask.length;) {
 			if (!~MASK_CHARS.indexOf(mask[i])) {
 				newValue += mask[i];
 				if (mask[i] == value[j]) {
@@ -115,7 +130,7 @@ const MaskedInput = React.createClass({
 				}
 			}
 		} else {
-			for (var i = cursorCurr; i <= cursorMax; i++) {
+			for (let i = cursorCurr; i <= cursorMax; i++) {
 				cursorCurr = i;
 				if (!rexps[i + 1] && rexps[i]) {
 					break
@@ -129,60 +144,77 @@ const MaskedInput = React.createClass({
 			}
 		}
 		this.mask.empty = cursorMax == cursorMin;
-		this.mask.props.value = newValue;
+		this.mask.value = newValue;
 		this.mask.cursor = cursorCurr;
 	},
-
 	_onBlur: function (e) {
-		if (this.props.mask) {
-			var cursor = this.mask.cursor;
-			var value = this.mask.props.value;
-
-			if (!this.mask.empty) {
-				//this.mask.props.value = value.substr(0, cursor); //wtf?
+		console.log('On Blur');
+		if(typeof this.props.mask !== 'undefined') {
+			if(this.mask.empty) {
+				this.mask.value = '';
 			} else {
-				this.mask.props.value = ''
+				//const	cursor	= this.mask.cursor,
+				//		value	= this.mask.props.value;
+
+				//this.mask.props.value = value.substr(0, cursor); //wtf?
 			}
 
-			this.forceUpdate()
+			this._forceUpdate();
 		}
-		if (this.props.onBlur) {
-			this.props.onBlur(e)
+		if (typeof this.props.onBlur !== 'undefined') {
+			// TODO it's a little trick for ie.
+			// Problem:
+			// 1) field is empty
+			// 2) user blur input
+			// 3) input was focused again. WHY??
+			//
+			// And i don't why this trick works
+			//this.props.onBlur(e);
 		}
 	},
-
 	_onChange: function (e) {
-		if (this.props.mask) {
+		console.log('On Change');
+		if(typeof this.props.mask !== 'undefined') {
 			this.processValue(e.target.value);
-			this.forceUpdate()
+			this._forceUpdate();
 		}
-		if (this.props.onChange) {
-            e.target.value = this.mask.props.value;
-			this.props.onChange(e)
+		if(typeof this.props.onChange !== 'undefined') {
+			this.props.onChange(e);
 		}
 	},
-
 	_onKeyDown: function (e) {
-		if (this.props.mask) {
-			this.mask.cursor = ReactDOM.findDOMNode(this).selectionStart
+		console.log('On Key Down');
+		if(typeof this.props.mask !== 'undefined') {
+			this.mask.cursor = ReactDOM.findDOMNode(this).selectionStart;
 		}
-		if (this.props.onKeyDown) {
-			this.props.onKeyDown(e)
+		if(this.props.onKeyDown) {
+			this.props.onKeyDown(e);
 		}
 	},
-
 	_onFocus: function (e) {
+		console.log('On Focus');
 		this._onChange(e);
-		if (this.props.onFocus) {
-			this.props.onFocus(e)
+		if(typeof this.props.onFocus !== 'undefined') {
+			this.props.onFocus(e);
 		}
 	},
 	render: function () {
 		//Use placeholder to display old information we already have
 		//Easier this way to use the mask to edit or add new data
-		return <input type="text" {...this.props} {...this.mask.props} />
+		return (
+			<input
+				type		= "text"
+				title		= { this.props.title }
+				placeholder	= { this.props.placeholder }
+				className	= { this.props.className }
+				value		= { this.mask.value }
+				onChange	= { this._onChange }
+				onKeyDown	= { this._onKeyDown }
+				onFocus		= { this._onFocus }
+				onBlur		= { this._onBlur }
+			/>
+		);
 	}
 });
-
 
 module.exports = MaskedInput;
