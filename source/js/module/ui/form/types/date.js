@@ -55,7 +55,6 @@ const MaskedDate =  React.createClass({
 	},
 
 	handleBlur: function(e) {
-		console.log('ON BLUR');
 		const self = this;
 		let value = e.target.value;
 
@@ -67,7 +66,6 @@ const MaskedDate =  React.createClass({
         e.stopPropagation();
 	},
 	handleChange: function(e) {
-		console.log('ON CHANGE');
 		const self = this,
 			inputValue = e.target.value;
 

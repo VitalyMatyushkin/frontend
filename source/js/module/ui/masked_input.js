@@ -148,7 +148,6 @@ const MaskedInput = React.createClass({
 		this.mask.cursor = cursorCurr;
 	},
 	_onBlur: function (e) {
-		console.log('On Blur');
 		if(typeof this.props.mask !== 'undefined') {
 			if(this.mask.empty) {
 				this.mask.value = '';
@@ -173,7 +172,6 @@ const MaskedInput = React.createClass({
 		}
 	},
 	_onChange: function (e) {
-		console.log('On Change');
 		if(typeof this.props.mask !== 'undefined') {
 			this.processValue(e.target.value);
 			this._forceUpdate();
@@ -183,7 +181,6 @@ const MaskedInput = React.createClass({
 		}
 	},
 	_onKeyDown: function (e) {
-		console.log('On Key Down');
 		if(typeof this.props.mask !== 'undefined') {
 			this.mask.cursor = ReactDOM.findDOMNode(this).selectionStart;
 		}
@@ -192,7 +189,6 @@ const MaskedInput = React.createClass({
 		}
 	},
 	_onFocus: function (e) {
-		console.log('On Focus');
 		this._onChange(e);
 		if(typeof this.props.onFocus !== 'undefined') {
 			this.props.onFocus(e);
