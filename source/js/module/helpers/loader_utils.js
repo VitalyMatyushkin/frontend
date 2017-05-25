@@ -14,7 +14,7 @@ function parseDomainName(domainName) {
     const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
 
     let model;
-    if(external[1].substring(0, 3) === 'bs_') {
+    if(external[1].substring(0, 10) === 'bigscreen_') {
         model = 'bigscreen';
     } else {
         model = external[1];
