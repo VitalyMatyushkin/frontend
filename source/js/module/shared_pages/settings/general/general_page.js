@@ -87,8 +87,6 @@ const GeneralSettingsPage = React.createClass({
 				</Form>
 			</div>
 		);
-		//	<FormField type="text">Phone code</FormField>
-		//<FormField type="text">Email code</FormField>
 	}
 });
 

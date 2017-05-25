@@ -104,13 +104,15 @@ const MaskedPoints = React.createClass({
 
 		return (
 			<div className={classes}>
-				<MaskedInput title={title} value={this.state.stringValue}
-							 className={`eScore_Points ${this.props.className}`}
-							 mask={mask}
-							 placeholder={this.props.mask}
-							 onChange={this.onChange}
-							 onBlur={this.onBlur}
-							 onFocus={this.onFocus} />
+				<MaskedInput
+					title		= {title}
+					value		= {this.state.stringValue}
+					className	= {`eScore_Points ${this.props.className}`}
+					mask		= {mask}
+					placeholder	= {this.props.mask}
+					onChange	= {this.onChange}
+					onBlur		= {this.onBlur}
+					onFocus		= {this.onFocus} />
 			</div>
 		);
 
