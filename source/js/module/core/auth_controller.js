@@ -30,8 +30,8 @@ const authСontroller = {
 		const	binding					= this.binding;
 
 		const	isRegistrationProcess	= binding.get('form.register.formFields'), //user not in registration process now
-				isUserAuth	= this.isUserAuth(),
-				isUserOnRole				= this.isUserOnRole(),
+				isUserAuth				= this.isUserAuth(),
+				isUserOnRole			= this.isUserOnRole(),
 				isSuperAdmin			= this.isSuperAdmin();
 
 		if(!isRegistrationProcess) {								// When user isn't in registration process
@@ -91,6 +91,7 @@ const authСontroller = {
 				role		= propz.get(data, ['role']);
 
 		return	this.isUserAuth() &&
+				this.isRoleListExist() &&
 				typeof isBecome !== 'undefined' &&
 				typeof role !== 'undefined';
 	},
@@ -196,6 +197,14 @@ const authСontroller = {
 		}
 
 		return schoolKind;
+	},
+	isRoleListExist: function() {
+		const binding = this.binding;
+
+		return (
+			typeof propz.get(binding.toJS('userData'), ['__allPermissions']) !== 'undefined' ||
+			typeof propz.get(binding.toJS('userData'), ['roleList']) !== 'undefined'
+		);
 	},
 	isFirstLogin: function() {
 		return typeof propz.get(this.binding.toJS('userData'), ['roleList']) === 'undefined';
