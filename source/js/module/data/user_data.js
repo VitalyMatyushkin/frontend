@@ -1,25 +1,18 @@
 const	DataPrototype	= require('module/data/data_prototype'),
 		UserDataClass	= Object.create(DataPrototype),
 		Helpers			= require('module/helpers/storage'),
+		propz			= require('propz'),
 		$				= require('jquery');
 
 /**
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	/**If this is the first request after the login page, the data will be in cookies.*/
-	const cookieData = Helpers.cookie.get('authorizationInfo'); //getting data
+	const self = this;
 
-	if(cookieData && cookieData.id){
-		/**init session storage */
-		Helpers.SessionStorage.set('authorizationInfo', cookieData);
-		/**and remove data from cookies.*/
-		Helpers.cookie.remove('authorizationInfo');
-	}
-
-	// Recovering authorization state info
 	return {
-		authorizationInfo: Helpers.SessionStorage.get('authorizationInfo')
+		authorizationInfo:	self.getInitAuthDataValue(),
+		rememberMe:			self.getInitRememberMeValue()
 	};
 };
 
@@ -33,14 +26,29 @@ UserDataClass.initBind = function () {
 	self._ajaxSetup(bindObject);
 	// Keeping authorization data
 	bindObject.addListener('authorizationInfo', function () {
-		const authorizationInfo = bindObject.toJS('authorizationInfo');
+		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
+				rememberMe			= bindObject.toJS('rememberMe');
 
-		authorizationInfo && Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
+		if(typeof authorizationInfo !== 'undefined') {
+			self.setAuthData(rememberMe, authorizationInfo);
+		}
 		self._ajaxSetup(bindObject);
 	});
+
+	self.addListenerToRememberMe(bindObject);
 };
 
-// configuring ajax to perform all ajax requests from jquery with Authorization header
+UserDataClass.addListenerToRememberMe = function (binding) {
+	const self = this;
+
+	binding.addListener('rememberMe', e => self.switchAuthStore(e.getCurrentValue()));
+};
+
+/**
+ * Configuring ajax to perform all ajax requests from jquery with Authorization header
+ * @param binding
+ * @private
+ */
 UserDataClass._ajaxSetup = function (binding){
 	const authorizationInfo = binding.toJS('authorizationInfo');
 
@@ -50,15 +58,46 @@ UserDataClass._ajaxSetup = function (binding){
 
 		options.headers[h] = authorizationInfo.id;
 
-		/**A function to be called when the request finishes (after success and error callbacks are executed). */
-		options.complete = function(jqXHR){
-			if(jqXHR.status === 401){
-				//if status request is unauthorized, then remove session information
-				binding.sub('authorizationInfo').clear();
-			}
-		};
+		// A function to be called when the request finishes (after success and error callbacks are executed).
+		// If status request is unauthorized, then remove session information.
+		options.complete = jqXHR => jqXHR.status === 401 && binding.sub('authorizationInfo').clear();
 		$.ajaxSetup(options);
 	}
+};
+
+UserDataClass.getInitAuthDataValue = function () {
+	return Helpers.cookie.get('authorizationInfo');
+};
+
+UserDataClass.setAuthData = function (rememberMe, authData) {
+	Helpers.cookie.set(
+		'authorizationInfo',
+		authData,
+		{session: !rememberMe}
+	);
+};
+
+UserDataClass.switchAuthStore = function (rememberMe) {
+	const self = this;
+
+	// back up
+	const backupCookie = Helpers.cookie.get('authorizationInfo');
+
+	// remove old
+	Helpers.cookie.remove('authorizationInfo');
+
+	// set new
+	self.setAuthData(rememberMe, backupCookie);
+};
+
+/**
+ * Return true if cookie data is exist
+ * @returns {boolean}
+ */
+UserDataClass.getInitRememberMeValue = function () {
+	return typeof propz.get(
+			Helpers.cookie.get('authorizationInfo'), ['id']
+		) !== 'undefined';
 };
 
 module.exports = UserDataClass;
