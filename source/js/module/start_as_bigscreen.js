@@ -91,7 +91,7 @@ function init404View() {
 function runMainMode() {
 	serviceList.initializeOpenServices();
 
-	const schoolDomain = document.location.host.split('.')[0].substring(3);
+	const schoolDomain = document.location.host.split('.')[0].substring(10);
 
 	const filter = {
 		where: {
