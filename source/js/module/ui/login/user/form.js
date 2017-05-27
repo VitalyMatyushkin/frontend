@@ -36,14 +36,9 @@ const LoginUserForm = React.createClass({
 
 		return (
 			<div className="bLoginForm">
-				<RememberMeCheckbox
-					filed		= {'rememberMe'}
-					isChecked	= { binding.toJS('rememberMe') }
-					onChange	= { this.onChangeRememberMe }
-				/>
 				<Form	name				= {this.tmpFormName}
 						service				= {Auth.login}
-						binding				= {this.getDefaultBinding()}
+						binding				= {this.getDefaultBinding().sub('form')}
 						onSuccess			= {this.props.onSuccess}
 						onError				= {this.props.onError}
 						hideCancelButton	= {true}
@@ -67,6 +62,11 @@ const LoginUserForm = React.createClass({
 						validation="required"
 						binding={binding}
 						id="login_password"
+					/>
+					<RememberMeCheckbox
+						filed		= {'rememberMe'}
+						isChecked	= { binding.toJS('rememberMe') }
+						onChange	= { this.onChangeRememberMe }
 					/>
 				</Form>
 				<If condition={this.props.customName === 'default'}>
