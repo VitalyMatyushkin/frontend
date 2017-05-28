@@ -52,11 +52,6 @@ const authСontroller = {
 			} else if (isUserOnRole) {								// When user under some role
 				if(typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
-					// TODO it's a little hack for case when user change role by role list menu.
-					// If user current page is default page for this role
-					// and user change role to same role other school
-					// then url doesn't change, so page doesn't reload.
-					window.location.reload();
 				} else {
 					this.redirectToRequestedPage();
 				}
@@ -125,6 +120,8 @@ const authСontroller = {
 		this.requestedPage = undefined;
 
 		window.location.hash = requestedPage;
+		// TODO it's a little hack for case when user redirect to page same us current page
+		window.location.reload();
 	},
 	/**
 	 * Function redirects to page default for current user role.
@@ -137,12 +134,16 @@ const authСontroller = {
 			data.role.toLowerCase(),
 			this.getSchoolKind(data.role, binding.toJS('userData'))
 		);
+		// TODO it's a little hack for case when user redirect to page same us current page
+		window.location.reload();
 	},
 	/**
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
 		window.location.hash = 'admin_schools';
+		// TODO it's a little hack for case when user redirect to page same us current page
+		window.location.reload();
 	},
 	getSchoolKind: function(role) {
 		const	binding = this.binding;
