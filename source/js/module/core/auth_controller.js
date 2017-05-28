@@ -41,6 +41,11 @@ const authСontroller = {
 				} else {
 					this.redirectToRequestedPage();
 				}
+			} else if(												//Bypass authentication
+				this.requestedPage === 'loginPublicSchool' ||
+				this.requestedPage === 'home'
+			) {
+				window.location.hash = this.requestedPage;
 			} else if (												// When user is log in but doesn't have role
 				isUserAuth &&
 				!isUserOnRole
@@ -50,7 +55,7 @@ const authСontroller = {
 				// This case is processed by router
 				console.log('');
 			} else if (isUserOnRole) {								// When user under some role
-				if(typeof this.requestedPage === 'undefined') {
+				if (typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
 					// TODO it's a little hack for case when user change role by role list menu.
 					// If user current page is default page for this role
@@ -60,8 +65,6 @@ const authСontroller = {
 				} else {
 					this.redirectToRequestedPage();
 				}
-			} else if(this.requestedPage === 'loginPublicSchool' || this.requestedPage === 'home') {
-				window.location.hash = this.requestedPage;			//Bypass authentication
 			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
 				window.location.href = DomainHelper.getLoginUrl();
 			}
