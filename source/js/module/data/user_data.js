@@ -12,7 +12,7 @@ UserDataClass.getDefaultState = function () {
 
 	return {
 		authorizationInfo:	self.getInitAuthDataValue(),
-		rememberMe:			self.getInitRememberMeValue()
+		rememberMe:			false
 	};
 };
 
@@ -30,18 +30,10 @@ UserDataClass.initBind = function () {
 				rememberMe			= bindObject.toJS('rememberMe');
 
 		if(typeof authorizationInfo !== 'undefined') {
-			self.setAuthData(rememberMe, authorizationInfo);
+			self.setAuthData(authorizationInfo, rememberMe);
 		}
 		self._ajaxSetup(bindObject);
 	});
-
-	self.addListenerToRememberMe(bindObject);
-};
-
-UserDataClass.addListenerToRememberMe = function (binding) {
-	const self = this;
-
-	binding.addListener('rememberMe', e => self.switchAuthStore(e.getCurrentValue()));
 };
 
 /**
@@ -69,35 +61,17 @@ UserDataClass.getInitAuthDataValue = function () {
 	return Helpers.cookie.get('authorizationInfo');
 };
 
-UserDataClass.setAuthData = function (rememberMe, authData) {
-	Helpers.cookie.set(
-		'authorizationInfo',
-		authData,
-		{session: !rememberMe}
-	);
-};
-
-UserDataClass.switchAuthStore = function (rememberMe) {
-	const self = this;
-
-	// back up
-	const backupCookie = Helpers.cookie.get('authorizationInfo');
-
-	// remove old
-	Helpers.cookie.remove('authorizationInfo');
-
-	// set new
-	self.setAuthData(rememberMe, backupCookie);
-};
-
-/**
- * Return true if cookie data is exist
- * @returns {boolean}
- */
-UserDataClass.getInitRememberMeValue = function () {
-	return typeof propz.get(
-			Helpers.cookie.get('authorizationInfo'), ['id']
-		) !== 'undefined';
+UserDataClass.setAuthData = function (authData, rememberMe) {
+	if(rememberMe) {
+		Helpers.cookie.set(
+			'authorizationInfo',
+			authData,
+			// TODO why 99?
+			{expires: 99}
+		);
+	} else {
+		Helpers.cookie.set('authorizationInfo', authData);
+	}
 };
 
 module.exports = UserDataClass;

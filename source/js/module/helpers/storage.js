@@ -2,7 +2,9 @@
  * Created by wert on 19.11.15.
  */
 
-const 	sessionStorage 	= window.sessionStorage;
+const	sessionStorage	= window.sessionStorage,
+		propz			= require('propz'),
+		Cookies			= require('js-cookie');
 
 let Helpers = {};
 
@@ -90,76 +92,33 @@ Helpers.SessionStorage = {
 
 
 Helpers.cookie = {
-    domain: document.location.hostname.match(/^(?:https?:\/\/)?(?:[A-z0-9-]+\.)?([^\/]+)/i)[1],
-    pluses: /\+/g,	// TODO: WTF ????????
-    expires: 99,	// TODO: why 99 days ????
-    _decode: function (decodeString) {
-        return decodeURIComponent(decodeString.replace(this.pluses, ' '));
-    },
-    _updateCookies: function () {
-        this.cookies = document.cookie.split('; ');
-    },
-    /**
-     * Setting Cookies
-     * @param key to set
-     * @param value to assign
-     * @param options few options to adjust while setting cookie. Optional.
-     * @param options.path path for saving cookie. Optional.
-     * @param options.expires cookie expiration date. Optional.
-     * @param options.session boolean which defines is cookie session based. Optional.
-     **/
-    set: function (key, value, options) {
-        const   savePath    = (options && options.path ? options.path : '/'),
-                expires     = (options && options.expires ? options.expires : this.expires),
-                dateExpire  = new Date();
+	get: function (key) {
+		let value = Cookies.get(key);
 
-        let cookieString = '';
+		if(typeof value !== 'undefined') {
+			value = JSON.parse(value);
+		}
 
-        value = typeof value === 'string' ? String(value) : JSON.stringify(value),
+		return value;
+	},
+	/**
+	 * @param key
+	 * @param value
+	 * @param options - optional param, can contain expires and path
+	 * @returns {boolean}
+	 */
+	set: function (key, value, options) {
+		if(typeof options !== 'undefined') {
+			Cookies.set(key, value, options);
+		} else {
+			Cookies.set(key, value);
+		}
 
-        dateExpire.setDate(dateExpire.getDate() + expires);
-        cookieString += encodeURIComponent(key) + '=' + encodeURIComponent(value) + '; path=' + savePath;
-
-        // Setting lifetime in case of cookie is not session-based
-        if (!(options && options.session === true)) {
-            cookieString += ';domain=.' + this.domain + '; expires=' + (options && options.session === true ? 0 : dateExpire.toUTCString());
-        }
-
-        // setting cookie
-        document.cookie = cookieString;
-
-        this._updateCookies();
-
-        return true;
-    },
-    /**
-     * Getting Cookies
-     */
-    get: function (key) {
-        var currentParts,
-            currentCookie;
-
-        this._updateCookies();
-
-        for (var i = 0, l = this.cookies.length; i < l; i++) {
-            currentParts = this.cookies[i].split('=');
-            if (this._decode(currentParts.shift()) === key) {
-                currentCookie = this._decode(currentParts.join('='));
-                return (currentCookie.indexOf('{') !== -1 || currentCookie.indexOf('[') !== -1 ? JSON.parse(currentCookie) : currentCookie);
-            }
-        }
-
-        return undefined;
-    },
-    /**
-     * Removing given key from cookies
-     */
-    remove: function (key) {
-        return this.set(key, '', {
-            expires: -10,
-            session: false
-        });
-    }
+		return true;
+	},
+	remove: function (key) {
+		return Cookies.remove(key);
+	}
 };
 
 module.exports = Helpers;
