@@ -64,7 +64,9 @@ const	TeamChooser	= React.createClass({
 				if(model.ages.length === 0) {
 					return teams;
 				} else {
-					return teams.filter(team => Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length);
+					return teams
+						.filter(team => team.ages.length > 0)
+						.filter(team => Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length);
 				}
 			});
 	},
