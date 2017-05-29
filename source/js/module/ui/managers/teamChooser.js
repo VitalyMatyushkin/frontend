@@ -60,7 +60,13 @@ const	TeamChooser	= React.createClass({
 		}
 
 		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self), filter)
-			.then(teams => teams.filter(team => Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length));
+			.then(teams => {
+				if(model.ages.length === 0) {
+					return teams;
+				} else {
+					return teams.filter(team => Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length);
+				}
+			});
 	},
 	/**
 	 * Convert ages array to table view
