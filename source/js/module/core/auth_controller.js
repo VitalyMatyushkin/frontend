@@ -1,6 +1,5 @@
-const	DomainHelper		= require('module/helpers/domain_helper'),
-		ForceReloadHelper	= require('module/helpers/force_reload_helper'),
-		propz				= require('propz');
+const	DomainHelper	= require('module/helpers/domain_helper'),
+		propz			= require('propz');
 
 const authСontroller = {
 	requestedPage: undefined,
@@ -37,11 +36,7 @@ const authСontroller = {
 
 		if(!isRegistrationProcess) {								// When user isn't in registration process
 			if (isSuperAdmin) {										// For superadmin
-				if(typeof this.requestedPage === 'undefined') {
-					this.redirectToDefaultPageForSuperAdmin();
-				} else {
-					this.redirectToRequestedPage();
-				}
+				this.redirectToDefaultPageForSuperAdmin();
 			} else if(												//Bypass authentication
 				this.requestedPage === 'loginPublicSchool' ||
 				this.requestedPage === 'home'
@@ -58,11 +53,14 @@ const authСontroller = {
 			} else if (isUserOnRole) {								// When user under some role
 				if (typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
+					window.location.reload();
 				} else {
 					this.redirectToRequestedPage();
+					window.location.reload();
 				}
 			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
 				window.location.href = DomainHelper.getLoginUrl();
+				window.location.reload();
 			}
 		}
 	},
@@ -123,11 +121,7 @@ const authСontroller = {
 		const requestedPage = String(this.requestedPage);
 		this.requestedPage = undefined;
 
-		if(requestedPage === window.location.hash) {
-			window.location.hash = ForceReloadHelper.addForceReloadParameter(requestedPage);
-		} else {
-			window.location.hash = requestedPage;
-		}
+		window.location.hash = requestedPage;
 	},
 	/**
 	 * Function redirects to page default for current user role.
@@ -141,21 +135,13 @@ const authСontroller = {
 			this.getSchoolKind(data.role, binding.toJS('userData'))
 		);
 
-		if(defaultPageHash === window.location.hash) {
-			window.location.hash = ForceReloadHelper.addForceReloadParameter(defaultPageHash);
-		} else {
-			window.location.hash = defaultPageHash;
-		}
+		window.location.hash = defaultPageHash;
 	},
 	/**
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
-		if(window.location.hash === 'admin_schools') {
-			window.location.hash = ForceReloadHelper.addForceReloadParameter('admin_schools');
-		} else {
-			window.location.hash = 'admin_schools';
-		}
+		window.location.hash = 'admin_schools';
 	},
 	getSchoolKind: function(role) {
 		const	binding = this.binding;
