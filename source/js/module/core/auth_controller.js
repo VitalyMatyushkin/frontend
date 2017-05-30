@@ -1,5 +1,6 @@
-const	DomainHelper	= require('module/helpers/domain_helper'),
-		propz			= require('propz');
+const	DomainHelper		= require('module/helpers/domain_helper'),
+		ForceReloadHelper	= require('module/helpers/force_reload_helper'),
+		propz				= require('propz');
 
 const authСontroller = {
 	requestedPage: undefined,
@@ -122,9 +123,11 @@ const authСontroller = {
 		const requestedPage = String(this.requestedPage);
 		this.requestedPage = undefined;
 
-		window.location.hash = requestedPage;
-		// TODO it's a little hack for case when user redirect to page same us current page
-		window.location.reload();
+		if(requestedPage === window.location.hash) {
+			window.location.hash = ForceReloadHelper.addForceReloadParameter(requestedPage);
+		} else {
+			window.location.hash = requestedPage;
+		}
 	},
 	/**
 	 * Function redirects to page default for current user role.
@@ -133,20 +136,26 @@ const authСontroller = {
 		const	binding		= this.binding,
 				data		= binding.toJS('userData.authorizationInfo');
 
-		window.location.hash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
+		const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
 			data.role.toLowerCase(),
 			this.getSchoolKind(data.role, binding.toJS('userData'))
 		);
-		// TODO it's a little hack for case when user redirect to page same us current page
-		window.location.reload();
+
+		if(defaultPageHash === window.location.hash) {
+			window.location.hash = ForceReloadHelper.addForceReloadParameter(defaultPageHash);
+		} else {
+			window.location.hash = defaultPageHash;
+		}
 	},
 	/**
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
-		window.location.hash = 'admin_schools';
-		// TODO it's a little hack for case when user redirect to page same us current page
-		window.location.reload();
+		if(window.location.hash === 'admin_schools') {
+			window.location.hash = ForceReloadHelper.addForceReloadParameter('admin_schools');
+		} else {
+			window.location.hash = 'admin_schools';
+		}
 	},
 	getSchoolKind: function(role) {
 		const	binding = this.binding;

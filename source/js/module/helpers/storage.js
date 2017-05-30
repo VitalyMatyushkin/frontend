@@ -95,7 +95,7 @@ Helpers.cookie = {
 	get: function (key) {
 		let value = Cookies.get(key);
 
-		if(typeof value !== 'undefined') {
+		if(typeof value !== 'undefined' && value !== 'undefined') {
 			value = JSON.parse(value);
 		}
 

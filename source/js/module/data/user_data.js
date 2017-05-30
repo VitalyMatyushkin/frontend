@@ -29,7 +29,7 @@ UserDataClass.initBind = function () {
 		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
 				rememberMe			= bindObject.toJS('rememberMe');
 
-		if(typeof authorizationInfo !== 'undefined') {
+		if(typeof authorizationInfo !== 'undefined' && authorizationInfo !== 'undefined') {
 			self.setAuthData(authorizationInfo, rememberMe);
 		}
 		self._ajaxSetup(bindObject);
