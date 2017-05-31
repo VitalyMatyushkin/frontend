@@ -34,8 +34,6 @@ const authСontroller = {
 				isUserOnRole			= this.isUserOnRole(),
 				isSuperAdmin			= this.isSuperAdmin();
 
-		console.log(binding.toJS('userData.authorizationInfo'));
-
 		if(!isRegistrationProcess) {								// When user isn't in registration process
 			if (isSuperAdmin) {										// For superadmin
 				this.redirectToDefaultPageForSuperAdmin();
@@ -54,7 +52,6 @@ const authСontroller = {
 				// TODO i think it should be looks something else
 				// But now just don't do anything
 				// This case is processed by router
-				console.log('');
 
 				// Remove old requested page for case when user change role
 				// i don't know why but it must be here

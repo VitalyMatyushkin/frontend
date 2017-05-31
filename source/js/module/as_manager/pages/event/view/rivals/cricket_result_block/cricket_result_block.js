@@ -70,7 +70,7 @@ const CricketResultBlock = React.createClass({
 					return 'No house name';
 				}
 			default:
-				console.log(`Error: Event type - ${eventType}`);
+				console.error(`Error: Event type - ${eventType}`);
 				return '';
 		}
 	},

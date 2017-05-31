@@ -168,7 +168,7 @@ const ViewNewsItem = React.createClass({
 				);
 			});
 		} else {
-			console.log('activeSchoolId undefined');
+			console.error('Active School Id is undefined.');
 		}
 	},
 	
