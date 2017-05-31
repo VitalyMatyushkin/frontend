@@ -29,7 +29,7 @@ UserDataClass.initBind = function () {
 		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
 				rememberMe			= bindObject.toJS('rememberMe');
 
-		if(typeof authorizationInfo !== 'undefined' && authorizationInfo !== 'undefined') {
+		if(typeof authorizationInfo !== 'undefined') {
 			self.setAuthData(authorizationInfo, rememberMe);
 		}
 		self._ajaxSetup(bindObject);
@@ -58,7 +58,33 @@ UserDataClass._ajaxSetup = function (binding){
 };
 
 UserDataClass.getInitAuthDataValue = function () {
-	return Helpers.cookie.get('authorizationInfo');
+	let authorizationInfo = Helpers.cookie.get('authorizationInfo');
+
+	// If auth info is not undefined and not valid
+	if(
+		typeof authorizationInfo !== 'undefined' &&
+		!UserDataClass.isValidAuthorizationInfo(authorizationInfo)
+	) {
+		console.error('Not valid authorization info in cookie.');
+		console.error(authorizationInfo);
+
+		authorizationInfo = undefined;
+		Helpers.cookie.remove('authorizationInfo');
+	}
+
+	return authorizationInfo;
+};
+
+UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
+	const	id			= propz.get(authorizationInfo, ['id']),
+			userId		= propz.get(authorizationInfo, ['userId']),
+			expireAt	= propz.get(authorizationInfo, ['expireAt']);
+
+	return (
+		typeof id === 'string' &&
+		typeof userId === 'string' &&
+		typeof expireAt === 'string'
+	);
 };
 
 UserDataClass.setAuthData = function (authData, rememberMe) {

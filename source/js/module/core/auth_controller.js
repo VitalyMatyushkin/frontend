@@ -34,6 +34,8 @@ const authСontroller = {
 				isUserOnRole			= this.isUserOnRole(),
 				isSuperAdmin			= this.isSuperAdmin();
 
+		console.log(binding.toJS('userData.authorizationInfo'));
+
 		if(!isRegistrationProcess) {								// When user isn't in registration process
 			if (isSuperAdmin) {										// For superadmin
 				this.redirectToDefaultPageForSuperAdmin();
