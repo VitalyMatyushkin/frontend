@@ -42,6 +42,9 @@ const authСontroller = {
 				this.requestedPage === 'home'
 			) {
 				window.location.hash = this.requestedPage;
+
+				// just in case
+				this.requestedPage = undefined;
 			} else if (												// When user is log in but doesn't have role
 				isUserAuth &&
 				!isUserOnRole
@@ -50,6 +53,10 @@ const authСontroller = {
 				// But now just don't do anything
 				// This case is processed by router
 				console.log('');
+
+				// Remove old requested page for case when user change role
+				// i don't know why but it must be here
+				this.requestedPage = undefined;
 			} else if (isUserOnRole) {								// When user under some role
 				if (typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
@@ -136,12 +143,18 @@ const authСontroller = {
 		);
 
 		window.location.hash = defaultPageHash;
+
+		// just in case
+		this.requestedPage = undefined;
 	},
 	/**
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
 		window.location.hash = 'admin_schools';
+
+		// just in case
+		this.requestedPage = undefined;
 	},
 	getSchoolKind: function(role) {
 		const	binding = this.binding;
