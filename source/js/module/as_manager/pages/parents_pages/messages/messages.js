@@ -7,8 +7,8 @@ const	React		= require('react'),
 		SubMenu		= require('module/ui/menu/sub_menu'),
 
 		Inbox		= require('module/as_manager/pages/parents_pages/messages/inbox/inbox'),
-		Outbox		= require('module/as_manager/pages/parents_pages/messages/inbox/outbox'),
-		Archive		= require('module/as_manager/pages/parents_pages/messages/inbox/archive');
+		Outbox		= require('module/as_manager/pages/parents_pages/messages/outbox/outbox'),
+		Archive		= require('module/as_manager/pages/parents_pages/messages/archive/archive');
 
 const Messages = React.createClass({
 	mixins: [Morearty.Mixin],

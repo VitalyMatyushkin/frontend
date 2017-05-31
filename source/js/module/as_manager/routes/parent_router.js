@@ -9,7 +9,7 @@ const	React					= require('react'),
 
 		EventComponent			= require('../pages/parents_pages/event/event_page'),
 		ParentEventsComponent	= require('./../pages/parents_pages/events/events'),
-		MessagesComponent		= require('./../pages/parents_pages/events/events');
+		MessagesComponent		= require('module/as_manager/pages/parents_pages/messages/messages');
 
 /**
  * It's a router for user with parent role.
@@ -35,7 +35,7 @@ const ParentRouter = React.createClass({
 						binding		= {binding.sub('events')}
 						component	= {EventComponent}
 				/>
-				<Route	path		= '/messages'
+				<Route	path		= '/messages /messages/:subPage'
 						binding		= {binding.sub('messages')}
 						component	= {MessagesComponent}
 				/>
