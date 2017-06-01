@@ -52,7 +52,6 @@ const authСontroller = {
 				// TODO i think it should be looks something else
 				// But now just don't do anything
 				// This case is processed by router
-				console.log('');
 
 				// Remove old requested page for case when user change role
 				// i don't know why but it must be here

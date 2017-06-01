@@ -18,10 +18,8 @@ const SchoolRequestArchive = React.createClass({
 			this.model = new RequestArchive(this).createGridFromExistingData(grid);
 		} else {
 			this.model = new RequestArchive(this);
-			console.log(this.model.columns);
 			this.model.columns.splice(5, 2);
 			this.model.createGrid();
-			console.log(this.model.columns);
 		}
 	},
 	render: function () {

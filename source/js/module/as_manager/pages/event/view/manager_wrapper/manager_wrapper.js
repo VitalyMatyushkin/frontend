@@ -56,8 +56,6 @@ const ManagerWrapper = React.createClass({
 													]))
 			.commit();
 
-		console.log(rivals);
-
 		this.addListeners();
 	},
 	addListeners: function() {
