@@ -6,6 +6,10 @@ const	React				= require('react'),
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		messages:		React.PropTypes.array.isRequired,
+		messageType:	React.PropTypes.string.isRequired
+	},
 	componentWillMount: function() {
 		MessageListActions.loadMessages().then(messages => {
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
@@ -19,7 +23,8 @@ const MessageListWrapper = React.createClass({
 		if(typeof messages !== 'undefined' && messages.length > 0) {
 			return (
 				<MessageList
-					messages={messages}
+					messages	={messages}
+					messageType	={this.props.messageType}
 				/>
 			);
 		} else {

@@ -1,0 +1,12 @@
+const MESSAGE_KIND = {
+	'INVITATION':	'INVITATION',
+	'REFUSAL':		'REFUSAL'
+};
+
+const MESSAGE_TYPE = {
+	'INBOX':	'INBOX',
+	'OUTBOX':	'OUTBOX'
+};
+
+module.exports.MESSAGE_KIND = MESSAGE_KIND;
+module.exports.MESSAGE_TYPE = MESSAGE_TYPE;

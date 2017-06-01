@@ -3,12 +3,12 @@ const	React			= require('react'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 
-const Buttons = React.createClass({
+const EventParticipationRefusalMessageButtons = React.createClass({
 	render: function() {
 		return (
 			<div className="eInvite_buttons">
 				<Button
-					text				= {'Accept'}
+					text				= {'Got it'}
 					extraStyleClasses	= {'mHalfWidth mMarginRight'}/>
 				<Button
 					text				= {'Decline'}
@@ -18,4 +18,4 @@ const Buttons = React.createClass({
 	}
 });
 
-module.exports = Buttons;
+module.exports = EventParticipationRefusalMessageButtons;
