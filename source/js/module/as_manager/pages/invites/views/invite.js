@@ -104,10 +104,10 @@ const InviteView = React.createClass({
 		}
 	},
 	render: function() {
-		const binding			= this.getDefaultBinding(),
+		const	binding			= this.getDefaultBinding(),
 				inviterSchool 	= binding.toJS('inviterSchool'),
 				invitedSchool 	= binding.toJS('invitedSchool'),
-			  	rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
+				rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
 				inviteClasses 	= classNames({
 					bInvite: true,
 					mNotRedeemed: !binding.get('redeemed')

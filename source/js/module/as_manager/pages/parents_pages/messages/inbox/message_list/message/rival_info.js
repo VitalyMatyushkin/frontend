@@ -1,9 +1,8 @@
 const	React			= require('react'),
-		propz			= require('propz'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 
-const RivalLogo = React.createClass({
+const RivalName = React.createClass({
 	propTypes: {
 		message: React.PropTypes.object.isRequired
 	},
@@ -21,31 +20,15 @@ const RivalLogo = React.createClass({
 
 		return rival;
 	},
-	getRivalLogoStyle: function() {
-		let rivalLogoStyle = {
-			backgroundImage: `url(/images/no_logo.jpg)`
-		};
-
+	render: function() {
 		const rival = this.getRival();
 
-		const pic = propz.get(rival, ['pic']);
-		if(typeof pic !== 'undefined'){
-			rivalLogoStyle.backgroundImage = `url(${pic})`
-		}
-
-		return rivalLogoStyle;
-	},
-	render: function() {
 		return (
-			<div className="col-md-5 col-sm-5">
-				<div
-					className	= "eInvite_img"
-					style		= { this.getRivalLogoStyle() }
-				>
-				</div>
-			</div>
+			<span>
+				<h4> {rival.name}</h4>
+			</span>
 		);
 	}
 });
 
-module.exports = RivalLogo;
+module.exports = RivalName;

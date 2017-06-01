@@ -10,9 +10,9 @@ const MessageList = React.createClass({
 
 		if(
 			typeof this.props.messages !== 'undefined' &&
-			this.props.messages.lenght > 0
+			this.props.messages.length > 0
 		) {
-			messages = this.props.messages.map(message => <Messsage message={message}/>);
+			messages = this.props.messages.map(message => <Messsage key={message.id} message={message}/>);
 		}
 
 		return messages;
