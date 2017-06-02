@@ -8,7 +8,8 @@ const	React					= require('react'),
 		VerifyRoute				= require('module/core/routes/verify_route'),
 
 		EventComponent			= require('../pages/parents_pages/event/event_page'),
-		ParentEventsComponent	= require("./../pages/parents_pages/events/events");
+		ParentEventsComponent	= require('./../pages/parents_pages/events/events'),
+		MessagesComponent		= require('module/as_manager/pages/parents_pages/messages/messages');
 
 /**
  * It's a router for user with parent role.
@@ -26,13 +27,17 @@ const ParentRouter = React.createClass({
 				<VerifyRoute	binding	= {binding.sub('userData')}/>
 				<SettingsRoute	binding	= {binding.sub('userData')}/>
 
-				<Route	path		= "/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId"
+				<Route	path		= '/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId'
 						binding		= {binding.sub('events')}
 						component	= {ParentEventsComponent}
 				/>
-				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
+				<Route	path		= '/event /event/:eventId /event/:eventId/:mode'
 						binding		= {binding.sub('events')}
 						component	= {EventComponent}
+				/>
+				<Route	path		= '/messages /messages/:subPage'
+						binding		= {binding.sub('messages')}
+						component	= {MessagesComponent}
 				/>
 			</RouterView>
 		);
