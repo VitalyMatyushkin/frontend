@@ -47,26 +47,28 @@ const Messages = React.createClass({
 					binding	= {binding.sub('messagesRouting')}
 				/>
 				<div className='bSchoolMaster'>
-					<RouterView
-						routes	= {binding.sub('messagesRouting')}
-						binding	= {rootBinging}
-					>
-						<Route
-							path		= '/messages/inbox'
-							binding		= {binding}
-							component	= {Inbox}
-						/>
-						<Route
-							path		= '/messages/outbox'
-							binding		= {binding}
-							component	= {Outbox}
-						/>
-						<Route
-							path		= '/messages/archive'
-							binding		= {binding}
-							component	= {Archive}
-						/>
-					</RouterView>
+					<div className="bInvites">
+						<RouterView
+							routes	= {binding.sub('messagesRouting')}
+							binding	= {rootBinging}
+						>
+							<Route
+								path		= '/messages/inbox'
+								binding		= {binding}
+								component	= {Inbox}
+							/>
+							<Route
+								path		= '/messages/outbox'
+								binding		= {binding}
+								component	= {Outbox}
+							/>
+							<Route
+								path		= '/messages/archive'
+								binding		= {binding}
+								component	= {Archive}
+							/>
+						</RouterView>
+					</div>
 				</div>
 			</div>
 		);

@@ -1,6 +1,6 @@
 const	React			= require('react'),
 		propz			= require('propz'),
-		MessageHelper	= require('module/as_manager/pages/parents_pages/messages/inbox/message_list/message/helpers/message_helper'),
+		MessageHelper	= require('module/as_manager/pages/parents_pages/messages/message_list/message/helpers/message_helper'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 

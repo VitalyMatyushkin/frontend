@@ -1,7 +1,7 @@
 const	React								= require('react'),
-		EventInvitationMessage				= require('module/as_manager/pages/parents_pages/messages/inbox/message_list/message/event_invitation_message'),
-		EventParticipationRefusalMessage	= require('module/as_manager/pages/parents_pages/messages/inbox/message_list/message/event_participation_refusal_message'),
-		MessageConsts						= require('module/as_manager/pages/parents_pages/messages/inbox/message_list/message/const/message_consts');
+		EventInvitationMessage				= require('module/as_manager/pages/parents_pages/messages/message_list/message/event_invitation_message'),
+		EventParticipationRefusalMessage	= require('module/as_manager/pages/parents_pages/messages/message_list/message/event_participation_refusal_message'),
+		MessageConsts						= require('module/as_manager/pages/parents_pages/messages/message_list/message/const/message_consts');
 
 const MessageList = React.createClass({
 	propTypes: {
@@ -41,10 +41,8 @@ const MessageList = React.createClass({
 	},
 	render: function() {
 		return (
-			<div>
-				<div className="eInvites_list container" >
-					{this.renderMessages()}
-				</div>
+			<div className="eInvites_list container" >
+				{this.renderMessages()}
 			</div>
 		);
 	}
