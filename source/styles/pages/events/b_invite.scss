@@ -22,6 +22,10 @@
     }
   .eInvite_buttons{
     padding-bottom: 14px;
+
+    &.mMessage {
+      padding: 0;
+    }
   }
   .eInviteDiscussionLink{
     a{
@@ -66,6 +70,10 @@
   line-height: 1.5;
   min-height: 120px;
   padding-top: 20px;
+
+  &.mMessage {
+    min-height: inherit;
+  }
 }
 
 .eInvite_message {
@@ -127,6 +135,10 @@
 .eInvite_comments {
   border-top: $mainBorder;
   padding-top: 10px;
+}
+
+.eInvite_text {
+  margin-bottom: 20px;
 }
 
 /* Medium Devices, Desktops */

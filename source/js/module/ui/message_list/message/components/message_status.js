@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		MessageConsts	= require('module/as_manager/pages/parents_pages/messages/message_list/message/const/message_consts'),
+		MessageConsts	= require('module/ui/message_list/message/const/message_consts'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 

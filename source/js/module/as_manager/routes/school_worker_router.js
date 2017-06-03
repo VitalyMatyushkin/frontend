@@ -13,7 +13,8 @@ const	React							= require('react'),
 		SchoolGalleryRoutesComponent	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
 		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
 		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
-		UserViewComponent				= require('module/shared_pages/users/user_view');
+		UserViewComponent				= require('module/shared_pages/users/user_view'),
+		MessagesComponent				= require('module/as_manager/pages/messages/messages');
 
 /**
  * It's a router for all school workers:
@@ -59,6 +60,11 @@ const SchoolWorkerRouter = React.createClass({
 				<Route	path		= "/invites /invites/:filter /invites/:inviteId/:mode"
 						binding		= {binding.sub('invites')}
 						component	= {InvitesComponent}
+				/>
+
+				<Route	path		= '/messages /messages/:subPage'
+						binding		= {binding.sub('messages')}
+						component	= {MessagesComponent}
 				/>
 
 				<Route	path		= "/school_console /school_console/:filter /school_console/:inviteId/:mode"

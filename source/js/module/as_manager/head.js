@@ -135,6 +135,13 @@ const Head = React.createClass({
 				routes			: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
 				authorization	: true,
 				verified		: true
+			},
+			{
+				href:			'/#messages/inbox',
+				name:			'Game acceptance/cancellation',
+				key:			'Messages',
+				authorization:	true,
+				routes:			['/messages/:subPage']
 			}
 		];
 	},
@@ -164,7 +171,7 @@ const Head = React.createClass({
 				routes: ['/events/achievement/:userId']
 			}, {
 				href: '/#messages/inbox',
-				name: 'Messages',
+				name: 'Game acceptance/cancellation',
 				key: 'Messages',
 				authorization: true,
 				routes: ['/messages/:subPage']

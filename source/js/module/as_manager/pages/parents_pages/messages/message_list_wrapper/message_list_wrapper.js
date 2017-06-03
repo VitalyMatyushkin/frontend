@@ -1,8 +1,8 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		MessageListActions	= require('module/as_manager/pages/parents_pages/messages/message_list/message_list_actions/message_list_actions'),
-		MessageList			= require('module/as_manager/pages/parents_pages/messages/message_list/message_list');
+		MessageListActions	= require('module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
+		MessageList			= require('module/ui/message_list/message_list');
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],

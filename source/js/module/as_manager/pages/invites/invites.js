@@ -99,22 +99,24 @@ const InvitesView = React.createClass({
 				binding	 		= self.getDefaultBinding(),
 				globalBinding 	= self.getMoreartyContext().getBinding();
 
-		return <div>
-			<SubMenu
-				binding	= {binding.sub('invitesRouting')}
-				items	= {self.menuItems}
-			/>
-			<div className='bSchoolMaster'>
-				<div className='bInvites'>
-					<RouterView routes={ binding.sub('invitesRouting') } binding={globalBinding}>
-						<Route path='/invites /invites/inbox'		binding={binding.sub('inbox')}		component={InboxComponent} />
-						<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
-						<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
-						<Route path='/invites/:inviteId/accept'		binding={this.getAcceptBinding()} 	component={AcceptComponent} />
-					</RouterView>
+		return (
+			<div>
+				<SubMenu
+					binding	= {binding.sub('invitesRouting')}
+					items	= {self.menuItems}
+				/>
+				<div className='bSchoolMaster'>
+					<div className='bInvites'>
+						<RouterView routes={ binding.sub('invitesRouting') } binding={globalBinding}>
+							<Route path='/invites /invites/inbox'		binding={binding.sub('inbox')}		component={InboxComponent} />
+							<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
+							<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
+							<Route path='/invites/:inviteId/accept'		binding={this.getAcceptBinding()} 	component={AcceptComponent} />
+						</RouterView>
+					</div>
 				</div>
 			</div>
-        </div>;
+		);
 	}
 });
 

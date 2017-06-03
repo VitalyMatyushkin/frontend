@@ -1,7 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
-		MessageListWrapper	= require('module/as_manager/pages/parents_pages/messages/message_list/message_list_wrapper'),
-		MessageConsts		= require('module/as_manager/pages/parents_pages/messages/message_list/message/const/message_consts');
+		MessageListWrapper	= require('module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_wrapper'),
+		MessageConsts		= require('module/ui/message_list/message/const/message_consts');
 
 const Inbox = React.createClass({
 	mixins: [Morearty.Mixin],
