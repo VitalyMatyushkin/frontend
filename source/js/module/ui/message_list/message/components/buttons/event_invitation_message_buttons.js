@@ -6,7 +6,7 @@ const	React			= require('react'),
 const EventInvitationMessageButtons = React.createClass({
 	render: function() {
 		return (
-			<div className="eInvite_buttons">
+			<div className="eInvite_buttons mMessage">
 				<Button
 					text				= {'Accept'}
 					extraStyleClasses	= {'mHalfWidth mMarginRight'}/>

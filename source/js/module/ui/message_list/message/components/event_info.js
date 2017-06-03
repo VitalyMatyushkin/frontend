@@ -40,7 +40,7 @@ const EventInfo = React.createClass({
 				minutes				= this.addZeroToFirst(startTimeDataObject.getMinutes());
 
 		return (
-			<div className="eInvite_content">
+			<div className="eInvite_content mMessage">
 				{sport} / {this.getGender(gender)} / {this.getAges(ages)}<br/>
 				{startDate} / {hours + ':' + minutes}<br/>
 			</div>

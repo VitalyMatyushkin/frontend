@@ -1,7 +1,7 @@
 const	React							= require('react'),
 		SchoolLogo						= require('module/ui/message_list/message/components/school_logo'),
-		ChildName						= require('module/ui/message_list/message/components/child_name'),
-		TeamInfo						= require('module/ui/message_list/message/components/team_info'),
+		MessageTitle					= require('module/ui/message_list/message/components/message_title'),
+		MessageText						= require('module/ui/message_list/message/components/message_text'),
 		EventInfo						= require('module/ui/message_list/message/components/event_info'),
 		EventInvitationMessageButtons	= require('module/ui/message_list/message/components/buttons/event_invitation_message_buttons'),
 		Venue							= require('module/ui/message_list/message/components/venue'),
@@ -44,18 +44,28 @@ const EventInvitationMessage = React.createClass({
 				<div className="row">
 					<div className="col-md-6 eInvite_left">
 						<div className="row">
-							<SchoolLogo message={this.props.message}/>
+							<SchoolLogo
+								message={this.props.message}
+							/>
 							<div className="eInvite_info col-md-7 col-sm-7">
-								<ChildName message={this.props.message}/>
-								<TeamInfo message={this.props.message}/>
-								<EventInfo message={this.props.message}/>
-								{this.renderButtons()}
-								{this.renderStatus()}
+								<MessageTitle
+									message={this.props.message}
+								/>
+								<EventInfo
+									message={this.props.message}
+								/>
+								<MessageText
+									message={this.props.message}
+								/>
+								{ this.renderButtons() }
+								{ this.renderStatus() }
 							</div>
 						</div>
 					</div>
 					<div className="col-md-6">
-						<Venue message={this.props.message}/>
+						<Venue
+							message={this.props.message}
+						/>
 					</div>
 				</div>
 			</div>

@@ -38,6 +38,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
 		CricketResultBlock 				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
+		PlayersStatusTab 				= require('module/as_manager/pages/event/view/players_status_tab/players_status_tab'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
@@ -647,6 +648,10 @@ const Event = React.createClass({
 				value		: 'tasks',
 				text		: 'Jobs',
 				isActive	: false
+			} , {
+				value		: 'playersStatus',
+				text		: 'Players Status',
+				isActive	: false
 			}
 		];
 
@@ -1158,6 +1163,13 @@ const Event = React.createClass({
 									<MatchReport	binding		= {binding.sub('matchReport')}
 													eventId		= {self.eventId}
 													role		= {role}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'playersStatus'} >
+								<div className="bEventBottomContainer">
+									<PlayersStatusTab
+										binding={binding}
 									/>
 								</div>
 							</If>
