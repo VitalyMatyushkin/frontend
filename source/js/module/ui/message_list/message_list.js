@@ -1,7 +1,7 @@
 const	React								= require('react'),
-		EventInvitationMessage				= require('module/as_manager/pages/parents_pages/messages/message_list/message/event_invitation_message'),
-		EventParticipationRefusalMessage	= require('module/as_manager/pages/parents_pages/messages/message_list/message/event_participation_refusal_message'),
-		MessageConsts						= require('module/as_manager/pages/parents_pages/messages/message_list/message/const/message_consts');
+		EventInvitationMessage				= require('module/ui/message_list/message/event_invitation_message'),
+		EventParticipationRefusalMessage	= require('module/ui/message_list/message/event_participation_refusal_message'),
+		MessageConsts						= require('module/ui/message_list/message/const/message_consts');
 
 const MessageList = React.createClass({
 	propTypes: {

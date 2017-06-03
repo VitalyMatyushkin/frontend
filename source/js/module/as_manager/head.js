@@ -135,6 +135,13 @@ const Head = React.createClass({
 				routes			: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
 				authorization	: true,
 				verified		: true
+			},
+			{
+				href:			'/#messages/inbox',
+				name:			'Messages',
+				key:			'Messages',
+				authorization:	true,
+				routes:			['/messages/:subPage']
 			}
 		];
 	},
