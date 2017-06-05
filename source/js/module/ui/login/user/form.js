@@ -4,7 +4,6 @@ const	Form				= require('module/ui/form/form'),
 		React				= require('react'),
 		Morearty			= require('morearty'),
 		Auth				= require('module/core/services/AuthorizationServices'),
-		RememberMeCheckbox	= require('module/ui/login/user/form_components/remember_me_checkbox'),
 		bFormStyles			= require('../../../../../styles/ui/forms/b_form.scss');
 
 const LoginUserForm = React.createClass({
@@ -22,14 +21,6 @@ const LoginUserForm = React.createClass({
 
 		this.tmpFormName = this.props.customName === 'default' ? "Sign in or <a class='mHover' href='/#register'>join us for free</a>" : this.props.customName;
 		this.forgotPassUrl = `//${domain}/#reset-request`;
-	},
-	onChangeRememberMe: function() {
-		const binding = this.getDefaultBinding();
-
-		binding.set(
-			'rememberMe',
-			!binding.toJS('rememberMe')
-		);
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
@@ -62,11 +53,6 @@ const LoginUserForm = React.createClass({
 						validation="required"
 						binding={binding}
 						id="login_password"
-					/>
-					<RememberMeCheckbox
-						filed		= {'rememberMe'}
-						isChecked	= { binding.toJS('rememberMe') }
-						onChange	= { this.onChangeRememberMe }
 					/>
 				</Form>
 				<If condition={this.props.customName === 'default'}>

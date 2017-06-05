@@ -8,11 +8,8 @@ const	DataPrototype	= require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	const self = this;
-
 	return {
-		authorizationInfo:	self.getInitAuthDataValue(),
-		rememberMe:			false
+		authorizationInfo:	Helpers.SessionStorage.get('authorizationInfo')
 	};
 };
 
@@ -26,11 +23,10 @@ UserDataClass.initBind = function () {
 	self._ajaxSetup(bindObject);
 	// Keeping authorization data
 	bindObject.addListener('authorizationInfo', function () {
-		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
-				rememberMe			= bindObject.toJS('rememberMe');
+		const	authorizationInfo	= bindObject.toJS('authorizationInfo');
 
 		if(typeof authorizationInfo !== 'undefined') {
-			self.setAuthData(authorizationInfo, rememberMe);
+			self.setAuthData(authorizationInfo);
 		}
 		self._ajaxSetup(bindObject);
 	});
@@ -57,24 +53,6 @@ UserDataClass._ajaxSetup = function (binding){
 	}
 };
 
-UserDataClass.getInitAuthDataValue = function () {
-	let authorizationInfo = Helpers.cookie.get('authorizationInfo');
-
-	// If auth info is not undefined and not valid
-	if(
-		typeof authorizationInfo !== 'undefined' &&
-		!UserDataClass.isValidAuthorizationInfo(authorizationInfo)
-	) {
-		console.error('Not valid authorization info in cookie.');
-		console.error(authorizationInfo);
-
-		authorizationInfo = undefined;
-		Helpers.cookie.remove('authorizationInfo');
-	}
-
-	return authorizationInfo;
-};
-
 UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
 	const	id			= propz.get(authorizationInfo, ['id']),
 			userId		= propz.get(authorizationInfo, ['userId']),
@@ -87,17 +65,8 @@ UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
 	);
 };
 
-UserDataClass.setAuthData = function (authData, rememberMe) {
-	if(rememberMe) {
-		Helpers.cookie.set(
-			'authorizationInfo',
-			authData,
-			// TODO why 99?
-			{expires: 99}
-		);
-	} else {
-		Helpers.cookie.set('authorizationInfo', authData);
-	}
+UserDataClass.setAuthData = function (authData) {
+	Helpers.SessionStorage.set('authorizationInfo', authData);
 };
 
 module.exports = UserDataClass;
