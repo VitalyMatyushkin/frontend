@@ -12,12 +12,29 @@ const	React									= require('react'),
 
 const EventParticipationRefusalMessage = React.createClass({
 	propTypes: {
-		message: React.PropTypes.object.isRequired
+		message:	React.PropTypes.object.isRequired,
+		type:		React.PropTypes.string.isRequired,
+		onAction:	React.PropTypes.func.isRequired
+	},
+	onGotIt: function() {
+		const	messageId	= this.props.message.id,
+				messageKind	= this.props.message.kind,
+				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT;
+
+		this.props.onAction(
+			messageId,
+			messageKind,
+			actionType
+		);
 	},
 	renderButtons: function() {
 		switch (this.props.type) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
-				return (<EventParticipationRefusalMessageButtons/>);
+				return (
+					<EventParticipationRefusalMessageButtons
+						onGotIt = {this.onGotIt}
+					/>
+				);
 			default:
 				return null;
 		}

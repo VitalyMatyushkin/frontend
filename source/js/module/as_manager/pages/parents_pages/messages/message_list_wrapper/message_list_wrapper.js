@@ -14,6 +14,9 @@ const MessageListWrapper = React.createClass({
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
 		});
 	},
+	onAction: function(messageId, messageKind, actionType) {
+		console.log({messageId: messageId, messageKind: messageKind, actionType: actionType});
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -22,8 +25,9 @@ const MessageListWrapper = React.createClass({
 		if(typeof messages !== 'undefined' && messages.length > 0) {
 			return (
 				<MessageList
-					messages	={messages}
-					messageType	={this.props.messageType}
+					messages	= {messages}
+					messageType	= {this.props.messageType}
+					onAction	= {this.onAction}
 				/>
 			);
 		} else {
