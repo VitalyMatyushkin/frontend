@@ -11,8 +11,7 @@ UserDataClass.getDefaultState = function () {
 	const self = this;
 
 	return {
-		authorizationInfo:	self.getInitAuthDataValue(),
-		rememberMe:			false
+		authorizationInfo:	self.getInitAuthDataValue()
 	};
 };
 
@@ -26,11 +25,10 @@ UserDataClass.initBind = function () {
 	self._ajaxSetup(bindObject);
 	// Keeping authorization data
 	bindObject.addListener('authorizationInfo', function () {
-		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
-				rememberMe			= bindObject.toJS('rememberMe');
+		const	authorizationInfo	= bindObject.toJS('authorizationInfo');
 
 		if(typeof authorizationInfo !== 'undefined') {
-			self.setAuthData(authorizationInfo, rememberMe);
+			self.setAuthData(authorizationInfo);
 		}
 		self._ajaxSetup(bindObject);
 	});
@@ -70,9 +68,16 @@ UserDataClass.getInitAuthDataValue = function () {
 
 		authorizationInfo = undefined;
 		Helpers.cookie.remove('authorizationInfo');
+	} else {
+		if (typeof authorizationInfo.id !== 'undefined') {
+			/**init session storage */
+			Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
+			/**and remove data from cookies.*/
+			Helpers.cookie.remove('authorizationInfo');
+		}
 	}
 
-	return authorizationInfo;
+	return Helpers.SessionStorage.get('authorizationInfo');
 };
 
 UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
@@ -87,17 +92,8 @@ UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
 	);
 };
 
-UserDataClass.setAuthData = function (authData, rememberMe) {
-	if(rememberMe) {
-		Helpers.cookie.set(
-			'authorizationInfo',
-			authData,
-			// TODO why 99?
-			{expires: 99}
-		);
-	} else {
-		Helpers.cookie.set('authorizationInfo', authData);
-	}
+UserDataClass.setAuthData = function (authData) {
+	Helpers.SessionStorage.set('authorizationInfo', authData);
 };
 
 module.exports = UserDataClass;
