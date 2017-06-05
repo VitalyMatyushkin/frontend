@@ -4,7 +4,7 @@
 .bRoleList{
   cursor: pointer;
   display: inline-block;
-  padding-top: 20px;
+  padding-top: 10px;
   vertical-align: top;
 
   &.mLogout {
@@ -68,10 +68,20 @@
     }
   }
 }
+
+.mActive{
+  text-align: left;
+  .eRole_name,
+  .eRole_schoolName{
+	display: block;
+  }
+
+}
+
 .eRole_name {
   display: inline-block;
 
-  padding: 5px 5px 0;
+  padding-top: 5px;
   vertical-align: top;
 
   color: #8c8c8c;
