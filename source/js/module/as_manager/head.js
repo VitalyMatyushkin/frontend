@@ -138,7 +138,7 @@ const Head = React.createClass({
 			},
 			{
 				href:			'/#messages/inbox',
-				name:			'Game acceptance/cancellation',
+				name:			'Messages',
 				key:			'Messages',
 				authorization:	true,
 				routes:			['/messages/:subPage']
@@ -152,33 +152,37 @@ const Head = React.createClass({
 	getMainMenuItemsForParent: function() {
 		return [
 			{
-				href: '/#events/calendar/all',
-				name: 'Calendar',
-				key: 'Calendar',
-				authorization: true,
-				routes: ['/events/calendar/:userId']
-			}, {
-				href: '/#events/fixtures/all',
-				name: 'Fixtures',
-				key: 'Fixtures',
-				authorization: true,
-				routes: ['/events/fixtures/:userId']
-			}, {
-				href: '/#events/achievement/all',
-				name: 'Achievements',
-				key: 'Achievements',
-				authorization: true,
-				routes: ['/events/achievement/:userId']
-			}, {
-				href: '/#messages/inbox',
-				name: 'Game acceptance/cancellation',
-				key: 'Messages',
-				authorization: true,
-				routes: ['/messages/:subPage']
-			}, {
-				href: '/#help',
-				name: 'Help',
-				key: 'Help'
+				href:			'/#events/calendar/all',
+				name:			'Calendar',
+				key:			'Calendar',
+				authorization:	true,
+				routes:			['/events/calendar/:userId']
+			},
+			{
+				href:			'/#events/fixtures/all',
+				name:			'Fixtures',
+				key:			'Fixtures',
+				authorization:	true,
+				routes:			['/events/fixtures/:userId']
+			},
+			{
+				href:			'/#events/achievement/all',
+				name:			'Achievements',
+				key:			'Achievements',
+				authorization:	true,
+				routes:			['/events/achievement/:userId']
+			},
+			{
+				href:			'/#messages/inbox',
+				name:			'Messages',
+				key:			'Messages',
+				authorization:	true,
+				routes:			['/messages/:subPage']
+			},
+			{
+				href:	'/#help',
+				name:	'Help',
+				key:	'Help'
 			}
 		];
 	},
