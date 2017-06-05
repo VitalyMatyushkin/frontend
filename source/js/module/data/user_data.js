@@ -8,10 +8,8 @@ const	DataPrototype	= require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	const self = this;
-
 	return {
-		authorizationInfo:	self.getInitAuthDataValue()
+		authorizationInfo:	Helpers.SessionStorage.get('authorizationInfo')
 	};
 };
 
@@ -53,34 +51,6 @@ UserDataClass._ajaxSetup = function (binding){
 		options.complete = jqXHR => jqXHR.status === 401 && binding.sub('authorizationInfo').clear();
 		$.ajaxSetup(options);
 	}
-};
-
-UserDataClass.getInitAuthDataValue = function () {
-	let authorizationInfo = Helpers.cookie.get('authorizationInfo');
-
-	// If auth info is not undefined and not valid
-	if(
-		typeof authorizationInfo !== 'undefined' &&
-		!UserDataClass.isValidAuthorizationInfo(authorizationInfo)
-	) {
-		console.error('Not valid authorization info in cookie.');
-		console.error(authorizationInfo);
-
-		authorizationInfo = undefined;
-		Helpers.cookie.remove('authorizationInfo');
-	} else {
-		if (
-			typeof authorizationInfo !== 'undefined' &&
-			typeof authorizationInfo.id !== 'undefined'
-		) {
-			/**init session storage */
-			Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
-			/**and remove data from cookies.*/
-			Helpers.cookie.remove('authorizationInfo');
-		}
-	}
-
-	return Helpers.SessionStorage.get('authorizationInfo');
 };
 
 UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
