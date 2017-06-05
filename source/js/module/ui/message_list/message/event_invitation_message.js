@@ -13,12 +13,40 @@ const	React							= require('react'),
 const EventInvitationMessage = React.createClass({
 	propTypes: {
 		message:	React.PropTypes.object.isRequired,
-		type:		React.PropTypes.string.isRequired
+		type:		React.PropTypes.string.isRequired,
+		onAction:	React.PropTypes.func.isRequired
+	},
+	onAccept: function() {
+		const	messageId	= this.props.message.id,
+				messageKind	= this.props.message.kind,
+				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT;
+
+		this.props.onAction(
+			messageId,
+			messageKind,
+			actionType
+		);
+	},
+	onDecline: function() {
+		const	messageId	= this.props.message.id,
+				messageKind	= this.props.message.kind,
+				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE;
+
+		this.props.onAction(
+			messageId,
+			messageKind,
+			actionType
+		);
 	},
 	renderButtons: function() {
 		switch (this.props.type) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
-				return (<EventInvitationMessageButtons/>);
+				return (
+					<EventInvitationMessageButtons
+						onAccept	= {this.onAccept}
+						onDecline	= {this.onDecline}
+					/>
+				);
 			default:
 				return null;
 		}
