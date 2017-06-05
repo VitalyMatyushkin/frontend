@@ -4,15 +4,16 @@ const	React			= require('react'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 
 const EventParticipationRefusalMessageButtons = React.createClass({
+	propTypes: {
+		onGotIt: React.PropTypes.func.isRequired
+	},
 	render: function() {
 		return (
 			<div className="eInvite_buttons">
 				<Button
+					onClick				= {this.props.onGotIt}
 					text				= {'Got it'}
 					extraStyleClasses	= {'mHalfWidth mMarginRight'}/>
-				<Button
-					text				= {'Decline'}
-					extraStyleClasses	= {'mCancel mHalfWidth'}/>
 			</div>
 		);
 	}
