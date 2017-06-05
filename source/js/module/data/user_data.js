@@ -69,7 +69,10 @@ UserDataClass.getInitAuthDataValue = function () {
 		authorizationInfo = undefined;
 		Helpers.cookie.remove('authorizationInfo');
 	} else {
-		if (typeof authorizationInfo.id !== 'undefined') {
+		if (
+			typeof authorizationInfo !== 'undefined' &&
+			typeof authorizationInfo.id !== 'undefined'
+		) {
 			/**init session storage */
 			Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
 			/**and remove data from cookies.*/
