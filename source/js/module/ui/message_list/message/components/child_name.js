@@ -8,7 +8,7 @@ const ChildName = React.createClass({
 	},
 	render: function() {
 		return (
-			<h4> {`${this.props.message.child.firstName} ${this.props.message.child.lastName}`}</h4>
+			<h4> {`${this.props.message.playerDetailsData.firstName} ${this.props.message.playerDetailsData.lastName}`}</h4>
 		);
 	}
 });

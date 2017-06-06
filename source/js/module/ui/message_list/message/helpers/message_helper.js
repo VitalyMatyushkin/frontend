@@ -3,11 +3,11 @@ const MessageHelper = {
 		let school;
 
 		//TODO get school from child
-		if(message.child.schoolId === message.event.inviterSchoolId) {
-			school = message.inviterSchool;
+		if(message.schoolId === message.eventData.inviterSchoolId) {
+			school = message.eventData.inviterSchool;
 		} else {
 			//TODO search from array - invitedSchools
-			school = message.invitedSchool;
+			school = message.eventData.invitedSchool;
 		}
 
 		return school;

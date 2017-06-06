@@ -29,12 +29,13 @@ const EventInfo = React.createClass({
 		return String(num).length === 1 ? '0' + num : num;
 	},
 	render: function() {
-		const message = this.props.message;
+		const	message = this.props.message;
 
-		const	sport				= message.event.sport.name,
-				ages				= message.event.ages,
-				gender				= message.event.gender,
-				startTimeDataObject	= new Date(message.event.startTime),
+		const	event				= message.eventData,
+				sport				= event.sport.name,
+				ages				= event.ages,
+				gender				= event.gender,
+				startTimeDataObject	= new Date(event.startTime),
 				startDate			= DateHelper.getDateStringFromDateObject(startTimeDataObject),
 				hours				= this.addZeroToFirst(startTimeDataObject.getHours()),
 				minutes				= this.addZeroToFirst(startTimeDataObject.getMinutes());

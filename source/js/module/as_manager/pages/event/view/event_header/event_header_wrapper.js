@@ -88,6 +88,19 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isEditEventPopupOpen', true);
 	},
+	onSendConsentRequest: function() {
+		const	binding			= this.getDefaultBinding(),
+				event			= binding.toJS('model'),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
+
+		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id);
+	},
+	onReportNotParticipate: function() {
+		const	binding		= this.getDefaultBinding(),
+				event		= binding.toJS('model');
+
+		EventHeaderActions.reportNotParticipate(event);
+	},
 	isTweetButtonRender: function(role: string, twitterData: any, mode: string){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
@@ -101,8 +114,9 @@ const EventHeaderWrapper = React.createClass({
 				mode 							= binding.toJS('mode'),
 				eventStatus						= binding.toJS('model.status'),
 				eventAges						= binding.toJS('model.ages'),
-				isUserSchoolWorker 				= RoleHelper.isUserSchoolWorker(this),
-				isShowScoreEventButtonsBlock 	= TeamHelper.isShowScoreEventButtonsBlock(this);
+				isUserSchoolWorker				= RoleHelper.isUserSchoolWorker(this),
+				isParent						= RoleHelper.isParent(this),
+				isShowScoreEventButtonsBlock	= TeamHelper.isShowScoreEventButtonsBlock(this);
 		//const for tweet button
 		const 	twitterData 				= typeof binding.toJS('twitterData') !== 'undefined' ? binding.toJS('twitterData') : [],
 				twitterIdDefault 			= typeof binding.toJS('twitterIdDefault') !== 'undefined' ? binding.toJS('twitterIdDefault') : '',
@@ -117,6 +131,7 @@ const EventHeaderWrapper = React.createClass({
 						eventStatus 					= { eventStatus }
 						eventAges						= { eventAges }
 						isUserSchoolWorker 				= { isUserSchoolWorker }
+						isParent						= { isParent }
 						isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
 						handleClickCancelEvent			= { this.handleClickCancelEvent }
 						handleClickCloseEvent			= { this.handleClickCloseEvent }
@@ -124,6 +139,8 @@ const EventHeaderWrapper = React.createClass({
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
 						onClickEditEventButton			= { this.onClickEditEventButton }
+						onSendConsentRequest			= { this.onSendConsentRequest }
+						onReportNotParticipate			= { this.onReportNotParticipate }
 						role 							= { role }
 						//props for tweet button
 						twitterData 					= { twitterData }
