@@ -17,12 +17,15 @@ const Buttons = React.createClass({
 		mode							: React.PropTypes.string.isRequired,
 		eventStatus						: React.PropTypes.string.isRequired,
 		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
+		isParent						: React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
 		handleClickCancelEvent			: React.PropTypes.func.isRequired,
 		handleClickCloseEvent			: React.PropTypes.func.isRequired,
 		handleClickDownloadPdf			: React.PropTypes.func.isRequired,
 		onClickCloseCancel				: React.PropTypes.func.isRequired,
-		onClickOk						: React.PropTypes.func.isRequired
+		onClickOk						: React.PropTypes.func.isRequired,
+		onSendConsentRequest			: React.PropTypes.func.isRequired,
+		onReportNotParticipate			: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -38,10 +41,20 @@ const Buttons = React.createClass({
 	getActionList: function() {
 		const actionList = [];
 
-		actionList.push({id:'create', text:'Create Event Like This'});
+		if(this.props.isUserSchoolWorker) {
+			actionList.push({id:'create', text:'Create Event Like This'});
+		}
 
 		if(this.isCloseEventActionAvailable()) {
 			actionList.push({id:'close', text:'Close Event'});
+		}
+
+		if(this.isSendConsentRequestAvailable()) {
+			actionList.push({id:'send_consent_request', text:'Send Consent Request'});
+		}
+
+		if(this.isReportNotParticipateAvailable()) {
+			actionList.push({id:'report_not_participate', text:'Report Not Participate'});
 		}
 
 		if(this.isChangeScoreEventActionAvailable()) {
@@ -52,7 +65,9 @@ const Buttons = React.createClass({
 			actionList.push({id:'cancel', text:'Cancel Event'});
 		}
 
-		actionList.push({id: 'download_pdf', text: 'Download Pdf'});
+		if(this.props.isUserSchoolWorker) {
+			actionList.push({id: 'download_pdf', text: 'Download Pdf'});
+		}
 
 		return actionList;
 	},
@@ -60,6 +75,7 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
+			this.props.isUserSchoolWorker &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
@@ -69,6 +85,7 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
+			this.props.isUserSchoolWorker &&
 			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED
 		);
@@ -77,9 +94,18 @@ const Buttons = React.createClass({
 		const eventStatus = this.props.eventStatus;
 
 		return (
+			this.props.isUserSchoolWorker &&
 			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
+	},
+	isSendConsentRequestAvailable: function() {
+		// TODO
+		return this.props.isUserSchoolWorker;
+	},
+	isReportNotParticipateAvailable: function() {
+		// TODO
+		return this.props.isParent;
 	},
 	handleClickActionItem: function(id: string) {
 		switch (id) {
@@ -96,6 +122,12 @@ const Buttons = React.createClass({
 				break;
 			case 'cancel':
 				this.props.handleClickCancelEvent();
+				break;
+			case 'send_consent_request':
+				this.props.onSendConsentRequest();
+				break;
+			case 'report_not_participate':
+				this.props.onReportNotParticipate();
 				break;
 			case 'download_pdf':
 				this.props.handleClickDownloadPdf();
@@ -126,17 +158,14 @@ const Buttons = React.createClass({
 	render: function() {
 		let buttons = null;
 
-		// It's general condition for all buttons
-		if(this.props.isUserSchoolWorker) {
-			switch (this.props.mode) {
-				case 'general':
-					buttons = this.renderScoreEventButtonsContainer();
-					break;
-				case 'closing':
-					buttons = this.renderChangeScoreEventButtonsContainer();
-					break;
-			};
-		}
+		switch (this.props.mode) {
+			case 'general':
+				buttons = this.renderScoreEventButtonsContainer();
+				break;
+			case 'closing':
+				buttons = this.renderChangeScoreEventButtonsContainer();
+				break;
+		};
 
 		return buttons;
 	}

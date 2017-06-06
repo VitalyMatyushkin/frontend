@@ -164,7 +164,7 @@ const serviceList = {
 		serviceList.publicSchoolEventPhotos = new Service('/public/schools/{schoolId}/events/{eventId}/photos', binding);
 
 		// invites
-		serviceList.schoolInvites 				= new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvites				= new Service('/i/schools/{schoolId}/invites', binding);
 		serviceList.schoolInvite 				= new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
 		serviceList.schoolInboxInvites 			= new Service('/i/schools/{schoolId}/invites/inbox', binding);
 		serviceList.schoolOutboxInvites 		= new Service('/i/schools/{schoolId}/invites/outbox', binding);
@@ -173,6 +173,10 @@ const serviceList = {
 		serviceList.declineSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
 		serviceList.schoolInviteComments		= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments', binding);
 		serviceList.schoolInviteCommentsCount	= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments/count', binding);
+
+		// message
+		serviceList.schoolMessagesInvite		= new Service('/i/schools/{schoolId}/events/messages/invite', binding);
+		serviceList.schoolMessagesInbox			= new Service('/i/schools/{schoolId}/events/messages/inbox', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);
@@ -194,6 +198,7 @@ const serviceList = {
 		// children
 		serviceList.children = new Service('/i/children', binding);
 		serviceList.childrenEvents = new Service('/i/children/events', binding);
+		serviceList.childrenEventParticipationRefuse = new Service('/i/children/events/messages/refuse', binding);
 		serviceList.childrenEventsDates = new Service('/i/children/events/dates/distinct', binding);
 		serviceList.childrenEventsCount = new Service('/i/children/events/count', binding);
 		serviceList.child = new Service('/i/children/{childId}', binding);

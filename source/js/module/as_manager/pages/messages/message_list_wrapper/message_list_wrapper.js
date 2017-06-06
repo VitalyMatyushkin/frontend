@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		MessageListActions	= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageList			= require('module/ui/message_list/message_list');
 
@@ -10,7 +11,12 @@ const MessageListWrapper = React.createClass({
 		messageType: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		MessageListActions.loadMessages(this.props.messageType).then(messages => {
+		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+		MessageListActions.loadMessages(
+			this.props.messageType,
+			this.activeSchoolId
+		).then(messages => {
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
 		});
 	},
