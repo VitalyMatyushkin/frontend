@@ -92,7 +92,11 @@ const Players = React.createClass({
 			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {
 				return this.renderText(this.NO_TEAM_MEMBERS);
 			} else {
-				if(rival.invite.status !== 'ACCEPTED') {							// Invite was not accepted yet
+				//For public site we do not have access to invites, then we render AWAITING_OPPONENT text
+				//TODO: If we will have access, then fix it
+				if (typeof rival.invite === 'undefined') {
+					return this.renderText(this.AWAITING_OPPONENT);
+				} else if(rival.invite.status !== 'ACCEPTED') {							// Invite was not accepted yet
 					return this.renderText(this.AWAITING_OPPONENT);
 				} else if(
 					rival.invite.status === 'ACCEPTED' &&							// Select team later
