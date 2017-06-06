@@ -1,6 +1,6 @@
 const MESSAGE_KIND = {
 	'INVITATION':	'INVITATION',
-	'REFUSAL':		'REFUSAL'
+	'REFUSAL':		'EventParticipationRefusalMessage'
 };
 
 const MESSAGE_TYPE = {
