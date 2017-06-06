@@ -89,7 +89,11 @@ const EventHeaderWrapper = React.createClass({
 		binding.set('isEditEventPopupOpen', true);
 	},
 	onSendConsentRequest: function() {
-		console.log('SEND CONSENT REQUEST');
+		const	binding			= this.getDefaultBinding(),
+				event			= binding.toJS('model'),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
+
+		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id);
 	},
 	onReportNotParticipate: function() {
 		const	binding		= this.getDefaultBinding(),

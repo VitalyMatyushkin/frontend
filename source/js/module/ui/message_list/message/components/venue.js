@@ -10,7 +10,7 @@ const Message = React.createClass({
 	},
 	render: function() {
 		const	message		= this.props.message,
-				venue		= propz.get(message, ['event', 'venue']),
+				venue		= propz.get(message, ['eventData', 'venue']),
 				point		= propz.get(venue, ['postcodeData', 'point']);
 
 		const venueArea = venue.postcodeId ?

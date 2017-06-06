@@ -461,6 +461,15 @@ function reportNotParticipate(event){
 	});
 }
 
+function sendConsentRequest(schoolId, eventId) {
+	return window.Server.sendInvitationMessagesForEvent.post(
+		{
+			schoolId:	schoolId,
+			eventId:	eventId
+		}
+	);
+}
+
 module.exports.downloadPdf 				= downloadPdf;
 module.exports.cancelEvent 				= cancelEvent;
 module.exports.setModeClosing 			= setModeClosing;
@@ -469,3 +478,4 @@ module.exports.revertScore 				= revertScore;
 module.exports.submitScore 				= submitScore;
 module.exports.closeMatch 				= closeMatch;
 module.exports.reportNotParticipate 	= reportNotParticipate;
+module.exports.sendConsentRequest 		= sendConsentRequest;
