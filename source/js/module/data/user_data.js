@@ -8,11 +8,8 @@ const	DataPrototype	= require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	const self = this;
-
 	return {
-		authorizationInfo:	self.getInitAuthDataValue(),
-		rememberMe:			false
+		authorizationInfo:	Helpers.SessionStorage.get('authorizationInfo')
 	};
 };
 
@@ -26,11 +23,10 @@ UserDataClass.initBind = function () {
 	self._ajaxSetup(bindObject);
 	// Keeping authorization data
 	bindObject.addListener('authorizationInfo', function () {
-		const	authorizationInfo	= bindObject.toJS('authorizationInfo'),
-				rememberMe			= bindObject.toJS('rememberMe');
+		const	authorizationInfo	= bindObject.toJS('authorizationInfo');
 
-		if(typeof authorizationInfo !== 'undefined' && authorizationInfo !== 'undefined') {
-			self.setAuthData(authorizationInfo, rememberMe);
+		if(typeof authorizationInfo !== 'undefined') {
+			self.setAuthData(authorizationInfo);
 		}
 		self._ajaxSetup(bindObject);
 	});
@@ -57,21 +53,20 @@ UserDataClass._ajaxSetup = function (binding){
 	}
 };
 
-UserDataClass.getInitAuthDataValue = function () {
-	return Helpers.cookie.get('authorizationInfo');
+UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
+	const	id			= propz.get(authorizationInfo, ['id']),
+			userId		= propz.get(authorizationInfo, ['userId']),
+			expireAt	= propz.get(authorizationInfo, ['expireAt']);
+
+	return (
+		typeof id === 'string' &&
+		typeof userId === 'string' &&
+		typeof expireAt === 'string'
+	);
 };
 
-UserDataClass.setAuthData = function (authData, rememberMe) {
-	if(rememberMe) {
-		Helpers.cookie.set(
-			'authorizationInfo',
-			authData,
-			// TODO why 99?
-			{expires: 99}
-		);
-	} else {
-		Helpers.cookie.set('authorizationInfo', authData);
-	}
+UserDataClass.setAuthData = function (authData) {
+	Helpers.SessionStorage.set('authorizationInfo', authData);
 };
 
 module.exports = UserDataClass;

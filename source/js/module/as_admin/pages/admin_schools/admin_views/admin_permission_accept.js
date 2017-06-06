@@ -141,7 +141,7 @@ const PermissionAcceptPage = React.createClass({
 				return students;
 			},
 			error => {
-				console.log(error);
+				console.error(error);
 			}
 		);
 	},

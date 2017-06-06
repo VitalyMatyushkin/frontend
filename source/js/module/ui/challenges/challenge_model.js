@@ -159,7 +159,7 @@ ChallengeModel.prototype.getTeamNameCricket = function(teamId, teamsData, houses
 				return 'No house name';
 			}
 		default:
-			console.log(`Error: Event type - ${eventType}`);
+			console.error(`Error: Event type - ${eventType}`);
 			return '';
 	}
 };

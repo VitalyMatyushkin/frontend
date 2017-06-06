@@ -42,7 +42,7 @@ const ImportStudents = React.createClass({
 
 				this.validationEverything();
 			},
-			err => { console.log('err: ' + err.message + '\n' + err.stack) }
+			err => { console.error('err: ' + err.message + '\n' + err.stack) }
 		);
 	},
 

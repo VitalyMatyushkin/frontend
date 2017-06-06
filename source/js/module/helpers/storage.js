@@ -95,8 +95,22 @@ Helpers.cookie = {
 	get: function (key) {
 		let value = Cookies.get(key);
 
-		if(typeof value !== 'undefined' && value !== 'undefined') {
-			value = JSON.parse(value);
+		// Cookies method set use JSON.stringify
+		// JSON.stringify for undefined is 'undefined'
+		// So convert it manually
+		if(value === "undefined") {
+			value = undefined;
+		// For other cases parse value
+		} else if(typeof value === 'string') {
+			try {
+				value = JSON.parse(value);
+			} catch (err) {
+				console.error('Not valid data in cookie.');
+				console.error(value);
+
+				this.remove(key);
+				value = undefined;
+			}
 		}
 
 		return value;

@@ -25,7 +25,7 @@ const Grid = React.createClass({
 		const 	model 				= this.props.model,
 				classStyleAdmin 	= model.classStyleAdmin ? ' bGrid-wide' : '',
 				//The function, which will call when user click on <Row> in Grid otherwise we display in console log warning
-				handleClick 		= model.handleClick ? model.handleClick : () => {console.log('Warning: Not function in grid for click on row')},
+				handleClick 		= model.handleClick ? model.handleClick : () => {console.warn('Warning: There is no function in grid for click on row')},
 				mHidden 			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
