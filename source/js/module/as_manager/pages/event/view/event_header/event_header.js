@@ -20,6 +20,7 @@ const EventHeader = React.createClass({
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
+		isParent:						React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
@@ -27,6 +28,8 @@ const EventHeader = React.createClass({
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
 		onClickEditEventButton:			React.PropTypes.func.isRequired,
+		onSendConsentRequest:			React.PropTypes.func.isRequired,
+		onReportNotParticipate:			React.PropTypes.func.isRequired,
 		role: 							React.PropTypes.string.isRequired,
 		
 		//prop for tweet button
@@ -102,12 +105,15 @@ const EventHeader = React.createClass({
 									mode							= { this.props.mode }
 									eventStatus 					= { this.props.eventStatus }
 									isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+									isParent		 				= { this.props.isParent }
 									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
 									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
 									handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
 									onClickCloseCancel				= { this.props.onClickCloseCancel }
 									onClickOk						= { this.props.onClickOk }
+									onSendConsentRequest			= { this.props.onSendConsentRequest }
+									onReportNotParticipate			= { this.props.onReportNotParticipate }
 						/>
 					</div>
 				</div>

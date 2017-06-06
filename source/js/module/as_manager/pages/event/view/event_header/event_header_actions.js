@@ -431,10 +431,41 @@ function submitMatchReport(activeSchoolId, event){
 	);
 }
 
-module.exports.downloadPdf 		= downloadPdf;
-module.exports.cancelEvent 		= cancelEvent;
-module.exports.setModeClosing 	= setModeClosing;
-module.exports.setModeGeneral 	= setModeGeneral;
-module.exports.revertScore 		= revertScore;
-module.exports.submitScore 		= submitScore;
-module.exports.closeMatch 		= closeMatch;
+function reportNotParticipate(event){
+
+	return window.Server.children.get().then(children => {
+		const activeChildren = [];
+
+		children.forEach(child => {
+			for(let i = 0; i < event.teamsData.length; i++) {
+				const player = event.teamsData[i].players.find(p => p.userId === child.id && p.permissionId === child.permissionId);
+				if(typeof player !== 'undefined') {
+					activeChildren.push(child);
+				} else {
+					break;
+				}
+			}
+		});
+
+		return activeChildren.map(child => {
+			return window.Server.childrenEventParticipationRefuse.post(
+				{
+					eventId:		event.id,
+					playerDetails:	{
+						userId:			child.id,
+						permissionId:	child.permissionId
+					}
+				}
+			);
+		});
+	});
+}
+
+module.exports.downloadPdf 				= downloadPdf;
+module.exports.cancelEvent 				= cancelEvent;
+module.exports.setModeClosing 			= setModeClosing;
+module.exports.setModeGeneral 			= setModeGeneral;
+module.exports.revertScore 				= revertScore;
+module.exports.submitScore 				= submitScore;
+module.exports.closeMatch 				= closeMatch;
+module.exports.reportNotParticipate 	= reportNotParticipate;
