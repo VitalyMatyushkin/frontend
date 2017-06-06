@@ -50,7 +50,7 @@ const Players = React.createClass({
 		const players = propz.get(this.props.rival, ['team', 'players']);
 
 		if(typeof players !== 'undefined' && players.length !== 0) {
-			return this.renderPlayers();
+			return this.renderPlayers(players);
 		} else {
 			return this.renderNotificationTextForInterSchoolsEvent();
 		}
@@ -59,7 +59,7 @@ const Players = React.createClass({
 		const players = propz.get(this.props.rival, ['players']);
 		
 		if(typeof players !== 'undefined' && players.length !== 0) {
-			return this.renderPlayers();
+			return this.renderPlayers(players);
 		} else {
 			return this.renderNotificationTextForInterSchoolsEvent();
 		}
@@ -132,7 +132,7 @@ const Players = React.createClass({
 		) {
 			return this.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
-			return this.renderPlayers();
+			return this.renderPlayers(players);
 		}
 	},
 	renderPlayersForInternalEvent: function() {
@@ -144,7 +144,7 @@ const Players = React.createClass({
 		) {
 			return this.renderText(this.MEMBERS_NOT_ADDED);
 		} else {
-			return this.renderPlayers();
+			return this.renderPlayers(players);
 		}
 	},
 	renderEditButton: function() {
@@ -165,10 +165,7 @@ const Players = React.createClass({
 				);
 		}
 	},
-	renderPlayers: function() {
-		let players = typeof propz.get(this.props.rival, ['team', 'player']) !== 'undefined' ?
-				propz.get(this.props.rival, ['team', 'player']) :
-				propz.get(this.props.rival, ['players']);
+	renderPlayers: function(players) {
 
 		//we sort array of players by individual score
 		//this.sortPlayersByScore(players);
