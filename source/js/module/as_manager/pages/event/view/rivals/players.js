@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		PencilButton	= require('module/ui/pencil_button'),
 		propz			= require('propz'),
 		PlayersStyle	= require('../../../../../../../styles/ui/rivals/b_players.scss');
@@ -27,7 +28,11 @@ const Players = React.createClass({
 				eventType	= event.eventType;
 
 		if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return this.renderPlayersForInterSchoolsEvent();
+			if (TeamHelper.isIndividualSport(event)) {
+				return this.renderPlayersForIndividualInterSchoolsEvent();
+			} else {
+				return this.renderPlayersForInterSchoolsEvent();
+			}
 		} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
 			return this.renderPlayersForHousesEvent();
 		} if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
@@ -44,6 +49,15 @@ const Players = React.createClass({
 	renderPlayersForInterSchoolsEvent: function() {
 		const players = propz.get(this.props.rival, ['team', 'players']);
 
+		if(typeof players !== 'undefined' && players.length !== 0) {
+			return this.renderPlayers();
+		} else {
+			return this.renderNotificationTextForInterSchoolsEvent();
+		}
+	},
+	renderPlayersForIndividualInterSchoolsEvent: function() {
+		const players = propz.get(this.props.rival, ['players']);
+		
 		if(typeof players !== 'undefined' && players.length !== 0) {
 			return this.renderPlayers();
 		} else {
@@ -152,7 +166,9 @@ const Players = React.createClass({
 		}
 	},
 	renderPlayers: function() {
-		const players = this.props.rival.team.players;
+		let players = typeof propz.get(this.props.rival, ['team', 'player']) !== 'undefined' ?
+				propz.get(this.props.rival, ['team', 'player']) :
+				propz.get(this.props.rival, ['players']);
 
 		//we sort array of players by individual score
 		//this.sortPlayersByScore(players);

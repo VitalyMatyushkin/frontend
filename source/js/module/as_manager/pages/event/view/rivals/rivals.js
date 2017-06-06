@@ -141,6 +141,50 @@ const Rivals = React.createClass({
 					return 0;
 				});
 			}
+		} else if (TeamHelper.isIndividualSport(event)){
+			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+				const	schoolsData	= event.schoolsData,
+						players = event.individualsData;
+				// iterate all schools
+				schoolsData.forEach(school => {
+					const rival = {};
+					
+					rival.school = school;
+					let schoolInvite = undefined;
+					if (typeof event.invites !== 'undefined') {
+						schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+					}
+					
+					if(typeof schoolInvite !== 'undefined') {
+						rival.invite = schoolInvite;
+					}
+					
+					rival.isIndividualScoreAvailable = true;
+					rival.isTeamScoreWasChanged = false; // надо ли?
+					
+					// search all players for current school
+					rival.players = [];
+					players.forEach( player => {
+						if(player.schoolId === school.id) {
+							rival.players.push(player);
+						}
+					});
+					
+					rivals.push(rival);
+				});
+				
+				// standart sort
+				rivals = rivals.sort((rival1, rival2) => {
+					if(rival1.school.id === this.props.activeSchoolId && rival2.school.id !== this.props.activeSchoolId) {
+						return -1;
+					}
+					if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
+						return 1;
+					}
+					
+					return 0;
+				});
+			}
 		}
 
 		binding.atomically()

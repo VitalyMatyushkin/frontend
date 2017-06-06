@@ -96,7 +96,7 @@ const SchoolRivalInfo = React.createClass({
 					placeData	= places.find(p => p.schoolIds.find(id => id === this.props.rival.school.id));
 
 			let placeNameStyle;
-			switch (placeData.place) {
+			switch (placeData && placeData.place) {
 				case 1:
 					placeNameStyle = 'mFirstPlace';
 					break;
