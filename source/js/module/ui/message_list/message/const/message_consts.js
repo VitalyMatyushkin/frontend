@@ -1,5 +1,5 @@
 const MESSAGE_KIND = {
-	'INVITATION':	'INVITATION',
+	'INVITATION':	'EventInvitationMessage',
 	'REFUSAL':		'EventParticipationRefusalMessage'
 };
 

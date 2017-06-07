@@ -21,6 +21,12 @@ const MessageListActions = {
 	},
 	loadArchiveMessages: function() {
 		return window.Server.childMessageArchive.get();
+	},
+	acceptInvitationMessage: function(messageId) {
+		return window.Server.childMessageAccept.post({messageId:messageId});
+	},
+	declineInvitationMessage: function(messageId) {
+		return window.Server.childMessageReject.post({messageId:messageId});
 	}
 };
 
