@@ -59,7 +59,13 @@ const MessageListWrapper = React.createClass({
 		const	messages	= binding.toJS('messages'),
 				isSync		= binding.toJS('isSync');
 
-		if(isSync) {
+		if(!isSync) {
+			return (
+				<div className="eInvites_processing">
+					<Loader/>
+				</div>
+			);
+		} else if(isSync && messages.length > 0) {
 			return (
 				<MessageList
 					messages	= {messages}
@@ -67,12 +73,10 @@ const MessageListWrapper = React.createClass({
 					onAction	= {this.onAction}
 				/>
 			);
-		} else {
+		} else if(isSync && messages.length === 0) {
 			return (
-				<div>
-					<br/>
-					<br/>
-					<Loader/>
+				<div className="eInvites_processing">
+					<span>There is no messages.</span>
 				</div>
 			);
 		}

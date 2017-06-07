@@ -17,12 +17,15 @@ const Messages = React.createClass({
 			messagesRouting:	{},
 			menuItems:			{},
 			inbox:				{
+				messages: [],
 				isSync: false
 			},
 			outbox:				{
+				messages: [],
 				isSync: false
 			},
 			archive:			{
+				messages: [],
 				isSync: false
 			}
 		});
