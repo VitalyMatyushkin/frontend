@@ -169,20 +169,24 @@ const Rivals = React.createClass({
 							rival.players.push(player);
 						}
 					});
+					rival.score = 0;
+					rival.players.forEach( player => {
+						const score = propz.get(player,['richScore', 'extraScore']);
+						
+						if (typeof score !== 'undefined') {
+							rival.score += score;
+						} else {
+							//TODO: It temp solution
+							rival.score += Math.round(Math.random() * 10);
+						}
+					});
 					
 					rivals.push(rival);
 				});
 				
-				// standart sort
+				// Sort array of rivals by ASC of extraScores
 				rivals = rivals.sort((rival1, rival2) => {
-					if(rival1.school.id === this.props.activeSchoolId && rival2.school.id !== this.props.activeSchoolId) {
-						return -1;
-					}
-					if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
-						return 1;
-					}
-					
-					return 0;
+					return rival1.score - rival2.score;
 				});
 			}
 		}
@@ -410,6 +414,33 @@ const Rivals = React.createClass({
 
 		binding.set('model.results.houseScore', Immutable.fromJS(results.houseScore));
 	},
+	handlePlayerAthleticScoreChanges: function(player, score){
+		const	binding					= this.getDefaultBinding(),
+				event					= binding.toJS('model'),
+				individualScoreArray	= event.results.individualScore;
+		
+		let playerScoreData = individualScoreArray.find(s =>
+			s.userId === player.userId && s.permissionId === player.permissionId
+		);
+		
+		if(typeof playerScoreData === 'undefined') {
+			playerScoreData = {
+				userId:			player.userId,
+				permissionId:	player.permissionId,
+				score:			0,
+				richScore: {
+					extraScore: 0
+				}
+			};
+			individualScoreArray.push(playerScoreData);
+		}
+		/** set score */
+		playerScoreData.score = score.scoreAthletic.score;
+		playerScoreData.richScore = Object.assign({}, {extraScore: score.scoreAthletic.extraScore});
+		playerScoreData.isChanged = true;
+		playerScoreData.isValid = score.isValid;
+		binding.set('model.results.individualScore', Immutable.fromJS(individualScoreArray));
+	},
 	changePointsForPlayer: function(teamId, player, score) {
 		const	binding					= this.getDefaultBinding(),
 				event					= binding.toJS('model'),
@@ -522,13 +553,17 @@ const Rivals = React.createClass({
 
 			this.changePointsForTeam(teamId, scoreData);
 		} else if(scoreBundleName === 'individualData') {
-			const teamId = rival.team.id;
-
-			this.handlePlayerScoreChanges(
-				teamId,
-				player,
-				scoreData
-			);
+			if (typeof rival.team !== 'undefined'){
+				const teamId = rival.team.id;
+				
+				this.handlePlayerScoreChanges(
+					teamId,
+					player,
+					scoreData
+				);
+			} else {
+				this.handlePlayerAthleticScoreChanges (player, scoreData);
+			}
 		}
 	},
 	renderRivals: function() {

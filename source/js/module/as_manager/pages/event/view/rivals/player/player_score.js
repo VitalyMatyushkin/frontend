@@ -64,7 +64,7 @@ const PlayerScore = React.createClass({
 									plainExtraPoints 		= { this.getExtraPointsAthleticByStudent(event, player.userId) }
 									pointsType				= { event.sport.points.display }
 									pointsStep				= { event.sport.points.pointsStep }
-									onChangeScoreAthletic	= { (value) => {console.log(value)} }
+									onChangeScoreAthletic	= { this.onChange }
 									pointsMask				= { event.sport.points.inputMask }
 					/>
 				</span>

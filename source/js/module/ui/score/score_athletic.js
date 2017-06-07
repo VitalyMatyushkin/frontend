@@ -42,6 +42,32 @@ const ScoreAthletic = React.createClass({
 		return playerScoreClassName;
 	},
 	
+	getScoreAsObject: function(score){
+		let result;
+		//score can be object and number, if score is object then it has property "value", else score just number
+		if (typeof score.value !== 'undefined') { 	//score
+			result = {
+				scoreAthletic: {
+					score: score.value,
+					extraScore: this.props.plainExtraPoints
+				},
+				isValid: score.isValid
+			};
+		} else {									//extraScore
+			result = {
+				scoreAthletic: {
+					score: this.props.plainPoints,
+					extraScore: score
+				},
+				isValid: true
+			};
+		}
+		
+		
+		this.props.onChangeScoreAthletic(result);
+		
+	},
+	
 	renderScoreViewMode: function() {
 		//TODO: Add extraScore in view
 		return (
@@ -74,46 +100,13 @@ const ScoreAthletic = React.createClass({
 					<div>{ SportConsts.SPORT_ATHLETIC.PLAIN }</div>
 					<PlainPoints	plainPoints	= { this.props.plainPoints }
 									step		= { this.props.pointsStep }
-									onChange	= { this.props.onChangeScoreAthletic }
+									onChange	= { this.getScoreAsObject }
 									modeView	= { this.props.modeView }
 					/>
 				</div>
-				<div className={"ePlayer_scoreAthletics " + playerPlainScoreClassName}>
-					<div>{ SportConsts.SPORT_ATHLETIC.EXTRA_SCORE }</div>
-					<ExtraScoreAthletic
-						extraScore 				= { this.props.plainExtraPoints }
-						onChangeScoreAthletic 	= { this.props.onChangeScoreAthletic }
-						modeView				= { this.props.modeView }
-					/>
-				</div>
+				{ this.renderPlayerExtraScoreInChangeMode() }
 			</div>
 		);
-	},
-	
-	getScoreAsObject: function(score){
-		
-		let result;
-		if (typeof score.value !== 'undefined') { 	//score
-			result = {
-				score: {
-					score: score.value,
-					extraScore: this.props.plainExtraPoints
-				},
-				isValid: score.isValid
-			};
-		} else {									//extraScore
-			result = {
-				score: {
-					score: this.props.plainPoints,
-					extraScore: score
-				},
-				isValid: true
-			};
-		}
-		
-		
-		this.props.onChangeScoreAthletic(result);
-		
 	},
 	
 	renderPlayerTimePointsInChangeMode: function() {
@@ -136,14 +129,7 @@ const ScoreAthletic = React.createClass({
 									 modeView		= { this.props.modeView }
 					/>
 				</div>
-				<div className={"ePlayer_scoreAthletics " + playerTimeScoreClassName}>
-					<div>{ SportConsts.SPORT_ATHLETIC.EXTRA_SCORE }</div>
-					<ExtraScoreAthletic
-						extraScore 				= { this.props.plainExtraPoints }
-						onChangeScoreAthletic 	= { this.getScoreAsObject }
-						modeView				= { this.props.modeView }
-					/>
-				</div>
+				{ this.renderPlayerExtraScoreInChangeMode() }
 			</div>
 		);
 	},
@@ -160,23 +146,33 @@ const ScoreAthletic = React.createClass({
 					<div>{ SportConsts.SPORT_ATHLETIC.DISTANCE }</div>
 					<MaskedPoints	plainPoints		= { this.props.plainPoints }
 									 mask			= { mask }
-									 onChange		= { this.props.onChangeScoreAthletic }
+									 onChange		= { this.getScoreAsObject }
 									 stringToPoints	= { ScoreHelper.stringDistanceToPoints }
 									 validation		= { ScoreHelper.stringDistanceValidation }
 									 className		= { "mDistance " +  playerDistanceScoreClassName}
 									 modeView		= { this.props.modeView }
 					/>
 				</div>
-				<div className={"ePlayer_scoreAthletics " + playerDistanceScoreClassName}>
-					<div>{ SportConsts.SPORT_ATHLETIC.EXTRA_SCORE }</div>
-					<ExtraScoreAthletic
-						extraScore 				= { this.props.plainExtraPoints }
-						onChangeScoreAthletic 	= { this.props.onChangeScoreAthletic }
-						modeView				= { this.props.modeView }
-					/>
-				</div>
+				{ this.renderPlayerExtraScoreInChangeMode() }
 			</div>
 		);
+	},
+	
+	renderPlayerExtraScoreInChangeMode: function(){
+		const playerDistanceScoreClassName = classNames({
+			"mMedium":		this.props.isPlayerScore
+		});
+		
+		return (
+			<div className={"ePlayer_scoreAthletics " + playerDistanceScoreClassName}>
+				<div>{ SportConsts.SPORT_ATHLETIC.EXTRA_SCORE }</div>
+				<ExtraScoreAthletic
+					extraScore 				= { this.props.plainExtraPoints }
+					onChangeScoreAthletic 	= { this.getScoreAsObject }
+					modeView				= { this.props.modeView }
+				/>
+			</div>
+		)
 	},
 	
 	render: function () {
