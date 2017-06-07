@@ -15,7 +15,16 @@ const Messages = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			messagesRouting:	{},
-			menuItems:			{}
+			menuItems:			{},
+			inbox:				{
+				isSync: false
+			},
+			outbox:				{
+				isSync: false
+			},
+			archive:			{
+				isSync: false
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -54,17 +63,17 @@ const Messages = React.createClass({
 						>
 							<Route
 								path		= '/messages/inbox'
-								binding		= {binding}
+								binding		= {binding.sub('inbox')}
 								component	= {Inbox}
 							/>
 							<Route
 								path		= '/messages/outbox'
-								binding		= {binding}
+								binding		= {binding.sub('outbox')}
 								component	= {Outbox}
 							/>
 							<Route
 								path		= '/messages/archive'
-								binding		= {binding}
+								binding		= {binding.sub('archive')}
 								component	= {Archive}
 							/>
 						</RouterView>

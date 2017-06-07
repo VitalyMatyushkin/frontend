@@ -217,6 +217,8 @@ const serviceList = {
 		serviceList.childMessageInbox = new Service('/i/children/events/messages/inbox', binding);
 		serviceList.childMessageOutbox = new Service('/i/children/events/messages/outbox', binding);
 		serviceList.childMessageArchive = new Service('/i/children/events/messages/archive', binding);
+		serviceList.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
+		serviceList.childMessageReject = new Service('/i/children/events/messages/{messageId}/reject', binding);
 
 		// new role student
 		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
