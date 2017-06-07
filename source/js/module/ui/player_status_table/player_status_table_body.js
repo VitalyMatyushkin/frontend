@@ -1,5 +1,6 @@
-const	React		= require('react'),
-		Bootstrap  	= require('../../../../styles/bootstrap-custom.scss');
+const	React			= require('react'),
+		MessageConsts	= require('module/ui/message_list/message/const/message_consts'),
+		Bootstrap  		= require('../../../../styles/bootstrap-custom.scss');
 
 const PlayerStatusTableBody = React.createClass({
 	propTypes: {
@@ -13,7 +14,7 @@ const PlayerStatusTableBody = React.createClass({
 				return (
 					<tr key={player.id}>
 						<td>{player.name}</td>
-						<td>{player.status}</td>
+						<td>{MessageConsts.MESSAGE_INVITATION_STATUS_MAP[player.status]}</td>
 					</tr>
 				);
 			});

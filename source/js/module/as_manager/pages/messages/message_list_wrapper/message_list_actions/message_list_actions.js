@@ -13,14 +13,63 @@ const MessageListActions = {
 				return this.loadArchiveMessages(activeSchoolId);
 		}
 	},
+	loadMessagesByEventId: function(messagesType, activeSchoolId, eventId) {
+		switch (messagesType) {
+			case MessageConsts.MESSAGE_TYPE.INBOX:
+				return this.loadInboxMessagesByEventId(activeSchoolId, eventId);
+			case MessageConsts.MESSAGE_TYPE.OUTBOX:
+				return this.loadOutboxMessagesByEventId(activeSchoolId, eventId);
+			case MessageConsts.MESSAGE_TYPE.ARCHIVE:
+				return this.loadArchiveMessagesByEventId(activeSchoolId, eventId);
+		}
+	},
 	loadInboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesInbox.get({schoolId: activeSchoolId});
+		return window.Server.schoolEventsMessagesInbox.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
 	},
 	loadOutboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesOutbox.get({schoolId: activeSchoolId});
+		return window.Server.schoolEventsMessagesOutbox.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
 	},
 	loadArchiveMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesArchive.get({schoolId: activeSchoolId});
+		return window.Server.schoolEventsMessagesArchive.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
+	},
+	loadInboxMessagesByEventId: function(activeSchoolId, eventId) {
+		return window.Server.schoolEventsMessagesInbox.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					where: {
+						eventId: eventId
+					},
+					limit: 1000
+				}
+			}
+		).then(messages => messages.filter(m => m.eventId === eventId));
+	},
+	loadOutboxMessagesByEventId: function(activeSchoolId, eventId) {
+		return window.Server.schoolEventsMessagesOutbox.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					where: {
+						eventId: eventId
+					},
+					limit: 1000
+				}
+			}
+		).then(messages => messages.filter(m => m.eventId === eventId));
+	},
+	loadArchiveMessagesByEventId: function(activeSchoolId, eventId) {
+		return window.Server.schoolEventsMessagesArchive.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					where: {
+						eventId: eventId
+					},
+					limit: 1000
+				}
+			}
+		).then(messages => messages.filter(m => m.eventId === eventId));
 	},
 	gotItRefusalMessage: function(activeSchoolId, messageId) {
 		return window.Server.doGotItActionForEventMessage.post(

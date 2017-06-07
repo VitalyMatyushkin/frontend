@@ -93,7 +93,7 @@ const EventHeaderWrapper = React.createClass({
 				event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
-		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id);
+		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(() => binding.set('parentalConsentTab.isSync', false));
 	},
 	onReportNotParticipate: function() {
 		const	binding		= this.getDefaultBinding(),
