@@ -37,8 +37,10 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		RoleHelper						= require('./../../../helpers/role_helper'),
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		CricketResultBlock 				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
-		PlayersStatusTab 				= require('module/as_manager/pages/event/view/players_status_tab/players_status_tab'),
+		CricketResultBlock				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
+		ParentalConsentTab				= require('module/as_manager/pages/event/view/parental_consent_tab/parental_consent_tab'),
+		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
+		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
@@ -100,6 +102,10 @@ const Event = React.createClass({
 			],
 			editEventPopup: {
 				eventEditForm: {}
+			},
+			parentalConsentTab: {
+				isSync: false,
+				messages: []
 			}
 		});
 	},
@@ -113,7 +119,7 @@ const Event = React.createClass({
 
 		this.initIsNewEventFlag();
 
-		let eventData, report, photos, settings;
+		let eventData, report, photos, settings, tasks, eventMessages;
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
 
@@ -204,13 +210,17 @@ const Event = React.createClass({
 		}).then(_settings => {
 			settings = _settings;
 
-				return window.Server.schoolEventTasks.get(
-					{
-						schoolId	: this.props.activeSchoolId,
-						eventId		: self.eventId
-					}
-				);
-		}).then(tasks => {
+			return window.Server.schoolEventTasks.get(
+				{
+					schoolId	: this.props.activeSchoolId,
+					eventId		: self.eventId
+				}
+			);
+		}).then(_tasks => {
+			tasks = _tasks;
+
+			return MessageListActions.loadMessagesByEventId(MessageConsts.MESSAGE_TYPE.OUTBOX, this.props.activeSchoolId, this.eventId);
+		}).then(messages => {
 			eventData.matchReport = report.content;
 			eventData.individualScoreForRemove = [];
 
@@ -225,6 +235,8 @@ const Event = React.createClass({
 				.set('mode',								Immutable.fromJS('general'))
 				.set('individualScoreAvailable.0.value',	this.getInitValueForIndividualScoreAvailableFlag(0, eventData))
 				.set('individualScoreAvailable.1.value',	this.getInitValueForIndividualScoreAvailableFlag(1, eventData))
+				.set('parentalConsentTab.isSync',			true)
+				.set('parentalConsentTab.messages',			Immutable.fromJS(messages))
 				.commit();
 
 			self.initTabs();
@@ -247,7 +259,6 @@ const Event = React.createClass({
 			return eventData;
 		});
 	},
-
 	//Load all user integrations from server, because we want button "tweet" only user with twitter integration
 	//Note: We do not care when promises are made, because we use this data only if user click button "tweet"
 	componentDidMount: function(){
@@ -264,6 +275,13 @@ const Event = React.createClass({
 				}
 			});
 		}
+	},
+	isShowParentalConsentTab: function() {
+		const binding = this.getDefaultBinding();
+
+		const messages = binding.toJS('parentalConsentTab.messages');
+
+		return messages.length > 0;
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
@@ -445,6 +463,23 @@ const Event = React.createClass({
 		) {
 			this.addListenerForTeamScore();
 		}
+
+		this.addListenerForParentalConsentMessages();
+	},
+	addListenerForParentalConsentMessages: function() {
+		const self = this;
+
+		this.listeners.push(this.getDefaultBinding().sub('parentalConsentTab.messages').addListener(() => {
+			if(self.isShowParentalConsentTab() && self.tabListModel.findIndex(t => t.value === 'parentalConsent') !== -1) {
+				self.tabListModel.push(
+					{
+						value		: 'parentalConsent',
+						text		: 'Parental Consent',
+						isActive	: false
+					}
+				);
+			}
+		}));
 	},
 	addListenerForTeamScore: function() {
 		const binding = this.getDefaultBinding();
@@ -648,10 +683,6 @@ const Event = React.createClass({
 				value		: 'tasks',
 				text		: 'Jobs',
 				isActive	: false
-			} , {
-				value		: 'playersStatus',
-				text		: 'Players Status',
-				isActive	: false
 			}
 		];
 
@@ -678,6 +709,16 @@ const Event = React.createClass({
 				isActive	: false
 			}
 		);
+
+		if(this.isShowParentalConsentTab()) {
+			self.tabListModel.push(
+				{
+					value		: 'parentalConsent',
+					text		: 'Parental Consent',
+					isActive	: false
+				}
+			);
+		}
 
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
@@ -1166,10 +1207,12 @@ const Event = React.createClass({
 									/>
 								</div>
 							</If>
-							<If condition={activeTab === 'playersStatus'} >
+							<If condition={activeTab === 'parentalConsent'} >
 								<div className="bEventBottomContainer">
-									<PlayersStatusTab
-										binding={binding}
+									<ParentalConsentTab
+										eventId		= {self.eventId}
+										schoolId	= {this.props.activeSchoolId}
+										binding		= {binding.sub('parentalConsentTab')}
 									/>
 								</div>
 							</If>
