@@ -11,6 +11,17 @@ const SportHelper = {
 		const cricketNames = ['cricket', 'cricket t20', 'cricket sixes'];
 
 		return cricketNames.some(cricketName => cricketName === sportName.toLowerCase());
+	},
+	
+	/**
+	 * Function return true, if sport is athletic (with different names)
+	 * @param sportName {string}
+	 * @returns {boolean}
+	 */
+	isAthletics: function(sportName){
+		const athleticNames = ['sprint (100 m)'];
+		
+		return athleticNames.some(athleticName => athleticName === sportName.toLowerCase());
 	}
 };
 

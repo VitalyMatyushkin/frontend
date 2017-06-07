@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		Score			= require('module/ui/score/score'),
 		ScoreCricket	= require('module/ui/score/score_cricket'),
+		ScoreAthletic	= require('module/ui/score/score_athletic'),
 		SportHelper 	= require('module/helpers/sport_helper'),
 		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper');
 
@@ -18,6 +19,20 @@ const PlayerScore = React.createClass({
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
+	
+	getExtraPointsAthleticByStudent: function(event, userId) {
+		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
+		
+		if (
+			typeof event.results.individualScore[userScoreDataIndex] !== 'undefined' &&
+			typeof event.results.individualScore[userScoreDataIndex].richScore !== 'undefined'
+		) {
+			return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].richScore.extraScore;
+		} else {
+			return 0;
+		}
+	},
+	
 	onChange: function(scoreData) {
 		this.props.onChange(scoreData, this.props.player);
 	},
@@ -41,6 +56,19 @@ const PlayerScore = React.createClass({
 					/>
 				</div>
 			);
+		} else if (SportHelper.isAthletics(event.sport.name)) {
+			return (
+				<span className="ePlayer_scoreAthleticContainer">
+					<ScoreAthletic	isChangeMode			= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }
+									plainPoints				= { this.getPointsByStudent(event, player.userId) }
+									plainExtraPoints 		= { this.getExtraPointsAthleticByStudent(event, player.userId) }
+									pointsType				= { event.sport.points.display }
+									pointsStep				= { event.sport.points.pointsStep }
+									onChangeScoreAthletic	= { (value) => {console.log(value)} }
+									pointsMask				= { event.sport.points.inputMask }
+					/>
+				</span>
+			)
 		} else {
 			return (
 				<span className="ePlayer_scoreContainer">

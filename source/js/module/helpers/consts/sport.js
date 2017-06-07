@@ -15,6 +15,13 @@ const SPORT_POINTS_TYPE = {
 	'DISTANCE':	'DISTANCE'
 };
 
+const SPORT_ATHLETIC = {
+	'PLAIN':		'Plain',
+	'TIME': 		'Time',
+	'DISTANCE':		'Distance',
+	'EXTRA_SCORE': 	'Score'
+};
+
 const ALLOWED_GENDERS = {
 	'MALE_ONLY':	'MALE_ONLY',
 	'FEMALE_ONLY':	'FEMALE_ONLY',
@@ -24,4 +31,4 @@ const ALLOWED_GENDERS = {
 module.exports.SPORT_PLAYERS = SPORT_PLAYERS;
 module.exports.SPORT_POINTS_TYPE = SPORT_POINTS_TYPE;
 module.exports.ALLOWED_GENDERS = ALLOWED_GENDERS;
-
+module.exports.SPORT_ATHLETIC = SPORT_ATHLETIC;
