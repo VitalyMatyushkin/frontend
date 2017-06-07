@@ -69,10 +69,9 @@ const ScoreAthletic = React.createClass({
 	},
 	
 	renderScoreViewMode: function() {
-		//TODO: Add extraScore in view
 		return (
 			<div className={this.getClassNames()}>
-				{TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str}
+				{`${TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str} / Score ${this.props.plainExtraPoints}`}
 			</div>
 		);
 	},

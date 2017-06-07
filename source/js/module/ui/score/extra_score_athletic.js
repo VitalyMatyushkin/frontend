@@ -29,9 +29,21 @@ const ExtraScoreAthletic = React.createClass({
 		this.changeScore(result);
 	},
 	
+	onChange:function(event){
+		this.changeScore(event.target.value);
+		
+		event.stopPropagation();
+	},
+	
+	checkValue: function(value){
+		return (/^[0-9]{1}$/.test(value) || value === '');
+	},
+	
 	changeScore: function(result){
-		this.setState({value: result});
-		this.props.onChangeScoreAthletic(result);
+		if (this.checkValue(result)){
+			this.setState({value: result});
+			this.props.onChangeScoreAthletic(result);
+		}
 	},
 	
 	onFocus:function(event){
@@ -64,11 +76,11 @@ const ExtraScoreAthletic = React.createClass({
 			<div>
 				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
 				<input	type		= "text"
-						  className	= {bScorePointClassNames}
-						  value		= {this.props.extraScore}
-						  onChange	= {this.onChange}
-						  onFocus		= {this.onFocus}
-						  onBlur		= {this.onBlur}
+						className	= { bScorePointClassNames }
+						value		= { this.props.extraScore }
+						onChange	= { this.onChange }
+						onFocus		= { this.onFocus }
+						onBlur		= { this.onBlur }
 				/>
 				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
 			</div>

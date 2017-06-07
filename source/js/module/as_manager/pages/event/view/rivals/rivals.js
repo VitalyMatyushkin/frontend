@@ -160,7 +160,7 @@ const Rivals = React.createClass({
 					}
 					
 					rival.isIndividualScoreAvailable = true;
-					rival.isTeamScoreWasChanged = false; // надо ли?
+					rival.isTeamScoreWasChanged = false;
 					
 					// search all players for current school
 					rival.players = [];
