@@ -14,13 +14,13 @@ const MessageListActions = {
 		}
 	},
 	loadInboxMessages: function() {
-		return window.Server.childMessageInbox.get();
+		return window.Server.childMessageInbox.get({}, {filter: {limit: 100}});
 	},
 	loadOutboxMessages: function() {
-		return window.Server.childMessageOutbox.get();
+		return window.Server.childMessageOutbox.get({}, {filter: {limit: 100}});
 	},
 	loadArchiveMessages: function() {
-		return window.Server.childMessageArchive.get();
+		return window.Server.childMessageArchive.get({}, {filter: {limit: 100}});
 	},
 	acceptInvitationMessage: function(messageId) {
 		return window.Server.childMessageAccept.post({messageId:messageId});
