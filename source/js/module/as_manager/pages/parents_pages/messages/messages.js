@@ -15,7 +15,19 @@ const Messages = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			messagesRouting:	{},
-			menuItems:			{}
+			menuItems:			{},
+			inbox:				{
+				messages: [],
+				isSync: false
+			},
+			outbox:				{
+				messages: [],
+				isSync: false
+			},
+			archive:			{
+				messages: [],
+				isSync: false
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -35,6 +47,42 @@ const Messages = React.createClass({
 			name:	'Archive',
 			key:	'Archive'
 		}];
+
+		this.addListeners();
+	},
+	addListeners: function() {
+		this.addListenerToInboxMessagesCount();
+	},
+	/**
+	 * Function adds listener to count of inbox invites.
+	 * So, invites component listens count of inbox invites and update this value too.
+	 * Yes, it's shitty way because child component should not update data from his parent.
+	 * But there is no any other way to solve this problem while we don't have redux or something else from flux camp
+	 * frameworks.
+	 */
+	addListenerToInboxMessagesCount: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('inbox.messages').addListener(descriptor => {
+			const	currentModels	= descriptor.getCurrentValue().toJS(),
+					prevModels		= descriptor.getPreviousValue().toJS();
+
+			if(currentModels.length !== prevModels.length) {
+				const	rootBinding		= this.getMoreartyContext().getBinding(),
+						topMenuItems	= rootBinding.toJS('topMenuItems'),
+						inviteItemIndex	= topMenuItems.findIndex(i => i.key === 'Messages');
+
+				let		name			= '';
+				if(currentModels.length > 0) {
+					name =`Messages(${currentModels.length})`;
+				} else {
+					name ='Messages';
+				}
+				topMenuItems[inviteItemIndex].name = name;
+
+				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+			}
+		});
 	},
 	render: function () {
 		const	binding		= this.getDefaultBinding(),
@@ -54,17 +102,17 @@ const Messages = React.createClass({
 						>
 							<Route
 								path		= '/messages/inbox'
-								binding		= {binding}
+								binding		= {binding.sub('inbox')}
 								component	= {Inbox}
 							/>
 							<Route
 								path		= '/messages/outbox'
-								binding		= {binding}
+								binding		= {binding.sub('outbox')}
 								component	= {Outbox}
 							/>
 							<Route
 								path		= '/messages/archive'
-								binding		= {binding}
+								binding		= {binding.sub('archive')}
 								component	= {Archive}
 							/>
 						</RouterView>

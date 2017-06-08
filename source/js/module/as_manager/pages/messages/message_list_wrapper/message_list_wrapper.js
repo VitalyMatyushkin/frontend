@@ -4,7 +4,8 @@ const	React				= require('react'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		MessageListActions	= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageList			= require('module/ui/message_list/message_list'),
-		MessageConsts		= require('module/ui/message_list/message/const/message_consts');
+		MessageConsts		= require('module/ui/message_list/message/const/message_consts'),
+		Loader				= require('module/ui/loader');
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,15 +18,17 @@ const MessageListWrapper = React.createClass({
 		this.loadAndSetMessages();
 	},
 	loadAndSetMessages: function() {
-		MessageListActions.loadMessages(
-			this.props.messageType,
-			this.activeSchoolId
-		).then(messages => {
-			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
+		MessageListActions.loadMessages(this.props.messageType, this.activeSchoolId).then(messages => {
+			this.getDefaultBinding().atomically()
+				.set('isSync',		true)
+				.set('messages',	Immutable.fromJS(messages))
+				.commit();
 		});
 	},
+	setSync: function(value) {
+		this.getDefaultBinding().set('isSync', value);
+	},
 	onAction: function(messageId, messageKind, actionType) {
-		console.log({messageId: messageId, messageKind: messageKind, actionType: actionType});
 		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType);
 	},
 	onActionByMessageKindAndActionType: function(messageId, messageKind, actionType) {
@@ -38,16 +41,27 @@ const MessageListWrapper = React.createClass({
 	onActionForRefusalMessageByActionType: function(messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
-				MessageListActions.gotItRefusalMessage(this.activeSchoolId, messageId).then(() => this.loadAndSetMessages());
+				MessageListActions.gotItRefusalMessage(this.activeSchoolId, messageId).then(() => {
+					this.setSync(false);
+
+					this.loadAndSetMessages();
+				});
 				break;
 		}
 	},
 	render: function() {
-		const binding = this.getDefaultBinding();
+		const	binding		= this.getDefaultBinding();
 
-		const messages = binding.toJS('messages');
+		const	messages	= binding.toJS('messages'),
+				isSync		= binding.toJS('isSync');
 
-		if(typeof messages !== 'undefined' && messages.length > 0) {
+		if(!isSync) {
+			return (
+				<div className="eInvites_processing">
+					<Loader/>
+				</div>
+			);
+		} else if(isSync && messages.length > 0) {
 			return (
 				<MessageList
 					messages	= {messages}
@@ -55,8 +69,12 @@ const MessageListWrapper = React.createClass({
 					onAction	= {this.onAction}
 				/>
 			);
-		} else {
-			return null;
+		} else if(isSync && messages.length === 0) {
+			return (
+				<div className="eInvites_processing">
+					<span>There is no messages.</span>
+				</div>
+			);
 		}
 	}
 });

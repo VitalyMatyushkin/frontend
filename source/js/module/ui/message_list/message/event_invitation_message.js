@@ -1,5 +1,7 @@
 const	React							= require('react'),
 		SchoolLogo						= require('module/ui/message_list/message/components/school_logo'),
+		ChildName						= require('module/ui/message_list/message/components/child_name'),
+		TeamInfo						= require('module/ui/message_list/message/components/team_info'),
 		MessageTitle					= require('module/ui/message_list/message/components/message_title'),
 		MessageText						= require('module/ui/message_list/message/components/message_text'),
 		EventInfo						= require('module/ui/message_list/message/components/event_info'),
@@ -76,7 +78,10 @@ const EventInvitationMessage = React.createClass({
 								message={this.props.message}
 							/>
 							<div className="eInvite_info col-md-7 col-sm-7">
-								<MessageTitle
+								<ChildName
+									message={this.props.message}
+								/>
+								<TeamInfo
 									message={this.props.message}
 								/>
 								<EventInfo

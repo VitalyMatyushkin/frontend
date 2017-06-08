@@ -93,13 +93,32 @@ const EventHeaderWrapper = React.createClass({
 				event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
-		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id);
+		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(() => {
+			binding.set('parentalConsentTab.isSync', false);
+
+			window.simpleAlert(
+				"Consent requests were successfully sent.",
+				'Ok',
+				() => {}
+			);
+		});
 	},
 	onReportNotParticipate: function() {
 		const	binding		= this.getDefaultBinding(),
 				event		= binding.toJS('model');
 
-		EventHeaderActions.reportNotParticipate(event);
+		EventHeaderActions.reportNotParticipate(event).then(() => {
+			window.simpleAlert(
+				"Reports were successfully sent.",
+				'Ok',
+				() => {}
+			);
+		});
+	},
+	onClickDeleteEvent: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isDeleteEventPopupOpen', true);
 	},
 	isTweetButtonRender: function(role: string, twitterData: any, mode: string){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
@@ -147,6 +166,7 @@ const EventHeaderWrapper = React.createClass({
 						onSendConsentRequest			= { this.onSendConsentRequest }
 						onReportNotParticipate			= { this.onReportNotParticipate }
 						role 							= { role }
+						onClickDeleteEvent 				= { this.onClickDeleteEvent }
 						//props for tweet button
 						twitterData 					= { twitterData }
 						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }

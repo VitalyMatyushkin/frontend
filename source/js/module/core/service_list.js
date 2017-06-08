@@ -178,6 +178,7 @@ const serviceList = {
 		// it's some invitation message
 		serviceList.schoolEventsInvitationMessages	= new Service('/i/schools/{schoolId}/events/messages/invite', binding);
 		// it's school worker inbox
+		serviceList.schoolEventsMessages			= new Service('/i/schools/{schoolId}/events/messages', binding);
 		serviceList.schoolEventsMessagesInbox		= new Service('/i/schools/{schoolId}/events/messages/inbox', binding);
 		serviceList.schoolEventsMessagesOutbox		= new Service('/i/schools/{schoolId}/events/messages/outbox', binding);
 		serviceList.schoolEventsMessagesArchive		= new Service('/i/schools/{schoolId}/events/messages/archive', binding);
@@ -217,6 +218,8 @@ const serviceList = {
 		serviceList.childMessageInbox = new Service('/i/children/events/messages/inbox', binding);
 		serviceList.childMessageOutbox = new Service('/i/children/events/messages/outbox', binding);
 		serviceList.childMessageArchive = new Service('/i/children/events/messages/archive', binding);
+		serviceList.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
+		serviceList.childMessageReject = new Service('/i/children/events/messages/{messageId}/reject', binding);
 
 		// new role student
 		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);

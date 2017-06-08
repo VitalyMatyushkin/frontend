@@ -37,8 +37,12 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		RoleHelper						= require('./../../../helpers/role_helper'),
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		CricketResultBlock 				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
-		PlayersStatusTab 				= require('module/as_manager/pages/event/view/players_status_tab/players_status_tab'),
+		CricketResultBlock				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
+		ParentalConsentTab				= require('module/as_manager/pages/event/view/parental_consent_tab/parental_consent_tab'),
+		ParentalReportsTab				= require('module/as_manager/pages/event/view/parental_report_tab/parental_report_tab'),
+		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
+		ConfirmPopup 					= require('module/ui/confirm_popup'),
+		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
@@ -62,6 +66,7 @@ const Event = React.createClass({
 			isRivalsSync: false,
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
+			isDeleteEventPopupOpen: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -100,6 +105,14 @@ const Event = React.createClass({
 			],
 			editEventPopup: {
 				eventEditForm: {}
+			},
+			parentalConsentTab: {
+				isSync: false,
+				messages: []
+			},
+			parentalReportsTab: {
+				isSync: false,
+				messages: []
 			}
 		});
 	},
@@ -109,11 +122,12 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
+		self.role = role;
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
 
-		let eventData, report, photos, settings;
+		let eventData, report, photos, settings, tasks, parentalConsentTabMessages, parentalReportsTabMessages;
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
 
@@ -204,13 +218,23 @@ const Event = React.createClass({
 		}).then(_settings => {
 			settings = _settings;
 
-				return window.Server.schoolEventTasks.get(
-					{
-						schoolId	: this.props.activeSchoolId,
-						eventId		: self.eventId
-					}
-				);
-		}).then(tasks => {
+			return window.Server.schoolEventTasks.get(
+				{
+					schoolId	: this.props.activeSchoolId,
+					eventId		: self.eventId
+				}
+			);
+		}).then(_tasks => {
+			tasks = _tasks;
+
+			return this.loadParentalConsentMessages();
+		}).then(_parentalConsentTabMessages => {
+			parentalConsentTabMessages = _parentalConsentTabMessages;
+
+			return this.loadParentalReposrtsMessages();
+		}).then(_parentalReportsTabMessages => {
+			parentalReportsTabMessages = _parentalReportsTabMessages;
+
 			eventData.matchReport = report.content;
 			eventData.individualScoreForRemove = [];
 
@@ -225,6 +249,10 @@ const Event = React.createClass({
 				.set('mode',								Immutable.fromJS('general'))
 				.set('individualScoreAvailable.0.value',	this.getInitValueForIndividualScoreAvailableFlag(0, eventData))
 				.set('individualScoreAvailable.1.value',	this.getInitValueForIndividualScoreAvailableFlag(1, eventData))
+				.set('parentalConsentTab.isSync',			true)
+				.set('parentalConsentTab.messages',			Immutable.fromJS(parentalConsentTabMessages))
+				.set('parentalReportsTab.isSync',			true)
+				.set('parentalReportsTab.messages',			Immutable.fromJS(parentalReportsTabMessages))
 				.commit();
 
 			self.initTabs();
@@ -247,7 +275,6 @@ const Event = React.createClass({
 			return eventData;
 		});
 	},
-
 	//Load all user integrations from server, because we want button "tweet" only user with twitter integration
 	//Note: We do not care when promises are made, because we use this data only if user click button "tweet"
 	componentDidMount: function(){
@@ -264,6 +291,40 @@ const Event = React.createClass({
 				}
 			});
 		}
+	},
+	loadParentalConsentMessages: function() {
+		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
+			return MessageListActions.loadParentalConsentMessagesByEventId(
+				this.props.activeSchoolId,
+				this.eventId
+			);
+		} else {
+			return Promise.resolve([]);
+		}
+	},
+	loadParentalReposrtsMessages: function() {
+		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
+			return MessageListActions.loadParentalReportsMessagesByEventId(
+				this.props.activeSchoolId,
+				this.eventId
+			);
+		} else {
+			return Promise.resolve([]);
+		}
+	},
+	isShowParentalConsentTab: function() {
+		const binding = this.getDefaultBinding();
+
+		const messages = binding.toJS('parentalConsentTab.messages');
+
+		return messages.length > 0;
+	},
+	isShowParentalReportsTab: function() {
+		const binding = this.getDefaultBinding();
+
+		const messages = binding.toJS('parentalReportsTab.messages');
+
+		return messages.length > 0;
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
@@ -445,6 +506,41 @@ const Event = React.createClass({
 		) {
 			this.addListenerForTeamScore();
 		}
+
+		if(this.role !== 'STUDENT' && this.role !== 'PARENT') {
+			this.addListenerForParentalConsentMessages();
+			this.addListenerForParentalReportMessages();
+		}
+	},
+	addListenerForParentalConsentMessages: function() {
+		const self = this;
+
+		this.listeners.push(this.getDefaultBinding().sub('parentalConsentTab.messages').addListener(() => {
+			if(self.isShowParentalConsentTab() && self.tabListModel.findIndex(t => t.value === 'parentalConsent') === -1) {
+				self.tabListModel.push(
+					{
+						value		: 'parentalConsent',
+						text		: 'Parental Consent',
+						isActive	: false
+					}
+				);
+			}
+		}));
+	},
+	addListenerForParentalReportMessages: function() {
+		const self = this;
+
+		this.listeners.push(this.getDefaultBinding().sub('parentalReportsTab.messages').addListener(() => {
+			if(self.isShowParentalReportsTab() && self.tabListModel.findIndex(t => t.value === 'parentalReports') === -1) {
+				self.tabListModel.push(
+					{
+						value		: 'parentalReports',
+						text		: 'Parental Reports',
+						isActive	: false
+					}
+				);
+			}
+		}));
 	},
 	addListenerForTeamScore: function() {
 		const binding = this.getDefaultBinding();
@@ -648,10 +744,6 @@ const Event = React.createClass({
 				value		: 'tasks',
 				text		: 'Jobs',
 				isActive	: false
-			} , {
-				value		: 'playersStatus',
-				text		: 'Players Status',
-				isActive	: false
 			}
 		];
 
@@ -678,6 +770,26 @@ const Event = React.createClass({
 				isActive	: false
 			}
 		);
+
+		if(this.isShowParentalConsentTab()) {
+			self.tabListModel.push(
+				{
+					value		: 'parentalConsent',
+					text		: 'Parental Consent',
+					isActive	: false
+				}
+			);
+		}
+
+		if(this.isShowParentalReportsTab()) {
+			self.tabListModel.push(
+				{
+					value		: 'parentalReports',
+					text		: 'Parental Reports',
+					isActive	: false
+				}
+			);
+		}
 
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
@@ -877,10 +989,32 @@ const Event = React.createClass({
 		//TODO I'm going to make event changes without reload.
 		this.props.onReload();
 	},
+	handleClickDeleteButton: function(){
+		const 	activeSchoolId 	= this.props.activeSchoolId,
+				rootBinding 	= this.getMoreartyContext().getBinding(),
+				eventId 		= rootBinding.get('routing.pathParameters.0'),
+				binding 		= this.getDefaultBinding();
+		
+		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
+			binding.set("isDeleteEventPopupOpen", false);
+			window.simpleAlert(
+				'Event have been deleted!',
+				'Ok',
+				() => {
+					document.location.hash = 'events/calendar';
+				}
+			);
+		});
+	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
 
 		binding.set("isEditEventPopupOpen", false);
+	},
+	handleDeleteEventPopup: function() {
+		const binding = this.getDefaultBinding();
+		
+		binding.set("isDeleteEventPopupOpen", false);
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
 		const binding = this.getDefaultBinding();
@@ -910,6 +1044,24 @@ const Event = React.createClass({
 								handleSuccessSubmit	= {this.handleSuccessSubmit}
 								handleClosePopup	= {this.handleCloseEditEventPopup}
 				/>
+			)
+		} else {
+			return null;
+		}
+	},
+	renderDeleteEventPopupOpen: function() {
+		const binding	= this.getDefaultBinding();
+		
+		if(binding.get("isDeleteEventPopupOpen")) {
+			return (
+				<ConfirmPopup	okButtonText			= "Delete"
+								cancelButtonText		= "Cancel"
+								isOkButtonDisabled		= { false }
+								handleClickOkButton		= { this.handleClickDeleteButton }
+								handleClickCancelButton	= { this.handleDeleteEventPopup }
+				>
+					<div>Do you want to remove this event?</div>
+				</ConfirmPopup>
 			)
 		} else {
 			return null;
@@ -1166,10 +1318,21 @@ const Event = React.createClass({
 									/>
 								</div>
 							</If>
-							<If condition={activeTab === 'playersStatus'} >
+							<If condition={activeTab === 'parentalConsent'} >
 								<div className="bEventBottomContainer">
-									<PlayersStatusTab
-										binding={binding}
+									<ParentalConsentTab
+										eventId		= {self.eventId}
+										schoolId	= {this.props.activeSchoolId}
+										binding		= {binding.sub('parentalConsentTab')}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'parentalReports'} >
+								<div className="bEventBottomContainer">
+									<ParentalReportsTab
+										eventId		= {self.eventId}
+										schoolId	= {this.props.activeSchoolId}
+										binding		= {binding.sub('parentalReportsTab')}
 									/>
 								</div>
 							</If>
@@ -1183,6 +1346,7 @@ const Event = React.createClass({
 						</div>
 						{ this.renderOpponentSchoolManager() }
 						{ this.renderEditEventPopupOpen() }
+						{ this.renderDeleteEventPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode
