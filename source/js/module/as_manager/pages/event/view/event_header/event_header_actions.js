@@ -441,7 +441,6 @@ function reportNotParticipate(event){
 				const player = event.teamsData[i].players.find(p => p.userId === child.id && p.permissionId === child.permissionId);
 				if(typeof player !== 'undefined') {
 					activeChildren.push(child);
-				} else {
 					break;
 				}
 			}
