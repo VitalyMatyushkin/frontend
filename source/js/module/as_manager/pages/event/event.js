@@ -42,6 +42,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		ParentalReportsTab				= require('module/as_manager/pages/event/view/parental_report_tab/parental_report_tab'),
 		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
+		ConfirmPopup 					= require('module/ui/confirm_popup'),
+		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
 
 const Event = React.createClass({
@@ -65,6 +67,7 @@ const Event = React.createClass({
 			isRivalsSync: false,
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
+			isDeleteEventPopupOpen: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -987,10 +990,32 @@ const Event = React.createClass({
 		//TODO I'm going to make event changes without reload.
 		this.props.onReload();
 	},
+	handleClickDeleteButton: function(){
+		const 	activeSchoolId 	= this.props.activeSchoolId,
+				rootBinding 	= this.getMoreartyContext().getBinding(),
+				eventId 		= rootBinding.get('routing.pathParameters.0'),
+				binding 		= this.getDefaultBinding();
+		
+		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
+			binding.set("isDeleteEventPopupOpen", false);
+			window.simpleAlert(
+				'Event have been deleted!',
+				'Ok',
+				() => {
+					document.location.hash = 'events/calendar';
+				}
+			);
+		});
+	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
 
 		binding.set("isEditEventPopupOpen", false);
+	},
+	handleDeleteEventPopup: function() {
+		const binding = this.getDefaultBinding();
+		
+		binding.set("isDeleteEventPopupOpen", false);
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
 		const binding = this.getDefaultBinding();
@@ -1020,6 +1045,24 @@ const Event = React.createClass({
 								handleSuccessSubmit	= {this.handleSuccessSubmit}
 								handleClosePopup	= {this.handleCloseEditEventPopup}
 				/>
+			)
+		} else {
+			return null;
+		}
+	},
+	renderDeleteEventPopupOpen: function() {
+		const binding	= this.getDefaultBinding();
+		
+		if(binding.get("isDeleteEventPopupOpen")) {
+			return (
+				<ConfirmPopup	okButtonText			= "Delete"
+								cancelButtonText		= "Cancel"
+								isOkButtonDisabled		= { false }
+								handleClickOkButton		= { this.handleClickDeleteButton }
+								handleClickCancelButton	= { this.handleDeleteEventPopup }
+				>
+					<div>Do you want to remove this event?</div>
+				</ConfirmPopup>
 			)
 		} else {
 			return null;
@@ -1304,6 +1347,7 @@ const Event = React.createClass({
 						</div>
 						{ this.renderOpponentSchoolManager() }
 						{ this.renderEditEventPopupOpen() }
+						{ this.renderDeleteEventPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode

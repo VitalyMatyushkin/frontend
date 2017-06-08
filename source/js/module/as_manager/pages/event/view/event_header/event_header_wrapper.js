@@ -101,6 +101,11 @@ const EventHeaderWrapper = React.createClass({
 
 		EventHeaderActions.reportNotParticipate(event);
 	},
+	onClickDeleteEvent: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isDeleteEventPopupOpen', true);
+	},
 	isTweetButtonRender: function(role: string, twitterData: any, mode: string){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
@@ -142,6 +147,7 @@ const EventHeaderWrapper = React.createClass({
 						onSendConsentRequest			= { this.onSendConsentRequest }
 						onReportNotParticipate			= { this.onReportNotParticipate }
 						role 							= { role }
+						onClickDeleteEvent 				= { this.onClickDeleteEvent }
 						//props for tweet button
 						twitterData 					= { twitterData }
 						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }

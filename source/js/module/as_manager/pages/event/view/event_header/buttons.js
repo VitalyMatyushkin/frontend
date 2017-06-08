@@ -25,7 +25,8 @@ const Buttons = React.createClass({
 		onClickCloseCancel				: React.PropTypes.func.isRequired,
 		onClickOk						: React.PropTypes.func.isRequired,
 		onSendConsentRequest			: React.PropTypes.func.isRequired,
-		onReportNotParticipate			: React.PropTypes.func.isRequired
+		onReportNotParticipate			: React.PropTypes.func.isRequired,
+		onClickDeleteEvent				: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -67,6 +68,7 @@ const Buttons = React.createClass({
 
 		if(this.props.isUserSchoolWorker) {
 			actionList.push({id: 'download_pdf', text: 'Download Pdf'});
+			actionList.push({id: 'delete_event', text: 'Delete Event'});
 		}
 
 		return actionList;
@@ -131,6 +133,9 @@ const Buttons = React.createClass({
 				break;
 			case 'download_pdf':
 				this.props.handleClickDownloadPdf();
+				break;
+			case 'delete_event':
+				this.props.onClickDeleteEvent();
 				break;
 		}
 	},
