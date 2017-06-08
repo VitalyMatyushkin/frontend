@@ -39,6 +39,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
 		CricketResultBlock				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		ParentalConsentTab				= require('module/as_manager/pages/event/view/parental_consent_tab/parental_consent_tab'),
+		ParentalReportsTab				= require('module/as_manager/pages/event/view/parental_report_tab/parental_report_tab'),
 		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
@@ -106,6 +107,10 @@ const Event = React.createClass({
 			parentalConsentTab: {
 				isSync: false,
 				messages: []
+			},
+			parentalReportsTab: {
+				isSync: false,
+				messages: []
 			}
 		});
 	},
@@ -115,11 +120,12 @@ const Event = React.createClass({
 				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
+		self.role = role;
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		this.initIsNewEventFlag();
 
-		let eventData, report, photos, settings, tasks, eventMessages;
+		let eventData, report, photos, settings, tasks, parentalConsentTabMessages, parentalReportsTabMessages;
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
 
@@ -219,8 +225,14 @@ const Event = React.createClass({
 		}).then(_tasks => {
 			tasks = _tasks;
 
-			return MessageListActions.loadMessagesByEventId(MessageConsts.MESSAGE_TYPE.OUTBOX, this.props.activeSchoolId, this.eventId);
-		}).then(messages => {
+			return this.loadParentalConsentMessages();
+		}).then(_parentalConsentTabMessages => {
+			parentalConsentTabMessages = _parentalConsentTabMessages;
+
+			return this.loadParentalReposrtsMessages();
+		}).then(_parentalReportsTabMessages => {
+			parentalReportsTabMessages = _parentalReportsTabMessages;
+
 			eventData.matchReport = report.content;
 			eventData.individualScoreForRemove = [];
 
@@ -236,7 +248,9 @@ const Event = React.createClass({
 				.set('individualScoreAvailable.0.value',	this.getInitValueForIndividualScoreAvailableFlag(0, eventData))
 				.set('individualScoreAvailable.1.value',	this.getInitValueForIndividualScoreAvailableFlag(1, eventData))
 				.set('parentalConsentTab.isSync',			true)
-				.set('parentalConsentTab.messages',			Immutable.fromJS(messages))
+				.set('parentalConsentTab.messages',			Immutable.fromJS(parentalConsentTabMessages))
+				.set('parentalReportsTab.isSync',			true)
+				.set('parentalReportsTab.messages',			Immutable.fromJS(parentalReportsTabMessages))
 				.commit();
 
 			self.initTabs();
@@ -276,10 +290,37 @@ const Event = React.createClass({
 			});
 		}
 	},
+	loadParentalConsentMessages: function() {
+		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
+			return MessageListActions.loadParentalConsentMessagesByEventId(
+				this.props.activeSchoolId,
+				this.eventId
+			);
+		} else {
+			return Promise.resolve([]);
+		}
+	},
+	loadParentalReposrtsMessages: function() {
+		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
+			return MessageListActions.loadParentalReportsMessagesByEventId(
+				this.props.activeSchoolId,
+				this.eventId
+			);
+		} else {
+			return Promise.resolve([]);
+		}
+	},
 	isShowParentalConsentTab: function() {
 		const binding = this.getDefaultBinding();
 
 		const messages = binding.toJS('parentalConsentTab.messages');
+
+		return messages.length > 0;
+	},
+	isShowParentalReportsTab: function() {
+		const binding = this.getDefaultBinding();
+
+		const messages = binding.toJS('parentalReportsTab.messages');
 
 		return messages.length > 0;
 	},
@@ -464,17 +505,35 @@ const Event = React.createClass({
 			this.addListenerForTeamScore();
 		}
 
-		this.addListenerForParentalConsentMessages();
+		if(this.role !== 'STUDENT' && this.role !== 'PARENT') {
+			this.addListenerForParentalConsentMessages();
+			this.addListenerForParentalReportMessages();
+		}
 	},
 	addListenerForParentalConsentMessages: function() {
 		const self = this;
 
 		this.listeners.push(this.getDefaultBinding().sub('parentalConsentTab.messages').addListener(() => {
-			if(self.isShowParentalConsentTab() && self.tabListModel.findIndex(t => t.value === 'parentalConsent') !== -1) {
+			if(self.isShowParentalConsentTab() && self.tabListModel.findIndex(t => t.value === 'parentalConsent') === -1) {
 				self.tabListModel.push(
 					{
 						value		: 'parentalConsent',
 						text		: 'Parental Consent',
+						isActive	: false
+					}
+				);
+			}
+		}));
+	},
+	addListenerForParentalReportMessages: function() {
+		const self = this;
+
+		this.listeners.push(this.getDefaultBinding().sub('parentalReportsTab.messages').addListener(() => {
+			if(self.isShowParentalReportsTab() && self.tabListModel.findIndex(t => t.value === 'parentalReports') === -1) {
+				self.tabListModel.push(
+					{
+						value		: 'parentalReports',
+						text		: 'Parental Reports',
 						isActive	: false
 					}
 				);
@@ -715,6 +774,16 @@ const Event = React.createClass({
 				{
 					value		: 'parentalConsent',
 					text		: 'Parental Consent',
+					isActive	: false
+				}
+			);
+		}
+
+		if(this.isShowParentalReportsTab()) {
+			self.tabListModel.push(
+				{
+					value		: 'parentalReports',
+					text		: 'Parental Reports',
 					isActive	: false
 				}
 			);
@@ -1213,6 +1282,15 @@ const Event = React.createClass({
 										eventId		= {self.eventId}
 										schoolId	= {this.props.activeSchoolId}
 										binding		= {binding.sub('parentalConsentTab')}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'parentalReports'} >
+								<div className="bEventBottomContainer">
+									<ParentalReportsTab
+										eventId		= {self.eventId}
+										schoolId	= {this.props.activeSchoolId}
+										binding		= {binding.sub('parentalReportsTab')}
 									/>
 								</div>
 							</If>

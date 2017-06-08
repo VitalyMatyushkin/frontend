@@ -1,6 +1,4 @@
-const	Promise			= require('bluebird'),
-		Immutable		= require('immutable'),
-		MessageConsts	= require('module/ui/message_list/message/const/message_consts');
+const MessageConsts = require('module/ui/message_list/message/const/message_consts');
 
 const MessageListActions = {
 	loadMessages: function(messageType) {
@@ -14,19 +12,42 @@ const MessageListActions = {
 		}
 	},
 	loadInboxMessages: function() {
-		return window.Server.childMessageInbox.get({}, {filter: {limit: 100}});
+		return window.Server.childMessageInbox.get({
+			filter: {
+				limit: 1000
+			},
+			order: 'updatedAt DESC'
+		});
 	},
 	loadOutboxMessages: function() {
-		return window.Server.childMessageOutbox.get({}, {filter: {limit: 100}});
+		return window.Server.childMessageOutbox.get({
+			filter: {
+				limit: 1000
+			},
+			order: 'updatedAt DESC'
+		});
 	},
 	loadArchiveMessages: function() {
-		return window.Server.childMessageArchive.get({}, {filter: {limit: 100}});
+		return window.Server.childMessageArchive.get({
+			filter: {
+				limit: 1000
+			},
+			order: 'updatedAt DESC'
+		});
 	},
 	acceptInvitationMessage: function(messageId) {
-		return window.Server.childMessageAccept.post({messageId:messageId});
+		return window.Server.childMessageAccept.post(
+			{
+				messageId: messageId
+			}
+		);
 	},
 	declineInvitationMessage: function(messageId) {
-		return window.Server.childMessageReject.post({messageId:messageId});
+		return window.Server.childMessageReject.post(
+			{
+				messageId: messageId
+			}
+		);
 	}
 };
 
