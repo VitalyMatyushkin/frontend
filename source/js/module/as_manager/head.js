@@ -32,6 +32,7 @@ const Head = React.createClass({
 			kindSchool === 'School'
 		) {
 			this.setInvitesCountToMenu();
+			this.setMessagesCountToMenu();
 		}
 	},
 	/**
@@ -45,10 +46,23 @@ const Head = React.createClass({
 		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
 			if(data.length > 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems');
+					topMenuItems	= rootBinding.toJS('topMenuItems');
 
 				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
 				topMenuItems[inviteItemIndex].name = `Invites(${data.length})`;
+
+				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+			}
+		});
+	},
+	setMessagesCountToMenu: function() {
+		window.Server.schoolEventsMessagesInbox.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
+			if(data.length > 0) {
+				const	rootBinding		= this.getMoreartyContext().getBinding(),
+						topMenuItems	= rootBinding.toJS('topMenuItems');
+
+				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
+				topMenuItems[inviteItemIndex].name = `Messages(${data.length})`;
 
 				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 			}
