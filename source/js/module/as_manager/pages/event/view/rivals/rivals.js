@@ -143,51 +143,77 @@ const Rivals = React.createClass({
 			}
 		} else if (TeamHelper.isIndividualSport(event)){
 			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
-				const	schoolsData	= event.schoolsData,
-						players = event.individualsData;
-				// iterate all schools
-				schoolsData.forEach(school => {
-					const rival = {};
+				//Initial state
+				if (typeof binding.toJS('view_mode') === 'undefined') {
+					binding.set('view_mode', 'general');
+				}
+				
+				if (binding.toJS('view_mode') === 'general') {
+					const	schoolsData	= event.schoolsData,
+							players = event.individualsData;
+					// iterate all schools
+					schoolsData.forEach(school => {
+						const rival = {};
+						
+						rival.school = school;
+						let schoolInvite = undefined;
+						if (typeof event.invites !== 'undefined') {
+							schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+						}
+						
+						if(typeof schoolInvite !== 'undefined') {
+							rival.invite = schoolInvite;
+						}
+						
+						rival.isIndividualScoreAvailable = true;
+						rival.isTeamScoreWasChanged = false;
+						
+						// search all players for current school
+						rival.players = [];
+						players.forEach( player => {
+							if(player.schoolId === school.id) {
+								rival.players.push(player);
+							}
+						});
+						rival.score = 0;
+						rival.players.forEach( player => {
+							const score = propz.get(player, ['richScore', 'extraScore']);
+							
+							if (typeof score !== 'undefined') {
+								rival.score += score;
+							} else {
+								//TODO: It temp solution
+								rival.score += Math.round(Math.random() * 10);
+							}
+						});
+						
+						rivals.push(rival);
+					});
 					
-					rival.school = school;
-					let schoolInvite = undefined;
-					if (typeof event.invites !== 'undefined') {
-						schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
-					}
+					// Sort array of rivals by ASC of extraScores
+					rivals = rivals.sort((rival1, rival2) => {
+						return rival1.score - rival2.score;
+					});
+				} else {
+					const 	rival = {},
+							players = event.individualsData;
+					//TODO Add score in players
+					rival.school = {};
+					rival.players = [];
+					players.forEach(player => {
+						rival.players.push(player);
+					});
 					
-					if(typeof schoolInvite !== 'undefined') {
-						rival.invite = schoolInvite;
-					}
-					
+					rival.players = rival.players.sort( (player1, player2) => {
+						return player1.score - player2.score;
+					});
+
 					rival.isIndividualScoreAvailable = true;
 					rival.isTeamScoreWasChanged = false;
 					
-					// search all players for current school
-					rival.players = [];
-					players.forEach( player => {
-						if(player.schoolId === school.id) {
-							rival.players.push(player);
-						}
-					});
-					rival.score = 0;
-					rival.players.forEach( player => {
-						const score = propz.get(player,['richScore', 'extraScore']);
-						
-						if (typeof score !== 'undefined') {
-							rival.score += score;
-						} else {
-							//TODO: It temp solution
-							rival.score += Math.round(Math.random() * 10);
-						}
-					});
-					
 					rivals.push(rival);
-				});
-				
-				// Sort array of rivals by ASC of extraScores
-				rivals = rivals.sort((rival1, rival2) => {
-					return rival1.score - rival2.score;
-				});
+					
+				}
 			}
 		}
 
@@ -197,6 +223,7 @@ const Rivals = React.createClass({
 			.commit();
 
 		this.addListenerForTeamScore();
+		this.addListenerForViewMode();
 	},
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
@@ -276,6 +303,21 @@ const Rivals = React.createClass({
 				typeof individualScoreData !== 'undefined'
 			);
 		}
+	},
+	getRandomString: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+	addListenerForViewMode: function() {
+		const 	binding = this.getDefaultBinding();
+		
+		this.listeners.push(binding.addListener( (eventDescriptor) => {
+			const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
+					currentValue	= eventDescriptor.getCurrentValue().toJS();
+			if (prevValue.view_mode !== currentValue.view_mode) {
+				binding.set('eventComponentKey', Immutable.fromJS(this.getRandomString()));
+			}
+		}));
 	},
 	addListenerForTeamScore: function() {
 		const	teamScoreBinding	= this.getDefaultBinding().sub(`model.results.teamScore`),
@@ -582,6 +624,7 @@ const Rivals = React.createClass({
 					rival									= { rival }
 					event									= { binding.toJS('model') }
 					mode									= { binding.toJS('mode') }
+					viewMode 								= { binding.toJS('view_mode') }
 					onChangeScore							= { this.onChangeScore.bind(this, rivalIndex) }
 					onClickEditTeam							= { this.onClickEditTeam.bind(this, rivalIndex) }
 					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable.bind(this, rivalIndex) }

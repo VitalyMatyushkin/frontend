@@ -16,6 +16,7 @@ const SchoolRivalInfo = React.createClass({
 		rival:									React.PropTypes.object.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
+		viewMode:								React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
@@ -194,21 +195,26 @@ const SchoolRivalInfo = React.createClass({
 		}
 	},
 	render: function() {
-		return (
-			<div className="bEventRival">
-				{ this.renderPlaceMedal() }
-				{ this.renderOpponentSchoolManagerButton() }
-				<div className="eEventRival_logo">
-					<img	className="eEventRivals_logoPic"
-							src={this.props.rival.school.pic}
-					/>
+		if (this.props.viewMode === 'general') {
+			return (
+				<div className="bEventRival">
+					{ this.renderPlaceMedal() }
+					{ this.renderOpponentSchoolManagerButton() }
+					<div className="eEventRival_logo">
+						<img	className="eEventRivals_logoPic"
+								src={this.props.rival.school.pic}
+						/>
+					</div>
+					<div className="eEventRival_rivalName">
+						{ this.getRivalName() }
+					</div>
+					{ this.renderPoints() }
 				</div>
-				<div className="eEventRival_rivalName">
-					{ this.getRivalName() }
-				</div>
-				{ this.renderPoints() }
-			</div>
-		);
+			);
+		} else {
+			return null;
+		}
+
 	}
 });
 

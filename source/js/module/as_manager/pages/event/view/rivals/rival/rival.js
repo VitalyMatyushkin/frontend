@@ -13,6 +13,7 @@ const Rival = React.createClass({
 		rivalIndex:								React.PropTypes.number.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
+		viewMode:								React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
@@ -57,6 +58,7 @@ const Rival = React.createClass({
 					rival									= { this.props.rival }
 					event									= { this.props.event }
 					mode									= { this.props.mode }
+					viewMode								= { this.props.viewMode }
 					onChangeScore							= { this.props.onChangeScore }
 					handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 					activeSchoolId							= { this.props.activeSchoolId }
