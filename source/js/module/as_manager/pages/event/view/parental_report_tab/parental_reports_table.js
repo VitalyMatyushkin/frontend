@@ -12,7 +12,7 @@ const ParentalReportsTable = React.createClass({
 		this.props.onGotIt(message.id);
 	},
 	getStatus: function(message) {
-		if(message.readStatus === MessageConsts.MESSAGE_READ_STATUS.READ) {
+		if(message.isActionPerformed) {
 			return 'Accepted';
 		} else {
 			return (
