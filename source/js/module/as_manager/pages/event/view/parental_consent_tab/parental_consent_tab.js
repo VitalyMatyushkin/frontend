@@ -1,7 +1,6 @@
 const	React					= require('react'),
 		Morearty				= require('morearty'),
 		Immutable				= require('immutable'),
-		MessageConsts			= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions		= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		PlayerStatusTable		= require('module/ui/player_status_table/player_status_table'),
 		Loader					= require('module/ui/loader'),
@@ -33,16 +32,18 @@ const ParentalConsentTab = React.createClass({
 		this.listeners.push(this.getDefaultBinding().sub('isSync').addListener(descriptor => {
 			const isSync = descriptor.getCurrentValue();
 
-			if(isSync) {
+			if(!isSync) {
 				this.loadAndSetMessages();
 			}
 		}));
 	},
 	getPlayers: function() {
 		return this.getDefaultBinding().toJS('messages').map(m => {
+			const name = `${m.playerDetailsData.firstName} ${m.playerDetailsData.lastName}`;
+
 			return {
 				id:		m.playerDetailsData.id,
-				name:	`${m.playerDetailsData.firstName} ${m.playerDetailsData.lastName}`,
+				name:	name,
 				status:	m.invitationStatus
 			}
 		});
