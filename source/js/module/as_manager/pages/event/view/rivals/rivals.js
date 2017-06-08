@@ -196,17 +196,17 @@ const Rivals = React.createClass({
 					});
 				} else {
 					const 	rival = {},
-							players = event.individualsData;
-					//TODO Add score in players
+							players = event.individualsData,
+							scores = propz.get(event, ['results', 'individualScore']);
+					
 					rival.school = {};
 					rival.players = [];
 					players.forEach(player => {
+						player.score = scores.find(score => score.userId === player.userId).score;
 						rival.players.push(player);
 					});
 					
-					rival.players = rival.players.sort( (player1, player2) => {
-						return player1.score - player2.score;
-					});
+					rival.players = this.sortPlayersByScore(rival.players);
 
 					rival.isIndividualScoreAvailable = true;
 					rival.isTeamScoreWasChanged = false;
@@ -225,6 +225,41 @@ const Rivals = React.createClass({
 		this.addListenerForTeamScore();
 		this.addListenerForViewMode();
 	},
+	
+	/**
+	 * Return array of players sorted by individual score
+	 */
+	sortPlayersByScore: function(players) {
+		const binding = this.getDefaultBinding();
+		
+		const	event		= binding.toJS('model'),
+			 	scoring 	= propz.get(event, ['sport', 'scoring']);
+
+		//Depending on the sport, we change the order of sorting the results of players (desc or asc)
+		if (
+			scoring === 'MORE_SCORES' ||
+			scoring === 'MORE_TIME' ||
+			scoring === 'MORE_RESULT' ||
+			scoring === 'FIRST_TO_N_POINTS'
+		) {
+			this.sortPlayersByScoreDesc(players);
+		} else {
+			this.sortPlayersByScoreAsc(players);
+		}
+		
+		return players;
+	},
+	sortPlayersByScoreDesc: function (players){
+		return players.sort( (player1, player2) => {
+			return player2.score - player1.score;
+		});
+	},
+	sortPlayersByScoreAsc: function (players){
+		return players.sort( (player1, player2) => {
+			return player1.score - player2.score;
+		});
+	},
+	
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			if(typeof rival.team === 'undefined') {
