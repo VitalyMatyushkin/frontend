@@ -7,7 +7,7 @@ const	React					= require('react'),
 		Loader					= require('module/ui/loader'),
 		ParentalConsentTabStyle	= require('../../../../../../../styles/ui/b_parental_consent_tab/b_parental_consent_tab.scss');
 
-const ParentalConsentTab = React.createClass({
+const ParentalReportTab = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
@@ -22,7 +22,7 @@ const ParentalConsentTab = React.createClass({
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	loadAndSetMessages: function() {
-		MessageListActions.loadParentalConsentMessagesByEventId(this.props.schoolId, this.props.eventId).then(messages => {
+		MessageListActions.loadParentalReportsMessagesByEventId(this.props.schoolId, this.props.eventId).then(messages => {
 			this.getDefaultBinding().atomically()
 				.set('isSync',		true)
 				.set('messages',	Immutable.fromJS(messages))
@@ -43,7 +43,7 @@ const ParentalConsentTab = React.createClass({
 			return {
 				id:		m.playerDetailsData.id,
 				name:	`${m.playerDetailsData.firstName} ${m.playerDetailsData.lastName}`,
-				status:	m.invitationStatus
+				status:	"GOT_IT"
 			}
 		});
 	},
@@ -81,4 +81,4 @@ const ParentalConsentTab = React.createClass({
 	}
 });
 
-module.exports = ParentalConsentTab;
+module.exports = ParentalReportTab;

@@ -29,7 +29,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000
-				}
+				},
+				order: 'updatedAt DESC'
 			}
 		);
 	},
@@ -39,7 +40,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000
-				}
+				},
+				order: 'updatedAt DESC'
 			}
 		);
 	},
@@ -49,7 +51,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000
-				}
+				},
+				order: 'updatedAt DESC'
 			}
 		);
 	},
@@ -91,6 +94,34 @@ const MessageListActions = {
 				}
 			}
 		).then(messages => messages.filter(m => m.eventId === eventId));
+	},
+	loadParentalConsentMessagesByEventId: function(schoolId, eventId) {
+		return window.Server.schoolEventsMessages.get(
+			{
+				schoolId:	schoolId,
+				filter:		{
+					where:		{
+									eventId:	eventId,
+									kind:		MessageConsts.MESSAGE_KIND.INVITATION
+								},
+					limit:		1000
+				}
+			}
+		);
+	},
+	loadParentalReportsMessagesByEventId: function(schoolId, eventId) {
+		return window.Server.schoolEventsMessages.get(
+			{
+				schoolId:	schoolId,
+				filter:		{
+					where:		{
+						eventId:	eventId,
+						kind:		MessageConsts.MESSAGE_KIND.REFUSAL
+					},
+					limit:		1000
+				}
+			}
+		);
 	},
 	gotItRefusalMessage: function(activeSchoolId, messageId) {
 		return window.Server.doGotItActionForEventMessage.post(
