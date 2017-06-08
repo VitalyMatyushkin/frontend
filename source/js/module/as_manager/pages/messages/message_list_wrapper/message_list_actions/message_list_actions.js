@@ -24,13 +24,34 @@ const MessageListActions = {
 		}
 	},
 	loadInboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesInbox.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
+		return window.Server.schoolEventsMessagesInbox.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					limit: 1000
+				}
+			}
+		);
 	},
 	loadOutboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesOutbox.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
+		return window.Server.schoolEventsMessagesOutbox.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					limit: 1000
+				}
+			}
+		);
 	},
 	loadArchiveMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesArchive.get({schoolId: activeSchoolId}, {filter: {limit: 50}});
+		return window.Server.schoolEventsMessagesArchive.get(
+			{
+				schoolId: activeSchoolId,
+				filter: {
+					limit: 1000
+				}
+			}
+		);
 	},
 	loadInboxMessagesByEventId: function(activeSchoolId, eventId) {
 		return window.Server.schoolEventsMessagesInbox.get(
