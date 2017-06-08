@@ -1,13 +1,12 @@
 const	React					= require('react'),
 		Morearty				= require('morearty'),
 		Immutable				= require('immutable'),
-		MessageConsts			= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions		= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
-		PlayerStatusTable		= require('module/ui/player_status_table/player_status_table'),
+		ParentalReportsTable	= require('module/as_manager/pages/event/view/parental_report_tab/parental_reports_table'),
 		Loader					= require('module/ui/loader'),
 		ParentalConsentTabStyle	= require('../../../../../../../styles/ui/b_parental_consent_tab/b_parental_consent_tab.scss');
 
-const ParentalReportTab = React.createClass({
+const ParentalConsentTab = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
@@ -33,19 +32,13 @@ const ParentalReportTab = React.createClass({
 		this.listeners.push(this.getDefaultBinding().sub('isSync').addListener(descriptor => {
 			const isSync = descriptor.getCurrentValue();
 
-			if(isSync) {
+			if(!isSync) {
 				this.loadAndSetMessages();
 			}
 		}));
 	},
-	getPlayers: function() {
-		return this.getDefaultBinding().toJS('messages').map(m => {
-			return {
-				id:		m.playerDetailsData.id,
-				name:	`${m.playerDetailsData.firstName} ${m.playerDetailsData.lastName}`,
-				status:	"GOT_IT"
-			}
-		});
+	onGotIt: function(messageId) {
+		MessageListActions.gotItRefusalMessage(this.props.schoolId, messageId).then(() => this.getDefaultBinding().set('isSync', false));
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding();
@@ -62,8 +55,9 @@ const ParentalReportTab = React.createClass({
 		} else if(isSync && messages.length > 0) {
 			return (
 				<div className="bParentalConsentTab">
-					<PlayerStatusTable
-						players={this.getPlayers()}
+					<ParentalReportsTable
+						messages	= {messages}
+						onGotIt		= {this.onGotIt}
 					/>
 				</div>
 			);
@@ -81,4 +75,4 @@ const ParentalReportTab = React.createClass({
 	}
 });
 
-module.exports = ParentalReportTab;
+module.exports = ParentalConsentTab;

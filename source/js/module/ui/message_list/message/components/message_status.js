@@ -19,9 +19,6 @@ const MessageStatus = React.createClass({
 				case MessageConsts.MESSAGE_KIND.INVITATION:
 					status = this.getStatusForInvitationMessage(message);
 					break;
-				case MessageConsts.MESSAGE_KIND.REFUSAL:
-					status = this.getStatusForRefusalMessage(message);
-					break;
 			}
 		}
 
@@ -31,17 +28,6 @@ const MessageStatus = React.createClass({
 		let status = '';
 
 		if(message.invitationStatus === MessageConsts.MESSAGE_INVITATION_STATUS.ACCEPTED) {
-			status = 'Accepted';
-		} else {
-			status = 'Declined';
-		}
-
-		return status;
-	},
-	getStatusForRefusalMessage: function(message) {
-		let status = '';
-
-		if(message.readStatus === MessageConsts.MESSAGE_READ_STATUS.READ) {
 			status = 'Accepted';
 		} else {
 			status = 'Declined';
