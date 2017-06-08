@@ -31,6 +31,7 @@ const EventHeader = React.createClass({
 		onSendConsentRequest:			React.PropTypes.func.isRequired,
 		onReportNotParticipate:			React.PropTypes.func.isRequired,
 		role: 							React.PropTypes.string.isRequired,
+		onClickDeleteEvent:				React.PropTypes.func.isRequired,
 		
 		//prop for tweet button
 		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
@@ -114,6 +115,7 @@ const EventHeader = React.createClass({
 									onClickOk						= { this.props.onClickOk }
 									onSendConsentRequest			= { this.props.onSendConsentRequest }
 									onReportNotParticipate			= { this.props.onReportNotParticipate }
+									onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
 						/>
 					</div>
 				</div>

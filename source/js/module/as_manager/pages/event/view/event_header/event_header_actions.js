@@ -470,6 +470,15 @@ function sendConsentRequest(schoolId, eventId) {
 	);
 }
 
+function deleteEvent(schoolId, eventId){
+	return window.Server.schoolEvent.delete(
+		{
+			schoolId:	schoolId,
+			eventId:	eventId
+		}
+	);
+}
+
 module.exports.downloadPdf 				= downloadPdf;
 module.exports.cancelEvent 				= cancelEvent;
 module.exports.setModeClosing 			= setModeClosing;
@@ -479,3 +488,4 @@ module.exports.submitScore 				= submitScore;
 module.exports.closeMatch 				= closeMatch;
 module.exports.reportNotParticipate 	= reportNotParticipate;
 module.exports.sendConsentRequest 		= sendConsentRequest;
+module.exports.deleteEvent 				= deleteEvent;
