@@ -8,12 +8,12 @@ const	Logo			= require('module/as_manager/head/logo'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
+		RoleHelper		= require('module/helpers/role_helper'),
 		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
-		Bootstrap  		= require('styles/bootstrap-custom.scss'),
-
-		RoleHelper		= require('../helpers/role_helper');
+		Bootstrap  		= require('styles/bootstrap-custom.scss');
 
 const Head = React.createClass({
+	role: undefined,
 	mixins: [Morearty.Mixin],
 	componentDidMount:function(){
 		this.createTopMenu();
@@ -26,12 +26,16 @@ const Head = React.createClass({
 		const	role		= RoleHelper.getLoggedInUserRole(this),
 				kindSchool	= RoleHelper.getActiveSchoolKind(this);
 
-		if(
-			role !== RoleHelper.USER_ROLES.PARENT &&
-			role !== RoleHelper.USER_ROLES.STUDENT &&
-			kindSchool === 'School'
-		) {
-			this.setInvitesCountToMenu();
+		this.role = role;
+
+		if(kindSchool === 'School') {
+			if(
+				role !== RoleHelper.USER_ROLES.PARENT &&
+				role !== RoleHelper.USER_ROLES.STUDENT
+			) {
+				this.setInvitesCountToMenu();
+			}
+			this.setMessagesCountToMenu();
 		}
 	},
 	/**
@@ -45,10 +49,26 @@ const Head = React.createClass({
 		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
 			if(data.length > 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems');
+					topMenuItems	= rootBinding.toJS('topMenuItems');
 
 				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
 				topMenuItems[inviteItemIndex].name = `Invites(${data.length})`;
+
+				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+			}
+		});
+	},
+	setMessagesCountToMenu: function() {
+		const	role	= RoleHelper.getLoggedInUserRole(this),
+				service	= role === 'PARENT' ? window.Server.childMessageInbox : window.Server.schoolEventsMessagesInbox;
+
+		service.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
+			if(data.length > 0) {
+				const	rootBinding		= this.getMoreartyContext().getBinding(),
+						topMenuItems	= rootBinding.toJS('topMenuItems');
+
+				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
+				topMenuItems[inviteItemIndex].name = `Messages(${data.length})`;
 
 				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 			}

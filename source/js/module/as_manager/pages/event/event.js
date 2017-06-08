@@ -40,7 +40,6 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		CricketResultBlock				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
 		ParentalConsentTab				= require('module/as_manager/pages/event/view/parental_consent_tab/parental_consent_tab'),
 		ParentalReportsTab				= require('module/as_manager/pages/event/view/parental_report_tab/parental_report_tab'),
-		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		ConfirmPopup 					= require('module/ui/confirm_popup'),
 		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
