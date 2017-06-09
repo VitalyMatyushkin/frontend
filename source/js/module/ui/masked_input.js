@@ -159,6 +159,7 @@ const MaskedInput = React.createClass({
 			if(this.mask.empty) {
 				this.mask.value = '';
 			} else {
+				this._onChange(e);
 				//const	cursor	= this.mask.cursor,
 				//		value	= this.mask.props.value;
 
