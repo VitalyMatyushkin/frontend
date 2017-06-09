@@ -15,9 +15,11 @@ const 	React				= require('react'),
 const ChallengeListItem = React.createClass({
 
 	propTypes: {
-		event: 			React.PropTypes.any,
-		model:			React.PropTypes.any,
-		onClick: 		React.PropTypes.func 	// first argument is eventId
+		event: 				React.PropTypes.any,
+		model:				React.PropTypes.any,
+		onClick: 			React.PropTypes.func, 	// first argument is eventId
+		onClickDeleteEvent: React.PropTypes.func,
+		isUserSchoolWorker: React.PropTypes.bool
 	},
 
 	onClick: function(eventId) {
@@ -36,7 +38,11 @@ const ChallengeListItem = React.createClass({
 		// TODO: I'm not sure it should be here. Models as they are implemented sucks, but they hide that kind of code
 		switch (true) {
 			case isCancelled:
-				eventResult = 'Cancelled';
+				if (this.props.isUserSchoolWorker) {
+					eventResult = <span>Cancelled <a onClick={ () => {this.props.onClickDeleteEvent(event.id)}}>(X)</a></span>;
+				} else {
+					eventResult = 'Cancelled';
+				}
 				break;
 			case isRejected:
 				eventResult = 'Rejected';

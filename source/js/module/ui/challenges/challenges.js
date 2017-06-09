@@ -10,11 +10,13 @@ const 	React				= require('react'),
 
 const Challenges = React.createClass({
 	propTypes: {
-		onClick:		React.PropTypes.func,
-		isSync:			React.PropTypes.bool,
-		isDaySelected:	React.PropTypes.bool,
-		activeSchoolId:	React.PropTypes.string,
-		events:			React.PropTypes.any
+		onClick:				React.PropTypes.func,
+		isSync:					React.PropTypes.bool,
+		isDaySelected:			React.PropTypes.bool,
+		activeSchoolId:			React.PropTypes.string,
+		events:					React.PropTypes.any,
+		onClickDeleteEvent: 	React.PropTypes.func,
+		isUserSchoolWorker: 	React.PropTypes.bool
 	},
 	getDefaultProps: function () {
 		return {
@@ -22,11 +24,13 @@ const Challenges = React.createClass({
 		};
 	},
 	_getEvents: function () {
-		const 	isSync			= this.props.isSync,
-				events			= this.props.events,
-				isDaySelected	= this.props.isDaySelected,
-				activeSchoolId	= this.props.activeSchoolId,
-				onEventClick	= this.props.onClick;
+		const 	isSync				= this.props.isSync,
+				events				= this.props.events,
+				isDaySelected		= this.props.isDaySelected,
+				activeSchoolId		= this.props.activeSchoolId,
+				onEventClick		= this.props.onClick,
+				onClickDeleteEvent	= this.props.onClickDeleteEvent,
+				isUserSchoolWorker 	= this.props.isUserSchoolWorker;
 
 		switch (true) {
 			/* when no day selected */
@@ -39,7 +43,14 @@ const Challenges = React.createClass({
 			case Array.isArray(events) && events.length > 0:		// actually it shouldn't be an array, but Immutable.List instead... but this is what we get from binding
 				return events.map( event =>  {
 					const	model = new ChallengeModel(event, activeSchoolId);
-					return <ChallengeListItem key={event.id} event={event} model={model} onClick={onEventClick}/>;
+					return <ChallengeListItem
+						key 				= { event.id }
+						event 				= { event }
+						model 				= { model }
+						onClick 			= { onEventClick }
+						onClickDeleteEvent 	= { onClickDeleteEvent }
+						isUserSchoolWorker 	= { isUserSchoolWorker }
+					/>;
 				});
 			default:
 				return <NoResultItem text="There are no events for selected day"/>;
