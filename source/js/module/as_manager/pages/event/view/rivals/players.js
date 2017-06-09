@@ -2,6 +2,7 @@ const	React			= require('react'),
 		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		SportHelper		= require('module/helpers/sport_helper'),
 		PencilButton	= require('module/ui/pencil_button'),
 		propz			= require('propz'),
 		PlayersStyle	= require('../../../../../../../styles/ui/rivals/b_players.scss');
@@ -169,10 +170,45 @@ const Players = React.createClass({
 				);
 		}
 	},
+	/**
+	 * Return array of players sorted by individual score
+	 */
+	sortPlayersByScore: function(players) {
+		
+		const	event		= this.props.event,
+				scoring 	= propz.get(event, ['sport', 'scoring']);
+		
+		//Depending on the sport, we change the order of sorting the results of players (desc or asc)
+		if (
+			scoring === 'MORE_SCORES' ||
+			scoring === 'MORE_TIME' ||
+			scoring === 'MORE_RESULT' ||
+			scoring === 'FIRST_TO_N_POINTS'
+		) {
+			this.sortPlayersByScoreDesc(players);
+		} else {
+			this.sortPlayersByScoreAsc(players);
+		}
+		
+		return players;
+	},
+	sortPlayersByScoreDesc: function (players){
+		return players.sort( (player1, player2) => {
+			return player2.score - player1.score;
+		});
+	},
+	sortPlayersByScoreAsc: function (players){
+		return players.sort( (player1, player2) => {
+			return player1.score - player2.score;
+		});
+	},
 	renderPlayers: function(players) {
+		const sportName = this.props.event.sport.name;
 
-		//we sort array of players by individual score
-		//this.sortPlayersByScore(players);
+		if (SportHelper.isAthletics(sportName)) {
+			//we sort array of players by individual score
+			players = this.sortPlayersByScore(players);
+		}
 
 		return players.map((player, playerIndex) =>
 			<Player

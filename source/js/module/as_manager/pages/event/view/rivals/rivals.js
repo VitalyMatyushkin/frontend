@@ -143,6 +143,7 @@ const Rivals = React.createClass({
 			}
 		} else if (TeamHelper.isIndividualSport(event)){
 			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+				
 				//Initial state
 				if (typeof binding.toJS('view_mode') === 'undefined') {
 					binding.set('view_mode', 'general');
@@ -206,11 +207,9 @@ const Rivals = React.createClass({
 						rival.players.push(player);
 					});
 					
-					rival.players = this.sortPlayersByScore(rival.players);
-
 					rival.isIndividualScoreAvailable = true;
 					rival.isTeamScoreWasChanged = false;
-					
+					this.addListenerForChangeMode();
 					rivals.push(rival);
 					
 				}
@@ -224,40 +223,6 @@ const Rivals = React.createClass({
 
 		this.addListenerForTeamScore();
 		this.addListenerForViewMode();
-	},
-	
-	/**
-	 * Return array of players sorted by individual score
-	 */
-	sortPlayersByScore: function(players) {
-		const binding = this.getDefaultBinding();
-		
-		const	event		= binding.toJS('model'),
-			 	scoring 	= propz.get(event, ['sport', 'scoring']);
-
-		//Depending on the sport, we change the order of sorting the results of players (desc or asc)
-		if (
-			scoring === 'MORE_SCORES' ||
-			scoring === 'MORE_TIME' ||
-			scoring === 'MORE_RESULT' ||
-			scoring === 'FIRST_TO_N_POINTS'
-		) {
-			this.sortPlayersByScoreDesc(players);
-		} else {
-			this.sortPlayersByScoreAsc(players);
-		}
-		
-		return players;
-	},
-	sortPlayersByScoreDesc: function (players){
-		return players.sort( (player1, player2) => {
-			return player2.score - player1.score;
-		});
-	},
-	sortPlayersByScoreAsc: function (players){
-		return players.sort( (player1, player2) => {
-			return player1.score - player2.score;
-		});
 	},
 	
 	initResultsForRival: function(rival, event) {
@@ -351,6 +316,30 @@ const Rivals = React.createClass({
 					currentValue	= eventDescriptor.getCurrentValue().toJS();
 			if (prevValue.view_mode !== currentValue.view_mode) {
 				binding.set('eventComponentKey', Immutable.fromJS(this.getRandomString()));
+			}
+		}));
+	},
+	//We use this listener, because we want sort players by score when we enter new time/distance/plain and send this data on server
+	//When we send data on server, we just copy new data (individualScores) in rivals(because rivals fill only when componentWillMount)
+	addListenerForChangeMode: function() {
+		const 	binding = this.getDefaultBinding();
+		
+		this.listeners.push(binding.addListener( (eventDescriptor) => {
+			const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
+					currentValue	= eventDescriptor.getCurrentValue().toJS();
+			
+			if (prevValue.mode === 'closing' && currentValue.mode === 'general') {
+				const 	binding 	= this.getDefaultBinding(),
+						rivals		= binding.toJS('rivals.0');
+				
+				rivals.players.forEach(player => {
+					const playerIndex = currentValue.model.results.individualScore.findIndex(individual => individual.userId === player.userId);
+					if (playerIndex !== -1) {
+						player.score = currentValue.model.results.individualScore[playerIndex].score;
+					}
+				});
+				
+				binding.set('rivals.0', Immutable.fromJS(rivals));
 			}
 		}));
 	},
