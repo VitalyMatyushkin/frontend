@@ -109,6 +109,20 @@ const MessageListActions = {
 			}
 		);
 	},
+	loadParentalConsentMessagesCountByEventId: function(schoolId, eventId) {
+		return window.Server.schoolEventsMessagesCount.get(
+			{
+				schoolId:	schoolId,
+				filter:		{
+					where:		{
+						eventId:	eventId,
+						kind:		MessageConsts.MESSAGE_KIND.REFUSAL
+					},
+					limit:		1000
+				}
+			}
+		);
+	},
 	loadParentalReportsMessagesByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessages.get(
 			{
