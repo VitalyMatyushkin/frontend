@@ -47,7 +47,7 @@ const EventsCalendar = React.createClass({
 								handleClickOkButton		= { this.handleClickDeleteButton }
 								handleClickCancelButton	= { this.handleCancelDeleteEventPopup }
 				>
-					<div>Do you want to remove this event?</div>
+					<div>Are you sure you want to delete the selected event?</div>
 				</ConfirmPopup>
 			)
 		} else {
@@ -64,7 +64,7 @@ const EventsCalendar = React.createClass({
 		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
 			binding.set("isDeleteEventPopupOpen", false);
 			window.simpleAlert(
-				'Event have been deleted!',
+				'Event has been successfully deleted',
 				'Ok',
 				() => {
 					CalendarActions.setSelectedDate(selectedDate, activeSchoolId, binding);

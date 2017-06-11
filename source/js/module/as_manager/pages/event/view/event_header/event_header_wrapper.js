@@ -97,7 +97,7 @@ const EventHeaderWrapper = React.createClass({
 			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
 
 			window.simpleAlert(
-				"Consent requests were successfully sent.",
+				"Consent requests have been successfully sent",
 				'Ok',
 				() => {}
 			);
@@ -111,7 +111,7 @@ const EventHeaderWrapper = React.createClass({
 			binding.set('parentalReportTab.messages', Immutable.fromJS(messages));
 
 			window.simpleAlert(
-				"Reports were successfully sent.",
+				"Your message has been successfully sent",
 				'Ok',
 				() => {}
 			);

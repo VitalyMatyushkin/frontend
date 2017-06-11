@@ -55,7 +55,7 @@ const Buttons = React.createClass({
 		}
 
 		if(this.isReportNotParticipateAvailable()) {
-			actionList.push({id:'report_not_participate', text:'Report Not Participate'});
+			actionList.push({id:'report_not_participate', text:'Report unavailability'});
 		}
 
 		if(this.isChangeScoreEventActionAvailable()) {
