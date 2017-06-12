@@ -12,6 +12,7 @@ const Players = React.createClass({
 		rival						: React.PropTypes.object.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
+		viewMode					: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		activeSchoolId				: React.PropTypes.string.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
@@ -202,8 +203,20 @@ const Players = React.createClass({
 			return player1.score - player2.score;
 		});
 	},
+	isShowMedal: function(){
+		const 	sportName 	= this.props.event.sport.name,
+				viewMode 	= this.props.viewMode,
+				mode 		= this.props.mode;
+		
+		return (
+			SportHelper.isAthletics(sportName) &&
+			viewMode === 'show_all' &&
+			mode === 'general'
+		);
+	},
 	renderPlayers: function(players) {
-		const sportName = this.props.event.sport.name;
+		const 	sportName 	= this.props.event.sport.name,
+				isShowMedal = this.isShowMedal();
 
 		if (SportHelper.isAthletics(sportName)) {
 			//we sort array of players by individual score
@@ -218,6 +231,7 @@ const Players = React.createClass({
 				isOwner						= {this.props.isOwner}
 				individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}
 				mode						= {this.props.mode}
+				isShowMedal					= {isShowMedal}
 				event						= {this.props.event}
 				onChangeScore				= {this.props.onChangeScore}
 				customCss					= {this.props.customCss}

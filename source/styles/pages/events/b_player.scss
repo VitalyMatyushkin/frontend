@@ -9,6 +9,7 @@
   max-width: 260px;
   padding: 15px 0;
   margin: 0 auto;
+  position: relative;
 
 
   &.mMini {
@@ -110,6 +111,29 @@
   }
   span {
     margin-right: 5px;
+  }
+}
+.ePlayer_medal {
+  position: absolute;
+
+  right: 0px;
+
+  width: 30px;
+  height: 30px;
+
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  &.mFirstPlace {
+	background-image: url("/images/1st_place_medal.png");
+  }
+
+  &.mSecondPlace {
+	background-image: url("/images/2nd_place_medal.png");
+  }
+
+  &.mThirdPlace {
+	background-image: url("/images/3rd_place_medal.png");
   }
 }
 

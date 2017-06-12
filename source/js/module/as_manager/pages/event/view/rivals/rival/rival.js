@@ -69,6 +69,7 @@ const Rival = React.createClass({
 					rival					= { this.props.rival }
 					isOwner					= { true }
 					mode					= { this.props.mode }
+					viewMode				= { this.props.viewMode }
 					event					= { this.props.event }
 					activeSchoolId			= { this.props.activeSchoolId }
 					onChangeScore			= { this.props.onChangeScore.bind(this, 'individualData') }

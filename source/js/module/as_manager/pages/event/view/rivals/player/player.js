@@ -15,6 +15,7 @@ const Player = React.createClass({
 		isOwner						: React.PropTypes.bool.isRequired,
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
+		isShowMedal					: React.PropTypes.bool.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired
@@ -26,6 +27,7 @@ const Player = React.createClass({
 		const	playerIndex					= this.props.playerIndex,
 				player						= this.props.player,
 				mode						= this.props.mode,
+				isShowMedal					= this.props.isShowMedal,
 				event						= this.props.event,
 				individualScoreAvailable	= this.props.individualScoreAvailable,
 				isOwner						= this.props.isOwner;
@@ -43,6 +45,7 @@ const Player = React.createClass({
 				<PlayerInfo
 					playerIndex	= {playerIndex}
 					player		= {player}
+					isShowMedal = {isShowMedal}
 				/>
 				<If condition={Boolean(player.isCaptain)}>
 					<CaptainStar/>
