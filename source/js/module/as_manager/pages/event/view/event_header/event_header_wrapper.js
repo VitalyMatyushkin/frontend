@@ -93,11 +93,11 @@ const EventHeaderWrapper = React.createClass({
 				event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
-		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(() => {
-			binding.set('parentalConsentTab.isSync', false);
+		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
+			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
 
 			window.simpleAlert(
-				"Consent requests were successfully sent.",
+				"Consent requests have been successfully sent",
 				'Ok',
 				() => {}
 			);
@@ -107,9 +107,11 @@ const EventHeaderWrapper = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				event		= binding.toJS('model');
 
-		EventHeaderActions.reportNotParticipate(event).then(() => {
+		EventHeaderActions.reportNotParticipate(event).then(messages => {
+			binding.set('parentalReportTab.messages', Immutable.fromJS(messages));
+
 			window.simpleAlert(
-				"Reports were successfully sent.",
+				"Your message has been successfully sent",
 				'Ok',
 				() => {}
 			);
