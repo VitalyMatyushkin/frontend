@@ -210,7 +210,6 @@ const Players = React.createClass({
 		
 		return (
 			SportHelper.isAthletics(sportName) &&
-			viewMode === 'show_all' &&
 			mode === 'general'
 		);
 	},

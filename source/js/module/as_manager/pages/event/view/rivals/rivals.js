@@ -151,7 +151,8 @@ const Rivals = React.createClass({
 				
 				if (binding.toJS('view_mode') === 'general') {
 					const	schoolsData	= event.schoolsData,
-							players = event.individualsData;
+							players 	= event.individualsData,
+							scores 		= propz.get(event, ['results', 'individualScore']);
 					// iterate all schools
 					schoolsData.forEach(school => {
 						const rival = {};
@@ -172,6 +173,7 @@ const Rivals = React.createClass({
 						// search all players for current school
 						rival.players = [];
 						players.forEach( player => {
+							player.score = scores.find(score => score.userId === player.userId).score;
 							if(player.schoolId === school.id) {
 								rival.players.push(player);
 							}
@@ -196,9 +198,9 @@ const Rivals = React.createClass({
 						return rival1.score - rival2.score;
 					});
 				} else {
-					const 	rival = {},
+					const 	rival 	= {},
 							players = event.individualsData,
-							scores = propz.get(event, ['results', 'individualScore']);
+							scores 	= propz.get(event, ['results', 'individualScore']);
 					
 					rival.school = {};
 					rival.players = [];
