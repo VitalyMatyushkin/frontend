@@ -36,6 +36,7 @@ const SportIcon = React.createClass({
 				break;
 			case 	sport === 'rugby union' ||
 					sport === 'tag rugby' ||
+					sport === 'tag rugby (mt)' ||
 					sport === 'rugby league':
 				icon = "rugby_union";
 				break;
@@ -78,6 +79,10 @@ const SportIcon = React.createClass({
 					sport === 'hurdles (60 m)' ||
 					sport === 'hurdles  60m' || //TODO: replace extra spaces in sport name and then delete it
 					sport === 'hurdles 60m' ||
+					sport === 'hurdles  70m' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'hurdles 70m' ||
+					sport === 'hurdles  75m' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'hurdles 75m' ||
 					sport === 'hurdles (80 m)' ||
 					sport === 'hurdles  80m' || //TODO: replace extra spaces in sport name and then delete it
 					sport === 'hurdles 80m' ||
@@ -95,11 +100,13 @@ const SportIcon = React.createClass({
 				break;
 			case 	sport === 'tennis singles' ||
 					sport === 'tennis doubles' ||
+					sport === 'tennis (t)' ||
 					sport === 'tennis mixed doubles':
 				icon = "tennis";
 				break;
 			case 	sport === 'table tennis singles' ||
-					sport === 'table tennis doubles':
+					sport === 'table tennis doubles' ||
+					sport === 'table tennis (t)':
 				icon = "table_tennis";
 				break;
 			case 	sport === 'netball high 5':
@@ -111,14 +118,18 @@ const SportIcon = React.createClass({
 			case 	sport === 'chess (individual)' ||
 					sport === 'chess (i)' ||
 					sport === 'chess (team)' ||
-					sport === 'chess (t)':
+					sport === 'chess (t)' ||
+					sport === 'chess (mt)':
 				icon = "chess";
 				break;
 			case 	sport === 'badminton singles' ||
-					sport === 'badminton doubles':
+					sport === 'badminton doubles' ||
+					sport === 'badminton (t)':
 				icon = "badminton";
 				break;
 			case 	sport === 'squash singles' ||
+					sport === 'squash (t)' ||
+					sport === 'squash (mt)' ||
 					sport === 'squash doubles':
 				icon = "squash";
 				break;
@@ -138,19 +149,23 @@ const SportIcon = React.createClass({
 				 	sport === 'orienteering (i)' ||
 					sport === 'orienteering (team)' ||
 					sport === 'orienteering (t)' ||
+					sport === 'orienteering (mt)' ||
 					sport === 'orienteering':
 				icon = "orienteering";
 				break;
-			case 	sport === 'american football':
+			case 	sport === 'american football' ||
+					sport === 'american football (mt)':
 				icon = "american_football";
 				break;
-			case 	sport === 'sports hall athletics':
+			case 	sport === 'sports hall athletics' ||
+					sport === 'triple jump':
 				icon = "athletics";
 				break;
 			case 	sport === 'hammer throw':
 				icon = "hammer_throw";
 				break;
-			case 	sport === 'water polo':
+			case 	sport === 'water polo' ||
+					sport === 'polo (mt)':
 				icon = "water_polo";
 				break;
 			case 	sport === 'mini golf':
@@ -171,10 +186,12 @@ const SportIcon = React.createClass({
 			case 	sport === 'high jump':
 				icon = "high_jump";
 				break;
-			case 	sport === 'cycling':
+			case 	sport === 'cycling' ||
+					sport === 'cycling (mt)':
 				icon = "bicycling";
 			break;
 			case 	sport === 'swimming relays' ||
+				 	sport === 'swimming relays (mt)' ||
 					sport === 'swimming freestyle   50m'|| //TODO: replace extra spaces in sport name and then delete it
 					sport === 'swimming freestyle 50m' ||
 					sport === 'swimming freestyle  100m' || //TODO: replace extra spaces in sport name and then delete it
@@ -209,13 +226,15 @@ const SportIcon = React.createClass({
 			case 	sport === 'bowling (individual)' ||
 					sport === 'bowling (i)' ||
 					sport === 'bowling (team)' ||
-					sport === 'bowling (t)':
+					sport === 'bowling (t)' ||
+					sport === 'bowling (mt)':
 				icon = "bowling";
 				break;
 			case 	sport === 'darts (individual)' ||
 				 	sport === 'darts (i)' ||
 					sport === 'darts (team)' ||
-					sport === 'darts (t)':
+					sport === 'darts (t)' ||
+					sport === 'darts (mt)':
 				icon = "darts";
 				break;
 			case 	sport === 'mini golf (individual)' ||
@@ -233,11 +252,14 @@ const SportIcon = React.createClass({
 			case 	sport === 'shooting (individual)' ||
 				 	sport === 'shooting (i)' ||
 					sport === 'shooting (team)' ||
-					sport === 'shooting (t)':
+					sport === 'shooting (t)' ||
+					sport === 'shooting (mt)':
 				icon = "shooting";
 				break;
 			case 	sport === 'dressage' ||
+					sport === 'dressage (mt)' ||
 					sport === 'cross-country equestrianism' ||
+					sport === 'cross-country equestrianism (mt)' ||
 					sport === 'show jumping':
 				icon = "equestrian";
 				break;
@@ -268,6 +290,10 @@ const SportIcon = React.createClass({
 				icon = "road_running";
 				break;
 			case 	sport === 'fives (eton)' ||
+					sport === 'eton fives' ||
+					sport === 'eton fives (mt)' ||
+					sport === 'rugby fives' ||
+					sport === 'rugby fives (mt)' ||
 					sport === 'fives (rugby)':
 				icon = "fives";
 				break;
@@ -282,8 +308,9 @@ const SportIcon = React.createClass({
 				icon = "canoeing_individual";
 				break;
 			case 	sport === 'canoeing (team)' ||
-					sport === 'canoeing (t)':
-				icon = "canoening_team";
+					sport === 'canoeing (t)' ||
+					sport === 'canoeing (mt)':
+				icon = "canoeing_team";
 				break;
 			case 	sport === 'boccia (1x1)':
 				icon = "boccia_1x1";
@@ -426,7 +453,8 @@ const SportIcon = React.createClass({
 					sport === 'stoolball (mt)':
 				icon="stoolball_mini_tournament";
 				break;
-			case sport === 'streetball':
+			case 	sport === 'streetball' ||
+					sport === 'streetball (mt)':
 				icon="streetball";
 				break;
 			case 	sport === 'swimming (mini tournament)' ||
@@ -448,6 +476,61 @@ const SportIcon = React.createClass({
 			case 	sport === 'hockey sevens (mini tournament)' ||
 					sport === 'hockey sevens (mt)':
 				icon="hockey_sevens_mini_tournament";
+				break;
+			case 	sport === 'fencing (i)' ||
+					sport === 'fencing (t)' ||
+					sport === 'fencing (mt)':
+				icon="fencing";
+				break;
+			case 	sport === 'judo (i)' ||
+					sport === 'judo (t)' ||
+					sport === 'judo (mt)':
+				icon="judo";
+				break;
+			case 	sport === 'karate (i)' ||
+					sport === 'karate (t)' ||
+					sport === 'karate (mt)':
+				icon="karate";
+				break;
+			case 	sport === 'boxing (mt)':
+				icon="boxing";
+				break;
+			case 	sport === 'sailing (mt)':
+				icon="sailing";
+				break;
+			case 	sport === 'curling (mt)':
+				icon="curling";
+				break;
+			case 	sport === 'dodgeball (mt)':
+				icon="dodgeball";
+				break;
+			case 	sport === 'handball (mt)':
+				icon="handball";
+				break;
+			case 	sport === 'soft ball' ||
+					sport === 'soft ball (mt)':
+				icon="baseball";
+				break;
+			case 	sport === 'lacrosse (mt)':
+				icon="lacrosse";
+				break;
+			case 	sport === 'taekwondo (t)' ||
+					sport === 'taekwondo (mt)':
+				icon="taekwondo";
+				break;
+			case 	sport === 'gymnastics (mt)':
+				icon="gymnastics";
+				break;
+			case 	sport === 'racewalking  1.5km' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'racewalking 1.5km' ||
+					sport === 'racewalking  3km' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'racewalking 3km' ||
+					sport === 'racewalking  5km' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'racewalking 5km' ||
+					sport === 'racewalking 10km' ||
+					sport === 'racewalking 20km' ||
+					sport === 'racewalking 50km':
+				icon="racewalking";
 				break;
 			default:
 				icon = sport;
