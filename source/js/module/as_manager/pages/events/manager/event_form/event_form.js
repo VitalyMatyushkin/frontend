@@ -229,7 +229,7 @@ const EventForm = React.createClass({
 			(
 				rivals.length >= 2 &&
 				typeof sport !== 'undefined' && sport.multiparty &&
-				(TeamHelper.isTeamSport(event) || SportHelper.isAthletics(sport.name))
+				(TeamHelper.isTeamSport(event) || TeamHelper.isIndividualSport(event))
 			)
 		) {
 			choosers.push(

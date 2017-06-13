@@ -204,13 +204,14 @@ const Players = React.createClass({
 		});
 	},
 	isShowMedal: function(){
-		const 	sportName 	= this.props.event.sport.name,
-				viewMode 	= this.props.viewMode,
-				mode 		= this.props.mode;
+		const 	sportName 		= this.props.event.sport.name,
+				eventStatus 	= this.props.event.status,
+				mode 			= this.props.mode;
 		
 		return (
 			SportHelper.isAthletics(sportName) &&
-			mode === 'general'
+			mode === 'general' &&
+			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
 	renderPlayers: function(players) {
