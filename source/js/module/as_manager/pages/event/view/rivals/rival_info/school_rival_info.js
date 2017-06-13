@@ -96,16 +96,18 @@ const SchoolRivalInfo = React.createClass({
 					placeData	= places.find(p => p.schoolIds.find(id => id === this.props.rival.school.id));
 
 			let placeNameStyle;
-			switch (placeData.place) {
-				case 1:
-					placeNameStyle = 'mFirstPlace';
-					break;
-				case 2:
-					placeNameStyle = 'mSecondPlace';
-					break;
-				case 3:
-					placeNameStyle = 'mThirdPlace';
-					break;
+			if (typeof placeData !== 'undefined') {
+				switch (placeData.place) {
+					case 1:
+						placeNameStyle = 'mFirstPlace';
+						break;
+					case 2:
+						placeNameStyle = 'mSecondPlace';
+						break;
+					case 3:
+						placeNameStyle = 'mThirdPlace';
+						break;
+				}
 			}
 
 			if(typeof placeNameStyle !== "undefined") {

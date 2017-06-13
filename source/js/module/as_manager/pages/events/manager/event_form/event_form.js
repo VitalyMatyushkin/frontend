@@ -22,7 +22,8 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 const	EventFormActions				= require('./event_form_actions'),
 		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
 		EventHelper						= require('../../eventHelper'),
-		GeoSearchHelper					= require('../../../../../helpers/geo_search_helper');
+		GeoSearchHelper					= require('../../../../../helpers/geo_search_helper'),
+		SportHelper 					= require('module/helpers/sport_helper');
 
 // Styles
 const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
@@ -228,7 +229,7 @@ const EventForm = React.createClass({
 			(
 				rivals.length >= 2 &&
 				typeof sport !== 'undefined' && sport.multiparty &&
-				TeamHelper.isTeamSport(event)
+				(TeamHelper.isTeamSport(event) || SportHelper.isAthletics(sport.name))
 			)
 		) {
 			choosers.push(

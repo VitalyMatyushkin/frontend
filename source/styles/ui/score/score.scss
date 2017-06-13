@@ -17,6 +17,7 @@ input[type="text"].eScore_Points {
 
   &.mTime{
     width: 90px;
+	text-align: center;
   }
 
   &.mPlain{
@@ -37,6 +38,8 @@ input[type="text"].eScore_Points {
 
   &.mDistance{
     width: 75px;
+	text-align: center;
+	font-size: 20px;
   }
 }
 
@@ -45,7 +48,8 @@ input[type="text"].eScore_Points {
   margin-right: 20px;
   margin-top: 10px;
 }
-.ePlayer_scoreCricketContainer{
+.ePlayer_scoreCricketContainer,
+.ePlayer_scoreAthleticContainer{
   width: 100%;
 }
 

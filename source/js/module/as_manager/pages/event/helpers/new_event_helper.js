@@ -14,7 +14,8 @@ const NewEventHelper = {
 			(
 				TeamHelper.isInterSchoolsEventForTeamSport(event) ||
 				TeamHelper.isHousesEventForTeamSport(event) ||
-				TeamHelper.isInternalEventForTeamSport(event)
+				TeamHelper.isInternalEventForTeamSport(event) ||
+				TeamHelper.isInterSchoolsEventForIndividualSport(event)
 			) && event.sport.multiparty
 		);
 	},

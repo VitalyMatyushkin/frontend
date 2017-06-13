@@ -81,7 +81,9 @@ const ScoreHelper = {
 				case 'cc':
 				case 'ccc':
 				case 'cccc':
-					tmp = valueParts[i]*1/(Math.pow(10, valueParts[i].length));
+					if (typeof valueParts[i] !== 'undefined') {
+						tmp = valueParts[i]*1/(Math.pow(10, valueParts[i].length));
+					}
 					break;
 				default:
 					tmp = NaN;
