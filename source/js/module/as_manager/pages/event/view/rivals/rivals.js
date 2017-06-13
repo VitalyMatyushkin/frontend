@@ -173,12 +173,17 @@ const Rivals = React.createClass({
 						// search all players for current school
 						rival.players = [];
 						players.forEach( player => {
-							const playerScore = scores.find(score => score.userId === player.userId);
+							const playerScoreObject = scores.find(score => score.userId === player.userId);
 							
-							if (typeof playerScore !== 'undefined') {
-								player.score = playerScore.score;
+							if (typeof playerScoreObject !== 'undefined') {
+								const 	playerScore 		= propz.get(playerScoreObject, ['score']),
+										playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'extraScore']);
+								
+								player.score = playerScore;
+								player.extraScore = playerExtraScore;
 							} else {
 								player.score = 0;
+								player.extraScore = 0;
 							}
 							
 							if(player.schoolId === school.id) {
@@ -193,7 +198,7 @@ const Rivals = React.createClass({
 					
 					// Sort array of rivals by ASC of extraScores
 					rivals = rivals.sort((rival1, rival2) => {
-						return rival1.score - rival2.score;
+						return rival2.score - rival1.score;
 					});
 				} else {
 					const 	rival 	= {},
@@ -234,13 +239,10 @@ const Rivals = React.createClass({
 	getExtraScoreForRival(rival){
 		let extraScoreRival = 0;
 		rival.players.forEach( player => {
-			const extraScorePlayer = propz.get(player, ['richScore', 'extraScore']);
+			const extraScorePlayer = propz.get(player, ['extraScore']);
 			
 			if (typeof extraScorePlayer !== 'undefined') {
 				extraScoreRival += extraScorePlayer;
-			} else {
-				//TODO: It temp solution
-				extraScoreRival += Math.round(Math.random() * 10);
 			}
 		});
 		return extraScoreRival;

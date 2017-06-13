@@ -30,7 +30,7 @@ const AthleticExtraScore = React.createClass({
 	},
 	
 	onChange:function(event){
-		this.changeScore(event.target.value);
+		this.changeScore(Number(event.target.value));
 		
 		event.stopPropagation();
 	},
