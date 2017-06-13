@@ -173,7 +173,14 @@ const Rivals = React.createClass({
 						// search all players for current school
 						rival.players = [];
 						players.forEach( player => {
-							player.score = scores.find(score => score.userId === player.userId).score;
+							const playerScore = scores.find(score => score.userId === player.userId);
+							
+							if (typeof playerScore !== 'undefined') {
+								player.score = playerScore.score;
+							} else {
+								player.score = 0;
+							}
+							
 							if(player.schoolId === school.id) {
 								rival.players.push(player);
 							}
@@ -196,7 +203,13 @@ const Rivals = React.createClass({
 					rival.school = {};
 					rival.players = [];
 					players.forEach(player => {
-						player.score = scores.find(score => score.userId === player.userId).score;
+						const playerScore = scores.find(score => score.userId === player.userId);
+						
+						if (typeof playerScore !== 'undefined') {
+							player.score = playerScore.score;
+						} else {
+							player.score = 0;
+						}
 						rival.players.push(player);
 					});
 					
@@ -223,7 +236,7 @@ const Rivals = React.createClass({
 		rival.players.forEach( player => {
 			const extraScorePlayer = propz.get(player, ['richScore', 'extraScore']);
 			
-			if (typeof score !== 'undefined') {
+			if (typeof extraScorePlayer !== 'undefined') {
 				extraScoreRival += extraScorePlayer;
 			} else {
 				//TODO: It temp solution
