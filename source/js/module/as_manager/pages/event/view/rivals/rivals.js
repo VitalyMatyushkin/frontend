@@ -196,7 +196,7 @@ const Rivals = React.createClass({
 						rivals.push(rival);
 					});
 					
-					// Sort array of rivals by ASC of extraScores
+					// Sort array of rivals by DESC of extraScores
 					rivals = rivals.sort((rival1, rival2) => {
 						return rival2.score - rival1.score;
 					});
