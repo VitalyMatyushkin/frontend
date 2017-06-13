@@ -12,8 +12,11 @@ const NewManagerWrapperHelper = {
 		// Add school or house
 		switch (true) {
 			case EventHelper.isInterSchoolsEvent(event):
-				// TODO it's fake
-				return {};
+				rival = {
+					id:			_rival.school.id,
+					name:		_rival.school.name
+				};
+				break;
 			case EventHelper.isHousesEvent(event):
 				rival = {
 					id:			_rival.house.id,
@@ -25,6 +28,7 @@ const NewManagerWrapperHelper = {
 					id:			null,
 					name:		null
 				};
+				break;
 		}
 
 		// Add team players
@@ -49,7 +53,8 @@ const NewManagerWrapperHelper = {
 		if(event) {
 			switch (true) {
 				case TeamHelper.isNonTeamSport(event):
-					return [];
+					result = this.getNonTeamPlayersByOrder(_rival);
+					break;
 				case TeamHelper.isTeamSport(event):
 					result = this.getTeamPlayers(_rival);
 					break;
@@ -57,6 +62,11 @@ const NewManagerWrapperHelper = {
 		}
 
 		return result;
+	},
+	getNonTeamPlayersByOrder: function(_rival) {
+		const players = propz.get(_rival, ['players']);
+
+		return typeof players !== 'undefined' ? players : [];
 	},
 	getTeamPlayers: function(_rival) {
 		const players = propz.get(_rival, ['team', 'players']);

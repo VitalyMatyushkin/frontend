@@ -20,21 +20,29 @@ const AfterRivalsChangesHelper = {
 
 		return  initName !== name;
 	},
-	getCommitPlayersForIndividualEvent: function(event, binding) {
-		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			return this.getTeamPlayersByOrder(0, binding);
+	getCommitPlayersForIndividualEvent: function(event, binding, order) {
+		if(event.sport.multiparty) {
+			return this.getTeamPlayersByOrder(order, binding);
 		} else {
-			return this.getTeamPlayersByOrder(0, binding).concat(this.getTeamPlayersByOrder(1, binding));
+			if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
+				return this.getTeamPlayersByOrder(0, binding);
+			} else {
+				return this.getTeamPlayersByOrder(0, binding).concat(this.getTeamPlayersByOrder(1, binding));
+			}
 		}
 	},
 	getTeamPlayersByOrder: function(order, binding) {
 		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.___teamManagerBinding.teamStudents`);
 	},
-	getInitPlayersForIndividualEvent: function(event, binding) {
-		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			return this.getInitialTeamPlayersByOrder(0, binding);
+	getInitPlayersForIndividualEvent: function(event, binding, order) {
+		if(event.sport.multiparty) {
+			return this.getInitialTeamPlayersByOrder(order, binding);
 		} else {
-			return this.getInitialTeamPlayersByOrder(0, binding).concat(this.getInitialTeamPlayersByOrder(1, binding));
+			if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
+				return this.getInitialTeamPlayersByOrder(0, binding);
+			} else {
+				return this.getInitialTeamPlayersByOrder(0, binding).concat(this.getInitialTeamPlayersByOrder(1, binding));
+			}
 		}
 	},
 	getInitialTeamPlayersByOrder: function(order, binding) {
