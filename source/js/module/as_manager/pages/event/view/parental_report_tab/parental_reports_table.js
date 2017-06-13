@@ -13,7 +13,7 @@ const ParentalReportsTable = React.createClass({
 	},
 	getStatus: function(message) {
 		if(message.isActionPerformed) {
-			return 'Accepted';
+			return 'Received';
 		} else {
 			return (
 				<a onClick={this.onGotIt.bind(this, message)}>
