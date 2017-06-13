@@ -125,6 +125,11 @@ const EventHeaderWrapper = React.createClass({
 	isTweetButtonRender: function(role: string, twitterData: any, mode: string){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
+	onClickViewMode: function(mode: string){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('view_mode', mode);
+	},
 	/**
 	 * The function render's component EventHeaderWrapper
 	 * @returns {XML}
@@ -170,6 +175,8 @@ const EventHeaderWrapper = React.createClass({
 						schoolDomain 					= { schoolDomain }
 						activeSchoolId 					= { this.props.activeSchoolId }
 						twitterIdDefault 				= { twitterIdDefault }
+						//props for view mode
+						onClickViewMode 				= { this.onClickViewMode }
 					/>
 		);
 	}

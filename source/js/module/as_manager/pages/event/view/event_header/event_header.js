@@ -9,6 +9,7 @@ const	Lazy				= require('lazy.js'),
 		RoleHelper 			= require('module/helpers/role_helper'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
+		SportHelper 		= require('module/helpers/sport_helper'),
 		TweetButton 		= require('./tweet_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
@@ -38,7 +39,10 @@ const EventHeader = React.createClass({
 		twitterData: 					React.PropTypes.array.isRequired,
 		schoolDomain: 					React.PropTypes.string.isRequired,
 		activeSchoolId: 				React.PropTypes.string.isRequired,
-		twitterIdDefault: 				React.PropTypes.string.isRequired
+		twitterIdDefault: 				React.PropTypes.string.isRequired,
+		
+		//prop for view mode
+		onClickViewMode: 				React.PropTypes.func.isRequired
 	},
 	/**
 	 * Function return string with all Age Groups
@@ -59,6 +63,32 @@ const EventHeader = React.createClass({
 		const role = this.props.role;
 
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.eventStatus !== "FINISHED";
+	},
+	renderViewModeLinks: function(){
+		const sportName = this.props.event.sport;
+
+		if (SportHelper.isAthletics(sportName)) {
+			return (
+				<div className="bEventViewMode">
+					<a
+						className	= "eEventViewModeLink"
+						onClick		= { () => {this.props.onClickViewMode('general')} }
+						key 		= "general"
+					>
+						Show Separate
+					</a>
+					<a
+						className 	= "eEventViewModeLink"
+						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
+						key 		= "showAll"
+					>
+						Show All
+					</a>
+				</div>
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function() {
 		const 	event 				= this.props.event,
@@ -100,6 +130,7 @@ const EventHeader = React.createClass({
 							activeSchoolId 			= { this.props.activeSchoolId }
 							twitterIdDefault 		= { this.props.twitterIdDefault }
 						/>
+						{ this.renderViewModeLinks() }
 					</div>
 					<div className="eEventHeader_rightSide">
 						<Buttons	eventId							= { event.id }

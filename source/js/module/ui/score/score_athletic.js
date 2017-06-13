@@ -14,7 +14,7 @@ const	React				= require('react'),
 		ExtraScoreAthletic 	= require('./extra_score_athletic'),
 		ScoreConsts			= require('./score_consts');
 
-const ScoreAthletic = React.createClass({
+const AthleticScore = React.createClass({
 	propTypes: {
 		isChangeMode:				React.PropTypes.bool,
 		plainPoints:				React.PropTypes.number.isRequired,
@@ -120,12 +120,12 @@ const ScoreAthletic = React.createClass({
 				<div className={"ePlayer_scoreAthletics " + playerTimeScoreClassName}>
 					<div>{ SportConsts.SPORT_ATHLETIC.TIME }</div>
 					<MaskedPoints	plainPoints		= { this.props.plainPoints }
-									 mask			= { mask }
-									 onChange		= { this.getScoreAsObject }
-									 stringToPoints	= { ScoreHelper.stringTimeToPoints }
-									 validation		= { ScoreHelper.stringTimeValidation }
-									 className		= { "mTime " + playerTimeScoreClassName }
-									 modeView		= { this.props.modeView }
+									mask			= { mask }
+									onChange		= { this.getScoreAsObject }
+									stringToPoints	= { ScoreHelper.stringTimeToPoints }
+									validation		= { ScoreHelper.stringTimeValidation }
+									className		= { "mTime " + playerTimeScoreClassName }
+									modeView		= { this.props.modeView }
 					/>
 				</div>
 				{ this.renderPlayerExtraScoreInChangeMode() }
@@ -144,12 +144,12 @@ const ScoreAthletic = React.createClass({
 				<div className={"ePlayer_scoreAthletics " + playerDistanceScoreClassName}>
 					<div>{ SportConsts.SPORT_ATHLETIC.DISTANCE }</div>
 					<MaskedPoints	plainPoints		= { this.props.plainPoints }
-									 mask			= { mask }
-									 onChange		= { this.getScoreAsObject }
-									 stringToPoints	= { ScoreHelper.stringDistanceToPoints }
-									 validation		= { ScoreHelper.stringDistanceValidation }
-									 className		= { "mDistance " +  playerDistanceScoreClassName}
-									 modeView		= { this.props.modeView }
+									mask			= { mask }
+									onChange		= { this.getScoreAsObject }
+									stringToPoints	= { ScoreHelper.stringDistanceToPoints }
+									validation		= { ScoreHelper.stringDistanceValidation }
+									className		= { "mDistance " +  playerDistanceScoreClassName}
+									modeView		= { this.props.modeView }
 					/>
 				</div>
 				{ this.renderPlayerExtraScoreInChangeMode() }
@@ -183,4 +183,4 @@ const ScoreAthletic = React.createClass({
 	}
 });
 
-module.exports = ScoreAthletic;
+module.exports = AthleticScore
