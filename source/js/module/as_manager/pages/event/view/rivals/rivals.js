@@ -178,17 +178,8 @@ const Rivals = React.createClass({
 								rival.players.push(player);
 							}
 						});
-						rival.score = 0;
-						rival.players.forEach( player => {
-							const score = propz.get(player, ['richScore', 'extraScore']);
-							
-							if (typeof score !== 'undefined') {
-								rival.score += score;
-							} else {
-								//TODO: It temp solution
-								rival.score += Math.round(Math.random() * 10);
-							}
-						});
+						
+						rival.score = this.getExtraScoreForRival(rival);
 						
 						rivals.push(rival);
 					});
@@ -225,6 +216,21 @@ const Rivals = React.createClass({
 
 		this.addListenerForTeamScore();
 		this.addListenerForViewMode();
+	},
+	
+	getExtraScoreForRival(rival){
+		let extraScoreRival = 0;
+		rival.players.forEach( player => {
+			const extraScorePlayer = propz.get(player, ['richScore', 'extraScore']);
+			
+			if (typeof score !== 'undefined') {
+				extraScoreRival += extraScorePlayer;
+			} else {
+				//TODO: It temp solution
+				extraScoreRival += Math.round(Math.random() * 10);
+			}
+		});
+		return extraScoreRival;
 	},
 	
 	initResultsForRival: function(rival, event) {

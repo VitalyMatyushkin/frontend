@@ -9,7 +9,7 @@ const 	React 		= require('react'),
 	
 		ScoreConsts	= require('./score_consts');
 
-const ExtraScoreAthletic = React.createClass({
+const AthleticExtraScore = React.createClass({
 	
 	propTypes: {
 		extraScore: 				React.PropTypes.number.isRequired,
@@ -88,4 +88,4 @@ const ExtraScoreAthletic = React.createClass({
 	}
 });
 
-module.exports = ExtraScoreAthletic;
+module.exports = AthleticExtraScore;

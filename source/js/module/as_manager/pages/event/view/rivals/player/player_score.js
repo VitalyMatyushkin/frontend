@@ -1,4 +1,5 @@
 const	React			= require('react'),
+		propz 			= require('propz'),
 		Score			= require('module/ui/score/score'),
 		ScoreCricket	= require('module/ui/score/score_cricket'),
 		ScoreAthletic	= require('module/ui/score/score_athletic'),
@@ -20,16 +21,18 @@ const PlayerScore = React.createClass({
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
 	
-	getExtraPointsAthleticByStudent: function(event, userId) {
-		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
+	getAthleticExtraPointsByStudent: function(event, userId) {
+		const 	userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 		
-		if (
-			typeof event.results.individualScore[userScoreDataIndex] !== 'undefined' &&
-			typeof event.results.individualScore[userScoreDataIndex].richScore !== 'undefined'
-		) {
-			return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].richScore.extraScore;
-		} else {
+		if (userScoreDataIndex === -1) {
 			return 0;
+		} else {
+			const extraScore = propz.get(event, ['results', 'individualScore', userScoreDataIndex, 'richScore', 'extraScore']);
+			if (typeof extraScore !== 'undefined') {
+				return  extraScore;
+			} else {
+				return 0;
+			}
 		}
 	},
 	
@@ -61,7 +64,7 @@ const PlayerScore = React.createClass({
 				<span className="ePlayer_scoreAthleticContainer">
 					<ScoreAthletic	isChangeMode			= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }
 									plainPoints				= { this.getPointsByStudent(event, player.userId) }
-									plainExtraPoints 		= { this.getExtraPointsAthleticByStudent(event, player.userId) }
+									plainExtraPoints 		= { this.getAthleticExtraPointsByStudent(event, player.userId) }
 									pointsType				= { event.sport.points.display }
 									pointsStep				= { event.sport.points.pointsStep }
 									onChangeScoreAthletic	= { this.onChange }
