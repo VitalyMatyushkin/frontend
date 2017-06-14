@@ -192,11 +192,28 @@ const Rivals = React.createClass({
 						
 						rivals.push(rival);
 					});
+					//If at least one opponent has extraScore then sort by extraScore else by activeSchoolId
+					const isExtraScore = rivals.some(rival => rival.score !== 0);
 					
-					// Sort array of rivals by DESC of extraScores
-					rivals = rivals.sort((rival1, rival2) => {
-						return rival2.score - rival1.score;
-					});
+					if (isExtraScore) {
+						// Sort array of rivals by DESC of extraScores
+						rivals = rivals.sort((rival1, rival2) => {
+							return rival2.score - rival1.score;
+						});
+					} else {
+						// Sort array of rivals by activeSchoolId
+						rivals = rivals.sort((rival1, rival2) => {
+							if(rival1.school.id === this.props.activeSchoolId && rival2.school.id !== this.props.activeSchoolId) {
+								return -1;
+							}
+							if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
+								return 1;
+							}
+							
+							return 0;
+						});
+					}
+					
 				} else {
 					const 	rival 	= {},
 							players = event.individualsData,
