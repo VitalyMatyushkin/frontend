@@ -1105,9 +1105,10 @@ const Event = React.createClass({
 				<span>
 					{ this.renderSelectWithGameResultForCricket( )}
 					{ this.renderGameResultForCricket() }
-					<EventRivals	binding         = {binding}
-									onReload        = {this.props.onReload}
-									activeSchoolId  = {this.props.activeSchoolId}
+					<EventRivals	binding									= {binding}
+									onReload								= {this.props.onReload}
+									activeSchoolId							= {this.props.activeSchoolId}
+									handleClickChangeOpponentSchoolButton	= {this.handleClickOpponentSchoolManagerButton}
 					/>
 					{ this.renderEditTeamButtons() }
 					<IndividualScoreAvailableBlock
