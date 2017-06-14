@@ -13,7 +13,7 @@ const Rival = React.createClass({
 		rivalIndex:								React.PropTypes.number.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
-		viewMode:								React.PropTypes.string.isRequired,
+		viewMode:								React.PropTypes.string,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
