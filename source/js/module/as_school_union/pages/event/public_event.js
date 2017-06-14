@@ -4,6 +4,8 @@ const	React				= require('react'),
 		FixtureListItem		= require('./../school_home/fixture_list_item'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
+		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
+		NewEventHelper		= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
 		PublicMatchReport	= require('./public_match_report'),
 		PublicEventGallery	= require('./public_event_gallery');
@@ -118,6 +120,33 @@ const PublicEvent = React.createClass({
 
 		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
 	},
+	onClickViewMode: function(mode){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('view_mode', mode);
+	},
+	renderTeams: function() {
+		const	binding			= this.getDefaultBinding(),
+				event			= binding.toJS('model'),
+				inviterSchoolId	= event.inviterSchoolId;
+
+		//TODO it's temp. only for event refactoring period.
+		if(NewEventHelper.isNewEvent(event)) {
+			return (
+				<Rivals	binding									= { binding }
+						activeSchoolId							= { inviterSchoolId }
+						handleClickOpponentSchoolManagerButton	= { () => {} }
+						isShowControlButtons					= { false }
+				/>
+			);
+		} else {
+			return (
+				<PublicEventTeams	binding			= { this._getEventTeamsBinding() }
+									activeSchoolId	= { inviterSchoolId }
+				/>
+			);
+		}
+	},
 	render: function() {
 		const 	binding			= this.getDefaultBinding(),
 				isSync			= binding.get('sync'),
@@ -129,8 +158,9 @@ const PublicEvent = React.createClass({
 				<div className="bPublicEvent">
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { inviterSchoolId }
+										onClickViewMode = { this.onClickViewMode }
 					/>
-					<PublicEventTeams	binding			= {this._getEventTeamsBinding()}/>
+					{ this.renderTeams() }
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
 					{this.renderMatchReport()}
 				</div>

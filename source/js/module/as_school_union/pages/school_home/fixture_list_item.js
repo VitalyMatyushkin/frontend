@@ -11,13 +11,13 @@ const FixtureListItem = React.createClass({
 	mixins: [DateTimeMixin],
 
 	propTypes: {
-		event:			React.PropTypes.any.isRequired,
-		activeSchoolId: React.PropTypes.string.isRequired
+		event:				React.PropTypes.any.isRequired,
+		activeSchoolId: 	React.PropTypes.string.isRequired,
+		onClickViewMode: 	React.PropTypes.func
 	},
 	handleClickFixtureItem: function() {
 		document.location.hash = `event/${this.props.event.id}`;
 	},
-
 	getFixtureInfo: function(event) {
 		return(
 			<div>
@@ -25,18 +25,20 @@ const FixtureListItem = React.createClass({
 				<div className="eEventHeader_field mDate">
 					{`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
 				</div>
+				{ this.renderViewModeLinks() }
 			</div>
 		)
 	},
-	
 	renderOpponentSide: function (model, order) {
+		const rivalStyle = model === 0 ? '' : 'mRight';
+		
 		if (SportHelper.isCricket(model.sport)) {
 			//In model.scoreAr format score {string}: <Runs>999/<Wickets>9 (example 200/5, mean Runs: 200, Wickets: 5)
 			const 	runs 	= model.scoreAr[order].split('/')[0],
 					wickets = model.scoreAr[order].split('/')[1];
 			
 			return (
-				<div>
+				<div className={"bEventRival " + rivalStyle}>
 					<div className="eEventRival_logo">
 						<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
 					</div>
@@ -46,10 +48,11 @@ const FixtureListItem = React.createClass({
 					</div>
 				</div>
 			);
-			
+		} else if (SportHelper.isAthletics(model.sport)) {
+			return null;
 		} else {
 			return (
-				<div>
+				<div className={"bEventRival " + rivalStyle}>
 					<div className="eEventRival_logo">
 						<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
 					</div>
@@ -61,7 +64,32 @@ const FixtureListItem = React.createClass({
 			);
 		}
 	},
-	
+	renderViewModeLinks: function(){
+		const sportName = this.props.event.sport.name.toLowerCase();
+		
+		if (SportHelper.isAthletics(sportName)) {
+			return (
+				<div className="bEventViewMode">
+					<a
+						className	= "eEventViewModeLink"
+						onClick		= { () => {this.props.onClickViewMode('general')} }
+						key 		= "general"
+					>
+						Show Separate
+					</a>
+					<a
+						className 	= "eEventViewModeLink"
+						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
+						key 		= "showAll"
+					>
+						Show All
+					</a>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	renderGameResultForCricket: function(){
 		const sportName = this.props.event.sport.name.toLowerCase();
 		
@@ -76,20 +104,19 @@ const FixtureListItem = React.createClass({
 			return null;
 		}
 	},
-
 	getEventRivals: function (model) {
 		if(!model.isEventWithOneIndividualTeam)
 			return (
-				<div className="bEventRivals">
+				<div>
 					{ this.renderGameResultForCricket() }
 					<div className="bEventRivals_row">
 						<div className="bEventRivals_column mLeft">
-							<div className="bEventRival">
+							<div>
 								{ this.renderOpponentSide(model, 0) }
 							</div>
 						</div>
 						<div className="bEventRivals_column">
-							<div className="bEventRival mRight">
+							<div>
 								{ this.renderOpponentSide(model, 1) }
 							</div>
 						</div>
