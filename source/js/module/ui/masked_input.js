@@ -185,6 +185,7 @@ const MaskedInput = React.createClass({
 			this._forceUpdate();
 		}
 		if(typeof this.props.onChange !== 'undefined') {
+			e.target.value = this.mask.value;
 			this.props.onChange(e);
 		}
 	},
