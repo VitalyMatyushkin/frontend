@@ -45,7 +45,11 @@ const ChallengeListItem = React.createClass({
 				}
 				break;
 			case isRejected:
-				eventResult = 'Rejected';
+				if (this.props.isUserSchoolWorker) {
+					eventResult = <span>Rejected <a onClick={ () => {this.props.onClickDeleteEvent(event.id)}}>(X)</a></span>;
+				} else {
+					eventResult = 'Rejected';
+				}
 				break;
 			case isInvitesSent:
 				eventResult = <span>Awaiting<br/>opponent</span>;
