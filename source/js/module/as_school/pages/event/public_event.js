@@ -112,6 +112,11 @@ const PublicEvent = React.createClass({
 	handleClickGoBack: function() {
 		document.location.hash = 'home';
 	},
+	onClickViewMode: function(mode){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('view_mode', mode);
+	},
 	renderMatchReport: function() {
 		const	binding	= this.getDefaultBinding(),
 				report	= binding.toJS('report');
@@ -152,6 +157,7 @@ const PublicEvent = React.createClass({
 				<div className="bPublicEvent">
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
+										onClickViewMode = { this.onClickViewMode }
 					/>
 					{ this.renderTeams() }
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
