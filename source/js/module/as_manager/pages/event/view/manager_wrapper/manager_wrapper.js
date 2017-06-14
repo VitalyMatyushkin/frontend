@@ -14,6 +14,7 @@ const	Actions							= require('../../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		SavingPlayerChangesPopupHelper	= require('../../../events/saving_player_changes_popup/helper'),
 		SavingEventHelper				= require('../../../../../helpers/saving_event_helper'),
+		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		ManagerHelper					= require('../../../../../ui/managers/helpers/manager_helper');
 
 const	TeamManagerWrapperStyle			= require('../../../../../../../styles/ui/b_team_manager_wrapper.scss');
@@ -34,15 +35,16 @@ const ManagerWrapper = React.createClass({
 
 		const event = binding.toJS('model');
 
-		const rivals = this.getRivals(event, binding.toJS('rivals'));
+		const	managerWrapperRivals	= this.getRivals(event, binding.toJS('rivals')),
+				schoolInfo				= this.getSchoolInfo(event, binding.toJS('rivals'), selectedRivalIndex);
 
 		binding.sub('teamManagerWrapper.default').atomically()
 			.set('isSubmitProcessing',				false)
 			.set('isSavingChangesModePopupOpen',	false)
 			.set('model',							Immutable.fromJS(event))
 			.set('model.sportModel',				Immutable.fromJS(event.sport))
-			.set('rivals',							Immutable.fromJS(rivals))
-			.set('schoolInfo',						Immutable.fromJS(event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
+			.set('rivals',							Immutable.fromJS(managerWrapperRivals))
+			.set('schoolInfo',						Immutable.fromJS(schoolInfo))
 			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
 			.set('error',							Immutable.fromJS([
 														{
@@ -75,15 +77,23 @@ const ManagerWrapper = React.createClass({
 			});
 	},
 	getRivals: function(event, rivals) {
-		if(
-			(
-				TeamHelper.isHousesEventForTeamSport(event) ||
-				TeamHelper.isInternalEventForTeamSport(event)
-			) && event.sport.multiparty
-		) {
+		if(NewEventHelper.mustUseNewManagerWraperHelper(event)) {
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {
 			return ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
+		}
+	},
+	getSchoolInfo: function(event, rivals, selectedRivalIndex) {
+		if(NewEventHelper.isNewEvent(event)) {
+			const school = rivals[selectedRivalIndex].school;
+
+			if(school.id === event.inviterSchoolId) {
+				return event.inviterSchool;
+			} else {
+				return event.invitedSchools.find(s => s.id === school.id);
+			}
+		} else {
+			return event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
 		}
 	},
 	getManagerBinding: function() {

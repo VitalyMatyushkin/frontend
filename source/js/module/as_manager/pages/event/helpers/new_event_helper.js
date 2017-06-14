@@ -20,6 +20,22 @@ const NewEventHelper = {
 		);
 	},
 	/**
+	 * Function returns true when you my friend must use NewManagerWrapperHelper to get rivals for manager wrapper.
+	 * This stuff only for manager wrapper, look at ManagerWrapper.getRivals.
+	 * And it's temporary only for new event refactoring period.
+	 * @param event
+	 * @returns {*|boolean}
+	 */
+	mustUseNewManagerWraperHelper: function(event) {
+		return (
+			(
+				TeamHelper.isHousesEventForTeamSport(event) ||
+				TeamHelper.isInternalEventForTeamSport(event) ||
+				TeamHelper.isInterSchoolsEventForIndividualSport(event)
+			) && event.sport.multiparty
+		);
+	},
+	/**
 	 * Function returns true when we should use new tab component
 	 * @param event - event model
 	 * @returns {*|boolean}

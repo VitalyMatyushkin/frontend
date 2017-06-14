@@ -59,9 +59,18 @@ function commitPlayersChanges(activeSchoolId, binding) {
 function commitIndividualPlayerChanges(activeSchoolId, binding) {
 	const event = binding.toJS('model');
 
-	const	eventId			= event.id,
-			players			= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding),
-			initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding);
+	const	eventId = event.id;
+	let		players, initialPlayers;
+
+	if(event.sport.multiparty) {
+		const selectedRivalIndex = binding.toJS('selectedRivalIndex');
+
+		players			= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding, selectedRivalIndex);
+		initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding, selectedRivalIndex);
+	} else {
+		players			= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding);
+		initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding);
+	}
 
 	return Promise.all(TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players));
 };
