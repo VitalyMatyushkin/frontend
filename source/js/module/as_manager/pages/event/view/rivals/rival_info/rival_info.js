@@ -9,7 +9,7 @@ const RivalInfo = React.createClass({
 		rival:									React.PropTypes.object.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
-		viewMode:								React.PropTypes.string.isRequired,
+		viewMode:								React.PropTypes.string,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		handleClickChangeOpponentSchoolButton:	React.PropTypes.func,
 		activeSchoolId:							React.PropTypes.string.isRequired,

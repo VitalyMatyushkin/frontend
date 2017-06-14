@@ -36,6 +36,8 @@ const Rivals = React.createClass({
 
 		let	rivals		= [];
 
+		this.initViewMode();
+
 		if(TeamHelper.isTeamSport(event)) {
 			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
 				const	schoolsData	= event.schoolsData,
@@ -144,11 +146,6 @@ const Rivals = React.createClass({
 		} else if (TeamHelper.isIndividualSport(event)){
 			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
 				
-				//Initial state
-				if (typeof binding.toJS('view_mode') === 'undefined') {
-					binding.set('view_mode', 'general');
-				}
-				
 				if (binding.toJS('view_mode') === 'general') {
 					const	schoolsData	= event.schoolsData,
 							players 	= event.individualsData,
@@ -235,9 +232,9 @@ const Rivals = React.createClass({
 		this.addListenerForTeamScore();
 		this.addListenerForViewMode();
 	},
-	
-	getExtraScoreForRival(rival){
+	getExtraScoreForRival: function(rival) {
 		let extraScoreRival = 0;
+
 		rival.players.forEach( player => {
 			const extraScorePlayer = propz.get(player, ['extraScore']);
 			
@@ -247,7 +244,14 @@ const Rivals = React.createClass({
 		});
 		return extraScoreRival;
 	},
-	
+	initViewMode: function() {
+		const binding = this.getDefaultBinding();
+
+		//Initial state
+		if (typeof binding.toJS('view_mode') === 'undefined') {
+			binding.set('view_mode', 'general');
+		}
+	},
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
 			if(typeof rival.team === 'undefined') {
