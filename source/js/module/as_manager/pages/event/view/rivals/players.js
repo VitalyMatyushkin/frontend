@@ -7,6 +7,14 @@ const	React			= require('react'),
 		propz			= require('propz'),
 		PlayersStyle	= require('../../../../../../../styles/ui/rivals/b_players.scss');
 
+const SPORT_SORT = {
+	'BY_SCORE': 'BY_SCORE',
+	'BY_EXTRA_SCORE': 'BY_EXTRA_SCORE'
+};
+
+//Change this const on BY_EXTRA_SCORE if you want sort by extraScore
+const SORTING = 'BY_SCORE';
+
 const Players = React.createClass({
 	propTypes: {
 		rival						: React.PropTypes.object.isRequired,
@@ -193,14 +201,75 @@ const Players = React.createClass({
 		
 		return players;
 	},
+	/**
+	 * Return array of players sorted by individual extraScore
+	 */
+	sortPlayersByExtraScore: function(players){
+		return players.sort( (player1, player2) => {
+			if (player2.extraScore < player1.extraScore) {
+				return -1;
+			} else if (player2.extraScore > player1.extraScore) {
+				return 1;
+			} else {
+				const	event		= this.props.event,
+						scoring 	= propz.get(event, ['sport', 'scoring']);
+				if (
+					scoring === 'MORE_SCORES' ||
+					scoring === 'MORE_TIME' ||
+					scoring === 'MORE_RESULT' ||
+					scoring === 'FIRST_TO_N_POINTS'
+				) {
+					if (player2.score < player1.score) {
+						return -1;
+					} else if (player2.score > player1.score) {
+						return 1;
+					} else {
+						return 0;
+					}
+				} else {
+					if (player1.score < player2.score) {
+						return -1;
+					} else if (player1.score > player2.score) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			}
+		});
+	},
 	sortPlayersByScoreDesc: function (players){
 		return players.sort( (player1, player2) => {
-			return player2.score - player1.score;
+			if (player2.score < player1.score) {
+				return -1;
+			} else if (player2.score > player1.score) {
+				return 1;
+			} else { // if player1.score === player2.score, then we sort by extraScore
+				if (player1.extraScore > player2.extraScore) {
+					return -1;
+				} else if (player1.extraScore < player2.extraScore) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
 		});
 	},
 	sortPlayersByScoreAsc: function (players){
 		return players.sort( (player1, player2) => {
-			return player1.score - player2.score;
+			if (player1.score < player2.score) {
+				return -1;
+			} else if (player1.score > player2.score) {
+				return 1;
+			} else { // if player1.score === player2.score, then we sort by extraScore
+				if (player1.extraScore > player2.extraScore) {
+					return -1;
+				} else if (player1.extraScore < player2.extraScore) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
 		});
 	},
 	isShowMedal: function(){
@@ -214,19 +283,43 @@ const Players = React.createClass({
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
+	getPlayersPlaceArray: function(players){
+		const playersPlaceArray = [];
+		let place = 1;
+		//we give additional place if score and extraScore is the same
+		for (let i = 1; i < players.length; i++) {
+			if (players[i-1].score === players[i].score && players[i-1].extraScore === players[i].extraScore) {
+				playersPlaceArray.push(place);
+			} else {
+				playersPlaceArray.push(place);
+				place++;
+			}
+		}
+		//push last place
+		playersPlaceArray.push(place);
+		
+		return playersPlaceArray;
+	},
 	renderPlayers: function(players) {
 		const 	event 		= this.props.event,
 				isShowMedal = this.isShowMedal();
 
-		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
-			//we sort array of players by individual score
-			players = this.sortPlayersByScore(players);
+		let playersPlaceArray = [];
+		if (SportHelper.isAthletics(sportName)) {
+			if (SORTING === SPORT_SORT.BY_SCORE) {
+				players = this.sortPlayersByScore(players);
+			} else if (SORTING === SPORT_SORT.BY_EXTRA_SCORE) {
+				players = this.sortPlayersByExtraScore(players);
+			}
+			
+			playersPlaceArray = this.getPlayersPlaceArray(players);
 		}
 
 		return players.map((player, playerIndex) =>
 			<Player
 				key							= {playerIndex}
 				playerIndex					= {playerIndex}
+				playerPlace 				= {playersPlaceArray.length !== 0 ? playersPlaceArray[playerIndex] : 0}
 				player						= {player}
 				isOwner						= {this.props.isOwner}
 				individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}

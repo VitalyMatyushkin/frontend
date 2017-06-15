@@ -5,11 +5,12 @@ const PlayerInfo = React.createClass({
 	propTypes: {
 		playerIndex	: React.PropTypes.number.isRequired,
 		player		: React.PropTypes.object.isRequired,
+		playerPlace : React.PropTypes.number,
 		isShowMedal	: React.PropTypes.bool.isRequired
 	},
 	renderPlace: function(){
 		const 	isShowMedal 	= this.props.isShowMedal,
-				place 			= Number(this.props.playerIndex) + 1;
+				place 			= this.props.playerPlace;
 		
 		let medal = null;
 

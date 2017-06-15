@@ -12,6 +12,7 @@ const Player = React.createClass({
 	propTypes: {
 		playerIndex					: React.PropTypes.number.isRequired,
 		player						: React.PropTypes.object.isRequired,
+		playerPlace 				: React.PropTypes.number,
 		isOwner						: React.PropTypes.bool.isRequired,
 		individualScoreAvailable	: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
@@ -26,6 +27,7 @@ const Player = React.createClass({
 	render: function() {
 		const	playerIndex					= this.props.playerIndex,
 				player						= this.props.player,
+				playerPlace 				= this.props.playerPlace,
 				mode						= this.props.mode,
 				isShowMedal					= this.props.isShowMedal,
 				event						= this.props.event,
@@ -45,6 +47,7 @@ const Player = React.createClass({
 				<PlayerInfo
 					playerIndex	= {playerIndex}
 					player		= {player}
+					playerPlace = {playerPlace}
 					isShowMedal = {isShowMedal}
 				/>
 				<If condition={Boolean(player.isCaptain)}>

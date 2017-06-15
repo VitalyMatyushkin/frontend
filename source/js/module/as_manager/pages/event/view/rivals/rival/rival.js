@@ -21,6 +21,30 @@ const Rival = React.createClass({
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool
 	},
+	onChangeRivalInfoScore: function(scoreBundleName, scoreData) {
+		this.props.onChangeScore(
+			this.props.rivalIndex,
+			scoreBundleName,
+			scoreData
+		);
+	},
+	onChangePlayerScore: function(scoreData, player) {
+		this.props.onChangeScore(
+			this.props.rivalIndex,
+			'individualData',
+			scoreData,
+			player
+		);
+	},
+	onClickEditTeam: function() {
+		this.props.onClickEditTeam(this.props.rivalIndex);
+	},
+	onChangeIndividualScoreAvailable: function() {
+		this.props.onChangeIndividualScoreAvailable(this.props.rivalIndex);
+	},
+	handleClickOpponentSchoolManagerButton: function() {
+		this.props.handleClickOpponentSchoolManagerButton(this.props.rivalIndex);
+	},
 	hasTeamPlayers: function() {
 		const players = propz.get(this.props.rival, ['team', 'players']);
 
@@ -39,7 +63,7 @@ const Rival = React.createClass({
 			return (
 				<IndividualScoreManager
 					value		= { this.props.rival.isIndividualScoreAvailable }
-					onChange	= { this.props.onChangeIndividualScoreAvailable }
+					onChange	= { this.onChangeIndividualScoreAvailable }
 				/>
 			);
 		} else {
@@ -59,8 +83,8 @@ const Rival = React.createClass({
 					event									= { this.props.event }
 					mode									= { this.props.mode }
 					viewMode								= { this.props.viewMode }
-					onChangeScore							= { this.props.onChangeScore }
-					handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
+					onChangeScore							= { this.onChangeRivalInfoScore }
+					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 				/>
@@ -72,8 +96,8 @@ const Rival = React.createClass({
 					viewMode				= { this.props.viewMode }
 					event					= { this.props.event }
 					activeSchoolId			= { this.props.activeSchoolId }
-					onChangeScore			= { this.props.onChangeScore.bind(this, 'individualData') }
-					onClickEditTeam			= { this.props.onClickEditTeam }
+					onChangeScore			= { this.onChangePlayerScore }
+					onClickEditTeam			= { this.onClickEditTeam }
 					customCss				= { '' }
 					isShowControlButtons	= { this.props.isShowControlButtons }
 				/>
