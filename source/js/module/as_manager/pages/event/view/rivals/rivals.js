@@ -693,12 +693,10 @@ const Rivals = React.createClass({
 					event									= { binding.toJS('model') }
 					mode									= { binding.toJS('mode') }
 					viewMode 								= { binding.toJS('view_mode') }
-					onChangeScore							= { this.onChangeScore.bind(this, rivalIndex) }
-					onClickEditTeam							= { this.onClickEditTeam.bind(this, rivalIndex) }
-					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable.bind(this, rivalIndex) }
-					handleClickOpponentSchoolManagerButton	= {
-						this.props.handleClickOpponentSchoolManagerButton.bind(this, rivalIndex)
-					}
+					onChangeScore							= { this.onChangeScore }
+					onClickEditTeam							= { this.onClickEditTeam }
+					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
+					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
 				/>
