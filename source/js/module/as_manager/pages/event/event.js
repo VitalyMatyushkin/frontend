@@ -567,11 +567,15 @@ const Event = React.createClass({
 	addListenerForIndividualScoreAvailable: function() {
 		const binding = this.getDefaultBinding();
 
-		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(
-			this.handleIndividualAvailableFlagChanges.bind(this, 0))
+		this.listeners.push(
+			binding
+				.sub('individualScoreAvailable.0.value')
+				.addListener(eventDescriptor => this.handleIndividualAvailableFlagChanges(0, eventDescriptor))
 		);
-		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(
-			this.handleIndividualAvailableFlagChanges.bind(this, 1))
+		this.listeners.push(
+			binding
+				.sub('individualScoreAvailable.1.value')
+				.addListener(eventDescriptor => this.handleIndividualAvailableFlagChanges(1, eventDescriptor))
 		);
 	},
 	handleIndividualAvailableFlagChanges: function(order, eventDescriptor) {
