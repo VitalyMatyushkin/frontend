@@ -68,7 +68,7 @@ const EventHeader = React.createClass({
 	renderViewModeLinks: function(){
 		const event = this.props.event;
 
-		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSportFromChallengeModel(event)) {
 			return (
 				<div className="bEventViewMode">
 					<a

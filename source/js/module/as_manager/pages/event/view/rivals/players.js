@@ -305,7 +305,7 @@ const Players = React.createClass({
 				isShowMedal = this.isShowMedal();
 
 		let playersPlaceArray = [];
-		if (SportHelper.isAthletics(sportName)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			if (SORTING === SPORT_SORT.BY_SCORE) {
 				players = this.sortPlayersByScore(players);
 			} else if (SORTING === SPORT_SORT.BY_EXTRA_SCORE) {
