@@ -273,12 +273,12 @@ const Players = React.createClass({
 		});
 	},
 	isShowMedal: function(){
-		const 	sportName 		= this.props.event.sport.name,
+		const 	event 			= this.props.event,
 				eventStatus 	= this.props.event.status,
 				mode 			= this.props.mode;
 		
 		return (
-			SportHelper.isAthletics(sportName) &&
+			TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
 			mode === 'general' &&
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
@@ -301,11 +301,11 @@ const Players = React.createClass({
 		return playersPlaceArray;
 	},
 	renderPlayers: function(players) {
-		const 	sportName 	= this.props.event.sport.name,
+		const 	event 		= this.props.event,
 				isShowMedal = this.isShowMedal();
 
 		let playersPlaceArray = [];
-		if (SportHelper.isAthletics(sportName)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			if (SORTING === SPORT_SORT.BY_SCORE) {
 				players = this.sortPlayersByScore(players);
 			} else if (SORTING === SPORT_SORT.BY_EXTRA_SCORE) {

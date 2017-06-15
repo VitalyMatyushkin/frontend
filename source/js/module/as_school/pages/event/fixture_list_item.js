@@ -4,6 +4,7 @@ const 	React 					= require('react'),
 		Button 					= require('module/ui/button/button'),
 		NewEventHelper			= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		CricketResultBlock 		= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
 
 const FixtureListItem = React.createClass({
@@ -30,9 +31,9 @@ const FixtureListItem = React.createClass({
 		)
 	},
 	renderViewModeLinks: function(){
-		const sportName = this.props.event.sport.name.toLowerCase();
+		const event = this.props.event;
 		
-		if (SportHelper.isAthletics(sportName)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			return (
 				<div className="bEventViewMode">
 					<a
@@ -56,7 +57,9 @@ const FixtureListItem = React.createClass({
 		}
 	},
 	renderOpponentSide: function (model, order) {
-		const rivalStyle = model === 0 ? '' : 'mRight';
+		const 	rivalStyle 	= model === 0 ? '' : 'mRight',
+				event 		= this.props.event;
+		
 		if (SportHelper.isCricket(model.sport)) {
 			//In model.scoreAr format score {string}: <Runs>999/<Wickets>9 (example 200/5, mean Runs: 200, Wickets: 5)
 			const 	runs 	= model.scoreAr[order].split('/')[0],
@@ -73,7 +76,7 @@ const FixtureListItem = React.createClass({
 					</div>
 				</div>
 			);
-		} else if (SportHelper.isAthletics(model.sport)) {
+		} else if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			return null;
 		} else {
 			return (

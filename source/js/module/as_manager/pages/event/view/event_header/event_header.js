@@ -10,6 +10,7 @@ const	Lazy				= require('lazy.js'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		SportHelper 		= require('module/helpers/sport_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		TweetButton 		= require('./tweet_button');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
@@ -65,9 +66,9 @@ const EventHeader = React.createClass({
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.eventStatus !== "FINISHED";
 	},
 	renderViewModeLinks: function(){
-		const sportName = this.props.event.sport;
+		const event = this.props.event;
 
-		if (SportHelper.isAthletics(sportName)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSportFromChallengeModel(event)) {
 			return (
 				<div className="bEventViewMode">
 					<a

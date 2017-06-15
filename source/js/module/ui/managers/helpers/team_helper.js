@@ -431,6 +431,12 @@ function isInterSchoolsEventForIndividualSport(event) {
 	}
 };
 
+function isInterSchoolsEventForIndividualSportFromChallengeModel(event) {
+	if(typeof event !== 'undefined') {
+		return event.eventType === 'inter-schools' && event.isIndividualSport === true;
+	}
+};
+
 function isInterSchoolsEventForOneOnOneSport(event) {
 	if(typeof event !== 'undefined') {
 		const self = this;
@@ -1379,7 +1385,8 @@ const TeamHelper = {
 	getParametersForLeftContext: 			getParametersForLeftContext,
 	getParametersForRightContext: 			getParametersForRightContext,
 	clearIndividualScore:					clearIndividualScore,
-	getRemovedPlayers:						getRemovedPlayers
+	getRemovedPlayers:						getRemovedPlayers,
+	isInterSchoolsEventForIndividualSportFromChallengeModel:	isInterSchoolsEventForIndividualSportFromChallengeModel
 };
 
 module.exports = TeamHelper;
