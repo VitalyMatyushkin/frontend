@@ -4,6 +4,7 @@ const	React			= require('react'),
 		ScoreCricket	= require('module/ui/score/score_cricket'),
 		ScoreAthletic	= require('module/ui/score/score_athletic'),
 		SportHelper 	= require('module/helpers/sport_helper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper');
 
 const PlayerScore = React.createClass({
@@ -59,7 +60,7 @@ const PlayerScore = React.createClass({
 					/>
 				</div>
 			);
-		} else if (SportHelper.isAthletics(event.sport.name)) {
+		} else if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			return (
 				<span className="ePlayer_scoreAthleticContainer">
 					<ScoreAthletic	isChangeMode			= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }

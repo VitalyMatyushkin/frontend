@@ -204,21 +204,21 @@ const Players = React.createClass({
 		});
 	},
 	isShowMedal: function(){
-		const 	sportName 		= this.props.event.sport.name,
+		const 	event 			= this.props.event,
 				eventStatus 	= this.props.event.status,
 				mode 			= this.props.mode;
 		
 		return (
-			SportHelper.isAthletics(sportName) &&
+			TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
 			mode === 'general' &&
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED
 		);
 	},
 	renderPlayers: function(players) {
-		const 	sportName 	= this.props.event.sport.name,
+		const 	event 		= this.props.event,
 				isShowMedal = this.isShowMedal();
 
-		if (SportHelper.isAthletics(sportName)) {
+		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			//we sort array of players by individual score
 			players = this.sortPlayersByScore(players);
 		}
