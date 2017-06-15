@@ -209,7 +209,6 @@ const Rivals = React.createClass({
 							if(rival1.school.id !== this.props.activeSchoolId && rival2.school.id === this.props.activeSchoolId) {
 								return 1;
 							}
-							
 							return 0;
 						});
 					}
@@ -221,15 +220,22 @@ const Rivals = React.createClass({
 					
 					rival.school = {};
 					rival.players = [];
-					players.forEach(player => {
-						const playerScore = scores.find(score => score.userId === player.userId);
+					players.forEach( player => {
+						const playerScoreObject = scores.find(score => score.userId === player.userId);
 						
-						if (typeof playerScore !== 'undefined') {
-							player.score = playerScore.score;
+						if (typeof playerScoreObject !== 'undefined') {
+							const 	playerScore 		= propz.get(playerScoreObject, ['score']),
+									playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'extraScore']);
+							
+							player.score = playerScore;
+							player.extraScore = playerExtraScore;
 						} else {
 							player.score = 0;
+							player.extraScore = 0;
 						}
-						rival.players.push(player);
+						
+							rival.players.push(player);
+						
 					});
 					
 					rival.isIndividualScoreAvailable = true;
@@ -380,6 +386,7 @@ const Rivals = React.createClass({
 					const playerIndex = currentValue.model.results.individualScore.findIndex(individual => individual.userId === player.userId);
 					if (playerIndex !== -1) {
 						player.score = currentValue.model.results.individualScore[playerIndex].score;
+						player.extraScore = currentValue.model.results.individualScore[playerIndex].richScore.extraScore;
 					}
 				});
 				

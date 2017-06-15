@@ -195,7 +195,12 @@ const SchoolRivalInfo = React.createClass({
 		}
 	},
 	render: function() {
-		if (this.props.viewMode === 'general') {
+		const 	viewMode 	= this.props.viewMode,
+				sportName 	= this.props.event.sport.name;
+		
+		if (viewMode === 'show_all' && SportHelper.isAthletics(sportName)) {
+			return null;
+		} else {
 			return (
 				<div className="bEventRival">
 					{ this.renderPlaceMedal() }
@@ -211,8 +216,6 @@ const SchoolRivalInfo = React.createClass({
 					{ this.renderPoints() }
 				</div>
 			);
-		} else {
-			return null;
 		}
 
 	}
