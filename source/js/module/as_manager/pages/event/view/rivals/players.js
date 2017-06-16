@@ -13,7 +13,7 @@ const SPORT_SORT = {
 };
 
 //Change this const on BY_EXTRA_SCORE if you want sort by extraScore
-const SORTING = 'BY_SCORE';
+const SORTING = 'BY_EXTRA_SCORE';
 
 const Players = React.createClass({
 	propTypes: {
