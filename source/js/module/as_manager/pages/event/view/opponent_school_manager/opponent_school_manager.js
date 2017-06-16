@@ -157,6 +157,9 @@ const OpponentSchoolManager = React.createClass({
 
 		return typeof postcode !== 'undefined';
 	},
+	isOkButtonDisabled: function() {
+		return typeof this.getDefaultBinding().toJS('opponentSchoolManager.opponentSchoolInput.school') === 'undefined';
+	},
 	getDistanceItems: function() {
 		return EventHelper.distanceItems.map(item => {
 			return (
@@ -186,7 +189,7 @@ const OpponentSchoolManager = React.createClass({
 		return (
 			<ConfirmPopup	okButtonText			= "Change opponent"
 							cancelButtonText		= "Back"
-							isOkButtonDisabled		= {false}
+							isOkButtonDisabled		= {this.isOkButtonDisabled()}
 							handleClickOkButton		= {this.handleClickOkButton}
 							handleClickCancelButton	= {this.closeSavingChangesModePopup}
 			>
@@ -214,7 +217,7 @@ const OpponentSchoolManager = React.createClass({
 						</div>
 						<Autocomplete	key				= {binding.toJS('schoolSelectorKey')}
 										defaultItem		= {binding.toJS('opponentSchoolManager.school')}
-										customListItem	= { SchoolListItem }
+										customListItem	= {SchoolListItem}
 										serviceFilter	= {this.serviceSchoolFilter}
 										serverField		= "name"
 										placeholder		= "enter school name"
