@@ -176,7 +176,7 @@ const Rivals = React.createClass({
 							
 							if (typeof playerScoreObject !== 'undefined') {
 								const 	playerScore 		= propz.get(playerScoreObject, ['score']),
-										playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'extraScore']);
+										playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'points']);
 								
 								player.score = playerScore;
 								player.extraScore = playerExtraScore;
@@ -227,7 +227,7 @@ const Rivals = React.createClass({
 						
 						if (typeof playerScoreObject !== 'undefined') {
 							const 	playerScore 		= propz.get(playerScoreObject, ['score']),
-									playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'extraScore']);
+									playerExtraScore 	= propz.get(playerScoreObject, ['richScore', 'points']);
 							
 							player.score = playerScore;
 							player.extraScore = playerExtraScore;
@@ -388,7 +388,7 @@ const Rivals = React.createClass({
 					const playerIndex = currentValue.model.results.individualScore.findIndex(individual => individual.userId === player.userId);
 					if (playerIndex !== -1) {
 						player.score = currentValue.model.results.individualScore[playerIndex].score;
-						player.extraScore = currentValue.model.results.individualScore[playerIndex].richScore.extraScore;
+						player.extraScore = currentValue.model.results.individualScore[playerIndex].richScore.points;
 					}
 				});
 				
@@ -548,14 +548,14 @@ const Rivals = React.createClass({
 				permissionId:	player.permissionId,
 				score:			0,
 				richScore: {
-					extraScore: 0
+					points: 0
 				}
 			};
 			individualScoreArray.push(playerScoreData);
 		}
 		/** set score */
 		playerScoreData.score = score.scoreAthletic.score;
-		playerScoreData.richScore = Object.assign({}, {extraScore: score.scoreAthletic.extraScore});
+		playerScoreData.richScore = Object.assign({}, {points: score.scoreAthletic.extraScore});
 		playerScoreData.isChanged = true;
 		playerScoreData.isValid = score.isValid;
 		binding.set('model.results.individualScore', Immutable.fromJS(individualScoreArray));

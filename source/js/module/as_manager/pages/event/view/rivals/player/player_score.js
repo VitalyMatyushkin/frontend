@@ -28,7 +28,7 @@ const PlayerScore = React.createClass({
 		if (userScoreDataIndex === -1) {
 			return 0;
 		} else {
-			const extraScore = propz.get(event, ['results', 'individualScore', userScoreDataIndex, 'richScore', 'extraScore']);
+			const extraScore = propz.get(event, ['results', 'individualScore', userScoreDataIndex, 'richScore', 'points']);
 			if (typeof extraScore !== 'undefined') {
 				return  extraScore;
 			} else {
