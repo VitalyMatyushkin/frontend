@@ -26,7 +26,8 @@ const Players = React.createClass({
 		onChangeScore				: React.PropTypes.func.isRequired,
 		onClickEditTeam				: React.PropTypes.func.isRequired,
 		customCss					: React.PropTypes.string.isRequired,
-		isShowControlButtons		: React.PropTypes.bool
+		isShowControlButtons		: React.PropTypes.bool,
+		isSchoolUnion				: React.PropTypes.bool.isRequired
 	},
 	SELECT_TEAM_LATER:		'Select team later',
 	NO_TEAM_MEMBERS:		'No team members to display',
@@ -275,13 +276,24 @@ const Players = React.createClass({
 	isShowMedal: function(){
 		const 	event 			= this.props.event,
 				eventStatus 	= this.props.event.status,
+				isSchoolUnion 	= this.props.isSchoolUnion,
+				viewMode 		= this.props.viewMode,
 				mode 			= this.props.mode;
-		
-		return (
-			TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
-			mode === 'general' &&
-			eventStatus === EventHelper.EVENT_STATUS.FINISHED
-		);
+		//for schoolUnion we show medals only in show all view mode
+		if (isSchoolUnion) {
+			return (
+				TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
+				mode === 'general' &&
+				eventStatus === EventHelper.EVENT_STATUS.FINISHED &&
+				viewMode === 'show_all'
+			);
+		} else {
+			return (
+				TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
+				mode === 'general' &&
+				eventStatus === EventHelper.EVENT_STATUS.FINISHED
+			);
+		}
 	},
 	getPlayersPlaceArray: function(players){
 		const playersPlaceArray = [];
