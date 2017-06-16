@@ -19,7 +19,8 @@ const Rival = React.createClass({
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
 		activeSchoolId:							React.PropTypes.string.isRequired,
-		isShowControlButtons:					React.PropTypes.bool
+		isShowControlButtons:					React.PropTypes.bool,
+		isSchoolUnion: 							React.PropTypes.bool.isRequired
 	},
 	onChangeRivalInfoScore: function(scoreBundleName, scoreData) {
 		this.props.onChangeScore(
@@ -100,6 +101,7 @@ const Rival = React.createClass({
 					onClickEditTeam			= { this.onClickEditTeam }
 					customCss				= { '' }
 					isShowControlButtons	= { this.props.isShowControlButtons }
+					isSchoolUnion 			= { this.props.isSchoolUnion }
 				/>
 			</div>
 		);

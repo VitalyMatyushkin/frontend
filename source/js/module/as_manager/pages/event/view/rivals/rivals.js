@@ -17,12 +17,14 @@ const Rivals = React.createClass({
 	propTypes: {
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
+		isSchoolUnion: 							React.PropTypes.bool.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func
 	},
 	listeners: [],
 	getDefaultProps: function(){
 		return {
-			isShowControlButtons: true
+			isShowControlButtons: true,
+			isSchoolUnion: false
 		};
 	},
 	componentWillUnmount: function() {
@@ -706,6 +708,7 @@ const Rivals = React.createClass({
 					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
+					isSchoolUnion 							= { this.props.isSchoolUnion }
 				/>
 			);
 

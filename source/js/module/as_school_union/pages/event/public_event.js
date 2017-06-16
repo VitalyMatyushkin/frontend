@@ -137,6 +137,7 @@ const PublicEvent = React.createClass({
 						activeSchoolId							= { inviterSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
+						isSchoolUnion 							= {	true }
 				/>
 			);
 		} else {

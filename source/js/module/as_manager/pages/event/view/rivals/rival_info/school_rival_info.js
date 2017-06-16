@@ -196,9 +196,9 @@ const SchoolRivalInfo = React.createClass({
 	},
 	render: function() {
 		const 	viewMode 	= this.props.viewMode,
-				sportName 	= this.props.event.sport.name;
+				event 		= this.props.event;
 		
-		if (viewMode === 'show_all' && SportHelper.isAthletics(sportName)) {
+		if (viewMode === 'show_all' && TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			return null;
 		} else {
 			return (
