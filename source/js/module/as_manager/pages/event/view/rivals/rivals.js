@@ -23,8 +23,8 @@ const Rivals = React.createClass({
 	listeners: [],
 	getDefaultProps: function(){
 		return {
-			isShowControlButtons: true,
-			isSchoolUnion: false
+			isShowControlButtons:	true,
+			isSchoolUnion:			false
 		};
 	},
 	componentWillUnmount: function() {
@@ -705,7 +705,7 @@ const Rivals = React.createClass({
 					onChangeScore							= { this.onChangeScore }
 					onClickEditTeam							= { this.onClickEditTeam }
 					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
-					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
+					handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isSchoolUnion 							= { this.props.isSchoolUnion }
