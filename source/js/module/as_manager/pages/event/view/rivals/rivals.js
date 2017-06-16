@@ -23,8 +23,8 @@ const Rivals = React.createClass({
 	listeners: [],
 	getDefaultProps: function(){
 		return {
-			isShowControlButtons: true,
-			isSchoolUnion: false
+			isShowControlButtons:	true,
+			isSchoolUnion:			false
 		};
 	},
 	componentWillUnmount: function() {
@@ -191,7 +191,7 @@ const Rivals = React.createClass({
 						});
 						
 						rival.score = this.getExtraScoreForRival(rival);
-						
+						this.addListenerForChangeMode();
 						rivals.push(rival);
 					});
 					//If at least one opponent has extraScore then sort by extraScore else by activeSchoolId
@@ -372,7 +372,7 @@ const Rivals = React.createClass({
 		}));
 	},
 	//We use this listener, because we want sort players by score when we enter new time/distance/plain and send this data on server
-	//When we send data on server, we just copy new data (individualScores) in rivals(because rivals fill only when componentWillMount)
+	//When we send data on server, we just reload component
 	addListenerForChangeMode: function() {
 		const 	binding = this.getDefaultBinding();
 		
@@ -381,18 +381,7 @@ const Rivals = React.createClass({
 					currentValue	= eventDescriptor.getCurrentValue().toJS();
 			
 			if (prevValue.mode === 'closing' && currentValue.mode === 'general') {
-				const 	binding 	= this.getDefaultBinding(),
-						rivals		= binding.toJS('rivals.0');
-				
-				rivals.players.forEach(player => {
-					const playerIndex = currentValue.model.results.individualScore.findIndex(individual => individual.userId === player.userId);
-					if (playerIndex !== -1) {
-						player.score = currentValue.model.results.individualScore[playerIndex].score;
-						player.extraScore = currentValue.model.results.individualScore[playerIndex].richScore.points;
-					}
-				});
-				
-				binding.set('rivals.0', Immutable.fromJS(rivals));
+				binding.set('eventComponentKey', Immutable.fromJS(this.getRandomString()));
 			}
 		}));
 	},
@@ -705,7 +694,7 @@ const Rivals = React.createClass({
 					onChangeScore							= { this.onChangeScore }
 					onClickEditTeam							= { this.onClickEditTeam }
 					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
-					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
+					handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isSchoolUnion 							= { this.props.isSchoolUnion }
