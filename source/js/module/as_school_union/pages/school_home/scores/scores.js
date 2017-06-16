@@ -33,6 +33,14 @@ const Scores = React.createClass({
 					resultSports = sports;
 				}
 
+				// up 'Overall Results' sport to first place
+				const index = resultSports.findIndex(s => s.name === 'Overall results');
+				if(index !== -1) {
+					resultSports.unshift(
+						resultSports.splice(index, 1)[0]
+					);
+				}
+
 				binding.atomically()
 					.set('sports',			Immutable.fromJS(resultSports))
 					.set('currentSport',	Immutable.fromJS(resultSports[0]))

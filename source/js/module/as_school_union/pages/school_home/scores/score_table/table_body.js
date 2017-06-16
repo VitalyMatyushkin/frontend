@@ -33,7 +33,7 @@ const TableBody = React.createClass({
 	render: function(){
 		return (
 			<tbody>
-			{this.renderRows()}
+				{ this.renderRows() }
 			</tbody>
 		);
 	}
