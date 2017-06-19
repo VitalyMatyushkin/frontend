@@ -1,41 +1,27 @@
-const	React		= require('react'),
-		Bootstrap  	= require('../../../../../../../styles/bootstrap-custom.scss');
+const	React				= require('react'),
+		DefaultTableBody	= require('module/as_school_union/pages/school_home/scores/score_table/table_body/default_table_body'),
+		ShortTableBody		= require('module/as_school_union/pages/school_home/scores/score_table/table_body/short_table_body'),
+		ScoreTableHelper	= require('module/as_school_union/pages/school_home/scores/score_table/helpers/score_table_helper');
 
 const TableBody = React.createClass({
 	propTypes: {
-		scores: React.PropTypes.object.isRequired
-	},
-	renderRows: function() {
-		const scores = this.props.scores;
-
-		if(typeof scores !== 'undefined') {
-			const xmlScore = [];
-
-			let index = 1;
-			for(let schoolId in scores) {
-				xmlScore.push(
-					<tr key={schoolId}>
-						<th scope="row">{index++}</th>
-						<td>{scores[schoolId].schoolName}</td>
-						<td>{scores[schoolId].total}</td>
-						<td>{scores[schoolId].won}</td>
-						<td>{scores[schoolId].lost}</td>
-						<td>{scores[schoolId].drew}</td>
-					</tr>
-				);
-			}
-
-			return xmlScore;
-		} else {
-			return null;
-		}
+		sport:	React.PropTypes.object.isRequired,
+		scores:	React.PropTypes.object.isRequired
 	},
 	render: function(){
-		return (
-			<tbody>
-				{ this.renderRows() }
-			</tbody>
-		);
+		if(ScoreTableHelper.useDefaultScoreTable(this.props.sport)) {
+			return (
+				<DefaultTableBody
+					scores={this.props.scores}
+				/>
+			);
+		} else {
+			return (
+				<ShortTableBody
+					scores={this.props.scores}
+				/>
+			);
+		}
 	}
 });
 
