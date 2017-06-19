@@ -164,6 +164,9 @@ const SportIcon = React.createClass({
 			case 	sport === 'triple jump':
 				icon = "triple_jump";
 				break;
+			case 	sport === 'long jump':
+				icon = "long_jump";
+				break;
 			case 	sport === 'hammer throw':
 				icon = "hammer_throw";
 				break;
