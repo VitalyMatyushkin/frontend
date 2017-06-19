@@ -328,12 +328,12 @@ const SportIcon = React.createClass({
 					sport === 'running 600m' ||
 					sport === 'running  800m' || //TODO: replace extra spaces in sport name and then delete it
 					sport === 'running 800m' ||
-					sport === 'running  1000m' ||
-					sport === 'running  1200m' ||
-					sport === 'running  1500m' ||
-					sport === 'running  1600m' ||
-					sport === 'running  2000m' ||
-					sport === 'running  3000m' ||
+					sport === 'running 1000m' ||
+					sport === 'running 1200m' ||
+					sport === 'running 1500m' ||
+					sport === 'running 1600m' ||
+					sport === 'running 2000m' ||
+					sport === 'running 3000m' ||
 					sport === 'road running marathon' :
 				icon = "road_running";
 				break;
