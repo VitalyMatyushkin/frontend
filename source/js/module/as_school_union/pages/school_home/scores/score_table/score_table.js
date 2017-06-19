@@ -1,19 +1,25 @@
 const	React							= require('react'),
-		TableHead						= require('./table_head'),
-		TableBody						= require('./table_body'),
+		TableHead						= require('./table_head/table_head'),
+		TableBody						= require('./table_body/table_body'),
 		SchoolUnionSeasonScoresStyles	= require('../../../../../../../styles/ui/b_school_union_season_scores.scss'),
 		Bootstrap						= require('../../../../../../../styles/bootstrap-custom.scss');
 
 const ScoreTable = React.createClass({
 	propTypes: {
-		scores: React.PropTypes.object.isRequired
+		sport:	React.PropTypes.object.isRequired,
+		scores:	React.PropTypes.object.isRequired
 	},
 	render: function(){
 		return (
 			<div className="eSchoolUnionSeasonScores_scoreTableWrapper">
 				<table className="table table-striped">
-					<TableHead/>
-					<TableBody scores={this.props.scores}/>
+					<TableHead
+						sport	= { this.props.sport }
+					/>
+					<TableBody
+						sport	= { this.props.sport }
+						scores	= { this.props.scores }
+					/>
 				</table>
 			</div>
 		);
