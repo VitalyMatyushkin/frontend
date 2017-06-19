@@ -11,7 +11,8 @@ const RadioGroup = React.createClass({
 		sourcePromise: React.PropTypes.func,
 		onSelect: React.PropTypes.func,
 		sourceArray: React.PropTypes.array,
-		name: React.PropTypes.string
+		name: React.PropTypes.string,
+		id: React.PropTypes.string
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -89,7 +90,7 @@ const RadioGroup = React.createClass({
 			binding = self.getDefaultBinding(),
 			radioNodes = self.renderRadioOptions();
 		return (
-			<div className="bRadioGroupMy">
+			<div className="bRadioGroupMy" id={self.props.id}>
 				<If condition={self.props.name !== undefined}>
 					<label className="eRadioGroupMy_label">{self.props.name}</label>
 				</If>

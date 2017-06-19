@@ -15,6 +15,7 @@ const	AddPlayerTeamButton	= React.createClass({
 	render: function() {
 		return (
 			<div	className	= "ePlayerChooser_addToTeamButton"
+					id			= "addPlayer_button"
 					onClick		= { this.props.handleClickAddTeamButton }
 			>
 			</div>

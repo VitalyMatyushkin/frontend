@@ -226,6 +226,8 @@ const StudentForm = React.createClass({
 					onSubmit		= { this.props.onFormSubmit }
 					binding			= { binding.sub('formData') }
 					submitOnEnter	= { false }
+					submitButtonId	= 'student_submit'
+					cancelButtonId	= 'student_cancel'
 				>
 					<FormColumn
 						key			= 'main_column'
@@ -236,11 +238,13 @@ const StudentForm = React.createClass({
 							labelText	='+'
 							type		= 'imageFile'
 							field		= 'avatar'
+							id			= 'student_avatar'
 						/>
 						<FormField
 							type		= 'text'
 							field		= 'firstName'
 							validation	= 'required'
+							id			= 'student_name'
 						>
 							Name
 						</FormField>
@@ -248,6 +252,7 @@ const StudentForm = React.createClass({
 							type		= 'text'
 							field		= 'lastName'
 							validation	= 'required'
+							id			= 'student_surname'
 						>
 							Surname
 						</FormField>
@@ -256,6 +261,7 @@ const StudentForm = React.createClass({
 							field			= 'gender'
 							sourcePromise	= { this.getGender }
 							validation		= 'required'
+							id 				= 'student_gender'
 						>
 							Gender
 						</FormField>
@@ -263,6 +269,7 @@ const StudentForm = React.createClass({
 							type		= 'date'
 							field		= 'birthday'
 							validation	= 'birthday'
+							id 			= 'student_birthday'
 						>
 							Date of birth
 						</FormField>
@@ -271,6 +278,7 @@ const StudentForm = React.createClass({
 							serviceFullData	= { this.getClassService() }
 							field			= 'formId'
 							defaultItem		= { this.props.initialForm }
+							id 				= 'student_formCombox'
 						>
 							Form
 						</FormField>
@@ -279,6 +287,7 @@ const StudentForm = React.createClass({
 							serviceFullData	= { this.getHouseService() }
 							field			= 'houseId'
 							defaultItem		= { this.props.initialHouse }
+							id 				= 'student_houseCombox'
 						>
 							House
 						</FormField>
@@ -286,12 +295,14 @@ const StudentForm = React.createClass({
 							classNames	= 'mSingleLine'
 							type		= 'checkbox'
 							field		= 'unwell'
+							id 			= 'student_injuredCheckbox'
 						>
 							Injured/Unwell
 						</FormField>
 						<FormField
 							type	= 'textarea'
 							field	= 'medicalInfo'
+							id 		= 'student_medicalInfo'
 						>
 							Medical Information
 						</FormField>

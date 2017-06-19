@@ -8,7 +8,8 @@ const TypeSelect = React.createClass({
 	propTypes: {
 		sourceArray:	React.PropTypes.array,
 		isDisabled:		React.PropTypes.bool, 	//false - show field like disabled
-		placeHolder:	React.PropTypes.string
+		placeHolder:	React.PropTypes.string,
+        id:			    React.PropTypes.string
 	},
     componentDidMount: function(){
         const self = this,
@@ -25,6 +26,7 @@ const TypeSelect = React.createClass({
 					isDisabled	= {self.props.isDisabled}
 					placeHolder	= {self.props.placeHolder}
 					binding		= {self.getDefaultBinding().sub('select')}
+					id 			= {self.props.id}
 			/>
 		);
 	}

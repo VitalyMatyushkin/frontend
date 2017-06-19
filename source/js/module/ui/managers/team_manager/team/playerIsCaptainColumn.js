@@ -21,6 +21,7 @@ const PlayerIsCaptainColumn = React.createClass({
 		return (
 			<div className="eTeam_playerItem mCaptain" onClick={this.handleClick}>
 				<input	onChange	= { this.handleCheckBoxClick }
+						id 			= "captain_checkbox"
 						type		= "checkbox"
 						checked		= { this.isChecked() }
 				/>

@@ -6,7 +6,8 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 const TypeRadio = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	propTypes: {
-		sourcePromise: React.PropTypes.func
+		sourcePromise: React.PropTypes.func,
+        id:			   React.PropTypes.string
 	},
 	bindToAutcomplete: function() {
 		const 	self 			= this,
@@ -30,7 +31,7 @@ const TypeRadio = React.createClass({
 		self.bindToAutcomplete();
 
 		return (
-			<RadioGroup sourcePromise={self.props.sourcePromise} binding={self.getDefaultBinding().sub('radio')} />
+			<RadioGroup sourcePromise={self.props.sourcePromise} binding={self.getDefaultBinding().sub('radio')} id={self.props.id}/>
 		);
 	}
 });

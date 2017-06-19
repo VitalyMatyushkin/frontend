@@ -7,7 +7,8 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 
 const TypeTextArea = React.createClass({
 	propTypes: {
-		textType: React.PropTypes.string
+		textType: React.PropTypes.string,
+        id:		  React.PropTypes.string
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	
@@ -56,6 +57,7 @@ const TypeTextArea = React.createClass({
 			<textarea	ref			= "fieldInput"
 						value		= { value }
 						type		= { this.props.textType || 'textarea' }
+						id			= {this.props.id}
 						placeholder	= { this.props.placeholder }
 						onBlur		= { this.handleBlur }
 						onChange	= { this.handleChange }

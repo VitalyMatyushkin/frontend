@@ -20,9 +20,16 @@ const AlbumEditForm = React.createClass({
 		binding = self.getDefaultBinding();
 
 		return (
-			<Form formStyleClass="mNarrow" name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
+			<Form
+				formStyleClass="mNarrow"
+				name={self.props.title}
+				onSubmit={self.props.onFormSubmit}
+				binding={binding}
+				submitButtonId	= "album_submit"
+				cancelButtonId	= "news_cancel"
+			>
 				<FormColumn>
-					<FormField type="text" field="name" validation="required">Name: </FormField>
+					<FormField type="text" field="name" id="album_name" validation="required">Name: </FormField>
 				</FormColumn>
 			</Form>
 		);

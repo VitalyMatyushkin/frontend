@@ -15,7 +15,8 @@ const Select = React.createClass({
 		/** array of data to display. Each item should have id and value properties */
 		sourceArray: 	React.PropTypes.array,
 		isDisabled:		React.PropTypes.bool, //false - show field like disabled
-		placeHolder:	React.PropTypes.string
+		placeHolder:	React.PropTypes.string,
+        id:			    React.PropTypes.string
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -126,7 +127,7 @@ const Select = React.createClass({
 		});
 
 		return (
-			<div className="bCombobox">
+			<div className="bCombobox" id={this.props.id}>
 				<input	className	= {inputStyle}
 						value		= {this.getText()}
 						onClick		= {self.toggleList}

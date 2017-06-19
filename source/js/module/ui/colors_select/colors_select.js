@@ -5,7 +5,8 @@ const 	ColorPicker 	= require('module/ui/colors_select/color_picker'),
 
 const ColorsSelect =  React.createClass({
 	propTypes: {
-		maxColors: React.PropTypes.number
+		maxColors: React.PropTypes.number,
+        id:		   React.PropTypes.string
 	},
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
@@ -106,7 +107,7 @@ const ColorsSelect =  React.createClass({
 		});
 
 		return (
-			<div className="bColorsSelect">
+			<div className="bColorsSelect" id={this.props.id}>
 				{colorNodes}
 
 				<div className="eColorsSelect_color mAdd" style={binding.get('showAdd') ? {display: 'inline-block'}: {display: 'none'}}>

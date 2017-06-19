@@ -371,6 +371,7 @@ const TeamForm = React.createClass({
 		return (
 			<input	onChange={self.handleChangeHouseFilter.bind(self, binding)}
 					  type="checkbox"
+					  id="team_houseFilter"
 					  checked={self.getHouseFilterCheckboxValue()}
 			/>
 		);
@@ -391,6 +392,7 @@ const TeamForm = React.createClass({
 					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
+					id="team_houseSelect"
 				/>
 			);
 		} else {
@@ -401,6 +403,7 @@ const TeamForm = React.createClass({
 					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
+					id="team_houseSelect"
 				/>
 			);
 		}
@@ -419,7 +422,7 @@ const TeamForm = React.createClass({
 						</div>
 					</div>
 					<div className="eForm_savePanel">
-						<div className="bButton mRight" onClick={self.props.onFormSubmit}>Finish</div>
+						<div className="bButton mRight" id="team_submit" onClick={self.props.onFormSubmit}>Finish</div>
 					</div>
 				</div>
 			);
@@ -442,6 +445,7 @@ const TeamForm = React.createClass({
 							ref="name"
 							className="eManager_field"
 							type="text"
+							id="team_name"
 							value={binding.get('name')}
 							placeholder={'enter name'}
 							onChange={self.handleChangeName}
@@ -454,6 +458,7 @@ const TeamForm = React.createClass({
 							ref="description"
 							className="eManager_field mTextArea"
 							type="text"
+							id="team_description"
 							value={binding.get('description')}
 							placeholder={'enter description'}
 							onChange={self.handleChangeDescription}
@@ -463,6 +468,7 @@ const TeamForm = React.createClass({
 					<div className="eManager_group">
 						<div className="eManager_label">{'Game'}</div>
 						<select	className="eManager_select"
+								id="team_sportSelect"
 								value={binding.toJS('sportId')}
 								onChange={self.handleChangeSport}
 						>
@@ -472,6 +478,7 @@ const TeamForm = React.createClass({
 					<div className="eManager_group">
 						<div className="eManager_label">{'Genders'}</div>
 						<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
+								id="team_genderSelect"
 								onChange={self.handleChangeGender}
 								disabled={!self.isSportSelected()}
 						>
@@ -485,6 +492,7 @@ const TeamForm = React.createClass({
 							items={self.getAgeItems()}
 							selections={self.getSelectedAges()}
 							onChange={self.handleChangeAges}
+							id="team_ageMultiselect"
 						/>
 					</div>
 					<div className="eManager_group">

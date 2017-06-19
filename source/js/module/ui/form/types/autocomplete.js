@@ -13,7 +13,8 @@ const TypeAutocomplete = React.createClass({
 		defaultItem:		React.PropTypes.object,
 		placeholder: 		React.PropTypes.string,
 		onSelect:			React.PropTypes.func,
-		customListItem:		React.PropTypes.object
+		customListItem:		React.PropTypes.object,
+        id:					React.PropTypes.string
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){
@@ -41,6 +42,7 @@ const TypeAutocomplete = React.createClass({
 				placeholder 	= {self.props.placeholder}
 				customListItem	= {self.props.customListItem}
 				isBlocked		= {self.props.isDisabled}
+				id				= {self.props.id}
 			/>
 		);
 	}

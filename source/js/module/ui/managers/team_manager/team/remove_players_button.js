@@ -17,6 +17,7 @@ const RemovePlayersButton = React.createClass({
 	render: function() {
 		return (
 			<div	className	= "eTeam_removeButton"
+					id  		= "removePlayer_button"
 					onClick		= { this.handleClickRemovePlayerButton }
 			>
 			</div>

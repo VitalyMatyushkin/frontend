@@ -46,7 +46,11 @@ const ComboBox2 = React.createClass({
 		 * False by default.
 		 */
 		isBlocked:			React.PropTypes.bool,
-		customListItem:		React.PropTypes.func
+		customListItem:		React.PropTypes.func,
+        /**
+		 * html id
+         */
+        id:					React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {
@@ -467,6 +471,7 @@ const ComboBox2 = React.createClass({
 
 		return (
 			<div	className	= {`${this.getComboboxCssStyle()} ${isOpenCN}`}
+					id			= {this.props.id}
 					onMouseDown	= {this.handleMouseDown}
 					onMouseUp	= {this.handleMouseUp}
 			>

@@ -15,10 +15,16 @@ const NewsForm = React.createClass({
 
 		return (
 				<div>
-			<Form onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} submitOnEnter={false} >
-				<FormField type="text" field="title" validation="required">Title</FormField>
-				<FormField type="date" field="date" validation="date required">Date</FormField>
-				<FormField type="textarea" field="body" validation="required">Text</FormField>
+			<Form
+				onSubmit={self.props.onFormSubmit}
+				binding={self.getDefaultBinding()}
+				submitOnEnter={false}
+				submitButtonId	= 'news_submit'
+				cancelButtonId	= 'news_cancel'
+			>
+				<FormField type="text" field="title" id="news_title" validation="required">Title</FormField>
+				<FormField type="date" field="date" id="news_date" validation="date required">Date</FormField>
+				<FormField type="textarea" field="body" id="news_text" validation="required">Text</FormField>
 				<FormColumn>
 					<FormField type="imageFile" labelText="+" typeOfFile="image" field="picUrl"/>
 				</FormColumn>

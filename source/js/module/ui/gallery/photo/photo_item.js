@@ -83,13 +83,13 @@ const AlbumPhoto = React.createClass({
 		return (
 				<div onClick={self.onImageClick} className={imgClasses}>
 					<div className='ePhotoActions'>
-						<span onClick={self.onClickPinPhoto} className="bTooltip" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
+						<span onClick={self.onClickPinPhoto} className="bTooltip" id="albumCover_button" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
 						<span ></span>
 						<span ></span>
-						<span onClick={self.onClickEditPhoto} className="bTooltip" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
-						<span onClick={self.onClickDeletePhoto} className="bTooltip" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
+						<span onClick={self.onClickEditPhoto} className="bTooltip" id="editPhoto_button" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
+						<span onClick={self.onClickDeletePhoto} className="bTooltip" id="deletePhoto_button" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
-					<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
+					<span className='eAlbumPhoto_photoTitle' id="photo_title">{binding.get('description')}</span>
 					<div className="img" style={background} onLoad={self.onImageLoad}></div>
 				</div>
 		);

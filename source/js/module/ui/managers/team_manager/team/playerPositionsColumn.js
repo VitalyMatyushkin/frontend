@@ -26,6 +26,7 @@ const PlayerPositionColumn = React.createClass({
 		return (
 			<div className="eTeam_playerItem mSelector mPosition">
 				<select	className	= "eTeam_positionSelector"
+						id  		= "teamPosition_select"
 						value		= {selectedPositionId}
 						onChange	= {self.handleChangePlayerPosition}
 				>

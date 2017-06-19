@@ -21,6 +21,7 @@ const PlayerSubColumn = React.createClass({
 		return (
 			<div className="eTeam_playerItem mSub" onClick={this.handleClick}>
 				<input	onChange	= { this.handleCheckBoxClick }
+						id  		= "sub_checkbox"
 						type		= "checkbox"
 						checked		= { this.isChecked() }
 				/>

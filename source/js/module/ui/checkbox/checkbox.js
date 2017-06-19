@@ -4,8 +4,9 @@ const	React			= require('react'),
 const Checkbox =  React.createClass({
 	propTypes: {
 		isChecked:	React.PropTypes.bool.isRequired,
-		onChange:	React.PropTypes.func.isRequired
-	},
+		onChange:	React.PropTypes.func.isRequired,
+        id:			React.PropTypes.string
+    },
 	render: function () {
 		return (
 			<div className="bCheckbox">
@@ -14,6 +15,7 @@ const Checkbox =  React.createClass({
 					type		= "checkbox"
 					checked		= { this.props.isChecked }
 					onChange	= { this.props.onChange }
+					id  		= { this.props.id }
 				/>
 				<label/>
 			</div>

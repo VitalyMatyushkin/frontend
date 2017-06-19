@@ -18,7 +18,8 @@ const OldAutocompleteWrapper = React.createClass({
 		defaultItem:		React.PropTypes.object,
 		extraCssStyle:		React.PropTypes.string,
 		getElementTitle:	React.PropTypes.func,
-		customListItem:		React.PropTypes.func
+		customListItem:		React.PropTypes.func,
+        id:					React.PropTypes.string
 	},
 	searchFunction: function(text) {
 		return {
@@ -61,6 +62,7 @@ const OldAutocompleteWrapper = React.createClass({
 						extraCssStyle		= {self.props.extraCssStyle}
 						isBlocked			= {self.props.isBlocked}
 						customListItem		= {self.props.customListItem}
+						id					= {self.props.id}
 			/>
 		);
 	}

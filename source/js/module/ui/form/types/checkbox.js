@@ -9,6 +9,9 @@ const	React		= require('react'),
 
 const TypeCheckbox =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
+    propTypes: {
+        id:				React.PropTypes.string 		// just old good html id
+    },
 	onChange: function(event) {
 		const self = this;
 
@@ -24,6 +27,7 @@ const TypeCheckbox =  React.createClass({
 			<Checkbox
 				isChecked	= { value }
 				onChange	= { self.onChange }
+				id			= { self.props.id }
 			/>
 		)
 	}

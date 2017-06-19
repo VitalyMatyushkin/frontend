@@ -7,7 +7,8 @@ const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
 
 const TypeColors =  React.createClass({
 	propTypes: {
-		maxColors: React.PropTypes.number
+		maxColors: React.PropTypes.number,
+        id:		   React.PropTypes.string
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
