@@ -2,7 +2,9 @@ const	React		= require('react'),
 		Bootstrap  	= require('../../../../../../../styles/bootstrap-custom.scss');
 
 const TableHead = React.createClass({
-
+	propTypes: {
+		sport: React.PropTypes.object.isRequired
+	},
 	render: function(){
 		return (
 			<thead>
