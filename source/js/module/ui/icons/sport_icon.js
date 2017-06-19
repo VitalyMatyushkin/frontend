@@ -51,6 +51,7 @@ const SportIcon = React.createClass({
 				 	sport === 'sprint 60m' ||
 					sport === 'sprint (100 m)' ||
 					sport === 'sprint 100m' ||
+					sport === 'sprint 150m' ||
 					sport === 'sprint (200 m)' ||
 					sport === 'sprint 200m' ||
 					sport === 'sprint (400 m)' ||
@@ -157,9 +158,11 @@ const SportIcon = React.createClass({
 					sport === 'american football (mt)':
 				icon = "american_football";
 				break;
-			case 	sport === 'sports hall athletics' ||
-					sport === 'triple jump':
+			case 	sport === 'sports hall athletics':
 				icon = "athletics";
+				break;
+			case 	sport === 'triple jump':
+				icon = "triple_jump";
 				break;
 			case 	sport === 'hammer throw':
 				icon = "hammer_throw";
@@ -174,14 +177,46 @@ const SportIcon = React.createClass({
 			case 	sport === 'javelin throw':
 				icon = "javelin_throw";
 				break;
-			case 	sport === 'discus throw':
+			case 	sport === 'javelin throw 400g':
+				icon = "javelin_throw_400";
+				break;
+			case 	sport === 'javelin throw 500g':
+				icon = "javelin_throw_500";
+				break;
+			case 	sport === 'javelin throw 600g':
+				icon = "javelin_throw_600";
+				break;
+			case 	sport === 'javelin throw 700g':
+				icon = "javelin_throw_700";
+				break;
+			case 	sport === 'discus throw' ||
+					sport === 'discus throw 0.75k':
 				icon = "discus_throw";
 				break;
-			case 	sport === 'shot put':
+			case 	sport === 'discus throw 1.00k':
+				icon = "discus_throw_1k";
+				break;
+			case 	sport === 'discus throw 1.25k':
+				icon = "discus_throw_125k";
+				break;
+			case 	sport === 'discus throw 1.50k':
+				icon = "discus_throw_150k";
+				break;
+			case 	sport === 'shot put' ||
+					sport === 'shot put 2.72':
 				icon = "shot_put";
 				break;
-			case 	sport === 'long jump':
-				icon = "long_jump";
+			case 	sport === 'shot put 3.00':
+				icon = "shot_put300";
+				break;
+			case 	sport === 'shot put 3.25':
+				icon = "shot_put325";
+				break;
+			case 	sport === 'shot put 4.00':
+				icon = "shot_put400";
+				break;
+			case 	sport === 'shot put 5.00':
+				icon = "shot_put500";
 				break;
 			case 	sport === 'high jump':
 				icon = "high_jump";
@@ -286,6 +321,16 @@ const SportIcon = React.createClass({
 					sport === 'road running 25km' ||
 					sport === 'road running 30km' ||
 					sport === 'road running half-marathon' ||
+					sport === 'running  600m' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'running 600m' ||
+					sport === 'running  800m' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'running 800m' ||
+					sport === 'running  1000m' ||
+					sport === 'running  1200m' ||
+					sport === 'running  1500m' ||
+					sport === 'running  1600m' ||
+					sport === 'running  2000m' ||
+					sport === 'running  3000m' ||
 					sport === 'road running marathon' :
 				icon = "road_running";
 				break;
@@ -527,6 +572,13 @@ const SportIcon = React.createClass({
 			case 	sport === 'rounders ball throw':
 				icon="rounders_ball_throw";
 				break;
+			case 	sport === 'relays (4x100 metres)' ||
+					sport === 'relays (4x400 metres)' ||
+					sport === 'relays (4x 75 metres)' || //TODO: replace extra spaces in sport name and then delete it
+					sport === 'relays (4x75 metres)':
+				icon="relay";
+				break;
+				
 			case 	sport === 'racewalking  1.5km' || //TODO: replace extra spaces in sport name and then delete it
 					sport === 'racewalking 1.5km' ||
 					sport === 'racewalking  3km' || //TODO: replace extra spaces in sport name and then delete it
