@@ -77,7 +77,7 @@ const ManagerWrapper = React.createClass({
 		this.addListeners();
 
 		// create debounce decorator for changeControlButtonState func
-		this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 1000);
+		this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 200);
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
