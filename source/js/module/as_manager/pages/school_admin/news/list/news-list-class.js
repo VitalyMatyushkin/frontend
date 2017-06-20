@@ -87,7 +87,8 @@ class NewsListModel {
 					dataField:'title'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+					id:'find_news_title'
 				}
 			},
 			{
@@ -98,7 +99,8 @@ class NewsListModel {
 					type:'date'
 				},
 				filter:{
-					type:'between-date'
+					type:'between-date',
+                    id:'find_news_date'
 				}
 			},
 			{

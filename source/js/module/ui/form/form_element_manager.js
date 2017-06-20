@@ -28,6 +28,7 @@ const FormElementManager = React.createClass({
 				<Button
 					onClick				= {this.props.onClick}
 					text				= {this.props.text}
+					id 					= {this.props.id}
 					extraStyleClasses	= "mAddFormItem"
 				/>
 			</div>

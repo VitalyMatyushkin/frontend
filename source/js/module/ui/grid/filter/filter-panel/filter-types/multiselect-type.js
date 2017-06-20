@@ -26,13 +26,14 @@ const FilterMultiSelectType = React.createClass({
 		const 	model 		= this.model,
 				items 		= model.items,
 				selections 	= model.getSelections(),
+				id			= model.filterField.id,
 				classes = classNames({
 					mHideFilter: model.hideFilter,
 					mHideButtons: model.hideButtons
 				});
 
 		return (
-			<MultiSelect items={items} selections={selections} onChange={this.onChange} className={classes} />
+			<MultiSelect items={items} selections={selections} onChange={this.onChange} id={id} className={classes} />
 		);
 	}
 });

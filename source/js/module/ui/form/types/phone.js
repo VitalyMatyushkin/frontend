@@ -6,6 +6,9 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 
 const TypePhone =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
+    propTypes: {
+        id: React.PropTypes.string
+    },
     getDefaultState: function() {
         return Immutable.fromJS({
             phone:'',       //input value
@@ -101,10 +104,10 @@ const TypePhone =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput mPhone">
-                <select onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
+                <select id="select_phone_prefix" onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
 					{codes.map(code => <option key={code} value={code} >{code}</option>)}
                 </select>
-                <input ref="input" type="text" value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} disabled={!!this.props.isDisabled} />
+                <input ref="input" type="text" id={self.props.id} value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} disabled={!!this.props.isDisabled} />
 			</div>
 		)
 	}

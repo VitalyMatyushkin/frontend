@@ -24,7 +24,7 @@ const ClassForm = React.createClass({
 			>
 				<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
 				<FormField type="text" id="house_description" field="description">Description</FormField>
-				<FormField classNames="mSingleLine" id="house_colorSelect" type="colors" maxColors={2} field="colors">House colors</FormField>
+				<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">House colors</FormField>
 			</Form></div>
 		)
 	}

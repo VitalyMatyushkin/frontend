@@ -15,7 +15,8 @@ const NULL_STRING = '_null_';
 const TypeDropDown = React.createClass({
 	mixins:[Morearty.Mixin, TypeMixin],
 	propTypes: {
-		options: React.PropTypes.array.isRequired
+		options: React.PropTypes.array.isRequired,
+        id: React.PropTypes.string
 	},
 	
 	renderOptions:function(){
@@ -52,7 +53,7 @@ const TypeDropDown = React.createClass({
 		let valueSelect = (value === null || typeof value === 'undefined') ? NULL_STRING : value;
 
 		return (
-			<select value={valueSelect} onChange={this.onChange}>
+			<select id={this.props.id} value={valueSelect} onChange={this.onChange}>
 				{this.renderOptions()}
 			</select>
 		);

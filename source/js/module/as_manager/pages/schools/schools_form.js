@@ -58,42 +58,46 @@ const SchoolForm = React.createClass({
 				<Form formStyleClass="row" name={self.props.title} binding={self.getDefaultBinding()}
 					  service="i/schools/domains"
 					  onSubmit={self.props.onSubmit} submitOnEnter={false} formButtonsClass='col-md-10 col-md-offset-1'
-					  formTitleClass="col-md-10 col-md-offset-1">
+					  formTitleClass="col-md-10 col-md-offset-1"
+					  submitButtonId="school_summary_submit"
+					  cancelButtonId="school_summary_cancel">
 					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
-						<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
+						<FormField type="text" field="email" id="school_official_email" validation="email" fieldClassName="mLarge">
 							School Official Email
 						</FormField>
-						<FormField type="text" field="sportsDepartmentEmail" validation="email" fieldClassName="mLarge">
+						<FormField type="text" field="sportsDepartmentEmail" id="school_department_email" validation="email" fieldClassName="mLarge">
 							Sports Department Email
 						</FormField>
 					</FormColumn>
 					<FormColumn customStyle="col-md-5">
-						<FormField type="text" field="name" validation="required">Name</FormField>
-						<FormField type="textarea" field="description" validation="any">Description</FormField>
+						<FormField type="text" field="name" id="school_name" validation="required">Name</FormField>
+						<FormField type="textarea" field="description" id="school_description" validation="any">Description</FormField>
 						<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
 							School Status
 						</FormField>
-						<FormField type="phone" field="phone" validation="any">Phone</FormField>
-						<FormField type="area" field="postcodeId" defaultItem={postcode}
+						<FormField type="phone" field="phone" id="school_phone" validation="any">Phone</FormField>
+						<FormField type="area" field="postcodeId" id="school_postcode" defaultItem={postcode}
 								   validation="any">Postcode</FormField>
-						<FormField type="text" field="address" validation="any">Address</FormField>
-						<FormField type="text" field="domain" validation="domain server">Domain</FormField>
+						<FormField type="text" field="address" id="school_address" validation="any">Address</FormField>
+						<FormField type="text" field="domain" id="school_domain" validation="domain server">Domain</FormField>
 						<FormField type="dropdown"
 								   field="publicSite.status"
+								   id="school_access_select"
 								   options={ self.getPublicSiteAccessTypes() }
 							>
 							Public Site Access
 						</FormField>
 						<FormField type="password"
+								   id="school_access_password"
 								   field="publicSite.password"
 								   condition={passActive}
 								   validation="required"
 							>
 							Public Site Access Password
 						</FormField>
-						<FormField classNames="mSingleLine" type="checkbox" field="studentSelfRegistrationEnabled">
+						<FormField classNames="mSingleLine" type="checkbox" id="school_registration_checkbox" field="studentSelfRegistrationEnabled">
 							Student registration
 						</FormField>
 					</FormColumn>

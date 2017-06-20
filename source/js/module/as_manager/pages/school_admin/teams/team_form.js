@@ -371,7 +371,7 @@ const TeamForm = React.createClass({
 		return (
 			<input	onChange={self.handleChangeHouseFilter.bind(self, binding)}
 					  type="checkbox"
-					  id="team_houseFilter"
+					  id="team_house_filter"
 					  checked={self.getHouseFilterCheckboxValue()}
 			/>
 		);
@@ -392,7 +392,7 @@ const TeamForm = React.createClass({
 					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
-					id="team_houseSelect"
+					id="team_house_select"
 				/>
 			);
 		} else {
@@ -403,7 +403,7 @@ const TeamForm = React.createClass({
 					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
-					id="team_houseSelect"
+					id="team_house_select"
 				/>
 			);
 		}
@@ -478,7 +478,7 @@ const TeamForm = React.createClass({
 					<div className="eManager_group">
 						<div className="eManager_label">{'Genders'}</div>
 						<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
-								id="team_genderSelect"
+								id="team_gender_select"
 								onChange={self.handleChangeGender}
 								disabled={!self.isSportSelected()}
 						>
@@ -492,7 +492,7 @@ const TeamForm = React.createClass({
 							items={self.getAgeItems()}
 							selections={self.getSelectedAges()}
 							onChange={self.handleChangeAges}
-							id="team_ageMultiselect"
+							id="team_age_multiselect"
 						/>
 					</div>
 					<div className="eManager_group">

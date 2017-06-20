@@ -26,7 +26,7 @@ const SummaryPanel = React.createClass({
 			return (
 				<div className="eSchoolMaster_summary_buttons">
 					<a href={'/#schools/edit?id=' + this.props.activeSchoolId}>
-						<div className="bButton mCircle bTooltip" data-description="Edit">
+						<div className="bButton mCircle bTooltip" id="edit_school_summary" data-description="Edit">
 							<i className="fa fa-pencil" aria-hidden="true"/>
 						</div>
 					</a>

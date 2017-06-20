@@ -26,7 +26,7 @@ const FilterStringType = React.createClass({
 				placeholder = 'Enter ' + model.field.text;
 
 		return (
-			<input type="text" className="eFilterTypeString" value={value} placeholder={placeholder}
+			<input type="text" className="eFilterTypeString" id={model.id} value={value} placeholder={placeholder}
 				   onChange={this.onChange} />
 		);
 	}
