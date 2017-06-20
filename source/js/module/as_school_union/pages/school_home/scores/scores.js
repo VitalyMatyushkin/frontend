@@ -35,7 +35,7 @@ const Scores = React.createClass({
 				//}
 
 				// TODO It's temporary.
-				const resultSports = sports.filter(s => s.isFavorite || s.name === ScoreTableHelper.NETBALL || s.name === ScoreTableHelper.OVERALL_RESULTS);
+				const resultSports = sports.filter(s => s.isFavorite || s.name === ScoreTableHelper.OVERALL_RESULTS);
 
 				// TODO It's temporary
 				// up 'Overall Results' sport to first place
