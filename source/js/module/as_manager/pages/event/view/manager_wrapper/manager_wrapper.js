@@ -25,7 +25,11 @@ const ManagerWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	// debounce decorator for changeControlButtonState func
 	onDebounceChangeControlButtonState: undefined,
+	/**
+	 * Function check manager data and set corresponding value to isControlButtonActive
+	 */
 	changeControlButtonState: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -72,6 +76,7 @@ const ManagerWrapper = React.createClass({
 
 		this.addListeners();
 
+		// create debounce decorator for changeControlButtonState func
 		this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 1000);
 	},
 	addListeners: function() {
@@ -203,17 +208,9 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				teamWrappers	= this.getTeamWrappers(),
-				validationData	= this.getValidationData();
-
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(
-			binding.get('isTeamManagerSync') &&
-			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
-			TeamHelper.isTeamDataCorrect(event, validationData)
-		) {
+		if(this.isControlButtonActive()) {
 
 			binding.set('isSubmitProcessing', true);
 			this.submit();
@@ -267,8 +264,6 @@ const ManagerWrapper = React.createClass({
 		return Actions.submitAllChanges(this.props.activeSchoolId, binding).then(() => this.doAfterCommitActions());
 	},
 	getSaveButtonStyleClass: function() {
-		console.log(this.getDefaultBinding().toJS('isControlButtonActive'));
-
 		return classNames({
 			'mMarginLeftFixed'	: true,
 			'mDisable'			: !this.getDefaultBinding().toJS('isControlButtonActive')
@@ -287,6 +282,8 @@ const ManagerWrapper = React.createClass({
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
 
+		// check control button state
+		// and if state was changed then call debounce decorator for changeControlButtonState
 		this.checkControlButtonState();
 
 		// provide isShowRivals by isInviteMode is a trick
