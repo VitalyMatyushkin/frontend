@@ -30,7 +30,7 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.toJS('isControlButtonActive', this.isControlButtonActive());
+		binding.set('isControlButtonActive', this.isControlButtonActive());
 	},
 	componentWillMount: function() {
 		const	self	= this,
@@ -39,15 +39,12 @@ const ManagerWrapper = React.createClass({
 		let selectedRivalIndex = binding.get('selectedRivalIndex');
 		typeof selectedRivalIndex === 'undefined' && (selectedRivalIndex = 0);
 
-		binding.set('isTeamManagerSync', false);
-
 		const event = binding.toJS('model');
 
 		const	managerWrapperRivals	= this.getRivals(event, binding.toJS('rivals')),
 				schoolInfo				= this.getSchoolInfo(event, binding.toJS('rivals'), selectedRivalIndex);
 
 		binding.sub('teamManagerWrapper.default').atomically()
-			.set('isControlButtonActive',			false)
 			.set('isSubmitProcessing',				false)
 			.set('isSavingChangesModePopupOpen',	false)
 			.set('model',							Immutable.fromJS(event))
@@ -65,6 +62,12 @@ const ManagerWrapper = React.createClass({
 															text: ""
 														}
 													]))
+			.commit();
+
+		binding
+			.atomically()
+			.set('isTeamManagerSync',		false)
+			.set('isControlButtonActive',	false)
 			.commit();
 
 		this.addListeners();
@@ -105,7 +108,7 @@ const ManagerWrapper = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		if(binding.toJS('isControlButtonActive') !== this.isControlButtonActive()) {
-			this.onDebounceChangeControlButtonState();
+			typeof this.onDebounceChangeControlButtonState !== 'undefined' && this.onDebounceChangeControlButtonState();
 		}
 	},
 	isControlButtonActive: function() {
@@ -114,11 +117,15 @@ const ManagerWrapper = React.createClass({
 		const	event			= binding.toJS('model'),
 				validationData	= this.getValidationData();
 
-		return (
+		if(
 			binding.get('isTeamManagerSync') &&
 			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
 			TeamHelper.isTeamDataCorrect(event, validationData)
-		);
+		) {
+			return true;
+		} else {
+			return false;
+		}
 	},
 	getRivals: function(event, rivals) {
 		if(NewEventHelper.mustUseNewManagerWraperHelper(event)) {
@@ -260,6 +267,8 @@ const ManagerWrapper = React.createClass({
 		return Actions.submitAllChanges(this.props.activeSchoolId, binding).then(() => this.doAfterCommitActions());
 	},
 	getSaveButtonStyleClass: function() {
+		console.log(this.getDefaultBinding().toJS('isControlButtonActive'));
+
 		return classNames({
 			'mMarginLeftFixed'	: true,
 			'mDisable'			: !this.getDefaultBinding().toJS('isControlButtonActive')
