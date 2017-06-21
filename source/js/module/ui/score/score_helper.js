@@ -51,8 +51,10 @@ const ScoreHelper = {
 	 * @returns {number} - points
 	 */
 	stringTimeToPoints: function(value, mask){
-		const 	maskParts 	= mask.replace(/[^hmsc]/g, ':').split(':'),
-			valueParts 	= value.replace(/[^0-9_]/g, ':').split(':');
+		const	maskParts	= mask.replace(/[^hmsc]/g, ':').split(':'),
+				valueParts	= value.replace(/[^0-9_]/g, ':').split(':');
+
+		console.log(value);
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
@@ -93,9 +95,76 @@ const ScoreHelper = {
 				return NaN;
 			result += tmp;
 		}
+
 		return result;
 	},
+	plainPointsToTimeString: function(value, mask){
+		const	valueParts			= String(value).split('.'),
+				integerPartOfValue	= Number(valueParts[0]),
+				floatPartOfValue	= Number(valueParts[1]);
 
+		let		buffer				= Number(integerPartOfValue);
+
+		let timeString = '';
+
+		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
+
+		for(let i = 0; i < maskParts.length; i++){
+			switch (maskParts[i]){
+				case 'h':		//here we use falling through
+				case 'hh':
+				case 'hhh':
+					const hourCount = value % 3600;
+					buffer = buffer - hourCount * 3600;
+
+					let hourString = String(hourCount);
+					const hourZeroCount = maskParts[i].length - hourString.length;
+					for(let i = 0; i < hourZeroCount; i++) {
+						hourString = '0' + hourString;
+					}
+
+					timeString = `${hourString}:`;
+					break;
+				case 'm':
+				case 'mm':
+					const minCount = value % 60;
+					buffer = buffer - minCount * 60;
+
+					let minString = String(minCount);
+					const minZeroCount = maskParts[i].length - minString.length;
+					for(let i = 0; i < minZeroCount; i++) {
+						minString = '0' + minString;
+					}
+
+					timeString += `${minString}:`;
+					break;
+				case 's':
+				case 'ss':
+					let secString = String(buffer);
+					const secZeroCount = maskParts[i].length - secString.length;
+					for(let i = 0; i < secZeroCount; i++) {
+						secString = '0' + secString;
+					}
+
+					timeString += `${secString}:`;
+					break;
+				case 'c':
+				case 'cc':
+				case 'ccc':
+				case 'cccc':
+					let msecString = String(floatPartOfValue);
+					const msecZeroCount = maskParts[i].length - msecString.length;
+					for(let i = 0; i < msecZeroCount; i++) {
+						msecString = '0' + msecString;
+					}
+
+					timeString += `${msecString}`;
+					break;
+			}
+		}
+
+		return timeString;
+	},
 	/**
 	 * Validation string value according to 'distance' type
 	 * @param {string} value - value to validation
