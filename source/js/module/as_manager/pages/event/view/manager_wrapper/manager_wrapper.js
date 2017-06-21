@@ -1,6 +1,7 @@
 const	React 							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable');
+		Immutable						= require('immutable'),
+		debounce						= require('debounce');
 
 const	Manager							= require('./../../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../../helpers/eventHelper'),
@@ -24,14 +25,23 @@ const ManagerWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	// debounce decorator for changeControlButtonState func
+	onDebounceChangeControlButtonState: undefined,
+	/**
+	 * Function check manager data and set corresponding value to isControlButtonActive
+	 */
+	changeControlButtonState: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('isControlButtonActive', this.isControlButtonActive());
+	},
 	componentWillMount: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		let selectedRivalIndex = binding.get('selectedRivalIndex');
 		typeof selectedRivalIndex === 'undefined' && (selectedRivalIndex = 0);
-
-		binding.set('isTeamManagerSync', false);
 
 		const event = binding.toJS('model');
 
@@ -58,10 +68,33 @@ const ManagerWrapper = React.createClass({
 													]))
 			.commit();
 
+		binding
+			.atomically()
+			.set('isTeamManagerSync',		false)
+			.set('isControlButtonActive',	false)
+			.commit();
+
 		this.addListeners();
+
+		// create debounce decorator for changeControlButtonState func
+		this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 200);
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
+		this.addListenersForControlButtonState();
+	},
+	addListenersForControlButtonState: function() {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.sub(`isTeamManagerSync`)
+			.addListener(eventDescriptor => {
+				// Lock submit button if team manager in searching state.
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
+
+				// Unlock submit button if team manager in searching state.
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
+			});
 	},
 	addListenerForTeamManager: function() {
 		const binding = this.getDefaultBinding();
@@ -75,6 +108,29 @@ const ManagerWrapper = React.createClass({
 				// Unlock submit button if team manager in searching state.
 				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
 			});
+	},
+	checkControlButtonState: function() {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isControlButtonActive') !== this.isControlButtonActive()) {
+			typeof this.onDebounceChangeControlButtonState !== 'undefined' && this.onDebounceChangeControlButtonState();
+		}
+	},
+	isControlButtonActive: function() {
+		const	binding			= this.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				validationData	= this.getValidationData();
+
+		if(
+			binding.get('isTeamManagerSync') &&
+			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
+			TeamHelper.isTeamDataCorrect(event, validationData)
+		) {
+			return true;
+		} else {
+			return false;
+		}
 	},
 	getRivals: function(event, rivals) {
 		if(NewEventHelper.mustUseNewManagerWraperHelper(event)) {
@@ -152,17 +208,9 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				teamWrappers	= this.getTeamWrappers(),
-				validationData	= this.getValidationData();
-
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(
-			binding.get('isTeamManagerSync') &&
-			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
-			TeamHelper.isTeamDataCorrect(event, validationData)
-		) {
+		if(this.isControlButtonActive()) {
 
 			binding.set('isSubmitProcessing', true);
 			this.submit();
@@ -217,7 +265,8 @@ const ManagerWrapper = React.createClass({
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
-			'mMarginLeftFixed'	: true
+			'mMarginLeftFixed'	: true,
+			'mDisable'			: !this.getDefaultBinding().toJS('isControlButtonActive')
 		});
 	},
 	isShowRivals: function() {
@@ -232,6 +281,10 @@ const ManagerWrapper = React.createClass({
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
+
+		// check control button state
+		// and if state was changed then call debounce decorator for changeControlButtonState
+		this.checkControlButtonState();
 
 		// provide isShowRivals by isInviteMode is a trick
 		return (

@@ -38,8 +38,8 @@ const ManagerWrapperHelper = {
 				break;
 			case EventHelper.isInternalEvent(event):
 				rival = {
-					id:			null,
-					name:		null
+					id:			'',
+					name:		''
 				};
 				break;
 		}
