@@ -5,6 +5,9 @@ const   MultiSelectItem = require('./multiselect_item'),
 
 const MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],
+    propTypes: {
+        id:		   React.PropTypes.string
+    },
     displayName: 'MultiSelect',
     componentWillReceiveProps: function(nextProps) {
         this.getDefaultBinding().set('selections', Immutable.fromJS(nextProps.selections));
@@ -109,7 +112,7 @@ const MultiSelect = React.createClass({
               count = self.props.selections.size; // typeof self.props.selections === object
 
         return (
-            <div className="bMultiSelect">
+            <div className="bMultiSelect" id={self.props.id}>
                 <input onChange={this.handleFilterChange} value={binding.toJS('filter')} placeholder={this.props.placeholder} />
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;

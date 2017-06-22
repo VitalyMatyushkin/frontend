@@ -34,12 +34,13 @@ const FilterBetweenDateType = React.createClass({
 	},
 	render: function() {
 		const 	model = this.props.filterField,
+				id = model.id,
 				badge = model.getBadge(),
 				valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '',
 				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '';
 
 		return (
-			<div className="eBetweenDate">
+			<div className="eBetweenDate" id={id}>
 				<label>from</label><Date value={valueFrom} onBlur={this.onChangeFrom} />
 				<label>to</label><Date value={valueTo} onBlur={this.onChangeTo} />
 			</div>

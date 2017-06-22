@@ -8,7 +8,7 @@ const MaskedDate =  React.createClass({
 		defaultValue:	React.PropTypes.string,
 		onChange: 		React.PropTypes.func,
 		onBlur: 		React.PropTypes.func,
-		validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
+        validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
 	},
 	getDefaultProps: function(){
 		return {
@@ -82,6 +82,7 @@ const MaskedDate =  React.createClass({
 			<MaskedInput
 				title		= "Format date dd.mm.yyyy"
 				value		= {date}
+				id 			= {this.props.id}
 				className	= "eDateInput"
 				onBlur		= {this.handleBlur}
 				onChange	= {this.handleChange}

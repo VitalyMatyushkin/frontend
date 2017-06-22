@@ -11,6 +11,7 @@ const BadgeModel = require('./badge-model');
  * */
 const FilterFieldModel = function(options){
 	this.type = options.column.filter.type;
+	this.id = options.column.filter.id;
 	this.typeOptions = options.column.filter.typeOptions;
 	this.field = {
 		name:options.column.cell.dataField,

@@ -140,7 +140,8 @@ class TeamListModel {
 						getDataPromise: this.getSportsFromServer(),
 						keyField:'id',
 						valueField:'name'
-					}
+					},
+                    id:'find_team_sport'
 				}
 			},
 			{
@@ -150,7 +151,8 @@ class TeamListModel {
 					dataField:'name'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+					id:'find_team_name'
 				}
 			},
 			{
@@ -160,7 +162,8 @@ class TeamListModel {
 					dataField:'description'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+                    id:'find_team_description'
 				}
 			},
 			{
@@ -178,7 +181,8 @@ class TeamListModel {
 						items: this.getGenderArray(),
 						hideFilter:true,
 						hideButtons:true
-					}
+					},
+                    id:'find_team_gender'
 				}
 			},
 			{

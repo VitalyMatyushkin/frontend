@@ -33,9 +33,16 @@ const ClassForm = React.createClass({
 
 	render: function() {
 		return (
-			<Form formStyleClass="mNarrow" name={this.props.title} onSubmit={this.props.onFormSubmit} binding={this.getDefaultBinding()} >
-				<FormField type="text" field="name" validation="required">Form name</FormField>
-				<FormField type="select" sourceArray={this.getAllAges()} field="age" validation="required">Age group</FormField>
+			<Form
+				formStyleClass="mNarrow"
+				name={this.props.title}
+				onSubmit={this.props.onFormSubmit}
+				binding={this.getDefaultBinding()}
+				submitButtonId	= 'class_submit'
+				cancelButtonId	= 'class_cancel'
+			>
+				<FormField type="text" field="name" id="class_name" validation="required">Form name</FormField>
+				<FormField type="select" sourceArray={this.getAllAges()} field="age" id="class_age_combox" validation="required">Age group</FormField>
 			</Form>
 		)
 	}

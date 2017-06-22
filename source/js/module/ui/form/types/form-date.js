@@ -5,13 +5,16 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 
 const TypeDate =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
+    propTypes: {
+        id:				React.PropTypes.string 		// just old good html id
+    },
 	render: function () {
         const self = this,
             binding = self.getDefaultBinding(),
 			value = binding.get('value');
 
 		return (
-            <Date value={value} validateOn={false} onChange={self.changeValue} onBlur={self.setValue} />
+            <Date value={value} validateOn={false} id={self.props.id} onChange={self.changeValue} onBlur={self.setValue} />
 		)
 	}
 });

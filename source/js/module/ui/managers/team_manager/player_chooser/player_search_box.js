@@ -22,6 +22,7 @@ const PlayerSearchBox = React.createClass({
 		return (
 			<div className="ePlayerChooser_playerSearchBox">
 				<input	className	="ePlayerChooser_playerSearchBoxInput"
+						id          ="searchPlayer_input"
 						placeholder	="Enter student name"
 						onChange	={self.handleChangeSearchText}
 						onKeyPress	={self.handleKeyPress}

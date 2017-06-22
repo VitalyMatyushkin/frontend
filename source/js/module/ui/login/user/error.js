@@ -16,11 +16,11 @@ const RegiseterUserDone = React.createClass({
 			<h2>Authorization failed</h2>
 			<div className="ePageMessage_text">
 				You can
-				<a className="bButton" href="/">
+				<a className="bButton" id="tryAgain_button" href="/">
 					try again →
 				</a>
 					or
-				<a href="/#register" className="bButton" >
+				<a href="/#register" className="bButton" id="signUp_button">
 					sign up
 				</a>
 			</div>

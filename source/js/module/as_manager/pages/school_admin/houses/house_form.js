@@ -14,10 +14,17 @@ const ClassForm = React.createClass({
 		var self = this;
 
 		return ( <div className ="eHouseForm">
-			<Form formStyleClass="mNarrow" name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="name" validation="required" >House name</FormField>
-				<FormField type="text" field="description">Description</FormField>
-				<FormField classNames="mSingleLine" type="colors" maxColors={2} field="colors">House colors</FormField>
+			<Form
+				formStyleClass="mNarrow"
+				name={self.props.title}
+				onSubmit={self.props.onFormSubmit}
+				binding={self.getDefaultBinding()}
+				submitButtonId	= 'house_submit'
+				cancelButtonId	= 'house_cancel'
+			>
+				<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
+				<FormField type="text" id="house_description" field="description">Description</FormField>
+				<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">House colors</FormField>
 			</Form></div>
 		)
 	}

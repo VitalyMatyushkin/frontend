@@ -82,7 +82,8 @@ HouseListModel.prototype.getColumns = function(){
 				dataField:'name'
 			},
 			filter:{
-				type:'string'
+				type:'string',
+				id:'find_house_name'
 			}
 		},
 		{
@@ -92,7 +93,8 @@ HouseListModel.prototype.getColumns = function(){
 				dataField:'description'
 			},
 			filter:{
-				type:'string'
+				type:'string',
+                id:'find_house_description'
 			}
 		},
 		{

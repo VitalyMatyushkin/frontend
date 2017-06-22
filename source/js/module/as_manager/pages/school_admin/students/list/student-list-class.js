@@ -139,7 +139,8 @@ class StudentListClass{
 						items: this.getGenders(),
 						hideFilter:true,
 						hideButtons:true
-					}
+					},
+                    id:'find_student_gender'
 				}
 			},
 			{
@@ -149,7 +150,8 @@ class StudentListClass{
 					dataField:'firstName'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+                    id:'find_student_name'
 				}
 			},
 			{
@@ -159,7 +161,8 @@ class StudentListClass{
 					dataField:'lastName'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+                    id:'find_student_surname'
 				}
 			},
 			{
@@ -180,7 +183,8 @@ class StudentListClass{
 						getDataPromise: this.getForms(),
 						valueField:'name',
 						keyField:'id'
-					}
+					},
+                    id:'find_student_class'
 				}
 			},
 			{
@@ -201,7 +205,8 @@ class StudentListClass{
 						getDataPromise: this.getHouses(),
 						valueField:'name',
 						keyField:'id'
-					}
+					},
+                    id:'find_student_house'
 				}
 			},
 			{
@@ -212,7 +217,8 @@ class StudentListClass{
 					type:'date'
 				},
 				filter:{
-					type:'between-date'
+					type:'between-date',
+                    id:'find_student_birthday'
 				}
 			},
 			{

@@ -4,6 +4,9 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 
 const TypePassword =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
+    propTypes: {
+        id: React.PropTypes.string
+    },
 	handleBlur: function(event) {
 		this.setValue(event.target.value);
 	},
@@ -16,7 +19,7 @@ const TypePassword =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<input autoCapitalize="none" type="password" onBlur={self.handleBlur} onChange={self.handleChange} value={value} />
+				<input autoCapitalize="none" type="password" id={self.props.id} onBlur={self.handleBlur} onChange={self.handleChange} value={value} />
 			</div>
 		)
 	}

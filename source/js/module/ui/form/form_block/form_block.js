@@ -8,7 +8,8 @@ const FormBlock = React.createClass({
 		type:				React.PropTypes.string.isRequired,
 		isVisible:			React.PropTypes.string.isRequired,
 		isShowCloseButton:	React.PropTypes.bool,
-		onClickClose:		React.PropTypes.func
+		onClickClose:		React.PropTypes.func,
+		id: React.PropTypes.string
 	},
 	getDefaultProps: function () {
 		return {
@@ -24,7 +25,7 @@ const FormBlock = React.createClass({
 		});
 
 		return (
-			<div className={className}>
+			<div className={className} id={this.props.id}>
 				{
 					this.props.isShowCloseButton ?
 						<FromBlockHeader onClick={this.props.onClickClose}/> :

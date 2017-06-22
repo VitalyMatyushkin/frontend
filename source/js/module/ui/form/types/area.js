@@ -8,6 +8,9 @@ const 	TypeAutocomplete 	= require('module/ui/form/types/autocomplete'),
  */
 const TypeArea = React.createClass({
 	mixins: [Morearty.Mixin],
+    propTypes: {
+        id: React.PropTypes.string
+    },
 	componentWillMount: function() {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();

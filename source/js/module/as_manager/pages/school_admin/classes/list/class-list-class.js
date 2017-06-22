@@ -88,7 +88,8 @@ class ClassListClass{
 					dataField:'name'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+					id:'find_class_name'
 				}
 			},
 			{

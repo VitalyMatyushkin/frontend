@@ -148,22 +148,26 @@ const StudentForm = React.createClass({
 				isVisible			= { isVisible }
 				isShowCloseButton	= { index !== 0 }
 				onClickClose		= { this.onClickRemoveNextOfKinBlock.bind(this, index) }
+				id 					= {`kin_block_${index}`}
 			>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_relationship` }
+					id 			= {`relationship_kin_${index}`}
 				>
 					Relationship
 				</FormField>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_firstName` }
+					id 			= {`firstName_kin_${index}`}
 				>
 					Name
 				</FormField>
 				<FormField
 					type		= 'text'
 					field		= { `nok_${index}_lastName` }
+					id 			= {`lastName_kin_${index}`}
 				>
 					Surname
 				</FormField>
@@ -171,6 +175,7 @@ const StudentForm = React.createClass({
 					type		='phone'
 					field		={`nok_${index}_phone`}
 					validation	='phone'
+					id 			= {`phone_kin_${index}`}
 				>
 					Phone
 				</FormField>
@@ -178,6 +183,7 @@ const StudentForm = React.createClass({
 					type		= 'text'
 					field		= { `nok_${index}_email` }
 					validation	= 'email'
+					id 			= {`email_kin_${index}`}
 				>
 					Email
 				</FormField>
@@ -213,6 +219,7 @@ const StudentForm = React.createClass({
 				isVisible	= { this.isShowFormElementManager() }
 				text		= { 'Add new "Next of kin" item' }
 				onClick		= { this.onClickAddNextOfKinItem }
+				id			= { 'add_new_kin' }
 			/>
 		);
 	},
@@ -226,6 +233,8 @@ const StudentForm = React.createClass({
 					onSubmit		= { this.props.onFormSubmit }
 					binding			= { binding.sub('formData') }
 					submitOnEnter	= { false }
+					submitButtonId	= 'student_submit'
+					cancelButtonId	= 'student_cancel'
 				>
 					<FormColumn
 						key			= 'main_column'
@@ -236,11 +245,13 @@ const StudentForm = React.createClass({
 							labelText	='+'
 							type		= 'imageFile'
 							field		= 'avatar'
+							id			= 'student_avatar'
 						/>
 						<FormField
 							type		= 'text'
 							field		= 'firstName'
 							validation	= 'required'
+							id			= 'student_name'
 						>
 							Name
 						</FormField>
@@ -248,6 +259,7 @@ const StudentForm = React.createClass({
 							type		= 'text'
 							field		= 'lastName'
 							validation	= 'required'
+							id			= 'student_surname'
 						>
 							Surname
 						</FormField>
@@ -256,6 +268,7 @@ const StudentForm = React.createClass({
 							field			= 'gender'
 							sourcePromise	= { this.getGender }
 							validation		= 'required'
+							id 				= 'student_gender'
 						>
 							Gender
 						</FormField>
@@ -263,6 +276,7 @@ const StudentForm = React.createClass({
 							type		= 'date'
 							field		= 'birthday'
 							validation	= 'birthday'
+							id 			= 'student_birthday'
 						>
 							Date of birth
 						</FormField>
@@ -271,6 +285,7 @@ const StudentForm = React.createClass({
 							serviceFullData	= { this.getClassService() }
 							field			= 'formId'
 							defaultItem		= { this.props.initialForm }
+							id 				= 'student_class_combox'
 						>
 							Form
 						</FormField>
@@ -279,6 +294,7 @@ const StudentForm = React.createClass({
 							serviceFullData	= { this.getHouseService() }
 							field			= 'houseId'
 							defaultItem		= { this.props.initialHouse }
+							id 				= 'student_house_combox'
 						>
 							House
 						</FormField>
@@ -286,12 +302,14 @@ const StudentForm = React.createClass({
 							classNames	= 'mSingleLine'
 							type		= 'checkbox'
 							field		= 'unwell'
+							id 			= 'student_injured_checkbox'
 						>
 							Injured/Unwell
 						</FormField>
 						<FormField
 							type	= 'textarea'
 							field	= 'medicalInfo'
+							id 		= 'student_medicalinfo'
 						>
 							Medical Information
 						</FormField>

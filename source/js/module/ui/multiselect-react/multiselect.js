@@ -12,7 +12,8 @@ const MultiSelectReact = React.createClass({
 		selections: React.PropTypes.array,
 		placeholder: React.PropTypes.string,
 		onChange: React.PropTypes.func.isRequired,
-		onFilterChange: React.PropTypes.func
+		onFilterChange: React.PropTypes.func,
+		id: React.PropTypes.string
 	},
 	getDefaultProps: function () {
 		return {
@@ -95,7 +96,7 @@ const MultiSelectReact = React.createClass({
 			count = state.selections.length;
 
 		return (
-			<div className={"bMultiSelect " + self.props.className}>
+			<div className={"bMultiSelect " + self.props.className} id={self.props.id}>
 				<input onChange={this.handleFilterChange} value={state.filter} placeholder={this.props.placeholder}/>
 				<ul>
 					{state.items.map(this.createItem)}

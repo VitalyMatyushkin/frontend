@@ -18,6 +18,7 @@ const MaskedInput = React.createClass({
 		title:			React.PropTypes.string,
 		placeholder:	React.PropTypes.string,
 		className:		React.PropTypes.string,
+        id:				React.PropTypes.string,
 		onChange:		React.PropTypes.func,
 		onBlur:			React.PropTypes.func,
 		onFocus:		React.PropTypes.func
@@ -213,6 +214,7 @@ const MaskedInput = React.createClass({
 				placeholder	= { this.props.placeholder }
 				className	= { this.props.className }
 				value		= { this.mask.value }
+				id			= { this.props.id }
 				onChange	= { this._onChange }
 				onKeyDown	= { this._onKeyDown }
 				onFocus		= { this._onFocus }
