@@ -71,7 +71,6 @@ const Score = React.createClass({
 
 		return (
 			<MaskedPoints	plainPoints		= { this.props.plainPoints }
-							value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask) }
 							mask			= { mask }
 							onChange		= { this.props.onChange }
 							stringToPoints	= { ScoreHelper.stringTimeToPoints }
