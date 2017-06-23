@@ -27,14 +27,22 @@ const Score = React.createClass({
 	},
 
 	renderScoreViewMode: function() {
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
+
 		const playerScoreClassName = classNames({
-			"ePlayer_score":	true,
-			"mBig":				this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG
+			"ePlayer_score":    true,
+			"mBig":             this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG,
+			"bTooltip":         true
 		});
-		
+
 		return (
-			<div className={playerScoreClassName}>
-				{TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str}
+			<div
+				className           = {playerScoreClassName}
+				data-description    = {TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str}
+			>
+				{
+					ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, '.')
+				}
 			</div>
 		);
 	},
@@ -71,6 +79,7 @@ const Score = React.createClass({
 
 		return (
 			<MaskedPoints	plainPoints		= { this.props.plainPoints }
+							value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
 							mask			= { mask }
 							onChange		= { this.props.onChange }
 							stringToPoints	= { ScoreHelper.stringTimeToPoints }
