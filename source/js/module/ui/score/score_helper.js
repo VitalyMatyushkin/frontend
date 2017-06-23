@@ -2,8 +2,8 @@
  * Created by Anatoly on 21.10.2016.
  */
 const ScoreHelper = {
-	DEFAULT_TIME_MASK: 'hh:mm:ss.ccc',
-	DEFAULT_DISTANCE_MASK: 'kk mmm.cc',
+	DEFAULT_TIME_MASK:      'hh:mm:ss.ccc',
+	DEFAULT_DISTANCE_MASK:  'kk mmm.cc',
 
 	/**
 	 * Validation result value according to 'plain' type
@@ -51,16 +51,14 @@ const ScoreHelper = {
 	 * @returns {number} - points
 	 */
 	stringTimeToPoints: function(value, mask){
-		const	maskParts	= mask.replace(/[^hmsc]/g, ':').split(':'),
-				valueParts	= value.replace(/[^0-9_]/g, ':').split(':');
-
-		console.log(value);
+		const   maskParts   = mask.replace(/[^hmsc]/g, ':').split(':'),
+			valueParts  = value.replace(/[^0-9_]/g, ':').split(':');
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
 			let tmp = 0;
 			switch (maskParts[i]){
-				case 'h':		//here we use falling through
+				case 'h':       //here we use falling through
 				case 'hh':
 				case 'hhh':
 					tmp = valueParts[i]*3600;
@@ -98,72 +96,89 @@ const ScoreHelper = {
 
 		return result;
 	},
-	plainPointsToTimeString: function(value, mask){
+	plainPointsToTimeString: function(value, mask, separator = ':'){
 		const	valueParts			= String(value).split('.'),
 				integerPartOfValue	= Number(valueParts[0]),
-				floatPartOfValue	= Number(valueParts[1]);
+				floatPartOfValue	= Number(typeof valueParts[1] !== 'undefined' ? valueParts[1] : 0);
 
-		let		buffer				= Number(integerPartOfValue);
+		// just copy integer part of plain points
+		let		remainder			= Number(integerPartOfValue);
 
 		let timeString = '';
 
 		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
 
-		for(let i = 0; i < maskParts.length; i++){
-			switch (maskParts[i]){
-				case 'h':		//here we use falling through
-				case 'hh':
-				case 'hhh':
-					const hourCount = value % 3600;
-					buffer = buffer - hourCount * 3600;
+		maskParts.forEach(maskPart => {
+			if(maskPart.search(/h{1,3}/) !== -1) {
+				const hourCount = this.getCountOfCurrentTimeUnit(remainder, 'HOURS');
+				// remove hours in sec from remainder
+				remainder -= hourCount * 3600;
 
-					let hourString = String(hourCount);
-					const hourZeroCount = maskParts[i].length - hourString.length;
-					for(let i = 0; i < hourZeroCount; i++) {
-						hourString = '0' + hourString;
-					}
+				const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
 
-					timeString = `${hourString}:`;
-					break;
-				case 'm':
-				case 'mm':
-					const minCount = value % 60;
-					buffer = buffer - minCount * 60;
+				timeString = hourString + separator;
+			} else if(maskPart.search(/m{1,2}/) !== -1) {
+				const minCount = this.getCountOfCurrentTimeUnit(remainder, 'MINUTES');
+				// remove minutes in sec from remainder
+				remainder -= minCount * 60;
 
-					let minString = String(minCount);
-					const minZeroCount = maskParts[i].length - minString.length;
-					for(let i = 0; i < minZeroCount; i++) {
-						minString = '0' + minString;
-					}
+				const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
 
-					timeString += `${minString}:`;
-					break;
-				case 's':
-				case 'ss':
-					let secString = String(buffer);
-					const secZeroCount = maskParts[i].length - secString.length;
-					for(let i = 0; i < secZeroCount; i++) {
-						secString = '0' + secString;
-					}
+				timeString += minString + separator;
+			} else if(maskPart.search(/s{1,2}/) !== -1) {
+				// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
+				const secCount = remainder;
 
-					timeString += `${secString}:`;
-					break;
-				case 'c':
-				case 'cc':
-				case 'ccc':
-				case 'cccc':
-					let msecString = String(floatPartOfValue);
-					const msecZeroCount = maskParts[i].length - msecString.length;
-					for(let i = 0; i < msecZeroCount; i++) {
-						msecString = '0' + msecString;
-					}
+				const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
 
-					timeString += `${msecString}`;
-					break;
+				timeString += secString + separator;
+			} else if(maskPart.search(/c{1,4}/) !== -1) {
+				const msecCount = String(floatPartOfValue);
+
+				const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart);
+
+				timeString += msecString;
 			}
-		}
+		});
 
 		return timeString;
+	},
+	plainPointsToDistanceString: function(value, mask, separator = ':'){
+		// just copy integer part of plain points
+		let remainder = Number(value);
+
+		let distanceString = '';
+
+		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
+
+		maskParts.forEach(maskPart => {
+			if(maskPart.search(/k{1,3}/) !== -1) {
+				const kmCount = this.getCountOfCurrentDistanceUnit(remainder, 'KILOMETERS');
+				// remove km in cm from remainder
+				remainder -= kmCount * 100000;
+
+				const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
+
+				distanceString = kmString + separator;
+			} else if(maskPart.search(/m{1,3}/) !== -1) {
+				const mCount = this.getCountOfCurrentDistanceUnit(remainder, 'METERS');
+				// remove m in cm from remainder
+				remainder -= mCount * 100;
+
+				const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
+
+				distanceString += mString + separator;
+			} else if(maskPart.search(/c{1,2}/) !== -1) {
+				// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
+				const cmCount = remainder;
+
+				const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
+
+				distanceString += cmString + separator;
+			}
+		});
+
+		return distanceString;
 	},
 	/**
 	 * Validation string value according to 'distance' type
@@ -184,14 +199,14 @@ const ScoreHelper = {
 	 * @returns {number} - points
 	 */
 	stringDistanceToPoints: function(value, mask){
-		const 	maskParts 	= mask.replace(/[^kmc]/g, ':').split(':'),
-			valueParts 	= value.replace(/[^0-9_]/g, ':').split(':');
+		const	maskParts	= mask.replace(/[^kmc]/g, ':').split(':'),
+				valueParts	= value.replace(/[^0-9_]/g, ':').split(':');
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
 			let tmp = 0;
 			switch (maskParts[i]){
-				case 'k':			//here we use falling through
+				case 'k':           //here we use falling through
 				case 'kk':
 				case 'kkk':
 					tmp = valueParts[i]*100000;
@@ -219,6 +234,40 @@ const ScoreHelper = {
 				return NaN;
 			result += tmp;
 		}
+		return result;
+	},
+
+	getCountOfCurrentTimeUnit: function(value, timeUnit) {
+		switch (timeUnit) {
+			case 'HOURS':
+				return Math.floor( value / 3600 );
+			case 'MINUTES':
+				return Math.floor( value / 60 );
+			case 'SECONDS':
+				return value;
+			default:
+				return 0;
+		}
+	},
+	getCountOfCurrentDistanceUnit: function(value, distanceUnit) {
+		switch (distanceUnit) {
+			case 'KILOMETERS':
+				return Math.floor( value / 100000 );
+			case 'METERS':
+				return Math.floor( value / 100 );
+			default:
+				return 0;
+		}
+	},
+	convertValueUnitToStringByMask: function(value, mask) {
+		// convert value to string
+		let result = String(value);
+
+		const zerosCount = mask.length - result.length;
+		for(let i = 0; i < zerosCount; i++) {
+			result = '0' + result;
+		}
+
 		return result;
 	}
 };
