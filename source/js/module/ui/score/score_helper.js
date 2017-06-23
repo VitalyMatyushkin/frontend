@@ -114,7 +114,7 @@ const ScoreHelper = {
 				// remove hours in sec from remainder
 				remainder -= hourCount * 3600;
 
-				const hourString = this.convertTimeUnitValueToStringByMask(hourCount, maskPart);
+				const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
 
 				timeString = hourString + separator;
 			} else if(maskPart.search(/m{1,2}/) !== -1) {
@@ -122,26 +122,63 @@ const ScoreHelper = {
 				// remove minutes in sec from remainder
 				remainder -= minCount * 60;
 
-				const minString = this.convertTimeUnitValueToStringByMask(minCount, maskPart);
+				const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
 
 				timeString += minString + separator;
 			} else if(maskPart.search(/s{1,2}/) !== -1) {
 				// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
 				const secCount = remainder;
 
-				const secString = this.convertTimeUnitValueToStringByMask(secCount, maskPart);
+				const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
 
 				timeString += secString + separator;
 			} else if(maskPart.search(/c{1,4}/) !== -1) {
 				const msecCount = String(floatPartOfValue);
 
-				const msecString = this.convertTimeUnitValueToStringByMask(msecCount, maskPart);
+				const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart);
 
 				timeString += msecString;
 			}
 		});
 
 		return timeString;
+	},
+	plainPointsToDistanceString: function(value, mask, separator = ':'){
+		// just copy integer part of plain points
+		let remainder = Number(value);
+
+		let distanceString = '';
+
+		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
+
+		maskParts.forEach(maskPart => {
+			if(maskPart.search(/k{1,3}/) !== -1) {
+				const kmCount = this.getCountOfCurrentDistanceUnit(remainder, 'KILOMETERS');
+				// remove km in cm from remainder
+				remainder -= kmCount * 100000;
+
+				const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
+
+				distanceString = kmString + separator;
+			} else if(maskPart.search(/m{1,3}/) !== -1) {
+				const mCount = this.getCountOfCurrentDistanceUnit(remainder, 'METERS');
+				// remove m in cm from remainder
+				remainder -= mCount * 100;
+
+				const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
+
+				distanceString += mString + separator;
+			} else if(maskPart.search(/c{1,2}/) !== -1) {
+				// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
+				const cmCount = remainder;
+
+				const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
+
+				distanceString += cmString + separator;
+			}
+		});
+
+		return distanceString;
 	},
 	/**
 	 * Validation string value according to 'distance' type
@@ -212,7 +249,17 @@ const ScoreHelper = {
 				return 0;
 		}
 	},
-	convertTimeUnitValueToStringByMask: function(value, mask) {
+	getCountOfCurrentDistanceUnit: function(value, distanceUnit) {
+		switch (distanceUnit) {
+			case 'KILOMETERS':
+				return Math.floor( value / 100000 );
+			case 'METERS':
+				return Math.floor( value / 100 );
+			default:
+				return 0;
+		}
+	},
+	convertValueUnitToStringByMask: function(value, mask) {
 		// convert value to string
 		let result = String(value);
 

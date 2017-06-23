@@ -1,13 +1,15 @@
 const	React			= require('react'),
-		
+
 		classNames		= require('classnames'),
-		
-		TeamHelper  	= require('module/ui/managers/helpers/team_helper'),
+
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		SportConsts		= require('module/helpers/consts/sport'),
-		ScoreHelper 	= require('./score_helper'),
-		PlainPoints 	= require('./plain-points'),
-		MaskedPoints 	= require('./masked-points'),
-		ScoreConsts		= require('./score_consts');
+		ScoreHelper		= require('./score_helper'),
+		PlainPoints		= require('./plain-points'),
+		MaskedPoints	= require('./masked-points'),
+		ScoreConsts		= require('./score_consts'),
+
+		TooltipStyle	= require('../../../../styles/ui/b_tooltip.scss');
 
 const Score = React.createClass({
 	propTypes: {
@@ -27,22 +29,38 @@ const Score = React.createClass({
 	},
 
 	renderScoreViewMode: function() {
+		const self = this;
+
 		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
 
 		const playerScoreClassName = classNames({
-			"ePlayer_score":    true,
-			"mBig":             this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG,
+			"ePlayer_score":	true,
+			"mBig":				this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG,
 			"bTooltip":         true
 		});
 
+		let	result,
+			tooltip = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
+
+		// points type
+		switch (self.props.pointsType) {
+			case SportConsts.SPORT_POINTS_TYPE.PLAIN:
+				result = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
+				break;
+			case SportConsts.SPORT_POINTS_TYPE.TIME:
+				result = ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, '.');
+				break;
+			case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
+				result = ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, '.');
+				break;
+		}
+
 		return (
 			<div
-				className           = {playerScoreClassName}
-				data-description    = {TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str}
+				className			= {playerScoreClassName}
+				data-description	= {tooltip}
 			>
-				{
-					ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, '.')
-				}
+				{result}
 			</div>
 		);
 	},
@@ -94,6 +112,7 @@ const Score = React.createClass({
 
 		return (
 			<MaskedPoints	plainPoints		= { this.props.plainPoints }
+							value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
 							mask			= { mask }
 							onChange		= { this.props.onChange }
 							stringToPoints	= { ScoreHelper.stringDistanceToPoints }
