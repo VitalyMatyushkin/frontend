@@ -30,6 +30,9 @@ build
 # Dependency directory
 node_modules
 
+# npm
+package-lock.json
+
 #IDE
 .idea
 *.iml
