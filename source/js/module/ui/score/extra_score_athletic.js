@@ -36,7 +36,7 @@ const AthleticExtraScore = React.createClass({
 	},
 	
 	checkValue: function(value){
-		return (/^[0-9]{1,2}$/.test(value) || value === '');
+		return (/^[0-9]{1,3}$/.test(value) || value === '');
 	},
 	
 	changeScore: function(result){
