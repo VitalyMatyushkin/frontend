@@ -436,15 +436,7 @@ function reportNotParticipate(event){
 	return window.Server.children.get().then(children => {
 		const activeChildren = [];
 
-		if(TeamHelper.isIndividualSport(event)) {
-			children.forEach(child => {
-				const player = event.individualsData.find(p => p.userId === child.id && p.permissionId === child.permissionId);
-
-				if(typeof player !== 'undefined') {
-					activeChildren.push(child);
-				}
-			});
-		} else if(TeamHelper.isTeamSport(event)) {
+		if(TeamHelper.isTeamSport(event)) {
 			children.forEach(child => {
 				for(let i = 0; i < event.teamsData.length; i++) {
 					const player = event.teamsData[i].players.find(p => p.userId === child.id && p.permissionId === child.permissionId);
@@ -452,6 +444,14 @@ function reportNotParticipate(event){
 						activeChildren.push(child);
 						break;
 					}
+				}
+			});
+		} else {
+			children.forEach(child => {
+				const player = event.individualsData.find(p => p.userId === child.id && p.permissionId === child.permissionId);
+
+				if(typeof player !== 'undefined') {
+					activeChildren.push(child);
 				}
 			});
 		}
