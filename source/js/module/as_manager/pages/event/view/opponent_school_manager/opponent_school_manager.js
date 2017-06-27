@@ -23,6 +23,9 @@ const OpponentSchoolManager = React.createClass({
 			.set('schoolSelectorKey',	Immutable.fromJS(this.getRandomString()))
 			.commit();
 	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().sub('opponentSchoolManager').clear();
+	},
 	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
