@@ -230,6 +230,7 @@ ChallengeModel.prototype.getScoreForCricket = function(eventType, teamScore, hou
 
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
+	// Cricket
 	if (this.isFinished && SportHelper.isCricket(event.sport.name)) { //то это полная жопа
 		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
 				result 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toLowerCase() : undefined,
@@ -341,6 +342,10 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 					return "Draw";
 				}
 		}
+	}
+
+	if(this.isFinished && TeamHelper.isNonTeamSport(event)) {
+		return 'View results';
 	}
 };
 
