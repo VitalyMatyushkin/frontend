@@ -103,8 +103,42 @@ const InviteView = React.createClass({
 				return activeSchoolId === inviterSchool.id ? invitedSchool : inviterSchool;
 		}
 	},
+	renderControlButtons: function() {
+		const binding = this.getDefaultBinding();
+
+		const inviteId = binding.get('id');
+
+		switch (this.props.type) {
+			case 'inbox':
+				return (
+					<div className="eInvite_buttons">
+						<Button
+							text				= {'Accept'}
+							onClick				= {() => {window.location.hash = `/#invites/${inviteId}/accept`}}
+							extraStyleClasses	= {'mHalfWidth mMarginRight'}
+						/>
+						<Button
+							text				= {'Decline'}
+							onClick				= {() => this.getInviteRequest(inviteId,'decline')}
+							extraStyleClasses	= {'mCancel mHalfWidth'}
+						/>
+					</div>
+				);
+			case 'outbox':
+				return (
+					<div className="eInvite_buttons">
+						<Button
+							text				= {'Cancel invitation'}
+							onClick				= {() => this.getInviteRequest(inviteId,'cancel')}
+							extraStyleClasses	= {'mCancel'}
+						/>
+					</div>
+				);
+		}
+	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
+				inviteId		= binding.get('id'),
 				inviterSchool 	= binding.toJS('inviterSchool'),
 				invitedSchool 	= binding.toJS('invitedSchool'),
 				rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
@@ -125,7 +159,6 @@ const InviteView = React.createClass({
 				startDate 		= DateHelper.getDateStringFromDateObject(eventDate),
 				hours 			= this.addZeroToFirst(eventDate.getHours()),
 				minutes 		= this.addZeroToFirst(eventDate.getMinutes()),
-				inviteId		= binding.get('id'),
 				point 			= binding.toJS('event.venue.postcodeData.point'),
 				venue 			= binding.toJS('event.venue'),
 				teamData 		= binding.toJS('event.teamsData'),
@@ -191,17 +224,7 @@ const InviteView = React.createClass({
 									<div className="eInvite_message">
 										{isArchive ? <span className={'m'+status}>{status}</span> : null}
 									</div>
-									<div className="eInvite_buttons">
-										{isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
-														   extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
-										{isInbox ? <Button text={'Decline'}
-														   onClick={() => this.getInviteRequest(inviteId,'decline')}
-														   extraStyleClasses={'mCancel mHalfWidth'}/> : null }
-										{isOutBox ?
-											<Button text={'Cancel invitation'}
-													onClick={() => this.getInviteRequest(inviteId,'cancel')}
-													extraStyleClasses={'mCancel'}/> : null }
-									</div>
+									{this.renderControlButtons()}
 									<div className="eInviteDiscussionLink">
 										<a onClick={this.toogleDiscussionLink}> { linkText } </a>
 									</div>

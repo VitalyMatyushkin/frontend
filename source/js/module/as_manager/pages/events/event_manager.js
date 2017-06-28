@@ -586,43 +586,46 @@ const EventManager = React.createClass({
 
 		const step = binding.get('step');
 
-		if(step === 1) {
-			const	isDisabled				= !self._isStepComplete(1),
-					continueButtonClassName	= classNames({
+		switch(step) {
+			case 1: {
+				const isDisabled = !self._isStepComplete(1),
+					continueButtonClassName = classNames({
 						mWidth: true,
 						mDisable: isDisabled
 					});
 
-			return (
-				<div className="eManager_controlButtons">
-					<Button
-							text				= "Continue"
-							onClick				= {this.toNext}
-							extraStyleClasses	= {continueButtonClassName}
-							isDisabled			= {isDisabled}
-					/>
-				</div>
-			);
-		} else if(step === 2) {
-			const	isDisabled				= !this.getDefaultBinding().toJS('isSaveButtonActive'),
-					finishButtonClassName	= classNames({
-						mFinish:	true,
-						mDisable:	isDisabled
+				return (
+					<div className="eManager_controlButtons">
+						<Button
+							text="Continue"
+							onClick={this.toNext}
+							extraStyleClasses={continueButtonClassName}
+							isDisabled={isDisabled}
+						/>
+					</div>
+				);
+			}
+			case 2: {
+				const isDisabled = !this.getDefaultBinding().toJS('isSaveButtonActive'),
+					finishButtonClassName = classNames({
+						mFinish: true,
+						mDisable: isDisabled
 					});
 
-			return (
-				<div className="eTeamManagerWrapper_footer">
-					<Button	text				= "Back"
-							onClick				= {this.toBack}
-							extraStyleClasses	= {"mCancel mMarginRight"}
-					/>
-					<Button	text				= "Finish"
-							onClick				= {this.handleClickFinishButton}
-							extraStyleClasses	= {finishButtonClassName}
-							isDisabled			= {isDisabled}
-					/>
-				</div>
-			);
+				return (
+					<div className="eTeamManagerWrapper_footer">
+						<Button text="Back"
+								onClick={this.toBack}
+								extraStyleClasses={"mCancel mMarginRight"}
+						/>
+						<Button text="Finish"
+								onClick={this.handleClickFinishButton}
+								extraStyleClasses={finishButtonClassName}
+								isDisabled={isDisabled}
+						/>
+					</div>
+				);
+			}
 		}
 	},
 	_isStepComplete: function(step) {
