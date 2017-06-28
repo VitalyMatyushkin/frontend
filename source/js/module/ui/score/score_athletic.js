@@ -58,8 +58,6 @@ const AthleticScore = React.createClass({
 		
 	},
 	renderScoreViewMode: function() {
-		const self = this;
-
 		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
 
 		const playerScoreClassName = classNames({
@@ -72,7 +70,7 @@ const AthleticScore = React.createClass({
 			tooltip = `${TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str} / Score ${this.props.plainExtraPoints}`;
 
 		// points type
-		switch (self.props.pointsType) {
+		switch (this.props.pointsType) {
 			case SportConsts.SPORT_POINTS_TYPE.PLAIN:
 				mainPoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
 				break;
