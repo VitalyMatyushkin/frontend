@@ -32,16 +32,6 @@ const AthleticScore = React.createClass({
 			isPlayerScore: 	false
 		};
 	},
-	
-	getClassNames: function(){
-		const playerScoreClassName = classNames({
-			"ePlayer_score":	true,
-			"mBig":				this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG
-		});
-		
-		return playerScoreClassName;
-	},
-	
 	getScoreAsObject: function(score){
 		let result;
 		//score can be object and number, if score is object then it has property "value", else score just number
@@ -67,15 +57,40 @@ const AthleticScore = React.createClass({
 		this.props.onChangeScoreAthletic(result);
 		
 	},
-	
 	renderScoreViewMode: function() {
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
+
+		const playerScoreClassName = classNames({
+			"ePlayer_score":	true,
+			"mBig":				this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG,
+			"bTooltip":			true
+		});
+
+		let	mainPoints,
+			tooltip = `${TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str} / Score ${this.props.plainExtraPoints}`;
+
+		// points type
+		switch (this.props.pointsType) {
+			case SportConsts.SPORT_POINTS_TYPE.PLAIN:
+				mainPoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
+				break;
+			case SportConsts.SPORT_POINTS_TYPE.TIME:
+				mainPoints = ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, '.');
+				break;
+			case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
+				mainPoints = ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, '.');
+				break;
+		}
+
 		return (
-			<div className={this.getClassNames()}>
-				{`${TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str} / Score ${this.props.plainExtraPoints}`}
+			<div
+				className			= {playerScoreClassName}
+				data-description	= {tooltip}
+			>
+				{`${mainPoints} / Score ${this.props.plainExtraPoints}`}
 			</div>
 		);
 	},
-	
 	renderScoreAthleticChangeMode: function() {
 		// points type
 		switch (this.props.pointsType) {
@@ -120,6 +135,7 @@ const AthleticScore = React.createClass({
 				<div className={"ePlayer_scoreAthletics " + playerTimeScoreClassName}>
 					<div>{ SportConsts.SPORT_ATHLETIC.TIME }</div>
 					<MaskedPoints	plainPoints		= { this.props.plainPoints }
+									value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
 									mask			= { mask }
 									onChange		= { this.getScoreAsObject }
 									stringToPoints	= { ScoreHelper.stringTimeToPoints }
@@ -144,6 +160,7 @@ const AthleticScore = React.createClass({
 				<div className={"ePlayer_scoreAthletics " + playerDistanceScoreClassName}>
 					<div>{ SportConsts.SPORT_ATHLETIC.DISTANCE }</div>
 					<MaskedPoints	plainPoints		= { this.props.plainPoints }
+									value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
 									mask			= { mask }
 									onChange		= { this.getScoreAsObject }
 									stringToPoints	= { ScoreHelper.stringDistanceToPoints }
