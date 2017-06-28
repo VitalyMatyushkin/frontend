@@ -5,7 +5,8 @@
 const	React			= require('react'),
 		ButtonCssStyle	= require('../../../../styles/ui/b_button.scss');
 
-/** Just Button. Buttons are clickable and have some text inside.
+/**
+ * Just Button. Buttons are clickable and have some text inside.
  * Maybe it should also take children for displaying icons or something like that, but we don't use it now,
  * so feel free to add if need.
  **/
@@ -14,8 +15,8 @@ function Button(props) {
 			className = `bButton ${extraStyleClasses}`;
 
 	let isDisabled = false;
-	if(extraStyleClasses.search(/mDisable/) !== -1) {
-		isDisabled = true;
+	if(typeof props.isDisabled !== 'undefined') {
+		isDisabled = props.isDisabled;
 	}
 
 	return (
@@ -43,6 +44,7 @@ Button.propTypes = {
 	onClick:			React.PropTypes.func,		// function to be called on click
 	href:				React.PropTypes.string,		// hyperlink if need
 	extraStyleClasses: 	React.PropTypes.string,		// if one need to add extra styles to button.
+	isDisabled:		 	React.PropTypes.bool,
 	id:					React.PropTypes.string 		// html id
 };
 

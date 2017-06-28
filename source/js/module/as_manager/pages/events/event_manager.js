@@ -588,9 +588,10 @@ const EventManager = React.createClass({
 
 		switch (true) {
 			case step === 1:
-				const continueButtonClassName = classNames({
+				const	isDisable				= !self._isStepComplete(1),
+						continueButtonClassName	= classNames({
 					mWidth		: true,
-					mDisable	: !self._isStepComplete(1)
+					mDisable	: isDisable
 				});
 
 				return (
@@ -598,13 +599,15 @@ const EventManager = React.createClass({
 						<Button	text				= "Continue"
 								onClick				= {this.toNext}
 								extraStyleClasses	= {continueButtonClassName}
+								isDisable			= {isDisable}
 						/>
 					</div>
 				);
 			case step === 2:
-				const finishButtonClassName = classNames({
+				const	isDisable				= !this.getDefaultBinding().toJS('isSaveButtonActive'),
+						finishButtonClassName	= classNames({
 					mFinish:	true,
-					mDisable:	!this.getDefaultBinding().toJS('isSaveButtonActive')
+					mDisable:	isDisable
 				});
 
 				return (
@@ -616,6 +619,7 @@ const EventManager = React.createClass({
 						<Button	text				= "Finish"
 								onClick				= {this.handleClickFinishButton}
 								extraStyleClasses	= {finishButtonClassName}
+								isDisable			= {isDisable}
 						/>
 					</div>
 				);

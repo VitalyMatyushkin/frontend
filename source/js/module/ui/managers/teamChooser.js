@@ -4,6 +4,7 @@ const	React			= require('react'),
 		classNames		= require('classnames'),
 		Morearty		= require('morearty'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		Button			= require('module/ui/button/button'),
 		Immutable		= require('immutable');
 
 const	TeamChooser	= React.createClass({
@@ -234,18 +235,20 @@ const	TeamChooser	= React.createClass({
 	},
 	_renderRevertButton: function() {
 		const	self					= this,
+				isDisabled				= !self._isTeamSelected(),
 				classNameRevertButton	= classNames({
 					bButton:				true,
 					mCancel:				true,
-					mDisable:				!self._isTeamSelected()
+					mDisable:				isDisabled
 				});
 
 		return (
-			<button	className	= {classNameRevertButton}
-					onClick		= {self._onTeamDeselectButtonClick}
-			>
-				Deselect Team
-			</button>
+			<Button
+					text				= {'Deselect Team'}
+					onClick				= {self._onTeamDeselectButtonClick}
+					extraStyleClasses	= {classNameRevertButton}
+					isDisabled			= {isDisabled}
+			/>
 		);
 	},
 	_renderTeamChooserButton: function() {

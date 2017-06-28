@@ -67,6 +67,7 @@ const ConfirmPopup = React.createClass({
 							<Button text={this.props.okButtonText}
 									onClick={this.handleClickOkButton}
 									extraStyleClasses={okButtonClassName}
+									isDisabled={this.props.isOkButtonDisabled}
 								/>
 						</div>
 					</div>
