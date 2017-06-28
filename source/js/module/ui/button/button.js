@@ -1,51 +1,47 @@
-/**
- * Created by wert on 13.09.16.
- */
-
 const	React			= require('react'),
 		ButtonCssStyle	= require('../../../../styles/ui/b_button.scss');
 
-/**
- * Just Button. Buttons are clickable and have some text inside.
- * Maybe it should also take children for displaying icons or something like that, but we don't use it now,
- * so feel free to add if need.
- **/
-function Button(props) {
-	const 	extraStyleClasses = props.extraStyleClasses || '',
-			className = `bButton ${extraStyleClasses}`;
+const Button = React.createClass({
+	propTypes: {
+		id:					React.PropTypes.string, 		// html id
+		text:				React.PropTypes.oneOfType([				// text to display in button
+			React.PropTypes.string,
+			React.PropTypes.array 						//if we want use tags (ex. <i> font awesome)
+		]),
+		onClick:			React.PropTypes.func,		// function to be called on click
+		href:				React.PropTypes.string,		// hyperlink if need
+		extraStyleClasses: 	React.PropTypes.string,		// if one need to add extra styles to button.
+		isDisabled:		 	React.PropTypes.bool
+	},
+	onClick: function(eventDescriptor) {
+		if(typeof this.props.onClick !== 'undefined') {
+			this.props.onClick(eventDescriptor);
+		}
 
-	let isDisabled = false;
-	if(typeof props.isDisabled !== 'undefined') {
-		isDisabled = props.isDisabled;
-	}
+		if(typeof this.props.href !== 'undefined') {
+			window.location.hash = this.props.href;
+		}
+	},
+	render: function () {
+		const	extraStyleClasses	= this.props.extraStyleClasses || '',
+				className			= `bButton ${extraStyleClasses}`;
 
-	return (
-		<button
-			id			= {props.id}
-			className	= {className}
-			onClick		= {props.onClick}
-			disabled	= {isDisabled}
-		>
-			<a
-				className	= {'eButton_link'}
-				href		= {props.href}
+		let isDisabled = false;
+		if(typeof this.props.isDisabled !== 'undefined') {
+			isDisabled = this.props.isDisabled;
+		}
+
+		return (
+			<button
+				id			= {this.props.id}
+				className	= {className}
+				disabled	= {isDisabled}
+				onClick		= {this.onClick}
 			>
-				{props.text}
-			</a>
-		</button>
-	);
-}
-
-Button.propTypes = {
-	text: React.PropTypes.oneOfType([				// text to display in button
-		React.PropTypes.string,
-		React.PropTypes.array 						//if we want use tags (ex. <i> font awesome)
-	]),
-	onClick:			React.PropTypes.func,		// function to be called on click
-	href:				React.PropTypes.string,		// hyperlink if need
-	extraStyleClasses: 	React.PropTypes.string,		// if one need to add extra styles to button.
-	isDisabled:		 	React.PropTypes.bool,
-	id:					React.PropTypes.string 		// html id
-};
+				{this.props.text}
+			</button>
+		);
+	}
+});
 
 module.exports = Button;
