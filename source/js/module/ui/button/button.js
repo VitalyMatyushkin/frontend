@@ -13,7 +13,26 @@ function Button(props) {
 	const 	extraStyleClasses = props.extraStyleClasses || '',
 			className = `bButton ${extraStyleClasses}`;
 
-	return <a className={className} href={props.href} onClick={props.onClick} id={props.id}>{props.text}</a>;
+	let isDisabled = false;
+	if(extraStyleClasses.search(/mDisable/) !== -1) {
+		isDisabled = true;
+	}
+
+	return (
+		<button
+			id			= {props.id}
+			className	= {className}
+			onClick		= {props.onClick}
+			disabled	= {isDisabled}
+		>
+			<a
+				className	= {'eButton_link'}
+				href		= {props.href}
+			>
+				{props.text}
+			</a>
+		</button>
+	);
 }
 
 Button.propTypes = {
