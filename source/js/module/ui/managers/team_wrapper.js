@@ -6,7 +6,8 @@ const	React				= require('react'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		classNames			= require('classnames'),
 		Morearty			= require('morearty'),
-		Immutable			= require('immutable');
+		Immutable			= require('immutable'),
+		Button				= require('module/ui/button/button');
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -426,9 +427,12 @@ const TeamWrapper = React.createClass({
 								binding			= {this.getTeamManagerBinding()}
 				/>
 				<div className="eTeamWrapper_footer">
-					<div className={this.getRevertButtonStyle()} onClick={this._onRevertChangesButtonClick}>
-						{'Revert changes'}
-					</div>
+					<Button
+						text				= {'Revert changes'}
+						extraStyleClasses	= {this.getRevertButtonStyle()}
+						onClick				= {this._onRevertChangesButtonClick}
+						isDisabled			= {!this.isShowRevertChangesButton()}
+					/>
 				</div>
 			</div>
 		);
