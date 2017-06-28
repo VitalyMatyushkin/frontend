@@ -47,7 +47,7 @@ const ScoreChangesHelper = {
 				ScoreCRUD.deleteIndividualScorePoint(schoolId, event.id, scoreData._id)
 			);
 		} else {
-			return Promise.resolve(true);
+			return [Promise.resolve(true)];
 		}
 	},
 	moveTeamScoreToSchoolScoreByEventAndTeamId: function(schoolId, event, teamId) {
