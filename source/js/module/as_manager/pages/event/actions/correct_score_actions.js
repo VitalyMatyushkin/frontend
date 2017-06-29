@@ -11,7 +11,9 @@ const CorrectScoreActions = {
 		let promises = [];
 
 		if(TeamHelper.isNonTeamSport(event)) {
-			promises = promises.concat(this.correctIndividualScoreByChanges(activeSchoolId, binding));
+			promises = promises.concat(
+				this.correctIndividualScoreByChanges(binding.toJS('selectedRivalIndex'), activeSchoolId, binding)
+			);
 		} else {
 			promises = promises.concat(
 				this.correctTeamScoreByChanges(binding.toJS('selectedRivalIndex'), activeSchoolId, binding)
@@ -20,11 +22,11 @@ const CorrectScoreActions = {
 
 		return Promise.all(promises);
 	},
-	correctIndividualScoreByChanges: function(activeSchoolId, binding) {
+	correctIndividualScoreByChanges: function(order, activeSchoolId, binding) {
 		const event = binding.toJS('model');
 
-		const	prevPlayers		= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding),
-				currentPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding),
+		const	prevPlayers		= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding, order),
+				currentPlayers	= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding, order),
 				removedPlayers	= TeamHelper.getRemovedPlayers(prevPlayers, currentPlayers);
 
 		return Promise.all(
