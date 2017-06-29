@@ -22,6 +22,15 @@ const TeamName = React.createClass({
 			name: this.props.name
 		});
 	},
+	componentWillReceiveProps: function(newProps) {
+		const updName = newProps.name;
+
+		if(updName !== 'undefined' && updName !== this.state.name) {
+			this.setState({
+				name: updName
+			});
+		}
+	},
 	handleChangeTeamName: function(event) {
 		this.setState({
 			name: event.target.value
@@ -40,6 +49,8 @@ const TeamName = React.createClass({
 		});
 	},
 	renderInput: function() {
+		console.log(this.state.name);
+
 		// It shows warning input when isShowError is true and team name input isn't focused on.
 		if(this.props.isShowError && !this.state.isFocused) {
 			return (

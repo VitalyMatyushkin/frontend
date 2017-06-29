@@ -388,9 +388,10 @@ const TeamWrapper = React.createClass({
 				const isError = errorData.isError && errorData.text === "Please enter team name";
 
 				return (
-					<TeamName	name				= { this.getDefaultBinding().toJS('teamName.name') }
-								handleChangeName	= { this.handleChangeName }
-								isShowError			= { isError }
+					<TeamName
+						name				= { this.getDefaultBinding().toJS('teamName.name') }
+						handleChangeName	= { this.handleChangeName }
+						isShowError			= { isError }
 					/>
 				);
 		}
