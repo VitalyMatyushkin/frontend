@@ -38,9 +38,8 @@ const OpponentSchoolManager = React.createClass({
 				event				= binding.toJS('model'),
 				newSchool			= binding.toJS('opponentSchoolManager.opponentSchoolInput.school');
 
-		const opponentSchoolIdIndex = event.invitedSchoolIds.find(schoolId => schoolId === opponentSchoolId);
-		event.invitedSchoolIds.splice(opponentSchoolIdIndex, 1);
-		event.invitedSchoolIds.push(newSchool.id);
+		const opponentSchoolIdIndex = event.invitedSchoolIds.findIndex(schoolId => schoolId === opponentSchoolId);
+		event.invitedSchoolIds[opponentSchoolIdIndex] = newSchool.id;
 
 		// change school on server
 		window.Server.schoolEventChangeOpponent.post(
