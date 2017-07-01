@@ -5,7 +5,7 @@ const	React						= require('react'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventHelper					= require('module/helpers/eventHelper'),
 		SportHelper					= require('module/helpers/sport_helper'),
-		RivalsHelper				= require('module/as_manager/pages/event/view/rivals/helpers/rivals_helper'),
+		RivalManager				= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
 		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames					= require('classnames'),
 		propz 						= require('propz'),
@@ -41,7 +41,7 @@ const Rivals = React.createClass({
 				viewMode	= binding.toJS('view_mode');
 
 		// Get main part of rivals
-		let		rivals		= RivalsHelper.getRivalsByEvent(this.props.activeSchoolId, viewMode, event);
+		let		rivals		= RivalManager.getRivalsByEvent(this.props.activeSchoolId, viewMode, event);
 
 		// Additional preparation
 		if(TeamHelper.isTeamSport(event)) {
@@ -50,24 +50,18 @@ const Rivals = React.createClass({
 				rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
 				this.initResultsForRival(rival, event);
 			});
-		} else if (TeamHelper.isIndividualSport(event)){
-			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
-				if (viewMode === 'general') {
-					rivals.forEach(rival => {
-						rival.isIndividualScoreAvailable = true;
-						rival.isTeamScoreWasChanged = false;
+		} else if(TeamHelper.isIndividualSport(event)) {
+			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+				rivals.forEach(rival => {
+					rival.isIndividualScoreAvailable = true;
+					rival.isTeamScoreWasChanged = false;
+
+					if (viewMode === 'general') {
 						rival.score = this.getExtraScoreForRival(rival);
+					}
+				});
 
-						this.addListenerForChangeMode();
-					});
-				} else {
-					rivals.forEach(rival => {
-						rival.isIndividualScoreAvailable = true;
-						rival.isTeamScoreWasChanged = false;
-
-						this.addListenerForChangeMode();
-					});
-				}
+				this.addListenerForChangeMode();
 			}
 		}
 

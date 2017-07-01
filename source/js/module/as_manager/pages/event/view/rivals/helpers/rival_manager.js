@@ -2,12 +2,11 @@ const	propz		= require('propz'),
 		TeamHelper	= require('module/ui/managers/helpers/team_helper'),
 		EventHelper	= require('module/helpers/eventHelper');
 
-const RivalsHelper = {
+const RivalManager = {
 	getRivalsByEvent: function(activeSchoolId, viewMode, event) {
 		const eventType = event.eventType;
 
 		let rivals = [];
-
 		if(TeamHelper.isTeamSport(event)) {
 			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
 				const	schoolsData	= event.schoolsData,
@@ -180,4 +179,4 @@ const RivalsHelper = {
 	}
 };
 
-module.exports = RivalsHelper;
+module.exports = RivalManager;
