@@ -49,8 +49,6 @@ const TeamName = React.createClass({
 		});
 	},
 	renderInput: function() {
-		console.log(this.state.name);
-
 		// It shows warning input when isShowError is true and team name input isn't focused on.
 		if(this.props.isShowError && !this.state.isFocused) {
 			return (
