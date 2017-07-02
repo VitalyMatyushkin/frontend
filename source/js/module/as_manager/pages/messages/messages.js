@@ -1,14 +1,15 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
 
-		RouterView	= require('module/core/router'),
-		Route		= require('module/core/route'),
-		SubMenu		= require('module/ui/menu/sub_menu'),
+		RouterView		= require('module/core/router'),
+		Route			= require('module/core/route'),
+		SubMenu			= require('module/ui/menu/sub_menu'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 
-		Inbox		= require('module/as_manager/pages/messages/inbox/inbox'),
-		Outbox		= require('module/as_manager/pages/messages/outbox/outbox'),
-		Archive		= require('module/as_manager/pages/messages/archive/archive');
+		Inbox			= require('module/as_manager/pages/messages/inbox/inbox'),
+		Outbox			= require('module/as_manager/pages/messages/outbox/outbox'),
+		Archive			= require('module/as_manager/pages/messages/archive/archive');
 
 const Messages = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -85,8 +86,9 @@ const Messages = React.createClass({
 		});
 	},
 	render: function () {
-		const	binding		= this.getDefaultBinding(),
-				rootBinging	= this.getMoreartyContext().getBinding();
+		const	binding			= this.getDefaultBinding(),
+				rootBinging		= this.getMoreartyContext().getBinding(),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
 			<div>
@@ -101,19 +103,22 @@ const Messages = React.createClass({
 							binding	= {rootBinging}
 						>
 							<Route
-								path		= '/messages/inbox'
-								binding		= {binding.sub('inbox')}
-								component	= {Inbox}
+								path			= '/messages/inbox'
+								binding			= {binding.sub('inbox')}
+								activeSchoolId	= {activeSchoolId}
+								component		= {Inbox}
 							/>
 							<Route
-								path		= '/messages/outbox'
-								binding		= {binding.sub('outbox')}
-								component	= {Outbox}
+								path			= '/messages/outbox'
+								binding			= {binding.sub('outbox')}
+								activeSchoolId	= {activeSchoolId}
+								component		= {Outbox}
 							/>
 							<Route
-								path		= '/messages/archive'
-								binding		= {binding.sub('archive')}
-								component	= {Archive}
+								path			= '/messages/archive'
+								binding			= {binding.sub('archive')}
+								activeSchoolId	= {activeSchoolId}
+								component		= {Archive}
 							/>
 						</RouterView>
 					</div>

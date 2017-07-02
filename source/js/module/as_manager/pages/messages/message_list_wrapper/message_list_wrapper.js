@@ -10,15 +10,17 @@ const	React				= require('react'),
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		messageType: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		messageType:	React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
-
 		this.loadAndSetMessages();
 	},
 	loadAndSetMessages: function() {
-		MessageListActions.loadMessages(this.props.messageType, this.activeSchoolId).then(messages => {
+		MessageListActions.loadMessages(
+			this.props.messageType,
+			this.props.activeSchoolId
+		).then(messages => {
 			this.getDefaultBinding().atomically()
 				.set('isSync',		true)
 				.set('messages',	Immutable.fromJS(messages))
@@ -41,7 +43,10 @@ const MessageListWrapper = React.createClass({
 	onActionForRefusalMessageByActionType: function(messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
-				MessageListActions.gotItRefusalMessage(this.activeSchoolId, messageId).then(() => {
+				MessageListActions.gotItRefusalMessage(
+					this.props.activeSchoolId,
+					messageId
+				).then(() => {
 					this.setSync(false);
 
 					this.loadAndSetMessages();
