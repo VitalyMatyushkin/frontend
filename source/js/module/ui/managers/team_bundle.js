@@ -1,29 +1,31 @@
 // Main components
-const	React		= require('react'),
-		Immutable	= require('immutable'),
-		Morearty	= require('morearty'),
-		classNames	= require('classnames');
+const	React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		classNames		= require('classnames');
 
 // Team bundle react components
-const	TeamChooser	= require('./teamChooser'),
-		TeamWrapper	= require('./team_wrapper');
+const	TeamChooser		= require('./teamChooser'),
+		TeamWrapper		= require('./team_wrapper');
 
 // Helpers
-const	TeamHelper	= require('module/ui/managers/helpers/team_helper');
+const	TeamHelper		= require('module/ui/managers/helpers/team_helper');
 
 // Style
 const	TeamBundleStyle	= require('../../../../styles/ui/teams_manager/b_team_bundle.scss');
 
 const TeamBundle = React.createClass({
 	mixins: [Morearty.Mixin],
-	TEAM_COUNT: 2,
+	listeners: [],
 	componentWillMount: function() {
 		const self = this;
 
 		self.initBinding();
 		self.addListeners();
 	},
-
+	componentWillUnmount: function() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
 	/** INIT FUNCTIONS **/
 	initBinding: function() {
 		const	self	= this;
@@ -72,7 +74,7 @@ const TeamBundle = React.createClass({
 	addTeamPlayersListenerByTeamIndex: function(binding, index) {
 		// if players were change
 		// add players from one team to blacklist of other team
-		binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
+		const listener = binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
 			const anotherRivalIndexArray = this.getAnotherRivalIndexArray(index);
 
 			anotherRivalIndexArray.forEach(index => {
@@ -88,6 +90,8 @@ const TeamBundle = React.createClass({
 				);
 			});
 		});
+
+		this.listeners.push(listener);
 	},
 	/**
 	 * Function adds listener for teamWrapper count
@@ -96,7 +100,7 @@ const TeamBundle = React.createClass({
 	addRivalsCountListener: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.sub(`rivalsCount`).addListener(descriptor => {
+		const listener = binding.sub(`rivalsCount`).addListener(descriptor => {
 			const	currentRivalsCount	= descriptor.getCurrentValue(),
 					prevRivalsCount		= descriptor.getPreviousValue();
 
@@ -110,6 +114,8 @@ const TeamBundle = React.createClass({
 				this.addTeamPlayersListenerByTeamIndex(binding, teamWrapperIndex);
 			}
 		});
+
+		this.listeners.push(listener);
 	},
 	/** HELPER FUNCTIONS **/
 	getTeamChooserBindings: function() {
