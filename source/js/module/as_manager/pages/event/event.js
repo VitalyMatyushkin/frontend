@@ -238,7 +238,7 @@ const Event = React.createClass({
 			eventData.individualScoreForRemove = [];
 
 			// TODO it's temp plug
-			this.fixvEventResultsData(eventData);
+			this.fixEventResultsData(eventData);
 
 			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
@@ -294,7 +294,7 @@ const Event = React.createClass({
 			});
 		}
 	},
-	fixvEventResultsData: function(eventData) {
+	fixEventResultsData: function(eventData) {
 		for(let key in eventData.results) {
 			eventData.results[key].forEach(resultsData => {
 				const score = propz.get(resultsData, ['richScore', 'result']);

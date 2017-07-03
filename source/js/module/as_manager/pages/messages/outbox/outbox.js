@@ -5,11 +5,15 @@ const	React				= require('react'),
 
 const Outbox = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	render: function() {
 		return (
 			<MessageListWrapper
-				binding		= {this.getDefaultBinding()}
-				messageType	= {MessageConsts.MESSAGE_TYPE.OUTBOX}
+				binding			= {this.getDefaultBinding()}
+				activeSchoolId	= {this.props.activeSchoolId}
+				messageType		= {MessageConsts.MESSAGE_TYPE.OUTBOX}
 			/>
 		);
 	}
