@@ -18,7 +18,10 @@ const	Manager							= require('../../../ui/managers/manager'),
 
 // Helpers
 const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wrapper_helper'),
+		NewManagerWrapperHelper			= require('../event/view/manager_wrapper/new_manager_wrapper_helper'),
+		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
+		RivalManager					= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
 		LocalEventHelper				= require('./eventHelper'),
@@ -154,11 +157,22 @@ const EventManager = React.createClass({
 	setEvent: function(eventId) {
 		const binding = this.getDefaultBinding();
 
+		let event;
+
 		// TODO check inter-schools case
 		return window.Server.schoolEvent.get({
 			schoolId	: this.activeSchoolId,
 			eventId		: eventId
-		}).then(event => {
+		})
+		.then(_event => {
+			event = _event;
+
+			return TeamHelper.getSchoolsArrayWithFullDataByEvent(event);
+		})
+		.then(schoolsData => {
+			// Schools data need for rival helper
+			event.schoolsData = schoolsData;
+
 			delete event.status;
 			// It's a convertation event data to EventForm component format,
 			// because event
@@ -171,15 +185,7 @@ const EventManager = React.createClass({
 				event.venue.postcodeData.id = postcodeId;
 			}
 
-			const rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
-			if(TeamHelper.isNonTeamSport(event)) {
-				rivals[0].players.forEach(p => {
-					p.id = p.userId;
-				});
-				rivals[1].players.forEach(p => {
-					p.id = p.userId;
-				});
-			}
+			const rivals = this.getRivals(event);
 
 			binding.atomically()
 				.set('isSubmitProcessing',				false)
@@ -201,6 +207,26 @@ const EventManager = React.createClass({
 
 			return true;
 		});
+	},
+	getRivals: function(event) {
+		let rivals;
+		if(NewEventHelper.isNewEvent(event)) {
+			const rivals = RivalManager.getRivalsByEvent(this.activeSchoolId, 'general', event);
+
+			return NewManagerWrapperHelper.getRivals(event, rivals);
+		} else {
+			rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
+			if(TeamHelper.isNonTeamSport(event)) {
+				rivals[0].players.forEach(p => {
+					p.id = p.userId;
+				});
+				rivals[1].players.forEach(p => {
+					p.id = p.userId;
+				});
+			}
+
+			return rivals;
+		}
 	},
 	convertServerGenderConstToClient: function(event) {
 		switch (event.gender) {

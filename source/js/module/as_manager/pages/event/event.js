@@ -142,9 +142,7 @@ const Event = React.createClass({
 		}).then(event => {
 			eventData = event;
 
-			return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
-				return window.Server.publicSchool.get(school.id);
-			}));
+			return TeamHelper.getSchoolsArrayWithFullDataByEvent(eventData);
 		}).then(schoolsData => {
 			eventData.schoolsData = schoolsData;
 				if(TeamHelper.isIndividualSport(eventData)) {
