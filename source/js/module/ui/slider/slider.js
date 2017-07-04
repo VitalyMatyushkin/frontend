@@ -30,7 +30,7 @@ const Slider = React.createClass({
 	getItems: function(){
 		return this.props.items.map((item, index) => {
 			const isShowing = this.state.currentSlide === index ? 'mShowing' : '';
-			return <div className={'eSchoolHeader_slider mTransitionImage ' + isShowing} style={{backgroundImage: 'url(' + item + ')'}} key={index}></div>
+			return <img className={'eSchoolHeader_slider mTransitionImage ' + isShowing} key={index} src={item}/>
 		});
 	},
 	 
@@ -40,7 +40,13 @@ const Slider = React.createClass({
 	},
 	
 	render: function(){
-		return <div>{this.getItems()}</div>
+		const imgSrc = this.props.items[0];
+		return (
+			<div>
+				<img src={imgSrc} style={{visibility:'hidden', maxWidth:'100%'}}/>
+				{this.getItems()}
+			</div>
+		);
 	}
 });
 
