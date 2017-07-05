@@ -3,9 +3,6 @@
  */
 const React = require('react');
 
-function getMaxOfArray(numArray) {
-	return Math.max.apply(null, numArray);
-}
 
 /**
  * Component slider that simply takes an array of pictures and outputs each in a separate div
@@ -18,19 +15,21 @@ const Slider = React.createClass({
 	
 	getInitialState: function() {
 		return {
-			currentSlide: 0,
-			maxHeights: []
+			currentSlide:	0,
+			intervalId:		undefined
 		}
 	},
 	
 	componentWillMount: function(){
-		this.intervalId = setInterval(() => {
+		const intervalId = setInterval(() => {
 			this.nextSlide();
 		}, 5000);
+		this.setState({intervalId: intervalId});
 	},
 	
 	componentWillUnmount: function(){
-		clearInterval(this.intervalId);
+		if(this.state.intervalId)
+			clearInterval(this.state.intervalId);
 	},
 	
 	getItems: function(){
@@ -41,38 +40,16 @@ const Slider = React.createClass({
 	},
 	 
 	nextSlide: function(){
-		const randIndexPos 	= Math.floor(Math.random() * this.props.items.length);
-		this.setState({currentSlide: randIndexPos});
-	},
-	
-	onLoadImage: function(e){
-		let arrayHeights = this.state.maxHeights;
-		
-		arrayHeights.push(e.target.height);
-		
-		this.setState({maxHeights: arrayHeights});
-	},
-	
-	renderInvisibleImages: function(){
-		return this.props.items.map( (img, index) => {
-			return <img key={index} onLoad={this.onLoadImage} src={img} style={{display:'none', maxWidth:'100%'}}/>
-		});
-	},
-		
-	renderMaxHeightImage: function(){
-		const maxHeight = getMaxOfArray(this.state.maxHeights);
-		if (maxHeight) {
-			return <img style={{visibility:'hidden', height: maxHeight, maxWidth:'100%'}}/>
-		} else {
-			return null;
-		}
+		const 	prevSlideIndex		= this.state.currentSlide,
+			 	totalSlidesCount	= this.props.items.length,
+				nextSlideIndex		= (prevSlideIndex + 1) % totalSlidesCount;
+
+		this.setState({currentSlide: nextSlideIndex});
 	},
 	
 	render: function(){
 		return (
 			<div>
-				{this.renderInvisibleImages()}
-				{this.renderMaxHeightImage()}
 				{this.getItems()}
 			</div>
 		);
