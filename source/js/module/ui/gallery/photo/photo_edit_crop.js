@@ -12,7 +12,7 @@ const 	ReactCropStylesCustom 	= require('styles/ui/gallery/b_photo_edit.scss'),
 //Documentation: https://github.com/DominicTobias/react-image-crop
 const 	ReactCropConfig = {
 	width : 100,
-	aspect: 16/9
+	aspect: 3/1
 };
 
 const PhotoEditCrop = React.createClass({
