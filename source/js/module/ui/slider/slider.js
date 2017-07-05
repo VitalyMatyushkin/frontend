@@ -2,6 +2,11 @@
  * Created by Woland on 11.03.2017.
  */
 const React = require('react');
+
+function getMaxOfArray(numArray) {
+	return Math.max.apply(null, numArray);
+}
+
 /**
  * Component slider that simply takes an array of pictures and outputs each in a separate div
  * Component change the picture randomly every 5s (use component state for re-render)
@@ -13,7 +18,8 @@ const Slider = React.createClass({
 	
 	getInitialState: function() {
 		return {
-			currentSlide: 0
+			currentSlide: 0,
+			maxHeights: []
 		}
 	},
 	
@@ -39,11 +45,34 @@ const Slider = React.createClass({
 		this.setState({currentSlide: randIndexPos});
 	},
 	
+	onLoadImage: function(e){
+		let arrayHeights = this.state.maxHeights;
+		
+		arrayHeights.push(e.target.height);
+		
+		this.setState({maxHeights: arrayHeights});
+	},
+	
+	renderInvisibleImages: function(){
+		return this.props.items.map( (img, index) => {
+			return <img key={index} onLoad={this.onLoadImage} src={img} style={{display:'none', maxWidth:'100%'}}/>
+		});
+	},
+		
+	renderMaxHeightImage: function(){
+		const maxHeight = getMaxOfArray(this.state.maxHeights);
+		if (maxHeight) {
+			return <img style={{visibility:'hidden', height: maxHeight, maxWidth:'100%'}}/>
+		} else {
+			return null;
+		}
+	},
+	
 	render: function(){
-		const imgSrc = this.props.items[0];
 		return (
 			<div>
-				<img src={imgSrc} style={{visibility:'hidden', maxWidth:'100%'}}/>
+				{this.renderInvisibleImages()}
+				{this.renderMaxHeightImage()}
 				{this.getItems()}
 			</div>
 		);
