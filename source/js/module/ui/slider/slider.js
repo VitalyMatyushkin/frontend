@@ -15,18 +15,21 @@ const Slider = React.createClass({
 	
 	getInitialState: function() {
 		return {
-			currentSlide:	0
+			currentSlide:	0,
+			intervalId:		undefined
 		}
 	},
 	
 	componentWillMount: function(){
-		this.intervalId = setInterval(() => {
+		const intervalId = setInterval(() => {
 			this.nextSlide();
 		}, 5000);
+		this.setState({intervalId: intervalId});
 	},
 	
 	componentWillUnmount: function(){
-		clearInterval(this.intervalId);
+		if(this.state.intervalId)
+			clearInterval(this.state.intervalId);
 	},
 	
 	getItems: function(){
@@ -37,8 +40,11 @@ const Slider = React.createClass({
 	},
 	 
 	nextSlide: function(){
-		const randIndexPos 	= Math.floor(Math.random() * this.props.items.length);
-		this.setState({currentSlide: randIndexPos});
+		const 	prevSlideIndex		= this.state.currentSlide,
+			 	totalSlidesCount	= this.props.items.length,
+				nextSlideIndex		= (prevSlideIndex + 1) % totalSlidesCount;
+
+		this.setState({currentSlide: nextSlideIndex});
 	},
 	
 	render: function(){
