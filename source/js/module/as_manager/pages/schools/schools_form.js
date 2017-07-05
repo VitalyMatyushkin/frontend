@@ -51,8 +51,8 @@ const SchoolForm = React.createClass({
 					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
 				],
 				publicStudentViewOptions = [
-					{ text: 'Shorten Last Name only', value: 'SHORTEN_LASTNAME_ONLY' },
-					{ text: 'Shorten First Name and Last Name', value: 'SHORTEN_FIRSTNAME_AND_LASTNAME' }
+					{ text: 'Shorten Last Name only (Brian S.)', value: 'SHORTEN_LASTNAME_ONLY' },
+					{ text: 'Shorten First Name and Last Name (B.S.)', value: 'SHORTEN_FIRSTNAME_AND_LASTNAME' }
 				],
 				postcode 	= binding.toJS('postcode');
 
