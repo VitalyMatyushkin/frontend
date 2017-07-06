@@ -6,26 +6,34 @@ const	React			= require('react'),
 const BigCalendar = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function() {
-		const	binding		= this.getDefaultBinding(),
-			currentDate	= binding.get('currentDate');
+		const binding = this.getDefaultBinding();
 
-		if (!currentDate) {
+		// init current date
+		if (typeof binding.get('currentDate') === 'undefined') {
 			binding.set('currentDate', (new Date()).toISOString());
 		}
 	},
 	setPrevMonth: function() {
-		const	binding		= this.getDefaultBinding(),
-				currentDate	= binding.get('currentDate'),
+		const	binding		= this.getDefaultBinding();
+
+		const	currentDate	= binding.get('currentDate'),
 				date		= new Date(currentDate);
 
-		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString());
+		binding.set(
+			'currentDate',
+			(new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString()
+		);
 	},
 	setNextMonth: function() {
-		const	binding		= this.getDefaultBinding(),
-				currentDate	= binding.get('currentDate'),
+		const	binding		= this.getDefaultBinding();
+
+		const	currentDate	= binding.get('currentDate'),
 				date		= new Date(currentDate);
 
-		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString());
+		binding.set(
+			'currentDate',
+			(new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString()
+		);
 	},
 	getWeeks: function() {
 		const	data		= {},
@@ -40,7 +48,7 @@ const BigCalendar = React.createClass({
 
 		let firstMonthDay, daysInMonth, weeksInView;
 
-		// Получение первого дня недели месяца
+		// get first day of month
 		monthDate.setFullYear(showedYear);
 		monthDate.setMonth(showedMonth);
 		monthDate.setDate(1);
@@ -48,11 +56,11 @@ const BigCalendar = React.createClass({
 		firstMonthDay = monthDate.getDay() - 1;
 		firstMonthDay = firstMonthDay === -1 ? 6 : firstMonthDay;
 
-		// Получение количества дней и недель в месяце
+		// get count of days and weeks from current month
 		daysInMonth = this.daysInMonth(date);
 		weeksInView = Math.ceil((firstMonthDay + daysInMonth) / 7);
 
-		// Добавление дней
+		// add days
 		data.weeks = [];
 
 		for (let i = 0; i < weeksInView; i++) {
@@ -79,16 +87,18 @@ const BigCalendar = React.createClass({
 
 		return data;
 	},
-	_getPlayerName: function(participan) {
+	_getPlayerName: function(participant) {
 		let name;
 
-		if (!participan) return '?';
+		if (typeof participant === 'undefined') {
+			name = '?';
+		} else {
+			name = participant.house && participant.house.name || participant.school && participant.school.name;
 
-		name = participan.house && participan.house.name || participan.school && participan.school.name;
-
-		// Внутреннее событие
-		if (participan.name) {
-			name = participan.name;
+			// internal game
+			if (participant.name) {
+				name = participant.name;
+			}
 		}
 
 		return name;
@@ -97,20 +107,23 @@ const BigCalendar = React.createClass({
 		return fixturesArray.map(function(fixture) {
 			const startTime = this.getTimeFromIso(fixture.startTime);
 
-			return (<a className="eBigCalendar_oneEvent" href={'/#event?id=' + fixture.id}>
-						<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
-						{this._getPlayerName(fixture.participants[0])} vs {this._getPlayerName(fixture.participants[1])}
-					</a>);
+			return (
+				<a className="eBigCalendar_oneEvent" href={'/#event?id=' + fixture.id}>
+					<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
+					{this._getPlayerName(fixture.participants[0])} vs {this._getPlayerName(fixture.participants[1])}
+				</a>
+			);
 		});
 	},
 	getCalendarNode: function(weeksData) {
-		const	binding			= this.getDefaultBinding(),
-				date			= new Date(binding.get('currentDate')),
+		const	binding			= this.getDefaultBinding();
+
+		const	date			= new Date(binding.get('currentDate')),
 				month			= date.getMonth(),
 				year			= date.getFullYear(),
 				monthFixtures	= binding.toJS('fixtures.' + year + '.' + month);
 
-		return  weeksData.map(function(oneWeek) {
+		return weeksData.map(function(oneWeek) {
 			const weekDays = oneWeek.map(function(oneDay) {
 				let dayFixtures,
 					dayFixturesNodes;
@@ -168,7 +181,7 @@ const BigCalendar = React.createClass({
 						{calendarNodes}
 					</div>
 				</div>
-		)
+		);
 	}
 });
 
