@@ -23,17 +23,24 @@ const HomeCalender = React.createClass({
 		CalendarActions.setPrevDaysFinishedEvents(activeSchoolId, binding, 365);
 	},
 
+	getMonthDate: function() {
+		const binding = this.getDefaultBinding().sub('events');
+
+		return typeof binding.get('monthDate') !== 'undefined' ? binding.get('monthDate') : new Date();
+	},
+
 	handleClickEvent: function(eventId: string) {
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 
 	render: function(){
-		const 	binding 					= this.getDefaultBinding().sub('events'),
-				activeSchoolId				= this.getMoreartyContext().getBinding().get('activeSchoolId'),
+		const	binding 					= this.getDefaultBinding().sub('events');
+
+		const	activeSchoolId				= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				todayDate					= binding.get('todayDate'),
 				selectedDate				= binding.get('selectedDate'),
 				isDistinctDatesInSync		= binding.get('distinctEventDatesData.isSync'),
-				monthDate					= isDistinctDatesInSync? binding.get('monthDate') : new Date(),
+				monthDate					= this.getMonthDate(),
 				distinctDates				= binding.get('distinctEventDatesData.dates'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				selectedDateEvents			= binding.get('selectedDateEventsData.events');
