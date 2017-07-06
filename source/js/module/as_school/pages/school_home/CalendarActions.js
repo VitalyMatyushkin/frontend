@@ -43,9 +43,13 @@ function loadMonthDistinctEventDatesToBinding(monthDate: Date, activeSchoolId: s
 
 	return window.Server.publicSchoolEventDates.get({ schoolId: activeSchoolId}, { filter: filter }).then( eventsData => {
 		const events = eventsData.dates.map( dateStr => new Date(dateStr));
-		eventsBinding.set('distinctEventDatesData.dates', Immutable.fromJS(events));
-		eventsBinding.set('monthDate', monthDate);
-		eventsBinding.set('distinctEventDatesData.isSync', true);
+
+		eventsBinding
+			.atomically()
+			.set('distinctEventDatesData.dates',	Immutable.fromJS(events))
+			.set('monthDate',						monthDate)
+			.set('distinctEventDatesData.isSync',	true)
+			.commit();
 	});
 
 }
@@ -88,8 +92,11 @@ function loadDailyEvents(date: Date, activeSchoolId: string, eventsBinding: any)
 
 	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter })
 		.then( eventsData => {
-			eventsBinding.set('selectedDateEventsData.events', Immutable.fromJS(eventsData));
-			eventsBinding.set('selectedDateEventsData.isSync', true);
+			eventsBinding
+				.atomically()
+				.set('selectedDateEventsData.events', Immutable.fromJS(eventsData))
+				.set('selectedDateEventsData.isSync', true)
+				.commit();
 
 			return true;
 	});
@@ -127,8 +134,11 @@ function setNextDaysEvents(activeSchoolId: string, eventsBinding: any, optDates:
 	};
 
 	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
-		eventsBinding.set('nextSevenDaysEvents.events', Immutable.fromJS(eventsData));
-		eventsBinding.set('nextSevenDaysEvents.isSync', true);
+		eventsBinding
+			.atomically()
+			.set('nextSevenDaysEvents.events',	Immutable.fromJS(eventsData))
+			.set('nextSevenDaysEvents.isSync',	true)
+			.commit();
 	});
 }
 
@@ -155,8 +165,11 @@ function setPrevDaysFinishedEvents(activeSchoolId: string, eventsBinding: any, o
 	};
 
 	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
-		eventsBinding.set('prevSevenDaysFinishedEvents.events', Immutable.fromJS(eventsData));
-		eventsBinding.set('prevSevenDaysFinishedEvents.isSync', true);
+		eventsBinding
+			.atomically()
+			.set('prevSevenDaysFinishedEvents.events',	Immutable.fromJS(eventsData))
+			.set('prevSevenDaysFinishedEvents.isSync',	true)
+			.commit();
 	});
 }
 

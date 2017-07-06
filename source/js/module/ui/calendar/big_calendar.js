@@ -1,52 +1,54 @@
-const 	DateTimeMixin 	= require('module/mixins/datetime'),
-		If 				= require('module/ui/if/if'),
-		Morearty        = require('morearty'),
-		React 			= require('react'),
-		ReactDOM 		= require('react-dom');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		DateTimeMixin	= require('module/mixins/datetime'),
+		If				= require('module/ui/if/if');
 
 const BigCalendar = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentDate = binding.get('currentDate');
+		const binding = this.getDefaultBinding();
 
-		if (!currentDate) {
+		// init current date
+		if (typeof binding.get('currentDate') === 'undefined') {
 			binding.set('currentDate', (new Date()).toISOString());
 		}
-
 	},
 	setPrevMonth: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentDate = binding.get('currentDate'),
-			date = new Date(currentDate);
+		const	binding		= this.getDefaultBinding();
 
-		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString());
+		const	currentDate	= binding.get('currentDate'),
+				date		= new Date(currentDate);
+
+		binding.set(
+			'currentDate',
+			(new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString()
+		);
 	},
 	setNextMonth: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentDate = binding.get('currentDate'),
-			date = new Date(currentDate);
+		const	binding		= this.getDefaultBinding();
 
-		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString());
+		const	currentDate	= binding.get('currentDate'),
+				date		= new Date(currentDate);
+
+		binding.set(
+			'currentDate',
+			(new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString()
+		);
 	},
 	getWeeks: function() {
-		var self = this,
-			data = {},
-			currentDay = 1,
-			binding = self.getDefaultBinding(),
-			date = new Date(binding.get('currentDate')),
-			todayDate = new Date(),
-			showedMonth = date.getMonth(),
-			showedYear = date.getFullYear(),
-			monthDate = new Date(),
-			firstMonthDay,
-			daysInMonth,
-			weeksInView;
+		const	data		= {},
+				binding		= this.getDefaultBinding(),
+				date		= new Date(binding.get('currentDate')),
+				todayDate	= new Date(),
+				showedMonth	= date.getMonth(),
+				showedYear	= date.getFullYear(),
+				monthDate	= new Date();
 
-		// Получение первого дня недели месяца
+		let currentDay = 1;
+
+		let firstMonthDay, daysInMonth, weeksInView;
+
+		// get first day of month
 		monthDate.setFullYear(showedYear);
 		monthDate.setMonth(showedMonth);
 		monthDate.setDate(1);
@@ -54,17 +56,17 @@ const BigCalendar = React.createClass({
 		firstMonthDay = monthDate.getDay() - 1;
 		firstMonthDay = firstMonthDay === -1 ? 6 : firstMonthDay;
 
-		// Получение количества дней и недель в месяце
-		daysInMonth = self.daysInMonth(date);
+		// get count of days and weeks from current month
+		daysInMonth = this.daysInMonth(date);
 		weeksInView = Math.ceil((firstMonthDay + daysInMonth) / 7);
 
-		// Добавление дней
+		// add days
 		data.weeks = [];
 
-		for (var i = 0; i < weeksInView; i++) {
+		for (let i = 0; i < weeksInView; i++) {
 			data.weeks[i] = [];
 
-			for (var j = 0; j < 7; j++) {
+			for (let j = 0; j < 7; j++) {
 				if (currentDay === 1 && j !== firstMonthDay || currentDay > daysInMonth) {
 					data.weeks[i].push({});
 				} else {
@@ -80,53 +82,54 @@ const BigCalendar = React.createClass({
 			}
 		}
 
-		data.monthName = self.monthNames[showedMonth];
+		data.monthName = this.monthNames[showedMonth];
 		data.yearName = showedYear;
 
 		return data;
 	},
-	_getPlayerName: function(participan) {
-		var self = this,
-			name;
+	_getPlayerName: function(participant) {
+		let name;
 
-		if (!participan) return '?';
+		if (typeof participant === 'undefined') {
+			name = '?';
+		} else {
+			name = participant.house && participant.house.name || participant.school && participant.school.name;
 
-		name = participan.house && participan.house.name || participan.school && participan.school.name;
-
-		// Внутреннее событие
-		if (participan.name) {
-			name = participan.name;
+			// internal game
+			if (participant.name) {
+				name = participant.name;
+			}
 		}
 
 		return name;
 	},
 	_getFixturesNode: function(fixturesArray) {
-		var self = this;
-
 		return fixturesArray.map(function(fixture) {
-			var startTime = self.getTimeFromIso(fixture.startTime);
+			const startTime = this.getTimeFromIso(fixture.startTime);
 
-			return (<a className="eBigCalendar_oneEvent" href={'/#event?id=' + fixture.id}>
-						<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
-						{self._getPlayerName(fixture.participants[0])} vs {self._getPlayerName(fixture.participants[1])}
-					</a>);
+			return (
+				<a className="eBigCalendar_oneEvent" href={'/#event?id=' + fixture.id}>
+					<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
+					{this._getPlayerName(fixture.participants[0])} vs {this._getPlayerName(fixture.participants[1])}
+				</a>
+			);
 		});
 	},
 	getCalendarNode: function(weeksData) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			date = new Date(binding.get('currentDate')),
-			month = date.getMonth(),
-			year = date.getFullYear(),
-			monthFixtures = binding.toJS('fixtures.' + year + '.' + month);
+		const	binding			= this.getDefaultBinding();
 
-		return  weeksData.map(function(oneWeek) {
-			var weekDays = oneWeek.map(function(oneDay) {
-				var dayFixtures,
+		const	date			= new Date(binding.get('currentDate')),
+				month			= date.getMonth(),
+				year			= date.getFullYear(),
+				monthFixtures	= binding.toJS('fixtures.' + year + '.' + month);
+
+		return weeksData.map(function(oneWeek) {
+			const weekDays = oneWeek.map(function(oneDay) {
+				let dayFixtures,
 					dayFixturesNodes;
 
 				if (monthFixtures && oneDay.date && (dayFixtures = monthFixtures[oneDay.date])){
-					dayFixturesNodes = self._getFixturesNode(dayFixtures);
+					dayFixturesNodes = this._getFixturesNode(dayFixtures);
 				}
 
 				return (
@@ -143,35 +146,31 @@ const BigCalendar = React.createClass({
 				);
 			});
 
-
-
-			return <div className="eBigCalendar_oneWeek">{weekDays}</div>
+			return (
+				<div className="eBigCalendar_oneWeek">{weekDays}</div>
+			);
 		});
 	},
 	getDaysOfWeekNodes: function() {
-		var self = this;
-
-		return self.daysOfWeekMedium.map(function(day) {
+		return this.daysOfWeekMedium.map(function(day) {
 			return (<div className="eBigCalendar_oneDay">{day}</div>);
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			monthData = self.getWeeks(),
-			calendarNodes = self.getCalendarNode(monthData.weeks),
-			daysOfWeekNodes = self.getDaysOfWeekNodes();
+		const	monthData		= this.getWeeks(),
+				calendarNodes	= this.getCalendarNode(monthData.weeks),
+				daysOfWeekNodes	= this.getDaysOfWeekNodes();
 
 		return (
 				<div className="bBigCalendar">
 					<div className="eBigCalendar_head">
-						<span className="bButton mGoLeft" onClick={self.setPrevMonth}>←</span>
+						<span className="bButton mGoLeft" onClick={this.setPrevMonth}>←</span>
 						<span className="eBigCalendar_currentSelect">
 							<span className="eBigCalendar_currentMonth">{monthData.monthName}</span>
 							<span className="eBigCalendar_currentYear">{monthData.yearName}</span>
 						</span>
 
-						<span className="bButton mGoRight" onClick={self.setNextMonth}>→</span>
+						<span className="bButton mGoRight" onClick={this.setNextMonth}>→</span>
 					</div>
 
 					<div className="eBigCalendar_oneWeek mDayNames">
@@ -182,7 +181,7 @@ const BigCalendar = React.createClass({
 						{calendarNodes}
 					</div>
 				</div>
-		)
+		);
 	}
 });
 
