@@ -295,12 +295,15 @@ const Event = React.createClass({
 	},
 	fixEventResultsData: function(eventData) {
 		for(let key in eventData.results) {
-			eventData.results[key].forEach(resultsData => {
-				const score = propz.get(resultsData, ['richScore', 'result']);
-				if(typeof score !== 'undefined') {
-					delete resultsData.richScore.result
-				}
-			});
+			const results = eventData.results[key];
+			if(Array.isArray(results)) {
+				results.forEach(resultsData => {
+					const score = propz.get(resultsData, ['richScore', 'result']);
+					if(typeof score !== 'undefined') {
+						delete resultsData.richScore.result
+					}
+				});
+			}
 		}
 
 		console.log(eventData);
