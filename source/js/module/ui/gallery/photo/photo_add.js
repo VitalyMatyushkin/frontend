@@ -12,7 +12,7 @@ const 	PhotoAddStyles 	= require('styles/ui/gallery/b_photo_add.scss'),
 
 const 	ReactCropConfig = {
 	width : 100,
-	aspect: 16/9
+	aspect: 3/1
 };
 
 const PhotoAddComponent = React.createClass({

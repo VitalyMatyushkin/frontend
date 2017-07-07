@@ -11,6 +11,7 @@ const 	React 		= require('react'),
 const MaskedPoints = React.createClass({
 	propTypes:{
 		plainPoints:	React.PropTypes.number.isRequired,
+		value:			React.PropTypes.string,
 		mask:			React.PropTypes.string.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
 		/**
@@ -37,7 +38,7 @@ const MaskedPoints = React.createClass({
 	getInitialState:function(){
 		return {
 			error: 			false,
-			stringValue: 	'' 					//string value from component MaskedInput
+			stringValue: 	typeof this.props.value !== 'undefined' ? this.props.value : ''	//string value from component MaskedInput
 		};
 	},
 	componentWillMount:function(){

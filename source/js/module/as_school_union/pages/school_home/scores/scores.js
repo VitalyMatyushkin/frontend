@@ -3,6 +3,7 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		ScoreTable						= require('./score_table/score_table'),
 		SportSelector					= require('./sport_selector'),
+		ScoreTableHelper				= require('module/as_school_union/pages/school_home/scores/score_table/helpers/score_table_helper'),
 		SchoolUnionSeasonScoresStyles	= require('../../../../../../styles/ui/b_school_union_season_scores.scss');
 
 const Scores = React.createClass({
@@ -24,17 +25,21 @@ const Scores = React.createClass({
 
 		window.Server.publicSchoolSports.get(activeSchoolId, filter)
 			.then(sports => {
-				const favoriteSports = this.filterFavoriteSports(sports);
+				//const favoriteSports = this.filterFavoriteSports(sports);
+				//
+				//let resultSports;
+				//if(favoriteSports.length > 0) {
+				//	resultSports = favoriteSports;
+				//} else {
+				//	resultSports = sports;
+				//}
 
-				let resultSports;
-				if(favoriteSports.length > 0) {
-					resultSports = favoriteSports;
-				} else {
-					resultSports = sports;
-				}
+				// TODO It's temporary.
+				const resultSports = sports.filter(s => s.isFavorite || s.name === ScoreTableHelper.OVERALL_RESULTS);
 
+				// TODO It's temporary
 				// up 'Overall Results' sport to first place
-				const index = resultSports.findIndex(s => s.name === 'Overall results');
+				const index = resultSports.findIndex(s => s.name === ScoreTableHelper.OVERALL_RESULTS);
 				if(index !== -1) {
 					resultSports.unshift(
 						resultSports.splice(index, 1)[0]
@@ -48,7 +53,7 @@ const Scores = React.createClass({
 					.commit();
 			});
 
-		this.getDefaultBinding().sub('currentSport').addListener(eventDescriptor => {
+		binding.sub('currentSport').addListener(eventDescriptor => {
 			const 	activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					sportId = binding.get('isSyncSports') ? eventDescriptor.getCurrentValue().toJS().id : null;
 
@@ -60,9 +65,15 @@ const Scores = React.createClass({
 						}
 					}
 				}).then(scores => {
-					binding.atomically()
-					.set('scores',			Immutable.fromJS(scores))
-					.commit();
+					if(binding.toJS('currentSport').name === 'Netball') {
+						for(let schoolId in scores) {
+							const scoreData = scores[schoolId];
+
+							scoreData.points = 3 * scoreData.won + 2 * scoreData.drew + scoreData.lost;
+						}
+					}
+
+					binding.set('scores', Immutable.fromJS(scores));
 				});
 			}
 
@@ -86,7 +97,10 @@ const Scores = React.createClass({
 		const binding = this.getDefaultBinding();
 		if (typeof binding.toJS('scores') !== 'undefined') {
 			return (
-				<ScoreTable scores={binding.toJS('scores')}/>
+				<ScoreTable
+					sport	= { binding.toJS('currentSport') }
+					scores	= { binding.toJS('scores') }
+				/>
 			);
 		} else {
 			return null;

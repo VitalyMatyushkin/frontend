@@ -82,7 +82,6 @@
      border: solid 1px #d2d2d2;
      color: $darkGrey;
      cursor: default;
-     pointer-events: none;
    }
 
   &.mCircle {
@@ -270,3 +269,19 @@
      color: $textColor;
    }
  }
+
+.eButton_link {
+  color: inherit;
+}
+
+.eButton_link:visited {
+  color:inherit;
+}
+
+.eButton_link:hover {
+  color:inherit;
+}
+
+.eButton_link:active {
+  color:inherit;
+}

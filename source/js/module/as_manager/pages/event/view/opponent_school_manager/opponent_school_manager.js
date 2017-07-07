@@ -23,6 +23,9 @@ const OpponentSchoolManager = React.createClass({
 			.set('schoolSelectorKey',	Immutable.fromJS(this.getRandomString()))
 			.commit();
 	},
+	componentWillUnmount: function() {
+		this.getDefaultBinding().sub('opponentSchoolManager').clear();
+	},
 	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
@@ -35,9 +38,8 @@ const OpponentSchoolManager = React.createClass({
 				event				= binding.toJS('model'),
 				newSchool			= binding.toJS('opponentSchoolManager.opponentSchoolInput.school');
 
-		const opponentSchoolIdIndex = event.invitedSchoolIds.find(schoolId => schoolId === opponentSchoolId);
-		event.invitedSchoolIds.splice(opponentSchoolIdIndex, 1);
-		event.invitedSchoolIds.push(newSchool.id);
+		const opponentSchoolIdIndex = event.invitedSchoolIds.findIndex(schoolId => schoolId === opponentSchoolId);
+		event.invitedSchoolIds[opponentSchoolIdIndex] = newSchool.id;
 
 		// change school on server
 		window.Server.schoolEventChangeOpponent.post(

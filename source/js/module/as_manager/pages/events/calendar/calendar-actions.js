@@ -68,7 +68,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 	eventsBinding.set('selectedDateEventsData.isSync', false);
 
 	const filter = {
-		limit: 100,
+		limit: 200,
 		where: {
 			startTime: {			// strict time gaps
 				$gte: dayStart,

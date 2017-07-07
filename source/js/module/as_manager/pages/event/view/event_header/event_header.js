@@ -76,14 +76,14 @@ const EventHeader = React.createClass({
 						onClick		= { () => {this.props.onClickViewMode('general')} }
 						key 		= "general"
 					>
-						Show Separate
+						View by teams
 					</a>
 					<a
 						className 	= "eEventViewModeLink"
 						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
 						key 		= "showAll"
 					>
-						Show All
+						View all
 					</a>
 				</div>
 			);

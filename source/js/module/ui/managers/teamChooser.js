@@ -4,6 +4,7 @@ const	React			= require('react'),
 		classNames		= require('classnames'),
 		Morearty		= require('morearty'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		Button			= require('module/ui/button/button'),
 		Immutable		= require('immutable');
 
 const	TeamChooser	= React.createClass({
@@ -113,7 +114,7 @@ const	TeamChooser	= React.createClass({
 		const	binding			= this.getDefaultBinding(),
 				teamIdBlackList	= binding.toJS('teamIdBlackList');
 
-		return Boolean(teamIdBlackList.find(t => t.id === teamId));
+		return teamIdBlackList.findIndex(_teamId => _teamId === teamId) !== -1;
 	},
 	_renderTeamList: function() {
 		const	self			= this,
@@ -146,7 +147,7 @@ const	TeamChooser	= React.createClass({
 		} else if(teams && teams.length !== 0) {
 			teamItems = teams
 				// filter black list teams and selected team
-				.filter(team => team.id !== selectedTeamId && !this.isBlackListTeam(teams[0].id))
+				.filter(team => team.id !== selectedTeamId && !this.isBlackListTeam(team.id))
 				.map((team, index) => {
 					const teamClass = classNames({
 						eTeamChooser_team:	true,
@@ -234,18 +235,20 @@ const	TeamChooser	= React.createClass({
 	},
 	_renderRevertButton: function() {
 		const	self					= this,
+				isDisabled				= !self._isTeamSelected(),
 				classNameRevertButton	= classNames({
 					bButton:				true,
 					mCancel:				true,
-					mDisable:				!self._isTeamSelected()
+					mDisable:				isDisabled
 				});
 
 		return (
-			<button	className	= {classNameRevertButton}
-					onClick		= {self._onTeamDeselectButtonClick}
-			>
-				Deselect Team
-			</button>
+			<Button
+					text				= {'Deselect Team'}
+					onClick				= {self._onTeamDeselectButtonClick}
+					extraStyleClasses	= {classNameRevertButton}
+					isDisabled			= {isDisabled}
+			/>
 		);
 	},
 	_renderTeamChooserButton: function() {

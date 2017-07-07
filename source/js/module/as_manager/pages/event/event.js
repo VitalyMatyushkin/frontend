@@ -43,7 +43,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		ConfirmPopup 					= require('module/ui/confirm_popup'),
 		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
-		SelectForCricketWrapperStyles 	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss');
+		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
+		propz							= require('propz');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -141,9 +142,7 @@ const Event = React.createClass({
 		}).then(event => {
 			eventData = event;
 
-			return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
-				return window.Server.publicSchool.get(school.id);
-			}));
+			return TeamHelper.getSchoolsArrayWithFullDataByEvent(eventData);
 		}).then(schoolsData => {
 			eventData.schoolsData = schoolsData;
 				if(TeamHelper.isIndividualSport(eventData)) {
@@ -238,6 +237,9 @@ const Event = React.createClass({
 			eventData.matchReport = report.content;
 			eventData.individualScoreForRemove = [];
 
+			// TODO it's temp plug
+			this.fixEventResultsData(eventData);
+
 			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
 				.set('model',								Immutable.fromJS(eventData))
@@ -291,6 +293,18 @@ const Event = React.createClass({
 				}
 			});
 		}
+	},
+	fixEventResultsData: function(eventData) {
+		for(let key in eventData.results) {
+			eventData.results[key].forEach(resultsData => {
+				const score = propz.get(resultsData, ['richScore', 'result']);
+				if(typeof score !== 'undefined') {
+					delete resultsData.richScore.result
+				}
+			});
+		}
+
+		console.log(eventData);
 	},
 	loadParentalConsentMessages: function() {
 		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {

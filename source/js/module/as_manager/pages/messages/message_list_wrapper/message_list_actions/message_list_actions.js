@@ -28,9 +28,9 @@ const MessageListActions = {
 			{
 				schoolId: activeSchoolId,
 				filter: {
-					limit: 1000
-				},
-				order: 'updatedAt DESC'
+					limit: 1000,
+					order: 'updatedAt DESC'
+				}
 			}
 		);
 	},
@@ -39,9 +39,9 @@ const MessageListActions = {
 			{
 				schoolId: activeSchoolId,
 				filter: {
-					limit: 1000
-				},
-				order: 'updatedAt DESC'
+					limit: 1000,
+					order: 'updatedAt DESC'
+				}
 			}
 		);
 	},
@@ -50,9 +50,9 @@ const MessageListActions = {
 			{
 				schoolId: activeSchoolId,
 				filter: {
-					limit: 1000
-				},
-				order: 'updatedAt DESC'
+					limit: 1000,
+					order: 'updatedAt DESC'
+				}
 			}
 		);
 	},

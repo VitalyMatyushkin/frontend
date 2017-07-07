@@ -67,8 +67,6 @@ const EventInvitationMessage = React.createClass({
 		}
 	},
 	render: function() {
-		console.log(this.props.message);
-
 		return (
 			<div className='bInvite'>
 				<div className="row">

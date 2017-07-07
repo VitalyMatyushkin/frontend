@@ -1,6 +1,7 @@
 const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable');
+		Immutable						= require('immutable'),
+		debounce						= require('debounce');
 
 // Main components
 const	classNames						= require('classnames'),
@@ -17,7 +18,10 @@ const	Manager							= require('../../../ui/managers/manager'),
 
 // Helpers
 const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wrapper_helper'),
+		NewManagerWrapperHelper			= require('../event/view/manager_wrapper/new_manager_wrapper_helper'),
+		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
+		RivalManager					= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
 		LocalEventHelper				= require('./eventHelper'),
@@ -31,6 +35,16 @@ const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_m
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
+	onDebounceChangeSaveButtonState: undefined,
+	/**
+	 * Function check manager data and set corresponding value to isControlButtonActive
+	 */
+	changeSaveButtonState: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('isSaveButtonActive', this.isSaveButtonActive());
+	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -76,7 +90,8 @@ const EventManager = React.createClass({
 			isSavingChangesModePopupOpen: false,
 			fartherThen: LocalEventHelper.distanceItems[0].id,
 			eventFormOpponentSchoolKey: undefined,
-			isShowAllSports: false
+			isShowAllSports: false,
+			isSaveButtonActive: false
 		});
 	},
 	componentWillMount: function () {
@@ -104,6 +119,9 @@ const EventManager = React.createClass({
 					.set('isEventManagerSync',	true)
 					.commit();
 			});
+
+		// create debounce decorator for changeControlButtonState func
+		this.onDebounceChangeSaveButtonState = debounce(this.changeSaveButtonState, 200);
 	},
 	isShowAddTeamButton: function() {
 		const	binding	= this.getDefaultBinding();
@@ -139,11 +157,22 @@ const EventManager = React.createClass({
 	setEvent: function(eventId) {
 		const binding = this.getDefaultBinding();
 
+		let event;
+
 		// TODO check inter-schools case
 		return window.Server.schoolEvent.get({
 			schoolId	: this.activeSchoolId,
 			eventId		: eventId
-		}).then(event => {
+		})
+		.then(_event => {
+			event = _event;
+
+			return TeamHelper.getSchoolsArrayWithFullDataByEvent(event);
+		})
+		.then(schoolsData => {
+			// Schools data need for rival helper
+			event.schoolsData = schoolsData;
+
 			delete event.status;
 			// It's a convertation event data to EventForm component format,
 			// because event
@@ -156,15 +185,7 @@ const EventManager = React.createClass({
 				event.venue.postcodeData.id = postcodeId;
 			}
 
-			const rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
-			if(TeamHelper.isNonTeamSport(event)) {
-				rivals[0].players.forEach(p => {
-					p.id = p.userId;
-				});
-				rivals[1].players.forEach(p => {
-					p.id = p.userId;
-				});
-			}
+			const rivals = this.getRivals(event);
 
 			binding.atomically()
 				.set('isSubmitProcessing',				false)
@@ -186,6 +207,26 @@ const EventManager = React.createClass({
 
 			return true;
 		});
+	},
+	getRivals: function(event) {
+		let rivals;
+		if(NewEventHelper.isNewEvent(event)) {
+			const rivals = RivalManager.getRivalsByEvent(this.activeSchoolId, 'general', event);
+
+			return NewManagerWrapperHelper.getRivals(event, rivals);
+		} else {
+			rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
+			if(TeamHelper.isNonTeamSport(event)) {
+				rivals[0].players.forEach(p => {
+					p.id = p.userId;
+				});
+				rivals[1].players.forEach(p => {
+					p.id = p.userId;
+				});
+			}
+
+			return rivals;
+		}
 	},
 	convertServerGenderConstToClient: function(event) {
 		switch (event.gender) {
@@ -362,13 +403,26 @@ const EventManager = React.createClass({
 			.set('selectedRivalIndex', incorrectRivalIndex)
 			.commit();
 	},
+	isSaveButtonActive: function() {
+		const binding = this.getDefaultBinding();
+
+		if(
+			binding.get('isTeamManagerSync') &&
+			!binding.get('isSubmitProcessing') &&
+			this._isStepComplete(2)
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	},
 	handleClickFinishButton: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(self._isStepComplete(2) && !binding.get('isSubmitProcessing') && binding.get('isTeamManagerSync')) {
+		if(this.isSaveButtonActive()) {
 			const	event			= binding.toJS('model'),
 					teamWrappers	= this.getTeamWrappers(),
 					validationData	= [
@@ -558,38 +612,46 @@ const EventManager = React.createClass({
 
 		const step = binding.get('step');
 
-		switch (true) {
-			case step === 1:
-				const continueButtonClassName = classNames({
-					mWidth		: true,
-					mDisable	: !self._isStepComplete(1)
-				});
+		switch(step) {
+			case 1: {
+				const isDisabled = !self._isStepComplete(1),
+					continueButtonClassName = classNames({
+						mWidth: true,
+						mDisable: isDisabled
+					});
 
 				return (
 					<div className="eManager_controlButtons">
-						<Button	text				= "Continue"
-								onClick				= {this.toNext}
-								extraStyleClasses	= {continueButtonClassName}
+						<Button
+							text="Continue"
+							onClick={this.toNext}
+							extraStyleClasses={continueButtonClassName}
+							isDisabled={isDisabled}
 						/>
 					</div>
 				);
-			case step === 2:
-				const finishButtonClassName = classNames({
-					mFinish:	true
-				});
+			}
+			case 2: {
+				const isDisabled = !this.getDefaultBinding().toJS('isSaveButtonActive'),
+					finishButtonClassName = classNames({
+						mFinish: true,
+						mDisable: isDisabled
+					});
 
 				return (
 					<div className="eTeamManagerWrapper_footer">
-						<Button	text				= "Back"
-								onClick				= {this.toBack}
-								extraStyleClasses	= {"mCancel mMarginRight"}
+						<Button text="Back"
+								onClick={this.toBack}
+								extraStyleClasses={"mCancel mMarginRight"}
 						/>
-						<Button	text				= "Finish"
-								onClick				= {this.handleClickFinishButton}
-								extraStyleClasses	= {finishButtonClassName}
+						<Button text="Finish"
+								onClick={this.handleClickFinishButton}
+								extraStyleClasses={finishButtonClassName}
+								isDisabled={isDisabled}
 						/>
 					</div>
 				);
+			}
 		}
 	},
 	_isStepComplete: function(step) {
@@ -668,6 +730,13 @@ const EventManager = React.createClass({
 	showSavingChangesModePopup: function() {
 		this.getDefaultBinding().set('isSavingChangesModePopupOpen', true);
 	},
+	checkSaveButtonState: function() {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isSaveButtonActive') !== this.isSaveButtonActive()) {
+			typeof this.onDebounceChangeSaveButtonState !== 'undefined' && this.onDebounceChangeSaveButtonState();
+		}
+	},
 	renderEventManagerBase: function() {
 		const	binding				= this.getDefaultBinding(),
 				isEventManagerSync	= binding.get('isEventManagerSync');
@@ -718,6 +787,12 @@ const EventManager = React.createClass({
 					bManager			: step === 1,
 					bTeamManagerWrapper : step === 2
 				});
+
+		if(step === 2) {
+			// check control button state
+			// and if state was changed then call debounce decorator for changeControlButtonState
+			this.checkSaveButtonState();
+		}
 
 		return (
 			<div>

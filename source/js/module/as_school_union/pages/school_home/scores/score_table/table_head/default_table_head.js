@@ -1,14 +1,14 @@
 const	React		= require('react'),
-		Bootstrap  	= require('../../../../../../../styles/bootstrap-custom.scss');
+		Bootstrap  	= require('../../../../../../../../styles/bootstrap-custom.scss');
 
-const TableHead = React.createClass({
-
+const DefaultTableHead = React.createClass({
 	render: function(){
 		return (
 			<thead>
 			<tr>
 				<th>#</th>
 				<th>Team</th>
+				<th>Scores</th>
 				<th>Total</th>
 				<th>Won</th>
 				<th>Lost</th>
@@ -19,4 +19,4 @@ const TableHead = React.createClass({
 	}
 });
 
-module.exports = TableHead;
+module.exports = DefaultTableHead;

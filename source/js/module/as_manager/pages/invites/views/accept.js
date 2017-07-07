@@ -1,8 +1,10 @@
 const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable');
+		Immutable						= require('immutable'),
+		debounce						= require('debounce');
 
 const	Promise							= require('bluebird'),
+		classNames						= require('classnames'),
 		Button							= require('../../../../ui/button/button');
 
 const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
@@ -19,6 +21,17 @@ const InviteAcceptView = React.createClass({
     // Will set on componentWillMount event
     activeSchoolId: undefined,
     display: 'InviteAccept',
+	// debounce decorator for changeControlButtonState func
+	onDebounceChangeControlButtonState: undefined,
+	/**
+	 * Function check manager data and set corresponding value to isControlButtonActive
+	 */
+	changeControlButtonState: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		binding.set('isControlButtonActive', this.isControlButtonActive());
+	},
     componentWillMount: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
@@ -31,58 +44,60 @@ const InviteAcceptView = React.createClass({
 		binding.set('isSavingChangesModePopupOpen', false);
         let invite;
         window.Server.schoolInvite.get({schoolId: self.activeSchoolId, inviteId: inviteId})
-        .then(_invite => {
-            invite = _invite;
+			.then(_invite => {
+				invite = _invite;
 
-            return window.Server.school.get(self.activeSchoolId)
-            .then(currentSchool => {
-                invite.invitedSchool = currentSchool;
+				return window.Server.school.get(self.activeSchoolId)
+				.then(currentSchool => {
+					invite.invitedSchool = currentSchool;
 
-                return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
-            })
-            .then(_ => {
-                return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
-                    invite.inviterSchool = inviterSchool;
+					return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
+				})
+				.then(_ => {
+					return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
+						invite.inviterSchool = inviterSchool;
 
-                    return window.Server.publicSchoolForms.get(invite.inviterSchoolId, {filter:{limit:1000}}).then(forms => inviterSchool.forms = forms);
-                });
-            })
-            .then(_ => {
-                return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
-            })
-            .then(event => {
-                invite.event = event;
+						return window.Server.publicSchoolForms.get(invite.inviterSchoolId, {filter:{limit:1000}}).then(forms => inviterSchool.forms = forms);
+					});
+				})
+				.then(_ => {
+					return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
+				})
+				.then(event => {
+					invite.event = event;
 
-                return window.Server.sport.get(event.sportId).then(sport => invite.event.sport = sport);
-            });
-        })
-        .then(() => {
-            binding.atomically()
-                .set('invite', Immutable.fromJS(invite))
-                //TODO wtf??
-                .set('model', Immutable.fromJS(invite.event))
-                .set('model.sportModel', Immutable.fromJS(invite.event.sport))
-                .set('rivals', Immutable.fromJS([invite.invitedSchool, invite.inviterSchool]))
-                .set('players', Immutable.fromJS([[],[]]))
-                .set('sync', true)
-                .set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
-                //TODO wtf??
-                .set('selectedRivalIndex', Immutable.fromJS(0))
-                //TODO wtf??
-                .set('error', Immutable.fromJS([
-                    {
-                        isError: false,
-                        text: ""
-                    },
-                    {
-                        isError: false,
-                        text: ""
-                    }
-                ]))
-                .commit();
+					return window.Server.sport.get(event.sportId).then(sport => invite.event.sport = sport);
+				});
+			})
+			.then(() => {
+				binding.atomically()
+					.set('invite', Immutable.fromJS(invite))
+					//TODO wtf??
+					.set('model', Immutable.fromJS(invite.event))
+					.set('model.sportModel', Immutable.fromJS(invite.event.sport))
+					.set('rivals', Immutable.fromJS([invite.invitedSchool, invite.inviterSchool]))
+					.set('players', Immutable.fromJS([[],[]]))
+					.set('sync', true)
+					.set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
+					.set('selectedRivalIndex', Immutable.fromJS(0))
+					.set('isControlButtonActive', false)
+					.set('error', Immutable.fromJS([
+						{
+							isError: false,
+							text: ""
+						},
+						{
+							isError: false,
+							text: ""
+						}
+					]))
+					.commit();
 
-			self.addListeners();
-        });
+				// create debounce decorator for changeControlButtonState func
+				this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 200);
+
+				self.addListeners();
+			});
     },
 	addListeners: function() {
 		this.addListenerForTeamManager();
@@ -114,19 +129,11 @@ const InviteAcceptView = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
-				teamWrappers	= this.getTeamWrappers(),
-				validationData	= [
-					binding.toJS('error.0'),
-					binding.toJS('error.1')
-				];
+				teamWrappers	= this.getTeamWrappers();
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(
-			binding.toJS('isTeamManagerSync') &&
-			!binding.toJS('isSubmitProcessing') &&
-			TeamHelper.isTeamDataCorrect(event, validationData)
-		) {
+		if(this.isControlButtonActive()) {
 			switch (true) {
 				case (
 						TeamHelper.isTeamSport(event) &&
@@ -244,6 +251,39 @@ const InviteAcceptView = React.createClass({
 
         return !self.getDefaultBinding().toJS('error.0').isError;
     },
+	isControlButtonActive: function() {
+		const	binding			= this.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				validationData	= [
+					binding.toJS('error.0'),
+					binding.toJS('error.1')
+				];
+
+		if(
+			binding.toJS('isTeamManagerSync') &&
+			!binding.toJS('isSubmitProcessing') &&
+			TeamHelper.isTeamDataCorrect(event, validationData)
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	checkControlButtonState: function() {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isControlButtonActive') !== this.isControlButtonActive()) {
+			typeof this.onDebounceChangeControlButtonState !== 'undefined' && this.onDebounceChangeControlButtonState();
+		}
+	},
+
+	getSaveButtonStyleClass: function() {
+		return classNames({
+			'mButton_leftSidePosition'	: true,
+			'mDisable'			: !this.getDefaultBinding().toJS('isControlButtonActive')
+		});
+	},
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -257,6 +297,11 @@ const InviteAcceptView = React.createClass({
             sport = binding.sub('model.sport');
 
 		if(!!binding.get('sync')) {
+
+			// check control button state
+			// and if state was changed then call debounce decorator for changeControlButtonState
+			this.checkControlButtonState();
+
 			return (
 				<div className="bInviteAccept">
 					<div className="bTeamManagerWrapper">
@@ -267,7 +312,7 @@ const InviteAcceptView = React.createClass({
 						<div className="eTeamManagerWrapper_footer">
 							<Button	text				= "Accept"
 									onClick				= {this.onClickAccept}
-									extraStyleClasses	= {'mButton_leftSidePosition'}
+									extraStyleClasses	= {this.getSaveButtonStyleClass()}
 							/>
 						</div>
 					</div>

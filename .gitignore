@@ -30,6 +30,9 @@ build
 # Dependency directory
 node_modules
 
+# npm
+package-lock.json
+
 #IDE
 .idea
 *.iml
@@ -44,3 +47,6 @@ dist
 
 #VERSION file
 VERSION.txt
+
+# OS files
+.DS_Store

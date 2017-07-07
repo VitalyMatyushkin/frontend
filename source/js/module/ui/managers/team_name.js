@@ -22,6 +22,15 @@ const TeamName = React.createClass({
 			name: this.props.name
 		});
 	},
+	componentWillReceiveProps: function(newProps) {
+		const updName = newProps.name;
+
+		if(updName !== 'undefined' && updName !== this.state.name) {
+			this.setState({
+				name: updName
+			});
+		}
+	},
 	handleChangeTeamName: function(event) {
 		this.setState({
 			name: event.target.value
