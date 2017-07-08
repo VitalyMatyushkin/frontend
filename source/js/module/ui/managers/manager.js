@@ -439,11 +439,57 @@ const Manager = React.createClass({
 
 		this.validate(newRivalIndex);
 	},
-	handleClickAddTeam: function() {
+	addNewEmptyRivalForInterSchoolsEvent: function(schoolId) {
+		const	binding			= this.getDefaultBinding(),
+				rivals			= this.getBinding().rivals.toJS(),
+				teamModeView	= binding.toJS('teamModeView');
+
+		// TODO This is not a very clear line of code
+		// I think we need model for rivals(react class).
+		const baseRival = rivals.find(r => r.id === schoolId);
+
+		rivals.push(Object.assign(baseRival));
+
+		this.getBinding().rivals.set(Immutable.fromJS(rivals));
+
+		const newRivalIndex = rivals.length - 1;
+		// push empty players array
+		teamModeView.players.push(
+			this.getInitPlayersByOrder(newRivalIndex)
+		);
+
+		// push empty team table model to team table array
+		teamModeView.teamTable.push(
+			this.getTeamTableByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.teamWrapper.push(
+			this.getTeamWrapperByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.rivalsCount = rivals.length;
+
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+
+		const error = this.getBinding('error').toJS();
+		error.push({
+			isError:	false,
+			text:		''
+		});
+		this.getBinding('error').set(Immutable.fromJS(error));
+
+		// add listeners
+		this.addTeamWrapperListenersByIndex(newRivalIndex);
+
+		this.validate(newRivalIndex);
+	},
+	handleClickAddTeam: function(schoolId) {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
-		if(TeamHelper.isInternalEventForTeamSport(event)) {
+		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
+			this.addNewEmptyRivalForInterSchoolsEvent(schoolId)
+		} else if(TeamHelper.isInternalEventForTeamSport(event)) {
 			this.addNewEmptyRivalForInternalTeamSportEvent();
 		}
 	},
