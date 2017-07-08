@@ -10,15 +10,13 @@ const NewEventHelper = {
 	 * @returns {*|boolean}
 	 */
 	isNewEvent: function(event) {
-		let multiparty = typeof event.sport !== 'undefined' ? event.sport.multiparty : event.sportModel.multiparty;
-
 		return (
 			(
 				TeamHelper.isInterSchoolsEventForTeamSport(event) ||
 				TeamHelper.isHousesEventForTeamSport(event) ||
 				TeamHelper.isInternalEventForTeamSport(event) ||
 				TeamHelper.isInterSchoolsEventForIndividualSport(event)
-			) && multiparty
+			) && this.isMultiparty(event)
 		);
 	},
 	/**
@@ -34,7 +32,7 @@ const NewEventHelper = {
 				TeamHelper.isHousesEventForTeamSport(event) ||
 				TeamHelper.isInternalEventForTeamSport(event) ||
 				TeamHelper.isInterSchoolsEventForIndividualSport(event)
-			) && event.sport.multiparty
+			) && this.isMultiparty(event)
 		);
 	},
 	/**
@@ -49,6 +47,11 @@ const NewEventHelper = {
 		);
 
 		return isEventTypeCorrect && event.sport.multiparty;
+	},
+	isMultiparty: function(event) {
+		let multiparty = typeof event.sport !== 'undefined' ? event.sport.multiparty : event.sportModel.multiparty;
+
+		return multiparty;
 	}
 };
 

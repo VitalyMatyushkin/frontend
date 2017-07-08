@@ -807,8 +807,10 @@ const EventManager = React.createClass({
 						{ this.renderStepButtons() }
 					</If>
 				</div>
-				<SavingPlayerChangesPopup	binding	= {binding}
-											submit	= {() => this.submit(binding.toJS('model'))}
+				<SavingPlayerChangesPopup
+					binding			= { binding }
+					activeSchoolId	= { this.activeSchoolId }
+					submit			= { this.submit.bind(this, binding.toJS('model')) }
 				/>
 			</div>
 		);
