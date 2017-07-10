@@ -640,14 +640,16 @@ const EventManager = React.createClass({
 
 				return (
 					<div className="eTeamManagerWrapper_footer">
-						<Button text="Back"
-								onClick={this.toBack}
-								extraStyleClasses={"mCancel mMarginRight"}
+						<Button
+							text				= "Back"
+							onClick				= {this.toBack}
+							extraStyleClasses	= {"mCancel mMarginRight"}
 						/>
-						<Button text="Finish"
-								onClick={this.handleClickFinishButton}
-								extraStyleClasses={finishButtonClassName}
-								isDisabled={isDisabled}
+						<Button
+							text				= "Finish"
+							onClick				= {this.handleClickFinishButton}
+							isDisabled			= {isDisabled}
+							extraStyleClasses	= {finishButtonClassName}
 						/>
 					</div>
 				);
