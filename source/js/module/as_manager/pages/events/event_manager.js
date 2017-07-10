@@ -523,8 +523,6 @@ const EventManager = React.createClass({
 		}
 	},
 	activateEvent: function(event) {
-		const self = this;
-
 		return window.Server.schoolEventActivate.post({
 			schoolId:	this.props.activeSchoolId,
 			eventId:	event.id
@@ -553,7 +551,7 @@ const EventManager = React.createClass({
 		const rivals = binding.toJS('rivals');
 		switch (model.type) {
 			case 'inter-schools':
-				const rivalIds = rivals.map(r => r.id);
+				const rivalIds = rivals.filter(r => r.id !== this.props.activeSchoolId).map(r => r.id);
 
 				body.invitedSchoolIds = rivalIds.slice(1);
 				body.finishSchoolIds = rivalIds;
