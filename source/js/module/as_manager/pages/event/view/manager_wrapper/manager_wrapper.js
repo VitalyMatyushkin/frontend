@@ -15,7 +15,6 @@ const	Actions							= require('../../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		SavingPlayerChangesPopupHelper	= require('../../../events/saving_player_changes_popup/helper'),
 		SavingEventHelper				= require('../../../../../helpers/saving_event_helper'),
-		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		ManagerHelper					= require('../../../../../ui/managers/helpers/manager_helper');
 
 const	TeamManagerWrapperStyle			= require('../../../../../../../styles/ui/b_team_manager_wrapper.scss');
@@ -133,14 +132,14 @@ const ManagerWrapper = React.createClass({
 		}
 	},
 	getRivals: function(event, rivals) {
-		if(NewEventHelper.mustUseNewManagerWraperHelper(event)) {
+		if(TeamHelper.mustUseNewManagerWraperHelper(event)) {
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {
 			return ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
 		}
 	},
 	getSchoolInfo: function(event, rivals, selectedRivalIndex) {
-		if(NewEventHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			const school = rivals[selectedRivalIndex].school;
 
 			if(school.id === event.inviterSchoolId) {

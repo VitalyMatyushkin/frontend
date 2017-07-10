@@ -22,7 +22,6 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		EventGallery					= require('./new_gallery/event_gallery'),
 		ManagerWrapper					= require('./view/manager_wrapper/manager_wrapper'),
 		Comments						= require('./view/event_blog'),
-		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper				= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper					= require('./view/details/details_wrapper'),
@@ -183,7 +182,7 @@ const Event = React.createClass({
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
 			//TODO it's temp. only for event refactoring period.
-			if(!NewEventHelper.isNewEvent(eventData)) {
+			if(!TeamHelper.isNewEvent(eventData)) {
 				EventResultHelper.initializeEventResults(eventData);
 			}
 
@@ -342,7 +341,7 @@ const Event = React.createClass({
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
-		if(!NewEventHelper.isNewEvent(event)) {
+		if(!TeamHelper.isNewEvent(event)) {
 			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
 				return false;
 			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
@@ -1110,7 +1109,7 @@ const Event = React.createClass({
 				isNewEvent		= binding.get('isNewEvent');
 
 		//TODO it's temp. only for event refactoring period.
-		if(NewEventHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { this.props.activeSchoolId }
@@ -1210,7 +1209,7 @@ const Event = React.createClass({
 		const	event			= binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
-		if(NewEventHelper.isNewTabs(event)) {
+		if(TeamHelper.isNewTabs(event)) {
 			return (
 				<NewPerformance	binding			= { binding }
 								activeSchoolId	= { this.props.activeSchoolId }
@@ -1231,7 +1230,7 @@ const Event = React.createClass({
 		const	event			= binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
-		if(NewEventHelper.isNewTabs(event)) {
+		if(TeamHelper.isNewTabs(event)) {
 			return (
 				<NewDiscipline	binding			= { binding }
 								activeSchoolId	= { this.props.activeSchoolId }

@@ -12,7 +12,6 @@ const	TeamBundle				= require('./team_bundle'),
 // Helpers
 const	TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		EventHelper				= require('./../../helpers/eventHelper'),
-		NewEventHelper			= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator');
 
 // Consts
@@ -221,7 +220,7 @@ const Manager = React.createClass({
 		const event = this.getDefaultBinding().toJS('model');
 		if(
 			EventHelper.isInterSchoolsEvent(event) &&
-			NewEventHelper.isMultiparty(event)
+			TeamHelper.isMultiparty(event)
 		) {
 			const binding = this.getBinding();
 

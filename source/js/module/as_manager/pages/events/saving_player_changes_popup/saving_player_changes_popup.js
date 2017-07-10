@@ -6,7 +6,7 @@ const	React							= require('react'),
 		TeamSaveModePanel				= require('../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
 		ManagerConsts					= require('../../../../ui/managers/helpers/manager_consts'),
 		EventHelper						= require('module/helpers/eventHelper'),
-		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
+		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
 		SavingPlayerChangesPopupHelper	= require('./helper'),
 
 		ManagerStyles					= require('../../../../../../styles/pages/events/b_events_manager.scss');
@@ -68,7 +68,7 @@ const SavingPlayerChangesPopup = React.createClass({
 		const teamWrappers = this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 
 		switch (true) {
-			case EventHelper.isInterSchoolsEvent(event) && NewEventHelper.isMultiparty(event): {
+			case EventHelper.isInterSchoolsEvent(event) && TeamHelper.isMultiparty(event): {
 				teamWrappers.forEach((tw, index) => {
 					if(
 						(

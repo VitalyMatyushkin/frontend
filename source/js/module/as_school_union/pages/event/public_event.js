@@ -5,7 +5,6 @@ const	React				= require('react'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
-		NewEventHelper		= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
 		PublicMatchReport	= require('./public_match_report'),
 		PublicEventGallery	= require('./public_event_gallery');
@@ -131,7 +130,7 @@ const PublicEvent = React.createClass({
 				inviterSchoolId	= event.inviterSchoolId;
 
 		//TODO it's temp. only for event refactoring period.
-		if(NewEventHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { inviterSchoolId }

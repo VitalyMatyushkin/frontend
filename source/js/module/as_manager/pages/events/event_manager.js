@@ -19,7 +19,6 @@ const	Manager							= require('../../../ui/managers/manager'),
 // Helpers
 const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wrapper_helper'),
 		NewManagerWrapperHelper			= require('../event/view/manager_wrapper/new_manager_wrapper_helper'),
-		NewEventHelper					= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
 		RivalManager					= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
 		EventConsts						= require('../../../helpers/consts/events'),
@@ -210,7 +209,7 @@ const EventManager = React.createClass({
 	},
 	getRivals: function(event) {
 		let rivals;
-		if(NewEventHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			const rivals = RivalManager.getRivalsByEvent(this.props.activeSchoolId, 'general', event);
 
 			return NewManagerWrapperHelper.getRivals(event, rivals);
