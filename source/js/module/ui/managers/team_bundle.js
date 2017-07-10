@@ -25,6 +25,8 @@ const TeamBundle = React.createClass({
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+
+		this.getDefaultBinding().clear();
 	},
 	/** INIT FUNCTIONS **/
 	initBinding: function() {
