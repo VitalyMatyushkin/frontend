@@ -36,6 +36,9 @@ const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	onDebounceChangeSaveButtonState: undefined,
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	/**
 	 * Function check manager data and set corresponding value to isControlButtonActive
 	 */
@@ -49,10 +52,7 @@ const EventManager = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	getDefaultState: function () {
-		var	self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			calendarBinding = this.getBinding('calendar');
+		var calendarBinding = this.getBinding('calendar');
 
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
@@ -138,7 +138,7 @@ const EventManager = React.createClass({
 	 */
 	setDateFromEventByEventId:function (eventId) {
 		return window.Server.schoolEvent.get({
-			schoolId	: this.activeSchoolId,
+			schoolId	: this.props.activeSchoolId,
 			eventId		: eventId
 		}).then(event => {
 			this.getDefaultBinding().set('model.startTime', Immutable.fromJS(event.startTime));
@@ -161,7 +161,7 @@ const EventManager = React.createClass({
 
 		// TODO check inter-schools case
 		return window.Server.schoolEvent.get({
-			schoolId	: this.activeSchoolId,
+			schoolId	: this.props.activeSchoolId,
 			eventId		: eventId
 		})
 		.then(_event => {
@@ -211,11 +211,11 @@ const EventManager = React.createClass({
 	getRivals: function(event) {
 		let rivals;
 		if(NewEventHelper.isNewEvent(event)) {
-			const rivals = RivalManager.getRivalsByEvent(this.activeSchoolId, 'general', event);
+			const rivals = RivalManager.getRivalsByEvent(this.props.activeSchoolId, 'general', event);
 
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {
-			rivals = ManagerWrapperHelper.getRivals(this.activeSchoolId, event, true);
+			rivals = ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, true);
 			if(TeamHelper.isNonTeamSport(event)) {
 				rivals[0].players.forEach(p => {
 					p.id = p.userId;
@@ -245,16 +245,14 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
 		let schoolData;
 		//get school data
-		return window.Server.school.get(self.activeSchoolId)
+		return window.Server.school.get(this.props.activeSchoolId)
 			.then(_schoolData => {
 				schoolData = _schoolData;
 
 				// get forms data
-				return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
+				return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
 			})
 			.then(forms => {
 				schoolData.forms = forms;
@@ -485,7 +483,7 @@ const EventManager = React.createClass({
 						savedEvent = _event;
 
 						return TeamHelper.addIndividualPlayersToEvent(
-							self.activeSchoolId,
+							this.props.activeSchoolId,
 							savedEvent,
 							binding.toJS(`teamModeView.teamWrapper`)
 						);
@@ -496,7 +494,7 @@ const EventManager = React.createClass({
 				return Promise
 					.all(
 						SavingEventHelper.processSavingChangesMode(
-							self.activeSchoolId,
+							this.props.activeSchoolId,
 							binding.toJS(`rivals`),
 							binding.toJS('model'),
 							binding.toJS(`teamModeView.teamWrapper`)
@@ -504,7 +502,7 @@ const EventManager = React.createClass({
 					)
 					.then(() => {
 						return Promise.all(TeamHelper.createTeams(
-							self.activeSchoolId,
+							this.props.activeSchoolId,
 							binding.toJS('model'),
 							binding.toJS(`rivals`),
 							binding.toJS(`teamModeView.teamWrapper`)
@@ -518,7 +516,7 @@ const EventManager = React.createClass({
 					.then(_event => {
 						savedEvent = _event;
 
-						return TeamHelper.addTeamsToEvent(self.activeSchoolId, savedEvent, teams);
+						return TeamHelper.addTeamsToEvent(this.props.activeSchoolId, savedEvent, teams);
 					})
 					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));
@@ -528,7 +526,7 @@ const EventManager = React.createClass({
 		const self = this;
 
 		return window.Server.schoolEventActivate.post({
-			schoolId:	self.activeSchoolId,
+			schoolId:	this.props.activeSchoolId,
 			eventId:	event.id
 		});
 	},
@@ -562,19 +560,19 @@ const EventManager = React.createClass({
 
 				break;
 			case 'houses':
-				body.invitedSchoolIds = [self.activeSchoolId];
+				body.invitedSchoolIds = [this.props.activeSchoolId];
 
 				body.houses = rivals.map(r => r.id);
 
 				break;
 			case 'internal':
-				body.invitedSchoolIds = [self.activeSchoolId];
+				body.invitedSchoolIds = [this.props.activeSchoolId];
 
 				break;
 		}
 
 		return window.Server.events.post(
-			self.activeSchoolId,
+			this.props.activeSchoolId,
 			body
 		);
 	},
@@ -811,7 +809,7 @@ const EventManager = React.createClass({
 				</div>
 				<SavingPlayerChangesPopup
 					binding			= { binding }
-					activeSchoolId	= { this.activeSchoolId }
+					activeSchoolId	= { this.props.activeSchoolId }
 					submit			= { this.submit.bind(this, binding.toJS('model')) }
 				/>
 			</div>
