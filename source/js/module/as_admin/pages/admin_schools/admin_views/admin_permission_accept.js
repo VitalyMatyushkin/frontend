@@ -168,7 +168,7 @@ const PermissionAcceptPage = React.createClass({
 			<div className='bForm'>
 				<div className="eForm_atCenter">
 					<h2>Accept parent permission. Please choose student.</h2>
-					<h3>{binding.get('comment')}</h3>
+					<h3>Comment from parent: {binding.get('comment')}</h3>
 					<div className='eForm_field'>
 						<Autocomplete
 							serviceFilter={this.serviceFormFilter}
