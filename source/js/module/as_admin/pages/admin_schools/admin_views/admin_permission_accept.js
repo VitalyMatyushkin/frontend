@@ -166,42 +166,44 @@ const PermissionAcceptPage = React.createClass({
 
 		return (
 			<div className='bForm'>
-				<h2>Accept parent permission. Please choose student.</h2>
-				<h3>{binding.get('comment')}</h3>
-				<div className='eForm_field'>
-					<Autocomplete
-						serviceFilter={this.serviceFormFilter}
-						serverField='name'
-						onSelect={this.onSelectForm}
-						binding={binding.sub('_formAutocomplete')}
-						placeholder='form name'
-					/>
+				<div className="eForm_atCenter">
+					<h2>Accept parent permission. Please choose student.</h2>
+					<h3>{binding.get('comment')}</h3>
+					<div className='eForm_field'>
+						<Autocomplete
+							serviceFilter={this.serviceFormFilter}
+							serverField='name'
+							onSelect={this.onSelectForm}
+							binding={binding.sub('_formAutocomplete')}
+							placeholder='form name'
+						/>
+					</div>
+					<If condition={binding.get('formId') !== undefined}>
+						<div className='eForm_field'>
+							<Autocomplete
+								serviceFilter={this.serviceHouseFilter}
+								serverField='name'
+								onSelect={this.onSelectHouse}
+								binding={binding.sub('_houseAutocomplete')}
+								placeholder='house name'
+							/>
+						</div>
+					</If>
+					<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined}>
+						<div className='eForm_field'>
+							<Autocomplete
+								serviceFilter={this.serviceStudentsFilter}
+								serverField='name'
+								onSelect={this.onSelectStudent}
+								binding={binding.sub('_studentAutocomplete')}
+								placeholder='Student name'
+							/>
+						</div>
+					</If>
+					<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined && binding.get('studentId') !== undefined}>
+						<div className="bButton" onClick={this.onAcceptPermission}>Accept permission</div>
+					</If>
 				</div>
-				<If condition={binding.get('formId') !== undefined}>
-					<div className='eForm_field'>
-						<Autocomplete
-							serviceFilter={this.serviceHouseFilter}
-							serverField='name'
-							onSelect={this.onSelectHouse}
-							binding={binding.sub('_houseAutocomplete')}
-							placeholder='house name'
-						/>
-					</div>
-				</If>
-				<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined}>
-					<div className='eForm_field'>
-						<Autocomplete
-							serviceFilter={this.serviceStudentsFilter}
-							serverField='name'
-							onSelect={this.onSelectStudent}
-							binding={binding.sub('_studentAutocomplete')}
-							placeholder='Student name'
-						/>
-					</div>
-				</If>
-				<If condition={binding.get('formId') !== undefined && binding.get('houseId') !== undefined && binding.get('studentId') !== undefined}>
-					<div className="bButton" onClick={this.onAcceptPermission}>Accept permission</div>
-				</If>
 			</div>
 		)
 	}
