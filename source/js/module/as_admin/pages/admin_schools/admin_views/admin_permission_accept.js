@@ -199,21 +199,27 @@ const PermissionAcceptPage = React.createClass({
 	render: function() {
 		const binding = this.getDefaultBinding();
 
+		const comment = binding.get('comment');
+
 		return (
 			<div className='bForm'>
 				<div className="eForm_atCenter">
+
 					<h2>Accept parent permission. Please choose student.</h2>
-					<h3>Comment from parent: {binding.get('comment')}</h3>
+
+					<h3>Comment from parent: {comment}</h3>
+
 					<div className='eForm_field'>
 						<Autocomplete
-							serviceFilter={this.serviceFormFilter}
-							serverField='name'
-							onSelect={this.onSelectForm}
-							binding={binding.sub('_formAutocomplete')}
-							placeholder='form name'
+							serviceFilter	= { this.serviceFormFilter }
+							serverField		= 'name'
+							onSelect		= { this.onSelectForm }
+							binding			= { binding.sub('_formAutocomplete') }
+							placeholder		= 'form name'
 						/>
 					</div>
-					<If condition={binding.get('formId') !== undefined}>
+
+					<If condition={typeof binding.get('formId') !== 'undefined'}>
 						<div className='eForm_field'>
 							<Autocomplete
 								key				= { binding.toJS('houseInputKey') }
@@ -229,19 +235,26 @@ const PermissionAcceptPage = React.createClass({
 							/>
 						</div>
 					</If>
-					<If condition={binding.get('formId') !== undefined}>
+
+					<If condition={typeof binding.get('formId') !== 'undefined'}>
 						<div className='eForm_field'>
 							<Autocomplete
-								serviceFilter={this.serviceStudentsFilter}
-								serverField='name'
-								onSelect={this.onSelectStudent}
-								binding={binding.sub('_studentAutocomplete')}
-								placeholder='Student name'
+								serviceFilter	= { this.serviceStudentsFilter}
+								serverField		= 'name'
+								onSelect		= { this.onSelectStudent }
+								binding			= { binding.sub('_studentAutocomplete') }
+								placeholder		= 'Student name'
 							/>
 						</div>
 					</If>
-					<If condition={binding.get('formId') !== undefined && binding.get('studentId') !== undefined}>
-						<div className="bButton" onClick={this.onAcceptPermission}>Accept permission</div>
+
+					<If condition={typeof binding.get('formId') !== 'undefined' && typeof binding.get('studentId') !== 'undefined'}>
+						<div
+							className	= "bButton"
+							onClick		= { this.onAcceptPermission }
+						>
+							Accept permission
+						</div>
 					</If>
 				</div>
 			</div>
