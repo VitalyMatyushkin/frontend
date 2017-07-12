@@ -11,7 +11,7 @@ const   specialModels   = ['app', 'parents', 'manager', 'admin', 'site', 'www', 
 /** Parses domain name to structure */
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
-    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
+    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod|test))?.(squadintouch|squard)\.(com|co\.uk)/);
 
     let model;
     if(external[1].substring(0, 10) === 'bigscreen_') {
@@ -76,7 +76,12 @@ function startModuleSelector(domainName) {
             model           = parsedDomain.model,
             modelToStart    = specialModels.indexOf(model) !== -1 ? model : defaultModel;
 
-    let startModule     = 'module/start_as_' + modelToStart;
+    let startModule;
+    if (model === 'test'){
+        startModule     = 'module/start_test_api';
+    } else {
+        startModule     = 'module/start_as_' + modelToStart;
+    }
 
     // TEST SERVER TEMPORARY SOLUTION
     if (startModule === 'module/start_as_stage') {
