@@ -15,6 +15,7 @@ const SetTeamsLater = React.createClass({
 		const isFinishedEvent = typeof event.status !== 'undefined' ? !EventHelper.isNotFinishedEvent(event) : false;
 
 		return (
+			!(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) &&
 			!(TeamHelper.isInternalEventForTeamSport(event) && event.sportModel.multiparty) &&
 			!(EventHelper.isInternalEvent(event) && isFinishedEvent)
 		);

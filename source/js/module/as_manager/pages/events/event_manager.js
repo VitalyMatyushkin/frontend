@@ -552,8 +552,7 @@ const EventManager = React.createClass({
 			case 'inter-schools':
 				const rivalIds = rivals.filter(r => r.id !== this.props.activeSchoolId).map(r => r.id);
 
-				body.invitedSchoolIds = rivalIds.slice(1);
-				body.finishSchoolIds = rivalIds;
+				body.invitedSchoolIds = rivalIds;
 
 				break;
 			case 'houses':

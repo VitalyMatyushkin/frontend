@@ -13,9 +13,7 @@ const	Manager							= require('./../../../../../ui/managers/manager'),
 
 const	Actions							= require('../../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
-		SavingPlayerChangesPopupHelper	= require('../../../events/saving_player_changes_popup/helper'),
-		SavingEventHelper				= require('../../../../../helpers/saving_event_helper'),
-		ManagerHelper					= require('../../../../../ui/managers/helpers/manager_helper');
+		SavingEventHelper				= require('../../../../../helpers/saving_event_helper');
 
 const	TeamManagerWrapperStyle			= require('../../../../../../../styles/ui/b_team_manager_wrapper.scss');
 

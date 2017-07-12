@@ -1072,30 +1072,37 @@ function getTeamBundles(event) {
 function createTeams(schoolId, event, rivals, teamWrappers) {
 	const self = this;
 
-	// For inter school event create team only for only one rival - active school
-	// There are two situations:
-	// 1) Create inter-schools event - create teams only for inviter school
-	// 2) Acceptation event - create team for invited school
-	let _rivals;
-	if(
-		EventHelper.isInterSchoolsEvent(event)) {
-		_rivals = rivals.filter(r => r.id === schoolId);
-	} else {
-		_rivals = rivals;
-	}
-
-	return _rivals.map((rival, i) => {
+	return rivals.map((rival, i) => {
 		if(!teamWrappers[i].isSetTeamLater) {
-			// Multiparty inter school event
-			if(EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event)) {
-				const teamWrapper = teamWrappers.find(tw => tw.schoolId === rival.id);
+			// TODO it's strange code construction, yes
+			// i can filter wrong team trapper
+			// but i need natural index of rival
+			// for EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event)
+			// Resolve of this problem is a - general model, it some sort of package for rival
+			// team wrapper and other related things
 
-				return self.createTeam(schoolId, event, rival, teamWrapper);
-			} else {
-				return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+
+			// Multiparty inter school event
+			switch (true) {
+				case EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event) && rival.id === schoolId: {
+					const teamWrapper = teamWrappers.find(tw => tw.rivalIndex === i);
+
+					return self.createTeam(schoolId, event, rival, teamWrapper);
+				}
+				case EventHelper.isInterSchoolsEvent(event) && rival.id === schoolId: {
+					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+				}
+				case EventHelper.isInterSchoolsEvent(event) && rival.id !== schoolId: {
+					return undefined;
+				}
+				default: {
+					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+				}
 			}
 		}
-	}).filter(p => typeof p !== 'undefined');
+	}).filter(p => {
+		typeof p !== 'undefined';
+	});
 }
 
 
@@ -1365,7 +1372,8 @@ function mustUseNewManagerWraperHelper(event) {
 		(
 			this.isHousesEventForTeamSport(event) ||
 			this.isInternalEventForTeamSport(event) ||
-			this.isInterSchoolsEventForIndividualSport(event)
+			this.isInterSchoolsEventForIndividualSport(event) ||
+			this.isInterSchoolsEventForTeamSport(event)
 		) && this.isMultiparty(event)
 	);
 }
