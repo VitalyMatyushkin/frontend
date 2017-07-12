@@ -110,6 +110,7 @@ const Manager = React.createClass({
 				schoolId	= this.getSchoolIdByOrder(rivalIndex);
 
 		return {
+			rivalIndex: rivalIndex,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
