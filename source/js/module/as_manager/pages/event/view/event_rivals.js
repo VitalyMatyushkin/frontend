@@ -395,7 +395,7 @@ const EventRival = React.createClass({
 			<div className={eventRivalClassName}>
 				<If condition={this.isShowChangeSchoolButton(order)}>
 					<div className="eEventRival_buttonContainer">
-						<PencilButton handleClick={this.props.handleClickChangeOpponentSchoolButton}/>
+						<PencilButton handleClick={this.props.handleClickChangeOpponentSchoolButton.bind(this, order)}/>
 					</div>
 				</If>
 				<div className="eEventRival_logo">{ this.getPic(order) }</div>

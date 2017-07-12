@@ -1035,14 +1035,21 @@ const Event = React.createClass({
 		binding.set("isDeleteEventPopupOpen", false);
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
-		const binding = this.getDefaultBinding();
+		const	binding		= this.getDefaultBinding(),
+				event		= binding.toJS(`model`);
 
-		const newValue = !binding.get('opponentSchoolManager.isOpen');
+		const	newValue	= !binding.get('opponentSchoolManager.isOpen');
 
 		if(newValue) {
-			const opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`);
+			let opponentSchoolId;
+			if(NewEventHelper.isNewEvent(event)) {
+				opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`)
+			} else {
+				opponentSchoolId = binding.toJS(`model.schoolsData.${rivalIndex}.id`);
+			}
 
-			binding.atomically()
+			binding
+				.atomically()
 				.set('opponentSchoolManager.isOpen',			newValue)
 				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
 				.commit();
