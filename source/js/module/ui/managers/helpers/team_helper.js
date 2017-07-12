@@ -1,8 +1,6 @@
 const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_validator'),
 		EventHelper				= require('module/helpers/eventHelper'),
-		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		RoleHelper				= require('module/helpers/role_helper'),
-		SportHelper				= require('module/helpers/sport_helper'),
 		SportConsts				= require('module/helpers/consts/sport'),
 		propz					= require('propz'),
 		Lazy					= require('lazy.js'),
@@ -1074,24 +1072,39 @@ function getTeamBundles(event) {
 function createTeams(schoolId, event, rivals, teamWrappers) {
 	const self = this;
 
-	// For inter school event create team only for only one rival - active school
-	// There are two situations:
-	// 1) Create inter-schools event - create team only for inviter school
-	// 2) Acceptation event - create team for invited school
-	let _rivals;
-	if(
-		EventHelper.isInterSchoolsEvent(event)) {
-		_rivals = [ rivals.find(r => r.id === schoolId) ];
-	} else {
-		_rivals = rivals;
-	}
-
-	return _rivals.map((rival, i) => {
+	return rivals.map((rival, i) => {
 		if(!teamWrappers[i].isSetTeamLater) {
-			return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+			// TODO it's strange code construction, yes
+			// i can filter wrong team trapper
+			// but i need natural index of rival
+			// for EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event)
+			// Resolve of this problem is a - general model, it some sort of package for rival
+			// team wrapper and other related things
+
+
+			// Multiparty inter school event
+			switch (true) {
+				case EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event) && rival.id === schoolId: {
+					const teamWrapper = teamWrappers.find(tw => tw.rivalIndex === i);
+
+					return self.createTeam(schoolId, event, rival, teamWrapper);
+				}
+				case EventHelper.isInterSchoolsEvent(event) && rival.id === schoolId: {
+					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+				}
+				case EventHelper.isInterSchoolsEvent(event) && rival.id !== schoolId: {
+					return undefined;
+				}
+				default: {
+					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+				}
+			}
 		}
-	}).filter(p => typeof p !== 'undefined');
+	}).filter(p => {
+		typeof p !== 'undefined';
+	});
 }
+
 
 function createTeam(schoolId, event, rival, teamWrapper) {
 	const self = this;
@@ -1327,6 +1340,64 @@ function clearIndividualScore(event, teamId) {
 	scores.forEach(s => s.score = 0);
 }
 
+/**
+ * It's temporary staff for new event. Only for refactoring time.
+ */
+
+/**
+ * Function returns true when we should use new event rivals component
+ * @param event
+ * @returns {*|boolean}
+ */
+function isNewEvent(event) {
+	return (
+		(
+			this.isInterSchoolsEventForTeamSport(event) ||
+			this.isHousesEventForTeamSport(event) ||
+			this.isInternalEventForTeamSport(event) ||
+			this.isInterSchoolsEventForIndividualSport(event)
+		) && this.isMultiparty(event)
+	);
+}
+
+/**
+ * Function returns true when you my friend must use NewManagerWrapperHelper to get rivals for manager wrapper.
+ * This stuff only for manager wrapper, look at ManagerWrapper.getRivals.
+ * And it's temporary only for new event refactoring period.
+ * @param event
+ * @returns {*|boolean}
+ */
+function mustUseNewManagerWraperHelper(event) {
+	return (
+		(
+			this.isHousesEventForTeamSport(event) ||
+			this.isInternalEventForTeamSport(event) ||
+			this.isInterSchoolsEventForIndividualSport(event) ||
+			this.isInterSchoolsEventForTeamSport(event)
+		) && this.isMultiparty(event)
+	);
+}
+
+/**
+ * Function returns true when we should use new tab component
+ * @param event - event model
+ * @returns {*|boolean}
+ */
+function isNewTabs(event) {
+	const isEventTypeCorrect = (
+		this.isHousesEventForTeamSport(event) ||
+		this.isInternalEventForTeamSport(event)
+	);
+
+	return isEventTypeCorrect && event.sport.multiparty;
+}
+
+function isMultiparty(event) {
+	let multiparty = typeof event.sport !== 'undefined' ? event.sport.multiparty : event.sportModel.multiparty;
+
+	return multiparty;
+}
+
 const TeamHelper = {
 	getAges:													getAges,
 	validate:													validate,
@@ -1397,7 +1468,11 @@ const TeamHelper = {
 	clearIndividualScore:										clearIndividualScore,
 	getRemovedPlayers:											getRemovedPlayers,
 	getSchoolsArrayWithFullDataByEvent:							getSchoolsArrayWithFullDataByEvent,
-	isInterSchoolsEventForIndividualSportFromChallengeModel:	isInterSchoolsEventForIndividualSportFromChallengeModel
+	isInterSchoolsEventForIndividualSportFromChallengeModel:	isInterSchoolsEventForIndividualSportFromChallengeModel,
+	isNewEvent:													isNewEvent,
+	mustUseNewManagerWraperHelper:								mustUseNewManagerWraperHelper,
+	isNewTabs:													isNewTabs,
+	isMultiparty:												isMultiparty
 };
 
 module.exports = TeamHelper;

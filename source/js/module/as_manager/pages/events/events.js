@@ -104,15 +104,17 @@ const EventView = React.createClass({
                                             }
                                component    = {EventFixturesComponent}
                         />
-                        <Route  path        = '/events/manager'
-                                binding     = {
+                        <Route
+                            path            = '/events/manager'
+                            activeSchoolId  = {self.activeSchoolId}
+                            binding         = {
                                                 {
                                                     default:    binding.sub('newEvent'),
                                                     sports:     binding.sub('sports'),
                                                     calendar:   binding.sub('calendar')
                                                 }
                                             }
-                                component   = {EventManagerComponent}
+                            component       = {EventManagerComponent}
                         />
                     </RouterView>
                 </div>

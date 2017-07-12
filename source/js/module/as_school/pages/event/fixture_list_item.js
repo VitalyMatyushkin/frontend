@@ -2,7 +2,6 @@ const 	React 					= require('react'),
 		DateTimeMixin			= require('module/mixins/datetime'),
 		ChallengeModel			= require('module/ui/challenges/challenge_model'),
 		Button 					= require('module/ui/button/button'),
-		NewEventHelper			= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		CricketResultBlock 		= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
@@ -93,7 +92,7 @@ const FixtureListItem = React.createClass({
 		}
 	},
 	getEventRivals: function (model) {
-		if(!model.isEventWithOneIndividualTeam && !NewEventHelper.isNewEvent(this.props.event)) {
+		if(!model.isEventWithOneIndividualTeam && !TeamHelper.isNewEvent(this.props.event)) {
 			return (
 				<div className="bEventRivals">
 

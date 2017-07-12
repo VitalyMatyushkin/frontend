@@ -106,11 +106,14 @@ const Manager = React.createClass({
 		const defaultBinding = this.getDefaultBinding();
 
 		const	teamId		= this.getTeamIdByOrder(rivalIndex),
-				teamName	= this.getTeamNameByOrder(rivalIndex);
+				teamName	= this.getTeamNameByOrder(rivalIndex),
+				schoolId	= this.getSchoolIdByOrder(rivalIndex);
 
 		return {
+			rivalIndex: rivalIndex,
 			isLoadingTeam: false,
 			filter: undefined,
+			schoolId: schoolId,
 			prevSelectedTeamId: teamId,
 			selectedTeamId: teamId,
 			teamsSaveMode: undefined,
@@ -202,6 +205,31 @@ const Manager = React.createClass({
 		if(typeof binding.rivals !== "undefined") {
 			const rivals = binding.rivals.toJS();
 			teamId = propz.get(rivals, [order, 'team', 'id']);
+		}
+
+		return teamId;
+	},
+	/**
+	 * Return schoolId for rival
+	 * Only for Interschools multyparty event
+	 * @param order
+	 * @returns {*}
+	 */
+	getSchoolIdByOrder: function(order) {
+		let teamId;
+
+		const event = this.getDefaultBinding().toJS('model');
+		if(
+			EventHelper.isInterSchoolsEvent(event) &&
+			TeamHelper.isMultiparty(event)
+		) {
+			const binding = this.getBinding();
+
+			if(typeof binding.rivals !== "undefined") {
+				const rivals = binding.rivals.toJS();
+
+				teamId = propz.get(rivals, [order, 'id']);
+			}
 		}
 
 		return teamId;
@@ -439,11 +467,57 @@ const Manager = React.createClass({
 
 		this.validate(newRivalIndex);
 	},
-	handleClickAddTeam: function() {
+	addNewEmptyRivalForInterSchoolsEvent: function(schoolId) {
+		const	binding			= this.getDefaultBinding(),
+				rivals			= this.getBinding().rivals.toJS(),
+				teamModeView	= binding.toJS('teamModeView');
+
+		// TODO This is not a very clear line of code
+		// I think we need model for rivals(react class).
+		const baseRival = rivals.find(r => r.id === schoolId);
+
+		rivals.push(Object.assign(baseRival));
+
+		this.getBinding().rivals.set(Immutable.fromJS(rivals));
+
+		const newRivalIndex = rivals.length - 1;
+		// push empty players array
+		teamModeView.players.push(
+			this.getInitPlayersByOrder(newRivalIndex)
+		);
+
+		// push empty team table model to team table array
+		teamModeView.teamTable.push(
+			this.getTeamTableByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.teamWrapper.push(
+			this.getTeamWrapperByRivalIndex(newRivalIndex)
+		);
+
+		teamModeView.rivalsCount = rivals.length;
+
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+
+		const error = this.getBinding('error').toJS();
+		error.push({
+			isError:	false,
+			text:		''
+		});
+		this.getBinding('error').set(Immutable.fromJS(error));
+
+		// add listeners
+		this.addTeamWrapperListenersByIndex(newRivalIndex);
+
+		this.validate(newRivalIndex);
+	},
+	handleClickAddTeam: function(schoolId) {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
-		if(TeamHelper.isInternalEventForTeamSport(event)) {
+		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
+			this.addNewEmptyRivalForInterSchoolsEvent(schoolId)
+		} else if(TeamHelper.isInternalEventForTeamSport(event)) {
 			this.addNewEmptyRivalForInternalTeamSportEvent();
 		}
 	},

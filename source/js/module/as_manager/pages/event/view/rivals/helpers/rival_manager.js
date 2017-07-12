@@ -12,28 +12,44 @@ const RivalManager = {
 				const	schoolsData	= event.schoolsData,
 						teamsData	= event.teamsData;
 
-				// iterate all schools
 				schoolsData.forEach(school => {
-					const rival = {};
 
-					rival.school = school;
-					let schoolInvite = undefined;
-					if (typeof event.invites !== 'undefined') {
-						schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
-					}
+					const schoolTeams = teamsData.filter(teamData => teamData.schoolId === school.id);
 
-					if(typeof schoolInvite !== 'undefined') {
-						rival.invite = schoolInvite;
-					}
+					// school can have many teams
+					if(schoolTeams.length > 0) {
+						schoolTeams.forEach(schoolTeam => {
+							const rival = {};
 
-					// search all teams for current school
-					teamsData.forEach(t => {
-						if(t.schoolId === school.id) {
-							rival.team = t;
+							rival.school	= school;
+							rival.team		= schoolTeam;
+
+							let schoolInvite = undefined;
+							if (typeof event.invites !== 'undefined') {
+								schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+							}
+
+							if(typeof schoolInvite !== 'undefined') {
+								rival.invite = schoolInvite;
+							}
+
+							rivals.push(rival);
+						});
+					} else {
+						const rival = {};
+
+						rival.school = school;
+						let schoolInvite = undefined;
+						if (typeof event.invites !== 'undefined') {
+							schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
 						}
-					});
 
-					rivals.push(rival);
+						if(typeof schoolInvite !== 'undefined') {
+							rival.invite = schoolInvite;
+						}
+
+						rivals.push(rival);
+					}
 				});
 
 				rivals = rivals.sort((rival1, rival2) => {

@@ -3,7 +3,6 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
 		FixtureListItem		= require('module/as_school/pages/event/fixture_list_item'),
-		NewEventHelper		= require('module/as_manager/pages/event/helpers/new_event_helper'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
@@ -132,7 +131,7 @@ const PublicEvent = React.createClass({
 		const event = binding.toJS('model');
 
 		//TODO it's temp. only for event refactoring period.
-		if(NewEventHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			return (
 				<Rivals	binding									= { binding }
 						activeSchoolId							= { this.props.activeSchoolId }
