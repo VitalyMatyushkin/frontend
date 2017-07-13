@@ -56,10 +56,22 @@ const SportSelector = React.createClass({
 				eventType	= binding.toJS('model.type');
 		let		rivals		= binding.toJS('rivals');
 
-		if(eventType === 'inter-schools') {
-			rivals = [rivals[0]];
-		} else if(eventType === 'houses') {
-			rivals = [];
+		switch (eventType) {
+			case 'inter-schools':
+				rivals = [rivals[0]];
+				break;
+			case 'houses':
+				rivals = [];
+				break;
+			case 'internal':
+				rivals = [{
+					id:		null,
+					name:	''
+				}, {
+					id:		null,
+					name:	''
+				}];
+				break;
 		}
 
 		binding.atomically()
