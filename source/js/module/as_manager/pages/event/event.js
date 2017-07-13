@@ -1041,7 +1041,7 @@ const Event = React.createClass({
 
 		if(newValue) {
 			let opponentSchoolId;
-			if(NewEventHelper.isNewEvent(event)) {
+			if(TeamHelper.isNewEvent(event)) {
 				opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`)
 			} else {
 				opponentSchoolId = binding.toJS(`model.schoolsData.${rivalIndex}.id`);
