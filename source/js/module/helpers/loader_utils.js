@@ -11,7 +11,7 @@ const   specialModels   = ['app', 'parents', 'manager', 'admin', 'site', 'www', 
 /** Parses domain name to structure */
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
-    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod|test))?.(squadintouch|squard)\.(com|co\.uk)/);
+    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
 
     let model;
     if(external[1].substring(0, 10) === 'bigscreen_') {
