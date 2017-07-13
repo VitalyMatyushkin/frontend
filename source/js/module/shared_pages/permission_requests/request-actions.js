@@ -7,7 +7,8 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		Morearty		= require('morearty'),
 		Lazy            = require('lazy.js'),
 		GridModel 		= require('module/ui/grid/grid-model'),
-		RoleHelper 		= require('module/helpers/role_helper');
+		RoleHelper 		= require('module/helpers/role_helper'),
+		propz 			= require('propz');
 
 /**
  * RequestActions
@@ -60,23 +61,21 @@ RequestActions.prototype = {
 		});
 	},
 	getSchoolEmblem:function(item){
-		const 	self = this,
-				binding = self.getDefaultBinding(),
-				schools = binding.get('schools'),
-				school = schools && item.requestedPermission ? schools.find(s => s.id === item.requestedPermission.schoolId) : null;
+		const pic = propz.get(item, ["requestedPermission", "school", "pic"]);
 
-		if(school && school.pic){
-			return <img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/>;
+		if(typeof pic !== 'undefined'){
+			return (
+				<img
+					src={window.Server.images.getResizedToBoxUrl(pic, 60, 60)}
+				/>
+			);
 		}
 	},
 	getSchoolName:function(item){
-		const self = this,
-			binding = self.getDefaultBinding(),
-			schools = binding.get('schools'),
-			school = schools && item.requestedPermission ? schools.find(s => s.id === item.requestedPermission.schoolId) : null;
+		const schoolName = propz.get(item, ["requestedPermission", "school", "name"]);
 
-		if(school){
-			return school.name;
+		if(typeof schoolName !== 'undefined'){
+			return schoolName;
 		}
 	},
 	updateSubMenu:function(){
