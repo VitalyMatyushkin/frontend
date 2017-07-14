@@ -32,12 +32,19 @@ const Buttons = React.createClass({
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
 	 */
 	renderScoreEventButtonsContainer: function() {
-		return (
-			<ActionList	buttonText				= 'Actions'
-						actionList				= {this.getActionList()}
-						handleClickActionItem	= {this.handleClickActionItem}
-			/>
-		);
+		const actions = this.getActionList();
+
+		let actionList = null;
+		if(actions.length > 0) {
+			actionList = (
+				<ActionList	buttonText				= 'Actions'
+							actionList				= { actions }
+							handleClickActionItem	= { this.handleClickActionItem }
+				/>
+			);
+		}
+
+		return actionList;
 	},
 	getActionList: function() {
 		const actionList = [];
