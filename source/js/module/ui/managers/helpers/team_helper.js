@@ -1100,9 +1100,7 @@ function createTeams(schoolId, event, rivals, teamWrappers) {
 				}
 			}
 		}
-	}).filter(p => {
-		typeof p !== 'undefined';
-	});
+	}).filter(p => typeof p !== 'undefined');
 }
 
 

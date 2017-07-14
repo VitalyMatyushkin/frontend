@@ -500,12 +500,14 @@ const EventManager = React.createClass({
 						)
 					)
 					.then(() => {
-						return Promise.all(TeamHelper.createTeams(
-							this.props.activeSchoolId,
-							binding.toJS('model'),
-							binding.toJS(`rivals`),
-							binding.toJS(`teamModeView.teamWrapper`)
-						));
+						return Promise.all(
+							TeamHelper.createTeams(
+								this.props.activeSchoolId,
+								binding.toJS('model'),
+								binding.toJS(`rivals`),
+								binding.toJS(`teamModeView.teamWrapper`)
+							)
+						);
 					})
 					.then(_teams => {
 						teams = _teams;
