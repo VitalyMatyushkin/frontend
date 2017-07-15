@@ -31,13 +31,13 @@ const DefaultRivals = React.createClass({
 
 		return rivals.map((rival, index) => {
 			const	disable		= this.isRivalDisable(rival),
-				eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
+					eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
 
 			let text = '';
 			switch (eventType) {
 				case 'houses':
 				case 'inter-schools':
-					text = rival.name;
+					text = rival.school.name;
 					break;
 				case 'internal':
 					const names = ['First', 'Second', 'Third'];
@@ -97,7 +97,7 @@ const DefaultRivals = React.createClass({
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.id !== activeSchoolId &&
+			rival.school.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},

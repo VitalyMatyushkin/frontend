@@ -9,6 +9,9 @@ const	TeamBundle				= require('./team_bundle'),
 		RivalChooser			= require('./rival_chooser/rival_chooser'),
 		GameField				= require('./gameField');
 
+// Model
+const	InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
+
 // Helpers
 const	TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		EventHelper				= require('./../../helpers/eventHelper'),
@@ -67,14 +70,15 @@ const Manager = React.createClass({
 		}
 
 		const	teamTable	= this.getTeamTables(),
-				teamWrapper	= this.getTeamWrappers();
+				teamWrapper	= this.getTeamWrappers(),
+				rivalsCount	= this.getBinding('rivals').toJS().length;
 
 		defaultBinding
 			.atomically()
 			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
-					rivalsCount:		Immutable.fromJS(this.getBinding('rivals').toJS().length),
+					rivalsCount:		Immutable.fromJS(rivalsCount),
 					selectedRivalIndex:	defaultBinding.get('selectedRivalIndex'),
 					players:			self.getInitPlayers(),
 					teamTable:			teamTable,
@@ -103,14 +107,17 @@ const Manager = React.createClass({
 		return rivals.map((rival, rivalIndex) => this.getTeamWrapperByRivalIndex(rivalIndex));
 	},
 	getTeamWrapperByRivalIndex: function(rivalIndex) {
-		const defaultBinding = this.getDefaultBinding();
+		const	defaultBinding	= this.getDefaultBinding();
 
-		const	teamId		= this.getTeamIdByOrder(rivalIndex),
-				teamName	= this.getTeamNameByOrder(rivalIndex),
-				schoolId	= this.getSchoolIdByOrder(rivalIndex);
+		const	rivals			= this.getBinding().rivals.toJS(),
+				currentRival	= rivals[rivalIndex];
+
+		const	teamId			= this.getTeamIdByOrder(rivalIndex),
+				teamName		= this.getTeamNameByOrder(rivalIndex),
+				schoolId		= this.getSchoolIdByRivalId(currentRival.id);
 
 		return {
-			rivalIndex: rivalIndex,
+			rivalId: currentRival.id,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -210,13 +217,13 @@ const Manager = React.createClass({
 		return teamId;
 	},
 	/**
-	 * Return schoolId for rival
+	 * Return schoolId for rival by rivalId
 	 * Only for Interschools multyparty event
 	 * @param order
 	 * @returns {*}
 	 */
-	getSchoolIdByOrder: function(order) {
-		let teamId;
+	getSchoolIdByRivalId: function(rivalId) {
+		let schoolId;
 
 		const event = this.getDefaultBinding().toJS('model');
 		if(
@@ -226,13 +233,14 @@ const Manager = React.createClass({
 			const binding = this.getBinding();
 
 			if(typeof binding.rivals !== "undefined") {
-				const rivals = binding.rivals.toJS();
+				const	rivals			= binding.rivals.toJS(),
+						currentRival	= rivals.find(r => r.id === rivalId);
 
-				teamId = propz.get(rivals, [order, 'id']);
+				schoolId = propz.get(currentRival, ['school', 'id']);
 			}
 		}
 
-		return teamId;
+		return schoolId;
 	},
 	getTeamTypeByOrder: function(order) {
 		const	binding	= this.getBinding();
@@ -412,7 +420,7 @@ const Manager = React.createClass({
 				rivals			= self.getBinding().rivals.toJS();
 
 			for(let rivalIndex in rivals) {
-				if(rivals[rivalIndex].id === activeSchoolId) {
+				if(rivals[rivalIndex].school.id === activeSchoolId) {
 					currentRivalIndex = rivalIndex;
 					break;
 				}
@@ -467,16 +475,17 @@ const Manager = React.createClass({
 
 		this.validate(newRivalIndex);
 	},
-	addNewEmptyRivalForInterSchoolsEvent: function(schoolId) {
-		const	binding			= this.getDefaultBinding(),
-				rivals			= this.getBinding().rivals.toJS(),
+	addNewEmptyRivalForInterSchoolsEventBySchool: function(school) {
+		const	binding			= this.getDefaultBinding();
+
+		const	rivals			= this.getBinding().rivals.toJS(),
 				teamModeView	= binding.toJS('teamModeView');
 
-		// TODO This is not a very clear line of code
-		// I think we need model for rivals(react class).
-		const baseRival = rivals.find(r => r.id === schoolId);
-
-		rivals.push(Object.assign(baseRival));
+		// Add new rival
+		// New rival construct by
+		rivals.push(
+			new InterSchoolsRivalModel(school)
+		);
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -511,12 +520,17 @@ const Manager = React.createClass({
 
 		this.validate(newRivalIndex);
 	},
-	handleClickAddTeam: function(schoolId) {
+	handleClickAddTeam: function() {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
 		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
-			this.addNewEmptyRivalForInterSchoolsEvent(schoolId)
+			// For inter schools event we add new rival only for active school.
+			// It's business logic.
+			// School info it is active school data
+			const activeSchool = binding.toJS('schoolInfo');
+
+			this.addNewEmptyRivalForInterSchoolsEventBySchool(activeSchool);
 		} else if(TeamHelper.isInternalEventForTeamSport(event)) {
 			this.addNewEmptyRivalForInternalTeamSportEvent();
 		}

@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		RivalsHelper		= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
 		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
 		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel');
 
@@ -66,22 +67,32 @@ const GameTypeSelectorWrapper = React.createClass({
 	handleClick: function(radioButtonId) {
 		const binding = this.getDefaultBinding();
 
-		let rivals = [];
+		let rivals;
 
 		switch (radioButtonId) {
-			case this.RADIO_BUTTON_IDS.INTER_SCHOOLS_RADIO_BUTTON:
-				rivals.push(binding.toJS('schoolInfo'));
+			case this.RADIO_BUTTON_IDS.INTER_SCHOOLS_RADIO_BUTTON: {
+				const schoolInfo = binding.toJS('schoolInfo');
+
+				rivals = RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolInfo);
 				break;
-			case this.RADIO_BUTTON_IDS.INTERNAL_RADIO_BUTTON:
-				rivals.push({
+			}
+			case this.RADIO_BUTTON_IDS.HOUSES_RADIO_BUTTON: {
+				rivals = [];
+				break;
+			}
+			case this.RADIO_BUTTON_IDS.INTERNAL_RADIO_BUTTON: {
+				rivals = [
+					{
 						id: null,
 						name: ''
 					},
 					{
 						id: null,
 						name: ''
-					});
+					}
+				];
 				break;
+			}
 		}
 
 		binding

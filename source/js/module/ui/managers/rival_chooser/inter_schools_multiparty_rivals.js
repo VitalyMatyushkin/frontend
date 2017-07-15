@@ -27,10 +27,10 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		let		schools				= [];
 		// collect unique schools
 		rivals.forEach(rival => {
-			const school = schools.find(s => s.id === rival.id);
+			const school = schools.find(s => s.id === rival.school.id);
 
 			if(typeof school === 'undefined') {
-				schools.push(rival);
+				schools.push(rival.school);
 			}
 		});
 
@@ -123,44 +123,50 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		const rivalActionList = [];
 
 		let teamCount = 0;
-		rivals.forEach((rival, rivalIndex) => {
-			if(rival.id === schoolId) {
+		rivals.forEach(rival => {
+			if(rival.school.id === schoolId) {
 				teamCount++;
 
 				rivalActionList.push(
 					{
-						id:		String(rivalIndex),
+						id:		rival.id,
 						text:	`Team ${teamCount}`
 					}
 				);
 			}
 		});
 
-		rivalActionList.push({id: 'add_team', text: 'Add new team'});
+		rivalActionList.push(
+			{
+				id:		'add_team',
+				text:	'Add new team'
+			}
+		);
 
 		return rivalActionList;
 	},
 	isRivalDisable: function(rival) {
-		const	binding			= this.getDefaultBinding(),
-				event			= binding.toJS('model'),
+		const	binding			= this.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.id !== activeSchoolId &&
+			rival.school.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},
-	handleClickItemFormRivalActionList: function(schoolId, actionItemId) {
+	handleClickItemFormRivalActionList: function(actionItemId) {
 		switch (actionItemId) {
 			case 'add_team':
-				this.props.handleClickAddTeam(schoolId);
+				this.props.handleClickAddTeam();
 
 				break;
 			default:
 				// This code string is only for show that by default actionItemId is a rivalIndex
-				const rivalIndex = actionItemId;
+				const rivalId = actionItemId;
 
-				this.props.handleChooseRival(rivalIndex);
+				this.props.handleChooseRival(rivalId);
 				break;
 		}
 	},

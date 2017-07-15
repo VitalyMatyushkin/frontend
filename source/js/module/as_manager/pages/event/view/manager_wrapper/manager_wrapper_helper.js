@@ -1,5 +1,6 @@
-const	EventHelper	= require('./../../../../../helpers/eventHelper'),
-		TeamHelper	= require('./../../../../../ui/managers/helpers/team_helper');
+const	EventHelper				= require('./../../../../../helpers/eventHelper'),
+		TeamHelper				= require('./../../../../../ui/managers/helpers/team_helper'),
+		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
 
 const ManagerWrapperHelper = {
 	getRivals: function(activeSchoolId, event, isFakeTeams) {

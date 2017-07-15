@@ -7,6 +7,9 @@ const	EventFormActions		= require('../../event_form_actions'),
 		If						= require('../../../../../../../ui/if/if'),
 		Autocomplete			= require('../../../../../../../ui/autocomplete2/OldAutocompleteWrapper');
 
+// Helpers
+const	RivalsHelper			= require('module/ui/managers/rival_chooser/helpers/rivals_helper');
+
 // Styles
 const	InputWrapperStyles		= require('../../../../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles		= require('../../../../../../../../../styles/ui/b_input_label.scss'),
@@ -57,9 +60,12 @@ const SportSelector = React.createClass({
 		let		rivals		= binding.toJS('rivals');
 
 		switch (eventType) {
-			case 'inter-schools':
-				rivals = [rivals[0]];
+			case 'inter-schools': {
+				const schoolInfo = binding.toJS('schoolInfo');
+
+				rivals = RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolInfo);
 				break;
+			}
 			case 'houses':
 				rivals = [];
 				break;
@@ -102,8 +108,8 @@ const SportSelector = React.createClass({
 	},
 
 	render: function() {
-		const	self = this,
-				binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		const	event						= binding.toJS('model'),
 				sport						= propz.get(event, ['sportModel']),

@@ -26,6 +26,7 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		LocalEventHelper				= require('./eventHelper'),
 		MoreartyHelper					= require('../../../helpers/morearty_helper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
+		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
 
 // Styles
@@ -256,13 +257,13 @@ const EventManager = React.createClass({
 			.then(forms => {
 				schoolData.forms = forms;
 
-				// get avail ages
-				const ages = TeamHelper.getAges(schoolData);
+				const	ages	= TeamHelper.getAges(schoolData), // get avail ages
+						rivals	= RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolData);
 
 				binding
 					.atomically()
 					.set('schoolInfo',		Immutable.fromJS(schoolData))
-					.set('rivals',			Immutable.fromJS([schoolData]))
+					.set('rivals',			Immutable.fromJS(rivals))
 					.set('availableAges',	Immutable.fromJS(ages))
 					.commit();
 
@@ -552,9 +553,9 @@ const EventManager = React.createClass({
 		const rivals = binding.toJS('rivals');
 		switch (model.type) {
 			case 'inter-schools':
-				const rivalIds = rivals.filter(r => r.id !== this.props.activeSchoolId).map(r => r.id);
-
-				body.invitedSchoolIds = rivalIds;
+				body.invitedSchoolIds = rivals
+					.filter(r => r.school.id !== this.props.activeSchoolId)
+					.map(r => r.school.id);
 
 				break;
 			case 'houses':

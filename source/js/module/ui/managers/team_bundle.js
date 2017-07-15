@@ -9,7 +9,8 @@ const	TeamChooser		= require('./teamChooser'),
 		TeamWrapper		= require('./team_wrapper');
 
 // Helpers
-const	TeamHelper		= require('module/ui/managers/helpers/team_helper');
+const	EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper');
 
 // Style
 const	TeamBundleStyle	= require('../../../../styles/ui/teams_manager/b_team_bundle.scss');
@@ -121,15 +122,18 @@ const TeamBundle = React.createClass({
 	},
 	/** HELPER FUNCTIONS **/
 	getTeamChooserBindings: function() {
-		const binding = this.getDefaultBinding();
+		const	binding			= this.getDefaultBinding();
 
-		const teamWrappers = binding.toJS(`teamWrapper`);
+		const	event			= this.getBinding().model,
+				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers.map((tw, index) => {
+			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw, index);
+
 			return ({
 				default:	binding.sub(`teamTable.${index}`),
-				model:		this.getBinding().model,
-				rival:		this.getBinding().rivals.sub(index)
+				model:		event,
+				rival:		currentRivalBinding
 			});
 		});
 	},
@@ -137,17 +141,32 @@ const TeamBundle = React.createClass({
 		const	binding				= this.getDefaultBinding(),
 				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
 
-		const teamWrappers = binding.toJS(`teamWrapper`);
+		const	event			= this.getBinding().model,
+				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers.map((tw, index) => {
+			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw, index);
+
 			return {
 				default	: binding.sub(`teamWrapper.${index}`),
 				model	: this.getBinding().model,
-				rival	: this.getBinding().rivals.sub(index),
+				rival	: currentRivalBinding,
 				players	: binding.sub(`players.${index}`),
 				error	: this.getBinding('error').sub(index)
 			};
 		});
+	},
+	getRivalBindingByTeamWrapperAndTeamWrapperIndex: function(event, teamWrapper, teamWrapperIndex) {
+		let currentRivalBinding;
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			const rivals = this.getBinding().rivals.toJS();
+
+			currentRivalBinding = rivals.find(rival => rival.id === teamWrapper.rivalIndex);
+		} else {
+			currentRivalBinding = this.getBinding().rivals.sub(teamWrapperIndex);
+		}
+
+		return currentRivalBinding;
 	},
 	getClassNamesForTeamWrapper: function() {
 		const	binding				= this.getDefaultBinding(),
