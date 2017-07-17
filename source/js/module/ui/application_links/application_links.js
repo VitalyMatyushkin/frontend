@@ -1,8 +1,7 @@
 /**
  * Created by Woland on 17.07.2017.
  */
-const 	React 		= require('react'),
-		Morearty	= require('morearty');
+const 	React 		= require('react');
 
 const ApplicationLinksStyles = require('styles/ui/b_application_links/b_application_links.scss');
 
