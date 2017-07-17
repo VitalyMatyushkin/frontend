@@ -1,18 +1,20 @@
 /**
  * Created by Vitaly on 11.07.17.
  */
-const   React   = require('react'),
-        AJAX    = require('module/core/AJAX'),
-        Logging = require('module/test_api/logging');
+const   React       = require('react'),
+        AJAX        = require('module/core/AJAX'),
+        LoggingList = require('module/test_api/logging-list'),
+        SVG 	    = require('module/ui/svg');
 
 const   domain   = "http://api.stage1.squadintouch.com";
 
 const ApplicationView = React.createClass({
     getInitialState: function() {
         return {
-            inputValue: '',
+            inputValue: "ubnbffa7ytajo1wikettgxkw1druigyp2edgri92",
             logs: [],
-            logId: 0
+            logId: 0,
+            finished: ''
         };
     },
 
@@ -34,6 +36,11 @@ const ApplicationView = React.createClass({
 
 
     handleSubmit: function() {
+        this.setState({
+            logs: [],
+            logId: 0,
+            finished: 'processed'
+        });
         this.checkCORSRequest()
         .then(() => {
             return this.getProfile();
@@ -44,23 +51,29 @@ const ApplicationView = React.createClass({
         .then((roles) => {
             return Promise.all(roles.data.map((role) => {
                 this.setRole(role.name)
-                    .then((selectedRole) => {
-                        return Promise.all(role.permissions.map((school) =>{
-                            this.getSchoolInfo(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role);
-                            this.getEvents(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                .then((selectedRole) => {
+                    return Promise.all(role.permissions.map((school) =>{
+                        this.getSchoolInfo(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                        .then(() => {
+                            return this.getEvents(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role);
+                        })
+                        .then(() => {
                             if (school.school.kind === 'School' && (selectedRole.data.role === 'ADMIN' || selectedRole.data.role === 'MANAGER' || selectedRole.data.role === 'TRAINER')) {
                                 Promise.all([
                                     this.getStudentList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getHouseList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getFormList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
-                                    this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
-                                        .then((event) => {
-                                            return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
-                                        })
-                                ]);
+                                    // this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                                    // .then((event) => {
+                                    //     return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
+                                    // })
+                                ]).then(() => {
+                                    this.setState({finished: 'completed'});
+                                })
                             }
-                        }));
-                    })
+                        });
+                    }));
+                });
             }));
         });
     },
@@ -74,7 +87,7 @@ const ApplicationView = React.createClass({
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`);
+            this.addLog(`${text}: ${res.textStatus}`, "message");
             return res;
         })
         .catch((err) => {
@@ -222,7 +235,8 @@ const ApplicationView = React.createClass({
             url: url,
             type: 'POST',
             headers: {usid},
-        }).then((res) => {
+        })
+        .then((res) => {
             this.addLog(`${text}: ${res.textStatus}`, "message");
             return res;
         })
@@ -240,7 +254,8 @@ const ApplicationView = React.createClass({
             url: url,
             type: typeRequest,
             headers: {usid},
-        }).then((res) => {
+        })
+        .then((res) => {
             this.addLog(`${text} ${typeRequest}: ${res.textStatus}`, "message");
             return res;
         })
@@ -264,25 +279,45 @@ const ApplicationView = React.createClass({
         , "err");
     },
 
+    showLogsBlock: function(logs, errorCount) {
+        if (this.state.finished === 'completed') {
+            return(
+                <div>
+                    <div className="bMessageBlock">
+                        {errorCount > 0 ? "There were some errors" : "Everything seems to be okay"}
+                    </div>
+                    <LoggingList logs={logs} />
+                </div>
+            );
+        } else {
+            if (this.state.finished === 'processed'){
+                return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
+            }
+        }
+    },
+
     render: function() {
-        const logs = this.state.logs;
-        const logsNode = logs.map((log) => {
-            return (<Logging log={log.text} key={log.id} type={log.type}/>)
-        });
+        let logs = [], errorCount = 0;
+        if (this.state.finished === 'completed') {
+            logs = this.state.logs;
+            logs.forEach((item) => {
+                if (item.type === "err") {
+                    errorCount++;
+                }
+            })
+        }
         return (
-            <div >
+            <div className="testApi">
                 <form className="bForm" onSubmit={this.handleSubmit}>
                     <input type="text" id="session-key-text" value={this.state.inputValue} onChange={this.updateInputValue}/>
                     <input type="submit" className="bButton" id="session-key-submit" value="Submit" />
                 </form>
-                <div className="bSchoolMaster">
-                    {logsNode}
-                </div>
+                
+                {this.showLogsBlock(logs, errorCount)}
             </div>
         );
     }
 
 });
-
 
 module.exports = ApplicationView;

@@ -180,7 +180,8 @@ const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
 		userInfo				= require('../styles/pages/user/b_user_info.scss'),
 		userName				= require('../styles/pages/user/b_user_name.scss'),
 		userPage				= require('../styles/pages/user/b_user_page.scss'),
-		userPhoto				= require('../styles/pages/user/b_user_photo.scss');
+		userPhoto				= require('../styles/pages/user/b_user_photo.scss'),
+		testApi					= require('../styles/pages/test-api.scss');
 
 const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
