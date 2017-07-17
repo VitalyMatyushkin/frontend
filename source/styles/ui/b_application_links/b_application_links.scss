@@ -1,0 +1,61 @@
+@import "../../!variables";
+
+.bApplicationLinks {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+}
+
+.eApplicationLink{
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.mIOS{
+  background-image: url('/images/icons/app_store.svg');
+  background-repeat: no-repeat;
+  background-size:contain;
+  width: 135px;
+  height: 40px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-right: 10px;
+}
+
+.mAndroid{
+  background-image: url('/images/icons/google_market.svg');
+  background-repeat: no-repeat;
+  background-size:contain;
+  width: 135px;
+  height: 40px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.mWeb{
+  color: $blueColor;
+  text-decoration: underline;
+  margin-top: 20px;
+  &:hover{
+	color: #000;
+	text-decoration: none;
+  }
+}
+
+.eApplicationLinkSeparator{
+  padding: 0;
+  border: none;
+  border-top: 1px solid $greyColor;
+  color: #333;
+  text-align: center;
+  &:after{
+	content: 'or';
+	display: inline-block;
+	position: relative;
+	top: -0.5em;
+	font-size: 1em;
+	padding: 0 0.4em;
+	color: $greyColor;
+	background: white;
+  }
+}
