@@ -10,9 +10,22 @@ function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 		default:
 			let promises = [];
 
-			teamWrappers.forEach((tw, index) => {
-				if(tw.isTeamChanged || isUserCreateNewTeam(tw)) {
-					promises = promises.concat(processTeam(schoolId, event, rivals[index], tw, tw.savingChangesMode));
+			teamWrappers.forEach(teamWrapper => {
+				if(
+					teamWrapper.isTeamChanged ||
+					isUserCreateNewTeam(teamWrapper)
+				) {
+					const currentRival = rivals.find(rival => rival.id === teamWrapper.rivalId);
+
+					promises = promises.concat(
+						processTeam(
+							schoolId,
+							event,
+							currentRival,
+							teamWrapper,
+							teamWrapper.savingChangesMode
+						)
+					);
 				}
 			});
 

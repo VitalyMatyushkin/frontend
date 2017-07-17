@@ -10,10 +10,13 @@ const	Promise							= require('bluebird'),
 const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		Manager							= require('../../../../ui/managers/manager');
 
-const	TeamHelper						= require('../../../../ui/managers/helpers/team_helper'),
+const	EventHelper						= require('module/helpers/eventHelper'),
+		TeamHelper						= require('../../../../ui/managers/helpers/team_helper'),
 		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
 		MoreartyHelper					= require('../../../../helpers/morearty_helper'),
 		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper');
+
+const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
 
 const InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin],
@@ -75,7 +78,7 @@ const InviteAcceptView = React.createClass({
 					//TODO wtf??
 					.set('model', Immutable.fromJS(invite.event))
 					.set('model.sportModel', Immutable.fromJS(invite.event.sport))
-					.set('rivals', Immutable.fromJS([invite.invitedSchool, invite.inviterSchool]))
+					.set('rivals', Immutable.fromJS(this.createRivalsByInvite(invite)))
 					.set('players', Immutable.fromJS([[],[]]))
 					.set('sync', true)
 					.set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
@@ -121,6 +124,11 @@ const InviteAcceptView = React.createClass({
 
         binding.clear();
     },
+	createRivalsByInvite: function(invite) {
+		return [
+			new InterSchoolsRivalModel(invite.invitedSchool)
+		];
+	},
 	showSavingChangesModePopup: function() {
 		this.getDefaultBinding().set('isSavingChangesModePopupOpen', true);
 	},
@@ -284,19 +292,39 @@ const InviteAcceptView = React.createClass({
 			'mDisable'			: !this.getDefaultBinding().toJS('isControlButtonActive')
 		});
 	},
+	renderManager: function() {
+		const	binding			= this.getDefaultBinding(),
+				event			= binding.toJS('model'),
+				managerBinding	= {
+					default:			binding,
+					selectedRivalIndex:	binding.sub('selectedRivalIndex'),
+					rivals:				binding.sub('rivals'),
+					players:			binding.sub('players'),
+					error:				binding.sub('error')
+				};
+
+		let isShowRivals = false;
+		if(EventHelper.isInterSchoolsEvent(event) && TeamHelper.isMultiparty(event)) {
+			isShowRivals = true;
+		}
+
+		return (
+			<Manager
+				isShowRivals		= { isShowRivals }
+				isInviteMode		= { true }
+				isShowAddTeamButton	= { false }
+				binding				= { managerBinding }
+			/>
+		);
+	},
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            managerBinding = {
-                default:            binding,
-                selectedRivalIndex: binding.sub('selectedRivalIndex'),
-                rivals:             binding.sub('rivals'),
-                players:            binding.sub('players'),
-                error:              binding.sub('error')
-            },
             sport = binding.sub('model.sport');
 
 		if(!!binding.get('sync')) {
+
+			console.log(this.getDefaultBinding().toJS('teamModeView.teamWrapper'));
 
 			// check control button state
 			// and if state was changed then call debounce decorator for changeControlButtonState
@@ -305,19 +333,18 @@ const InviteAcceptView = React.createClass({
 			return (
 				<div className="bInviteAccept">
 					<div className="bTeamManagerWrapper">
-						<Manager	isShowRivals		= { false }
-									isShowAddTeamButton	= { false }
-									binding				= {managerBinding}
-						/>
+						{ this.renderManager() }
 						<div className="eTeamManagerWrapper_footer">
-							<Button	text				= "Accept"
-									onClick				= {this.onClickAccept}
-									extraStyleClasses	= {this.getSaveButtonStyleClass()}
+							<Button
+								text				= "Accept"
+								onClick				= {this.onClickAccept}
+								extraStyleClasses	= {this.getSaveButtonStyleClass()}
 							/>
 						</div>
 					</div>
-					<SavingPlayerChangesPopup	binding	= {binding}
-												submit	= {() => this._submit()}
+					<SavingPlayerChangesPopup	binding			= { binding }
+												activeSchoolId	= { this.activeSchoolId }
+												submit			= { () => this._submit() }
 					/>
 				</div>
 			);

@@ -14,7 +14,6 @@ const	TeamChooserStyles	= require('../../../../../styles/ui/teams_manager/b_riva
 const DefaultRivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isShowRivals			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number,
@@ -31,13 +30,13 @@ const DefaultRivals = React.createClass({
 
 		return rivals.map((rival, index) => {
 			const	disable		= this.isRivalDisable(rival),
-				eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
+					eventType	= TeamHelper.getEventType(this.getDefaultBinding().toJS('model'));
 
 			let text = '';
 			switch (eventType) {
 				case 'houses':
 				case 'inter-schools':
-					text = rival.name;
+					text = rival.school.name;
 					break;
 				case 'internal':
 					const names = ['First', 'Second', 'Third'];
@@ -51,7 +50,6 @@ const DefaultRivals = React.createClass({
 
 			if(
 				!TeamHelper.isInternalEventForIndividualSport(event) &&
-				this.props.isShowRivals &&
 				(typeof this.props.indexOfDisplayingRival !== 'undefined' ? index === this.props.indexOfDisplayingRival : true)
 			) {
 				const xmlRivals = [];
@@ -62,8 +60,9 @@ const DefaultRivals = React.createClass({
 					index !== rivals.length
 				) {
 					xmlRivals.push(
-						<span	key			= 'team-index-separator'
-								 className	= 'eRivalChooser_separator'
+						<span
+							key			= 'team-index-separator'
+							className	= 'eRivalChooser_separator'
 						>
 							vs.
 						</span>
@@ -97,7 +96,7 @@ const DefaultRivals = React.createClass({
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.id !== activeSchoolId &&
+			rival.school.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},

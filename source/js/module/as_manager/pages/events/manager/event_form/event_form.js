@@ -18,6 +18,9 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 		SquareCrossButton				= require('module/ui/square_cross_button'),
 		HousesManager					= require('module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager');
 
+// Models
+const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
+
 // Helpers
 const	EventFormActions				= require('./event_form_actions'),
 		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
@@ -61,7 +64,7 @@ const EventForm = React.createClass({
 			filter: {
 				where: {
 					id: {
-						$nin: rivals.map(r => r.id)
+						$nin: rivals.map(r => r.school.id)
 					},
 					name: { like: schoolName }
 				},
@@ -75,10 +78,9 @@ const EventForm = React.createClass({
 	 * @returns {*}
 	 */
 	schoolService: function(schoolName) {
-		const binding = this.getDefaultBinding();
+		const	binding					= this.getDefaultBinding();
 
 		const	activeSchool			= binding.toJS('schoolInfo'),
-				activeSchoolId			= activeSchool.id,
 				activeSchoolPostcode	= activeSchool.postcode,
 				rivals					= binding.toJS('rivals'),
 				fartherThen				= binding.toJS('fartherThen');
@@ -131,11 +133,12 @@ const EventForm = React.createClass({
 
 		binding.set('model.ages', Immutable.fromJS(selections));
 	},
-	onSelectRival: function (order, id, model) {
+	onSelectInterSchoolsRival: function (order, id, model) {
 		const binding	= this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
-			binding.set(`rivals.${order}`, Immutable.fromJS(model));
+			const rival = new InterSchoolsRivalModel(model);
+			binding.set(`rivals.${order}`, Immutable.fromJS(rival));
 		}
 	},
 	getSports: function () {
@@ -205,24 +208,35 @@ const EventForm = React.createClass({
 				sport	= event.sportModel,
 				rivals	= binding.toJS('rivals');
 
-		const choosers = rivals.filter((rival, rivalIndex) => rivalIndex !== 0).map((rival, rivalIndex) => {
-			return (
-				<span>
-					<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivalIndex + 1}`)}
-									serviceFilter	= {this.schoolService}
-									serverField		= "name"
-									placeholder		= "Enter school name"
-									onSelect		= {this.onSelectRival.bind(null, rivalIndex + 1)}
-									binding			= {binding.sub(`autocomplete.inter-schools.${rivalIndex}`)}
-									extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-									customListItem	= {SchoolItemList}
-					/>
-					<SquareCrossButton
-						handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex + 1)}
-					/>
-				</span>
-			);
-		});
+		const getElementTitle = function(item) {
+			let name = '';
+
+			if(typeof item.school !== 'undefined') {
+				name = item.school.name;
+			}
+
+			return name;
+		};
+
+		const choosers = rivals
+			.filter((rival, rivalIndex) => rivalIndex !== 0)
+			.map((rival, rivalIndex) => {
+				return (
+					<span>
+						<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivalIndex + 1}`) }
+										serviceFilter	= { this.schoolService }
+										getElementTitle	= { getElementTitle }
+										placeholder		= "Enter school name"
+										onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex + 1) }
+										extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
+										customListItem	= { SchoolItemList }
+						/>
+						<SquareCrossButton
+							handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex + 1)}
+						/>
+					</span>
+				);
+			});
 
 		if(
 			rivals.length === 1 ||
@@ -233,14 +247,13 @@ const EventForm = React.createClass({
 			)
 		) {
 			choosers.push(
-				<Autocomplete	defaultItem		= {binding.toJS(`rivals.${rivals.length}`)}
-								serviceFilter	= {this.schoolService}
-								serverField		= "name"
+				<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivals.length}`) }
+								serviceFilter	= { this.schoolService }
+								getElementTitle	= { getElementTitle }
 								placeholder		= "Enter school name"
-								onSelect		= {this.onSelectRival.bind(null, rivals.length)}
-								binding			= {binding.sub(`autocomplete.inter-schools.${rivals.length}`)}
+								onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
 								extraCssStyle	= "mBigSize mWhiteBG"
-								customListItem	= {SchoolItemList}
+								customListItem	= { SchoolItemList }
 				/>
 			);
 		}
@@ -292,7 +305,8 @@ const EventForm = React.createClass({
 					</div>
 					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
-				<If	condition	= {this.isShowDistanceSelector()}
+				<If
+					condition	= {this.isShowDistanceSelector()}
 					key			= {'if-farther-then'}
 				>
 					<div className="bInputWrapper">
@@ -308,12 +322,15 @@ const EventForm = React.createClass({
 						</select>
 					</div>
 				</If>
-				<If	condition	= {type === 'inter-schools'}
+				<If
+					condition	= {type === 'inter-schools'}
 					key			= {'if-choose-school'}
 				>
 					{ this.renderSchoolChoosers() }
 				</If>
-				<If condition={type === 'houses'}>
+				<If
+					condition={type === 'houses'}
+				>
 					<HousesManager
 						binding			= { binding }
 						activeSchoolId	= { binding.get('schoolInfo.id') }

@@ -1072,37 +1072,37 @@ function getTeamBundles(event) {
 function createTeams(schoolId, event, rivals, teamWrappers) {
 	const self = this;
 
-	return rivals.map((rival, i) => {
-		if(!teamWrappers[i].isSetTeamLater) {
-			// TODO it's strange code construction, yes
-			// i can filter wrong team trapper
-			// but i need natural index of rival
-			// for EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event)
-			// Resolve of this problem is a - general model, it some sort of package for rival
-			// team wrapper and other related things
+	let filteredRivals;
+	if(EventHelper.isInterSchoolsEvent(event)) {
+		// only active school rivals
+		filteredRivals = rivals.filter(rival => rival.school.id === schoolId);
+	} else {
+		filteredRivals = rivals;
+	}
 
-
-			// Multiparty inter school event
-			switch (true) {
-				case EventHelper.isInterSchoolsEvent(event) && this.isMultiparty(event) && rival.id === schoolId: {
-					const teamWrapper = teamWrappers.find(tw => tw.rivalIndex === i);
-
-					return self.createTeam(schoolId, event, rival, teamWrapper);
-				}
-				case EventHelper.isInterSchoolsEvent(event) && rival.id === schoolId: {
-					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
-				}
-				case EventHelper.isInterSchoolsEvent(event) && rival.id !== schoolId: {
-					return undefined;
-				}
-				default: {
-					return self.createTeam(schoolId, event, rival, teamWrappers[i]);
-				}
-			}
+	let teamPromises = [];
+	filteredRivals.forEach((rival, i) => {
+		let currentTeamWrapper;
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			currentTeamWrapper = teamWrappers.find(teamWrapper => teamWrapper.rivalId === rival.id);
+		} else {
+			currentTeamWrapper = teamWrappers[i];
 		}
-	}).filter(p => typeof p !== 'undefined');
-}
 
+		if(!currentTeamWrapper.isSetTeamLater) {
+			teamPromises = teamPromises.concat(
+				self.createTeam(
+					schoolId,
+					event,
+					rival,
+					currentTeamWrapper
+				)
+			);
+		}
+	});
+
+	return teamPromises;
+}
 
 function createTeam(schoolId, event, rival, teamWrapper) {
 	const self = this;
