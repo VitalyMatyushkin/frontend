@@ -10,7 +10,7 @@ const   domain   = "http://api.stage1.squadintouch.com";
 const ApplicationView = React.createClass({
     getInitialState: function() {
         return {
-            inputValue: '0cki6wswjr8ynsf5adok95iibr3jco7wr9gyabca',
+            inputValue: 'kfaanlo2dl7g5e5ehz11hx1re4hzbe6f1247a4wu',
             logs: [],
             logId: 0
         };
@@ -41,27 +41,25 @@ const ApplicationView = React.createClass({
         .then((roles) => {
             return Promise.all(roles.data.map((role) => {
                 this.setRole(role.name)
-                .then((selectedRole) => {
-                    this.getSchools(selectedRole.data.key, selectedRole.data.role)
-                    .then((schools) => {
-                        return Promise.all(schools.data.map((school) => {
-                            if (selectedRole.data.role === 'ADMIN' || selectedRole.data.role === 'MANAGER' || selectedRole.data.role === 'TRAINER') {
+                    .then((selectedRole) => {
+                        return Promise.all(role.permissions.map((school) =>{
+                            this.getSchoolInfo(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role);
+                            this.getEvents(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                            if (school.school.kind === 'School' && (selectedRole.data.role === 'ADMIN' || selectedRole.data.role === 'MANAGER' || selectedRole.data.role === 'TRAINER')) {
                                 Promise.all([
-                                    this.getStudentList(selectedRole.data.key, school.id, school.name, selectedRole.data.role),
-                                    this.getHouseList(selectedRole.data.key, school.id, school.name, selectedRole.data.role),
-                                    this.getFormList(selectedRole.data.key, school.id, school.name, selectedRole.data.role),
-                                    this.createEvent(selectedRole.data.key, school.id, school.name, selectedRole.data.role)
+                                    this.getStudentList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
+                                    this.getHouseList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
+                                    this.getFormList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
+                                    this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
                                         .then((event) => {
-                                        return this.activateEvent(selectedRole.data.key, school.id, school.name, event.data.id, selectedRole.data.role);
+                                            return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
                                         })
-                                ])
+                                ]);
                             }
-                            this.getEvents(selectedRole.data.key, school.id, school.name, selectedRole.data.role)
-                        }))
+                        }));
                     })
-                })
             }));
-        })
+        });
         event.preventDefault();
     },
 
@@ -116,9 +114,9 @@ const ApplicationView = React.createClass({
         });
     },
 
-    getSchools: function(usid, role) {
-        const   url = `${domain}/i/schools?filter=%22%22`,
-                text = `Info about schools for role: ${role}`;
+    getSchoolInfo: function(usid, schoolId, schoolName, role) {
+        const   url = `${domain}/i/schools/${schoolId}?filter=%22%22`,
+            text = `Info about school ${schoolName} for role: ${role}`;
         return AJAX({
             url: url,
             type: 'GET',
@@ -127,9 +125,9 @@ const ApplicationView = React.createClass({
             this.addLog(`${text}: ${res.textStatus}`, "message");
             return res;
         })
-        .catch((err) => {
-            this.showError(err, "GET", url, usid, text);
-        });
+            .catch((err) => {
+                this.showError(err, "GET", url, usid, text);
+            });
     },
 
     getStudentList: function(usid, schoolId, schoolName, role) {
@@ -181,7 +179,7 @@ const ApplicationView = React.createClass({
     },
 
     getEvents: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}/events`,
+        const   url = `${domain}/i/schools/${schoolId}/events?filter=%7B%22limit%22%3A200%2C%22where%22%3A%7B%22startTime%22%3A%7B%22%24gte%22%3A%222017-07-16T18%3A00%3A00.000Z%22%2C%22%24lt%22%3A%222017-07-17T18%3A00%3A00.000Z%22%7D%2C%22%24or%22%3A%5B%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22INTERNAL_HOUSES%22%2C%22INTERNAL_TEAMS%22%5D%7D%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%7B%22%24ne%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%22invitedSchoolIds%22%3A%2257d154fdf07ed2150ef39bde%22%2C%22status%22%3A%7B%22%24in%22%3A%5B%22ACCEPTED%22%2C%22REJECTED%22%2C%22FINISHED%22%2C%22CANCELED%22%5D%7D%7D%5D%7D%7D&{}`,
                 text = `Events for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
@@ -263,12 +261,14 @@ const ApplicationView = React.createClass({
             return (<Logging log={log.text} key={log.id} type={log.type}/>)
         });
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" value={this.state.inputValue} onChange={this.updateInputValue}/>
-                    <input type="submit" value="Submit" />
+            <div >
+                <form className="bForm" onSubmit={this.handleSubmit}>
+                    <input type="text" id="session-key-text" value={this.state.inputValue} onChange={this.updateInputValue}/>
+                    <input type="submit" className="bButton" id="session-key-submit" value="Submit" />
                 </form>
-                {logsNode}
+                <div className="bSchoolMaster">
+                    {logsNode}
+                </div>
             </div>
         );
     }
