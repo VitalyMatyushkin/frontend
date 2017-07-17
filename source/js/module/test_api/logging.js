@@ -8,11 +8,14 @@ const Logging = React.createClass({
         let colorBlock = this.props.type === "err" ? "#FFA07A" : "#98FB98";
         const divStyle = {
             background: colorBlock,
-            padding: "5px"
+            padding: "5px",
+            margin: "3px"
         };
         return (
             <div style={divStyle}>
-                {this.props.log}
+                {this.props.log.split('\n').map((item, i) =>
+                    <div key={i}>{item}</div>
+                )}
             </div>
         );
     }

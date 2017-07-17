@@ -10,19 +10,19 @@ const   domain   = "http://api.stage1.squadintouch.com";
 const ApplicationView = React.createClass({
     getInitialState: function() {
         return {
-            inputValue: 'kfaanlo2dl7g5e5ehz11hx1re4hzbe6f1247a4wu',
+            inputValue: '',
             logs: [],
             logId: 0
         };
     },
 
-    updateInputValue: (event) => {
+    updateInputValue: function(event) {
         this.setState({
             inputValue: event.target.value
         });
     },
 
-    addLog: function(val, type){
+    addLog: function(val, type) {
         let id = this.state.logId;
         id++;
         this.setState({logId: id});
@@ -33,9 +33,12 @@ const ApplicationView = React.createClass({
     },
 
 
-    handleSubmit: function(event) {
-        this.optionRequest();
-        this.getProfile().then(() => {
+    handleSubmit: function() {
+        this.checkCORSRequest()
+        .then(() => {
+            return this.getProfile();
+        })
+        .then(() => {
             return this.getRoles()
         })
         .then((roles) => {
@@ -60,7 +63,6 @@ const ApplicationView = React.createClass({
                     })
             }));
         });
-        event.preventDefault();
     },
 
     getProfile: function() {
@@ -229,18 +231,25 @@ const ApplicationView = React.createClass({
         });
     },
 
-    optionRequest: function() {
+    checkCORSRequest: function() {
         const   url = `${domain}/i/profile?filter=%22%22`,
-                text = `OPTIONS REQUEST`;
+                usid = this.state.inputValue,
+                text = `CORS`,
+                typeRequest = "GET";
         return AJAX({
             url: url,
-            type: 'OPTIONS'
+            type: typeRequest,
+            headers: {usid},
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text} ${typeRequest}: ${res.textStatus}`, "message");
             return res;
         })
         .catch((err) => {
-            this.addLog(`${text} status: ${err.xhr.status}`, "err");
+            if (typeof err.xhr === "undefined") {
+                this.addLog(`${text} not supported`, "err");
+            } else {
+                this.showError(err, typeRequest, url, usid, text);
+            }
         });
     },
 
