@@ -1,10 +1,13 @@
-const	React			= require('react'),
-		Immutable		= require('immutable'),
-		Morearty		= require('morearty'),
-		LoginForm		= require('../../ui/login/user/form'),
-		LoginError		= require('../../ui/login/user/error'),
-		RoleSelector	= require('../../as_login/pages/RoleSelector'),
-		SVG				= require('../../ui/svg');
+const	React				= require('react'),
+		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
+		bowser 				= require('bowser'),
+		LoginForm			= require('../../ui/login/user/form'),
+		LoginError			= require('../../ui/login/user/error'),
+		RoleSelector		= require('../../as_login/pages/RoleSelector'),
+		ApplicationLinks 	= require('../../ui/application_links/application_links'),
+		ApplicationConst	= require('module/helpers/consts/application_links'),
+		SVG					= require('../../ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -50,12 +53,12 @@ const LoginUserPage = React.createClass({
 	isAuthorized: function() {
 		return typeof this.getDefaultBinding().toJS("authorizationInfo.userId") !== 'undefined';
 	},
-	render: function() {
+	renderCurrentView: function(){
 		let currentView;
 		
 		const	showError		= this.getDefaultBinding().get('showError'),
 				allPermissions	= this.getDefaultBinding().get('__allPermissions');
-
+		
 		switch (true) {
 			case showError === true:
 				currentView = (
@@ -77,13 +80,42 @@ const LoginUserPage = React.createClass({
 				);
 				break;
 		}
-
-		return (
+		return currentView;
+	},
+	isFirstVisitFromMobile: function(){
+		const isFirstVisit = typeof this.getDefaultBinding().get('isFirstVisit') === 'undefined';
+		return isFirstVisit && bowser.mobile;
+	},
+	onClickWebVersion: function(){
+		const binding = this.getDefaultBinding();
+		binding.set('isFirstVisit', false);
+	},
+	onClickIOSVersion: function (){
+		window.open(ApplicationConst.APPLICATION_LINKS.IOS);
+	},
+	onClickAndroidVersion: function (){
+		window.open(ApplicationConst.APPLICATION_LINKS.ANDROID);
+	},
+	render: function() {
+		if (this.isFirstVisitFromMobile()) {
+			return (
 			<div className="bPageMessage">
 				<SVG classes="bLoginIcon" icon="icon_login"/>
-				{currentView}
+					<ApplicationLinks
+						onClickWebVersion 		= {this.onClickWebVersion}
+						onClickIOSVersion 		= {this.onClickIOSVersion}
+						onClickAndroidVersion 	= {this.onClickAndroidVersion}
+					/>
 			</div>
-		)
+			);
+		} else {
+			return (
+				<div className="bPageMessage">
+					<SVG classes="bLoginIcon" icon="icon_login"/>
+					{this.renderCurrentView()}
+				</div>
+			)
+		}
 	}
 });
 

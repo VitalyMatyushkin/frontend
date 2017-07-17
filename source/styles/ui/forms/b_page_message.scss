@@ -38,3 +38,9 @@
   width: 100%;
   max-width: 200px;
 }
+
+@media screen and (max-width: 450px) {
+  .bPageMessage{
+	width: 100%;
+  }
+}
