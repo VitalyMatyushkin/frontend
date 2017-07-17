@@ -271,13 +271,25 @@ const ManagerWrapper = React.createClass({
 				event	= binding.toJS('model');
 
 		return (
+			!EventHelper.isInterSchoolsEvent(event) && TeamHelper.isMultiparty(event) &&
 			!TeamHelper.isInternalEventForIndividualSport(event) &&
 			!TeamHelper.isInternalEventForTeamSport(event)
 		)
 	},
-	render: function() {
+	renderManager: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
+
+		return (
+			<Manager	binding					= {managerBinding}
+						isShowRivals			= {this.isShowRivals()}
+						isShowAddTeamButton		= {false}
+						indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
+			/>
+		)
+	},
+	render: function() {
+		const binding = this.getDefaultBinding();
 
 		// check control button state
 		// and if state was changed then call debounce decorator for changeControlButtonState
@@ -286,11 +298,7 @@ const ManagerWrapper = React.createClass({
 		// provide isShowRivals by isInviteMode is a trick
 		return (
 			<div className="bTeamManagerWrapper">
-				<Manager	binding					= {managerBinding}
-							isShowRivals			= {this.isShowRivals()}
-							isShowAddTeamButton		= {false}
-							indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
-				/>
+				{ this.renderManager() }
 				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}
 											submit	= {this.handleClickPopupSubmit}
 				/>

@@ -28,6 +28,7 @@ const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isShowRivals			: React.PropTypes.bool,
+		isInviteMode			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
@@ -549,6 +550,21 @@ const Manager = React.createClass({
 				);
 		}
 	},
+	renderRivals: function() {
+		if(this.props.isShowRivals) {
+			return (
+				<RivalChooser
+					binding					= { this.getBinding() }
+					isInviteMode			= { this.props.isInviteMode }
+					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
+					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
+					handleClickAddTeam		= { this.handleClickAddTeam }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	defaultBinding		= this.getDefaultBinding(),
 				binding				= this.getBinding(),
@@ -562,13 +578,7 @@ const Manager = React.createClass({
 
 		return (
 			<div className="bTeamsManager">
-				<RivalChooser
-					binding					= { binding }
-					isShowRivals			= { this.props.isShowRivals }
-					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
-					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
-					handleClickAddTeam		= { this.handleClickAddTeam }
-				/>
+				{ this.renderRivals() }
 				<div className="eTeamsManager_body">
 					<TeamBundle binding={teamBundleBinding}/>
 					{this.renderGameField()}

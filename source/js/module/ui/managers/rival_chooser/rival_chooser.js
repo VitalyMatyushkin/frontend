@@ -16,7 +16,7 @@ const	TeamChooserStyles				= require('../../../../../styles/ui/teams_manager/b_r
 const RivalChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isShowRivals			: React.PropTypes.bool,
+		isInviteMode			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number
@@ -31,8 +31,7 @@ const RivalChooser = React.createClass({
 			return (
 				<InterSchoolsMultipartyRivals
 					binding					= { this.getBinding() }
-					isShowRivals			= { this.props.isShowRivals }
-					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
+					isInviteMode			= { this.props.isInviteMode }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.props.handleClickAddTeam }
 					handleChooseRival		= { this.handleChooseRival }
@@ -42,7 +41,6 @@ const RivalChooser = React.createClass({
 			return (
 				<DefaultRivals
 					binding					= { this.getBinding() }
-					isShowRivals			= { this.props.isShowRivals }
 					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.props.handleClickAddTeam }

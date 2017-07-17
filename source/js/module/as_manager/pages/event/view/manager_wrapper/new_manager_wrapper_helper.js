@@ -1,6 +1,7 @@
-const	EventHelper	= require('./../../../../../helpers/eventHelper'),
-		TeamHelper	= require('./../../../../../ui/managers/helpers/team_helper'),
-		propz		= require('propz');
+const	EventHelper				= require('./../../../../../helpers/eventHelper'),
+		TeamHelper				= require('./../../../../../ui/managers/helpers/team_helper'),
+		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
+		propz					= require('propz');
 
 const NewManagerWrapperHelper = {
 	getRivals: function(event, rivals) {
@@ -12,21 +13,19 @@ const NewManagerWrapperHelper = {
 		// Add school or house
 		switch (true) {
 			case EventHelper.isInterSchoolsEvent(event):
-				rival = {
-					id:			_rival.school.id,
-					name:		_rival.school.name
-				};
+				rival = new InterSchoolsRivalModel(_rival.school);
+
 				break;
 			case EventHelper.isHousesEvent(event):
 				rival = {
-					id:			_rival.house.id,
-					name:		_rival.name
+					id:		_rival.house.id,
+					name:	_rival.name
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
 				rival = {
-					id:			'',
-					name:		''
+					id:		'',
+					name:	''
 				};
 				break;
 		}

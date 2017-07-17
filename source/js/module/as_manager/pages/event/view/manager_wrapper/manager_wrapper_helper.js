@@ -26,10 +26,8 @@ const ManagerWrapperHelper = {
 						school = event.inviterSchool.id !== activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
 						break;
 				}
-				rival = {
-					id:			school.id,
-					name:		school.name
-				};
+
+				rival = new InterSchoolsRivalModel(school);
 				break;
 			case EventHelper.isHousesEvent(event):
 				rival = {

@@ -14,7 +14,6 @@ const	TeamChooserStyles	= require('../../../../../styles/ui/teams_manager/b_riva
 const DefaultRivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isShowRivals			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number,
@@ -51,7 +50,6 @@ const DefaultRivals = React.createClass({
 
 			if(
 				!TeamHelper.isInternalEventForIndividualSport(event) &&
-				this.props.isShowRivals &&
 				(typeof this.props.indexOfDisplayingRival !== 'undefined' ? index === this.props.indexOfDisplayingRival : true)
 			) {
 				const xmlRivals = [];
@@ -62,8 +60,9 @@ const DefaultRivals = React.createClass({
 					index !== rivals.length
 				) {
 					xmlRivals.push(
-						<span	key			= 'team-index-separator'
-								 className	= 'eRivalChooser_separator'
+						<span
+							key			= 'team-index-separator'
+							className	= 'eRivalChooser_separator'
 						>
 							vs.
 						</span>

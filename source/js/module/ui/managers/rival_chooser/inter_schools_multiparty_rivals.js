@@ -16,11 +16,11 @@ const	TeamChooserStyles	= require('../../../../../styles/ui/teams_manager/b_riva
 const InterSchoolsMultipartyRivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		indexOfDisplayingRival	: React.PropTypes.number,
+		isInviteMode			: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func.isRequired,
 		handleChooseRival		: React.PropTypes.func.isRequired
 	},
-	getRivals: function () {
+	getSchools: function () {
 		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
 				rivals				= this.getBinding('rivals').toJS();
 
@@ -36,12 +36,12 @@ const InterSchoolsMultipartyRivals = React.createClass({
 
 		const event = this.getDefaultBinding().toJS('model');
 		return schools.map((school, index) => {
-			const	disable		= this.isRivalDisable(school),
+			const	disable		= this.isSchoolDisable(school),
 					eventType	= TeamHelper.getEventType(event);
 
 			let text = school.name;
 
-			if(this.isShowCurrentRivalByIndex(index)) {
+			if(this.isShowSchoolByIndex(index)) {
 				const xmlRivals = [];
 
 				if(this.isShowVSLabelByIndex(index, rivals.length)) {
@@ -63,7 +63,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 				});
 
 				xmlRivals.push(
-					this.getRival(school.id, index, teamClasses, text, disable)
+					this.getSchool(school.id, index, teamClasses, text, disable)
 				);
 
 				return xmlRivals;
@@ -75,11 +75,17 @@ const InterSchoolsMultipartyRivals = React.createClass({
 	 * @param index
 	 * @returns {boolean}
 	 */
-	isShowCurrentRivalByIndex: function(index) {
+	isShowSchoolByIndex: function(index) {
 		const indexOfDisplayingRival = this.props.indexOfDisplayingRival;
 
-		// Show any rivals if indexOfDisplayingRival is undefined or show only rival with index === indexOfDisplayingRival
-		return typeof indexOfDisplayingRival !== 'undefined' ? index === indexOfDisplayingRival : true;
+		if(this.props.isInviteMode) {
+			// for invite mode show only first school
+			return index === 0;
+		} else {
+			// Show any rivals if indexOfDisplayingRival is undefined or show only rival with index === indexOfDisplayingRival
+			return typeof indexOfDisplayingRival !== 'undefined' ? index === indexOfDisplayingRival : true;
+		}
+
 	},
 	/**
 	 * It's a rule for displaying "vs" text label between rivals.
@@ -96,13 +102,13 @@ const InterSchoolsMultipartyRivals = React.createClass({
 			currentRivalIndex !== rivalsLength
 		);
 	},
-	getRival: function(schoolId, index, teamClasses, text, disable) {
+	getSchool: function(schoolId, index, teamClasses, text, disable) {
 		if(index === 0) {
 			return (
 				<ActionList
 					buttonText				= {text}
 					actionList				= {this.getRivalActionList(schoolId)}
-					handleClickActionItem	= {this.handleClickItemFormRivalActionList.bind(null, schoolId)}
+					handleClickActionItem	= {this.handleClickItemFromRivalActionList}
 				/>
 			);
 		} else {
@@ -145,18 +151,18 @@ const InterSchoolsMultipartyRivals = React.createClass({
 
 		return rivalActionList;
 	},
-	isRivalDisable: function(rival) {
+	isSchoolDisable: function(rival) {
 		const	binding			= this.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.school.id !== activeSchoolId &&
+			rival.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},
-	handleClickItemFormRivalActionList: function(actionItemId) {
+	handleClickItemFromRivalActionList: function(actionItemId) {
 		switch (actionItemId) {
 			case 'add_team':
 				this.props.handleClickAddTeam();
@@ -164,16 +170,17 @@ const InterSchoolsMultipartyRivals = React.createClass({
 				break;
 			default:
 				// This code string is only for show that by default actionItemId is a rivalIndex
-				const rivalId = actionItemId;
+				const	currentRivalId		= actionItemId,
+						currentRivalIndex	= this.getBinding('rivals').toJS().findIndex(r => r.id === currentRivalId);
 
-				this.props.handleChooseRival(rivalId);
+				this.props.handleChooseRival(currentRivalIndex);
 				break;
 		}
 	},
 	render: function() {
 		return (
 			<span>
-				{this.getRivals()}
+				{this.getSchools()}
 			</span>
 		);
 	}
