@@ -748,8 +748,9 @@ const EventManager = React.createClass({
 
 		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
 			return (
-				<EventForm	binding		= {commonBinding}
-							isCopyMode	= {this.isCopyMode}
+				<EventForm	binding			= { commonBinding }
+							activeSchoolId	= { this.props.activeSchoolId }
+							isCopyMode		= { this.isCopyMode }
 				/>
 			);
 		} else {
