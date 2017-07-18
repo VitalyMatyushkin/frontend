@@ -39,7 +39,8 @@ const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wr
 const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isCopyMode : React.PropTypes.bool
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		isCopyMode:		React.PropTypes.bool
 	},
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
@@ -218,16 +219,15 @@ const EventForm = React.createClass({
 			return name;
 		};
 
-		const choosers = rivals
-			.filter((rival, rivalIndex) => rivalIndex !== 0)
-			.map((rival, rivalIndex) => {
+		const choosers = rivals.map((rival, rivalIndex) => {
+			if(rival.school.id !== this.props.activeSchoolId) {
 				return (
 					<span>
-						<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivalIndex + 1}`) }
+						<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivalIndex}`) }
 										serviceFilter	= { this.schoolService }
 										getElementTitle	= { getElementTitle }
 										placeholder		= "Enter school name"
-										onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex + 1) }
+										onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
 										extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
 										customListItem	= { SchoolItemList }
 						/>
@@ -236,12 +236,17 @@ const EventForm = React.createClass({
 						/>
 					</span>
 				);
-			});
+			} else {
+				return undefined;
+			}
+		}).filter(r => typeof r !== 'undefined');
 
+
+		const filteredRivals = rivals.filter(r => r.school.id !== this.props.activeSchoolId);
 		if(
-			rivals.length === 1 ||
+			filteredRivals.length === 0 ||
 			(
-				rivals.length >= 2 &&
+				filteredRivals.length >= 1 &&
 				typeof sport !== 'undefined' && sport.multiparty &&
 				(TeamHelper.isTeamSport(event) || TeamHelper.isIndividualSport(event))
 			)
@@ -333,7 +338,7 @@ const EventForm = React.createClass({
 				>
 					<HousesManager
 						binding			= { binding }
-						activeSchoolId	= { binding.get('schoolInfo.id') }
+						activeSchoolId	= { this.props.activeSchoolId }
 					/>
 				</If>
 				<EventVenue	binding					= { binding }
