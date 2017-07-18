@@ -1391,7 +1391,15 @@ function isNewTabs(event) {
 }
 
 function isMultiparty(event) {
-	let multiparty = typeof event.sport !== 'undefined' ? event.sport.multiparty : event.sportModel.multiparty;
+	let multiparty = false;
+
+	if(typeof propz.get(event, ['sport', 'multiparty']) !== 'undefined') {
+		multiparty = propz.get(event, ['sport', 'multiparty']);
+	}
+
+	if(typeof propz.get(event, ['sportModel', 'multiparty']) !== 'undefined') {
+		multiparty = propz.get(event, ['sportModel', 'multiparty']);
+	}
 
 	return multiparty;
 }

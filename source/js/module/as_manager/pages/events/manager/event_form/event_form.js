@@ -3,9 +3,7 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 		propz							= require('propz'),
-		If								= require('../../../../../ui/if/if'),
-		Autocomplete					= require('../../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		SchoolItemList					= require('../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item');
+		If								= require('../../../../../ui/if/if');
 
 // EventForm React components
 const	DateSelectorWrapper				= require('./components/date_selector/date_selector_wrapper'),
@@ -15,18 +13,12 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
 		TimeInputWrapper				= require('../time_input_wrapper'),
 		EventVenue						= require('../event_venue'),
-		SquareCrossButton				= require('module/ui/square_cross_button'),
+		SchoolsManager					= require('module/as_manager/pages/events/manager/event_form/components/schools_manager/schools_manager'),
 		HousesManager					= require('module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager');
 
-// Models
-const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
-
 // Helpers
-const	EventFormActions				= require('./event_form_actions'),
-		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
-		EventHelper						= require('../../eventHelper'),
-		GeoSearchHelper					= require('../../../../../helpers/geo_search_helper'),
-		SportHelper 					= require('module/helpers/sport_helper');
+const	EventHelper						= require('../../eventHelper'),
+		RandomHelper					= require('module/helpers/random_helper');
 
 // Styles
 const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
@@ -50,15 +42,8 @@ const EventForm = React.createClass({
 		binding.atomically()
 			.set('isShowAllSports', !isSchoolHaveFavoriteSports )
 			.set('isSchoolHaveFavoriteSports', isSchoolHaveFavoriteSports)
-			.set('eventFormOpponentSchoolKey', Immutable.fromJS(this.getRandomString()))
+			.set('eventFormOpponentSchoolKey', Immutable.fromJS(RandomHelper.getRandomString()))
 			.commit();
-	},
-	getActiveSchoolId: function() {
-		return this.getDefaultBinding().toJS('schoolInfo.id');
-	},
-	getRandomString: function() {
-		// just current date in timestamp view
-		return + new Date();
 	},
 	getMainSchoolFilter: function(rivals, schoolName) {
 		return {
@@ -73,59 +58,13 @@ const EventForm = React.createClass({
 			}
 		};
 	},
-	/**
-	 * School filtering service
-	 * @param schoolName
-	 * @returns {*}
-	 */
-	schoolService: function(schoolName) {
-		const	binding					= this.getDefaultBinding();
-
-		const	activeSchool			= binding.toJS('schoolInfo'),
-				activeSchoolPostcode	= activeSchool.postcode,
-				rivals					= binding.toJS('rivals'),
-				fartherThen				= binding.toJS('fartherThen');
-
-		const filter = this.getMainSchoolFilter(rivals, schoolName);
-		if(typeof activeSchoolPostcode !== 'undefined') {
-			const point = activeSchoolPostcode.point;
-			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
-		} else {
-			filter.filter.order = "name ASC";
-		}
-
-		let schools;
-		return window.Server.publicSchools.get(filter)
-			.then(_schools => {
-				schools = _schools;
-
-				return this.getTBDSchool();
-			})
-			.then(data => {
-				if(data.length > 0 && data[0].name === "TBD") {
-					// set TBD school at first
-					schools.unshift(data[0]);
-				}
-				return schools;
-			});
-	},
-	getTBDSchool: function() {
-		const filter = {
-			filter: {
-				where: {
-					name: { like: "TBD" }
-				}
-			}
-		};
-		return window.Server.publicSchools.get(filter);
-	},
 	handleChangeFartherThan: function (eventDescriptor) {
 		const	binding	= this.getDefaultBinding(),
 				rivals	= binding.toJS('rivals');
 
 		binding.atomically()
 			.set('rivals',						Immutable.fromJS([rivals[0]]))
-			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(this.getRandomString()))
+			.set('eventFormOpponentSchoolKey',	Immutable.fromJS(RandomHelper.getRandomString()))
 			.set('fartherThen',					eventDescriptor.target.value)
 			.commit();
 	},
@@ -133,14 +72,6 @@ const EventForm = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.set('model.ages', Immutable.fromJS(selections));
-	},
-	onSelectInterSchoolsRival: function (order, id, model) {
-		const binding	= this.getDefaultBinding();
-
-		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
-			const rival = new InterSchoolsRivalModel(model);
-			binding.set(`rivals.${order}`, Immutable.fromJS(rival));
-		}
 	},
 	getSports: function () {
 		const	self	= this,
@@ -194,83 +125,6 @@ const EventForm = React.createClass({
 				postcode		= activeSchool.postcode;
 
 		return type === 'inter-schools' && typeof postcode !== 'undefined';
-	},
-	onClickRemoveRivalSchool: function(rivalIndex) {
-		const	binding	= this.getDefaultBinding();
-		let		rivals	= binding.toJS('rivals');
-
-		rivals.splice(rivalIndex, 1);
-
-		binding.set('rivals', Immutable.fromJS(rivals));
-	},
-	renderSchoolChoosers: function() {
-		const	binding	= this.getDefaultBinding(),
-				event	= binding.toJS('model'),
-				sport	= event.sportModel,
-				rivals	= binding.toJS('rivals');
-
-		const getElementTitle = function(item) {
-			let name = '';
-
-			if(typeof item.school !== 'undefined') {
-				name = item.school.name;
-			}
-
-			return name;
-		};
-
-		const choosers = rivals.map((rival, rivalIndex) => {
-			if(rival.school.id !== this.props.activeSchoolId) {
-				return (
-					<span>
-						<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivalIndex}`) }
-										serviceFilter	= { this.schoolService }
-										getElementTitle	= { getElementTitle }
-										placeholder		= "Enter school name"
-										onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
-										extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-										customListItem	= { SchoolItemList }
-						/>
-						<SquareCrossButton
-							handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex + 1)}
-						/>
-					</span>
-				);
-			} else {
-				return undefined;
-			}
-		}).filter(r => typeof r !== 'undefined');
-
-
-		const filteredRivals = rivals.filter(r => r.school.id !== this.props.activeSchoolId);
-		if(
-			filteredRivals.length === 0 ||
-			(
-				filteredRivals.length >= 1 &&
-				typeof sport !== 'undefined' && sport.multiparty &&
-				(TeamHelper.isTeamSport(event) || TeamHelper.isIndividualSport(event))
-			)
-		) {
-			choosers.push(
-				<Autocomplete	defaultItem		= { binding.toJS(`rivals.${rivals.length}`) }
-								serviceFilter	= { this.schoolService }
-								getElementTitle	= { getElementTitle }
-								placeholder		= "Enter school name"
-								onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
-								extraCssStyle	= "mBigSize mWhiteBG"
-								customListItem	= { SchoolItemList }
-				/>
-			);
-		}
-
-		return (
-			<div className="bInputWrapper">
-				<div className="bInputLabel">
-					Choose schools
-				</div>
-				{choosers}
-			</div>
-		);
 	},
 	render: function() {
 		const	self = this,
@@ -331,7 +185,10 @@ const EventForm = React.createClass({
 					condition	= {type === 'inter-schools'}
 					key			= {'if-choose-school'}
 				>
-					{ this.renderSchoolChoosers() }
+					<SchoolsManager
+						binding			= { binding }
+						activeSchoolId	= { this.props.activeSchoolId }
+					/>
 				</If>
 				<If
 					condition={type === 'houses'}
