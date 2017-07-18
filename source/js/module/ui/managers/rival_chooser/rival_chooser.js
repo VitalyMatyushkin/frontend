@@ -8,7 +8,7 @@ const	InterSchoolsMultipartyRivals	= require('module/ui/managers/rival_chooser/i
 		DefaultRivals					= require('module/ui/managers/rival_chooser/default_rivals');
 
 // Helpers
-const	EventHelper						= require('module/helpers/eventHelper');
+const	TeamHelper						= require('module/ui/managers/helpers/team_helper');
 
 // Styles
 const	TeamChooserStyles				= require('../../../../../styles/ui/teams_manager/b_rival_chooser.scss');
@@ -27,7 +27,10 @@ const RivalChooser = React.createClass({
 	getRivals: function () {
 		const event = this.getDefaultBinding().toJS('model');
 
-		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
+		if(
+			TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+			TeamHelper.isMultiparty(event)
+		) {
 			return (
 				<InterSchoolsMultipartyRivals
 					binding					= { this.getBinding() }
