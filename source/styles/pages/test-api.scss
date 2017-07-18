@@ -21,4 +21,17 @@
       height: 60px;
     }
   }
+
+  .logBlock{
+    padding: 5px;
+    margin: 3px;
+  }
+
+  .errorLog{
+    background-color: #FFA07A;
+  }
+
+  .messageLog{
+    background-color: #98FB98;
+  }
 }

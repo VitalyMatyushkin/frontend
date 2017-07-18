@@ -1,18 +1,21 @@
 /**
  * Created by Vitaly on 12.07.17.
  */
-const	React = require('react');
+const	React       = require('react'),
+        classNames  = require('classnames');
+
+const ERROR = "error";
 
 const Logging = React.createClass({
+    propTypes: {
+      type: React.PropTypes.string
+    },
+
     render: function() {
-        let colorBlock = this.props.type === "err" ? "#FFA07A" : "#98FB98";
-        const divStyle = {
-            background: colorBlock,
-            padding: "5px",
-            margin: "3px"
-        };
+        let classLog = this.props.type === ERROR ? "errorLog" : "messageLog";
+
         return (
-            <div style={divStyle}>
+            <div className={classNames("logBlock", classLog)}>
                 {this.props.log.split('\n').map((item, i) =>
                     <div key={i}>{item}</div>
                 )}

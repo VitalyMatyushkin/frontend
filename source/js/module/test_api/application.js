@@ -4,17 +4,24 @@
 const   React       = require('react'),
         AJAX        = require('module/core/AJAX'),
         LoggingList = require('module/test_api/logging-list'),
-        SVG 	    = require('module/ui/svg');
+        SVG 	    = require('module/ui/svg'),
+        loaderUtils = require('module/helpers/loader_utils');
 
-const   domain   = "http://api.stage1.squadintouch.com";
+const   domain      = document.location.hostname,
+        apiMain		= loaderUtils.apiSelector(domain).main,
+        NOT_STARTED = "not_started",
+        PROCESSED   = "processed",
+        COMPLETED   = "completed",
+        MESSAGE     = "message",
+        ERROR       = "error";
 
 const ApplicationView = React.createClass({
     getInitialState: function() {
         return {
-            inputValue: "ubnbffa7ytajo1wikettgxkw1druigyp2edgri92",
+            inputValue: "6hkhnh2l37d4p5fp0llgm34ouc1tsqojgwt251jn",
             logs: [],
             logId: 0,
-            finished: ''
+            status: NOT_STARTED
         };
     },
 
@@ -39,7 +46,7 @@ const ApplicationView = React.createClass({
         this.setState({
             logs: [],
             logId: 0,
-            finished: 'processed'
+            finished: PROCESSED
         });
         this.checkCORSRequest()
         .then(() => {
@@ -63,31 +70,34 @@ const ApplicationView = React.createClass({
                                     this.getStudentList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getHouseList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getFormList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
-                                    // this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
-                                    // .then((event) => {
-                                    //     return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
-                                    // })
+                                    this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                                    .then((event) => {
+                                        return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
+                                    })
                                 ]).then(() => {
-                                    this.setState({finished: 'completed'});
-                                })
+                                    this.setState({finished: COMPLETED});
+                                });
                             }
                         });
                     }));
                 });
-            }));
+            }))
+        })
+        .catch(() => {
+            this.setState({finished: COMPLETED});
         });
     },
 
     getProfile: function() {
         const   usid = this.state.inputValue,
-                url = `${domain}/i/profile?filter=%22%22`,
+                url = `${apiMain}/i/profile?filter=%22%22`,
                 text = `Check profile`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -97,14 +107,14 @@ const ApplicationView = React.createClass({
 
     getRoles: function() {
         const   usid = this.state.inputValue,
-                url = `${domain}/i/roles?filter=%22%22`,
+                url = `${apiMain}/i/roles?filter=%22%22`,
                 text = `Check roles`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -114,14 +124,14 @@ const ApplicationView = React.createClass({
 
     setRole: function(role) {
         const   usid = this.state.inputValue,
-                url = `${domain}/i/roles/${role}/become?filter=%22%22`,
+                url = `${apiMain}/i/roles/${role}/become?filter=%22%22`,
                 text = `Switch role ${role}`;
         return AJAX({
             url: url,
             type: 'POST',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -130,14 +140,14 @@ const ApplicationView = React.createClass({
     },
 
     getSchoolInfo: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}?filter=%22%22`,
+        const   url = `${apiMain}/i/schools/${schoolId}?filter=%22%22`,
             text = `Info about school ${schoolName} for role: ${role}`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
             .catch((err) => {
@@ -146,14 +156,14 @@ const ApplicationView = React.createClass({
     },
 
     getStudentList: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}/students?filter=%7B%22limit%22%3A20%2C%22skip%22%3A20%7D&{}`,
+        const   url = `${apiMain}/i/schools/${schoolId}/students?filter=%7B%22limit%22%3A20%2C%22skip%22%3A20%7D&{}`,
                 text = `List of students for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -162,14 +172,14 @@ const ApplicationView = React.createClass({
     },
 
     getHouseList: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}/houses?filter=%7B%22limit%22%3A20%7D&{}`,
+        const   url = `${apiMain}/i/schools/${schoolId}/houses?filter=%7B%22limit%22%3A20%7D&{}`,
                 text = `List of houses for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -178,14 +188,14 @@ const ApplicationView = React.createClass({
     },
 
     getFormList: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}/forms?filter=%7B%22limit%22%3A30%7D&{}`,
+        const   url = `${apiMain}/i/schools/${schoolId}/forms?filter=%7B%22limit%22%3A30%7D&{}`,
                 text = `List of classes for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -194,14 +204,14 @@ const ApplicationView = React.createClass({
     },
 
     getEvents: function(usid, schoolId, schoolName, role) {
-        const   url = `${domain}/i/schools/${schoolId}/events?filter=%7B%22limit%22%3A200%2C%22where%22%3A%7B%22startTime%22%3A%7B%22%24gte%22%3A%222017-07-16T18%3A00%3A00.000Z%22%2C%22%24lt%22%3A%222017-07-17T18%3A00%3A00.000Z%22%7D%2C%22%24or%22%3A%5B%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22INTERNAL_HOUSES%22%2C%22INTERNAL_TEAMS%22%5D%7D%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%7B%22%24ne%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%22invitedSchoolIds%22%3A%2257d154fdf07ed2150ef39bde%22%2C%22status%22%3A%7B%22%24in%22%3A%5B%22ACCEPTED%22%2C%22REJECTED%22%2C%22FINISHED%22%2C%22CANCELED%22%5D%7D%7D%5D%7D%7D&{}`,
+        const   url = `${apiMain}/i/schools/${schoolId}/events?filter=%7B%22limit%22%3A200%2C%22where%22%3A%7B%22startTime%22%3A%7B%22%24gte%22%3A%222017-07-16T18%3A00%3A00.000Z%22%2C%22%24lt%22%3A%222017-07-17T18%3A00%3A00.000Z%22%7D%2C%22%24or%22%3A%5B%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22INTERNAL_HOUSES%22%2C%22INTERNAL_TEAMS%22%5D%7D%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%7B%22%24ne%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%22invitedSchoolIds%22%3A%2257d154fdf07ed2150ef39bde%22%2C%22status%22%3A%7B%22%24in%22%3A%5B%22ACCEPTED%22%2C%22REJECTED%22%2C%22FINISHED%22%2C%22CANCELED%22%5D%7D%7D%5D%7D%7D&{}`,
                 text = `Events for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
             type: 'GET',
             headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -211,7 +221,7 @@ const ApplicationView = React.createClass({
 
     createEvent: function(usid, schoolId, schoolName, role) {
         const   data = {"gender":"MALE_ONLY","eventType":"EXTERNAL_SCHOOLS","ages":[1],"sportId":"57b6caa5dd69264b6c5bb06b","startTime":"2017-07-13T04:00:52.697Z","venue":{"venueType":"HOME","postcodeId":"57b6cd0b1c0b151bcf94afdc"},"invitedSchoolIds":["58b554f5533a3b03e36d49e6"]},
-                url = `${domain}/i/schools/${schoolId}/events?filter=%22%22`,
+                url = `${apiMain}/i/schools/${schoolId}/events?filter=%22%22`,
                 text = `Create event for ${schoolName} by ${role}`;
         return AJAX({
             url: url,
@@ -220,7 +230,7 @@ const ApplicationView = React.createClass({
             data: JSON.stringify(data),
             contentType: 'application/json'
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -229,7 +239,7 @@ const ApplicationView = React.createClass({
     },
 
     activateEvent: function(usid, schoolId, schoolName, eventId, role) {
-        const   url = `${domain}/i/schools/${schoolId}/events/${eventId}/activate?filter=%22%22`,
+        const   url = `${apiMain}/i/schools/${schoolId}/events/${eventId}/activate?filter=%22%22`,
                 text = `Activate event for ${schoolName} by ${role}`;
         return AJAX({
             url: url,
@@ -237,7 +247,7 @@ const ApplicationView = React.createClass({
             headers: {usid},
         })
         .then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, "message");
+            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
@@ -246,7 +256,7 @@ const ApplicationView = React.createClass({
     },
 
     checkCORSRequest: function() {
-        const   url = `${domain}/i/profile?filter=%22%22`,
+        const   url = `${apiMain}/i/profile?filter=%22%22`,
                 usid = this.state.inputValue,
                 text = `CORS`,
                 typeRequest = "GET";
@@ -256,12 +266,12 @@ const ApplicationView = React.createClass({
             headers: {usid},
         })
         .then((res) => {
-            this.addLog(`${text} ${typeRequest}: ${res.textStatus}`, "message");
+            this.addLog(`${text} ${typeRequest}: ${res.textStatus}`, MESSAGE);
             return res;
         })
         .catch((err) => {
             if (typeof err.xhr === "undefined") {
-                this.addLog(`${text} not supported`, "err");
+                this.addLog(`${text} not supported`, ERROR);
             } else {
                 this.showError(err, typeRequest, url, usid, text);
             }
@@ -276,11 +286,11 @@ const ApplicationView = React.createClass({
             url: ${url}
             usid: ${usid}
             responseText: ${err.xhr.responseText}`
-        , "err");
+        , ERROR);
     },
 
     showLogsBlock: function(logs, errorCount) {
-        if (this.state.finished === 'completed') {
+        if (this.state.finished === COMPLETED) {
             return(
                 <div>
                     <div className="bMessageBlock">
@@ -290,7 +300,7 @@ const ApplicationView = React.createClass({
                 </div>
             );
         } else {
-            if (this.state.finished === 'processed'){
+            if (this.state.finished === PROCESSED){
                 return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
             }
         }
@@ -298,10 +308,10 @@ const ApplicationView = React.createClass({
 
     render: function() {
         let logs = [], errorCount = 0;
-        if (this.state.finished === 'completed') {
+        if (this.state.finished === COMPLETED) {
             logs = this.state.logs;
             logs.forEach((item) => {
-                if (item.type === "err") {
+                if (item.type === ERROR) {
                     errorCount++;
                 }
             })
@@ -312,7 +322,7 @@ const ApplicationView = React.createClass({
                     <input type="text" id="session-key-text" value={this.state.inputValue} onChange={this.updateInputValue}/>
                     <input type="submit" className="bButton" id="session-key-submit" value="Submit" />
                 </form>
-                
+
                 {this.showLogsBlock(logs, errorCount)}
             </div>
         );
