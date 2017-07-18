@@ -34,9 +34,11 @@ const DefaultRivals = React.createClass({
 
 			let text = '';
 			switch (eventType) {
-				case 'houses':
 				case 'inter-schools':
 					text = rival.school.name;
+					break;
+				case 'houses':
+					text = rival.name;
 					break;
 				case 'internal':
 					const names = ['First', 'Second', 'Third'];
@@ -96,8 +98,8 @@ const DefaultRivals = React.createClass({
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.school.id !== activeSchoolId &&
-			TeamHelper.getEventType(event) === 'inter-schools'
+			TeamHelper.getEventType(event) === 'inter-schools' &&
+			rival.school.id !== activeSchoolId
 		);
 	},
 	render: function() {
