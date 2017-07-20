@@ -1,0 +1,37 @@
+.testApi{
+  .bLogTest{
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .bMessageBlock{
+    text-align: center;
+  }
+
+  #show-requests-button{
+    display: block;
+    margin: 0 auto;
+  }
+
+  .eLoader{
+    .bIcon{
+      display: block;
+      margin: 0 auto;
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .logBlock{
+    padding: 5px;
+    margin: 3px;
+  }
+
+  .errorLog{
+    background-color: #FFA07A;
+  }
+
+  .messageLog{
+    background-color: #98FB98;
+  }
+}

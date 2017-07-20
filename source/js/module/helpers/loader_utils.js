@@ -4,7 +4,7 @@
 
 const Promise = require('bluebird');
 
-const   specialModels   = ['app', 'parents', 'manager', 'admin', 'site', 'www', 'stage', 'playground', 'password', 'bigscreen'],
+const   specialModels   = ['app', 'parents', 'manager', 'admin', 'site', 'www', 'stage', 'playground', 'password', 'bigscreen', 'api_test'],
         defaultModel    = 'school',
         apiVersion      = 1;
 
@@ -76,7 +76,7 @@ function startModuleSelector(domainName) {
             model           = parsedDomain.model,
             modelToStart    = specialModels.indexOf(model) !== -1 ? model : defaultModel;
 
-    let startModule     = 'module/start_as_' + modelToStart;
+    let startModule = 'module/start_as_' + modelToStart;
 
     // TEST SERVER TEMPORARY SOLUTION
     if (startModule === 'module/start_as_stage') {
