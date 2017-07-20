@@ -1,43 +1,47 @@
 const	React				= require('react');
 
 const	ActionButton		= require('./action_button'),
-		ActionItem			= require('./action_item');
+		DropdownList		= require('./dropdown_list');
 
 const	ActionListCssStyle	= require('../../../../styles/ui/b_action_list.scss');
 
+
+/**
+ * It's simple button with text.
+ * When you click it action list will drop down.
+ *
+ * 		|-------------------|
+ * 		|	action_button	| 
+ * 		|-------------------|
+ * 		|-------------------|
+ *		|	dropdown_list	|
+ * 		|					|
+ * 		|	action_item		|
+ * 		|	action_item		|
+ * 		|	action_item		|
+ * 		|					|
+ * 		|-------------------|
+ */
 const ActionList = React.createClass({
 	propTypes: {
-		buttonText				: React.PropTypes.string.isRequired,
-		actionList				: React.PropTypes.array.isRequired,
-		handleClickActionItem	: React.PropTypes.func.isRequired
+		buttonText					: React.PropTypes.string.isRequired,
+		actionList					: React.PropTypes.array.isRequired,
+		handleClickActionItem		: React.PropTypes.func.isRequired,
+		handleClickRemoveActionItem	: React.PropTypes.func
 	},
 	getInitialState: function(){
 		return {
 			isOpen: false
 		};
 	},
-	renderList: function() {
-		if(this.state.isOpen) {
-			const items = this.props.actionList.map((action,index, actionList) =>
-				<ActionItem	key					= {action.id}
-							id					= {action.id}
-							text				= {action.text}
-							extraStyleClasses	= {index === actionList.length - 1 ? 'mLast' : ''}
-							onClick				= {this.props.handleClickActionItem}
-				/>
-			);
-
-			return (
-				<div className='eActionList_itemsContainer'>
-					<div className="eActionList_itemListHead"></div>
-					<div className="eActionList_itemList">
-						{items}
-					</div>
-				</div>
-			);
-		} else {
-			return null;
-		}
+	renderDropdownList: function() {
+		return this.state.isOpen ?
+			<DropdownList
+				actionList					= { this.props.actionList }
+				handleClickActionItem		= { this.props.handleClickActionItem }
+				handleClickRemoveActionItem	= { this.props.handleClickRemoveActionItem }
+			/> :
+			null;
 	},
 	handleClick: function() {
 		this.setState({isOpen: !this.state.isOpen});
@@ -52,7 +56,7 @@ const ActionList = React.createClass({
 								onClick	= {this.handleClick}
 								onBlur	= {this.handleBlur}
 				/>
-				{this.renderList()}
+				{this.renderDropdownList()}
 			</div>
 		);
 	}

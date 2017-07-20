@@ -18,7 +18,8 @@ const InterSchoolsMultipartyRivals = React.createClass({
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func.isRequired,
-		handleChooseRival		: React.PropTypes.func.isRequired
+		handleChooseRival		: React.PropTypes.func.isRequired,
+		handleClickRemoveTeam	: React.PropTypes.func
 	},
 	getSchools: function () {
 		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
@@ -106,9 +107,10 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		if(index === 0) {
 			return (
 				<ActionList
-					buttonText				= {text}
-					actionList				= {this.getRivalActionList(schoolId)}
-					handleClickActionItem	= {this.handleClickItemFromRivalActionList}
+					buttonText					= { text }
+					actionList					= { this.getRivalActionList(schoolId) }
+					handleClickActionItem		= { this.handleClickItemFromRivalActionList }
+					handleClickRemoveActionItem	= { this.handleClickRemoveRival }
 				/>
 			);
 		} else {
@@ -135,8 +137,11 @@ const InterSchoolsMultipartyRivals = React.createClass({
 
 				rivalActionList.push(
 					{
-						id:		rival.id,
-						text:	`Team ${teamCount}`
+						id:			rival.id,
+						text:		`Team ${teamCount}`,
+						options:	{
+							isRemoveButtonEnable: true
+						}
 					}
 				);
 			}
@@ -145,7 +150,10 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		rivalActionList.push(
 			{
 				id:		'add_team',
-				text:	'Add new team'
+				text:	'Add new team',
+				options:	{
+					isRemoveButtonEnable: true
+				}
 			}
 		);
 
@@ -169,13 +177,16 @@ const InterSchoolsMultipartyRivals = React.createClass({
 
 				break;
 			default:
-				// This code string is only for show that by default actionItemId is a rivalIndex
-				const	currentRivalId		= actionItemId,
-						currentRivalIndex	= this.getBinding('rivals').toJS().findIndex(r => r.id === currentRivalId);
+				const rivalId = actionItemId;
 
-				this.props.handleChooseRival(currentRivalIndex);
+				this.props.handleChooseRival(rivalId);
 				break;
 		}
+	},
+	handleClickRemoveRival: function(actionItemId) {
+		const rivalId = actionItemId;
+
+		this.props.handleClickRemoveTeam(rivalId);
 	},
 	render: function() {
 		return (
