@@ -22,7 +22,7 @@ const	asAdmin			= require('./module/start_as_admin'),
 		asSchool		= require('./module/start_as_school'),
 		asPlayGround	= require('./module/start_as_playground'),
 		asBigScreen		= require('./module/start_as_bigscreen'),
-		testApi			= require('./module/start_test_api');
+		testApi			= require('./module/start_as_api_test');
 
 // adding some undoubtedly required features form ES6
 es6PonyFill();
@@ -64,7 +64,7 @@ console.log('Guessed timezone is: ' + window.timezone);
 switch(startModule) {
 	case 'module/start_as_admin':		asAdmin();		break;
 	case 'module/start_as_app':			asApp();		break;
-	case 'module/start_test_api':		testApi();		break;
+	case 'module/start_as_api_test':	testApi();		break;
 	case 'module/start_as_www':			asWWW();		break;
 	case 'module/start_as_password':	asPassword();	break;
 	case 'module/start_as_school':		asSchool();		break;

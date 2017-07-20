@@ -2,7 +2,7 @@
  * Created by Vitaly on 17.07.17.
  */
 const	React = require('react'),
-        Logging = require('module/test_api/logging');
+        Logging = require('module/as_api_test/logging');
 
 const LoggingList = React.createClass({
     getInitialState: function() {

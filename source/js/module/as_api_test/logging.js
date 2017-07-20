@@ -4,7 +4,7 @@
 const	React       = require('react'),
         classNames  = require('classnames');
 
-const ERROR = "error";
+const ERROR = "ERROR";
 
 const Logging = React.createClass({
     propTypes: {

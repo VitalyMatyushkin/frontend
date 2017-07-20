@@ -3,22 +3,23 @@
  */
 const   React       = require('react'),
         AJAX        = require('module/core/AJAX'),
-        LoggingList = require('module/test_api/logging-list'),
+        LoggingList = require('module/as_api_test/logging-list'),
         SVG 	    = require('module/ui/svg'),
         loaderUtils = require('module/helpers/loader_utils');
 
 const   domain      = document.location.hostname,
-        apiMain		= loaderUtils.apiSelector(domain).main,
-        NOT_STARTED = "not_started",
-        PROCESSED   = "processed",
-        COMPLETED   = "completed",
-        MESSAGE     = "message",
-        ERROR       = "error";
+        apiMain		= loaderUtils.apiSelector(domain).main;
+
+const   NOT_STARTED = "NOT_STARTED",
+        PROCESSED   = "PROCESSED",
+        COMPLETED   = "COMPLETED",
+        MESSAGE     = "MESSAGE",
+        ERROR       = "ERROR";
 
 const ApplicationView = React.createClass({
     getInitialState: function() {
         return {
-            inputValue: "6hkhnh2l37d4p5fp0llgm34ouc1tsqojgwt251jn",
+            inputValue: "",
             logs: [],
             logId: 0,
             status: NOT_STARTED
@@ -46,7 +47,7 @@ const ApplicationView = React.createClass({
         this.setState({
             logs: [],
             logId: 0,
-            finished: PROCESSED
+            status: PROCESSED
         });
         this.checkCORSRequest()
         .then(() => {
@@ -75,7 +76,7 @@ const ApplicationView = React.createClass({
                                         return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
                                     })
                                 ]).then(() => {
-                                    this.setState({finished: COMPLETED});
+                                    this.setState({status: COMPLETED});
                                 });
                             }
                         });
@@ -84,7 +85,7 @@ const ApplicationView = React.createClass({
             }))
         })
         .catch(() => {
-            this.setState({finished: COMPLETED});
+            this.setState({status: COMPLETED});
         });
     },
 
@@ -204,7 +205,7 @@ const ApplicationView = React.createClass({
     },
 
     getEvents: function(usid, schoolId, schoolName, role) {
-        const   url = `${apiMain}/i/schools/${schoolId}/events?filter=%7B%22limit%22%3A200%2C%22where%22%3A%7B%22startTime%22%3A%7B%22%24gte%22%3A%222017-07-16T18%3A00%3A00.000Z%22%2C%22%24lt%22%3A%222017-07-17T18%3A00%3A00.000Z%22%7D%2C%22%24or%22%3A%5B%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22INTERNAL_HOUSES%22%2C%22INTERNAL_TEAMS%22%5D%7D%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%7B%22%24ne%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%22invitedSchoolIds%22%3A%2257d154fdf07ed2150ef39bde%22%2C%22status%22%3A%7B%22%24in%22%3A%5B%22ACCEPTED%22%2C%22REJECTED%22%2C%22FINISHED%22%2C%22CANCELED%22%5D%7D%7D%5D%7D%7D&{}`,
+        const   url = `${apiMain}/i/schools/${schoolId}/events?filter=%7B%22limit%22%3A200%2C%22where%22%3A%7B%22startTime%22%3A%7B%22%24gte%22%3A%222017-07-16T18%3A00%3A00.000Z%22%2C%22%24lt%22%3A%222017-07-17T18%3A00%3A00.000Z%22%7D%2C%22%24or%22%3A%5B%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22INTERNAL_HOUSES%22%2C%22INTERNAL_TEAMS%22%5D%7D%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%7B%22eventType%22%3A%7B%22%24in%22%3A%5B%22EXTERNAL_SCHOOLS%22%5D%7D%2C%22inviterSchoolId%22%3A%7B%22%24ne%22%3A%2257d154fdf07ed2150ef39bde%22%7D%2C%22invitedSchoolIds%22%3A%2257d154fdf07ed2150ef39bde%22%2C%22status%22%3A%7B%22%24in%22%3A%5B%22ACCEPTED%22%2C%22REJECTED%22%2C%22status%22%2C%22CANCELED%22%5D%7D%7D%5D%7D%7D&{}`,
                 text = `Events for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
@@ -290,7 +291,7 @@ const ApplicationView = React.createClass({
     },
 
     showLogsBlock: function(logs, errorCount) {
-        if (this.state.finished === COMPLETED) {
+        if (this.state.status === COMPLETED) {
             return(
                 <div>
                     <div className="bMessageBlock">
@@ -300,7 +301,7 @@ const ApplicationView = React.createClass({
                 </div>
             );
         } else {
-            if (this.state.finished === PROCESSED){
+            if (this.state.status === PROCESSED){
                 return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
             }
         }
@@ -308,7 +309,7 @@ const ApplicationView = React.createClass({
 
     render: function() {
         let logs = [], errorCount = 0;
-        if (this.state.finished === COMPLETED) {
+        if (this.state.status === COMPLETED) {
             logs = this.state.logs;
             logs.forEach((item) => {
                 if (item.type === ERROR) {
@@ -319,8 +320,19 @@ const ApplicationView = React.createClass({
         return (
             <div className="testApi">
                 <form className="bForm" onSubmit={this.handleSubmit}>
-                    <input type="text" id="session-key-text" value={this.state.inputValue} onChange={this.updateInputValue}/>
-                    <input type="submit" className="bButton" id="session-key-submit" value="Submit" />
+                    <input
+                        type        = "text"
+                        id          = "session-key-text"
+                        value       = { this.state.inputValue }
+                        placeholder = "Please enter session key"
+                        onChange    = { this.updateInputValue }
+                    />
+                    <input
+                        type        = "submit"
+                        className   = "bButton"
+                        id          = "session-key-submit"
+                        value       = "Submit"
+                    />
                 </form>
 
                 {this.showLogsBlock(logs, errorCount)}
