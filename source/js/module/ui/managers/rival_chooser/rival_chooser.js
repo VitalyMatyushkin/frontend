@@ -23,7 +23,9 @@ const RivalChooser = React.createClass({
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	handleChooseRival: function(rivalId) {
-		this.getBinding('selectedRivalId').set(Immutable.fromJS(rivalId));
+		const rivalIndex = this.getBinding().rivals.toJS().findIndex(r => r.id === rivalId);
+
+		this.getBinding('selectedRivalIndex').set(Immutable.fromJS(rivalIndex));
 	},
 	getRivals: function () {
 		const event = this.getDefaultBinding().toJS('model');

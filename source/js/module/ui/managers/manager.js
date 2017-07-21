@@ -189,7 +189,7 @@ const Manager = React.createClass({
 				currentRival	= rivals[rivalIndex];
 
 		return {
-			rivalId			: typeof currentRival !== 'InterSchoolsRivalModel' ? currentRival.id : rivalIndex,
+			rivalId			: currentRival,
 			selectedTeamId	: teamId,
 			isSelectedTeam	: typeof team !== 'undefined',
 			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)

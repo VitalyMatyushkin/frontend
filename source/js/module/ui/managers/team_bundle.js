@@ -131,7 +131,7 @@ const TeamBundle = React.createClass({
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers.map((tw, index) => {
-			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw, index);
+			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw);
 
 			return ({
 				default:	binding.sub(`teamTable.${index}`),
@@ -147,7 +147,7 @@ const TeamBundle = React.createClass({
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers.map((tw, index) => {
-			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw);
+			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw);
 
 			const errorIndex = this.getBinding('error').toJS().findIndex(e => e.rivalId === tw.rivalId);
 
@@ -160,10 +160,11 @@ const TeamBundle = React.createClass({
 			};
 		});
 	},
-	getRivalBindingByTeamWrapperAndTeamWrapperIndex: function(event, teamWrapper) {
-		const rivals = this.getBinding().rivals.toJS();
+	getRivalBindingByTeamWrapperAndTeamWrapper: function(event, teamWrapper) {
+		const	rivals				= this.getBinding().rivals.toJS(),
+				currentRivalIndex	= rivals.findIndex(rival => rival.id === teamWrapper.rivalIndex);
 
-		return rivals.find(rival => rival.id === teamWrapper.rivalIndex);
+		return this.getBinding().rivals.sub(currentRivalIndex);
 	},
 	getClassNamesForTeamWrapper: function() {
 		const	binding			= this.getDefaultBinding(),
@@ -232,53 +233,69 @@ const TeamBundle = React.createClass({
 		});
 	},
 	selectTeam: function(teamId, team) {
-		const	binding		= this.getDefaultBinding(),
-				teamWrapper	= binding.toJS('teamWrapper'),
-				teamTable	= binding.toJS('teamTable'),
-				rivalIndex	= binding.toJS('selectedRivalIndex');
+		const	binding				= this.getDefaultBinding();
 
-		teamWrapper[rivalIndex].selectedTeamId		= teamId;
-		teamWrapper[rivalIndex].teamType			= team.teamType;
-		teamWrapper[rivalIndex].selectedTeam		= team;
-		teamWrapper[rivalIndex].prevTeamName		= team.name;
-		teamWrapper[rivalIndex].teamName.name		= team.name;
-		teamWrapper[rivalIndex].teamName.prevName	= team.name;
-		teamTable[rivalIndex].selectedTeamId		= teamId;
-		this.addTeamIdToOtherRivalsBlackList(teamTable, rivalIndex, teamId);
+		const	teamWrappers		= binding.toJS('teamWrapper'),
+				teamTables			= binding.toJS('teamTable'),
+				rivals 				= this.getBinding().rivals.toJS(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
+
+		const	currentTeamWrapper		= teamWrappers.findIndex(tw => tw.rivalId === rivals[selectedRivalIndex].id),
+				currentTeamTableIndex	= teamTables.findIndex(tw => tw.rivalId === rivals[selectedRivalIndex].id);
+
+		teamWrappers[currentTeamWrapper].selectedTeamId		= teamId;
+		teamWrappers[currentTeamWrapper].teamType			= team.teamType;
+		teamWrappers[currentTeamWrapper].selectedTeam		= team;
+		teamWrappers[currentTeamWrapper].prevTeamName		= team.name;
+		teamWrappers[currentTeamWrapper].teamName.name		= team.name;
+		teamWrappers[currentTeamWrapper].teamName.prevName	= team.name;
+		teamTables[currentTeamTableIndex].selectedTeamId	= teamId;
+		this.addTeamIdToOtherRivalsBlackList(teamTables, selectedRivalIndex, teamId);
 
 		binding
 			.atomically()
-			.set('teamWrapper',	Immutable.fromJS(teamWrapper))
-			.set('teamTable',	Immutable.fromJS(teamTable))
+			.set('teamWrapper',	Immutable.fromJS(teamWrappers))
+			.set('teamTable',	Immutable.fromJS(teamTables))
 			.commit();
 	},
 	deselectTeam: function() {
-		const	binding		= this.getDefaultBinding(),
-				teamWrapper	= binding.toJS('teamWrapper'),
-				teamTable	= binding.toJS('teamTable'),
-				rivalIndex	= binding.toJS('selectedRivalIndex'),
-				teamId		= String(teamWrapper[rivalIndex].selectedTeamId);
+		const	binding		= this.getDefaultBinding();
 
-		teamWrapper[rivalIndex].selectedTeamId		= undefined;
-		teamWrapper[rivalIndex].teamType			= undefined;
-		teamWrapper[rivalIndex].selectedTeam		= undefined;
-		teamWrapper[rivalIndex].prevTeamName		= undefined;
-		teamWrapper[rivalIndex].teamName.name		= undefined;
-		teamTable[rivalIndex].selectedTeamId		= undefined;
-		this.removeTeamIdToOtherRivalsBlackList(teamTable, rivalIndex, teamId);
+		const	teamWrappers		= binding.toJS('teamWrapper'),
+				teamTables			= binding.toJS('teamTable'),
+				rivals 				= this.getBinding().rivals.toJS(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
+
+		const	currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivals[selectedRivalIndex].id),
+				currentTeamTableIndex	= teamTables.findIndex(tw => tw.rivalId === rivals[selectedRivalIndex].id);
+
+		teamWrappers[currentTeamWrapperIndex].selectedTeamId	= undefined;
+		teamWrappers[currentTeamWrapperIndex].teamType		= undefined;
+		teamWrappers[currentTeamWrapperIndex].selectedTeam	= undefined;
+		teamWrappers[currentTeamWrapperIndex].prevTeamName	= undefined;
+		teamWrappers[currentTeamWrapperIndex].teamName.name	= undefined;
+
+		teamTables[currentTeamTableIndex].selectedTeamId	= undefined;
+
+		const teamId = String(teamWrappers[currentTeamWrapperIndex].selectedTeamId);
+		this.removeTeamIdToOtherRivalsBlackList(teamTables, selectedRivalIndex, teamId);
 
 		binding
 			.atomically()
-			.set('teamWrapper',	Immutable.fromJS(teamWrapper))
-			.set('teamTable',	Immutable.fromJS(teamTable))
+			.set('teamWrapper',	Immutable.fromJS(teamWrappers))
+			.set('teamTable',	Immutable.fromJS(teamTables))
 			.commit();
 	},
 
 	/** HANDLE FUNCTIONS **/
 	handleTeamClick: function(teamId, team) {
-		const	binding				= this.getDefaultBinding(),
-				rivalIndex			= binding.toJS('selectedRivalIndex'),
-				prevSelectedTeamId	= binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
+		const	binding					= this.getDefaultBinding();
+
+		const	selectedRivalIndex		= binding.toJS('selectedRivalIndex'),
+				rivals 					= this.getBinding().rivals.toJS(),
+				teamWrappers			= binding.toJS('teamWrapper'),
+				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivals[selectedRivalIndex].id),
+				prevSelectedTeamId		= binding.toJS(`teamWrapper.${currentTeamWrapperIndex}.selectedTeamId`);
 
 		if(prevSelectedTeamId !== teamId) {
 			this.selectTeam(teamId, team);
@@ -288,19 +305,20 @@ const TeamBundle = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	rivals 					= this.getBinding().rivals.toJS(),
+				teamTables				= binding.toJS('teamTable'),
+				currentTeamTeamIndex	= teamTables.findIndex(tt => tt.rivalId === rivals[rivalIndex].id);
+
 		self.deselectTeam();
-		binding.set(`teamTable.${rivalIndex}.isSelectedTeam`, Immutable.fromJS(false));
+		binding.set(`teamTable.${currentTeamTeamIndex}.isSelectedTeam`, Immutable.fromJS(false));
 	},
 
 	/** RENDER FUNCTIONS **/
 	renderTeamChoosers: function() {
-		const	binding	= this.getDefaultBinding(),
-				event	= this.getBinding('model').toJS();
+		const event = this.getBinding('model').toJS();
 
 		let teamChoosers = null;
 		if(TeamHelper.isTeamSport(event)) {
-			const selectedRivalIndex = binding.toJS('selectedRivalIndex');
-
 			//TODO shitty way
 			//one react element and many data bundles - that's what we need
 			//Need to go TeamChooser on react state, delete morearty
@@ -309,14 +327,21 @@ const TeamBundle = React.createClass({
 			//so we can't just send new data to TeamChooser in some point of TeamChooser lifecycle
 			//and hope - everything will work good. NO!)
 			//All fall down. Sorrrry, mate.
-			teamChoosers = this.getTeamChooserBindings().map((binding, index) =>
-				<TeamChooser	key				= { `team-chooser-${index}` }
-								onTeamClick		= { this.handleTeamClick }
-								onTeamDeselect	= { this.deselectTeam }
-								binding			= { binding }
-								isEnable		= { parseInt(selectedRivalIndex, 10) === index }
-				/>
-			);
+			teamChoosers = this.getTeamChooserBindings().map((binding, index) => {
+				const	selectedRivalIndex	= this.getDefaultBinding().toJS('selectedRivalIndex'),
+						rivals 				= this.getBinding().rivals.toJS(),
+						currentTeamTable	= binding.default.toJS();
+
+				return (
+					<TeamChooser
+						key				= { `team-chooser-${index}` }
+						onTeamClick		= { this.handleTeamClick }
+						onTeamDeselect	= { this.deselectTeam }
+						binding			= { binding }
+						isEnable		= { currentTeamTable.rivalId === rivals[selectedRivalIndex].id }
+					/>
+				);
+			});
 		}
 
 		return teamChoosers;
