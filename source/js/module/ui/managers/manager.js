@@ -11,7 +11,8 @@ const	TeamBundle				= require('./team_bundle'),
 
 // Models
 const	Error					= require('module/ui/managers/models/error'),
-		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
+		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
+		InternalRivalModel		= require('module/ui/managers/rival_chooser/models/internal_rival_model');
 
 // Helpers
 const	TeamHelper				= require('module/ui/managers/helpers/team_helper'),
@@ -503,11 +504,7 @@ const Manager = React.createClass({
 				rivals			= this.getBinding().rivals.toJS(),
 				teamModeView	= binding.toJS('teamModeView');
 
-		//TODO add empty rival
-		rivals.push({
-			id:		null,
-			name:	''
-		});
+		rivals.push(new InternalRivalModel());
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -702,15 +699,6 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
-
-		//console.log('RIVALS');
-		//console.log(defaultBinding.sub('rivals').toJS());
-		//
-		//console.log('ERROR');
-		//console.log(binding.error.toJS());
-		//
-		//console.log('TEAM WRAPPER LISTENERS');
-		//console.log(this.teamWrapperListeners);
 
 		return (
 			<div className="bTeamsManager">

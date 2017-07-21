@@ -1,6 +1,7 @@
 const	EventHelper				= require('./../../../../../helpers/eventHelper'),
 		TeamHelper				= require('./../../../../../ui/managers/helpers/team_helper'),
 		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
+		InternalRivalModel		= require('module/ui/managers/rival_chooser/models/internal_rival_model'),
 		propz					= require('propz');
 
 const NewManagerWrapperHelper = {
@@ -23,10 +24,7 @@ const NewManagerWrapperHelper = {
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
-				rival = {
-					id:		'',
-					name:	''
-				};
+				rival = new InternalRivalModel();
 				break;
 		}
 

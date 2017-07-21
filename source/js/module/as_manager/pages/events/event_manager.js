@@ -24,7 +24,6 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
 		LocalEventHelper				= require('./eventHelper'),
-		MoreartyHelper					= require('../../../helpers/morearty_helper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
 		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');

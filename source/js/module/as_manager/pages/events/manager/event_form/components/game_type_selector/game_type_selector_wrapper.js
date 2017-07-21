@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		InternalRivalModel	= require('module/ui/managers/rival_chooser/models/internal_rival_model'),
 		RivalsHelper		= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
 		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
 		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel');
@@ -81,16 +82,7 @@ const GameTypeSelectorWrapper = React.createClass({
 				break;
 			}
 			case this.RADIO_BUTTON_IDS.INTERNAL_RADIO_BUTTON: {
-				rivals = [
-					{
-						id: null,
-						name: ''
-					},
-					{
-						id: null,
-						name: ''
-					}
-				];
+				rivals = RivalsHelper.getDefaultRivalsForInternalSchoolsEvent();
 				break;
 			}
 		}
