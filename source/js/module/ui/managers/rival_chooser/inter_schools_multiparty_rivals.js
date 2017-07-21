@@ -22,11 +22,11 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		handleClickRemoveTeam	: React.PropTypes.func
 	},
 	getSchools: function () {
-		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
-				rivals				= this.getBinding('rivals').toJS();
+		const rivals = this.getBinding('rivals').toJS();
 
-		let		schools				= [];
+		const schools = [];
 		// collect unique schools
+		// because schools in rivals can be repeated
 		rivals.forEach(rival => {
 			const school = schools.find(s => s.id === rival.school.id);
 
@@ -35,13 +35,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 			}
 		});
 
-		const event = this.getDefaultBinding().toJS('model');
 		return schools.map((school, index) => {
-			const	disable		= this.isSchoolDisable(school),
-					eventType	= TeamHelper.getEventType(event);
-
-			let text = school.name;
-
 			if(this.isShowSchoolByIndex(index)) {
 				const xmlRivals = [];
 
@@ -56,15 +50,8 @@ const InterSchoolsMultipartyRivals = React.createClass({
 					);
 				}
 
-				const teamClasses = classNames({
-					eRivalChooser_item	: true,
-					mOnce				: typeof this.props.indexOfDisplayingRival !== 'undefined', //it mean that only one rival is displaying
-					mNotActive			: eventType !== 'inter-schools' && selectedRivalIndex !== index,
-					mDisable			: disable
-				});
-
 				xmlRivals.push(
-					this.getSchool(school.id, index, teamClasses, text, disable)
+					this.getSchool(school, index)
 				);
 
 				return xmlRivals;
@@ -103,22 +90,32 @@ const InterSchoolsMultipartyRivals = React.createClass({
 			currentRivalIndex !== rivalsLength
 		);
 	},
-	getSchool: function(schoolId, index, teamClasses, text, disable) {
+	getSchool: function(school, index) {
+		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+				eventType			= TeamHelper.getEventType(this.getDefaultBinding().toJS('model')),
+				text				= school.name;
+
 		if(index === 0) {
 			return (
 				<ActionList
 					buttonText					= { text }
-					actionList					= { this.getRivalActionList(schoolId) }
+					actionList					= { this.getRivalActionList(school.id) }
 					handleClickActionItem		= { this.handleClickItemFromRivalActionList }
 					handleClickRemoveActionItem	= { this.handleClickRemoveRival }
 				/>
 			);
 		} else {
+			const teamClasses = classNames({
+				eRivalChooser_item	: true,
+				mOnce				: typeof this.props.indexOfDisplayingRival !== 'undefined', //it mean that only one rival is displaying
+				mNotActive			: eventType !== 'inter-schools' && selectedRivalIndex !== index,
+				mDisable			: this.isSchoolDisable(school)
+			});
+
 			return (
 				<span
 					key			= {`team-index-${index}`}
 					className	= {teamClasses}
-					onClick		= {!disable ? this.onChooseRival.bind(null, index) : null}
 				>
 					{text}
 				</span>
@@ -146,27 +143,30 @@ const InterSchoolsMultipartyRivals = React.createClass({
 				);
 			}
 		});
+		if(teamCount === 1) {
+			rivalActionList[0].options.isRemoveButtonEnable = false;
+		}
 
 		rivalActionList.push(
 			{
 				id:		'add_team',
 				text:	'Add new team',
 				options:	{
-					isRemoveButtonEnable: true
+					isRemoveButtonEnable: false
 				}
 			}
 		);
 
 		return rivalActionList;
 	},
-	isSchoolDisable: function(rival) {
+	isSchoolDisable: function(school) {
 		const	binding			= this.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
 				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 		return (
-			rival.id !== activeSchoolId &&
+			school.id !== activeSchoolId &&
 			TeamHelper.getEventType(event) === 'inter-schools'
 		);
 	},

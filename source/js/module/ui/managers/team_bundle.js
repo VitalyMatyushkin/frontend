@@ -80,18 +80,21 @@ const TeamBundle = React.createClass({
 		const listener = binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
 			const anotherRivalIndexArray = this.getAnotherRivalIndexArray(index);
 
-			anotherRivalIndexArray.forEach(index => {
-				const blackList = binding.toJS(`teamWrapper.${index}.___teamManagerBinding.blackList`);
+			// TODO check blacklist
+			if(typeof descriptor.getCurrentValue() !== 'undefined') {
+				anotherRivalIndexArray.forEach(index => {
+					const blackList = binding.toJS(`teamWrapper.${index}.___teamManagerBinding.blackList`);
 
-				binding.set(
-					`teamWrapper.${index}.___teamManagerBinding.blackList`,
-					Immutable.fromJS(
-						blackList.concat(
-							descriptor.getCurrentValue().toJS()
+					binding.set(
+						`teamWrapper.${index}.___teamManagerBinding.blackList`,
+						Immutable.fromJS(
+							blackList.concat(
+								descriptor.getCurrentValue().toJS()
+							)
 						)
-					)
-				);
-			});
+					);
+				});
+			}
 		});
 
 		this.listeners.push(listener);
@@ -138,46 +141,40 @@ const TeamBundle = React.createClass({
 		});
 	},
 	getTeamWrapperBindings: function() {
-		const	binding				= this.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
+		const	binding			= this.getDefaultBinding();
 
 		const	event			= this.getBinding().model,
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers.map((tw, index) => {
-			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw, index);
+			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapperIndex(event, tw);
+
+			const errorIndex = this.getBinding('error').toJS().findIndex(e => e.rivalId === tw.rivalId);
 
 			return {
 				default	: binding.sub(`teamWrapper.${index}`),
 				model	: this.getBinding().model,
 				rival	: currentRivalBinding,
 				players	: binding.sub(`players.${index}`),
-				error	: this.getBinding('error').sub(index)
+				error	: this.getBinding('error').sub(errorIndex)
 			};
 		});
 	},
-	getRivalBindingByTeamWrapperAndTeamWrapperIndex: function(event, teamWrapper, teamWrapperIndex) {
-		let currentRivalBinding;
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			const rivals = this.getBinding().rivals.toJS();
+	getRivalBindingByTeamWrapperAndTeamWrapperIndex: function(event, teamWrapper) {
+		const rivals = this.getBinding().rivals.toJS();
 
-			currentRivalBinding = rivals.find(rival => rival.id === teamWrapper.rivalIndex);
-		} else {
-			currentRivalBinding = this.getBinding().rivals.sub(teamWrapperIndex);
-		}
-
-		return currentRivalBinding;
+		return rivals.find(rival => rival.id === teamWrapper.rivalIndex);
 	},
 	getClassNamesForTeamWrapper: function() {
-		const	binding				= this.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex');
+		const	binding			= this.getDefaultBinding(),
+				selectedRival	= this.getBinding().rivals.toJS()[ binding.toJS('selectedRivalIndex') ];
 
 		const teamWrappers = binding.toJS(`teamWrapper`);
 
-		return teamWrappers.map((tw, index) => {
+		return teamWrappers.map(tw => {
 			return classNames({
 					bWrapperTeamWrapper:	true,
-					mDisable:				parseInt(selectedRivalIndex, 10) !== index
+					mDisable:				tw.rivalId !== selectedRival.id
 				}
 			);
 		});
@@ -325,18 +322,21 @@ const TeamBundle = React.createClass({
 		return teamChoosers;
 	},
 	renderTeamWrapper: function() {
-		const	binding				= this.getDefaultBinding(),
-				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-				_classNames			= this.getClassNamesForTeamWrapper();
+		const _classNames = this.getClassNamesForTeamWrapper();
 
 		return this.getTeamWrapperBindings().map((binding, index) => {
+			const rivalId = binding.default.toJS('rivalId');
+
 			return (
-				<div	key			= { `team_wrapper_${index}` }
-						className	= { _classNames[index] }
+				<div
+					key			= { `team_wrapper_${index}` }
+					className	= { _classNames[index] }
 				>
-					<TeamWrapper	binding					= { binding }
-									otherTeamPlayers		= { this.getAnotherTeamPlayersByRivalIndex(index) }
-									handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
+					<TeamWrapper
+						key						= { rivalId }
+						binding					= { binding }
+						otherTeamPlayers		= { this.getAnotherTeamPlayersByRivalIndex(index) }
+						handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
 					/>
 				</div>
 			);

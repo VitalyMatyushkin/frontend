@@ -152,7 +152,7 @@ const Manager = React.createClass({
 				schoolId		= this.getSchoolIdByRivalId(currentRival.id);
 
 		return {
-			rivalId: typeof currentRival.id !== 'undefined' ? currentRival.id : rivalIndex,
+			rivalId: typeof currentRival !== 'InterSchoolsRivalModel' ? currentRival.id : rivalIndex,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -184,7 +184,11 @@ const Manager = React.createClass({
 	getTeamTableByRivalIndex: function(rivalIndex) {
 		const teamId = this.getTeamIdByOrder(rivalIndex);
 
+		const	rivals			= this.getBinding().rivals.toJS(),
+				currentRival	= rivals[rivalIndex];
+
 		return {
+			rivalId			: typeof currentRival !== 'InterSchoolsRivalModel' ? currentRival.id : rivalIndex,
 			selectedTeamId	: teamId,
 			isSelectedTeam	: typeof team !== 'undefined',
 			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
@@ -311,7 +315,7 @@ const Manager = React.createClass({
 
 		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`),
 				event				= this.getDefaultBinding().toJS('model'),
-				rivalIndex			= binding.rivals.toJS().findIndex(r => r.id === rivalId),
+				rivalIndex			= this.getBinding('rivals').toJS().findIndex(r => r.id === rivalId),
 				teamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivalId);
 
 		if(
@@ -405,70 +409,73 @@ const Manager = React.createClass({
 				errorBinding	= self.getBinding('error');
 
 		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`),
-				teamWrapper			= teamWrappers.find(tw => tw.rivalId === rivalId),
-				errorArray			= errorBinding.toJS(),
+				teamWrapper			= teamWrappers.find(tw => tw.rivalId === rivalId);
+
+		if(typeof teamWrapper !== 'undefined') {
+			const	errorArray			= errorBinding.toJS(),
 				errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
 				isSetTeamLater		= teamWrapper.isSetTeamLater,
 				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan');
 
-		let result = {
-			isError:	false,
-			text:		''
-		};
-		// process data if setTeamLater is FALSE
-		// in any other case just set def validation result data
-		if(!isSetTeamLater) {
-			const event = binding.toJS('model');
+			let result = {
+				isError:	false,
+				text:		''
+			};
+			// process data if setTeamLater is FALSE
+			// in any other case just set def validation result data
+			if(!isSetTeamLater) {
+				const event = binding.toJS('model');
 
-			if(
-				typeof event !== 'undefined' &&
-				typeof event.sportModel !== 'undefined'
-			) {
-				const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
-					maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
-					minPlayers:	event.sportModel.defaultLimits.minPlayers,
-					minSubs:	event.sportModel.defaultLimits.minSubs,
-					maxSubs:	event.sportModel.defaultLimits.maxSubs
-				} : {minPlayers: 1};
+				if(
+					typeof event !== 'undefined' &&
+					typeof event.sportModel !== 'undefined'
+				) {
+					const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
+						maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+						minPlayers:	event.sportModel.defaultLimits.minPlayers,
+						minSubs:	event.sportModel.defaultLimits.minSubs,
+						maxSubs:	event.sportModel.defaultLimits.maxSubs
+					} : {minPlayers: 1};
 
-				switch (true) {
-					case TeamHelper.isNonTeamSport(event): {
-						result = TeamPlayersValidator.validate(
-							teamWrapper.___teamManagerBinding.teamStudents,
-							limits,
-							subscriptionPlan
-						);
-					}
-					break;
-					case TeamHelper.isTeamSport(event): {
-						if (
-							teamWrapper.teamName.name === undefined ||
-							teamWrapper.teamName.name === ''
-						) {
-							result = {
-								isError:	true,
-								text:		'Please enter team name'
-							};
-						} else {
+					switch (true) {
+						case TeamHelper.isNonTeamSport(event): {
 							result = TeamPlayersValidator.validate(
 								teamWrapper.___teamManagerBinding.teamStudents,
 								limits,
-								subscriptionPlan,
-								true
+								subscriptionPlan
 							);
 						}
+							break;
+						case TeamHelper.isTeamSport(event): {
+							if (
+								teamWrapper.teamName.name === undefined ||
+								teamWrapper.teamName.name === ''
+							) {
+								result = {
+									isError:	true,
+									text:		'Please enter team name'
+								};
+							} else {
+								result = TeamPlayersValidator.validate(
+									teamWrapper.___teamManagerBinding.teamStudents,
+									limits,
+									subscriptionPlan,
+									true
+								);
+							}
+						}
+							break;
 					}
-					break;
 				}
 			}
-		}
 
-		// set result
-		errorArray[errorIndex].isError = result.isError;
-		errorArray[errorIndex].text = result.text;
-		errorBinding.set(
-			Immutable.fromJS(errorArray)
-		);
+			// set result
+			errorArray[errorIndex].isError = result.isError;
+			errorArray[errorIndex].text = result.text;
+			errorBinding.set(
+				Immutable.fromJS(errorArray)
+			);
+		}
 	},
 	initRivalIndex: function() {
 		const	self		= this,
@@ -543,9 +550,8 @@ const Manager = React.createClass({
 
 		// Add new rival
 		// New rival construct by
-		rivals.push(
-			new InterSchoolsRivalModel(school)
-		);
+		const rival = new InterSchoolsRivalModel(school);
+		rivals.push(rival);
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -568,19 +574,20 @@ const Manager = React.createClass({
 		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
 		const error = this.getBinding('error').toJS();
-		error.push({
-			isError:	false,
-			text:		''
-		});
+		error.push(this.createErrorObjectByRival(rival));
 		this.getBinding('error').set(Immutable.fromJS(error));
 
 		// add listeners
 		this.addTeamWrapperListenersByRivalId(teamWrapper.rivalId);
 
-		this.validate(newRivalIndex);
+		this.validate(teamWrapper.rivalId);
 	},
 	removeRival: function(rivalId) {
 		const binding = this.getDefaultBinding();
+
+		// FIRST REMOVE LISTENERS
+		// remove listeners
+		this.removeTeamWrapperListenersByRivaId(rivalId);
 
 		// remove rival
 		const	rivals				= this.getBinding().rivals.toJS(),
@@ -613,9 +620,6 @@ const Manager = React.createClass({
 		this.getBinding('error').set(
 			Immutable.fromJS(error)
 		);
-
-		// remove listeners
-		this.removeTeamWrapperListenersByRivaId(rivalId);
 	},
 	handleClickAddTeam: function() {
 		const	binding	= this.getDefaultBinding(),
@@ -637,6 +641,24 @@ const Manager = React.createClass({
 				event	= binding.toJS('model');
 
 		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
+			const	activeSchoolId		= this.getDefaultBinding().toJS('schoolInfo.id'),
+					rivals				= this.getBinding('rivals').toJS(),
+					removedRivalIndex	= rivals.findIndex(r => r.id === rivalId),
+					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS();
+
+			if(removedRivalIndex <= selectedRivalIndex) {
+				let newSelectedRivalIndex;
+
+				for(let i = selectedRivalIndex - 1; i >= 0; i--) {
+					if(rivals[i].school.id === activeSchoolId) {
+						newSelectedRivalIndex = i;
+						break;
+					}
+				}
+
+				this.getBinding('selectedRivalIndex').set(Immutable.fromJS(newSelectedRivalIndex));
+			}
+
 			this.removeRival(rivalId);
 		}
 	},
@@ -681,14 +703,14 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-		console.log('RIVALS');
-		console.log(defaultBinding.sub('rivals').toJS());
-
-		console.log('ERROR');
-		console.log(binding.error.toJS());
-
-		console.log('TEAM WRAPPER LISTENERS');
-		console.log(this.teamWrapperListeners);
+		//console.log('RIVALS');
+		//console.log(defaultBinding.sub('rivals').toJS());
+		//
+		//console.log('ERROR');
+		//console.log(binding.error.toJS());
+		//
+		//console.log('TEAM WRAPPER LISTENERS');
+		//console.log(this.teamWrapperListeners);
 
 		return (
 			<div className="bTeamsManager">
