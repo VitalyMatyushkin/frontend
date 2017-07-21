@@ -128,13 +128,15 @@ const TeamBundle = React.createClass({
 		const	binding			= this.getDefaultBinding();
 
 		const	event			= this.getBinding().model,
+				teamTables		= binding.toJS(`teamTable`),
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
-		return teamWrappers.map((tw, index) => {
-			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw);
+		return teamWrappers.filter(tw => typeof tw.rivalId !== 'undefined').map(tw => {
+			const	currentRivalBinding		= this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw),
+					currentTeamTableIndex	= teamTables.findIndex(tt => tt.rivalId === tw.rivalId);
 
 			return ({
-				default:	binding.sub(`teamTable.${index}`),
+				default:	binding.sub(`teamTable.${currentTeamTableIndex}`),
 				model:		event,
 				rival:		currentRivalBinding
 			});

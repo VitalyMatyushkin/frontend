@@ -153,7 +153,7 @@ const Manager = React.createClass({
 				schoolId		= this.getSchoolIdByRivalId(currentRival.id);
 
 		return {
-			rivalId: typeof currentRival !== 'InterSchoolsRivalModel' ? currentRival.id : rivalIndex,
+			rivalId: currentRival.id,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -189,7 +189,7 @@ const Manager = React.createClass({
 				currentRival	= rivals[rivalIndex];
 
 		return {
-			rivalId			: currentRival,
+			rivalId			: currentRival.id,
 			selectedTeamId	: teamId,
 			isSelectedTeam	: typeof team !== 'undefined',
 			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
@@ -602,7 +602,10 @@ const Manager = React.createClass({
 		teamModeView.teamWrapper.splice(currentTeamWrapperIndex, 1);
 		teamModeView.rivalsCount = rivals.length;
 
-		// TODO remove team table
+		// remove team table
+		const currentTeamTableIndex	= teamModeView.teamTable.findIndex(tt => tt.rivalId === currentRivalIndex);
+		teamModeView.teamTable.splice(currentTeamTableIndex, 1);
+
 		// TODO remove players
 
 		// save changes
@@ -641,22 +644,28 @@ const Manager = React.createClass({
 			const	activeSchoolId		= this.getDefaultBinding().toJS('schoolInfo.id'),
 					rivals				= this.getBinding('rivals').toJS(),
 					removedRivalIndex	= rivals.findIndex(r => r.id === rivalId),
-					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS();
+					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+					selectedRival		= rivals[selectedRivalIndex];
 
-			if(removedRivalIndex <= selectedRivalIndex) {
-				let newSelectedRivalIndex;
+			this.removeRival(rivalId);
 
-				for(let i = selectedRivalIndex - 1; i >= 0; i--) {
-					if(rivals[i].school.id === activeSchoolId) {
-						newSelectedRivalIndex = i;
+			if(removedRivalIndex === selectedRivalIndex) {
+				const updRivals = this.getBinding('rivals').toJS();
+
+				// just find index of next rival
+				for(let i = 0; i < updRivals.length; i++) {
+					if(updRivals[i].school.id === activeSchoolId) {
+						this.getBinding('selectedRivalIndex').set(Immutable.fromJS(i));
 						break;
 					}
 				}
+			} else if(removedRivalIndex < selectedRivalIndex) {
+ 				// just find index of selected rival in updated rival array
+				const	updRivals				= this.getBinding('rivals').toJS(),
+						updSelectedRivalIndex	= updRivals.findIndex(r => r.id === selectedRival.id);
 
-				this.getBinding('selectedRivalIndex').set(Immutable.fromJS(newSelectedRivalIndex));
+				this.getBinding('selectedRivalIndex').set(Immutable.fromJS(updSelectedRivalIndex));
 			}
-
-			this.removeRival(rivalId);
 		}
 	},
 	renderGameField: function() {
