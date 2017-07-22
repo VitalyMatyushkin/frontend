@@ -11,7 +11,7 @@ const	React				= require('react'),
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
-	playersListener: undefined,
+	listeners: [],
 	propTypes: {
 		handleIsSelectTeamLater:	React.PropTypes.func,
 		otherTeamPlayers:			React.PropTypes.array.isRequired
@@ -24,7 +24,11 @@ const TeamWrapper = React.createClass({
 		self._initBinding();
 		self._addListeners();
 	},
+	componentWillUnmount: function() {
+		const binding = this.getDefaultBinding();
 
+		this.listeners.forEach(listenerId => binding.removeListener(listenerId));
+	},
 	/*HELPERS*/
 	_initBinding: function() {
 		const	self = this,
@@ -145,15 +149,17 @@ const TeamWrapper = React.createClass({
 	_addTeamIdListener: function() {
 		const self = this;
 
-		self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
+		const listenerId = self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
 			self._changeTeam(descriptor.getCurrentValue());
 		});
+
+		this.listeners.push(listenerId);
 	},
 	_addTeamNameListener: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.sub('teamName.name').addListener(() => {
+		const listenerId = binding.sub('teamName.name').addListener(() => {
 			// check team name only if selectedTeamId isn't undefined
 			// it's equal situation when we have selected team.
 			const	isTeamNameChanged	= (
@@ -167,12 +173,14 @@ const TeamWrapper = React.createClass({
 				.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
 				.commit();
 		});
+
+		this.listeners.push(listenerId);
 	},
 	_addPlayersListener: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
+		const listenerId = binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
 			const	isTeamPlayersChanged	= (
 												typeof binding.toJS('selectedTeamId') !== 'undefined' &&
 												!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
@@ -184,6 +192,8 @@ const TeamWrapper = React.createClass({
 				.set('isTeamChanged',			isTeamPlayersChanged || isTeamNameChanged)
 				.commit();
 		});
+
+		this.listeners.push(listenerId);
 	},
 	/**
 	 * Change team, that mean:

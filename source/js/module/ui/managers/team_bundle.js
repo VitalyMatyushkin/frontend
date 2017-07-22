@@ -39,11 +39,13 @@ const TeamBundle = React.createClass({
 		const	self	= this,
 				rivals	= self.getBinding().rivals.toJS();
 
-		rivals.forEach((rival, index) => self.initTeamWrapperFilterBinding(index, rival));
+		rivals.forEach(rival => self.initTeamWrapperFilterBinding(rival));
 	},
-	initTeamWrapperFilterBinding: function(rivalIndex, rival) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	initTeamWrapperFilterBinding: function(rival) {
+		const	self					= this,
+				binding					= self.getDefaultBinding(),
+				teamWrappers			= binding.set(`teamWrapper`),
+				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rival.id);
 
 		const	school	= self.getBinding('schoolInfo').toJS(),
 				model	= self.getBinding('model').toJS(),
@@ -52,7 +54,7 @@ const TeamBundle = React.createClass({
 				houseId	= TeamHelper.getEventType(model) === 'houses' ? rival.id : undefined;
 
 		binding.set(
-			`teamWrapper.${rivalIndex}.___teamManagerBinding.filter`,
+			`teamWrapper.${currentTeamWrapperIndex}.___teamManagerBinding.filter`,
 			Immutable.fromJS(
 				TeamHelper.getTeamManagerSearchFilter(
 					school,
@@ -111,13 +113,10 @@ const TeamBundle = React.createClass({
 					prevRivalsCount		= descriptor.getPreviousValue();
 
 			if(currentRivalsCount > prevRivalsCount) {
-				const	rivals				= this.getBinding().rivals.toJS(),
-						// rivals and team wrappers are connected
-						// rival by index N corresponds to team wrapper by index N
-						teamWrapperIndex	= currentRivalsCount - 1;
+				const newRivalIndex = currentRivalsCount - 1;
 
-				this.initTeamWrapperFilterBinding(teamWrapperIndex, rivals[teamWrapperIndex]);
-				this.addTeamPlayersListenerByTeamIndex(binding, teamWrapperIndex);
+				this.initTeamWrapperFilterBinding(newRivalIndex);
+				this.addTeamPlayersListenerByTeamIndex(binding, newRivalIndex);
 			}
 		});
 

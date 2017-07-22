@@ -709,6 +709,8 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
+		console.log(defaultBinding.toJS('teamModeView'));
+
 		return (
 			<div className="bTeamsManager">
 				{ this.renderRivals() }
