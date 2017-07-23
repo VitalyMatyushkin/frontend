@@ -44,7 +44,7 @@ const TeamBundle = React.createClass({
 	initTeamWrapperFilterBinding: function(rival) {
 		const	self					= this,
 				binding					= self.getDefaultBinding(),
-				teamWrappers			= binding.set(`teamWrapper`),
+				teamWrappers			= binding.toJS(`teamWrapper`),
 				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rival.id);
 
 		const	school	= self.getBinding('schoolInfo').toJS(),
@@ -72,23 +72,36 @@ const TeamBundle = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const teamWrappers = binding.toJS('teamWrapper');
-		teamWrappers.forEach((_, index) => self.addTeamPlayersListenerByTeamIndex(binding, index));
+		teamWrappers.forEach(tw => {
+			const	rivals		= this.getBinding().rivals.toJS(),
+					rivalIndex	= rivals.findIndex(r => r.id === tw.rivalId);
+			
+			self.addTeamPlayersListenerByRivalIndex(binding, rivalIndex)
+		});
 
 		this.addRivalsCountListener();
 	},
-	addTeamPlayersListenerByTeamIndex: function(binding, index) {
+	addTeamPlayersListenerByRivalIndex: function(binding, rivalIndex) {
+		const	rivals					= this.getBinding().rivals.toJS(),
+				currentRival			= rivals[rivalIndex],
+				teamWrappers			= binding.toJS('teamWrapper'),
+				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === currentRival.id);
+		
 		// if players were change
 		// add players from one team to blacklist of other team
-		const listener = binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
-			const anotherRivalIndexArray = this.getAnotherRivalIndexArray(index);
+		const listener = binding.sub(`teamWrapper.${currentTeamWrapperIndex}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
+			const anotherRivalIdArray = this.getAnotherRivalIdArray(rivalIndex);
 
 			// TODO check blacklist
 			if(typeof descriptor.getCurrentValue() !== 'undefined') {
-				anotherRivalIndexArray.forEach(index => {
-					const blackList = binding.toJS(`teamWrapper.${index}.___teamManagerBinding.blackList`);
+				anotherRivalIdArray.forEach(rivalId => {
+					const _teamWrappers				= binding.toJS('teamWrapper');
+					const _currentTeamWrapperIndex	= _teamWrappers.findIndex(tw => tw.rivalId === rivalId);
+					
+					const blackList = binding.toJS(`teamWrapper.${_currentTeamWrapperIndex}.___teamManagerBinding.blackList`);
 
 					binding.set(
-						`teamWrapper.${index}.___teamManagerBinding.blackList`,
+						`teamWrapper.${_currentTeamWrapperIndex}.___teamManagerBinding.blackList`,
 						Immutable.fromJS(
 							blackList.concat(
 								descriptor.getCurrentValue().toJS()
@@ -113,10 +126,11 @@ const TeamBundle = React.createClass({
 					prevRivalsCount		= descriptor.getPreviousValue();
 
 			if(currentRivalsCount > prevRivalsCount) {
-				const newRivalIndex = currentRivalsCount - 1;
+				const	newRivalIndex	= currentRivalsCount - 1,
+						rivals			= this.getBinding().rivals.toJS();
 
-				this.initTeamWrapperFilterBinding(newRivalIndex);
-				this.addTeamPlayersListenerByTeamIndex(binding, newRivalIndex);
+				this.initTeamWrapperFilterBinding(rivals[newRivalIndex]);
+				this.addTeamPlayersListenerByRivalIndex(binding, newRivalIndex);
 			}
 		});
 
@@ -199,12 +213,12 @@ const TeamBundle = React.createClass({
 
 		return anotherPlayers;
 	},
-	getAnotherRivalIndexArray: function(rivalIndex) {
+	getAnotherRivalIdArray: function(rivalIndex) {
 		const rivals = this.getBinding().rivals.toJS();
 
 		return rivals
-			.map((rival, rivalIndex) => rivalIndex)
-			.filter(number => number !== rivalIndex);
+			.filter((rival, _rivalIndex) => _rivalIndex !== rivalIndex)
+			.map((rival, rivalIndex) => rival.id);
 	},
 	/**
 	 * Function adds teamId to black list of other rivals.
@@ -214,9 +228,13 @@ const TeamBundle = React.createClass({
 	 * @returns {*}
 	 */
 	addTeamIdToOtherRivalsBlackList: function(teamTable, currentRivalIndex, blackListTeamId) {
-		const anotherRivalIndexArray = this.getAnotherRivalIndexArray(currentRivalIndex);
+		const anotherRivalIdArray = this.getAnotherRivalIdArray(currentRivalIndex);
 
-		anotherRivalIndexArray.forEach(index => teamTable[index].teamIdBlackList.push(blackListTeamId));
+		anotherRivalIdArray.forEach(rivalId => {
+			const currentTeamTableIndex = teamTable.findIndex(tt => tt.rivalId === rivalId);
+			
+			teamTable[currentTeamTableIndex].teamIdBlackList.push(blackListTeamId);
+		});
 	},
 	/**
 	 * Function removes teamId from black list of other rivals.
@@ -225,12 +243,13 @@ const TeamBundle = React.createClass({
 	 * @param blackListTeamId
 	 */
 	removeTeamIdToOtherRivalsBlackList: function(teamTable, currentRivalIndex, blackListTeamId) {
-		const anotherRivalIndexArray = this.getAnotherRivalIndexArray(currentRivalIndex);
+		const anotherRivalIdArray = this.getAnotherRivalIdArray(currentRivalIndex);
 
-		anotherRivalIndexArray.forEach(index => {
-			const teamIdIndex = teamTable[index].teamIdBlackList.find(id => id === blackListTeamId);
-
-			teamTable[index].teamIdBlackList.splice(teamIdIndex, 1);
+		anotherRivalIdArray.forEach(rivalId => {
+			const currentTeamTableIndex = teamTable.findIndex(tt => tt.rivalId === rivalId);
+			
+			const teamIdIndex = teamTable[currentTeamTableIndex].teamIdBlackList.find(id => id === blackListTeamId);
+			teamTable[currentTeamTableIndex].teamIdBlackList.splice(teamIdIndex, 1);
 		});
 	},
 	selectTeam: function(teamId, team) {
