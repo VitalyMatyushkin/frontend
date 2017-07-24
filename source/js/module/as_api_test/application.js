@@ -58,31 +58,32 @@ const ApplicationView = React.createClass({
         })
         .then((roles) => {
             return Promise.all(roles.data.map((role) => {
-                this.setRole(role.name)
+                return this.setRole(role.name)
                 .then((selectedRole) => {
                     return Promise.all(role.permissions.map((school) =>{
-                        this.getSchoolInfo(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
+                        return this.getSchoolInfo(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
                         .then(() => {
                             return this.getEvents(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role);
                         })
                         .then(() => {
                             if (school.school.kind === 'School' && (selectedRole.data.role === 'ADMIN' || selectedRole.data.role === 'MANAGER' || selectedRole.data.role === 'TRAINER')) {
-                                Promise.all([
+                                return Promise.all([
                                     this.getStudentList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getHouseList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getFormList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
-                                    .then((event) => {
-                                        return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
-                                    })
-                                ]).then(() => {
-                                    this.setState({status: COMPLETED});
-                                });
+                                        .then((event) => {
+                                            return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
+                                        })
+                                ])
                             }
                         });
-                    }));
-                });
+                    }))
+                })
             }))
+        })
+        .then(() => {
+            this.setState({status: COMPLETED});
         })
         .catch(() => {
             this.setState({status: COMPLETED});
