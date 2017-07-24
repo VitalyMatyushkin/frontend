@@ -154,6 +154,7 @@ const Manager = React.createClass({
 
 		return {
 			rivalId: currentRival.id,
+			willRemove: false,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -591,25 +592,23 @@ const Manager = React.createClass({
 				currentRivalIndex	= rivals.findIndex(r => r.id === rivalId);
 
 		rivals.splice(currentRivalIndex, 1);
-		this.getBinding().rivals.set(
-			Immutable.fromJS(rivals)
-		);
 
 		// remove team mode view
 		const	teamModeView			= binding.toJS('teamModeView'),
-				currentTeamWrapperIndex	= teamModeView.teamWrapper.findIndex(tw => tw.rivalId === currentRivalIndex);
+				currentTeamWrapperIndex	= teamModeView.teamWrapper.findIndex(tw => tw.rivalId === rivalId);
+
+		// call object to remove listeners
+		teamModeView.teamWrapper[currentTeamWrapperIndex].willRemoveListeners = true;
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
 		teamModeView.teamWrapper.splice(currentTeamWrapperIndex, 1);
 		teamModeView.rivalsCount = rivals.length;
 
 		// remove team table
-		const currentTeamTableIndex	= teamModeView.teamTable.findIndex(tt => tt.rivalId === currentRivalIndex);
+		const currentTeamTableIndex	= teamModeView.teamTable.findIndex(tt => tt.rivalId === rivalId);
 		teamModeView.teamTable.splice(currentTeamTableIndex, 1);
 
 		// TODO remove players
-
-		// save changes
-		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
 		// remove error info object
 		const error = this.getBinding('error').toJS();
@@ -617,6 +616,12 @@ const Manager = React.createClass({
 			error.findIndex(e => e.rivalId === rivalId),
 			1
 		);
+
+		// save changes
+		this.getBinding().rivals.set(
+			Immutable.fromJS(rivals)
+		);
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 		this.getBinding('error').set(
 			Immutable.fromJS(error)
 		);
@@ -709,7 +714,11 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-		console.log(defaultBinding.toJS('teamModeView'));
+		console.log(`TEAM WRAPPERS LENGTH ${defaultBinding.toJS('teamModeView.teamWrapper').length}`);
+
+		defaultBinding.toJS('teamModeView.teamWrapper').forEach((tw) => {
+			console.log(`#${tw.rivalId} WILL REMOVE LISTENERS ${tw.willRemove}`);
+		});
 
 		return (
 			<div className="bTeamsManager">

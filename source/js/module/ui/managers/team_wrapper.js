@@ -25,9 +25,16 @@ const TeamWrapper = React.createClass({
 		self._addListeners();
 	},
 	componentWillUnmount: function() {
+		this.removeListeners();
+
+		this.getDefaultBinding().clear();
+	},
+	removeListeners: function() {
 		const binding = this.getDefaultBinding();
 
 		this.listeners.forEach(listenerId => binding.removeListener(listenerId));
+
+		this.listeners = [];
 	},
 	/*HELPERS*/
 	_initBinding: function() {
@@ -43,10 +50,11 @@ const TeamWrapper = React.createClass({
 			self._fillPlugBinding();
 			self._setPlayers(self.getBinding().players.toJS());
 			self._setBlackList(this.props.otherTeamPlayers);
-			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
-			binding.set('isSetTeamLater',	Immutable.fromJS(false));
-			binding.set('isTeamChanged',	false);
-			binding.set('isInit',			Immutable.fromJS(true));
+			binding.set('prevPlayers',			Immutable.fromJS(self.getBinding().players.toJS()));
+			binding.set('isSetTeamLater',		Immutable.fromJS(false));
+			binding.set('isTeamChanged',		false);
+			binding.set('isInit',				Immutable.fromJS(true));
+			binding.set('willRemoveListeners',	false);
 		}
 	},
 	_setBlackList: function(players) {
@@ -66,6 +74,7 @@ const TeamWrapper = React.createClass({
 		self._addTeamIdListener();
 		self._addTeamNameListener();
 		self._addPlayersListener();
+		self.addWillRemoveListenersListener();
 	},
 	_initCreationModeBinding: function() {
 		const	self	= this,
@@ -172,6 +181,22 @@ const TeamWrapper = React.createClass({
 				.set('isTeamNameChanged',	isTeamNameChanged)
 				.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
 				.commit();
+		});
+
+		this.listeners.push(listenerId);
+	},
+	addWillRemoveListenersListener: function() {
+		const binding = this.getDefaultBinding();
+
+		const listenerId = binding.sub('willRemoveListeners').addListener(eventDescriptor => {
+			if(
+				typeof eventDescriptor.getCurrentValue() === 'boolean' &&
+				eventDescriptor.getCurrentValue() === true
+			) {
+				this.removeListeners();
+
+				this.callTeamManagerToRemoveListeners();
+			}
 		});
 
 		this.listeners.push(listenerId);
@@ -372,6 +397,9 @@ const TeamWrapper = React.createClass({
 				Immutable.fromJS(true)
 			)
 			.commit();
+	},
+	callTeamManagerToRemoveListeners: function() {
+		this.getDefaultBinding().set('___teamManagerBinding.willRemoveListeners', true);
 	},
 	handleChangeName: function(newName) {
 		this.getDefaultBinding().set('teamName.name', Immutable.fromJS(newName));

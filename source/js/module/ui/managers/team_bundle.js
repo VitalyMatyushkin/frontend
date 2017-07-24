@@ -144,16 +144,18 @@ const TeamBundle = React.createClass({
 				teamTables		= binding.toJS(`teamTable`),
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
-		return teamWrappers.filter(tw => typeof tw.rivalId !== 'undefined').map(tw => {
-			const	currentRivalBinding		= this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw),
-					currentTeamTableIndex	= teamTables.findIndex(tt => tt.rivalId === tw.rivalId);
+		return teamWrappers
+			.filter(tw => typeof tw.willRemove === 'boolean' && tw.willRemove === false)
+			.map(tw => {
+				const	currentRivalBinding		= this.getRivalBindingByTeamWrapper(event, tw),
+						currentTeamTableIndex	= teamTables.findIndex(tt => tt.rivalId === tw.rivalId);
 
-			return ({
-				default:	binding.sub(`teamTable.${currentTeamTableIndex}`),
-				model:		event,
-				rival:		currentRivalBinding
+				return ({
+					default:	binding.sub(`teamTable.${currentTeamTableIndex}`),
+					model:		event,
+					rival:		currentRivalBinding
+				});
 			});
-		});
 	},
 	getTeamWrapperBindings: function() {
 		const	binding			= this.getDefaultBinding();
@@ -161,21 +163,23 @@ const TeamBundle = React.createClass({
 		const	event			= this.getBinding().model,
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
-		return teamWrappers.map((tw, index) => {
-			let currentRivalBinding = this.getRivalBindingByTeamWrapperAndTeamWrapper(event, tw);
+		return teamWrappers
+			.filter(tw => typeof tw.willRemove === 'boolean' && tw.willRemove === false)
+			.map((tw, index) => {
 
-			const errorIndex = this.getBinding('error').toJS().findIndex(e => e.rivalId === tw.rivalId);
+				const errorIndex = this.getBinding('error').toJS().findIndex(e => e.rivalId === tw.rivalId);
 
-			return {
-				default	: binding.sub(`teamWrapper.${index}`),
-				model	: this.getBinding().model,
-				rival	: currentRivalBinding,
-				players	: binding.sub(`players.${index}`),
-				error	: this.getBinding('error').sub(errorIndex)
-			};
-		});
+				return {
+					default	: binding.sub(`teamWrapper.${index}`),
+					model	: this.getBinding().model,
+					rival	: this.getRivalBindingByTeamWrapper(event, tw),
+					players	: binding.sub(`players.${index}`),
+					error	: this.getBinding('error').sub(errorIndex)
+				};
+			}
+		);
 	},
-	getRivalBindingByTeamWrapperAndTeamWrapper: function(event, teamWrapper) {
+	getRivalBindingByTeamWrapper: function(event, teamWrapper) {
 		const	rivals				= this.getBinding().rivals.toJS(),
 				currentRivalIndex	= rivals.findIndex(rival => rival.id === teamWrapper.rivalIndex);
 
