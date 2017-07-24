@@ -82,7 +82,7 @@ const DefaultRivals = React.createClass({
 					<span
 						key			= {`team-index-${index}`}
 						className	= {teamClasses}
-						onClick		= {!disable ? this.props.handleChooseRival.bind(null, index) : null}
+						onClick		= {!disable ? this.props.handleChooseRival.bind(null, rival.id) : null}
 					>
 						{text}
 					</span>

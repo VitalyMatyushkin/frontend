@@ -127,13 +127,7 @@ const Manager = React.createClass({
 		this.getBinding('error').set(Immutable.fromJS(error));
 	},
 	createErrorObjectByRival: function(rival) {
-		const event = this.getDefaultBinding().toJS('model');
-
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			return new Error(rival.id, '', false);
-		} else {
-			return new Error(undefined, '', false);
-		}
+		return new Error(rival.id, '', false);
 	},
 	getTeamWrappers: function() {
 		const binding = this.getBinding();
@@ -713,12 +707,6 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
-
-		console.log(`TEAM WRAPPERS LENGTH ${defaultBinding.toJS('teamModeView.teamWrapper').length}`);
-
-		defaultBinding.toJS('teamModeView.teamWrapper').forEach((tw) => {
-			console.log(`#${tw.rivalId} WILL REMOVE LISTENERS ${tw.willRemove}`);
-		});
 
 		return (
 			<div className="bTeamsManager">
