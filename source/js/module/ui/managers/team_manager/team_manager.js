@@ -20,6 +20,7 @@ const TeamManager = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			willRemoveListeners:		false,
 			filter:						undefined,
 			foundStudents:				[],
 			removedPlayers:				[],
@@ -64,12 +65,31 @@ const TeamManager = React.createClass({
 				self.searchAndSetStudents(self.currentSearchText, binding);
 			}
 		}));
+		self.listeners.push(binding.sub('willRemoveListeners').addListener((descriptor) => {
+			if(
+				typeof descriptor.getCurrentValue() === 'boolean' &&
+				descriptor.getCurrentValue() === true
+			) {
+				this.removeListeners();
+				this.cancelCurrentSearchRequest();
+			}
+		}));
 	},
 	componentWillUnmount: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		this.removeListeners();
+		this.cancelCurrentSearchRequest();
 
-		self.listeners.forEach(l => binding.removeListener(l));
+		this.getDefaultBinding().clear();
+	},
+	removeListeners: function() {
+		const binding = this.getDefaultBinding();
+
+		this.listeners.forEach(listenerId => binding.removeListener(listenerId));
+
+		this.listeners = [];
+	},
+	cancelCurrentSearchRequest: function() {
+		typeof this.currentSearchRequest !== 'undefined' && this.currentSearchRequest.cancel();
 	},
 	clearTeamValues: function() {
 		const	self	= this,

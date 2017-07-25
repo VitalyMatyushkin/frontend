@@ -19,9 +19,12 @@ const RivalChooser = React.createClass({
 		isInviteMode			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
+		handleClickRemoveTeam	: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
-	handleChooseRival: function(rivalIndex) {
+	handleChooseRival: function(rivalId) {
+		const rivalIndex = this.getBinding().rivals.toJS().findIndex(r => r.id === rivalId);
+
 		this.getBinding('selectedRivalIndex').set(Immutable.fromJS(rivalIndex));
 	},
 	getRivals: function () {
@@ -37,6 +40,7 @@ const RivalChooser = React.createClass({
 					isInviteMode			= { this.props.isInviteMode }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.props.handleClickAddTeam }
+					handleClickRemoveTeam	= { this.props.handleClickRemoveTeam }
 					handleChooseRival		= { this.handleChooseRival }
 				/>
 			);

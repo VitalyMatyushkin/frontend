@@ -11,7 +11,7 @@ const	React				= require('react'),
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
-	playersListener: undefined,
+	listeners: [],
 	propTypes: {
 		handleIsSelectTeamLater:	React.PropTypes.func,
 		otherTeamPlayers:			React.PropTypes.array.isRequired
@@ -24,7 +24,18 @@ const TeamWrapper = React.createClass({
 		self._initBinding();
 		self._addListeners();
 	},
+	componentWillUnmount: function() {
+		this.removeListeners();
 
+		this.getDefaultBinding().clear();
+	},
+	removeListeners: function() {
+		const binding = this.getDefaultBinding();
+
+		this.listeners.forEach(listenerId => binding.removeListener(listenerId));
+
+		this.listeners = [];
+	},
 	/*HELPERS*/
 	_initBinding: function() {
 		const	self = this,
@@ -39,10 +50,11 @@ const TeamWrapper = React.createClass({
 			self._fillPlugBinding();
 			self._setPlayers(self.getBinding().players.toJS());
 			self._setBlackList(this.props.otherTeamPlayers);
-			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
-			binding.set('isSetTeamLater',	Immutable.fromJS(false));
-			binding.set('isTeamChanged',	false);
-			binding.set('isInit',			Immutable.fromJS(true));
+			binding.set('prevPlayers',			Immutable.fromJS(self.getBinding().players.toJS()));
+			binding.set('isSetTeamLater',		Immutable.fromJS(false));
+			binding.set('isTeamChanged',		false);
+			binding.set('isInit',				Immutable.fromJS(true));
+			binding.set('willRemoveListeners',	false);
 		}
 	},
 	_setBlackList: function(players) {
@@ -62,6 +74,7 @@ const TeamWrapper = React.createClass({
 		self._addTeamIdListener();
 		self._addTeamNameListener();
 		self._addPlayersListener();
+		self.addWillRemoveListenersListener();
 	},
 	_initCreationModeBinding: function() {
 		const	self	= this,
@@ -145,15 +158,17 @@ const TeamWrapper = React.createClass({
 	_addTeamIdListener: function() {
 		const self = this;
 
-		self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
+		const listenerId = self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
 			self._changeTeam(descriptor.getCurrentValue());
 		});
+
+		this.listeners.push(listenerId);
 	},
 	_addTeamNameListener: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.sub('teamName.name').addListener(() => {
+		const listenerId = binding.sub('teamName.name').addListener(() => {
 			// check team name only if selectedTeamId isn't undefined
 			// it's equal situation when we have selected team.
 			const	isTeamNameChanged	= (
@@ -167,12 +182,30 @@ const TeamWrapper = React.createClass({
 				.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
 				.commit();
 		});
+
+		this.listeners.push(listenerId);
+	},
+	addWillRemoveListenersListener: function() {
+		const binding = this.getDefaultBinding();
+
+		const listenerId = binding.sub('willRemoveListeners').addListener(eventDescriptor => {
+			if(
+				typeof eventDescriptor.getCurrentValue() === 'boolean' &&
+				eventDescriptor.getCurrentValue() === true
+			) {
+				this.removeListeners();
+
+				this.callTeamManagerToRemoveListeners();
+			}
+		});
+
+		this.listeners.push(listenerId);
 	},
 	_addPlayersListener: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
+		const listenerId = binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
 			const	isTeamPlayersChanged	= (
 												typeof binding.toJS('selectedTeamId') !== 'undefined' &&
 												!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
@@ -184,6 +217,8 @@ const TeamWrapper = React.createClass({
 				.set('isTeamChanged',			isTeamPlayersChanged || isTeamNameChanged)
 				.commit();
 		});
+
+		this.listeners.push(listenerId);
 	},
 	/**
 	 * Change team, that mean:
@@ -362,6 +397,9 @@ const TeamWrapper = React.createClass({
 				Immutable.fromJS(true)
 			)
 			.commit();
+	},
+	callTeamManagerToRemoveListeners: function() {
+		this.getDefaultBinding().set('___teamManagerBinding.willRemoveListeners', true);
 	},
 	handleChangeName: function(newName) {
 		this.getDefaultBinding().set('teamName.name', Immutable.fromJS(newName));

@@ -1,0 +1,14 @@
+@import "../!variables";
+
+.bSmallCrossButton {
+  height: 20px;
+
+  color: black;
+
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    color: #fff;
+  }
+}

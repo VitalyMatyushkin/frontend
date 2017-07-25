@@ -9,8 +9,10 @@ const	TeamBundle				= require('./team_bundle'),
 		RivalChooser			= require('./rival_chooser/rival_chooser'),
 		GameField				= require('./gameField');
 
-// Model
-const	InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
+// Models
+const	Error					= require('module/ui/managers/models/error'),
+		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
+		InternalRivalModel		= require('module/ui/managers/rival_chooser/models/internal_rival_model');
 
 // Helpers
 const	TeamHelper				= require('module/ui/managers/helpers/team_helper'),
@@ -33,6 +35,7 @@ const Manager = React.createClass({
 		indexOfDisplayingRival	: React.PropTypes.number
 	},
 	listeners: [],
+	teamWrapperListeners: [],
 	componentWillMount: function () {
 		const self = this;
 
@@ -41,19 +44,47 @@ const Manager = React.createClass({
 		self.addListeners();
 
 		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
-			self.validate(this.props.indexOfDisplayingRival);
+			let rivalId = this.props.indexOfDisplayingRival;
+			if(
+				EventHelper.isInterSchoolsEvent(
+					this.getDefaultBinding().toJS('model')
+				)
+			) {
+				rivalId = this.getBinding('rivals').toJS()[this.props.indexOfDisplayingRival].id;
+			}
+
+			self.validate(rivalId);
 		} else {
 			const	binding		= this.getDefaultBinding(),
 					teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-			teamWrapper.forEach((tw, index) => self.validate(index));
+			teamWrapper.forEach(tw => this.validate(tw.rivalId));
 		}
 	},
 	componentWillUnmount: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		self.listeners.forEach(l => binding.removeListener(l));
+		this.listeners.forEach(l => binding.removeListener(l));
+		this.removeAllTeamWrapperListeners();
+	},
+	removeAllTeamWrapperListeners: function() {
+		const binding = this.getDefaultBinding();
+
+		this.teamWrapperListeners.forEach(teamWrapperListener => binding.removeListener(teamWrapperListener.listener));
+		this.teamWrapperListeners = [];
+	},
+	removeTeamWrapperListenersByRivaId: function(rivalId) {
+		const binding = this.getDefaultBinding();
+
+		const tempTeamWrapperListeners = Object.assign(this.teamWrapperListeners);
+		tempTeamWrapperListeners.forEach((teamWrapperListener, index) => {
+			if(teamWrapperListener.rivalId === rivalId) {
+				binding.removeListener(
+					teamWrapperListener.listener
+				);
+				this.teamWrapperListeners.splice(index, 1);
+			}
+		});
 	},
 	getDefaultProps: function(){
 		return {
@@ -91,14 +122,12 @@ const Manager = React.createClass({
 	initErrorBinding: function() {
 		const rivals = this.getBinding('rivals').toJS();
 
-		const error = rivals.map(() => {
-			return {
-				isError:	false,
-				text:		''
-			}
-		});
+		const error = rivals.map(rival => this.createErrorObjectByRival(rival));
 
 		this.getBinding('error').set(Immutable.fromJS(error));
+	},
+	createErrorObjectByRival: function(rival) {
+		return new Error(rival.id, '', false);
 	},
 	getTeamWrappers: function() {
 		const binding = this.getBinding();
@@ -119,6 +148,7 @@ const Manager = React.createClass({
 
 		return {
 			rivalId: currentRival.id,
+			willRemove: false,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -150,7 +180,11 @@ const Manager = React.createClass({
 	getTeamTableByRivalIndex: function(rivalIndex) {
 		const teamId = this.getTeamIdByOrder(rivalIndex);
 
+		const	rivals			= this.getBinding().rivals.toJS(),
+				currentRival	= rivals[rivalIndex];
+
 		return {
+			rivalId			: currentRival.id,
 			selectedTeamId	: teamId,
 			isSelectedTeam	: typeof team !== 'undefined',
 			teamIdBlackList	: this.getTeamIdBlackListByRivalIndex(rivalIndex)
@@ -270,145 +304,173 @@ const Manager = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-		teamWrapper.forEach((tw, index) => this.addTeamWrapperListenersByIndex(index));
+		teamWrapper.forEach(tw => this.addTeamWrapperListenersByRivalId(tw.rivalId));
 	},
-	addTeamWrapperListenersByIndex: function(index) {
-		const	binding	= this.getDefaultBinding(),
-				event	= this.getDefaultBinding().toJS('model');
+	addTeamWrapperListenersByRivalId: function(rivalId) {
+		const	binding			= this.getDefaultBinding();
+
+		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`),
+				event				= this.getDefaultBinding().toJS('model'),
+				rivalIndex			= this.getBinding('rivals').toJS().findIndex(r => r.id === rivalId),
+				teamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivalId);
 
 		if(
 			// for index 0 always true
-		index === 0 ||
+		rivalIndex === 0 ||
 		(
-			index > 0 &&
-				// condition for other indexes
+			rivalIndex > 0 &&
+			// condition for other indexes
 			(
 				!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)
 			)
 		)
 		) {
-			this.listeners.push(
-				binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.teamStudents`)
-					.addListener(() => this.validate(index))
+			this.teamWrapperListeners.push(
+				{
+					rivalId:	rivalId,
+					listener:	binding.sub(`teamModeView.teamWrapper.${teamWrapperIndex}.___teamManagerBinding.teamStudents`).addListener(() => this.validate(rivalId))
+				}
 			);
 
-			this.listeners.push(
-				binding.sub(`teamModeView.teamWrapper.${index}.teamName.name`)
-					.addListener(() => this.validate(index))
+			this.teamWrapperListeners.push(
+				{
+					rivalId:	rivalId,
+					listener:	binding.sub(`teamModeView.teamWrapper.${teamWrapperIndex}.teamName.name`).addListener(() => this.validate(rivalId))
+				}
 			);
 		}
 
-		this.listeners.push(
-			binding.sub(`teamModeView.teamWrapper.${index}.isSetTeamLater`)
-				.addListener(() => this.validate(index))
+		this.teamWrapperListeners.push(
+			{
+				rivalId:	rivalId,
+				listener:	binding.sub(`teamModeView.teamWrapper.${teamWrapperIndex}.isSetTeamLater`).addListener(() => this.validate(rivalId))
+			}
 		);
 
-		this.addSyncListenersByTeamWrapperIndex(index);
+		this.addSyncListenersByRivalId(rivalId);
 	},
-	addSyncListenersByTeamWrapperIndex: function(index) {
-		this.addListenerToIsLoadingTeamByIndex(index);
-		this.addListenerToTeamManagerIsSearchByIndex(index);
+	addSyncListenersByRivalId: function(rivalId) {
+		this.addListenerToIsLoadingTeamByRivalId(rivalId);
+		this.addListenerToTeamManagerIsSearchByRivalId(rivalId);
 	},
-	addListenerToIsLoadingTeamByIndex: function(index) {
-		const binding = this.getDefaultBinding();
+	addListenerToIsLoadingTeamByRivalId: function(rivalId) {
+		const	binding				= this.getDefaultBinding(),
+				teamWrappers		= binding.toJS(`teamModeView.teamWrapper`);
 
-		this.listeners.push(
-			binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
-				// team wrapper is loading data
-				if(eventDescriptor.getCurrentValue()) {
-					binding.set('isSync', false);
-				}
+		let		teamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivalId);
 
-				// team wrapper isn't loading data
-				if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
-					binding.set('isSync', true);
-				}
-			})
-		);
-	},
-	addListenerToTeamManagerIsSearchByIndex: function(index) {
-		const binding = this.getDefaultBinding();
+		this.teamWrapperListeners.push(
+			{
+				rivalId:	rivalId,
+				listener:	binding.sub(`teamModeView.teamWrapper.${teamWrapperIndex}.isLoadingTeam`).addListener(eventDescriptor => {
+					// team wrapper is loading data
+					if(eventDescriptor.getCurrentValue()) {
+						binding.set('isSync', false);
+					}
 
-		this.listeners.push(
-			binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
-				// player selector is loading data
-				if(eventDescriptor.getCurrentValue()) {
-					binding.set('isSync', false);
-				}
-
-				// player selector isn't loading data
-				if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
-					binding.set('isSync', true);
-				}
-			})
-		);
-	},
-	validate: function(rivalIndex) {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
-
-		const	isSetTeamLater		= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
-				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan'),
-				errorBinding		= self.getBinding('error');
-
-		if(isSetTeamLater) {
-			errorBinding.sub(rivalIndex).set(
-				Immutable.fromJS({
-					isError:	false,
-					text:		''
+					// team wrapper isn't loading data
+					if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${teamWrapperIndex}.___teamManagerBinding.isSearch`)) {
+						binding.set('isSync', true);
+					}
 				})
-			);
-		} else {
-			const event = binding.toJS('model');
+			}
+		);
+	},
+	addListenerToTeamManagerIsSearchByRivalId: function(rivalId) {
+		const	binding				= this.getDefaultBinding(),
+				teamWrappers		= binding.toJS(`teamModeView.teamWrapper`);
 
-			if(
-				typeof event !== 'undefined' &&
-				typeof event.sportModel !== 'undefined'
-			) {
-				const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
-					maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
-					minPlayers:	event.sportModel.defaultLimits.minPlayers,
-					minSubs:	event.sportModel.defaultLimits.minSubs,
-					maxSubs:	event.sportModel.defaultLimits.maxSubs
-				} : {minPlayers: 1};
+		let		teamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rivalId);
 
-				let result = {
-					isError:	false,
-					text:		''
-				};
+		this.teamWrapperListeners.push(
+			{
+				rivalId:	rivalId,
+				listener:	binding.sub(`teamModeView.teamWrapper.${teamWrapperIndex}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
+					// player selector is loading data
+					if(eventDescriptor.getCurrentValue()) {
+						binding.set('isSync', false);
+					}
 
-				switch (true) {
-					case TeamHelper.isNonTeamSport(event):
-						result = TeamPlayersValidator.validate(
-							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-							limits,
-							subscriptionPlan
-						);
-						break;
-					case TeamHelper.isTeamSport(event):
-						if (
-							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-						) {
-							result = {
-								isError:	true,
-								text:		'Please enter team name'
-							};
-						} else {
+					// player selector isn't loading data
+					if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${teamWrapperIndex}.isLoadingTeam`)) {
+						binding.set('isSync', true);
+					}
+				})
+			}
+		);
+	},
+	validate: function(rivalId) {
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				errorBinding	= self.getBinding('error');
+
+		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`),
+				teamWrapper			= teamWrappers.find(tw => tw.rivalId === rivalId);
+
+		if(typeof teamWrapper !== 'undefined') {
+			const	errorArray			= errorBinding.toJS(),
+				errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
+				isSetTeamLater		= teamWrapper.isSetTeamLater,
+				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan');
+
+			let result = {
+				isError:	false,
+				text:		''
+			};
+			// process data if setTeamLater is FALSE
+			// in any other case just set def validation result data
+			if(!isSetTeamLater) {
+				const event = binding.toJS('model');
+
+				if(
+					typeof event !== 'undefined' &&
+					typeof event.sportModel !== 'undefined'
+				) {
+					const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
+						maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+						minPlayers:	event.sportModel.defaultLimits.minPlayers,
+						minSubs:	event.sportModel.defaultLimits.minSubs,
+						maxSubs:	event.sportModel.defaultLimits.maxSubs
+					} : {minPlayers: 1};
+
+					switch (true) {
+						case TeamHelper.isNonTeamSport(event): {
 							result = TeamPlayersValidator.validate(
-								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+								teamWrapper.___teamManagerBinding.teamStudents,
 								limits,
-								subscriptionPlan,
-								true
+								subscriptionPlan
 							);
 						}
-						break;
+							break;
+						case TeamHelper.isTeamSport(event): {
+							if (
+								teamWrapper.teamName.name === undefined ||
+								teamWrapper.teamName.name === ''
+							) {
+								result = {
+									isError:	true,
+									text:		'Please enter team name'
+								};
+							} else {
+								result = TeamPlayersValidator.validate(
+									teamWrapper.___teamManagerBinding.teamStudents,
+									limits,
+									subscriptionPlan,
+									true
+								);
+							}
+						}
+							break;
+					}
 				}
-
-				errorBinding.sub(rivalIndex).set(
-					Immutable.fromJS(result)
-				);
 			}
+
+			// set result
+			errorArray[errorIndex].isError = result.isError;
+			errorArray[errorIndex].text = result.text;
+			errorBinding.set(
+				Immutable.fromJS(errorArray)
+			);
 		}
 	},
 	initRivalIndex: function() {
@@ -437,11 +499,7 @@ const Manager = React.createClass({
 				rivals			= this.getBinding().rivals.toJS(),
 				teamModeView	= binding.toJS('teamModeView');
 
-		//TODO add empty rival
-		rivals.push({
-			id:		null,
-			name:	''
-		});
+		rivals.push(new InternalRivalModel());
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -472,7 +530,7 @@ const Manager = React.createClass({
 		this.getBinding('error').set(Immutable.fromJS(error));
 
 		// add listeners
-		this.addTeamWrapperListenersByIndex(newRivalIndex);
+		this.addTeamWrapperListenersByRivalId(newRivalIndex);
 
 		this.validate(newRivalIndex);
 	},
@@ -484,9 +542,8 @@ const Manager = React.createClass({
 
 		// Add new rival
 		// New rival construct by
-		rivals.push(
-			new InterSchoolsRivalModel(school)
-		);
+		const rival = new InterSchoolsRivalModel(school);
+		rivals.push(rival);
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -501,25 +558,67 @@ const Manager = React.createClass({
 			this.getTeamTableByRivalIndex(newRivalIndex)
 		);
 
-		teamModeView.teamWrapper.push(
-			this.getTeamWrapperByRivalIndex(newRivalIndex)
-		);
+		const teamWrapper = this.getTeamWrapperByRivalIndex(newRivalIndex);
+		teamModeView.teamWrapper.push(teamWrapper);
 
 		teamModeView.rivalsCount = rivals.length;
 
 		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
 		const error = this.getBinding('error').toJS();
-		error.push({
-			isError:	false,
-			text:		''
-		});
+		error.push(this.createErrorObjectByRival(rival));
 		this.getBinding('error').set(Immutable.fromJS(error));
 
 		// add listeners
-		this.addTeamWrapperListenersByIndex(newRivalIndex);
+		this.addTeamWrapperListenersByRivalId(teamWrapper.rivalId);
 
-		this.validate(newRivalIndex);
+		this.validate(teamWrapper.rivalId);
+	},
+	removeRival: function(rivalId) {
+		const binding = this.getDefaultBinding();
+
+		// FIRST REMOVE LISTENERS
+		// remove listeners
+		this.removeTeamWrapperListenersByRivaId(rivalId);
+
+		// remove rival
+		const	rivals				= this.getBinding().rivals.toJS(),
+				currentRivalIndex	= rivals.findIndex(r => r.id === rivalId);
+
+		rivals.splice(currentRivalIndex, 1);
+
+		// remove team mode view
+		const	teamModeView			= binding.toJS('teamModeView'),
+				currentTeamWrapperIndex	= teamModeView.teamWrapper.findIndex(tw => tw.rivalId === rivalId);
+
+		// call object to remove listeners
+		teamModeView.teamWrapper[currentTeamWrapperIndex].willRemoveListeners = true;
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+
+		teamModeView.teamWrapper.splice(currentTeamWrapperIndex, 1);
+		teamModeView.rivalsCount = rivals.length;
+
+		// remove team table
+		const currentTeamTableIndex	= teamModeView.teamTable.findIndex(tt => tt.rivalId === rivalId);
+		teamModeView.teamTable.splice(currentTeamTableIndex, 1);
+
+		// TODO remove players
+
+		// remove error info object
+		const error = this.getBinding('error').toJS();
+		error.splice(
+			error.findIndex(e => e.rivalId === rivalId),
+			1
+		);
+
+		// save changes
+		this.getBinding().rivals.set(
+			Immutable.fromJS(rivals)
+		);
+		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+		this.getBinding('error').set(
+			Immutable.fromJS(error)
+		);
 	},
 	handleClickAddTeam: function() {
 		const	binding	= this.getDefaultBinding(),
@@ -534,6 +633,38 @@ const Manager = React.createClass({
 			this.addNewEmptyRivalForInterSchoolsEventBySchool(activeSchool);
 		} else if(TeamHelper.isInternalEventForTeamSport(event)) {
 			this.addNewEmptyRivalForInternalTeamSportEvent();
+		}
+	},
+	handleClickRemoveTeam: function(rivalId) {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+
+		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
+			const	activeSchoolId		= this.getDefaultBinding().toJS('schoolInfo.id'),
+					rivals				= this.getBinding('rivals').toJS(),
+					removedRivalIndex	= rivals.findIndex(r => r.id === rivalId),
+					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+					selectedRival		= rivals[selectedRivalIndex];
+
+			this.removeRival(rivalId);
+
+			if(removedRivalIndex === selectedRivalIndex) {
+				const updRivals = this.getBinding('rivals').toJS();
+
+				// just find index of next rival
+				for(let i = 0; i < updRivals.length; i++) {
+					if(updRivals[i].school.id === activeSchoolId) {
+						this.getBinding('selectedRivalIndex').set(Immutable.fromJS(i));
+						break;
+					}
+				}
+			} else if(removedRivalIndex < selectedRivalIndex) {
+ 				// just find index of selected rival in updated rival array
+				const	updRivals				= this.getBinding('rivals').toJS(),
+						updSelectedRivalIndex	= updRivals.findIndex(r => r.id === selectedRival.id);
+
+				this.getBinding('selectedRivalIndex').set(Immutable.fromJS(updSelectedRivalIndex));
+			}
 		}
 	},
 	renderGameField: function() {
@@ -559,6 +690,7 @@ const Manager = React.createClass({
 					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.handleClickAddTeam }
+					handleClickRemoveTeam	= { this.handleClickRemoveTeam }
 				/>
 			);
 		} else {

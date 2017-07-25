@@ -1,9 +1,12 @@
 @import "../!variables";
 
 .bActionItem {
+  display: flex;
+  justify-content: space-between;
+
   min-height: 19px;
   width: 100%;
-  padding: 12px 0 10px 0;
+  padding: 12px 5px 10px 5px;
 
   vertical-align: top;
 
