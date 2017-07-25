@@ -190,9 +190,11 @@ const InterSchoolsMultipartyRivals = React.createClass({
 	},
 	render: function() {
 		return (
-			<span>
+			<div
+				className="eRivalChooser_itemsContainer"
+			>
 				{this.getSchools()}
-			</span>
+			</div>
 		);
 	}
 });

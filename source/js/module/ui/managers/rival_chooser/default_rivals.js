@@ -104,9 +104,11 @@ const DefaultRivals = React.createClass({
 	},
 	render: function() {
 		return (
-			<span>
+			<div
+				className="eRivalChooser_itemsContainer"
+			>
 				{this.getRivals()}
-			</span>
+			</div>
 		)
 	}
 });

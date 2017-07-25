@@ -621,18 +621,24 @@ const Manager = React.createClass({
 		);
 	},
 	handleClickAddTeam: function() {
-		const	binding	= this.getDefaultBinding(),
-				event	= binding.toJS('model');
+		const binding = this.getDefaultBinding();
 
+		const event = binding.toJS('model');
+
+		// function for select new rival
+		const selectNewRival = () => this.getBinding('selectedRivalIndex').set(this.getBinding('rivals').toJS().length - 1);
 		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
 			// For inter schools event we add new rival only for active school.
 			// It's business logic.
 			// School info it is active school data
 			const activeSchool = binding.toJS('schoolInfo');
-
 			this.addNewEmptyRivalForInterSchoolsEventBySchool(activeSchool);
+
+			selectNewRival();
 		} else if(TeamHelper.isInternalEventForTeamSport(event)) {
 			this.addNewEmptyRivalForInternalTeamSportEvent();
+
+			selectNewRival();
 		}
 	},
 	handleClickRemoveTeam: function(rivalId) {
@@ -646,8 +652,10 @@ const Manager = React.createClass({
 					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
 					selectedRival		= rivals[selectedRivalIndex];
 
+			// remove rival
 			this.removeRival(rivalId);
 
+			// change selected rival index
 			if(removedRivalIndex === selectedRivalIndex) {
 				const updRivals = this.getBinding('rivals').toJS();
 
