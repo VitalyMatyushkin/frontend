@@ -64,6 +64,10 @@ RequestListModel.prototype = {
 			binding.set('schools', schools);
 		});
 	},
+    getSportsName:function(item){
+		const sports = item.sports;
+		return sports.map(sport => sport.name).join(", ");
+	},
 	setColumns: function(){
 		this.columns = [
 			{
@@ -122,6 +126,16 @@ RequestListModel.prototype = {
 					type:'string'
 				}
 			},
+            {
+                text:'Sports',
+                cell:{
+                    dataField:'sports',
+                    type:'custom',
+                    typeOptions:{
+                        parseFunction:this.getSportsName.bind(this)
+                    }
+                }
+            },
 			{
 				text:'Status',
 				isSorted:true,
