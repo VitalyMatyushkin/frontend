@@ -43,7 +43,8 @@ const ApplicationView = React.createClass({
     },
 
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         this.setState({
             logs: [],
             logId: 0,
