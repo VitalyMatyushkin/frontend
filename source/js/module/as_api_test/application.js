@@ -73,9 +73,9 @@ const ApplicationView = React.createClass({
                                     this.getHouseList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.getFormList(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role),
                                     this.createEvent(selectedRole.data.key, school.schoolId, school.school.name, selectedRole.data.role)
-                                        .then((event) => {
-                                            return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
-                                        })
+                                    .then((event) => {
+                                        return this.activateEvent(selectedRole.data.key, school.schoolId, school.school.name, event.data.id, selectedRole.data.role);
+                                    })
                                 ])
                             }
                         });
@@ -222,23 +222,44 @@ const ApplicationView = React.createClass({
         });
     },
 
-    createEvent: function(usid, schoolId, schoolName, role) {
-        const   data = {"gender":"MALE_ONLY","eventType":"EXTERNAL_SCHOOLS","ages":[1],"sportId":"57b6caa5dd69264b6c5bb06b","startTime":"2017-07-13T04:00:52.697Z","venue":{"venueType":"HOME","postcodeId":"57b6cd0b1c0b151bcf94afdc"},"invitedSchoolIds":["58b554f5533a3b03e36d49e6"]},
-                url = `${apiMain}/i/schools/${schoolId}/events?filter=%22%22`,
-                text = `Create event for ${schoolName} by ${role}`;
+    getFirstSports: function(usid, schoolId, schoolName, role) {
+        const   url = `${apiMain}/i/schools/${schoolId}/sports`,
+                text = `Sports for ${role} school ${schoolName}`;
         return AJAX({
             url: url,
-            type: 'POST',
-            headers: {usid},
-            data: JSON.stringify(data),
-            contentType: 'application/json'
+            type: 'GET',
+            headers: {usid}
         }).then((res) => {
-            this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
-            return res;
+            return res.data[0].id;
         })
         .catch((err) => {
-            this.showError(err, "POST", url, usid, text);
+            this.showError(err, "GET", url, usid, text);
         });
+    },
+
+    createEvent: function(usid, schoolId, schoolName, role) {
+        return this.getFirstSports(usid, schoolId, schoolName, role)
+            .then((sportId) => {
+                const   data = {"gender":"MALE_ONLY","eventType":"INTERNAL_TEAMS","ages":[1],"sportId":sportId,
+                        "startTime":"2017-07-13T04:00:52.697Z","venue":{"venueType":"TBD"},
+                        "invitedSchoolIds":[schoolId]},
+                        url = `${apiMain}/i/schools/${schoolId}/events?filter=%22%22`,
+                        text = `Create event for ${schoolName} by ${role}`;
+                return AJAX({
+                    url: url,
+                    type: 'POST',
+                    headers: {usid},
+                    data: JSON.stringify(data),
+                    contentType: 'application/json'
+                }).then((res) => {
+                    this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
+
+                    return res;
+                })
+                .catch((err) => {
+                    this.showError(err, "POST", url, usid, text);
+                });
+            })
     },
 
     activateEvent: function(usid, schoolId, schoolName, eventId, role) {
@@ -308,7 +329,7 @@ const ApplicationView = React.createClass({
             }
         }
     },
-
+    
     render: function() {
         let logs = [], errorCount = 0;
         if (this.state.status === COMPLETED) {
@@ -336,12 +357,10 @@ const ApplicationView = React.createClass({
                         value       = "Submit"
                     />
                 </form>
-
                 {this.showLogsBlock(logs, errorCount)}
             </div>
         );
     }
-
 });
 
 module.exports = ApplicationView;
