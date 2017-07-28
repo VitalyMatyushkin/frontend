@@ -12,10 +12,8 @@ const	Form				= require('module/ui/form/form'),
 		roleList			= require('module/data/roles_data'),
 		PostcodeSelector	= require('../../../ui/postcode_selector/postcode_selector'),
 		GeoSearchHelper		= require('../../../helpers/geo_search_helper'),
-    	FormBlock			= require('module/ui/form/form_block/form_block'),
-		RoleHelper			= require('module/helpers/role_helper');
-
-const MAX_SPORT_FIELD = 5;
+		RoleHelper			= require('module/helpers/role_helper'),
+		SportManager		= require('./helpers/sport-manager');
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -30,7 +28,8 @@ const AddPermissionRequest = React.createClass({
 			schoolId:	'',
 			comment:	'',
 			form:		{},
-			postcode:	undefined
+			postcode:	undefined,
+			rivals: []
 		});
 	},
     componentWillMount:function(){
@@ -47,24 +46,19 @@ const AddPermissionRequest = React.createClass({
         if(typeof countSportFields === 'undefined' || countSportFields < 0) {
             binding.set('countSportFields', 0);
         }
+        binding.set('rivals', Immutable.fromJS([]));
     },
 	continueButtonClick:function(model){
+		const 	binding 		= this.getDefaultBinding();
+
 		model.preset = model.preset.toUpperCase();
+
+		if (model.preset === RoleHelper.USER_PERMISSIONS.TEACHER || model.preset === RoleHelper.USER_PERMISSIONS.COACH)
+        	model.sportIds = binding.toJS('rivals').map(r => r.id);
 
 		if(model.studentName)
 			model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
 
-        if (model.preset === RoleHelper.USER_PERMISSIONS.TEACHER ||
-            model.preset === RoleHelper.USER_PERMISSIONS.COACH) {
-            const sportIds = [];
-            for (let field in model.sports) {
-                if (typeof model.sports[field] !== 'undefined') {
-                    sportIds.push(model.sports[field]);
-                }
-            }
-            model.sportIds = sportIds;
-        }
-		delete model.sports;
 		window.Server.profileRequests.post(model)
 			.then(result => {
 				return this.props.onSuccess && this.props.onSuccess(result);
@@ -90,9 +84,6 @@ const AddPermissionRequest = React.createClass({
 	getPlaceHolderForRoleSelect: function() {
 		return this.isSchoolSelected() ? 'Please select role' : "";
 	},
-    getPlaceHolderForSportSelect: function() {
-        return this.isRoleCoachOrTeacherSelected() ? 'Please select sport' : "";
-    },
 	isRoleSelectDisabled: function() {
 		return !this.isSchoolSelected();
 	},
@@ -156,133 +147,6 @@ const AddPermissionRequest = React.createClass({
 
 		return window.Server.publicSchools.get(filter);
 	},
-    sportsService: function(sportName) {
-		const 	schoolId 	= this.getSchoolSelectedId(),
-        		formBinding = this.getDefaultBinding().sub('form'),
-				sports = [];
-        for(let i = 0; i < MAX_SPORT_FIELD; i++) {
-            sports.push(formBinding.meta().toJS(`sports.field${i}.value`));
-        }
-
-		const filter = {
-			filter: {
-				where: {
-                    id: {
-                        $nin: sports
-                    },
-					name: {
-						like: sportName,
-						options: 'i'
-					}
-				},
-				limit: 100,
-				order:'name ASC'
-			}
-		};
-
-
-        return window.Server.publicSchoolSports.get(schoolId, filter);
-    },
-    onClickRemoveSportField: function() {
-        const	binding					= this.getDefaultBinding(),
-            	countSportField = binding.get('countSportFields');
-
-        if (countSportField > 0){
-            binding.set('countSportFields', countSportField - 1);
-        }
-
-        this.deleteLastSport();
-    },
-	deleteLastSport: function () {
-		const 	binding  = this.getDefaultBinding(),
-        		formData = binding.sub('form'),
-            	countSportField = binding.get('countSportFields'),
-        		fieldData = {
-					active:	true,
-					error:	false,
-					value:	undefined
-       			};
-        formData.meta().set(`sports.field${countSportField}`,Immutable.fromJS(fieldData));
-    },
-    clearSports: function () {
-        const 	binding  = this.getDefaultBinding(),
-				formData = binding.sub('form'),
-				countSportField = binding.get('countSportFields'),
-				fieldData = {
-					active:	true,
-					error:	false,
-					value:	undefined
-				};
-        for (let i=0; i<countSportField; ++i){
-            formData.meta().set(`sports.field${i}`,Immutable.fromJS(fieldData));
-        }
-        binding.set('countSportFields', 0);
-    },
-    onClickAddSportField: function() {
-        const 	binding			= this.getDefaultBinding(),
-				countSportField = binding.get('countSportFields'),
-            	previousField	= binding.sub('form').meta().toJS(`sports.field${countSportField-1}.value`);
-        if (countSportField === 0 ||  (previousField !== undefined && countSportField < MAX_SPORT_FIELD)) {
-            binding.set('countSportFields', countSportField + 1);
-        }
-    },
-    renderSportBlock: function() {
-        const	sportFields = [],
-				isVisible = this.isRoleCoachOrTeacherSelected();
-
-        for(let i = 0; i < MAX_SPORT_FIELD; i++) {
-            sportFields.push(
-                this.renderSportField(i)
-            );
-        }
-        return (
-			<FormBlock
-				key					= 'sport_fields'
-				isShowCloseButton	= { false }
-				isVisible			= { isVisible }
-			>
-                { sportFields }
-				{ this.renderAddDeleteSportField() }
-			</FormBlock>
-        );
-    },
-    renderSportField: function(i) {
-		const	binding					= this.getDefaultBinding(),
-            	countSportField 		= binding.get('countSportFields');
-
-        const	isVisible				= i < countSportField;
-
-        return (
-			<FormField
-				id				= {`sport${i}`}
-				type			= "autocomplete"
-				field			= {`sports.field${i}`}
-				serviceFullData	= { this.sportsService }
-				placeholder		= { this.getPlaceHolderForSportSelect() }
-				condition       = { isVisible }
-			>
-				Sport
-			</FormField>
-		);
-	},
-    renderAddDeleteSportField: function() {
-		return (
-			<div>
-				<input type			= "submit"
-					   onClick		= { this.onClickAddSportField }
-					   className	= "bButton"
-					   id			= "add-sport-button"
-					   value		= "Add Sport"
-				/>
-				<input type			= "submit"
-					   onClick		= { this.onClickRemoveSportField }
-					   className	= "bButton"
-					   id			= "Delete-sport-button"
-					   value		= "Delete Sport"
-				/>
-			</div>
-		);
-    },
 	handleSelectPostcode: function(id, postcode) {
 		this.getDefaultBinding().set('postcode', postcode);
 	},
@@ -296,6 +160,7 @@ const AddPermissionRequest = React.createClass({
 								&& formBinding.meta('schoolId.value').toJS();
 
 		return (
+			<div>
 			<Form
 				name			= "New Request"
 				updateBinding	= { true }
@@ -309,10 +174,11 @@ const AddPermissionRequest = React.createClass({
 					<div className="eForm_fieldName">
 						Postcode
 					</div>
-					<PostcodeSelector	currentPostcode			= {binding.toJS('postcode')}
-										handleSelectPostcode	= {this.handleSelectPostcode}
-										handleEscapePostcode	= {this.handleEscapePostcode}
-										extraCssStyle 			= {'mInline mRightMargin mWidth250'}
+					<PostcodeSelector
+						currentPostcode			= {binding.toJS('postcode')}
+						handleSelectPostcode	= {this.handleSelectPostcode}
+						handleEscapePostcode	= {this.handleEscapePostcode}
+						extraCssStyle 			= {'mInline mRightMargin mWidth250'}
 					/>
 				</div>
 				<FormField
@@ -336,7 +202,19 @@ const AddPermissionRequest = React.createClass({
 				>
 					Role
 				</FormField>
-				{ this.renderSportBlock() }
+                { this.isRoleCoachOrTeacherSelected() ?
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
+							Sports
+						</div>
+						<SportManager
+							binding={ binding }
+							schoolId={ this.getSchoolSelectedId() }
+						/>
+					</div>
+					:
+					<div></div>
+                }
 				<FormField
 					type		= "text"
 					field		= "studentName"
@@ -351,6 +229,7 @@ const AddPermissionRequest = React.createClass({
 					Comment
 				</FormField>
 			</Form>
+			</div>
 		);
 	}
 });

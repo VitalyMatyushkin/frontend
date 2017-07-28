@@ -143,7 +143,12 @@ class RequestActionsClass {
 				break;
 		}
 	}
-	
+
+    getSportsName(item){
+		const sports = item.sports;
+		return sports.map(sport => sport.name).join(", ");
+	}
+
 	setColumns() {
 		this.columns = [
 			{
@@ -219,6 +224,16 @@ class RequestActionsClass {
 					type:'string'
 				}
 			},
+            {
+                text:'Sports',
+                cell:{
+                    dataField:'sports',
+                    type:'custom',
+                    typeOptions:{
+                        parseFunction:this.getSportsName.bind(this)
+                    }
+                }
+            },
 			{
 				text:'Actions',
 				cell:{
