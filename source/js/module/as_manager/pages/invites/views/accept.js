@@ -323,9 +323,6 @@ const InviteAcceptView = React.createClass({
             sport = binding.sub('model.sport');
 
 		if(!!binding.get('sync')) {
-
-			console.log(this.getDefaultBinding().toJS('teamModeView.teamWrapper'));
-
 			// check control button state
 			// and if state was changed then call debounce decorator for changeControlButtonState
 			this.checkControlButtonState();

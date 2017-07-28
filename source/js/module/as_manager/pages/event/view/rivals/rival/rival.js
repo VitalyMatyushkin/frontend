@@ -1,14 +1,15 @@
-const	React					= require('react'),
-		RivalInfo				= require('module/as_manager/pages/event/view/rivals/rival_info/rival_info'),
-		Players					= require('module/as_manager/pages/event/view/rivals/players'),
-		IndividualScoreManager	= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
-		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
-		propz					= require('propz'),
-		classNames				= require('classnames'),
-		RivalStyle				= require('../../../../../../../../styles/ui/rivals/b_rival.scss');
+const	React						= require('react'),
+		propz						= require('propz'),
+		classNames					= require('classnames'),
+		RivalInfo					= require('module/as_manager/pages/event/view/rivals/rival_info/rival_info'),
+		Players						= require('module/as_manager/pages/event/view/rivals/players'),
+		IndividualScoreManager		= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
+		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		RivalStyle					= require('../../../../../../../../styles/ui/rivals/b_rival.scss');
 
 const Rival = React.createClass({
 	propTypes: {
+		activeSchoolId:							React.PropTypes.string.isRequired,
 		rival:									React.PropTypes.object.isRequired,
 		rivalIndex:								React.PropTypes.number.isRequired,
 		event:									React.PropTypes.object.isRequired,
@@ -17,8 +18,7 @@ const Rival = React.createClass({
 		onChangeScore:							React.PropTypes.func.isRequired,
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
-		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
-		activeSchoolId:							React.PropTypes.string.isRequired,
+		rivalInfoOptions:						React.PropTypes.object,
 		isShowControlButtons:					React.PropTypes.bool,
 		isSchoolUnion: 							React.PropTypes.bool.isRequired
 	},
@@ -80,14 +80,13 @@ const Rival = React.createClass({
 		return (
 			<div className={rivalStyle}>
 				<RivalInfo
-					rival									= { this.props.rival }
-					event									= { this.props.event }
-					mode									= { this.props.mode }
-					viewMode								= { this.props.viewMode }
-					onChangeScore							= { this.onChangeRivalInfoScore }
-					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
-					activeSchoolId							= { this.props.activeSchoolId }
-					isShowControlButtons					= { this.props.isShowControlButtons }
+					rival			= { this.props.rival }
+					event			= { this.props.event }
+					mode			= { this.props.mode }
+					viewMode		= { this.props.viewMode }
+					onChangeScore	= { this.onChangeRivalInfoScore }
+					activeSchoolId	= { this.props.activeSchoolId }
+					options			= { this.props.rivalInfoOptions }
 				/>
 				{ this.renderIndividualScoreAvailable() }
 				<Players

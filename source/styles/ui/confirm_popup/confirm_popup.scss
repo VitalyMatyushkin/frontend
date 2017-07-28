@@ -14,6 +14,10 @@
   padding: 20px;
   margin: auto;
 
+  &.contentWidth {
+    min-width: inherit !important;
+  }
+
   &.mBig {
     max-width: 700px;
   }

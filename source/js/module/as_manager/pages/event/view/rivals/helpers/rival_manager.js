@@ -1,6 +1,7 @@
-const	propz		= require('propz'),
-		TeamHelper	= require('module/ui/managers/helpers/team_helper'),
-		EventHelper	= require('module/helpers/eventHelper');
+const	propz			= require('propz'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		RandomHelper	= require('module/helpers/random_helper');
 
 const RivalManager = {
 	getRivalsByEvent: function(activeSchoolId, viewMode, event) {
@@ -190,6 +191,10 @@ const RivalManager = {
 				}
 			}
 		}
+
+		rivals.forEach(rival => {
+			rival.id = RandomHelper.getRandomString();
+		});
 
 		return rivals;
 	}

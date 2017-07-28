@@ -1,25 +1,33 @@
+// main components
 const	React						= require('react'),
 		Immutable					= require('immutable'),
 		Morearty					= require('morearty'),
-		Rival						= require('module/as_manager/pages/event/view/rivals/rival/rival'),
+		classNames					= require('classnames'),
+		propz 						= require('propz');
+
+// react components
+const	Rival						= require('module/as_manager/pages/event/view/rivals/rival/rival'),
+		SelectForCricketWrapper		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
+		CricketResultBlock			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
+
+// helper
+const	RivalManager				= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventHelper					= require('module/helpers/eventHelper'),
 		SportHelper					= require('module/helpers/sport_helper'),
-		RivalManager				= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
-		InvitesMixin				= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		classNames					= require('classnames'),
-		propz 						= require('propz'),
-		SelectForCricketWrapper 	= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		CricketResultBlock 			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
-		RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
+		RivalInfoOptionsHelper		= require('module/as_manager/pages/event/view/rivals/helpers/rival_info_options_helper');
+
+// styles
+const	RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
 
 const Rivals = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
 		isSchoolUnion: 							React.PropTypes.bool.isRequired,
-		handleClickOpponentSchoolManagerButton:	React.PropTypes.func
+		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
+		handleClickRemoveTeamButton:			React.PropTypes.func
 	},
 	listeners: [],
 	getDefaultProps: function(){
@@ -235,6 +243,7 @@ const Rivals = React.createClass({
 			}));
 		}
 	},
+
 	isSync: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -510,7 +519,19 @@ const Rivals = React.createClass({
 					onChangeScore							= { this.onChangeScore }
 					onClickEditTeam							= { this.onClickEditTeam }
 					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
-					handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton.bind(this, rivalIndex) }
+					rivalInfoOptions						= {
+						RivalInfoOptionsHelper.getOptionsObjectForRivalInfoByRival(
+							rival,
+							this.props.activeSchoolId,
+							binding.toJS('model'),
+							rivals,
+							this.props.isShowControlButtons,
+							{
+								handleClickOpponentSchoolManagerButton:	this.props.handleClickOpponentSchoolManagerButton,
+								handleClickRemoveTeamButton:			this.props.handleClickRemoveTeamButton
+							}
+						)
+					}
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isSchoolUnion 							= { this.props.isSchoolUnion }

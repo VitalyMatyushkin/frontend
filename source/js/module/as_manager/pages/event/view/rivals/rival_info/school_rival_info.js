@@ -1,5 +1,6 @@
-const	React				= require('react'),
+const	React					= require('react'),
 		PencilButton			= require('module/ui/pencil_button'),
+		CircleCrossButton		= require('module/ui/circle_cross_button'),
 		Score					= require('module/ui/score/score'),
 		ScoreCricket			= require('module/ui/score/score_cricket'),
 		ScoreConsts				= require('module/ui/score/score_consts'),
@@ -8,7 +9,7 @@ const	React				= require('react'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		RivalHelper				= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
-		classNames				= require('classnames'),
+		SchoolRivalInfoConsts	= require('module/as_manager/pages/event/view/rivals/rival_info/consts/school_rival_info_consts'),
 		propz					= require('propz');
 
 const SchoolRivalInfo = React.createClass({
@@ -16,32 +17,9 @@ const SchoolRivalInfo = React.createClass({
 		rival:									React.PropTypes.object.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
-		viewMode:								React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
-		handleClickOpponentSchoolManagerButton:	React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
-		isShowControlButtons:					React.PropTypes.bool
-	},
-	isInviteAccepted: function() {
-		const inviteStatus = propz.get(this.props.rival, ['invite', 'status']);
-
-		return typeof inviteStatus !== 'undefined' ? inviteStatus === "ACCEPTED" : true;
-	},
-	isShowChangeSchoolButton: function() {
-		const	activeSchoolIsInviterSchool	= this.props.activeSchoolId === this.props.event.inviterSchoolId,
-				isInviteAccepted			= this.isInviteAccepted(),
-				isValidEventStatus			= (
-					this.props.event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-					this.props.event.status !== EventHelper.EVENT_STATUS.ACCEPTED
-				);
-
-		// TODO Waiting server fix
-		return (
-			activeSchoolIsInviterSchool &&								// Active school is inviter school
-			this.props.activeSchoolId !== this.props.rival.school.id &&	// Current rival is not active school
-			!isInviteAccepted &&
-			isValidEventStatus
-		);
+		options:								React.PropTypes.object
 	},
 	getRivalName: function() {
 		const	teamName	= this.getTeamName(),
@@ -89,6 +67,43 @@ const SchoolRivalInfo = React.createClass({
 			this.props.onChangeScore('teamScore', scoreData);
 		}
 	},
+	/**
+	 * Universal handler for 'click' button event
+	 * @param buttonData - button data with button id, button type and other information
+	 */
+	handleClickButton: function(buttonData) {
+		buttonData.handler(this.props.rival.id);
+	},
+	renderButtons: function() {
+		let buttonsContainer = null;
+
+		let buttons = [];
+		const buttonDataArray = propz.get(this.props, ['options', 'buttonsList']);
+		if(typeof buttonDataArray !== 'undefined') {
+			buttons = buttonDataArray
+				.filter(buttonData => buttonData.isShow)
+				.map(buttonData => {
+					switch (buttonData.type) {
+						case (SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON): {
+							return this.renderOpponentSchoolManagerButton(buttonData);
+						}
+						case (SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON): {
+							return this.renderRemoveTeamButton(buttonData);
+						}
+					}
+				});
+		}
+
+		if(buttons.length > 0) {
+			buttonsContainer = (
+				<div className="eEventRival_buttonContainer">
+					{ buttons }
+				</div>
+			);
+		}
+
+		return buttonsContainer;
+	},
 	renderPlaceMedal: function() {
 		let medal = null;
 
@@ -121,16 +136,22 @@ const SchoolRivalInfo = React.createClass({
 
 		return medal;
 	},
-	renderOpponentSchoolManagerButton: function() {
-		if(this.props.isShowControlButtons && this.isShowChangeSchoolButton()) {
-			return (
-				<div className="eEventRival_buttonContainer">
-					<PencilButton handleClick={this.props.handleClickOpponentSchoolManagerButton}/>
-				</div>
-			);
-		} else {
-			return null;
-		}
+	renderOpponentSchoolManagerButton: function(buttonData) {
+		return (
+			<PencilButton
+				id			= { buttonData.id }
+				handleClick	= { this.handleClickButton.bind(this, buttonData) }
+			/>
+		);
+	},
+	renderRemoveTeamButton: function(buttonData) {
+		return (
+			<CircleCrossButton
+				id				= { buttonData.id }
+				extraClassName	= "mMarginLeftFixed10"
+				handleClick		= { this.handleClickButton.bind(this, buttonData) }
+			/>
+		);
 	},
 	renderPoints: function() {
 		const event = this.props.event;
@@ -195,29 +216,22 @@ const SchoolRivalInfo = React.createClass({
 		}
 	},
 	render: function() {
-		const 	viewMode 	= this.props.viewMode,
-				event 		= this.props.event;
-		
-		if (viewMode === 'show_all' && TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
-			return null;
-		} else {
-			return (
-				<div className="bEventRival">
-					{ this.renderPlaceMedal() }
-					{ this.renderOpponentSchoolManagerButton() }
-					<div className="eEventRival_logo">
-						<img	className="eEventRivals_logoPic"
-								src={this.props.rival.school.pic}
-						/>
-					</div>
-					<div className="eEventRival_rivalName">
-						{ this.getRivalName() }
-					</div>
-					{ this.renderPoints() }
+		return (
+			<div className="bEventRival">
+				{ this.renderPlaceMedal() }
+				{ this.renderButtons() }
+				<div className="eEventRival_logo">
+					<img
+						className	= "eEventRivals_logoPic"
+						src			= {this.props.rival.school.pic}
+					/>
 				</div>
-			);
-		}
-
+				<div className="eEventRival_rivalName">
+					{ this.getRivalName() }
+				</div>
+				{ this.renderPoints() }
+			</div>
+		);
 	}
 });
 

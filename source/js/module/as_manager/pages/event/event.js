@@ -51,6 +51,7 @@ const Event = React.createClass({
 	propTypes: {
 		activeSchoolId:			React.PropTypes.string.isRequired,
 		onReload:				React.PropTypes.func.isRequired,
+		// it's main rule(top priority) for displaying control buttons at rivals
 		isShowControlButtons:	React.PropTypes.bool.isRequired
 	},
 	getDefaultProps: function(){
@@ -998,6 +999,49 @@ const Event = React.createClass({
 	isShowMap: function() {
 		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
 	},
+	removeTeamByRivalId: function(rivalId) {
+		const binding = this.getDefaultBinding();
+
+		const	event	= binding.toJS('model'),
+				rivals	= binding.toJS('rivals'),
+				rival	= rivals.find(rival => rival.id === rivalId);
+
+		event.teams.splice(
+			event.teams.findIndex(teamId => teamId === rival.team.id),
+			1
+		);
+		return window.Server.schoolEvent.put(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			}, {
+				teams: event.teams
+			}
+		);
+	},
+	removeRivalByRivalId: function(rivalId) {
+		const rivals = this.getDefaultBinding().toJS('rivals');
+
+		rivals.splice(rivals.findIndex(rival => rival.id === rivalId), 1);
+
+		this.getDefaultBinding().set('rivals', Immutable.fromJS(rivals));
+	},
+	removeSchoolFromEventBySchoolId: function(schoolId) {
+		const event = this.getDefaultBinding().toJS('model');
+
+		event.invitedSchoolIds.splice(
+			event.invitedSchoolIds.findIndex(_schoolId => _schoolId === schoolId),
+			1
+		);
+		return window.Server.schoolEvent.put(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			}, {
+				invitedSchoolIds: event.invitedSchoolIds
+			}
+		);
+	},
 	handleSuccessSubmit: function(updEvent) {
 		const binding = this.getDefaultBinding();
 
@@ -1036,27 +1080,52 @@ const Event = React.createClass({
 		
 		binding.set("isDeleteEventPopupOpen", false);
 	},
-	handleClickOpponentSchoolManagerButton: function(rivalIndex) {
-		const	binding		= this.getDefaultBinding(),
-				event		= binding.toJS(`model`);
+	handleClickRemoveTeamButton: function(rivalId) {
+		const	rivals		= this.getDefaultBinding().toJS('rivals'),
+				rival		= rivals.find(rival => rival.id === rivalId),
+				rivalSchool	= rival.school;
 
-		const	newValue	= !binding.get('opponentSchoolManager.isOpen');
+		let promises = [];
+
+		if(typeof rival.team !== 'undefined') {
+			promises = promises.concat(this.removeTeamByRivalId(rivalId));
+		}
+
+		const currentSchoolRivals = rivals.filter(rival => rival.school.id === rivalSchool.id);
+		if(
+			rivalSchool.id !== this.props.activeSchoolId &&
+			currentSchoolRivals.length === 1 // remove current rival school if it's last rival for current school
+		) {
+			promises = promises.concat(this.removeSchoolFromEventBySchoolId(rivalSchool.id));
+		}
+
+		Promise.all(promises).then(() => {
+			// reload event component
+			this.props.onReload();
+		});
+	},
+	handleClickOpponentSchoolManagerButton: function(rivalId) {
+		const	event		= this.getDefaultBinding().toJS(`model`),
+				rivals		= this.getDefaultBinding().toJS('rivals'),
+				rivalIndex	= rivals.findIndex(rival => rival.id === rivalId);
+
+		const	newValue	= !this.getDefaultBinding().get('opponentSchoolManager.isOpen');
 
 		if(newValue) {
 			let opponentSchoolId;
 			if(TeamHelper.isNewEvent(event)) {
-				opponentSchoolId = binding.toJS(`rivals.${rivalIndex}.school.id`)
+				opponentSchoolId = this.getDefaultBinding().toJS(`rivals.${rivalIndex}.school.id`)
 			} else {
-				opponentSchoolId = binding.toJS(`model.schoolsData.${rivalIndex}.id`);
+				opponentSchoolId = this.getDefaultBinding().toJS(`model.schoolsData.${rivalIndex}.id`);
 			}
 
-			binding
+			this.getDefaultBinding()
 				.atomically()
 				.set('opponentSchoolManager.isOpen',			newValue)
 				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
 				.commit();
 		} else {
-			binding.set('opponentSchoolManager.isOpen', newValue);
+			this.getDefaultBinding().set('opponentSchoolManager.isOpen', newValue);
 		}
 	},
 	renderEditEventPopupOpen: function() {
@@ -1121,10 +1190,12 @@ const Event = React.createClass({
 		//TODO it's temp. only for event refactoring period.
 		if(TeamHelper.isNewEvent(event)) {
 			return (
-				<Rivals	binding									= { binding }
-						activeSchoolId							= { this.props.activeSchoolId }
-						isShowControlButtons					= { this.props.isShowControlButtons }
-						handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
+				<Rivals
+					binding									= { binding }
+					activeSchoolId							= { this.props.activeSchoolId }
+					isShowControlButtons					= { this.props.isShowControlButtons }
+					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
+					handleClickRemoveTeamButton				= { this.handleClickRemoveTeamButton }
 				/>
 			);
 		} else {

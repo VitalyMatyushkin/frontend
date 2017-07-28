@@ -194,6 +194,7 @@ const OpponentSchoolManager = React.createClass({
 							isOkButtonDisabled		= {this.isOkButtonDisabled()}
 							handleClickOkButton		= {this.handleClickOkButton}
 							handleClickCancelButton	= {this.closeSavingChangesModePopup}
+							customStyle				= {'contentWidth'}
 			>
 				<div className='bChangeOpponentSchoolPopup'>
 					<h1 className="eChangeOpponentSchoolPopup_header">
