@@ -5,10 +5,13 @@ const   React       = require('react'),
         AJAX        = require('module/core/AJAX'),
         LoggingList = require('module/as_api_test/logging-list'),
         SVG 	    = require('module/ui/svg'),
-        loaderUtils = require('module/helpers/loader_utils');
+        loaderUtils = require('module/helpers/loader_utils'),
+         CropImageHelper = require('module/helpers/crop_image_helper');
 
 const   domain      = document.location.hostname,
-        apiMain		= loaderUtils.apiSelector(domain).main;
+        apiMain		= loaderUtils.apiSelector(domain).main,
+        apiImg  	= loaderUtils.apiSelector(domain).img,
+        imgTestSrc  = '/images/panda.jpeg';
 
 const   NOT_STARTED = "NOT_STARTED",
         PROCESSED   = "PROCESSED",
@@ -50,6 +53,7 @@ const ApplicationView = React.createClass({
             logId: 0,
             status: PROCESSED
         });
+        this.uploadImgToServer();
         this.checkCORSRequest()
         .then(() => {
             return this.getProfile();
@@ -329,6 +333,33 @@ const ApplicationView = React.createClass({
             }
         }
     },
+
+    uploadImgToServer: function () {
+        const   canvas 	    = this.refs.canvasImage,
+                imageObject = this.refs.imageSrc,
+                url         = `${apiImg}/images`,
+                fd          = new FormData(),
+                text        = "Images server is";
+        canvas
+            .getContext("2d")
+            .drawImage(imageObject, 0, 0);
+        const file = CropImageHelper.dataURLtoFile(canvas.toDataURL("image/jpeg"), 'image-squadintouch.jpeg');
+        fd.append('image', file);
+        return AJAX({
+            url: url,
+            type: 'POST',
+            data: fd,
+            processData:    false,
+            contentType:    false
+        })
+        .then((res) => {
+            this.addLog(`${text} working. Status: ${res.textStatus}. URL testing image: http:${apiImg}/images/${res.data.key}`, MESSAGE);
+            return `${apiImg}/images/${res.data.key}`;
+        })
+        .catch((err) => {
+            this.addLog(`${text} not working. Status: ${err.xhr.status}`, ERROR);
+        });
+    },
     
     render: function() {
         let logs = [], errorCount = 0;
@@ -358,6 +389,15 @@ const ApplicationView = React.createClass({
                     />
                 </form>
                 {this.showLogsBlock(logs, errorCount)}
+                <canvas
+                    ref 		= "canvasImage"
+                    className 	= "mDisplayNone"
+                >
+                    <img
+                        src 		= { imgTestSrc }
+                        ref 		= "imageSrc"
+                    />
+                </canvas>
             </div>
         );
     }
