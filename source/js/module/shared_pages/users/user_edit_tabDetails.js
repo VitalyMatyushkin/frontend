@@ -15,6 +15,9 @@ const USER = require('module/helpers/consts/user');
 
 const TabItemDetails = React.createClass({
     mixins:[Morearty.Mixin],
+    propTypes: {
+        onCancel: React.PropTypes.func.isRequired
+    },
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -89,7 +92,13 @@ const TabItemDetails = React.createClass({
 
         return (
             <div className="bDetailsTab">
-                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={this._onSubmit} defaultButton="Save" formStyleClass="mDetails">
+                <Form binding       = {binding.sub('form')}
+                      service       = "superadmin/users"
+                      onSubmit      = {this._onSubmit}
+                      onCancel      = {this.props.onCancel}
+                      defaultButton = "Save"
+                      formStyleClass= "mDetails"
+                >
                     <FormColumn>
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>

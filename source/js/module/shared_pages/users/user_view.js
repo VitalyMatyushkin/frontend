@@ -182,17 +182,21 @@ const UserDetail= React.createClass({
                     onRequestClose  = {this._closePopup}
                     otherClass      = "bPopupEdit"
                 >
-                    <EditUser binding = {binding} />
+                    <EditUser
+                        binding     = {binding}
+                        onCancel    = {this._closePopup}
+                    />
                 </Popup>
-                <Popup 
-                    binding={binding} 
+                <Popup
+                    binding         ={binding}
                     stateProperty   = {'editPermission'}
                     onRequestClose  = {this._closeEditPermissionPopup}
                     otherClass      = "bPopupPermissionEdit"
                 >
-                    <EditPermission 
+                    <EditPermission
                         binding     = {binding}
-                        onCancel    = {this._closeEditPermissionPopup}/>
+                        onCancel    = {this._closeEditPermissionPopup}
+                    />
                 </Popup>
             </div>
         )

@@ -10,6 +10,9 @@ const   React           = require('react'),
 
 const EditUser = React.createClass({
     mixins:[Morearty.Mixin],
+    propTypes: {
+        onCancel: React.PropTypes.func.isRequired
+    },
     getDefaultState:function(){
         return Immutable.fromJS({
             tabDetail:true,
@@ -39,7 +42,7 @@ const EditUser = React.createClass({
 
         switch (true) {
             case binding.get('tabDetail'):
-                result = <TabItemDetails binding={binding}/>;
+                result = <TabItemDetails binding={binding} onCancel={this.props.onCancel}/>;
                 break;
             case binding.get('tabRole'):
                 result = <UserRole binding={binding} />;
