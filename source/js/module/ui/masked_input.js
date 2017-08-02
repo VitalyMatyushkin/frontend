@@ -177,7 +177,14 @@ const MaskedInput = React.createClass({
 			// 3) input was focused again. WHY??
 			//
 			// And i don't why this trick works
-			//this.props.onBlur(e);
+			
+			//TODO Maybe we will show filter fields if user click it? (now we show fields if user hover on it)
+			// Note: in ie blur doesn't work correctly (work only if click on <body>)
+			// 1) User fill field
+			// 2) User click on <body>
+			// 3) Filter works
+			// For grid (between-date filter) we use only onBlur method, then we need call this.props.onBlur
+			this.props.onBlur(e);
 		}
 	},
 	_onChange: function (e) {
