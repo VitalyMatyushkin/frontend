@@ -12,13 +12,15 @@
 // обоих случаях. Сервис сам отберет только нужные ему значения. (self.params = {schoolId:schoolId, userId:userId};)
 
 const   EditUser            = require('./user_edit'),
+        EditPermission      = require('./permission_edit'),
         React               = require('react'),
         Popup               = require('module/ui/popup'),
         Immutable           = require('immutable'),
         Morearty            = require('morearty'),
         UserViewSummary     = require('module/shared_pages/users/user_view_summary'),
         If                  = require('module/ui/if/if'),
-		propz				= require('propz');
+		propz				= require('propz'),
+        SVG 	            = require('module/ui/svg');
 
 const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
@@ -28,43 +30,79 @@ const UserDetail= React.createClass({
           };
       },    
     componentWillMount: function() {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-                globalBinding   = self.getMoreartyContext().getBinding(),
+        const   binding         = this.getDefaultBinding(),
+                globalBinding   = this.getMoreartyContext().getBinding(),
                 userId          = globalBinding.get('routing.parameters.id'),
                 schoolId        = globalBinding.get('userRules.activeSchoolId');
 
         //Parameters services for the super-administrator and managers
-        self.params = {schoolId:schoolId, userId:userId};
+        this.params = {schoolId, userId};
 
         binding.set('popup',false);
-        self.request = window.Server.user.get(self.params).then( user => {
+        binding.set('editPermission',false);
+        this.request = window.Server.user.get(this.params).then( user => {
+            user.permissions.sort(this.sortPermission);
             binding.set('userWithPermissionDetail',Immutable.fromJS(user));
             return user;
         });
-        self.addBindingListener(binding, 'popup', function(){
-            if(binding.get('popup')===false){
-                window.Server.user.get(self.params)
-                .then(function(user){
+        this.addBindingListener(binding, 'popup', this.userReload);
+        this.addBindingListener(binding, 'editPermission', this.userReload);
+    },
+    userReload: function () {
+        const binding         = this.getDefaultBinding();
+        if(binding.get('editPermission')===false){
+            window.Server.user.get(this.params)
+                .then((user) => {
+                    user.permissions.sort(this.sortPermission);
                     binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     return user;
                 });
-            }
-        });
+        }
+    },
+    sortPermission: function (a, b) {
+        if (a.schoolId > b.schoolId) {
+            return 1;
+        }
+        if (a.schoolId < b.schoolId) {
+            return -1;
+        }
+        return 0;
     },
     componentWillUnmount: function() {
-        const self = this;
-        self.request && self.request.cancel();
+        this.request && this.request.cancel();
     },
     onEditClick:function(evt){
-        const   self    = this,
-                binding = self.getDefaultBinding();
+        const   binding = this.getDefaultBinding();
 
         binding.set('popup',true);
         evt.stopPropagation();
     },
-    _getRelatedSchool:function(data){
+    onEditPermissionClick:function(permissionId){
+        const   binding = this.getDefaultBinding();
 
+        binding.set('editPermissionId', permissionId);
+        binding.set('editPermission', true);
+    },
+    revokePermission: function (permissionId) {
+        const   binding = this.getDefaultBinding(),
+                userId = binding.toJS('userWithPermissionDetail.id'),
+                permissions = binding.sub('userWithPermissionDetail.permissions'),
+                newPermissions 	= permissions.toJS().filter(p => p.id !== permissionId);
+
+        window.confirmAlert(
+            "Are you sure you want to revoke this permission?",
+            "Ok",
+            "Cancel",
+            () => {
+                window.Server.userPermission.delete({userId, permissionId})
+                    .then(() => {
+                        permissions.set(newPermissions);
+                    });
+            },
+            () => {}
+        );
+    },
+    _getRelatedSchool:function(data){
         if(data !== undefined){
             return data.map( (role, i) => {
 				const imageSrc = propz.get(role, ['school', 'pic'], 'http://placehold.it/75x75');
@@ -74,34 +112,47 @@ const UserDetail= React.createClass({
                         <div className="eDataList_listItemCell">{role.school ? role.school.name: 'n/a'}</div>
                         <div className="eDataList_listItemCell">{role.student ? role.student.firstName+" "+role.student.lastName : ''}</div>
                         <div className="eDataList_listItemCell">{role.preset}</div>
+                        <div className="eDataList_listItemCell">{role.status}</div>
+                        <div className="eDataList_listItemCell">
+                            <span key={i+"edit"} id="edit_row" onClick={this.onEditPermissionClick.bind(null, role.id)}
+                                className="bLinkLike bTooltip" data-description="Edit">
+                                <SVG icon="icon_edit"/>
+                            </span>
+                            <span key={i+"remove"} id="remove_row" onClick={this.revokePermission.bind(null, role.id)}
+                                className="bLinkLike delete_btn bTooltip" data-description="Delete">
+                                <SVG icon="icon_delete"/>
+			                </span>
+                        </div>
                     </div>
                 )
             });
         }
     },
     _closePopup:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
         binding.set('popup',false);
+    },
+    _closeEditPermissionPopup:function(){
+        const binding = this.getDefaultBinding();
+        binding.set('editPermission',false);
     },
 
     render: function() {
-        var self, binding, selectedUserData, listItems;
-        self = this;
-        binding = self.getDefaultBinding();
+        let selectedUserData, listItems;
+        const binding = this.getDefaultBinding();
         if(typeof binding.toJS('userWithPermissionDetail')!== 'undefined'){
             selectedUserData = binding.toJS('userWithPermissionDetail');
-            listItems = self._getRelatedSchool(binding.toJS('userWithPermissionDetail.permissions'));
+            listItems = this._getRelatedSchool(binding.toJS('userWithPermissionDetail.permissions'));
         }
         return (
             <div>
                 <div className = "bAdminView">
                     <UserViewSummary selectedUserData={selectedUserData} />
-                    <If condition={self.props.isEditable}>
+                    <If condition={this.props.isEditable}>
                         <div className="eSchoolMaster_buttons">
                             <h3>Actions</h3>
                             <div>
-                                <a onClick={self.onEditClick} className="bButton">Edit...</a>
+                                <a onClick={this.onEditClick} className="bButton">Edit...</a>
                             </div>
                         </div>
                     </If>
@@ -115,16 +166,33 @@ const UserDetail= React.createClass({
                     <div className="bDataList mCentred">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
-                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>School Crest</div>
-                                <div className="eDataList_listItemCell" style={{width:26+'%'}}>School</div>
-                                <div className="eDataList_listItemCell" style={{width:35+'%'}}>Child</div>
+                                <div className="eDataList_listItemCell" style={{width:15+'%'}}>School Crest</div>
+                                <div className="eDataList_listItemCell" style={{width:22+'%'}}>School</div>
+                                <div className="eDataList_listItemCell" style={{width:23+'%'}}>Child</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>Role</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Actions</div>
                             </div>
                             {listItems}
                         </div>
                     </div>
-                <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupEdit">
-                    <EditUser binding={binding} />
+                <Popup 
+                    binding         = {binding}
+                    stateProperty   = {'popup'}
+                    onRequestClose  = {this._closePopup}
+                    otherClass      = "bPopupEdit"
+                >
+                    <EditUser binding = {binding} />
+                </Popup>
+                <Popup 
+                    binding={binding} 
+                    stateProperty   = {'editPermission'}
+                    onRequestClose  = {this._closeEditPermissionPopup}
+                    otherClass      = "bPopupPermissionEdit"
+                >
+                    <EditPermission 
+                        binding     = {binding}
+                        onCancel    = {this._closeEditPermissionPopup}/>
                 </Popup>
             </div>
         )
