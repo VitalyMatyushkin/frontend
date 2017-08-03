@@ -33,10 +33,10 @@ const InviteActions = {
 				const 	_a	= a.event.startTime,
 						_b	= b.event.startTime;
 
-				if (_a < _b) {
+				if (_a > _b) {
 					return -1;
 				}
-				if (_a > _b) {
+				if (_a < _b) {
 					return 1;
 				}
 				return 0;
