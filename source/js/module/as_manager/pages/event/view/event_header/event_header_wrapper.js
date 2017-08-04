@@ -117,6 +117,13 @@ const EventHeaderWrapper = React.createClass({
 			);
 		});
 	},
+	onClickAddSchool: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.set('opponentSchoolManager.isOpen', true);
+		binding.set('opponentSchoolManager.opponentSchoolId', undefined)
+		binding.set('opponentSchoolManager.mode', 'ADD')
+	},
 	onClickDeleteEvent: function(){
 		const binding = this.getDefaultBinding();
 		
@@ -170,6 +177,7 @@ const EventHeaderWrapper = React.createClass({
 						onClickEditEventButton			= { this.onClickEditEventButton }
 						onSendConsentRequest			= { this.onSendConsentRequest }
 						onReportNotParticipate			= { this.onReportNotParticipate }
+						onClickAddSchool				= { this.onClickAddSchool }
 						role 							= { role }
 						onClickDeleteEvent 				= { this.onClickDeleteEvent }
 						//props for tweet button

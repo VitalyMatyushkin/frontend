@@ -35,7 +35,8 @@ const EventHeader = React.createClass({
 		onReportNotParticipate:			React.PropTypes.func.isRequired,
 		role: 							React.PropTypes.string.isRequired,
 		onClickDeleteEvent:				React.PropTypes.func.isRequired,
-		
+		onClickAddSchool:				React.PropTypes.func.isRequired,
+
 		//prop for tweet button
 		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
 		twitterData: 					React.PropTypes.array.isRequired,
@@ -121,20 +122,24 @@ const EventHeader = React.createClass({
 						{ this.renderViewModeLinks() }
 					</div>
 					<div className="eEventHeader_rightSide">
-						<Buttons	eventId							= { event.id }
-									mode							= { this.props.mode }
-									eventStatus 					= { this.props.eventStatus }
-									isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
-									isParent		 				= { this.props.isParent }
-									isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-									handleClickCancelEvent			= { this.props.handleClickCancelEvent }
-									handleClickCloseEvent			= { this.props.handleClickCloseEvent }
-									handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
-									onClickCloseCancel				= { this.props.onClickCloseCancel }
-									onClickOk						= { this.props.onClickOk }
-									onSendConsentRequest			= { this.props.onSendConsentRequest }
-									onReportNotParticipate			= { this.props.onReportNotParticipate }
-									onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
+						<Buttons
+							eventId							= { event.id }
+							mode							= { this.props.mode }
+							eventStatus 					= { this.props.eventStatus }
+							eventType 						= { event.eventType }
+							isMultiparty 					= { this.props.isMultiparty }
+							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+							isParent		 				= { this.props.isParent }
+							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
+							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+							handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
+							onClickCloseCancel				= { this.props.onClickCloseCancel }
+							onClickOk						= { this.props.onClickOk }
+							onSendConsentRequest			= { this.props.onSendConsentRequest }
+							onReportNotParticipate			= { this.props.onReportNotParticipate }
+							onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
+							onClickAddSchool 				= { this.props.onClickAddSchool }
 						/>
 					</div>
 				</div>

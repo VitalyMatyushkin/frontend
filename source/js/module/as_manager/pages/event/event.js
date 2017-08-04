@@ -1103,8 +1103,6 @@ const Event = React.createClass({
 		});
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalId) {
-		console.log(rivalId);
-
 		const	event		= this.getDefaultBinding().toJS(`model`),
 				rivals		= this.getDefaultBinding().toJS('rivals'),
 				rivalIndex	= rivals.findIndex(rival => rival.id === rivalId);
@@ -1123,6 +1121,7 @@ const Event = React.createClass({
 				.atomically()
 				.set('opponentSchoolManager.isOpen',			newValue)
 				.set('opponentSchoolManager.opponentSchoolId',	Immutable.fromJS(opponentSchoolId))
+				.set('opponentSchoolManager.mode',				'REPLACE')
 				.commit();
 		} else {
 			this.getDefaultBinding().set('opponentSchoolManager.isOpen', newValue);
@@ -1228,12 +1227,14 @@ const Event = React.createClass({
 		const isOpen = binding.toJS('opponentSchoolManager.isOpen');
 
 		if(isOpen) {
-			const opponentSchoolId = binding.toJS('opponentSchoolManager.opponentSchoolId');
+			const	opponentSchoolId	= binding.toJS('opponentSchoolManager.opponentSchoolId'),
+					mode				= binding.toJS('opponentSchoolManager.mode');
 
 			return (
 				<OpponentSchoolManager
 					activeSchoolId		= { this.props.activeSchoolId }
 					opponentSchoolId	= { opponentSchoolId }
+					mode				= { mode }
 					onReload			= { this.props.onReload }
 					binding				= { binding }
 				/>

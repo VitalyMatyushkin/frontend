@@ -14,7 +14,8 @@ const OpponentSchoolManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId:		React.PropTypes.string.isRequired,
-		opponentSchoolId:	React.PropTypes.string.isRequired,
+		opponentSchoolId:	React.PropTypes.string,
+		mode:				React.PropTypes.string.isRequired,
 		onReload:			React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
@@ -38,8 +39,12 @@ const OpponentSchoolManager = React.createClass({
 				event				= binding.toJS('model'),
 				newSchool			= binding.toJS('opponentSchoolManager.opponentSchoolInput.school');
 
-		const opponentSchoolIdIndex = event.invitedSchoolIds.findIndex(schoolId => schoolId === opponentSchoolId);
-		event.invitedSchoolIds[opponentSchoolIdIndex] = newSchool.id;
+		if(this.props.mode === 'REPLACE') {
+			const opponentSchoolIdIndex = event.invitedSchoolIds.findIndex(schoolId => schoolId === opponentSchoolId);
+			event.invitedSchoolIds[opponentSchoolIdIndex] = newSchool.id;
+		} else {
+			event.invitedSchoolIds.push(newSchool.id);
+		}
 
 		// change school on server
 		window.Server.schoolEventChangeOpponent.post(
@@ -51,23 +56,27 @@ const OpponentSchoolManager = React.createClass({
 			}
 		)
 		.then(() => {
-			const	venueType				= this.getVenueType(),
-					newSchoolPostcodeId		= propz.get(newSchool, ['postcodeId']),
-					activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
+			if(this.props.mode === 'REPLACE') {
+				const	venueType				= this.getVenueType(),
+						newSchoolPostcodeId		= propz.get(newSchool, ['postcodeId']),
+						activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
 
-			switch (true) {
-				case (
-					venueType === 'AWAY' &&
-					typeof newSchoolPostcodeId === 'undefined' &&
-					typeof activeSchoolPostcodeId === 'undefined'
-				):
-					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
-				case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
-					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
-				case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined':
-					return this.updateEventVenuePostcode(activeSchoolId, event.id, 'HOME', activeSchoolPostcodeId);
-				default:
-					return true;
+				switch (true) {
+					case (
+						venueType === 'AWAY' &&
+						typeof newSchoolPostcodeId === 'undefined' &&
+						typeof activeSchoolPostcodeId === 'undefined'
+					):
+						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
+					case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
+						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
+					case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined':
+						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'HOME', activeSchoolPostcodeId);
+					default:
+						return true;
+				}
+			} else {
+				return Promise.resolve(true);
 			}
 		})
 		.then(() => {
@@ -173,13 +182,21 @@ const OpponentSchoolManager = React.createClass({
 			);
 		});
 	},
+	getOkButtonText: function() {
+		switch (this.props.mode) {
+			case 'ADD':
+				return "Add school";
+			case 'REPLACE':
+				return "Change opponent";
+		}
+	},
 	handleChangeDistance: function(eventDescriptor) {
 		const binding = this.getDefaultBinding();
 
 		binding.atomically()
 			.set('opponentSchoolManager.opponentSchoolInput.school',	undefined)
-			.set('schoolSelectorKey',						Immutable.fromJS(this.getRandomString()))
-			.set('distance',								eventDescriptor.target.value)
+			.set('schoolSelectorKey',									Immutable.fromJS(this.getRandomString()))
+			.set('distance',											eventDescriptor.target.value)
 			.commit();
 	},
 	render: function() {
@@ -189,7 +206,7 @@ const OpponentSchoolManager = React.createClass({
 		const distance = binding.toJS('distance');
 
 		return (
-			<ConfirmPopup	okButtonText			= "Change opponent"
+			<ConfirmPopup	okButtonText			= {this.getOkButtonText()}
 							cancelButtonText		= "Back"
 							isOkButtonDisabled		= {this.isOkButtonDisabled()}
 							handleClickOkButton		= {this.handleClickOkButton}
