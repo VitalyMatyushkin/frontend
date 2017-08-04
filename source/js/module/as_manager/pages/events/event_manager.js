@@ -210,9 +210,19 @@ const EventManager = React.createClass({
 	getRivals: function(event) {
 		let rivals;
 		if(TeamHelper.isNewEvent(event)) {
-			const rivals = RivalManager.getRivalsByEvent(this.props.activeSchoolId, event);
+			let filteredRivals = [];
+			RivalManager.getRivalsByEvent(this.props.activeSchoolId, event)
+				.forEach(rival => {
+					if(rival.school.id === this.props.activeSchoolId) {
+						filteredRivals.push(rival);
+					} else if(
+						filteredRivals.findIndex(_rival => _rival.school.id === rival.school.id) === -1
+					) {
+						filteredRivals.push(rival);
+					}
+				});
 
-			return NewManagerWrapperHelper.getRivals(event, rivals);
+			return NewManagerWrapperHelper.getRivals(event, filteredRivals);
 		} else {
 			rivals = ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, true);
 			if(TeamHelper.isNonTeamSport(event)) {
