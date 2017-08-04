@@ -5,7 +5,7 @@ const	React 					= require('react'),
 		ClassesListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes-list'),
 		ClassAddComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_add'),
 		ClassEditComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit'),
-		SVG										= require('module/ui/svg');
+		SVG						= require('module/ui/svg');
 
 const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -14,9 +14,9 @@ const ClassesPage = React.createClass({
 	},
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
-				subBinding      = binding.sub('classesRouting'),
+				subBinding 		= binding.sub('classesRouting'),
 				globalBinding 	= this.getMoreartyContext().getBinding(),
-				addButton = <div className="addButtonShort" onClick={this.createNewClass}><SVG icon="icon_add_form" /></div>;
+				addButton 		= <div className="addButtonShort" onClick={this.createNewClass}><SVG icon="icon_add_form" /></div>;
 
 
 		return (

@@ -14,7 +14,8 @@ const TypeAutocomplete = React.createClass({
 		placeholder: 		React.PropTypes.string,
 		onSelect:			React.PropTypes.func,
 		customListItem:		React.PropTypes.object,
-        id:					React.PropTypes.string
+        id:					React.PropTypes.string,
+		isDisabled: 		React.PropTypes.bool
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){

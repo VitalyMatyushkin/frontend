@@ -1,15 +1,17 @@
 /**
  * Created by bridark on 04/06/15.
  */
+const 	Morearty 				= require('morearty'),
+		React 					= require('react');
+
 const   RouterView 				= require('module/core/router'),
 		Route 					= require('module/core/route'),
 		LoginRoute 				= require('module/core/routes/login_route'),
 		LogoutRoute 			= require('module/core/routes/logout_route'),
 		RegisterRoute 			= require('module/core/routes/register_route'),
-		SettingsRoute 			= require('module/core/routes/settings_route'),
-		Morearty 				= require('morearty'),
-		React 					= require('react'),
-		SchoolPageComponent 	= require('module/as_school/pages/school/school_page'),
+		SettingsRoute 			= require('module/core/routes/settings_route');
+
+const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page'),
 		FixturePageComponent 	= require("module/as_school/pages/fixtures/fixtures_page"),
 		CalendarPageComponent 	= require('module/as_school/pages/calendar/calendar_page'),
 		OpponentsPageComponent 	= require('module/as_school/pages/opponents/opponents_page'),
@@ -19,7 +21,8 @@ const   RouterView 				= require('module/core/router'),
 		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox'),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert'),
-		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component');
+		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component'),
+		ToolsComponent 			= require('module/as_admin/pages/tools/tools');
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -77,9 +80,14 @@ const Center = React.createClass({
 							component	= { AdminUserPageComponent }
 						/>
 						<Route
-							path 		="/school_sandbox/:schoolId school_sandbox/:schoolId/:subPage /school_sandbox/:schoolId/:subPage/:mode /school_sandbox/:schoolId/:subPage/:mode/:id"
-							binding 	={ binding.sub('schoolSandbox') }
-							component 	={ SchoolSandboxComponent }
+							path 		= "/school_sandbox/:schoolId school_sandbox/:schoolId/:subPage /school_sandbox/:schoolId/:subPage/:mode /school_sandbox/:schoolId/:subPage/:mode/:id"
+							binding 	= { binding.sub('schoolSandbox') }
+							component 	= { SchoolSandboxComponent }
+						/>
+						<Route
+							path 		= "/tools"
+							binding 	= { binding.sub('tools') }
+							component 	= { ToolsComponent }
 						/>
 						<LoginRoute
 							binding = { binding.sub('userData') }
