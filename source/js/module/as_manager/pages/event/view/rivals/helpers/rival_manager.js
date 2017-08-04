@@ -4,7 +4,7 @@ const	propz			= require('propz'),
 		RandomHelper	= require('module/helpers/random_helper');
 
 const RivalManager = {
-	getRivalsByEvent: function(activeSchoolId, viewMode, event) {
+	getRivalsByEvent: function(activeSchoolId, event) {
 		const eventType = event.eventType;
 
 		let rivals = [];
@@ -119,55 +119,26 @@ const RivalManager = {
 					return 0;
 				});
 			}
-		} else if (TeamHelper.isIndividualSport(event)){
-			if (EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
-				if (viewMode === 'general') {
-					const	schoolsData	= event.schoolsData,
-							players		= event.individualsData,
-							scores		= propz.get(event, ['results', 'individualScore']);
-					// iterate all schools
-					schoolsData.forEach(school => {
-						const rival = {};
+		} else if(TeamHelper.isIndividualSport(event)) {
+			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+				const	schoolsData	= event.schoolsData,
+						players		= event.individualsData,
+						scores		= propz.get(event, ['results', 'individualScore']);
+				// iterate all schools
+				schoolsData.forEach(school => {
+					const rival = {};
 
-						rival.school = school;
-						let schoolInvite = undefined;
-						if (typeof event.invites !== 'undefined') {
-							schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
-						}
+					rival.school = school;
+					let schoolInvite = undefined;
+					if (typeof event.invites !== 'undefined') {
+						schoolInvite = event.invites.find(invite => invite.invitedSchoolId === school.id);
+					}
 
-						if(typeof schoolInvite !== 'undefined') {
-							rival.invite = schoolInvite;
-						}
+					if(typeof schoolInvite !== 'undefined') {
+						rival.invite = schoolInvite;
+					}
 
-						// search all players for current school
-						rival.players = [];
-						players.forEach( player => {
-							const playerScoreObject = scores.find(score => score.userId === player.userId);
-
-							if (typeof playerScoreObject !== 'undefined') {
-								const	playerScore			= propz.get(playerScoreObject, ['score']),
-										playerExtraScore	= propz.get(playerScoreObject, ['richScore', 'points']);
-
-								player.score = playerScore;
-								player.extraScore = playerExtraScore;
-							} else {
-								player.score = 0;
-								player.extraScore = 0;
-							}
-
-							if(player.schoolId === school.id) {
-								rival.players.push(player);
-							}
-						});
-
-						rivals.push(rival);
-					});
-				} else {
-					const	rival	= {},
-							players	= event.individualsData,
-							scores	= propz.get(event, ['results', 'individualScore']);
-
-					rival.school = {};
+					// search all players for current school
 					rival.players = [];
 					players.forEach( player => {
 						const playerScoreObject = scores.find(score => score.userId === player.userId);
@@ -183,12 +154,13 @@ const RivalManager = {
 							player.extraScore = 0;
 						}
 
-						rival.players.push(player);
-
+						if(player.schoolId === school.id) {
+							rival.players.push(player);
+						}
 					});
 
 					rivals.push(rival);
-				}
+				});
 			}
 		}
 

@@ -1,0 +1,12 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bTableViewRivalRank {
+  @extend .col-md-1;
+
+  text-align: center;
+
+  &.mEmpty {
+    padding: 20px 0;
+  }
+}

@@ -1,0 +1,15 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bTableViewRivalActions {
+  @extend .col-md-2;
+
+  padding: 4px 0;
+  font-weight: bold;
+
+  text-align: center;
+
+  &.mEmpty {
+    padding: 20px 0;
+  }
+}

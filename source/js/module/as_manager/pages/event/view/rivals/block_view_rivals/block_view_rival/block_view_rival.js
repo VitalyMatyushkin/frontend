@@ -1,26 +1,24 @@
 const	React						= require('react'),
 		propz						= require('propz'),
 		classNames					= require('classnames'),
-		RivalInfo					= require('module/as_manager/pages/event/view/rivals/rival_info/rival_info'),
+		BlockViewRivalInfo			= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_rival_info'),
 		Players						= require('module/as_manager/pages/event/view/rivals/players'),
 		IndividualScoreManager		= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
-		RivalStyle					= require('../../../../../../../../styles/ui/rivals/b_rival.scss');
+		BlockViewRivalStyle			= require('../../../../../../../../../styles/ui/b_block_view_rivals/b_block_view_rival.scss');
 
-const Rival = React.createClass({
+const BlockViewRival = React.createClass({
 	propTypes: {
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		rival:									React.PropTypes.object.isRequired,
 		rivalIndex:								React.PropTypes.number.isRequired,
 		event:									React.PropTypes.object.isRequired,
 		mode:									React.PropTypes.string.isRequired,
-		viewMode:								React.PropTypes.string,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
 		rivalInfoOptions:						React.PropTypes.object,
-		isShowControlButtons:					React.PropTypes.bool,
-		isSchoolUnion: 							React.PropTypes.bool.isRequired
+		isShowControlButtons:					React.PropTypes.bool
 	},
 	onChangeRivalInfoScore: function(scoreBundleName, scoreData) {
 		this.props.onChangeScore(
@@ -73,17 +71,16 @@ const Rival = React.createClass({
 	},
 	render: function() {
 		const rivalStyle = classNames({
-			bRival	: true,
-			mLeft	: this.props.rivalIndex % 2 === 0
+			bBlockViewRival	: true,
+			mLeft			: this.props.rivalIndex % 2 === 0
 		});
 
 		return (
 			<div className={rivalStyle}>
-				<RivalInfo
+				<BlockViewRivalInfo
 					rival			= { this.props.rival }
 					event			= { this.props.event }
 					mode			= { this.props.mode }
-					viewMode		= { this.props.viewMode }
 					onChangeScore	= { this.onChangeRivalInfoScore }
 					activeSchoolId	= { this.props.activeSchoolId }
 					options			= { this.props.rivalInfoOptions }
@@ -93,18 +90,16 @@ const Rival = React.createClass({
 					rival					= { this.props.rival }
 					isOwner					= { true }
 					mode					= { this.props.mode }
-					viewMode				= { this.props.viewMode }
 					event					= { this.props.event }
 					activeSchoolId			= { this.props.activeSchoolId }
 					onChangeScore			= { this.onChangePlayerScore }
 					onClickEditTeam			= { this.onClickEditTeam }
 					customCss				= { '' }
 					isShowControlButtons	= { this.props.isShowControlButtons }
-					isSchoolUnion 			= { this.props.isSchoolUnion }
 				/>
 			</div>
 		);
 	}
 });
 
-module.exports = Rival;
+module.exports = BlockViewRival;

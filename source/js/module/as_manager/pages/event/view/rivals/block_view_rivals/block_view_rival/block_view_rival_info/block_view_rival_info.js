@@ -1,16 +1,14 @@
-const	React				= require('react'),
-		SchoolRivalInfo		= require('module/as_manager/pages/event/view/rivals/rival_info/school_rival_info'),
-		HouseRivalInfo		= require('module/as_manager/pages/event/view/rivals/rival_info/house_rival_info'),
-		InternalRivalInfo	= require('module/as_manager/pages/event/view/rivals/rival_info/internal_rival_info'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		EventHelper			= require('module/helpers/eventHelper');
+const	React						= require('react'),
+		BlockViewSchoolRivalInfo	= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_school_rival_info'),
+		BlockViewHouseRivalInfo		= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_house_rival_info'),
+		BlockViewInternalRivalInfo	= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_internal_rival_info'),
+		EventHelper					= require('module/helpers/eventHelper');
 
-const RivalInfo = React.createClass({
+const BlockViewRivalInfo = React.createClass({
 	propTypes: {
 		rival:			React.PropTypes.object.isRequired,
 		event:			React.PropTypes.object.isRequired,
 		mode:			React.PropTypes.string.isRequired,
-		viewMode:		React.PropTypes.string.isRequired,
 		onChangeScore:	React.PropTypes.func.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		options:		React.PropTypes.object
@@ -18,11 +16,8 @@ const RivalInfo = React.createClass({
 	render: function() {
 		switch (true) {
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if (this.props.options.viewMode === 'show_all' && TeamHelper.isInterSchoolsEventForIndividualSport(this.props.event)) {
-					return null;
-				} else {
-					return (
-						<SchoolRivalInfo
+				return (
+						<BlockViewSchoolRivalInfo
 							activeSchoolId	= { this.props.activeSchoolId }
 							rival			= { this.props.rival }
 							event			= { this.props.event }
@@ -31,10 +26,9 @@ const RivalInfo = React.createClass({
 							options			= { this.props.options }
 						/>
 					);
-				}
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 				return (
-					<HouseRivalInfo
+					<BlockViewHouseRivalInfo
 						activeSchoolId	= { this.props.activeSchoolId }
 						rival			= { this.props.rival }
 						event			= { this.props.event }
@@ -44,7 +38,7 @@ const RivalInfo = React.createClass({
 				);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				return (
-					<InternalRivalInfo
+					<BlockViewInternalRivalInfo
 						activeSchoolId	= { this.props.activeSchoolId }
 						rival			= { this.props.rival }
 						event			= { this.props.event }
@@ -58,4 +52,4 @@ const RivalInfo = React.createClass({
 	}
 });
 
-module.exports = RivalInfo;
+module.exports = BlockViewRivalInfo;

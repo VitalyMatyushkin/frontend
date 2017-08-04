@@ -2,15 +2,10 @@
 @import '../../!mixins';
 @import "../../bootstrap-custom";
 
-.bRivals {
+.bTableViewRivals {
   @extend .container;
 }
 
-.eRivals_row {
+.eTableViewRivals_row {
   @include make-row();
-  margin-bottom: 20px;
-
-  &.mFirst {
-    margin-bottom: 0;
-  }
 }

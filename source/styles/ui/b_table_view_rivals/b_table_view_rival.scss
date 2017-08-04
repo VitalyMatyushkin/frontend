@@ -1,0 +1,16 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bTableViewRival {
+  @extend .col-md-11;
+
+  @include make-md-column-offset(1);
+
+  border-top: solid 1px #d2d2d2;
+
+  cursor: pointer;
+
+  &.mLastItem {
+    border-bottom: solid 1px #d2d2d2;
+  }
+}

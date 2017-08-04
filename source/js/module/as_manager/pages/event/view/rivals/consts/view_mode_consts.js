@@ -1,0 +1,6 @@
+const VIEW_MODE = {
+	'BLOCK_VIEW':	'BLOCK_VIEW',
+	'TABLE_VIEW':	'TABLE_VIEW'
+};
+
+module.exports.VIEW_MODE = VIEW_MODE;

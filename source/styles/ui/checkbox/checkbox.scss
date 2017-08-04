@@ -2,6 +2,10 @@
 
 .bCheckbox {
   position: relative;
+
+  &.mInline {
+    display: inline-block;
+  }
 }
 
 .eCheckbox_switch {

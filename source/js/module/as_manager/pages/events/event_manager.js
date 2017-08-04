@@ -210,7 +210,7 @@ const EventManager = React.createClass({
 	getRivals: function(event) {
 		let rivals;
 		if(TeamHelper.isNewEvent(event)) {
-			const rivals = RivalManager.getRivalsByEvent(this.props.activeSchoolId, 'general', event);
+			const rivals = RivalManager.getRivalsByEvent(this.props.activeSchoolId, event);
 
 			return NewManagerWrapperHelper.getRivals(event, rivals);
 		} else {

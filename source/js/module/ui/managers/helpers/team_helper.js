@@ -429,12 +429,6 @@ function isInterSchoolsEventForIndividualSport(event) {
 	}
 };
 
-function isInterSchoolsEventForIndividualSportFromChallengeModel(event) {
-	if(typeof event !== 'undefined') {
-		return event.eventType === 'inter-schools' && event.isIndividualSport === true;
-	}
-};
-
 function isInterSchoolsEventForOneOnOneSport(event) {
 	if(typeof event !== 'undefined') {
 		const self = this;
@@ -1474,7 +1468,6 @@ const TeamHelper = {
 	clearIndividualScore:										clearIndividualScore,
 	getRemovedPlayers:											getRemovedPlayers,
 	getSchoolsArrayWithFullDataByEvent:							getSchoolsArrayWithFullDataByEvent,
-	isInterSchoolsEventForIndividualSportFromChallengeModel:	isInterSchoolsEventForIndividualSportFromChallengeModel,
 	isNewEvent:													isNewEvent,
 	mustUseNewManagerWraperHelper:								mustUseNewManagerWraperHelper,
 	isNewTabs:													isNewTabs,

@@ -9,15 +9,15 @@ const	Lazy				= require('lazy.js'),
 		RoleHelper 			= require('module/helpers/role_helper'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
-		SportHelper 		= require('module/helpers/sport_helper'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		TweetButton 		= require('./tweet_button');
+		TweetButton 		= require('./tweet_button'),
+		ViewSelector		= require('module/as_manager/pages/event/view/event_header/view_selector');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
 	propTypes: {
 		event: 							React.PropTypes.object.isRequired,
+		isMultiparty:					React.PropTypes.bool.isRequired,
 		mode:							React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
@@ -43,7 +43,7 @@ const EventHeader = React.createClass({
 		twitterIdDefault: 				React.PropTypes.string.isRequired,
 		
 		//prop for view mode
-		onClickViewMode: 				React.PropTypes.func.isRequired
+		onClickViewMode: 				React.PropTypes.func
 	},
 	/**
 	 * Function return string with all Age Groups
@@ -66,26 +66,11 @@ const EventHeader = React.createClass({
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.eventStatus !== "FINISHED";
 	},
 	renderViewModeLinks: function(){
-		const event = this.props.event;
-
-		if (TeamHelper.isInterSchoolsEventForIndividualSportFromChallengeModel(event)) {
+		if(this.props.isMultiparty) {
 			return (
-				<div className="bEventViewMode">
-					<a
-						className	= "eEventViewModeLink"
-						onClick		= { () => {this.props.onClickViewMode('general')} }
-						key 		= "general"
-					>
-						View by teams
-					</a>
-					<a
-						className 	= "eEventViewModeLink"
-						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
-						key 		= "showAll"
-					>
-						View all
-					</a>
-				</div>
+				<ViewSelector
+					handleClick={this.props.onClickViewMode}
+				/>
 			);
 		} else {
 			return null;

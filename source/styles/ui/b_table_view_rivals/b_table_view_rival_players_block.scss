@@ -1,0 +1,21 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bTableViewRivalPlayersBlock {
+  @extend .col-md-11;
+
+  @include make-md-column-offset(1);
+
+  padding: 15px;
+
+  background-color: $secondBackgroundColor;
+
+  border-top: solid 1px #d2d2d2;
+  border-right: solid 1px #d2d2d2;
+  border-left: solid 1px #d2d2d2;
+
+  &.mLastItem {
+    border-top: none;
+    border-bottom: solid 1px #d2d2d2;
+  }
+}

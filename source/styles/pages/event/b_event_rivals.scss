@@ -40,29 +40,6 @@
 
   border: $mainBorder;
 
-  .eEventRival_medal {
-    position: absolute;
-
-    left: 5px;
-
-    width: 50px;
-    height: 50px;
-
-    background-repeat: no-repeat;
-    
-    &.mFirstPlace {
-      background-image: url("/images/1st_place_medal.png");
-    }
-
-    &.mSecondPlace {
-      background-image: url("/images/2nd_place_medal.png");
-    }
-
-    &.mThirdPlace {
-      background-image: url("/images/3rd_place_medal.png");
-    }
-  }
-
   .eEventRival_buttonContainer {
     position: absolute;
     display: flex;
@@ -86,6 +63,39 @@
   .eScore_Sign {
 	width: 15px;
 	height: 15px;
+  }
+}
+
+.eEventRival_medal {
+  position: absolute;
+
+  left: 5px;
+
+  width: 50px;
+  height: 50px;
+
+  background-repeat: no-repeat;
+
+  &.mTableView {
+    position: relative;
+
+    width: 35px;
+
+    margin: 0 auto;
+
+    left: inherit !important;
+  }
+
+  &.mFirstPlace {
+    background-image: url("/images/1st_place_medal.png");
+  }
+
+  &.mSecondPlace {
+    background-image: url("/images/2nd_place_medal.png");
+  }
+
+  &.mThirdPlace {
+    background-image: url("/images/3rd_place_medal.png");
   }
 }
 

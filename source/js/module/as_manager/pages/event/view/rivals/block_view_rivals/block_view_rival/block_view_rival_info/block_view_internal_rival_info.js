@@ -7,42 +7,28 @@ const	React			= require('react'),
 		RivalHelper		= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		propz			= require('propz');
 
-const HouseRivalInfo = React.createClass({
+const BlockViewInternalRivalInfo = React.createClass({
 	propTypes: {
-		rival:									React.PropTypes.object.isRequired,
-		event:									React.PropTypes.object.isRequired,
-		mode:									React.PropTypes.string.isRequired,
-		onChangeScore:							React.PropTypes.func.isRequired,
-		activeSchoolId:							React.PropTypes.string.isRequired
+		rival:			React.PropTypes.object.isRequired,
+		event:			React.PropTypes.object.isRequired,
+		mode:			React.PropTypes.string.isRequired,
+		onChangeScore:	React.PropTypes.func.isRequired,
+		activeSchoolId:	React.PropTypes.string.isRequired
 	},
 	getRivalName: function() {
-		const	teamName	= this.getTeamName(),
-				houseName	= this.getHouseName();
+		const teamName = this.getTeamName();
 
-		if(typeof teamName === "undefined") {
-			return houseName;
-		} else {
-			return <div>{teamName} <span>/</span> {houseName}</div>;
-		}
+		return <div>{teamName}</div>;
 	},
 	getTeamName: function() {
 		return propz.get(this.props.rival, ['team','name']); 
 	},
-	getHouseName: function () {
-		return this.props.rival.house.name;
-	},
 	getPoints: function() {
-		const	houseResults	= this.props.event.results.houseScore,
-				teamResults		= this.props.event.results.teamScore,
-				teamId			= propz.get(this.props.rival, ['team','id']),
-				houseId			= this.props.rival.house.id;
-
-		const houseScoreData = houseResults.find(scoreData => scoreData.houseId === houseId);
+		const	teamResults		= this.props.event.results.teamScore,
+				teamId			= propz.get(this.props.rival, ['team','id']);
 
 		let points = 0;
-		if(typeof houseScoreData !== 'undefined') {
-			points = houseScoreData.score;
-		} else if(typeof teamId !== 'undefined') {
+		if(typeof teamId !== 'undefined') {
 			const teamScoreData = teamResults.find(scoreData => scoreData.teamId === teamId);
 			if(typeof teamScoreData !== 'undefined') {
 				points = teamScoreData.score;
@@ -52,25 +38,16 @@ const HouseRivalInfo = React.createClass({
 		return points;
 	},
 	onChangeScore: function(scoreData) {
-		if(typeof this.props.rival.team === 'undefined') {
-			this.props.onChangeScore('houseScore', scoreData);
-		} else {
-			this.props.onChangeScore('teamScore', scoreData);
-		}
+		this.props.onChangeScore('teamScore', scoreData);
 	},
 	renderPoints: function() {
 		const event = this.props.event;
 
-		const	isTeamSport		= TeamHelper.isTeamSport(event),
-				isOneOnOneSport	= TeamHelper.isOneOnOneSport(event),
-				isFinishedEvent	= event.status === "FINISHED",
+		const	isFinishedEvent	= event.status === "FINISHED",
 				isClosingMode	= this.props.mode === 'closing';
 
 		let xmlScore = null;
-		if(
-			(isTeamSport || isOneOnOneSport) &&
-			(isFinishedEvent || isClosingMode)
-		) {
+		if(isFinishedEvent || isClosingMode) {
 			xmlScore = this.renderCountPoints();
 		}
 
@@ -108,13 +85,13 @@ const HouseRivalInfo = React.createClass({
 		} else {
 			return (
 				<div className="eEventResult_PointSideWrapper">
-					<Score 	isChangeMode 	= { isChangeMode }
-							plainPoints 	= { points }
-							pointsStep 		= { event.sport.points.pointsStep }
-							pointsType 		= { event.sport.points.display }
-							pointsMask 		= { event.sport.points.inputMask }
-							onChange 		= { this.onChangeScore }
-							modeView 		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
+					<Score	isChangeMode	= { isChangeMode }
+							plainPoints		= { points }
+							pointsStep		= { event.sport.points.pointsStep }
+							pointsType		= { event.sport.points.display }
+							pointsMask		= { event.sport.points.inputMask }
+							onChange		= { this.onChangeScore }
+							modeView		= { ScoreConsts.SCORE_MODES_VIEW.BIG }
 					/>
 				</div>
 			);
@@ -137,4 +114,4 @@ const HouseRivalInfo = React.createClass({
 	}
 });
 
-module.exports = HouseRivalInfo;
+module.exports = BlockViewInternalRivalInfo;

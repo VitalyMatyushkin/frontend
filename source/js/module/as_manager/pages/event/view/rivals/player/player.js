@@ -19,7 +19,7 @@ const Player = React.createClass({
 		isShowMedal					: React.PropTypes.bool.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
-		customCss					: React.PropTypes.string.isRequired
+		customCss					: React.PropTypes.string
 	},
 	isNonInternalEventForOneOnOneSport: function(event) {
 		return TeamHelper.isOneOnOneSport(event) && !EventHelper.isInternalEvent(event);

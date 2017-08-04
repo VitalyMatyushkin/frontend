@@ -1,0 +1,11 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bTableViewRivalOrder {
+  @extend .col-md-1;
+
+  text-align: center;
+
+  padding: 20px 0;
+  font-weight: bold;
+}

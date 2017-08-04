@@ -128,7 +128,7 @@ const EventHeaderWrapper = React.createClass({
 	onClickViewMode: function(mode: string){
 		const binding = this.getDefaultBinding();
 		
-		binding.set('view_mode', mode);
+		binding.set('viewMode', mode);
 	},
 	/**
 	 * The function render's component EventHeaderWrapper
@@ -152,7 +152,8 @@ const EventHeaderWrapper = React.createClass({
 
 		return (
 					<EventHeader
-						event 							= { event }
+						event							= { event }
+						isMultiparty					= { TeamHelper.isMultiparty(binding.toJS('model')) }
 						mode 							= { mode }
 						eventStatus 					= { eventStatus }
 						eventAges						= { eventAges }

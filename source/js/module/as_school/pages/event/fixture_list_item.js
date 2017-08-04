@@ -4,7 +4,7 @@ const 	React 					= require('react'),
 		Button 					= require('module/ui/button/button'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
-		CricketResultBlock 		= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
+		CricketResultBlock 		= require('module/as_manager/pages/event/view/cricket_result_block/cricket_result_block');
 
 const FixtureListItem = React.createClass({
 	

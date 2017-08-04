@@ -9,10 +9,11 @@ const	React					= require('react'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		RivalHelper				= require('module/as_manager/pages/event/view/rivals/rival_helper'),
 		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
-		SchoolRivalInfoConsts	= require('module/as_manager/pages/event/view/rivals/rival_info/consts/school_rival_info_consts'),
-		propz					= require('propz');
+		SchoolRivalInfoConsts	= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/consts/school_rival_info_consts'),
+		propz					= require('propz'),
+		EventRivalsStyle		= require('../../../../../../../../../../styles/pages/event/b_event_rivals.scss');
 
-const SchoolRivalInfo = React.createClass({
+const BlockViewSchoolRivalInfo = React.createClass({
 	propTypes: {
 		rival:									React.PropTypes.object.isRequired,
 		event:									React.PropTypes.object.isRequired,
@@ -235,4 +236,4 @@ const SchoolRivalInfo = React.createClass({
 	}
 });
 
-module.exports = SchoolRivalInfo;
+module.exports = BlockViewSchoolRivalInfo;

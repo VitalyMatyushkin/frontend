@@ -1,0 +1,43 @@
+@import "../../!variables";
+@import '../../!mixins';
+@import "../../bootstrap-custom";
+
+.bTableViewRivalsHeaderWrapper {
+  @include make-row();
+}
+
+.bTableViewRivalsHeader {
+  @extend .col-md-11;
+
+  @include make-md-column-offset(1);
+}
+
+.eTableViewRivalsHeader_plug {
+  @extend .col-md-7;
+
+  &.mShort {
+    @extend .col-md-5;
+  }
+
+  &.mLong {
+    @extend .col-md-8;
+  }
+}
+
+.eTableViewRivalsHeader_actions {
+  @extend .col-md-2;
+
+  text-align: center;
+}
+
+.eTableViewRivalsHeader_rank {
+  @extend .col-md-1;
+
+  text-align: center;
+}
+
+.eTableViewRivalsHeader_score {
+  @extend .col-md-3;
+
+  text-align: center;
+}

@@ -11,10 +11,13 @@ const IndividualScoreManager = React.createClass({
 	render: function() {
 		return (
 			<div className="eIndividualScoreCheckbox">
-				Individual score available
+				<div className="eIndividualScoreText">
+					Individual score available
+				</div>
 				<Checkbox
 					isChecked	= {this.props.value}
 					onChange	= {this.props.onChange}
+					customCss	= {'mInline'}
 				/>
 			</div>
 		);

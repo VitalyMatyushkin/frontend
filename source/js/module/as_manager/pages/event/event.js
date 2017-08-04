@@ -36,7 +36,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		RoleHelper						= require('./../../../helpers/role_helper'),
 		OpponentSchoolManager			= require('module/as_manager/pages/event/view/opponent_school_manager/opponent_school_manager'),
 		SelectForCricketWrapper 		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		CricketResultBlock				= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block'),
+		CricketResultBlock				= require('module/as_manager/pages/event/view/cricket_result_block/cricket_result_block'),
 		ParentalConsentTab				= require('module/as_manager/pages/event/view/parental_consent_tab/parental_consent_tab'),
 		ParentalReportsTab				= require('module/as_manager/pages/event/view/parental_report_tab/parental_report_tab'),
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
@@ -306,8 +306,6 @@ const Event = React.createClass({
 				});
 			}
 		}
-
-		console.log(eventData);
 	},
 	loadParentalConsentMessages: function() {
 		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
@@ -1105,6 +1103,8 @@ const Event = React.createClass({
 		});
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalId) {
+		console.log(rivalId);
+
 		const	event		= this.getDefaultBinding().toJS(`model`),
 				rivals		= this.getDefaultBinding().toJS('rivals'),
 				rivalIndex	= rivals.findIndex(rival => rival.id === rivalId);

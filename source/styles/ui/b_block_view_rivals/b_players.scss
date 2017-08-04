@@ -10,6 +10,12 @@
   min-height: 60px;
   padding-top: 15px;
   padding-bottom: 15px;
+
+  &.mTableView {
+    padding: 0 ;
+
+    border: none;
+  }
 }
 
 .ePlayers_editButtonWrapper {

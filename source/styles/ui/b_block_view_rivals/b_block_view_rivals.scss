@@ -1,0 +1,16 @@
+@import "../../!variables";
+@import '../../!mixins';
+@import "../../bootstrap-custom";
+
+.bBlockViewRivals {
+  @extend .container;
+}
+
+.eBlockViewRivals_row {
+  @include make-row();
+  margin-bottom: 20px;
+
+  &.mFirst {
+    margin-bottom: 0;
+  }
+}

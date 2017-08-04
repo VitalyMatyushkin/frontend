@@ -1,55 +1,48 @@
 // main components
-const	React						= require('react'),
-		Immutable					= require('immutable'),
-		Morearty					= require('morearty'),
-		classNames					= require('classnames'),
-		propz 						= require('propz');
+const	React				= require('react'),
+		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
+		propz 				= require('propz');
 
 // react components
-const	Rival						= require('module/as_manager/pages/event/view/rivals/rival/rival'),
-		SelectForCricketWrapper		= require('module/as_manager/pages/event/view/rivals/select_for_cricket/select_for_cricket_wrapper'),
-		CricketResultBlock			= require('module/as_manager/pages/event/view/rivals/cricket_result_block/cricket_result_block');
+const	BlockViewRivals		= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rivals'),
+		TableViewRivals		= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rivals');
 
 // helper
-const	RivalManager				= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
-		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
-		EventHelper					= require('module/helpers/eventHelper'),
-		SportHelper					= require('module/helpers/sport_helper'),
-		RivalInfoOptionsHelper		= require('module/as_manager/pages/event/view/rivals/helpers/rival_info_options_helper');
+const	RivalManager		= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventHelper			= require('module/helpers/eventHelper');
 
-// styles
-const	RivalsStyle					= require('../../../../../../../styles/ui/rivals/rivals.scss');
+// consts
+const	ViewModeConsts		= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts');
 
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
-		isSchoolUnion: 							React.PropTypes.bool.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
 		handleClickRemoveTeamButton:			React.PropTypes.func
 	},
 	listeners: [],
 	getDefaultProps: function(){
 		return {
-			isShowControlButtons:	true,
-			isSchoolUnion:			false
+			isShowControlButtons: true
 		};
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	componentWillMount: function() {
-		this.initViewMode();
-
 		const	binding		= this.getDefaultBinding();
 
+		this.initViewMode();
+
 		const	event		= binding.toJS('model'),
-				eventType	= event.eventType,
-				viewMode	= binding.toJS('view_mode');
+				eventType	= event.eventType;
 
 		// Get main part of rivals
-		let		rivals		= RivalManager.getRivalsByEvent(this.props.activeSchoolId, viewMode, event);
+		let		rivals		= RivalManager.getRivalsByEvent(this.props.activeSchoolId, event);
 
 		// Additional preparation
 		if(TeamHelper.isTeamSport(event)) {
@@ -64,9 +57,7 @@ const Rivals = React.createClass({
 					rival.isIndividualScoreAvailable = true;
 					rival.isTeamScoreWasChanged = false;
 
-					if (viewMode === 'general') {
-						rival.score = this.getExtraScoreForRival(rival);
-					}
+					rival.score = this.getExtraScoreForRival(rival);
 				});
 
 				this.addListenerForChangeMode();
@@ -79,7 +70,9 @@ const Rivals = React.createClass({
 			.commit();
 
 		this.addListenerForTeamScore();
-		this.addListenerForViewMode();
+	},
+	initViewMode: function() {
+		this.getDefaultBinding().set('viewMode', ViewModeConsts.VIEW_MODE.BLOCK_VIEW);
 	},
 	getExtraScoreForRival: function(rival) {
 		let extraScoreRival = 0;
@@ -92,14 +85,6 @@ const Rivals = React.createClass({
 			}
 		});
 		return extraScoreRival;
-	},
-	initViewMode: function() {
-		const binding = this.getDefaultBinding();
-
-		//Initial state
-		if (typeof binding.toJS('view_mode') === 'undefined') {
-			binding.set('view_mode', 'general');
-		}
 	},
 	initResultsForRival: function(rival, event) {
 		if(TeamHelper.isInterSchoolsEventForTeamSport(event)) {
@@ -184,27 +169,16 @@ const Rivals = React.createClass({
 		// just current date in timestamp view
 		return + new Date();
 	},
-	addListenerForViewMode: function() {
-		const 	binding = this.getDefaultBinding();
-		
-		this.listeners.push(binding.addListener( (eventDescriptor) => {
-			const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
-					currentValue	= eventDescriptor.getCurrentValue().toJS();
-			if (prevValue.view_mode !== currentValue.view_mode) {
-				binding.set('eventComponentKey', Immutable.fromJS(this.getRandomString()));
-			}
-		}));
-	},
 	//We use this listener, because we want sort players by score when we enter new time/distance/plain and send this data on server
 	//When we send data on server, we just reload component
 	addListenerForChangeMode: function() {
-		const 	binding = this.getDefaultBinding();
-		
+		const binding = this.getDefaultBinding();
+
 		this.listeners.push(binding.addListener( (eventDescriptor) => {
 			const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
 					currentValue	= eventDescriptor.getCurrentValue().toJS();
 			
-			if (prevValue.mode === 'closing' && currentValue.mode === 'general') {
+			if(prevValue.mode === 'closing' && currentValue.mode === 'general') {
 				binding.set('eventComponentKey', Immutable.fromJS(this.getRandomString()));
 			}
 		}));
@@ -499,120 +473,49 @@ const Rivals = React.createClass({
 			}
 		}
 	},
-	renderRivals: function() {
-		const binding = this.getDefaultBinding();
-
-		const rivals = binding.toJS('rivals');
-
-		const xmlRivals = [];
-		let row = [];
-
-		rivals.forEach((rival, rivalIndex) => {
-			row.push(
-				<Rival
-					key										= { `rival_${rivalIndex}` }
-					rivalIndex								= { rivalIndex }
-					rival									= { rival }
-					event									= { binding.toJS('model') }
-					mode									= { binding.toJS('mode') }
-					viewMode 								= { binding.toJS('view_mode') }
-					onChangeScore							= { this.onChangeScore }
-					onClickEditTeam							= { this.onClickEditTeam }
-					onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
-					rivalInfoOptions						= {
-						RivalInfoOptionsHelper.getOptionsObjectForRivalInfoByRival(
-							rival,
-							this.props.activeSchoolId,
-							binding.toJS('model'),
-							rivals,
-							this.props.isShowControlButtons,
-							{
-								handleClickOpponentSchoolManagerButton:	this.props.handleClickOpponentSchoolManagerButton,
-								handleClickRemoveTeamButton:			this.props.handleClickRemoveTeamButton
-							}
-						)
-					}
-					isShowControlButtons					= { this.props.isShowControlButtons }
-					activeSchoolId							= { this.props.activeSchoolId }
-					isSchoolUnion 							= { this.props.isSchoolUnion }
-				/>
-			);
-
-			if(
-				rivalIndex % 2 !== 0 ||
-				rivalIndex === rivals.length - 1
-			) {
-				const rivalRowStyle = classNames({
-					eRivals_row	: true,
-					mFirst		: this.props.rivalIndex  === 1
-				});
-
-				xmlRivals.push(
-					<div
-						key			= {`rival_row_${rivalIndex}`}
-						className	= {rivalRowStyle}
-					>
-						{row}
-					</div>
-				);
-				row = [];
-			}
-		});
-
-		return xmlRivals;
-	},
-
-	onChangeCricketResult: function(result){
-		const binding = this.getDefaultBinding();
-
-		binding.set('model.results.cricketResult', Immutable.fromJS(result));
-	},
-
-	renderSelectWithGameResultForCricket: function(){
-		const 	binding 	= this.getDefaultBinding(),
-				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '',
-				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
-				event 		= binding.toJS('model');
-
-		if (SportHelper.isCricket(sportName) && mode === 'closing') {
-			return (
-				<SelectForCricketWrapper
-					event 			= { event }
-					onChangeResult 	= { this.onChangeCricketResult }
-				/>
-			);
-		} else {
-			return null;
-		}
-	},
-	
-	renderGameResultForCricket: function(){
-		const 	binding 	= this.getDefaultBinding(),
-				mode 		= typeof binding.toJS('mode') !== 'undefined' ? binding.toJS('mode') : '',
-				event 		= binding.toJS('model'),
-				sportName 	= typeof binding.toJS('model.sport.name') !== 'undefined' ? binding.toJS('model.sport.name').toLowerCase() : '';
-
-		if (SportHelper.isCricket(sportName) && mode === 'general') {
-			return (
-				<CricketResultBlock
-					event 			= { event }
-					activeSchoolId 	= { this.props.activeSchoolId }
-				/>
-			);
-		} else {
-			return null;
-		}
-	},
-	
 	render: function() {
 		if(this.isSync()) {
-			return (
-				<div className="bRivals">
-					{ this.renderSelectWithGameResultForCricket() }
-					{ this.renderGameResultForCricket() }
-					{ this.renderRivals() }
-				</div>
-			);
+			const	binding		= this.getDefaultBinding();
+
+			const	viewMode	= binding.toJS('viewMode'),
+					rivals		= binding.toJS('rivals'),
+					mode		= binding.toJS('mode'),
+					event		= binding.toJS('model');
+
+			switch (viewMode) {
+				case ViewModeConsts.VIEW_MODE.BLOCK_VIEW: {
+					return (
+						<BlockViewRivals
+							rivals									= { rivals }
+							mode									= { mode }
+							event									= { event }
+							activeSchoolId							= { this.props.activeSchoolId }
+							isShowControlButtons					= { this.props.isShowControlButtons }
+							onChangeScore							= { this.onChangeScore }
+							onClickEditTeam							= { this.onClickEditTeam }
+							onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
+							handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
+							handleClickRemoveTeamButton				= { this.props.handleClickRemoveTeamButton }
+						/>
+					);
+				}
+				case ViewModeConsts.VIEW_MODE.TABLE_VIEW: {
+					return (
+						<TableViewRivals
+							rivals									= { rivals }
+							mode									= { mode }
+							event									= { event }
+							activeSchoolId							= { this.props.activeSchoolId }
+							isShowControlButtons					= { this.props.isShowControlButtons }
+							onChangeScore							= { this.onChangeScore }
+							onClickEditTeam							= { this.onClickEditTeam }
+							onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
+							handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
+							handleClickRemoveTeamButton				= { this.props.handleClickRemoveTeamButton }
+						/>
+					);
+				}
+			}
 		} else {
 			return null;
 		}

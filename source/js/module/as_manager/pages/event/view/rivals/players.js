@@ -2,10 +2,10 @@ const	React			= require('react'),
 		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		SportHelper		= require('module/helpers/sport_helper'),
 		PencilButton	= require('module/ui/pencil_button'),
 		propz			= require('propz'),
-		PlayersStyle	= require('../../../../../../../styles/ui/rivals/b_players.scss');
+		classNames		= require('classnames'),
+		PlayersStyle	= require('../../../../../../../styles/ui/b_block_view_rivals/b_players.scss');
 
 const SPORT_SORT = {
 	'BY_SCORE': 'BY_SCORE',
@@ -20,14 +20,13 @@ const Players = React.createClass({
 		rival						: React.PropTypes.object.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
-		viewMode					: React.PropTypes.string.isRequired,
 		event						: React.PropTypes.object.isRequired,
 		activeSchoolId				: React.PropTypes.string.isRequired,
 		onChangeScore				: React.PropTypes.func.isRequired,
 		onClickEditTeam				: React.PropTypes.func.isRequired,
-		customCss					: React.PropTypes.string.isRequired,
-		isShowControlButtons		: React.PropTypes.bool,
-		isSchoolUnion				: React.PropTypes.bool.isRequired
+		customCss					: React.PropTypes.string,
+		customPlayerCss				: React.PropTypes.string,
+		isShowControlButtons		: React.PropTypes.bool
 	},
 	SELECT_TEAM_LATER:		'Select team later',
 	NO_TEAM_MEMBERS:		'No team members to display',
@@ -276,24 +275,13 @@ const Players = React.createClass({
 	isShowMedal: function(){
 		const 	event 			= this.props.event,
 				eventStatus 	= this.props.event.status,
-				isSchoolUnion 	= this.props.isSchoolUnion,
-				viewMode 		= this.props.viewMode,
 				mode 			= this.props.mode;
-		//for schoolUnion we show medals only in show all view mode
-		if (isSchoolUnion) {
-			return (
-				TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
-				mode === 'general' &&
-				eventStatus === EventHelper.EVENT_STATUS.FINISHED &&
-				viewMode === 'show_all'
-			);
-		} else {
-			return (
-				TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
-				mode === 'general' &&
-				eventStatus === EventHelper.EVENT_STATUS.FINISHED
-			);
-		}
+
+		return (
+			TeamHelper.isInterSchoolsEventForIndividualSport(event) &&
+			mode === 'general' &&
+			eventStatus === EventHelper.EVENT_STATUS.FINISHED
+		);
 	},
 	getPlayersPlaceArray: function(players){
 		const playersPlaceArray = [];
@@ -339,13 +327,15 @@ const Players = React.createClass({
 				isShowMedal					= {isShowMedal}
 				event						= {this.props.event}
 				onChangeScore				= {this.props.onChangeScore}
-				customCss					= {this.props.customCss}
+				customCss					= {this.props.customPlayerCss}
 			/>
 		);
 	},
 	render: function() {
 		return (
-			<div className="bPlayers">
+			<div
+				className={classNames('bPlayers', this.props.customCss)}
+			>
 				{ this.renderEditButton() }
 				{ this.renderContent() }
 			</div>
