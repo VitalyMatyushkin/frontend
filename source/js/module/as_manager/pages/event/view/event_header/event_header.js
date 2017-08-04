@@ -19,6 +19,7 @@ const EventHeader = React.createClass({
 		event: 							React.PropTypes.object.isRequired,
 		isMultiparty:					React.PropTypes.bool.isRequired,
 		mode:							React.PropTypes.string.isRequired,
+		viewMode:						React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
@@ -69,7 +70,8 @@ const EventHeader = React.createClass({
 		if(this.props.isMultiparty) {
 			return (
 				<ViewSelector
-					handleClick={this.props.onClickViewMode}
+					handleClick	= { this.props.onClickViewMode }
+					viewMode	= { this.props.viewMode }
 				/>
 			);
 		} else {

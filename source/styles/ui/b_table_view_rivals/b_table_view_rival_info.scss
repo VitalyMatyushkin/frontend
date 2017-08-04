@@ -2,12 +2,12 @@
 @import "../../bootstrap-custom";
 
 .bTableViewRivalInfo {
-  @extend .col-md-4;
+  @extend .col-md-5;
 
   display: flex;
 
   &.mLong {
-    @extend .col-md-7;
+    @extend .col-md-8;
   }
 }
 
