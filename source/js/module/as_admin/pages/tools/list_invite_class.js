@@ -21,14 +21,30 @@ class ListInviteClass{
 		
 		this.setColumns();
 	}
-	
 	reloadData(){
 		this.dataLoader.loadData();
 	}
-	onRemove(data, event){
-		console.log('remove');
+	getRemoveFunction(itemId){
+		const inviteId = itemId;
+		
+		return window.Server.invite.delete(inviteId).then(() => {
+			this.reloadData();
+		});
 	}
-	
+	getActions(){
+		const actionList = ['Remove'];
+		return actionList;
+	}
+	getQuickEditAction(itemId, action){
+		//For future extension, maybe will appear new actions
+		switch (action){
+			case 'Remove':
+				this.getRemoveFunction(itemId);
+				break;
+			default :
+				break;
+		}
+	}
 	setColumns(){
 		this.columns = [
 			{
@@ -52,9 +68,10 @@ class ListInviteClass{
 			{
 				text:'Action',
 				cell:{
-					type:'action-buttons',
+					type:'action-list',
 					typeOptions:{
-						onItemRemove: this.onRemove.bind(this)
+						getActionList:this.getActions.bind(this),
+						actionHandler:this.getQuickEditAction.bind(this)
 					}
 				}
 			}
@@ -69,11 +86,11 @@ class ListInviteClass{
 			},
 			columns: this.columns,
 			handleClick: this.props.handleClick,
-			filters: {limit: 30}
+			filters:{where:{status:{$ne:'REMOVED'}},limit:20}
 		});
 		
 		this.dataLoader = new DataLoader({
-			serviceName:'invite',
+			serviceName:'invites',
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});
@@ -97,7 +114,7 @@ class ListInviteClass{
 		});
 		
 		this.dataLoader = new DataLoader({
-			serviceName:'invite',
+			serviceName:'invites',
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});

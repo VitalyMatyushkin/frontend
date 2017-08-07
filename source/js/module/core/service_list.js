@@ -239,6 +239,8 @@ const serviceList = {
 		serviceList.postCodes = new Service('/public/postcodes', binding);
 		serviceList.postCodeById = new Service('/public/postcodes/{postcodeId}', binding);
 
+		// invite
+		serviceList.invite = new Service('/public/users/invites/{inviteKey}', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

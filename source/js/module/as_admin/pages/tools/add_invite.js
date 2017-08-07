@@ -2,7 +2,9 @@
  * Created by Woland on 01.08.2017.
  */
 const 	React 			= require('react'),
-		Morearty		= require('morearty');
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		propz 			= require('propz');
 
 const 	roleList 			= require('module/data/roles_data'),
 		Form				= require('module/ui/form/form'),
@@ -79,9 +81,9 @@ const AddInvite = React.createClass({
 			});
 	},
 	onSuccess: function(data){
-		const domain = document.location.host.replace('admin', 'app');
+		const domain = document.location.host.replace('admin', 'invite');
 		window.simpleAlert(
-			`Invite link: ${domain}/${data.inviteKey}`,
+			`Invite link: ${domain}/#${data.inviteKey}`,
 			'Ok',
 			() => {
 				document.location.hash = 'school-invite/list-invite';
@@ -109,7 +111,7 @@ const AddInvite = React.createClass({
 			}
 		}
 
-		return window.Server.invite.post(dataToPost).then(response => {
+		return window.Server.invites.post(dataToPost).then(response => {
 			this.onSuccess(response);
 		});
 	},

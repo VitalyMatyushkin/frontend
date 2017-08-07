@@ -69,7 +69,8 @@ const serviceList = {
 		serviceList.notifications = new Service('/superadmin/users/{userId}/notifications', binding);
 		
 		//Invites
-		serviceList.invite = new Service('/superadmin/users/invites', binding);
+		serviceList.invites = new Service('/superadmin/users/invites', binding);
+		serviceList.invite = new Service('/superadmin/users/invites/{inviteId}', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

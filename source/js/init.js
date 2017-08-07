@@ -22,6 +22,7 @@ const	asAdmin			= require('./module/start_as_admin'),
 		asSchool		= require('./module/start_as_school'),
 		asPlayGround	= require('./module/start_as_playground'),
 		asBigScreen		= require('./module/start_as_bigscreen'),
+		asInvite		= require('./module/start_as_invite'),
 		testApi			= require('./module/start_as_api_test');
 
 // adding some undoubtedly required features form ES6
@@ -70,5 +71,6 @@ switch(startModule) {
 	case 'module/start_as_school':		asSchool();		break;
 	case 'module/start_as_playground':	asPlayGround();	break;
 	case 'module/start_as_bigscreen':	asBigScreen();	break;
+	case 'module/start_as_invite':		asInvite();		break;
 	default: asApp();
 }
