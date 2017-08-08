@@ -241,6 +241,9 @@ const serviceList = {
 
 		// invite
 		serviceList.invite = new Service('/public/users/invites/{inviteKey}', binding);
+		
+		//check
+		serviceList.phoneCheck = new Service('/i/register/check', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

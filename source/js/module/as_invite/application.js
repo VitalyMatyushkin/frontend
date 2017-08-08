@@ -45,6 +45,11 @@ const Application = React.createClass({
 		
 		binding.set('isResentPhonePopupOpen', false);
 	},
+	handleClickSendSmsPopupClose: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isSendSmsPopupOpen', false);
+	},
 	isPhoneVerified: function() {
 		const binding = this.getDefaultBinding();
 		
@@ -59,6 +64,11 @@ const Application = React.createClass({
 		const binding = this.getDefaultBinding();
 		
 		return binding.toJS('isResentPhonePopupOpen');
+	},
+	isSendSmsPopupOpen: function() {
+		const binding = this.getDefaultBinding();
+		
+		return binding.toJS('isSendSmsPopupOpen');
 	},
 	handleClickResendPhone: function() {
 		const 	binding = this.getDefaultBinding();
@@ -106,9 +116,31 @@ const Application = React.createClass({
 		document.location.hash = 'login';
 		document.location.hostname = hostName;
 	},
+	handleChangePhone: function(phone){
+		const binding = this.getDefaultBinding();
+		
+		window.Server.phoneCheck.post({ phone }).then(result => {
+			binding.set('isPhoneExist', !Boolean(result.phone));
+		});
+	},
+	isPhoneExist:  function(){
+		const binding = this.getDefaultBinding();
+		
+		return 	typeof binding.toJS('isPhoneExist') === 'undefined' ? true : binding.toJS('isPhoneExist');
+	},
+	handleClickSendSms: function(phone){
+		const 	binding 	= this.getDefaultBinding();
+		
+		window.Server.profilePhone.put({ phone }).then(() => {
+			binding.atomically()
+			.set('inviteData.phone', phone)
+			.set('isSendSmsPopupOpen', true)
+			.commit();
+		});
+	},
 	render: function(){
 		const 	binding 	= this.getDefaultBinding(),
-				phone 		= binding.toJS('inviteData.phone'),
+				phone 		= binding.toJS('inviteData.phone') || '+44',
 				isVerified 	= Boolean(binding.toJS('isPhoneVerified')),
 				isSync 		= binding.toJS('isSync');
 		
@@ -122,6 +154,7 @@ const Application = React.createClass({
 								<PhoneVerification
 									phone 								= { phone }
 									isPhoneVerified 					= { this.isPhoneVerified() }
+									isPhoneExist 						= { this.isPhoneExist() }
 									isErrorPhoneVerification 			= { this.isErrorPhoneVerification() }
 									handleClickConfirmPhone 			= { this.handleClickConfirmPhone }
 									handleSuccessPhoneChange 			= { this.handleSuccessPhoneChange }
@@ -129,11 +162,15 @@ const Application = React.createClass({
 									canUserResendPhoneVerification 		= { this.canUserResendPhoneVerification() }
 									isResentPhonePopupOpen 				= { this.isResentPhonePopupOpen() }
 									handleClickPhonePopupClose 			= { this.handleClickPhonePopupClose }
+									handleChangePhone 					= { this.handleChangePhone }
+									handleClickSendSms 					= { this.handleClickSendSms }
+									isSendSmsPopupOpen 					= { this.isSendSmsPopupOpen() }
+									handleClickSendSmsPopupClose 		= { this.handleClickSendSmsPopupClose }
 								/>
 								<If condition = { isVerified }>
 									<Button
 										onClick 	= { this.handleClickContinueButton }
-										text 		= { "Continue"}
+										text 		= { "Continue" }
 									/>
 								</If>
 							</div>

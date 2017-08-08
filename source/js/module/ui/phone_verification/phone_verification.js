@@ -6,24 +6,31 @@ const 	React 							= require('react'),
 		SVG 							= require('module/ui/svg'),
 		Popup 							= require('module/ui/new_popup'),
 		If 								= require('module/ui/if/if'),
-		ChangeUserProfileFieldModule 	= require('module/ui/register/user/changeUserProfileFieldModule');
+		ChangeUserProfileFieldModule 	= require('module/ui/register/user/changeUserProfileFieldModule'),
+		Button 							= require('module/ui/button/button');
 
 const PhoneVerification = React.createClass({
 	propTypes: {
 		phone: 								React.PropTypes.string.isRequired,
 		isPhoneVerified: 					React.PropTypes.bool.isRequired,
+		isPhoneExist: 						React.PropTypes.bool.isRequired,
 		isErrorPhoneVerification: 			React.PropTypes.bool.isRequired,
 		handleClickConfirmPhone: 			React.PropTypes.func.isRequired,
 		handleSuccessPhoneChange: 			React.PropTypes.func.isRequired,
 		canUserResendPhoneVerification: 	React.PropTypes.bool.isRequired,
 		handleClickResendPhone: 			React.PropTypes.func.isRequired,
 		isResentPhonePopupOpen: 			React.PropTypes.bool.isRequired,
-		handleClickPhonePopupClose: 		React.PropTypes.func.isRequired
+		handleClickPhonePopupClose: 		React.PropTypes.func.isRequired,
+		handleChangePhone: 					React.PropTypes.func.isRequired,
+		handleClickSendSms: 				React.PropTypes.func.isRequired,
+		isSendSmsPopupOpen: 				React.PropTypes.bool.isRequired,
+		handleClickSendSmsPopupClose: 		React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function(){
 		return {
 			phone: 								'',
 			isPhoneVerified: 					false,
+			isPhoneExist: 						true,
 			isErrorPhoneVerification: 			false,
 			canUserResendPhoneVerification: 	true,
 			isResentPhonePopupOpen: 			false
@@ -31,7 +38,8 @@ const PhoneVerification = React.createClass({
 	},
 	getInitialState: function(){
 		return {
-			isChangePhonePopupOpen: false
+			isChangePhonePopupOpen: 	false,
+			phone: 						this.props.phone
 		};
 	},
 	handleClickWrongPhone: function() {
@@ -53,10 +61,16 @@ const PhoneVerification = React.createClass({
 			bButton_hide: 			!this.props.isErrorPhoneVerification
 		});
 	},
-	getPhoneCheckSuccessIconClassName: function() {
+	getPhoneSmsCheckSuccessIconClassName: function() {
 		return classNames({
 			bCheck_show: 	this.props.isPhoneVerified,
 			bButton_hide: 	!this.props.isPhoneVerified
+		});
+	},
+	getPhoneCheckSuccessIconClassName: function() {
+		return classNames({
+			bCheck_show: 	!this.props.isPhoneExist,
+			bButton_hide: 	this.props.isPhoneExist
 		});
 	},
 	getPhoneResendLinkClassName: function() {
@@ -71,9 +85,47 @@ const PhoneVerification = React.createClass({
 	handleClickConfirmPhone: function() {
 		this.props.handleClickConfirmPhone(this.state.phoneCode);
 	},
+	handleChangePhone: function(eventDescriptor){
+		const phone = eventDescriptor.target.value;
+		
+		this.setState( {phone: eventDescriptor.target.value} );
+		
+		if(phone && phone.length > 7) {
+			this.props.handleChangePhone(phone);
+		} else {
+			return false;
+		}
+	},
+	handleClickSendSms: function(){
+		const phone = this.state.phone;
+		
+		this.props.handleClickSendSms(phone);
+	},
 	render: function(){
+		const 	isPhone 		= !(this.props.phone === '+44'),
+				isPhoneExist 	= this.props.isPhoneExist;
 		return (
 			<div className="eUserInvite_phoneVerification">
+				<If condition = { !isPhone }>
+					<label className="eRegistration_label">
+						<span className="eRegistration_labelField">Phone</span>
+						<input 	className 		= 'eRegistration_input'
+								value 			= { this.state.phone }
+								placeholder 	= "Phone"
+								onChange 		= { this.handleChangePhone }
+						/>
+						<If condition = { !isPhoneExist }>
+							<Button 	onClick 			= { this.handleClickSendSms }
+										text 				= {"Send sms to phone"}
+										extraStyleClasses 	= {"mSmall"}
+							/>
+						</If>
+						<span className = { this.getPhoneCheckSuccessIconClassName() }>
+							<SVG icon="icon_check" classes="bButton_svg_check" />
+						</span>
+					</label>
+				</If>
+				<If condition = { isPhone }>
 				<label className="eRegistration_label">
 					<span className="eRegistration_labelField">Phone Verification Code</span>
 					<input 	className 	= 'eRegistration_input'
@@ -86,14 +138,15 @@ const PhoneVerification = React.createClass({
 					>
 						Verify
 					</button>
-					<span className = { this.getPhoneCheckSuccessIconClassName() }>
+					<span className = { this.getPhoneSmsCheckSuccessIconClassName() }>
 						<SVG icon="icon_check" classes="bButton_svg_check" />
 					</span>
 				</label>
+				</If>
 				<div className = { this.getErrorPhoneVerificationTextClassName() }>
 					<span className="verify_error">An error occurred please try again</span>
 				</div>
-				<If condition={!this.props.isPhoneVerified}>
+				<If condition={!this.props.isPhoneVerified && isPhone}>
 					<div className="eRegisterMessage">
 						We have sent your verification sms to <b>{ this.props.phone }</b><br/>
 						<a 	className 	= { this.getPhoneResendLinkClassName() }
@@ -117,6 +170,12 @@ const PhoneVerification = React.createClass({
 						isShowCloseButton 		= { true }
 				>
 					<span className="ePopupText">We have sent the verification code again; please check your text messages.</span>
+				</Popup>
+				<Popup 	isOpened 				= { this.props.isSendSmsPopupOpen }
+						handleClickCloseButton 	= { this.props.handleClickSendSmsPopupClose }
+						isShowCloseButton 		= { true }
+				>
+					<span className="ePopupText">We have sent the verification code; Please check your text messages.</span>
 				</Popup>
 				<Popup 	isOpened 				= { this.state.isChangePhonePopupOpen }
 						handleClickCloseButton 	= { this.handleClickCloseChangePhonePopup }
