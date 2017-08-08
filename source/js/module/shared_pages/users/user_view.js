@@ -28,7 +28,7 @@ const UserDetail= React.createClass({
           return {
               isEditable:true
           };
-      },    
+      },
     componentWillMount: function() {
         const   binding         = this.getDefaultBinding(),
                 globalBinding   = this.getMoreartyContext().getBinding(),
@@ -105,14 +105,22 @@ const UserDetail= React.createClass({
     _getRelatedSchool:function(data){
         if(data !== undefined){
             return data.map( (role, i) => {
-				const imageSrc = propz.get(role, ['school', 'pic'], 'http://placehold.it/75x75');
+				const   imageSrc = propz.get(role, ['school', 'pic'], 'http://placehold.it/75x75'),
+                        today = new Date(),
+                        activated = role.activatedAt ? new Date(role.activatedAt) : null,
+                        deactivated = role.deactivatedAt ? new Date(role.deactivatedAt) : null,
+                        statusRole = (role.status === 'ACTIVE' && activated && deactivated && (today < activated || today > deactivated)) ? `${role.status}/Outdated` : role.status,
+                        dateInterval = (role.status === 'ACTIVE' && activated && deactivated) ? `${activated.toLocaleDateString()} - ${deactivated.toLocaleDateString()}` : '';
                 return(
                     <div key={i} className="eDataList_listItem">
                         <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={imageSrc}/></span></div>
                         <div className="eDataList_listItemCell">{role.school ? role.school.name: 'n/a'}</div>
                         <div className="eDataList_listItemCell">{role.student ? role.student.firstName+" "+role.student.lastName : ''}</div>
                         <div className="eDataList_listItemCell">{role.preset}</div>
-                        <div className="eDataList_listItemCell">{role.status}</div>
+                        <div className="eDataList_listItemCell">
+                            <div>{statusRole}</div>
+                            <div className="bItemDateInterval">{dateInterval}</div>
+                        </div>
                         <div className="eDataList_listItemCell">
                             <span key={i+"edit"} id="edit_row" onClick={this.onEditPermissionClick.bind(null, role.id)}
                                 className="bLinkLike bTooltip" data-description="Edit">
@@ -176,7 +184,7 @@ const UserDetail= React.createClass({
                             {listItems}
                         </div>
                     </div>
-                <Popup 
+                <Popup
                     binding         = {binding}
                     stateProperty   = {'popup'}
                     onRequestClose  = {this._closePopup}
