@@ -15,15 +15,21 @@ const 	React 				= require('react'),
 		EventHeader 		= require('./event_header'),
 		EventHeaderActions 	= require('./event_header_actions');
 
+const	ManagerConsts	= require('module/ui/managers/helpers/manager_consts');
+
 const EventHeaderWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	isInviterSchool: function() {
+		const event = this.getDefaultBinding().toJS('model');
 
+		return event.inviterSchoolId === this.props.activeSchoolId;
+	},
 	handleClickDownloadPdf: function() {
 		const 	binding		= this.getDefaultBinding(),
-				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				schoolId 	= this.props.activeSchoolId,
 				event		= binding.toJS('model'),
 				eventId 	= binding.toJS('model.id');
 
@@ -34,7 +40,7 @@ const EventHeaderWrapper = React.createClass({
 	 */
 	handleClickCancelEvent: function () {
 		const 	binding		= this.getDefaultBinding(),
-				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				schoolId 	= this.props.activeSchoolId,
 				eventId 	= binding.toJS('model.id');
 
 		EventHeaderActions.cancelEvent(schoolId, eventId);
@@ -73,9 +79,9 @@ const EventHeaderWrapper = React.createClass({
 	 * The event handler when clicking the button "Save" after clicking the button "Change score"
 	 */
 	onClickOk: function () {
-		const 	binding 		= this.getDefaultBinding(),
-				event 			= binding.toJS('model'),
-				activeSchoolId 	= MoreartyHelper.getActiveSchoolId(this);
+		const	binding 		= this.getDefaultBinding(),
+				event			= binding.toJS('model'),
+				activeSchoolId	= this.props.activeSchoolId;
 
 		if(this.getDefaultBinding().get('model.status') === "FINISHED") {
 			EventHeaderActions.submitScore(activeSchoolId, event, binding);
@@ -91,7 +97,7 @@ const EventHeaderWrapper = React.createClass({
 	onSendConsentRequest: function() {
 		const	binding			= this.getDefaultBinding(),
 				event			= binding.toJS('model'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
+				activeSchoolId	= this.props.activeSchoolId;
 
 		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
 			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
@@ -123,6 +129,13 @@ const EventHeaderWrapper = React.createClass({
 		binding.set('opponentSchoolManager.isOpen', true);
 		binding.set('opponentSchoolManager.opponentSchoolId', undefined)
 		binding.set('opponentSchoolManager.mode', 'ADD')
+	},
+	onClickAddTeam: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.set('selectedRivalIndex', Immutable.fromJS(0));
+		binding.set('mode', 'edit_squad');
+		binding.set('teamManagerMode', ManagerConsts.MODE.ADD_TEAM)
 	},
 	onClickDeleteEvent: function(){
 		const binding = this.getDefaultBinding();
@@ -161,6 +174,7 @@ const EventHeaderWrapper = React.createClass({
 		return (
 					<EventHeader
 						event							= { event }
+						isInviterSchool					= { this.isInviterSchool() }
 						isMultiparty					= { TeamHelper.isMultiparty(binding.toJS('model')) }
 						mode 							= { mode }
 						viewMode						= { viewMode }
@@ -178,6 +192,7 @@ const EventHeaderWrapper = React.createClass({
 						onSendConsentRequest			= { this.onSendConsentRequest }
 						onReportNotParticipate			= { this.onReportNotParticipate }
 						onClickAddSchool				= { this.onClickAddSchool }
+						onClickAddTeam					= { this.onClickAddTeam }
 						role 							= { role }
 						onClickDeleteEvent 				= { this.onClickDeleteEvent }
 						//props for tweet button

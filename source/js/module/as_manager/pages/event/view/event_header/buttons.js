@@ -17,6 +17,8 @@ const Buttons = React.createClass({
 		eventType						: React.PropTypes.string.isRequired,
 		mode							: React.PropTypes.string.isRequired,
 		eventStatus						: React.PropTypes.string.isRequired,
+		// TRUE if active school id ==== inviter school id
+		isInviterSchool					: React.PropTypes.bool.isRequired,
 		isMultiparty					: React.PropTypes.bool.isRequired,
 		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
 		isParent						: React.PropTypes.bool.isRequired,
@@ -29,7 +31,8 @@ const Buttons = React.createClass({
 		onSendConsentRequest			: React.PropTypes.func.isRequired,
 		onReportNotParticipate			: React.PropTypes.func.isRequired,
 		onClickDeleteEvent				: React.PropTypes.func.isRequired,
-		onClickAddSchool				: React.PropTypes.func.isRequired
+		onClickAddSchool				: React.PropTypes.func.isRequired,
+		onClickAddTeam					: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -56,6 +59,14 @@ const Buttons = React.createClass({
 			actionList.push({id:'create', text:'Create Event Like This'});
 		}
 
+		if(this.isAddSchoolAvailable()) {
+			actionList.push({id:'add_school', text:'Add School'});
+		}
+
+		if(this.isAddTeamAvailable()) {
+			actionList.push({id:'add_team', text:'Add Team'});
+		}
+
 		if(this.isCloseEventActionAvailable()) {
 			actionList.push({id:'close', text:'Close Event'});
 		}
@@ -76,10 +87,6 @@ const Buttons = React.createClass({
 			actionList.push({id:'cancel', text:'Cancel Event'});
 		}
 
-		if(this.isAddSchoolAvailable()) {
-			actionList.push({id:'add_school', text:'Add School'});
-		}
-
 		if(this.props.isUserSchoolWorker) {
 			actionList.push({id: 'download_pdf', text: 'Download Pdf'});
 			actionList.push({id: 'delete_event', text: 'Delete Event'});
@@ -88,6 +95,19 @@ const Buttons = React.createClass({
 		return actionList;
 	},
 	isAddSchoolAvailable: function() {
+		const eventStatus = this.props.eventStatus;
+
+		return (
+			this.props.isUserSchoolWorker &&
+			this.props.isMultiparty &&
+			this.props.eventType === 'inter-schools' &&
+			this.props.isInviterSchool &&
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
+			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+		);
+	},
+	isAddTeamAvailable: function() {
 		const eventStatus = this.props.eventStatus;
 
 		return (
@@ -165,6 +185,9 @@ const Buttons = React.createClass({
 				break;
 			case 'add_school':
 				this.props.onClickAddSchool();
+				break;
+			case 'add_team':
+				this.props.onClickAddTeam();
 				break;
 		}
 	},

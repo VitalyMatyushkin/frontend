@@ -34,16 +34,12 @@ const ManagerWrapper = React.createClass({
 		binding.set('isControlButtonActive', this.isControlButtonActive());
 	},
 	componentWillMount: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		let selectedRivalIndex = binding.get('selectedRivalIndex');
-		typeof selectedRivalIndex === 'undefined' && (selectedRivalIndex = 0);
-
-		const event = binding.toJS('model');
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
 
 		const	managerWrapperRivals	= this.getRivals(event, binding.toJS('rivals')),
-				schoolInfo				= this.getSchoolInfo(event, binding.toJS('rivals'), selectedRivalIndex);
+				selectedRivalIndex		= this.initSelectedRivalIndex(managerWrapperRivals),
+				schoolInfo				= this.getSchoolInfo(event, managerWrapperRivals, selectedRivalIndex);
 
 		binding.sub('teamManagerWrapper.default').atomically()
 			.set('isSubmitProcessing',				false)
@@ -129,12 +125,58 @@ const ManagerWrapper = React.createClass({
 			return false;
 		}
 	},
-	getRivals: function(event, rivals) {
-		if(TeamHelper.mustUseNewManagerWraperHelper(event)) {
-			return NewManagerWrapperHelper.getRivals(event, rivals);
-		} else {
-			return ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
+	/**
+	 * Function returns initialized selectedRivalIndex
+	 * by some rules.
+	 * @param managerWrapperRivals
+	 * @returns {*}
+	 */
+	initSelectedRivalIndex: function(managerWrapperRivals) {
+		const binding = this.getDefaultBinding();
+
+		let selectedRivalIndex = binding.get('selectedRivalIndex');
+		switch (true) {
+			case binding.toJS('teamManagerMode') === 'ADD_TEAM': {
+				selectedRivalIndex = managerWrapperRivals.findIndex(r => r.emptyRival);
+				break;
+			}
+			case typeof selectedRivalIndex === 'undefined': {
+				selectedRivalIndex = 0;
+				break;
+			}
 		}
+
+		return selectedRivalIndex;
+	},
+	/**
+	 * Function converts event rivals to manager rivals by some rules depend
+	 * on event type and event manager mode
+	 * @param event
+	 * @param rivals
+	 * @returns {Array}
+	 */
+	getRivals: function(event, rivals) {
+		const binding = this.getDefaultBinding();
+
+		let _rivals = [];
+
+		if(TeamHelper.mustUseNewManagerWraperHelper(event)) {
+			_rivals = NewManagerWrapperHelper.getRivals(event, rivals);
+		} else {
+			_rivals = ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, false);
+		}
+
+		if(
+			TeamHelper.mustUseNewManagerWraperHelper(event) &&
+			binding.toJS('teamManagerMode') === 'ADD_TEAM'
+		) {
+			const anyCurrentSchoolRival = rivals.find(rival => rival.school.id === this.props.activeSchoolId);
+			const emptyRival = NewManagerWrapperHelper.getEmptyRivalForInterSchoolEvent( anyCurrentSchoolRival );
+			emptyRival.emptyRival = true;
+			_rivals.push( emptyRival );
+		}
+
+		return _rivals;
 	},
 	getSchoolInfo: function(event, rivals, selectedRivalIndex) {
 		if(TeamHelper.isNewEvent(event)) {
@@ -208,40 +250,8 @@ const ManagerWrapper = React.createClass({
 		// if true - then user click to finish button
 		// so we shouldn't do anything
 		if(this.isControlButtonActive()) {
-
 			binding.set('isSubmitProcessing', true);
 			this.submit();
-			//switch (true) {
-			//	case (
-			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-			//	):
-			//		this.showSavingChangesModePopup();
-			//		break;
-			//	case (
-			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-			//	):
-			//		this.showSavingChangesModePopup();
-			//		break;
-			//	case (
-			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-			//	):
-			//		this.showSavingChangesModePopup();
-			//		break;
-			//	case (
-			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-			//	):
-			//		binding.set('isSubmitProcessing', true);
-			//		this.submit();
-			//		break;
-			//	case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
-			//		binding.set('isSubmitProcessing', true);
-			//		this.submit();
-			//		break;
-			//}
 		}
 	},
 	showSavingChangesModePopup: function() {
@@ -254,11 +264,9 @@ const ManagerWrapper = React.createClass({
 	submit: function() {
 		const binding = this.getDefaultBinding();
 
-		//return Promise.all(this.processSavingChangesMode())
-		//	.then(() => Actions.submitAllChanges(this.activeSchoolId, binding))
-		//	.then(() => this.doAfterCommitActions());
-
-		return Actions.submitAllChanges(this.props.activeSchoolId, binding).then(() => this.doAfterCommitActions());
+		return Actions
+			.submitAllChanges(this.props.activeSchoolId, binding)
+			.then(() => this.doAfterCommitActions());
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
@@ -281,10 +289,11 @@ const ManagerWrapper = React.createClass({
 				managerBinding	= this.getManagerBinding();
 
 		return (
-			<Manager	binding					= {managerBinding}
-						isShowRivals			= {this.isShowRivals()}
-						isShowAddTeamButton		= {false}
-						indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
+			<Manager
+				binding					= {managerBinding}
+				isShowRivals			= {this.isShowRivals()}
+				isShowAddTeamButton		= {false}
+				indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
 			/>
 		)
 	},

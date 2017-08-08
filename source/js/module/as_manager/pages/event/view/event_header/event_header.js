@@ -22,11 +22,13 @@ const EventHeader = React.createClass({
 		viewMode:						React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
 		eventAges:						React.PropTypes.array,
+		isInviterSchool:				React.PropTypes.bool.isRequired,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
 		isParent:						React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
+		onClickAddTeam:					React.PropTypes.func.isRequired,
 		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
@@ -127,6 +129,7 @@ const EventHeader = React.createClass({
 							mode							= { this.props.mode }
 							eventStatus 					= { this.props.eventStatus }
 							eventType 						= { event.eventType }
+							isInviterSchool 				= { this.props.isInviterSchool }
 							isMultiparty 					= { this.props.isMultiparty }
 							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
 							isParent		 				= { this.props.isParent }
@@ -140,6 +143,7 @@ const EventHeader = React.createClass({
 							onReportNotParticipate			= { this.props.onReportNotParticipate }
 							onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
 							onClickAddSchool 				= { this.props.onClickAddSchool }
+							onClickAddTeam 					= { this.props.onClickAddTeam }
 						/>
 					</div>
 				</div>

@@ -6,9 +6,16 @@ const	EventHelper				= require('./../../../../../helpers/eventHelper'),
 
 const NewManagerWrapperHelper = {
 	getRivals: function(event, rivals) {
-		return rivals.map(r => this.getRivalByOrder(event, r));
+		return rivals.map(r => this.getRivalModel(event, r));
 	},
-	getRivalByOrder: function(event, _rival) {
+	getEmptyRivalForInterSchoolEvent: function(rival) {
+		const rivalModel = new InterSchoolsRivalModel(rival.school);
+
+		rivalModel.players = [];
+
+		return rivalModel;
+	},
+	getRivalModel: function(event, _rival) {
 		let rival;
 
 		// Add school or house

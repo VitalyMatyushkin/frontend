@@ -9,12 +9,15 @@ const	If				= require('module/ui/if/if'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		PencilButton	= require('../../../../ui/pencil_button');
 
+const	ManagerConsts	= require('module/ui/managers/helpers/manager_consts');
+
 const EditingTeamsButtons = React.createClass({
 	mixins: [Morearty.Mixin],
 	handleClickChangeTeamsButtons: function (index) {
 		this.getDefaultBinding()
 			.atomically()
 			.set('mode',				'edit_squad')
+			.set('teamManagerMode',		ManagerConsts.MODE.CHANGE_TEAM)
 			.set('selectedRivalIndex',	index)
 			.commit();
 	},

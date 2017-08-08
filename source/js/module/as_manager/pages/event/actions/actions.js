@@ -158,17 +158,50 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 	);
 };
 
-//TODO rename it
+/**
+ * This function only for created event.
+ * Submit changes when user changed team(for all event types)
+ * or submit changes when user add new team(only for inter school event, multiparty).
+ * @param activeSchoolId
+ * @param binding
+ * @returns {*}
+ */
 function submitAllChanges(activeSchoolId, binding) {
-	return changeTeamNames(activeSchoolId, binding)
-		.then(() => commitPlayersChanges(activeSchoolId, binding))
-		.then(() => {
-			if(EventHelper.isNotFinishedEvent(binding.toJS('model'))) {
-				return Promise.resolve(true);
-			} else {
-				return CorrectScoreActions.correctEventScoreByChanges(activeSchoolId, binding);
-			}
-		});
+	switch (true) {
+		case binding.toJS('teamManagerMode') === 'ADD_TEAM': {
+			const	selectedRivalIndex	= binding.toJS('teamManagerWrapper.default.teamModeView.selectedRivalIndex'),
+					event				= binding.toJS('model'),
+					rival				= binding.toJS(`teamManagerWrapper.default.rivals.${selectedRivalIndex}`),
+					teamWrappers		= binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper`),
+					teamWrapper			= teamWrappers.find(tw => tw.rivalId === rival.id);
+
+			return TeamHelper
+				.createTeam(
+					activeSchoolId,
+					event,
+					rival,
+					teamWrapper
+				)
+				.then(team => {
+					return TeamHelper.addTeamsToEvent(
+						activeSchoolId,
+						event,
+						[team]
+					);
+				});
+		}
+		case binding.toJS('teamManagerMode') === 'CHANGE_TEAM': {
+			return changeTeamNames(activeSchoolId, binding)
+				.then(() => commitPlayersChanges(activeSchoolId, binding))
+				.then(() => {
+					if(EventHelper.isNotFinishedEvent(binding.toJS('model'))) {
+						return Promise.resolve(true);
+					} else {
+						return CorrectScoreActions.correctEventScoreByChanges(activeSchoolId, binding);
+					}
+				});
+		}
+	}
 };
 
 module.exports.changeTeamNames				= changeTeamNames;

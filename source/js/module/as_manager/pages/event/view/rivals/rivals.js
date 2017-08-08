@@ -14,7 +14,8 @@ const	RivalManager		= require('module/as_manager/pages/event/view/rivals/helpers
 		EventHelper			= require('module/helpers/eventHelper');
 
 // consts
-const	ViewModeConsts		= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts');
+const	ViewModeConsts		= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		ManagerConsts		= require('module/ui/managers/helpers/manager_consts');
 
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -440,6 +441,7 @@ const Rivals = React.createClass({
 			.atomically()
 			.set('mode',				'edit_squad')
 			.set('selectedRivalIndex',	rivalIndex)
+			.set('teamManagerMode',		ManagerConsts.MODE.CHANGE_TEAM)
 			.commit();
 	},
 	onChangeScore: function(rivalIndex, scoreBundleName, scoreData, player) {
