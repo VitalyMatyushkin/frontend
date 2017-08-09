@@ -41,7 +41,8 @@ const ManagerWrapper = React.createClass({
 				selectedRivalIndex		= this.initSelectedRivalIndex(managerWrapperRivals),
 				schoolInfo				= this.getSchoolInfo(event, managerWrapperRivals, selectedRivalIndex);
 
-		binding.sub('teamManagerWrapper.default').atomically()
+		binding.sub('teamManagerWrapper.default')
+			.atomically()
 			.set('isSubmitProcessing',				false)
 			.set('isSavingChangesModePopupOpen',	false)
 			.set('model',							Immutable.fromJS(event))
@@ -290,10 +291,10 @@ const ManagerWrapper = React.createClass({
 
 		return (
 			<Manager
-				binding					= {managerBinding}
-				isShowRivals			= {this.isShowRivals()}
-				isShowAddTeamButton		= {false}
-				indexOfDisplayingRival	= {binding.toJS('selectedRivalIndex')}
+				binding					= { managerBinding }
+				isShowRivals			= { this.isShowRivals() }
+				isShowAddTeamButton		= { false }
+				indexOfDisplayingRival	= { binding.toJS('selectedRivalIndex') }
 			/>
 		)
 	},
@@ -304,21 +305,23 @@ const ManagerWrapper = React.createClass({
 		// and if state was changed then call debounce decorator for changeControlButtonState
 		this.checkControlButtonState();
 
-		// provide isShowRivals by isInviteMode is a trick
 		return (
 			<div className="bTeamManagerWrapper">
 				{ this.renderManager() }
-				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}
-											submit	= {this.handleClickPopupSubmit}
+				<SavingPlayerChangesPopup
+					binding	= { binding.sub('teamManagerWrapper.default') }
+					submit	= { this.handleClickPopupSubmit }
 				/>
 				<div className="eTeamManagerWrapper_footer">
-					<Button	text				= "Cancel"
-							onClick				= {this.handleClickCancelButton}
-							extraStyleClasses	= {"mCancel"}
-						/>
-					<Button	text				= "Save"
-							onClick				= {this.handleClickSubmitButton}
-							extraStyleClasses	= {this.getSaveButtonStyleClass()}
+					<Button
+						text				= "Cancel"
+						onClick				= { this.handleClickCancelButton }
+						extraStyleClasses	= { "mCancel" }
+					/>
+					<Button
+						text				= "Save"
+						onClick				= { this.handleClickSubmitButton }
+						extraStyleClasses	= { this.getSaveButtonStyleClass() }
 					/>
 				</div>
 			</div>

@@ -205,24 +205,28 @@ const TeamBundle = React.createClass({
 
 		return teamWrapper.map(tw => tw.___teamManagerBinding.teamStudents);
 	},
-	getAnotherTeamPlayersByRivalIndex: function(rivalIndex) {
-		const players = this.getAllPlayers();
+	getOtherTeamPlayersByRivalIndex: function(rivalIndex) {
+		let players = [];
 
-		players.splice(rivalIndex, 1);
+		const	binding					= this.getDefaultBinding(),
+				rivals					= this.getBinding().rivals.toJS(),
+				currentRivalId			= rivals[rivalIndex].id,
+				teamWrappers			= binding.toJS('teamWrapper'),
+				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === currentRivalId);
 
-		let anotherPlayers = [];
-		players.forEach(playersArray => {
-			anotherPlayers = anotherPlayers.concat(playersArray);
+		teamWrappers.splice(currentTeamWrapperIndex, 1);
+		teamWrappers.forEach(tw => {
+			players = players.concat(tw.___teamManagerBinding.teamStudents);
 		});
 
-		return anotherPlayers;
+		return players;
 	},
 	getAnotherRivalIdArray: function(rivalIndex) {
 		const rivals = this.getBinding().rivals.toJS();
 
 		return rivals
-			.filter((rival, _rivalIndex) => _rivalIndex !== rivalIndex)
-			.map((rival, rivalIndex) => rival.id);
+			.filter((_, _rivalIndex) => _rivalIndex !== rivalIndex)
+			.map(rival => rival.id);
 	},
 	/**
 	 * Function adds teamId to black list of other rivals.
@@ -384,7 +388,7 @@ const TeamBundle = React.createClass({
 					<TeamWrapper
 						key						= { rivalId }
 						binding					= { binding }
-						otherTeamPlayers		= { this.getAnotherTeamPlayersByRivalIndex(index) }
+						otherTeamPlayers		= { this.getOtherTeamPlayersByRivalIndex(index) }
 						handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
 					/>
 				</div>

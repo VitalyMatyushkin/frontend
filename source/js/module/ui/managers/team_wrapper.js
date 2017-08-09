@@ -29,6 +29,11 @@ const TeamWrapper = React.createClass({
 
 		this.getDefaultBinding().clear();
 	},
+	componentWillReceiveProps: function(newProps) {
+		if(newProps.otherTeamPlayers.length !== this.props.otherTeamPlayers.length) {
+			this.setBlackList(newProps.otherTeamPlayers);
+		}
+	},
 	removeListeners: function() {
 		const binding = this.getDefaultBinding();
 
@@ -49,7 +54,7 @@ const TeamWrapper = React.createClass({
 			self._initCreationModeBinding();
 			self._fillPlugBinding();
 			self._setPlayers(self.getBinding().players.toJS());
-			self._setBlackList(this.props.otherTeamPlayers);
+			self.setBlackList(this.props.otherTeamPlayers);
 			binding.set('prevPlayers',			Immutable.fromJS(self.getBinding().players.toJS()));
 			binding.set('isSetTeamLater',		Immutable.fromJS(false));
 			binding.set('isTeamChanged',		false);
@@ -57,9 +62,8 @@ const TeamWrapper = React.createClass({
 			binding.set('willRemoveListeners',	false);
 		}
 	},
-	_setBlackList: function(players) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	setBlackList: function(players) {
+		const binding = this.getDefaultBinding();
 
 		binding.set("___teamManagerBinding.blackList", Immutable.fromJS(players));
 	},
