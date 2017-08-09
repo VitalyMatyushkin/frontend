@@ -27,7 +27,7 @@ const RegiseterUserPage = React.createClass({
 				phone:true
 			}
 		}).then(function(res){
-			document.location.hash = 'admin_schools/users';
+			document.location.hash = 'users';
 			return res;
 		});
 	},

@@ -150,7 +150,7 @@ const authСontroller = {
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
-		window.location.hash = 'admin_schools';
+		window.location.hash = 'users';
 
 		// just in case
 		this.requestedPage = undefined;

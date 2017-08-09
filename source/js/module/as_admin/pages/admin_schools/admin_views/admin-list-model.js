@@ -68,7 +68,7 @@ SchoolsListModel.prototype.getQuickEditAction = function(itemId, action){
 };
 
 SchoolsListModel.prototype.getEditFunction = function(itemId){
-    document.location.hash = 'admin_schools/admin_views/edit?id=' + itemId;
+    document.location.hash = 'schools/admin_views/edit?id=' + itemId;
 };
 
 SchoolsListModel.prototype.getViewFunction = function(itemId){

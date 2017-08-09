@@ -9,7 +9,7 @@ const AddSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
     submitAdd: function(schoolData) {
         window.Server.schools.post(schoolData).then(() => {
-            document.location.hash = 'admin_schools/admin_views/list';
+            document.location.hash = 'schools/admin_views/list';
         });
     },
     render: function() {

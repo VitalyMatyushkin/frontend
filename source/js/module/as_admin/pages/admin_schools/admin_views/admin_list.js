@@ -25,7 +25,7 @@ const SchoolListPage = React.createClass({
 
     },
     _getAdminSchoolEditFunction:function(data){
-        document.location.hash = 'admin_schools/admin_views/edit?id=' + data.id;
+        document.location.hash = 'schools/admin_views/edit?id=' + data.id;
     },
     _getItemRemoveFunction:function(model){
         var self = this,

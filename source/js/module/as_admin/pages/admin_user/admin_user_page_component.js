@@ -19,7 +19,7 @@ const AdminUserPageComponent = React.createClass({
 				userId 			= globalBinding.get('routing.parameters.id'),
 				menuItems 		= [
 					{
-						href: 	'/#admin_schools/users',
+						href: 	'/#users',
 						name: 	'← user list',
 						key: 	'back'
 					},

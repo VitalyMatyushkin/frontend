@@ -1,6 +1,6 @@
 
 const SportsHelpers = {
-    SPORTS_PAGE: 'admin_schools/admin_views/sports',
+    SPORTS_PAGE: '/sports',
     redirectToSportsPage: function() {
         const self = this;
 

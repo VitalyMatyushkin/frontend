@@ -25,16 +25,16 @@ const SportsPage = React.createClass({
         return (
             <RouterView routes={binding.sub('sportsRouting')} binding={globalBinding}>
                 <Route
-                    path="/admin_schools/admin_views/sports"
+                    path="/sports"
                     binding={binding.sub('sportsList')}
                     component={SportsListComponent}
                     formBinding={binding.sub('sportsForm')}
                 />
-                <Route path="/admin_schools/admin_views/sports/add"
+                <Route path="/sports/add"
                        binding={binding.sub('sportsAdd')}
                        component={SportsAddComponent}
                 />
-                <Route path="/admin_schools/admin_views/sports/edit"
+                <Route path="/sports/edit"
                        binding={binding.sub('sportsForm')}
                        component={SportsEditComponent}
                 />

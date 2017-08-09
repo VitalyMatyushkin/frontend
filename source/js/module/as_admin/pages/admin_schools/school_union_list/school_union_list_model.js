@@ -64,7 +64,7 @@ SchoolUnionListModel.prototype.getQuickEditAction = function(itemId, action){
 };
 
 SchoolUnionListModel.prototype.getEditFunction = function(schoolId){
-	document.location.hash = `admin_schools/school_union/edit?id=${schoolId}`;
+	document.location.hash = `schools/school_union/edit?id=${schoolId}`;
 };
 
 SchoolUnionListModel.prototype.getDeleteFunction = function(itemId){

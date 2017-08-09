@@ -12,7 +12,7 @@ const AdminUsersList = React.createClass({
 	mixins:[Morearty.Mixin],
 
 	adminCreateNewUser: function(){
-		document.location.hash = 'admin_schools/admin_views/create_user';
+		document.location.hash = 'users/admin_views/create_user';
 	},
 	
 	//The function, which will call when user click on <Row> in Grid

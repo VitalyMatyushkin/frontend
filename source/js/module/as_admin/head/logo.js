@@ -3,7 +3,7 @@ const 	React			= require('react'),
 
 const Logo = React.createClass({
 	onLogoClick: function(){
-		document.location.hash = 'admin_schools';
+		document.location.hash = 'users';
 	},
 	render: function() {
 		return (

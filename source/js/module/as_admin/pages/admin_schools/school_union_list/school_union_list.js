@@ -17,7 +17,7 @@ const SchoolUnionList = React.createClass({
 		this.model = new SchoolUnionSchoolListModel(this, this.handleClickAddSchoolUnionButton);
 	},
 	handleClickAddSchoolUnionButton: function() {
-		document.location.hash = '/admin_schools/school_unions/add';
+		document.location.hash = 'schools/school_unions/add';
 	},
 	renderGrid: function() {
 		return typeof this.model.grid !== 'undefined' ? <Grid model={this.model.grid}/> : null;

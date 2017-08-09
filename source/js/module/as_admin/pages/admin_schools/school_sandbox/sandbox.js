@@ -32,7 +32,7 @@ const SchoolSandbox = React.createClass({
 				schoolId 		= globalBinding.get('routing.pathParameters.0'),
 				menuItems 		= [
 									{
-										href:'/#admin_schools/admin_views/list',
+										href:'/#schools/admin_views/list',
 										name: '← school list',
 										key:'back'
 									},

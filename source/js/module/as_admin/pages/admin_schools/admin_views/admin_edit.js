@@ -44,7 +44,7 @@ const EditSchoolForm = React.createClass({
 		 */
 		SchoolHelper.setServerPublicSiteAccessPasswordValue(schoolData);
         window.Server.school.put(this.schoolId, schoolData).then(() => {
-            document.location.hash = 'admin_schools/admin_views/list';
+            document.location.hash = 'schools/admin_views/list';
         });
 
     },

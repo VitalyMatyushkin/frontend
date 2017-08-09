@@ -16,7 +16,7 @@ const SchoolUnionListWrapper = React.createClass({
 						routes	= {binding.sub('schoolUnionListRouting')}
 			>
 				<Route	binding		= {binding.sub('schoolUnionList')}
-						path		= "/admin_schools/school_unions"
+						path		= "/schools/school_unions"
 						component	= {SchoolUnionList}
 				/>
 			</RouterView>

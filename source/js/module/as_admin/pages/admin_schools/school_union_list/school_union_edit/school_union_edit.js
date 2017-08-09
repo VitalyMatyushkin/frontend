@@ -42,7 +42,7 @@ const SchoolUnionEdit = React.createClass({
 		SchoolHelper.setServerPublicSiteAccessPasswordValue(schoolData);
 		window.Server.school.put(this.getSchoolIdFromPageUrl(), schoolData).then(() => {
 			this.getDefaultBinding().clear();
-			document.location.hash = 'admin_schools/school_unions';
+			document.location.hash = 'schools/school_unions';
 		});
 	},
 	render: function() {

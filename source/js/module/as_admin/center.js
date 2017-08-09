@@ -22,7 +22,10 @@ const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert'),
 		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component'),
-		ToolsComponent 			= require('module/as_admin/pages/tools/tools');
+		ToolsComponent 			= require('module/as_admin/pages/tools/tools'),
+    	UsersComponent			= require('module/as_admin/pages/admin_schools/users'),
+    	SchoolsComponent		= require('module/as_admin/pages/admin_schools/schools'),
+    	SportsComponent			= require('module/as_admin/pages/admin_schools/sports');
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -70,9 +73,19 @@ const Center = React.createClass({
 							component 	= { AlbumsComponent }
 						/>
 						<Route
-							path		= "/admin_schools /admin_schools/:subPage /admin_schools/:subFolder/:subPage /admin_schools/:subFolder/:subPage/:mode"
-							binding		= { binding.sub('adminDashboard') }
-							component	= { AdminDashboardComponent }
+							path		= "/users /users/:subPage /users/:subFolder/:subPage"
+							binding		= { binding.sub('users') }
+							component	= { UsersComponent }
+						/>
+						<Route
+							path		= "/schools /schools/:subPage /schools/:subFolder/:subPage /schools/:subFolder/:subPage/:mode"
+							binding		= { binding.sub('schools') }
+							component	= { SchoolsComponent }
+						/>
+						<Route
+							path		= "/sports /sports/:subPage /sports/:subPage/:mode"
+							binding		= { binding.sub('sports') }
+							component	= { SportsComponent }
 						/>
 						<Route
 							path		= "/user/view /user/notification-channel-view /user/notifications-view"

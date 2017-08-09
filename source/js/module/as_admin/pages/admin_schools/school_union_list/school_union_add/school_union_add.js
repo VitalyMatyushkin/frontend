@@ -8,7 +8,7 @@ const SchoolUnionCreate = React.createClass({
 	submitAdd: function(schoolUnionData) {
 		schoolUnionData.kind = "SchoolUnion";
 		window.Server.schools.post(schoolUnionData).then(() => {
-			document.location.hash = '/admin_schools/school_unions';
+			document.location.hash = 'schools/school_unions';
 		});
 	},
 	render: function() {

@@ -17,15 +17,30 @@ const Head = React.createClass({
         const binding = this.getDefaultBinding();
 
         // TODO: should it be here ??
-		const menuItems = [{
-			href: '/#admin_schools',
-			icon: 'icon_home',
-			name: 'Dashboard',
-			key: 'Dashboard',
-			routes:['/admin_schools/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
-			authorization:true
-		}];
-
+		const menuItems = [
+            {
+                href: '/#users',
+                name: 'Users',
+                key: 'Users',
+                routes:['/users/:subPage', '/users/:filter', '/users/:inviteId/:mode'],
+                authorization:true
+            },
+            {
+                href: '/#schools',
+                name: 'Schools',
+                key: 'Schools',
+                routes:['/schools/:subPage', '/schools/:filter', '/schools/:inviteId/:mode'],
+                authorization:true
+            },
+            {
+                href: '/#sports',
+                name: 'Sports',
+                key: 'Sports',
+                routes:['/sports/:subPage', '/sports/:filter', '/sports/:inviteId/:mode'],
+                authorization:true
+            }
+		];
+        binding.set('topMenuItems', menuItems);
         return (
             <div className="bTopPanel container">
                 <div className="row">
@@ -33,7 +48,7 @@ const Head = React.createClass({
                         <Logo />
                     </div>
                     <div className="col-md-8 bTopNav">
-                        <TopMenu items={this.menuItems} binding={binding.sub('routing')}/>
+                        <TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
                         <UserBlock binding={binding.sub('userData')} asAdmin={true}/>
                     </div>
                 </div>
