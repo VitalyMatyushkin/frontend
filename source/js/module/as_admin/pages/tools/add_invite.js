@@ -81,9 +81,10 @@ const AddInvite = React.createClass({
 			});
 	},
 	onSuccess: function(data){
-		const domain = document.location.host.replace('admin', 'invite');
+		const 	domain = document.location.host.replace('admin', 'invite'),
+				protocol = document.location.href.split('/')[0];
 		window.simpleAlert(
-			`Invite link: ${domain}/#${data.inviteKey}`,
+			`Invite link: ${protocol}//${domain}/#${data.inviteKey}`,
 			'Ok',
 			() => {
 				document.location.hash = 'school-invite/list-invite';
@@ -179,7 +180,7 @@ const AddInvite = React.createClass({
 				<FormField
 					type 		= "phone"
 					field 		= "phone"
-					validation 	= "phone"
+					validation 	= "server phone"
 				>
 					Phone
 				</FormField>
