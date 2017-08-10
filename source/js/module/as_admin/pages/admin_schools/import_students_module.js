@@ -21,7 +21,7 @@ const ImportStudentsModule = React.createClass({
 		const binding	= this.getDefaultBinding();
 
 		binding.remove('importIsSync');
-		window.Server.schoolForms.get({schoolId: schoolId})
+		window.Server.schoolForms.get({schoolId: schoolId}, {filter: {limit: 20}})
 			.then(forms => {
 				school.forms = forms;
 				return window.Server.schoolHouses.get({schoolId: schoolId})
@@ -30,7 +30,6 @@ const ImportStudentsModule = React.createClass({
 				school.houses = houses;
 				binding.set('currentSchool', Immutable.fromJS(school));
 				binding.set('importIsSync', Immutable.fromJS('false'));
-				this.validationEverything();
 			});
 	},
 
@@ -41,7 +40,6 @@ const ImportStudentsModule = React.createClass({
 		StudentImporter.loadFromCSV(file).then(
 			result => {
 				binding.set('studentData', Immutable.fromJS(result));
-				this.validationEverything();
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
 		);
@@ -55,12 +53,8 @@ const ImportStudentsModule = React.createClass({
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
 			const 	result			= StudentImporter.pullFormsAndHouses(studentData, currentSchool);
 
-			binding.set('studentData', Immutable.fromJS(result));
-
-			const
-					errorsImport	= binding.toJS('studentData.errors'),
-					studentsImport	= binding.toJS('studentData.students'),
-					errorsFormId	= result.errors;
+			const	errorsImport	= result.errors,
+					studentsImport	= result.students;
 
 			let errorsList = [],
 					numberError = 0;
@@ -68,10 +62,6 @@ const ImportStudentsModule = React.createClass({
 			for (let key in errorsImport) {
 				numberError++;
 				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li
-			}
-			for (let key in errorsFormId) {
-				numberError++;
-				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>); //In console React has error with unique key in elements li
 			}
 
 			if (errorsList.length > 0) {
@@ -179,7 +169,6 @@ const ImportStudentsModule = React.createClass({
 					<Loader condition={!importIsSync} />
 					<div>{self.validationEverything()}</div>
 				</div>
-				
 			)
 		}
 

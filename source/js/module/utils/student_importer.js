@@ -92,7 +92,7 @@ const objectToStudent = function(headers, obj) {
 };
 
 function readStudentsFromCSVFile(file) {
-	return parseCSVFile(file, { header: true }).then( result => {
+	return parseCSVFile(file, { header: true, skipEmptyLines: true }).then( result => {
 		const 	data			= result.data || [],
 				origHeaders		= result.meta.fields || [],
 				guessedHeaders	= guessHeaders(origHeaders);
