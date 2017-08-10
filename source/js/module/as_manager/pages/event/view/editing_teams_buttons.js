@@ -2,6 +2,7 @@
  * Created by Anatoly on 08.12.2016.
  */
 const	React 			= require('react'),
+		Immutable		= require('immutable'),
 		Morearty		= require('morearty');
 
 const	If				= require('module/ui/if/if'),
@@ -18,7 +19,7 @@ const EditingTeamsButtons = React.createClass({
 			.atomically()
 			.set('mode',				'edit_squad')
 			.set('teamManagerMode',		ManagerConsts.MODE.CHANGE_TEAM)
-			.set('selectedRivalIndex',	index)
+			.set('selectedRivalIndex',	Immutable.fromJS(index))
 			.commit();
 	},
 	render:function () {

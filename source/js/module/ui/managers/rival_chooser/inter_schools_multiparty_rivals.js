@@ -91,7 +91,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		);
 	},
 	getSchool: function(school, index) {
-		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+		const	selectedRivalIndex	= this.getDefaultBinding().toJS('teamModeView.selectedRivalIndex'),
 				eventType			= TeamHelper.getEventType(this.getDefaultBinding().toJS('model')),
 				text				= school.name;
 

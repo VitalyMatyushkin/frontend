@@ -49,7 +49,6 @@ const ManagerWrapper = React.createClass({
 			.set('model.sportModel',				Immutable.fromJS(event.sport))
 			.set('rivals',							Immutable.fromJS(managerWrapperRivals))
 			.set('schoolInfo',						Immutable.fromJS(schoolInfo))
-			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
 			.set('error',							Immutable.fromJS([
 														{
 															isError: false,
@@ -64,6 +63,7 @@ const ManagerWrapper = React.createClass({
 
 		binding
 			.atomically()
+			.set('selectedRivalIndex',		Immutable.fromJS(selectedRivalIndex))
 			.set('isTeamManagerSync',		false)
 			.set('isControlButtonActive',	false)
 			.commit();
@@ -135,7 +135,7 @@ const ManagerWrapper = React.createClass({
 	initSelectedRivalIndex: function(managerWrapperRivals) {
 		const binding = this.getDefaultBinding();
 
-		let selectedRivalIndex = binding.get('selectedRivalIndex');
+		let selectedRivalIndex = binding.toJS('selectedRivalIndex');
 		switch (true) {
 			case binding.toJS('teamManagerMode') === 'ADD_TEAM': {
 				selectedRivalIndex = managerWrapperRivals.findIndex(r => r.emptyRival);
@@ -198,10 +198,9 @@ const ManagerWrapper = React.createClass({
 				teamManagerWrapperBinding	= binding.sub('teamManagerWrapper');
 
 		return {
-			default:			teamManagerWrapperBinding.sub('default'),
-			selectedRivalIndex:	teamManagerWrapperBinding.sub('default.selectedRivalIndex'),
-			rivals:				teamManagerWrapperBinding.sub('default.rivals'),
-			error:				teamManagerWrapperBinding.sub('default.error')
+			default:	teamManagerWrapperBinding.sub('default'),
+			rivals:		teamManagerWrapperBinding.sub('default.rivals'),
+			error:		teamManagerWrapperBinding.sub('default.error')
 		};
 	},
 	/**
@@ -292,6 +291,7 @@ const ManagerWrapper = React.createClass({
 		return (
 			<Manager
 				binding					= { managerBinding }
+				selectedRivalIndex		= { binding.toJS('selectedRivalIndex') }
 				isShowRivals			= { this.isShowRivals() }
 				isShowAddTeamButton		= { false }
 				indexOfDisplayingRival	= { binding.toJS('selectedRivalIndex') }

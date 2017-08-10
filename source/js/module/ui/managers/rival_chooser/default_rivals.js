@@ -20,10 +20,10 @@ const DefaultRivals = React.createClass({
 		handleChooseRival		: React.PropTypes.func.isRequired
 	},
 	onChooseRival: function (index) {
-		this.getBinding('selectedRivalIndex').set(Immutable.fromJS(index));
+		this.getDefaultBinding().set('teamModeView.selectedRivalIndex', Immutable.fromJS(index));
 	},
 	getRivals: function () {
-		const	selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+		const	selectedRivalIndex	= this.getDefaultBinding().toJS('teamModeView.selectedRivalIndex'),
 				rivals				= this.getBinding('rivals').toJS();
 
 		const event = this.getDefaultBinding().toJS('model');

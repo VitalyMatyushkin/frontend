@@ -440,7 +440,7 @@ const Rivals = React.createClass({
 		this.getDefaultBinding()
 			.atomically()
 			.set('mode',				'edit_squad')
-			.set('selectedRivalIndex',	rivalIndex)
+			.set('selectedRivalIndex',	Immutable.fromJS(rivalIndex))
 			.set('teamManagerMode',		ManagerConsts.MODE.CHANGE_TEAM)
 			.commit();
 	},

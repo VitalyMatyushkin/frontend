@@ -32,7 +32,8 @@ const Manager = React.createClass({
 		isShowRivals			: React.PropTypes.bool,
 		isInviteMode			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
-		indexOfDisplayingRival	: React.PropTypes.number
+		indexOfDisplayingRival	: React.PropTypes.number,
+		selectedRivalIndex		: React.PropTypes.number
 	},
 	listeners: [],
 	teamWrapperListeners: [],
@@ -92,18 +93,13 @@ const Manager = React.createClass({
 		};
 	},
 	initDefaultBinding: function() {
-		const	self			= this,
-				defaultBinding	= self.getDefaultBinding(),
-				binding			= self.getBinding();
+		const	defaultBinding		= this.getDefaultBinding();
 
 		// Init rival index if need
-		if(binding.selectedRivalIndex.toJS() === null) {
-			self.initRivalIndex();
-		}
-
-		const	teamTable	= this.getTeamTables(),
-				teamWrapper	= this.getTeamWrappers(),
-				rivalsCount	= this.getBinding('rivals').toJS().length;
+		const	selectedRivalIndex	= typeof this.props.selectedRivalIndex !== 'undefined' ? this.props.selectedRivalIndex : this.initRivalIndex(),
+				teamTable			= this.getTeamTables(),
+				teamWrapper			= this.getTeamWrappers(),
+				rivalsCount			= this.getBinding('rivals').toJS().length;
 
 		defaultBinding
 			.atomically()
@@ -111,8 +107,8 @@ const Manager = React.createClass({
 			.set('teamModeView', Immutable.fromJS(
 				{
 					rivalsCount:		Immutable.fromJS(rivalsCount),
-					selectedRivalIndex:	defaultBinding.get('selectedRivalIndex'),
-					players:			self.getInitPlayers(),
+					selectedRivalIndex:	Immutable.fromJS(selectedRivalIndex),
+					players:			this.getInitPlayers(),
 					teamTable:			teamTable,
 					teamWrapper:		teamWrapper
 				}
@@ -292,11 +288,6 @@ const Manager = React.createClass({
 	addListeners: function() {
 		const	binding		= this.getDefaultBinding(),
 				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
-
-		// set selected rival index for teamModeView
-		this.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
-			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
-		}));
 
 		this.addTeamWrapperListeners();
 	},
@@ -478,7 +469,7 @@ const Manager = React.createClass({
 				event	= self.getDefaultBinding().toJS('model');
 		let		currentRivalIndex;
 
-		if(TeamHelper.getEventType(event) === 'inter-schools') {
+		if(EventHelper.isInterSchoolsEvent(event)) {
 			let	activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				rivals			= self.getBinding().rivals.toJS();
 
@@ -492,7 +483,7 @@ const Manager = React.createClass({
 			currentRivalIndex = 0;
 		}
 
-		self.getBinding('selectedRivalIndex').set(Immutable.fromJS(currentRivalIndex));
+		return currentRivalIndex;
 	},
 	addNewEmptyRivalForInternalTeamSportEvent: function() {
 		const	binding			= this.getDefaultBinding(),
@@ -626,7 +617,7 @@ const Manager = React.createClass({
 		const event = binding.toJS('model');
 
 		// function for select new rival
-		const selectNewRival = () => this.getBinding('selectedRivalIndex').set(this.getBinding('rivals').toJS().length - 1);
+		const selectNewRival = () => binding.set('teamModeView.selectedRivalIndex', Immutable.fromJS( this.getBinding('rivals').toJS().length - 1) );
 		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
 			// For inter schools event we add new rival only for active school.
 			// It's business logic.
@@ -649,7 +640,7 @@ const Manager = React.createClass({
 			const	activeSchoolId		= this.getDefaultBinding().toJS('schoolInfo.id'),
 					rivals				= this.getBinding('rivals').toJS(),
 					removedRivalIndex	= rivals.findIndex(r => r.id === rivalId),
-					selectedRivalIndex	= this.getBinding('selectedRivalIndex').toJS(),
+					selectedRivalIndex	= binding.toJS('teamModeView.selectedRivalIndex'),
 					selectedRival		= rivals[selectedRivalIndex];
 
 			// remove rival
@@ -662,7 +653,7 @@ const Manager = React.createClass({
 				// just find index of next rival
 				for(let i = 0; i < updRivals.length; i++) {
 					if(updRivals[i].school.id === activeSchoolId) {
-						this.getBinding('selectedRivalIndex').set(Immutable.fromJS(i));
+						binding.set('teamModeView.selectedRivalIndex', Immutable.fromJS(i));
 						break;
 					}
 				}
@@ -671,7 +662,7 @@ const Manager = React.createClass({
 				const	updRivals				= this.getBinding('rivals').toJS(),
 						updSelectedRivalIndex	= updRivals.findIndex(r => r.id === selectedRival.id);
 
-				this.getBinding('selectedRivalIndex').set(Immutable.fromJS(updSelectedRivalIndex));
+				binding.set('teamModeView.selectedRivalIndex', Immutable.fromJS(updSelectedRivalIndex));
 			}
 		}
 	},

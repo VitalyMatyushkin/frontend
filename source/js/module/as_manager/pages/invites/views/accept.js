@@ -82,7 +82,6 @@ const InviteAcceptView = React.createClass({
 					.set('players', Immutable.fromJS([[],[]]))
 					.set('sync', true)
 					.set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
-					.set('selectedRivalIndex', Immutable.fromJS(0))
 					.set('isControlButtonActive', false)
 					.set('error', Immutable.fromJS([
 						{
@@ -296,11 +295,10 @@ const InviteAcceptView = React.createClass({
 		const	binding			= this.getDefaultBinding(),
 				event			= binding.toJS('model'),
 				managerBinding	= {
-					default:			binding,
-					selectedRivalIndex:	binding.sub('selectedRivalIndex'),
-					rivals:				binding.sub('rivals'),
-					players:			binding.sub('players'),
-					error:				binding.sub('error')
+					default:	binding,
+					rivals:		binding.sub('rivals'),
+					players:	binding.sub('players'),
+					error:		binding.sub('error')
 				};
 
 		let isShowRivals = false;
@@ -313,6 +311,7 @@ const InviteAcceptView = React.createClass({
 				isShowRivals		= { isShowRivals }
 				isInviteMode		= { true }
 				isShowAddTeamButton	= { false }
+				selectedRivalIndex	= { 0 }
 				binding				= { managerBinding }
 			/>
 		);

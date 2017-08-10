@@ -71,7 +71,6 @@ const EventManager = React.createClass({
 				description:	'',
 				type:			'inter-schools'
 			},
-			selectedRivalIndex: null,
 			schoolInfo: {},
 			inviteModel: {},
 			step: 1,
@@ -407,7 +406,7 @@ const EventManager = React.createClass({
 
 		self.getDefaultBinding()
 			.atomically()
-			.set('selectedRivalIndex', incorrectRivalIndex)
+			.set('teamModeView.selectedRivalIndex', Immutable.fromJS(incorrectRivalIndex))
 			.commit();
 	},
 	isSaveButtonActive: function() {
@@ -774,7 +773,6 @@ const EventManager = React.createClass({
 
 		const managerBinding	= {
 									default				: binding,
-									selectedRivalIndex	: binding.sub('selectedRivalIndex'),
 									rivals				: binding.sub('rivals'),
 									players				: binding.sub('players'),
 									error				: binding.sub('error')
