@@ -22,10 +22,11 @@ const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert'),
 		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component'),
-		ToolsComponent 			= require('module/as_admin/pages/tools/tools'),
+		ToolsComponent 			= require('module/as_admin/pages/admin_schools/tools'),
     	UsersComponent			= require('module/as_admin/pages/admin_schools/users'),
     	SchoolsComponent		= require('module/as_admin/pages/admin_schools/schools'),
-    	SportsComponent			= require('module/as_admin/pages/admin_schools/sports');
+    	SportsComponent			= require('module/as_admin/pages/admin_schools/sports'),
+    	InvitesComponent		= require('module/as_admin/pages/tools/tools');
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -98,9 +99,14 @@ const Center = React.createClass({
 							component 	= { SchoolSandboxComponent }
 						/>
 						<Route
-							path 		= "/tools"
+							path 		= "/tools /tools/:subPage"
 							binding 	= { binding.sub('tools') }
 							component 	= { ToolsComponent }
+						/>
+						<Route
+							path 		= "/school-invite/add-invite /school-invite/list-invite"
+							binding 	= { binding.sub('invites') }
+							component 	= { InvitesComponent }
 						/>
 						<LoginRoute
 							binding = { binding.sub('userData') }

@@ -38,6 +38,13 @@ const Head = React.createClass({
                 key: 'Sports',
                 routes:['/sports/:subPage', '/sports/:filter', '/sports/:inviteId/:mode'],
                 authorization:true
+            },
+            {
+                href: '/#tools',
+                name: 'Tools',
+                key: 'Tools',
+                routes:['/tools/:subPage', '/tools/:filter', '/tools/:inviteId/:mode'],
+                authorization:true
             }
 		];
         binding.set('topMenuItems', menuItems);

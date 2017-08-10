@@ -17,32 +17,30 @@ const Tools = React.createClass({
 	componentWillMount: function(){
 		const 	binding 	= this.getDefaultBinding(),
 				menuItems 	= 	[
-									{
-										href:'/#admin_schools',
-										name: '← Back',
-										key:'back'
-									},
-									{
-										href:'/#school-invite/add-invite',
-										name: 'Add invite',
-										key:'add invite'
-									},
-									{
-										href:'/#school-invite/list-invite',
-										name: 'List invite',
-										key:'list invite'
-									}
-								];
+								{
+									href:'/#tools/import_students',
+									name: '← Back',
+									key:'back'
+								},
+								{
+									href:'/#school-invite/add-invite',
+									name: 'Add invite',
+									key:'add invite'
+								},
+								{
+									href:'/#school-invite/list-invite',
+									name: 'List invite',
+									key:'list invite'
+								}
+							];
 		
 		//Set sub menu items in default binding
 		binding.set('subMenuItems', Immutable.fromJS(menuItems));
-		
-		document.location.hash = 'school-invite/add-invite';
 	},
 	
 	render:function(){
 		const 	binding 	= this.getDefaultBinding(),
-				subBinding 	= binding.sub('toolsRouting'),
+				subBinding 	= binding.sub('invitesRouting'),
 				global 		= this.getMoreartyContext().getBinding();
 
 		return (
@@ -52,7 +50,7 @@ const Tools = React.createClass({
 				<div className="bSchoolMaster">
 					<RouterView routes={subBinding.sub('routing')} binding={global}>
 						<Route
-							path 		="/school-invite /school-invite/add-invite"
+							path 		="/school-invite/add-invite"
 							binding 	={ subBinding }
 							component 	={ AddInviteComponent }
 						/>
