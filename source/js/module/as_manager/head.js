@@ -62,7 +62,7 @@ const Head = React.createClass({
 		const	role	= RoleHelper.getLoggedInUserRole(this),
 				service	= role === 'PARENT' ? window.Server.childMessageInbox : window.Server.schoolEventsMessagesInbox;
 
-		service.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
+		service.get(MoreartyHelper.getActiveSchoolId(this),{filter:{limit:1000}}).then(data => {
 			if(data.length > 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
 						topMenuItems	= rootBinding.toJS('topMenuItems');
