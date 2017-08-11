@@ -53,6 +53,8 @@ const ImportStudentsModule = React.createClass({
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
 			const 	result			= StudentImporter.pullFormsAndHouses(studentData, currentSchool);
 
+            binding.set('studentDataResult', Immutable.fromJS(result));
+
 			const	errorsImport	= result.errors,
 					studentsImport	= result.students;
 
@@ -97,7 +99,7 @@ const ImportStudentsModule = React.createClass({
 		const	binding	= this.getDefaultBinding();
 
 		const	currentSchool	= binding.toJS('currentSchool'),
-				studentData		= binding.toJS('studentData');
+				studentData		= binding.toJS('studentDataResult');
 
 		Promise.all(studentData.students.map( student => {
 			return window.Server.schoolStudents.post(currentSchool.id, {
