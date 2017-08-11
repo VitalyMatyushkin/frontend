@@ -1084,23 +1084,32 @@ const Event = React.createClass({
 				rivalSchool	= rival.school;
 
 		let promises = [];
+		const alertMessage = rival.team ? `team ${rival.team.name} from ${rivalSchool.name}` : `opponent ${rivalSchool.name}`;
+        window.confirmAlert(
+            `Are you sure you want to remove ${alertMessage}?`,
+            "Ok",
+            "Cancel",
+            () => {
+                if(typeof rival.team !== 'undefined') {
+					promises = promises.concat(this.removeTeamByRivalId(rivalId));
+				}
 
-		if(typeof rival.team !== 'undefined') {
-			promises = promises.concat(this.removeTeamByRivalId(rivalId));
-		}
+				const currentSchoolRivals = rivals.filter(rival => rival.school.id === rivalSchool.id);
+				if(
+					rivalSchool.id !== this.props.activeSchoolId &&
+					currentSchoolRivals.length === 1 // remove current rival school if it's last rival for current school
+				) {
+					promises = promises.concat(this.removeSchoolFromEventBySchoolId(rivalSchool.id));
+				}
 
-		const currentSchoolRivals = rivals.filter(rival => rival.school.id === rivalSchool.id);
-		if(
-			rivalSchool.id !== this.props.activeSchoolId &&
-			currentSchoolRivals.length === 1 // remove current rival school if it's last rival for current school
-		) {
-			promises = promises.concat(this.removeSchoolFromEventBySchoolId(rivalSchool.id));
-		}
+				Promise.all(promises).then(() => {
+					// reload event component
+					this.props.onReload();
+				});
+        	},
+            () => {}
+        );
 
-		Promise.all(promises).then(() => {
-			// reload event component
-			this.props.onReload();
-		});
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalId) {
 		const	event		= this.getDefaultBinding().toJS(`model`),
