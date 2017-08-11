@@ -4,7 +4,7 @@ const RoleHelper = {
 		admin:		'app',
 		manager:	'app',
 		teacher:	'app',
-		trainer:	'app',
+		coach:		'app',
 		parent:		'app',
 		student:	'app',
 		no_body:	'app'// it's a synthetic role, it isn't exist on server
@@ -13,7 +13,7 @@ const RoleHelper = {
 		ADMIN:		'ADMIN',
 		MANAGER:	'MANAGER',
 		TEACHER:	'TEACHER',
-		TRAINER:	'TRAINER',
+		COACH:		'COACH',
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},
@@ -29,7 +29,7 @@ const RoleHelper = {
 		ADMIN:		'ADMIN',
 		MANAGER:	'MANAGER',
 		TEACHER:	'TEACHER',
-		TRAINER:	'COACH',
+		COACH:		'COACH',
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},
@@ -48,7 +48,7 @@ const RoleHelper = {
 		const role = this.getLoggedInUserRole(self);
 
 		return role === this.USER_ROLES.ADMIN || role === this.USER_ROLES.MANAGER ||
-			role === this.USER_ROLES.TEACHER || role === this.USER_ROLES.TRAINER;
+			role === this.USER_ROLES.TEACHER || role === this.USER_ROLES.COACH;
 	},
 	isParent: function(self) {
 		const role = this.getLoggedInUserRole(self);

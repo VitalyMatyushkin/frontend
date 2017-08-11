@@ -56,7 +56,7 @@ const DomainHelper = {
 				return `events/calendar`;
 			case _roleName === 'teacher' && schoolKind === 'School':
 				return `events/calendar`;
-			case _roleName === 'trainer' && schoolKind === 'School':
+			case _roleName === 'coach' && schoolKind === 'School':
 				return `events/calendar`;
 			case _roleName === 'parent' && schoolKind === 'School':
 				return `events/calendar/all`;
