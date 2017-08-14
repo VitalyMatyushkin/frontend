@@ -36,7 +36,7 @@ const FixtureItem = React.createClass({
 		const	event				= this.props.event,
 				activeSchoolId		= this.props.activeSchoolId;
 
-		if(event.sport.multiparty) {
+		if(event.sport.multiparty && event.teams.length !== 2) {
 			return (
 				<MultipartyOpponentSide
 					event			= { event }
