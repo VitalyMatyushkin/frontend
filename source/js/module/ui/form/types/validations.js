@@ -156,8 +156,9 @@ var validationsSet = {
 		clearTimeout(serverValidationTimer);
 		// to validate more appropriate method Debouncing
 		serverValidationTimer = setTimeout(function(){
+			const service = typeof self.props.service !== 'undefined' ? self.props.service : 'i/register';
 			$.ajax({
-				url: 			window.apiBase + '/' + self.props.service + '/check',
+				url: 			window.apiBase + '/' + service + '/check',
 				type: 			'POST',
 				dataType: 		'json',
 				contentType: 	'application/json',

@@ -11,6 +11,8 @@ const 	roleList 			= require('module/data/roles_data'),
 		FormField 			= require('module/ui/form/form_field'),
 		SchoolListItem		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item');
 
+const AddInviteStyles = require('styles/pages/admin_add_invite/b_add_invite_link.scss');
+
 const AddInvite = React.createClass({
 	mixins: [Morearty.Mixin],
 	schoolService: function(schoolName) {
@@ -150,77 +152,80 @@ const AddInvite = React.createClass({
 				formBinding	= binding.sub('form');
 
 		return (
-			<Form
-					name 			= "Create New User Invite"
-					updateBinding	= { true }
-					binding			= { formBinding }
-					onSubmit 		= { this.onSubmit }
-			>
-				<FormField
-					type 		= "text"
-					field 		= "firstName"
-					validation 	= "alphanumeric"
+			<div className="bAddInviteLink">
+				<Form
+						name 			= "Create New User Invite"
+						updateBinding	= { true }
+						binding			= { formBinding }
+						onSubmit 		= { this.onSubmit }
 				>
-					First name
-				</FormField>
-				<FormField
-					type 		= "text"
-					field 		= "lastName"
-					validation 	= "alphanumeric"
-				>
-					Last name
-				</FormField>
-				<FormField
-					type 		= "text"
-					field 		= "email"
-					validation 	= "alphanumeric required"
-				>
-					Email
-				</FormField>
-				<FormField
-					type 		= "phone"
-					field 		= "phone"
-					validation 	= "server phone"
-				>
-					Phone
-				</FormField>
-				<FormField
-					type			= "autocomplete"
-					field			= "schoolId"
-					serviceFullData	= { this.schoolService }
-					customListItem	= { SchoolListItem }
-					placeholder 	= { 'Please select school' }
-					validation 		= "required"
-				>
-					School
-				</FormField>
-				<FormField
-					type		= "select"
-					field		= "preset"
-					sourceArray	= { roleList }
-					isDisabled	= { this.isRoleSelectDisabled() }
-					placeHolder	= { this.getPlaceHolderForRoleSelect() }
-					validation 	= "required"
-				>
-					Role
-				</FormField>
-				<FormField
-					type			= "autocomplete"
-					field			= "id"
-					serverField		= "name"
-					serviceFilter	= { this.studentService }
-					isDisabled		= { !(this.isRoleSelected() && this.isParent()) }
-					placeholder 	= { 'Please select student' }
-				>
-					Student
-				</FormField>
-				<FormField
-					type 		="textarea"
-					field 		="comment"
-				>
-					Comment
-				</FormField>
-			</Form>
+					<FormField
+						type 		= "text"
+						field 		= "firstName"
+						validation 	= "alphanumeric"
+					>
+						First name
+					</FormField>
+					<FormField
+						type 		= "text"
+						field 		= "lastName"
+						validation 	= "alphanumeric"
+					>
+						Last name
+					</FormField>
+					<FormField
+						type 		= "text"
+						field 		= "email"
+						validation 	= "alphanumeric required"
+					>
+						Email
+					</FormField>
+					<FormField
+						type 			= "phone"
+						field 			= "phone"
+						validation 		= "server phone"
+						fieldClassName 	= "eAddInviteLinkFormField"
+					>
+						Phone
+					</FormField>
+					<FormField
+						type			= "autocomplete"
+						field			= "schoolId"
+						serviceFullData	= { this.schoolService }
+						customListItem	= { SchoolListItem }
+						placeholder 	= { 'Please select school' }
+						validation 		= "required"
+					>
+						School
+					</FormField>
+					<FormField
+						type		= "select"
+						field		= "preset"
+						sourceArray	= { roleList }
+						isDisabled	= { this.isRoleSelectDisabled() }
+						placeHolder	= { this.getPlaceHolderForRoleSelect() }
+						validation 	= "required"
+					>
+						Role
+					</FormField>
+					<FormField
+						type			= "autocomplete"
+						field			= "id"
+						serverField		= "name"
+						serviceFilter	= { this.studentService }
+						isDisabled		= { !(this.isRoleSelected() && this.isParent()) }
+						placeholder 	= { 'Please select student' }
+					>
+						Student
+					</FormField>
+					<FormField
+						type 		="textarea"
+						field 		="comment"
+					>
+						Comment
+					</FormField>
+				</Form>
+			</div>
 		);
 	}
 });
