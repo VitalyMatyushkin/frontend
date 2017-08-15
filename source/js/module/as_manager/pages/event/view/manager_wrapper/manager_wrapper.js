@@ -180,7 +180,7 @@ const ManagerWrapper = React.createClass({
 		return _rivals;
 	},
 	getSchoolInfo: function(event, rivals, selectedRivalIndex) {
-		if(TeamHelper.isNewEvent(event)) {
+		if(TeamHelper.isNewEvent(event) && !EventHelper.isHousesEvent(event)) {
 			const school = rivals[selectedRivalIndex].school;
 
 			if(school.id === event.inviterSchoolId) {
