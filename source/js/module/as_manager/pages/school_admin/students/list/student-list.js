@@ -27,7 +27,7 @@ const StudentList = React.createClass({
 		const binding = this.getDefaultBinding();
 		
 		binding.set('grid', Immutable.fromJS(this.model.grid));
-		return this.model.grid ? <Grid model={this.model.grid}/> : null;
+		return this.model.grid ? <Grid model={this.model.grid} id="students_table"/> : null;
 	}
 });
 

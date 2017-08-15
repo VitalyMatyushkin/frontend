@@ -53,13 +53,13 @@ const ClassForm = React.createClass({
 					name 			= { this.props.title }
 					onSubmit 		= { this.props.onFormSubmit }
 					binding 		= { this.getDefaultBinding() }
-					submitButtonId	= 'class_submit'
-					cancelButtonId	= 'class_cancel'
+					submitButtonId	= 'school_form_submit'
+					cancelButtonId	= 'school_form_cancel'
 				>
 					<FormField
 						type 		= "text"
 						field 		= "name"
-						id 			= "class_name"
+						id 			= "school_form_name"
 						validation 	= "required"
 					>
 						Form name
@@ -68,7 +68,7 @@ const ClassForm = React.createClass({
 						type 			= "select"
 						sourceArray 	= { ages }
 						field 			= "age"
-						id 				= "class_age_combox"
+						id 				= "school_form_age_combox"
 						validation 		= "required"
 					>
 						Age group

@@ -9,7 +9,8 @@ const 	ActionPanel = require('./action-panel/action-panel'),
 
 const Grid = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object.isRequired
+		model: 	React.PropTypes.object.isRequired,
+		id:     React.PropTypes.string
 	},
 	componentWillMount:function(){
 		this.props.model.onRender = this.onRender;
@@ -23,13 +24,14 @@ const Grid = React.createClass({
 	},
 	render: function() {
 		const 	model 				= this.props.model,
+				id					= this.props.id,
 				classStyleAdmin 	= model.classStyleAdmin ? ' bGrid-wide' : '',
 				//The function, which will call when user click on <Row> in Grid otherwise we display in console log warning
 				handleClick 		= model.handleClick ? model.handleClick : () => {console.warn('Warning: There is no function in grid for click on row')},
 				mHidden 			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
-			<div className={"bGrid" + classStyleAdmin}>
+			<div className={"bGrid" + classStyleAdmin} id={id}>
 				<ActionPanel model={model.actionPanel} />
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />
