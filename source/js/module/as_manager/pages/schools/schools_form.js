@@ -44,16 +44,6 @@ const SchoolForm = React.createClass({
 				rootBinding = this.getMoreartyContext().getBinding(),
 				statusActive = !rootBinding.get('userRules.activeSchoolId'),
 				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-				statusOptions = [
-					{ text: 'Active', value: 'ACTIVE' },
-					{ text: 'Inactive', value: 'INACTIVE' },
-					{ text: 'Suspended', value: 'SUSPENDED' },
-					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
-				],
-				publicStudentViewOptions = [
-					{ text: 'Shorten Last Name only (Brian S.)', value: 'SHORTEN_LASTNAME_ONLY' },
-					{ text: 'Shorten First Name and Last Name (B.S.)', value: 'SHORTEN_FIRSTNAME_AND_LASTNAME' }
-				],
 				postcode 	= binding.toJS('postcode');
 
 		return (
@@ -115,7 +105,7 @@ const SchoolForm = React.createClass({
 						<FormField
 							type 		= "dropdown"
 							field 		= "status"
-							options 	= { statusOptions }
+							options 	= { SchoolConsts.STATUS_OPTIONS }
 							condition 	= { statusActive }
 						>
 							School Status
@@ -182,9 +172,17 @@ const SchoolForm = React.createClass({
 							type 		= "dropdown"
 							id 			= "school_public_student_view_type_checkbox"
 							field 		= "publicStudentViewType"
-							options 	= { publicStudentViewOptions }
+							options 	= { SchoolConsts.PUBLIC_STUDENT_VIEW_OPTIONS }
 						>
 							Public student view type
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							id 			= "school_age_groups_naming_checkbox"
+							field 		= "ageGroupsNaming"
+							options 	= { SchoolConsts.AGE_GROUPS_NAMING_OPTIONS }
+						>
+							Age groups naming
 						</FormField>
 					</FormColumn>
 				</Form>

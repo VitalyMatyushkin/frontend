@@ -71,6 +71,9 @@ const serviceList = {
 		//Invites
 		serviceList.invites = new Service('/superadmin/users/invites', binding);
 		serviceList.invite = new Service('/superadmin/users/invites/{inviteId}', binding);
+		
+		//age group
+		serviceList.ageGroups = new Service('/superadmin/schools/{schoolId}/ages', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

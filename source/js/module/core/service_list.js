@@ -244,6 +244,9 @@ const serviceList = {
 		
 		//check
 		serviceList.phoneCheck = new Service('/i/register/check', binding);
+		
+		//age group
+		serviceList.ageGroups = new Service('/i/schools/{schoolId}/ages', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)

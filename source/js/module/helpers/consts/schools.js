@@ -35,6 +35,36 @@ const SCHOOL_SUBSCRIPTION_PLAN = {
 	LITE: 'LITE'
 };
 
+//Options for element dropdown in school form
+const STATUS_OPTIONS = [
+	{ text: 'Active', 				value: 'ACTIVE' },
+	{ text: 'Inactive', 			value: 'INACTIVE' },
+	{ text: 'Suspended', 			value: 'SUSPENDED' },
+	{ text: 'Email Notifications', 	value: 'EMAIL_NOTIFICATIONS' }
+];
+
+const PUBLIC_STUDENT_VIEW_OPTIONS = [
+	{ text: 'Shorten Last Name only (Brian S.)', 		value: 'SHORTEN_LASTNAME_ONLY' },
+	{ text: 'Shorten First Name and Last Name (B.S.)', 	value: 'SHORTEN_FIRSTNAME_AND_LASTNAME' }
+];
+
+const AGE_GROUPS_NAMING_OPTIONS = [
+	{ text: 'English', 	value: 'ENGLISH'},
+	{ text: 'Scottish', value: 'SCOTTISH'}
+];
+
+const INVITE_ACTION_OPTIONS = [
+	{ text: 'Manual Mode (default)', 	value: 'MANUAL' },
+	{ text: 'Auto Accept', 				value: 'AUTO_ACCEPT' },
+	{ text: 'Auto Reject', 				value: 'AUTO_REJECT' }
+];
+
+
+const SUBSCRIPTION_PLAN_OPTIONS = [
+	{text: 'Full', value: 'FULL'},
+	{text: 'Lite', value: 'LITE'}
+];
+
 module.exports.PUBLIC_SCHOOL_STATUS_SERVER					= PUBLIC_SCHOOL_STATUS_SERVER;
 
 module.exports.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE	= PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
@@ -45,3 +75,9 @@ module.exports.PUBLIC_SCHOOL_STATUS_CLIENT_VALUE_ARRAY		= PUBLIC_SCHOOL_STATUS_C
 module.exports.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE	= DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE;
 
 module.exports.SCHOOL_SUBSCRIPTION_PLAN						= SCHOOL_SUBSCRIPTION_PLAN;
+
+module.exports.STATUS_OPTIONS 				= STATUS_OPTIONS;
+module.exports.PUBLIC_STUDENT_VIEW_OPTIONS 	= PUBLIC_STUDENT_VIEW_OPTIONS;
+module.exports.AGE_GROUPS_NAMING_OPTIONS 	= AGE_GROUPS_NAMING_OPTIONS;
+module.exports.INVITE_ACTION_OPTIONS 		= INVITE_ACTION_OPTIONS;
+module.exports.SUBSCRIPTION_PLAN_OPTIONS 	= SUBSCRIPTION_PLAN_OPTIONS;

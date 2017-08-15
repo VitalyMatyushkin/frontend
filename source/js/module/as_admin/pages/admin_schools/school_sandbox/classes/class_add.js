@@ -1,32 +1,33 @@
-
 const 	React 			= 	require('react'),
-		Morearty		= require('morearty'),
+		Morearty 		= require('morearty'),
 		ClassForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form');
 
 const ClassAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-        const   self        = this,
-                binding 	= self.getDefaultBinding(),
-                schoolId    = binding.get('routing.pathParameters.0');
-        
-		self.schoolId = schoolId;
-        self.FORM_URL = `school_sandbox/${schoolId}/forms`;
+		const 	binding 	= this.getDefaultBinding(),
+				schoolId 	= binding.get('routing.pathParameters.0');
+		
+		this.schoolId = schoolId;
+		this.FORM_URL = `school_sandbox/${schoolId}/forms`;
 	},
 	submitAdd: function(data) {
-		const self = this;
-		window.Server.schoolForms.post(self.schoolId, data).then(function() {
-			document.location.hash = self.FORM_URL;
-		}).catch(function(err){
-			document.location.hash = self.FORM_URL;
+		window.Server.schoolForms.post(this.schoolId, data).then( () => {
+			document.location.hash = this.FORM_URL;
+		}).catch( (err) => {
+			document.location.hash = this.FORM_URL;
 		});
 	},
 	render: function() {
-		const 	self 		= this,
-				binding 	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
-			<ClassForm title="Add new form to school" onFormSubmit={self.submitAdd} binding={binding.sub('formAdd')} />
+			<ClassForm
+				title 			= "Add new form to school"
+				schoolId 		= { this.schoolId }
+				onFormSubmit 	= { this.submitAdd }
+				binding 		= { binding.sub('formAdd') }
+			/>
 		)
 	}
 });
