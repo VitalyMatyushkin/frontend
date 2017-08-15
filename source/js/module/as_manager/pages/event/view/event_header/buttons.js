@@ -13,13 +13,10 @@ const	EventHelper		= require('module/helpers/eventHelper'),
  * */
 const Buttons = React.createClass({
 	propTypes: {
-		eventId							: React.PropTypes.string.isRequired,
-		eventType						: React.PropTypes.string.isRequired,
+		event							: React.PropTypes.object.isRequired,
 		mode							: React.PropTypes.string.isRequired,
-		eventStatus						: React.PropTypes.string.isRequired,
 		// TRUE if active school id ==== inviter school id
 		isInviterSchool					: React.PropTypes.bool.isRequired,
-		isMultiparty					: React.PropTypes.bool.isRequired,
 		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
 		isParent						: React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
@@ -95,12 +92,12 @@ const Buttons = React.createClass({
 		return actionList;
 	},
 	isAddSchoolAvailable: function() {
-		const eventStatus = this.props.eventStatus;
+		const eventStatus = this.props.event.status;
 
 		return (
 			this.props.isUserSchoolWorker &&
-			this.props.isMultiparty &&
-			this.props.eventType === 'inter-schools' &&
+			TeamHelper.isMultiparty(this.props.event) &&
+			EventHelper.isInterSchoolsEvent(this.props.event) &&
 			this.props.isInviterSchool &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
@@ -108,19 +105,19 @@ const Buttons = React.createClass({
 		);
 	},
 	isAddTeamAvailable: function() {
-		const eventStatus = this.props.eventStatus;
+		const eventStatus = this.props.event.status;
 
 		return (
 			this.props.isUserSchoolWorker &&
-			this.props.isMultiparty &&
-			this.props.eventType === 'inter-schools' &&
+			TeamHelper.isMultiparty(this.props.event) &&
+			TeamHelper.isInterSchoolsEventForTeamSport(this.props.event) &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
 		);
 	},
 	isCancelEventActionAvailable: function() {
-		const eventStatus = this.props.eventStatus;
+		const eventStatus = this.props.event.status;
 
 		return (
 			this.props.isUserSchoolWorker &&
@@ -130,7 +127,7 @@ const Buttons = React.createClass({
 		);
 	},
 	isCloseEventActionAvailable: function() {
-		const eventStatus = this.props.eventStatus;
+		const eventStatus = this.props.event.status;
 
 		return (
 			this.props.isUserSchoolWorker &&
@@ -139,7 +136,7 @@ const Buttons = React.createClass({
 		);
 	},
 	isChangeScoreEventActionAvailable: function() {
-		const eventStatus = this.props.eventStatus;
+		const eventStatus = this.props.event.status;
 
 		return (
 			this.props.isUserSchoolWorker &&
@@ -160,7 +157,7 @@ const Buttons = React.createClass({
 			// create event like this
 			case 'create':
 				const mode = EventHelper.EVENT_CREATION_MODE.COPY;
-				document.location.hash = `events/manager?mode=${mode}&eventId=${this.props.eventId}`;
+				document.location.hash = `events/manager?mode=${mode}&eventId=${this.props.event.id}`;
 				break;
 			case 'change':
 				this.props.handleClickCloseEvent();

@@ -156,10 +156,10 @@ const EventHeaderWrapper = React.createClass({
 	 */
 	render: function() {
 		const 	binding 						= this.getDefaultBinding(),
-				event 							= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId),
+				event							= binding.toJS('model'),
+				challengeModel					= new ChallengeModel(event, this.props.activeSchoolId),
 				mode 							= binding.toJS('mode'),
-				viewMode 						= binding.get('viewMode'),
-				eventStatus						= binding.toJS('model.status'),
+				viewMode 						= binding.toJS('viewMode'),
 				eventAges						= binding.toJS('model.ages'),
 				isUserSchoolWorker				= RoleHelper.isUserSchoolWorker(this),
 				isParent						= RoleHelper.isParent(this),
@@ -174,11 +174,10 @@ const EventHeaderWrapper = React.createClass({
 		return (
 					<EventHeader
 						event							= { event }
+						challengeModel					= { challengeModel }
 						isInviterSchool					= { this.isInviterSchool() }
-						isMultiparty					= { TeamHelper.isMultiparty(binding.toJS('model')) }
 						mode 							= { mode }
 						viewMode						= { viewMode }
-						eventStatus 					= { eventStatus }
 						eventAges						= { eventAges }
 						isUserSchoolWorker 				= { isUserSchoolWorker }
 						isParent						= { isParent }

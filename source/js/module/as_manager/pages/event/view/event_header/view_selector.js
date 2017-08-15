@@ -6,10 +6,15 @@ const	classNames			= require('classnames');
 
 const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
-const EventHeader = React.createClass({
+const ViewSelector = React.createClass({
 	propTypes: {
 		handleClick:	React.PropTypes.func.isRequired,
 		viewMode:		React.PropTypes.string.isRequired
+	},
+	getDefaultProps: function(){
+		return {
+			viewMode: ViewModeConsts.VIEW_MODE.BLOCK_VIEW
+		};
 	},
 	handleClick: function(viewMode) {
 		this.props.handleClick(viewMode);
@@ -47,4 +52,4 @@ const EventHeader = React.createClass({
 });
 
 
-module.exports = EventHeader;
+module.exports = ViewSelector;

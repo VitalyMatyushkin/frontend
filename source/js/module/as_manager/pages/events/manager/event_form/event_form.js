@@ -58,6 +58,13 @@ const EventForm = React.createClass({
 			}
 		};
 	},
+	getOpponentSchoolInfoArray: function() {
+		const binding = this.getDefaultBinding();
+
+		return binding.toJS('rivals')
+			.filter(r => r.school.id !== this.props.activeSchoolId)
+			.map(r => r.school);
+	},
 	handleChangeFartherThan: function (eventDescriptor) {
 		const	binding	= this.getDefaultBinding(),
 				rivals	= binding.toJS('rivals');
@@ -134,7 +141,7 @@ const EventForm = React.createClass({
 				fartherThen					= binding.get('fartherThen'),
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
 				type						= event.type,
-				opponentSchoolInfoArray		= binding.toJS('rivals').slice(1);
+				opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
 
 		return(
 			<div className="eManager_base">

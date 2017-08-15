@@ -1084,13 +1084,16 @@ const Event = React.createClass({
 				rivalSchool	= rival.school;
 
 		let promises = [];
-		const alertMessage = rival.team ? `team ${rival.team.name} from ${rivalSchool.name}` : `opponent ${rivalSchool.name}`;
-        window.confirmAlert(
-            `Are you sure you want to remove ${alertMessage}?`,
-            "Ok",
-            "Cancel",
-            () => {
-                if(typeof rival.team !== 'undefined') {
+		const alertMessage = rival.team ?
+			`${rival.team.name} from ${rivalSchool.name}` :
+			`opponent ${rivalSchool.name}`;
+
+		window.confirmAlert(
+			`Are you sure you want to remove ${alertMessage}?`,
+			"Ok",
+			"Cancel",
+			() => {
+				if(typeof rival.team !== 'undefined') {
 					promises = promises.concat(this.removeTeamByRivalId(rivalId));
 				}
 
@@ -1106,10 +1109,9 @@ const Event = React.createClass({
 					// reload event component
 					this.props.onReload();
 				});
-        	},
-            () => {}
-        );
-
+			},
+			() => {}
+		);
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalId) {
 		const	event		= this.getDefaultBinding().toJS(`model`),
@@ -1209,22 +1211,24 @@ const Event = React.createClass({
 		} else {
 			return (
 				<span>
-					{ this.renderSelectWithGameResultForCricket( )}
+					{ this.renderSelectWithGameResultForCricket( ) }
 					{ this.renderGameResultForCricket() }
-					<EventRivals	binding									= {binding}
-									onReload								= {this.props.onReload}
-									activeSchoolId							= {this.props.activeSchoolId}
-									handleClickChangeOpponentSchoolButton	= {this.handleClickOpponentSchoolManagerButton}
+					<EventRivals
+						binding									= { binding }
+						onReload								= { this.props.onReload }
+						activeSchoolId							= { this.props.activeSchoolId }
+						handleClickChangeOpponentSchoolButton	= { this.handleClickOpponentSchoolManagerButton }
 					/>
 					{ this.renderEditTeamButtons() }
 					<IndividualScoreAvailableBlock
-						binding         = { this.getDefaultBinding() }
-						activeSchoolId  = { this.props.activeSchoolId }
-						mode            = { mode }
-						event           = { event }
+						binding			= { this.getDefaultBinding() }
+						activeSchoolId	= { this.props.activeSchoolId }
+						mode			= { mode }
+						event			= { event }
 					/>
-					<EventTeams binding         = {self.getEventTeamsBinding()}
-								activeSchoolId  = {this.props.activeSchoolId}
+					<EventTeams
+						binding			= { self.getEventTeamsBinding() }
+						activeSchoolId	= { this.props.activeSchoolId }
 					/>
 				</span>
 			);

@@ -7,7 +7,7 @@ const	React			= require('react'),
 		Button			= require('module/ui/button/button'),
 		Immutable		= require('immutable');
 
-const	TeamChooser	= React.createClass({
+const TeamChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onTeamClick:	React.PropTypes.func,
@@ -269,6 +269,8 @@ const	TeamChooser	= React.createClass({
 	},
 	render: function() {
 		const	self	= this;
+
+		console.log(this.getDefaultBinding().toJS('teamIdBlackList'));
 
 		const teamChooserClass = classNames({
 			bTeamChooser:	true,

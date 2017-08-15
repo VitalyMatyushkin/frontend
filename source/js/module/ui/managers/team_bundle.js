@@ -5,7 +5,7 @@ const	React			= require('react'),
 		classNames		= require('classnames');
 
 // Team bundle react components
-const	TeamChooser		= require('./teamChooser'),
+const	TeamChooser		= require('./team_chooser'),
 		TeamWrapper		= require('./team_wrapper');
 
 // Helpers
@@ -31,17 +31,45 @@ const TeamBundle = React.createClass({
 	},
 	/** INIT FUNCTIONS **/
 	initBinding: function() {
-		const	self	= this;
-
-		self.initTeamWrapperFiltersBinding();
+		this.initTeamWrapperFiltersBindings();
+		this.initTeamIdBlackListBindings();
 	},
-	initTeamWrapperFiltersBinding: function() {
+	initTeamIdBlackListBindings: function() {
+		const rivals = this.getBinding().rivals.toJS();
+
+		rivals.forEach(rival => this.initTeamIdBlackListBindingByRival(rival));
+	},
+	initTeamIdBlackListBindingByRival: function(rival) {
+		const	binding					= this.getDefaultBinding(),
+				teamTables				= binding.toJS(`teamTable`),
+				currentTeamTableIndex	= teamTables.findIndex(tw => tw.rivalId === rival.id);
+
+		binding.set(
+			`teamTable.${currentTeamTableIndex}.teamIdBlackList`,
+			Immutable.fromJS(
+				this.getTeamIdBlackListByRival(rival)
+			)
+		);
+	},
+	getTeamIdBlackListByRival: function(rival) {
+		const	binding					= this.getDefaultBinding(),
+				teamWrappers			= binding.toJS(`teamWrapper`),
+				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rival.id);
+
+		const teamIdBlackList = [];
+		// remove current team wrapper
+		teamWrappers.splice(currentTeamWrapperIndex, 1);
+		teamWrappers.forEach(tw => typeof tw.selectedTeamId !== 'undefined' && teamIdBlackList.push(tw.selectedTeamId));
+
+		return teamIdBlackList;
+	},
+	initTeamWrapperFiltersBindings: function() {
 		const	self	= this,
 				rivals	= self.getBinding().rivals.toJS();
 
-		rivals.forEach(rival => self.initTeamWrapperFilterBinding(rival));
+		rivals.forEach(rival => self.initTeamWrapperFilterBindingByRival(rival));
 	},
-	initTeamWrapperFilterBinding: function(rival) {
+	initTeamWrapperFilterBindingByRival: function(rival) {
 		const	self					= this,
 				binding					= self.getDefaultBinding(),
 				teamWrappers			= binding.toJS(`teamWrapper`),
@@ -129,7 +157,7 @@ const TeamBundle = React.createClass({
 				const	newRivalIndex	= currentRivalsCount - 1,
 						rivals			= this.getBinding().rivals.toJS();
 
-				this.initTeamWrapperFilterBinding(rivals[newRivalIndex]);
+				this.initTeamWrapperFilterBindingByRival(rivals[newRivalIndex]);
 				this.addTeamPlayersListenerByRivalIndex(binding, newRivalIndex);
 			}
 		});

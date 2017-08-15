@@ -7,6 +7,7 @@ const	Lazy				= require('lazy.js'),
 		DateHelper			= require('module/helpers/date_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		RoleHelper 			= require('module/helpers/role_helper'),
+		TeamHelper			= require('../../../../../ui/managers/helpers/team_helper'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button'),
@@ -16,11 +17,10 @@ const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_even
 
 const EventHeader = React.createClass({
 	propTypes: {
-		event: 							React.PropTypes.object.isRequired,
-		isMultiparty:					React.PropTypes.bool.isRequired,
+		event:							React.PropTypes.object.isRequired,
+		challengeModel:					React.PropTypes.object.isRequired,
 		mode:							React.PropTypes.string.isRequired,
-		viewMode:						React.PropTypes.string.isRequired,
-		eventStatus:					React.PropTypes.string.isRequired,
+		viewMode:						React.PropTypes.string,
 		eventAges:						React.PropTypes.array,
 		isInviterSchool:				React.PropTypes.bool.isRequired,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
@@ -67,10 +67,10 @@ const EventHeader = React.createClass({
 	isShowPencilButton: function(){
 		const role = this.props.role;
 
-		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.eventStatus !== "FINISHED";
+		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.event.status !== "FINISHED";
 	},
 	renderViewModeLinks: function(){
-		if(this.props.isMultiparty) {
+		if(TeamHelper.isMultiparty(this.props.event)) {
 			return (
 				<ViewSelector
 					handleClick	= { this.props.onClickViewMode }
@@ -82,18 +82,18 @@ const EventHeader = React.createClass({
 		}
 	},
 	render: function() {
-		const 	event 				= this.props.event,
+		const	challengeModel		= this.props.challengeModel,
 				eventAges			= this.getEventAges(),
-				name				= event.name,
-				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
-				time				= event.time,
-				sport				= event.sport,
+				name				= challengeModel.name,
+				date				= DateHelper.toLocalWithMonthName(challengeModel.dateUTC),
+				time				= challengeModel.time,
+				sport				= challengeModel.sport,
 				protocol 			= document.location.protocol + '//',
-				eventId				= event.id,
+				eventId				= challengeModel.id,
 				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
 				linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
-				score 				= event.isFinished && typeof event.score !== 'undefined' && event.score !== '' ? `Score: ${event.score}` : '',
-				textForTweet 		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
+				score				= challengeModel.isFinished && typeof challengeModel.score !== 'undefined' && challengeModel.score !== '' ? `Score: ${challengeModel.score}` : '',
+				textForTweet		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
 
 		return (
 			<div className="bEventHeader">
@@ -125,12 +125,9 @@ const EventHeader = React.createClass({
 					</div>
 					<div className="eEventHeader_rightSide">
 						<Buttons
-							eventId							= { event.id }
+							event							= { this.props.event }
 							mode							= { this.props.mode }
-							eventStatus 					= { this.props.eventStatus }
-							eventType 						= { event.eventType }
 							isInviterSchool 				= { this.props.isInviterSchool }
-							isMultiparty 					= { this.props.isMultiparty }
 							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
 							isParent		 				= { this.props.isParent }
 							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }

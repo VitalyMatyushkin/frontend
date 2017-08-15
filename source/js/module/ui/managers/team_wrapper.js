@@ -449,6 +449,8 @@ const TeamWrapper = React.createClass({
 		return this.getDefaultBinding().toJS('isSetTeamLater');
 	},
 	render: function() {
+		//console.log(this.getDefaultBinding().toJS());
+
 		const event = this.getBinding('model').toJS();
 
 		const plugClass = classNames({
