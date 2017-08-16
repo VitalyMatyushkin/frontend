@@ -6,6 +6,7 @@ const 	React 		= require('react'),
 const 	PhoneVerification 	= require('module/ui/phone_verification/phone_verification'),
 		Loader 				= require('module/ui/loader'),
 		If 					= require('module/ui/if/if'),
+		Page404 			= require('module/ui/404_page'),
 		Button 				= require('module/ui/button/button');
 
 const UserInvitePageStyles = require('styles/pages/user/b_user_invite.scss');
@@ -17,7 +18,7 @@ const Application = React.createClass({
 		const 	inviteKey 	= document.location.hash.replace('#', ''),
 				binding 	= this.getDefaultBinding();
 
-		if (inviteKey !== '' && inviteKey.length === 32) {
+		if (inviteKey !== '') {
 			window.Server.invite.post(inviteKey).then(response => {
 				const sessionKey = propz.get(response, ['session', 'key']);
 				
@@ -27,11 +28,16 @@ const Application = React.createClass({
 						id: sessionKey
 					}))
 					.set('isSync', true)
+					.set('isInviteData', true)
 					.commit();
 				
 			},
 			err => {
 				console.error(err.message);
+					binding.atomically()
+					.set('isSync', true)
+					.set('isInviteData', false)
+					.commit();
 			});
 		}
 	},
@@ -53,22 +59,22 @@ const Application = React.createClass({
 	isPhoneVerified: function() {
 		const binding = this.getDefaultBinding();
 		
-		return binding.toJS('isPhoneVerified');
+		return Boolean(binding.toJS('isPhoneVerified'));
 	},
 	isErrorPhoneVerification: function() {
 		const binding = this.getDefaultBinding();
 		
-		return binding.toJS('isErrorPhoneVerification');
+		return Boolean(binding.toJS('isErrorPhoneVerification'));
 	},
 	isResentPhonePopupOpen: function() {
 		const binding = this.getDefaultBinding();
 		
-		return binding.toJS('isResentPhonePopupOpen');
+		return Boolean(binding.toJS('isResentPhonePopupOpen'));
 	},
 	isSendSmsPopupOpen: function() {
 		const binding = this.getDefaultBinding();
 		
-		return binding.toJS('isSendSmsPopupOpen');
+		return Boolean(binding.toJS('isSendSmsPopupOpen'));
 	},
 	handleClickResendPhone: function() {
 		const 	binding = this.getDefaultBinding();
@@ -126,7 +132,7 @@ const Application = React.createClass({
 	isPhoneExist:  function(){
 		const binding = this.getDefaultBinding();
 		
-		return 	typeof binding.toJS('isPhoneExist') === 'undefined' ? true : binding.toJS('isPhoneExist');
+		return 	typeof binding.toJS('isPhoneExist') === 'undefined' ? true : Boolean(binding.toJS('isPhoneExist'));
 	},
 	handleClickSendSms: function(phone){
 		const 	binding 	= this.getDefaultBinding();
@@ -139,12 +145,13 @@ const Application = React.createClass({
 		});
 	},
 	render: function(){
-		const 	binding 	= this.getDefaultBinding(),
-				phone 		= binding.toJS('inviteData.phone') || '+44',
-				isVerified 	= Boolean(binding.toJS('isPhoneVerified')),
-				isSync 		= binding.toJS('isSync');
+		const 	binding 		= this.getDefaultBinding(),
+				phone 			= binding.toJS('inviteData.phone') || '+44',
+				isVerified 		= Boolean(binding.toJS('isPhoneVerified')),
+				isInviteData 	= Boolean(binding.toJS('isInviteData')),
+				isSync 			= Boolean(binding.toJS('isSync'));
 		
-		if (isSync) {
+		if (isSync && isInviteData) {
 			return (
 				<div className="bMainLayout mClearFix">
 					<div className="bPageWrap">
@@ -178,12 +185,21 @@ const Application = React.createClass({
 					</div>
 				</div>
 			);
+		} else if (isSync && !isInviteData) {
+			return(
+				<Page404 />
+			);
 		} else {
 			return (
-				<div>
-					<Loader condition = { true } />
+				<div className="bMainLayout mClearFix">
+					<div className="bPageWrap">
+						<div className="bSchoolMaster">
+							<div className="bUserInvite">
+								<Loader condition = { true } />
+							</div>
+						</div>
+					</div>
 				</div>
-
 			);
 		}
 	}

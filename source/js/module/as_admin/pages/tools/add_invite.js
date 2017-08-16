@@ -9,6 +9,7 @@ const 	React 			= require('react'),
 const 	roleList 			= require('module/data/roles_data'),
 		Form				= require('module/ui/form/form'),
 		FormField 			= require('module/ui/form/form_field'),
+		Popup 				= require('module/ui/new_popup'),
 		SchoolListItem		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item');
 
 const AddInviteStyles = require('styles/pages/admin_add_invite/b_add_invite_link.scss');
@@ -83,15 +84,13 @@ const AddInvite = React.createClass({
 			});
 	},
 	onSuccess: function(data){
-		const 	domain = document.location.host.replace('admin', 'invite'),
-				protocol = document.location.href.split('/')[0];
-		window.simpleAlert(
-			`Invite link: ${protocol}//${domain}/#${data.inviteKey}`,
-			'Ok',
-			() => {
-				document.location.hash = 'school-invite/list-invite';
-			}
-		);
+		const 	inviteKey 	= propz.get(data, ['inviteKey']),
+				binding 	= this.getDefaultBinding();
+
+				binding.atomically()
+					.set('isPopupOpen', true)
+					.set('inviteKey', inviteKey)
+					.commit();
 	},
 	onSubmit: function(data){
 		const {email, phone, firstName, lastName, preset, schoolId, comment, id} = data;
@@ -147,9 +146,19 @@ const AddInvite = React.createClass({
 		
 		return formBinding.meta().toJS('schoolId.value');
 	},
+	onClickOkPopup: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isPopupOpen', false);
+		document.location.hash = 'school-invite/list-invite';
+	},
 	render: function(){
-		const	binding		= this.getDefaultBinding(),
-				formBinding	= binding.sub('form');
+		const 	binding 	= this.getDefaultBinding(),
+				isPopupOpen = Boolean(binding.toJS('isPopupOpen')),
+				inviteKey 	= binding.toJS('inviteKey'),
+				domain 		= document.location.host.replace('admin', 'invite'),
+				protocol 	= document.location.href.split('/')[0],
+				formBinding = binding.sub('form');
 
 		return (
 			<div className="bAddInviteLink">
@@ -225,6 +234,13 @@ const AddInvite = React.createClass({
 						Comment
 					</FormField>
 				</Form>
+				<Popup
+					isOpened 				= { isPopupOpen }
+					handleClickCloseButton 	= { this.onClickOkPopup }
+					isShowCloseButton 		= { true }
+				>
+					<span className="eInviteLinkPopup">{`Invite link: ${protocol}//${domain}/#${inviteKey}`}</span>
+				</Popup>
 			</div>
 		);
 	}
