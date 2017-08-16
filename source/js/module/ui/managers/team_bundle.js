@@ -2,6 +2,7 @@
 const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
+		propz			= require('propz'),
 		classNames		= require('classnames');
 
 // Team bundle react components
@@ -244,7 +245,9 @@ const TeamBundle = React.createClass({
 
 		teamWrappers.splice(currentTeamWrapperIndex, 1);
 		teamWrappers.forEach(tw => {
-			players = players.concat(tw.___teamManagerBinding.teamStudents);
+			const teamStudents = propz.get(tw, ['___teamManagerBinding', 'teamStudents']);
+
+			typeof teamStudents !== 'undefined' && (players = players.concat(teamStudents));
 		});
 
 		return players;
