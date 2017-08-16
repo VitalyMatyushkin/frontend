@@ -67,15 +67,6 @@ class ClassListClass{
 		event.stopPropagation();
 	}
 	
-	/**
-	 * Function return string with Age Group
-	 * @param item {object}
-	 * @returns {string}
-	 */
-	getAllAges(item) {
-		return item.age === 0 ? "Reception" : "Y" + item.age;
-	}
-	
 	setColumns(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -96,11 +87,8 @@ class ClassListClass{
 				text:'Age group',
 				isSorted:true,
 				cell:{
-					dataField:'age',
-					type:'custom',
-					typeOptions:{
-						parseFunction: item => this.getAllAges(item)
-					}
+					dataField:'ageGroup',
+					type:'general'
 				}
 			},
 			{
