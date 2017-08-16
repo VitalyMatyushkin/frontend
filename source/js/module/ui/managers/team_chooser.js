@@ -270,8 +270,6 @@ const TeamChooser = React.createClass({
 	render: function() {
 		const	self	= this;
 
-		console.log(this.getDefaultBinding().toJS('teamIdBlackList'));
-
 		const teamChooserClass = classNames({
 			bTeamChooser:	true,
 			mDisable:		!self.props.isEnable

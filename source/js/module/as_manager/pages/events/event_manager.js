@@ -130,6 +130,29 @@ const EventManager = React.createClass({
 
 		return TeamHelper.isInternalEventForTeamSport(event) && sport.multiparty;
 	},
+	setDefaultStateForActiveSchoolRivalsForInterSchoolEvent: function() {
+		const binding = this.getDefaultBinding();
+
+		const rivals = binding.toJS('rivals');
+
+		const updRivals = [];
+		let isArrayContainAtLeastOneActiveSchoolRival = false;
+		rivals.forEach(r => {
+			switch (true) {
+				case !isArrayContainAtLeastOneActiveSchoolRival && r.school.id === this.props.activeSchoolId: {
+					isArrayContainAtLeastOneActiveSchoolRival = true;
+					updRivals.push(r);
+					break;
+				}
+				case r.school.id !== this.props.activeSchoolId: {
+					updRivals.push(r);
+					break;
+				}
+			}
+		});
+
+		binding.set('rivals', Immutable.fromJS(updRivals));
+	},
 	/**
 	 * Get event from server by eventId and set date from this event to event form.
 	 * It needs for 'another' creation mode - when user create event by click "add another event" button.
@@ -375,12 +398,13 @@ const EventManager = React.createClass({
 		});
 	},
 	toBack: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
+		binding.set('step', 1);
 
-		binding.update('step', function (step) {
-			return step - 1;
-		});
+		const event = binding.toJS('model');
+		if(TeamHelper.isInterSchoolsEventForTeamSport(event) && TeamHelper.isMultiparty(event)) {
+			this.setDefaultStateForActiveSchoolRivalsForInterSchoolEvent();
+		}
 	},
 	_changeRivalFocusToErrorForm: function() {
 		const self = this,
@@ -788,7 +812,7 @@ const EventManager = React.createClass({
 	render: function() {
 		const	binding				= this.getDefaultBinding(),
 				isEventManagerSync	= binding.get('isEventManagerSync'),
-				step				= binding.get('step');
+				step				= binding.toJS('step');
 
 		const	bManagerClasses	= classNames({
 					bManager			: step === 1,
