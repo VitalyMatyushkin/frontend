@@ -1,6 +1,7 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
+		Loader						= require('module/ui/loader'),
 
 		RouterView					= require('module/core/router'),
 		Route						= require('module/core/route'),
@@ -19,6 +20,7 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			eventsRouting: {},
+			isChildrenSync: false,
 			children:[],
 			childrenIds:[],
 			teams: [],
@@ -44,11 +46,11 @@ const EventView = React.createClass({
 		self.addBindingListener(binding, 'eventsRouting', self.setActiveChild);
 	},
 	setActiveChild: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			params = rootBinding.toJS('routing.pathParameters'),
-			newValue = params && params.length > 0 ? params[0]:'all';
+		const	self = this,
+				binding = self.getDefaultBinding(),
+				rootBinding = self.getMoreartyContext().getBinding(),
+				params = rootBinding.toJS('routing.pathParameters'),
+				newValue = params && params.length > 0 ? params[0]:'all';
 
 		binding.set('activeChildId', newValue);
 	},
@@ -88,42 +90,77 @@ const EventView = React.createClass({
 				const ids = children.map(c => c.id);
 
 				binding.atomically()
-					.set('children',Immutable.fromJS(children))
-					.set('childrenIds',Immutable.fromJS(ids))
+					.set('children',		Immutable.fromJS(children))
+					.set('childrenIds',		Immutable.fromJS(ids))
+					.set('isChildrenSync',	true)
 					.commit();
 
 				return true;
 			});
+	},
+	renderLoader: function() {
+		if(this.getDefaultBinding().toJS('isChildrenSync')) {
+			return null;
+		} else {
+			return (
+				<div className="eSchoolMaster_loaderContainer">
+					<Loader condition={true}/>
+				</div>
+			);
+		}
 	},
 	render: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			rootBinging = self.getMoreartyContext().getBinding();
 
-		return <div className="bParentsPage">
-			<SubMenu items={self.menuItems}
-					binding={{
-						default: binding.sub('eventsRouting'),
-						itemsBinding: binding.sub('itemsBinding')
-					}}/>
+		let mainContent = null;
 
-			<div className='bSchoolMaster'>
-				<RouterView routes={binding.sub('eventsRouting')}
-							binding={rootBinging}>
-					<Route	path='/events/calendar/:userId'
-							binding={binding}
-							component={EventsCalendarComponent}/>
+		if(binding.toJS('isChildrenSync')) {
+			mainContent = (
+				<RouterView
+					routes	= { binding.sub('eventsRouting') }
+					binding	= { rootBinging }
+				>
+					<Route
+						path		= '/events/calendar/:userId'
+						binding		= { binding }
+						component	= { EventsCalendarComponent }
+					/>
 
-					<Route	path='/events/fixtures/:userId'
-							binding={binding}
-							component={EventsFixturesComponent}/>
+					<Route
+						path		= '/events/fixtures/:userId'
+						binding		= { binding }
+						component	= { EventsFixturesComponent }
+					/>
 
-					<Route	path="/events/achievement/:userId"
-							binding={binding}
-							component={EventsAchievementComponent}/>
+					<Route
+						path		=" /events/achievement/:userId"
+						binding		= { binding }
+						component	= { EventsAchievementComponent }
+					/>
 				</RouterView>
+			);
+		}
+
+		return (
+			<div className="bParentsPage">
+				<SubMenu
+					items	= { self.menuItems }
+					binding	= {
+						{
+							default:		binding.sub('eventsRouting'),
+							itemsBinding:	binding.sub('itemsBinding')
+						}
+					}
+				/>
+
+				<div className='bSchoolMaster'>
+					{ this.renderLoader() }
+					{ mainContent }
+				</div>
 			</div>
-		</div>;
+		);
 	}
 });
 

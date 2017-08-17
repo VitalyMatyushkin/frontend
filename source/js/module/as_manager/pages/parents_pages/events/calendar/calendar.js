@@ -15,14 +15,14 @@ const Calendar = React.createClass({
 		childIdList: React.PropTypes.array.isRequired
 	},
 	componentWillMount: function () {
-		const binding = this.getDefaultBinding();
-
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), this.props.childIdList, this.getDefaultBinding());
 	},
+	componentWillUnmount: function () {
+		this.getDefaultBinding().clear();
+	},
 	render: function(){
-		const	self			= this,
-				binding			= this.getDefaultBinding(),
+		const	binding			= this.getDefaultBinding(),
 				todayDate		= binding.get('todayDate'),
 				monthDate		= binding.get('monthDate'),
 				selectedDate	= binding.get('selectedDate'),
@@ -30,15 +30,18 @@ const Calendar = React.createClass({
 
 		return (
 			<MonthCalendar
-				monthDate={monthDate}
-				todayDate={todayDate}
-				selectedDate={selectedDate}
-				onMonthClick={ (date) => CalendarActions.setCurrentMonth(date, self.props.childIdList, binding) }
-				onDateClick={ date => CalendarActions.setSelectedDate(date, self.props.childIdList, binding) }
-				eventsData={eventsData}
+				isSync			= { binding.toJS('isEventsDataSync') }
+				monthDate		= { monthDate }
+				todayDate		= { todayDate }
+				selectedDate	= { selectedDate }
+				onMonthClick	= { date => CalendarActions.setCurrentMonth(date, this.props.childIdList, binding) }
+				onDateClick		= { date => CalendarActions.setSelectedDate(date, this.props.childIdList, binding) }
+				eventsData		= { eventsData }
 			/>
 		);
 	}
 });
+
+
 
 module.exports = Calendar;

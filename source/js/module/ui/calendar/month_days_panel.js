@@ -6,6 +6,7 @@
 const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		PureRenderMixin = require('react-addons-pure-render-mixin'),
+		Loader			= require('module/ui/loader'),
 		DayPanel		= require('./day_panel');
 
 /**
@@ -19,6 +20,7 @@ const 	React			= require('react'),
  */
 const MonthDaysPanel = React.createClass({
 	propTypes: {
+		isSync:			React.PropTypes.bool.isRequired,
 		monthDate:		React.PropTypes.instanceOf(Date).isRequired,			// like Date(2016, 7)
 		todayDate:		React.PropTypes.instanceOf(Date),
 		selectedDate:	React.PropTypes.instanceOf(Date),
@@ -90,7 +92,17 @@ const MonthDaysPanel = React.createClass({
 		);
 	},
 	noOp: function(){},	// most robust function ever
-
+	renderSpinner: function() {
+		if(!this.props.isSync) {
+			return (
+				<div className="eMonth_spinnerContainer">
+					<Loader condition={true}/>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function(){
 		const 	year			= this.props.monthDate.getFullYear(),
 				month			= this.props.monthDate.getMonth(),
@@ -132,7 +144,12 @@ const MonthDaysPanel = React.createClass({
 			renderedRows.push(renderedRow);
 		}
 
-		return <div className="eMonth_container" >{renderedRows}</div>;
+		return ( 
+			<div className="eMonth_container">
+				{ this.renderSpinner() }
+				{ renderedRows }
+			</div>
+		);
 	}
 });
 

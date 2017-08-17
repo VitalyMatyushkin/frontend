@@ -6,10 +6,11 @@ const Immutable = require('immutable');
 
 /** Load in binding data for all dates which have events */
 function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBinding){
-	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
+	const	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
-	eventsBinding.set('distinctEventDatesData.isSync', false);
+	eventsBinding.set('distinctEventDatesData.isSync',	false);
+	eventsBinding.set('isEventsDataSync',				false);
 
 	const filter = {
 		limit: 1000,
@@ -35,8 +36,9 @@ function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBind
 		});
 
 		eventsBinding.atomically()
-			.set('eventsData', Immutable.fromJS(eventsData))
-			.set('monthDate', monthDate)
+			.set('eventsData',			Immutable.fromJS(eventsData))
+			.set('isEventsDataSync',	true)
+			.set('monthDate',			monthDate)
 			.commit();
 	});
 

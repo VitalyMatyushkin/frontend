@@ -8,27 +8,36 @@ const	React					= require('react'),
 
 const EventsCalendar = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	componentDidMount: function () {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		/** Loading initial data for this month */
-		self.addBindingListener(binding, 'children', self.onChangeChild);
-		self.addBindingListener(binding, 'activeChildId', self.onChangeChild);
+		this.addBindingListener(binding, 'children', this.onChangeChild);
+		this.addBindingListener(binding, 'activeChildId', this.onChangeChild);
 	},
-	onChangeChild:function(){
-		const 	self 		= this,
-				binding 	= self.getDefaultBinding(),
-				calendar 	= binding.sub('calendar');
+	componentWillUnmount: function () {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
+	/**
+	 * Function loads data for current month and selected date
+	 * So it's events for selected day and month
+	 */
+	setDefaultState: function() {
+		const	binding		= this.getDefaultBinding(),
+				calendar	= binding.sub('calendar');
 
-		const 	monthDate		= calendar.get('monthDate'),
+		const	monthDate		= calendar.get('monthDate'),
 				selectedDate	= calendar.get('selectedDate'),
 
-				activeChildId 	= binding.toJS('activeChildId'),
-				childIdList 	= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
+				activeChildId	= binding.toJS('activeChildId'),
+				childIdList		= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
 
 		CalendarActions.setCurrentMonth(monthDate, childIdList, calendar);
 		CalendarActions.setSelectedDate(selectedDate, childIdList, calendar);
+	},
+	onChangeChild:function(){
+		this.setDefaultState();
 	},
 	onEventClick:function(schoolId, eventId){
 		document.location.hash = 'event/' + eventId + '?schoolId=' + schoolId;
@@ -73,20 +82,22 @@ const EventsCalendar = React.createClass({
 		return children.find(c => c.id === currentChildId);
 	},
 	render: function() {
-		var self 			= this,
-			binding 		= self.getDefaultBinding(),
-			activeChildId 	= binding.get('activeChildId'),
-			childIdList 	= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
+		const	binding			= this.getDefaultBinding(),
+				activeChildId	= binding.get('activeChildId'),
+				childIdList		= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
 
 		return (
 			<div className="bEvents">
 				<div className="eEvents_container">
 					<div className="eEvents_row">
 						<div className="eEvents_leftSideContainer">
-							<Calendar binding={binding.sub('calendar')} childIdList={childIdList}/>
+							<Calendar
+								binding		= { binding.sub('calendar') }
+								childIdList = { childIdList }
+							/>
 						</div>
 						<div className="eEvents_rightSideContainer">
-							{self._renderChallengesListView()}
+							{ this._renderChallengesListView() }
 						</div>
 					</div>
 				</div>

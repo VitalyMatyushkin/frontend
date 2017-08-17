@@ -8,8 +8,9 @@ const MonthYearSelector = React.createClass({
 	DROPDOWN_CSS_STYLE: 'mDateSelector',
 
 	propTypes: {
-		date: React.PropTypes.object.isRequired,
-		onMonthClick: React.PropTypes.func
+		isSync:			React.PropTypes.bool.isRequired,
+		date:			React.PropTypes.object.isRequired,
+		onMonthClick:	React.PropTypes.func
 	},
 	componentWillMount: function(){
 		this.setState({dateState: this.props.date});
@@ -92,10 +93,20 @@ const MonthYearSelector = React.createClass({
 			this.handleChangeMonth(currentMonth + 1);
 		}
 	},
-
+	renderPlaceHolder: function() {
+		if(!this.props.isSync) {
+			return (
+				<div className="eMonthYearSelector_placeHolder">
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (
 			<div className="bMonthYearSelector">
+				{ this.renderPlaceHolder() }
 				<div className="eMonthYearSelector_smallSizeColumn mLeft">
 					<div	className	= "eMonthYearSelector_arrow mLeft"
 							onClick		= {this.handleClickPrevMonth}

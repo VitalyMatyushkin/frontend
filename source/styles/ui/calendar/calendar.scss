@@ -22,6 +22,26 @@ $active-day-background: #b2d7ec;
   padding-bottom: $spacing*3;
 }
 
+.eMonth_container {
+  position: relative;
+}
+
+.eMonth_spinnerContainer {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  padding-top: 30%;
+
+  border-radius: 4px;
+
+  background: #a3a3a3;
+  opacity: 0.8;
+
+  z-index: 900;
+}
+
 .eCalendar_item {
   display: inline-block;
   cursor: pointer;
@@ -127,6 +147,8 @@ $active-day-background: #b2d7ec;
 
 @media screen and (max-width: 480px) {
   .eMonth_container {
+    position: relative;
+
     width: 100%;
   }
 
