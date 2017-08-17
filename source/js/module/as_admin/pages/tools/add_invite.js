@@ -10,7 +10,9 @@ const 	roleList 			= require('module/data/roles_data'),
 		Form				= require('module/ui/form/form'),
 		FormField 			= require('module/ui/form/form_field'),
 		Popup 				= require('module/ui/new_popup'),
-		SchoolListItem		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item');
+		SchoolListItem		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+    	RoleHelper			= require('module/helpers/role_helper'),
+		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
 const AddInviteStyles = require('styles/pages/admin_add_invite/b_add_invite_link.scss');
 
@@ -39,6 +41,12 @@ const AddInvite = React.createClass({
 		
 		return window.Server.publicSchools.get(filter);
 	},
+    componentWillMount:function(){
+        this.initCountSportFieldsBlocks();
+    },
+    componentWillUnmount:function(){
+        this.getDefaultBinding().clear();
+    },
 	studentService: function(name){
 		const 	formBinding 	= this.getDefaultBinding().sub('form'),
 				schoolId 		= formBinding.meta().toJS('schoolId.value');
@@ -93,7 +101,11 @@ const AddInvite = React.createClass({
 					.commit();
 	},
 	onSubmit: function(data){
-		const {email, phone, firstName, lastName, preset, schoolId, comment, id} = data;
+        const	binding		= this.getDefaultBinding(),
+				sports		= binding.toJS('rivals'),
+				{email, phone, firstName, lastName, preset, schoolId, comment, id} = data;
+
+        const sportIds = this.isRoleCoachOrTeacherSelected() && sports.length>0 ? sports.map(r => r.id) : undefined;
 		const dataToPost = Object.assign({}, {
 			email,
 			phone,
@@ -102,13 +114,14 @@ const AddInvite = React.createClass({
 			permission: {
 				preset: preset.toUpperCase(),
 				schoolId,
+                sportIds,
 				comment,
 				studentId: id
 			}
 		});
 		//delete undefined fields
 		for(let key in dataToPost){
-			if (typeof key === 'undefined') {
+			if (typeof dataToPost[key] === 'undefined') {
 				delete dataToPost[key];
 			}
 		}
@@ -148,10 +161,26 @@ const AddInvite = React.createClass({
 	},
 	onClickOkPopup: function(){
 		const binding = this.getDefaultBinding();
-		
+
 		binding.set('isPopupOpen', false);
 		document.location.hash = 'school-invite/list-invite';
 	},
+    isRoleCoachOrTeacherSelected: function() {
+        const 	formBinding 	= this.getDefaultBinding().sub('form'),
+            	selectedRole 	= formBinding.meta().toJS('preset.value');
+        return selectedRole === RoleHelper.USER_PERMISSIONS.TEACHER.toLowerCase()
+            || selectedRole === RoleHelper.USER_PERMISSIONS.COACH.toLowerCase();
+    },
+    initCountSportFieldsBlocks: function() {
+        const binding = this.getDefaultBinding();
+
+        const countSportFields = binding.toJS('countSportFields');
+
+        if(typeof countSportFields === 'undefined' || countSportFields < 0) {
+            binding.set('countSportFields', 0);
+        }
+        binding.set('rivals', Immutable.fromJS([]));
+    },
 	render: function(){
 		const 	binding 	= this.getDefaultBinding(),
 				isPopupOpen = Boolean(binding.toJS('isPopupOpen')),
@@ -217,6 +246,21 @@ const AddInvite = React.createClass({
 					>
 						Role
 					</FormField>
+                    { this.isRoleCoachOrTeacherSelected() ?
+						<div className="eForm_field">
+							<div className="eForm_fieldName">
+								Sports
+							</div>
+							<SportManager
+								binding		= { binding }
+								schoolId	= { this.getSchoolSelectedId() }
+								serviceName = "sports"
+								extraCssStyle	= "mInline mRightMargin mWidth308"
+							/>
+						</div>
+                        :
+						<div></div>
+                    }
 					<FormField
 						type			= "autocomplete"
 						field			= "id"

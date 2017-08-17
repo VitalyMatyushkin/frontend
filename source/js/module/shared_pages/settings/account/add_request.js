@@ -208,8 +208,10 @@ const AddPermissionRequest = React.createClass({
 							Sports
 						</div>
 						<SportManager
-							binding={ binding }
-							schoolId={ this.getSchoolSelectedId() }
+							binding			= { binding }
+							schoolId		= { this.getSchoolSelectedId() }
+							serviceName 	= "publicSchoolSports"
+							extraCssStyle	= "mInline mRightMargin mWidth250"
 						/>
 					</div>
 					:

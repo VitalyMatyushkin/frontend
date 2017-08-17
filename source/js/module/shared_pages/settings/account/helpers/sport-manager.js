@@ -11,7 +11,9 @@ const	React				= require('react'),
 const   SportsManager = React.createClass({
         mixins: [Morearty.Mixin],
         propTypes: {
-            schoolId : React.PropTypes.string.isRequired
+            schoolId : React.PropTypes.string.isRequired,
+            serviceName: React.PropTypes.string.isRequired,
+            extraCssStyle: React.PropTypes.string
         },
 
     sportsService: function(sportName) {
@@ -35,8 +37,8 @@ const   SportsManager = React.createClass({
                 order:'name ASC'
             }
         };
-
-        return window.Server.publicSchoolSports.get(schoolId, filter);
+        const service = window.Server[this.props.serviceName];
+        return service.get(schoolId, filter);
     },
 
     onSelectSport: function (order, id, model) {
@@ -58,7 +60,7 @@ const   SportsManager = React.createClass({
     render: function() {
         const	binding	        = this.getDefaultBinding(),
                 rivals	        = binding.toJS('rivals'),
-                extraCssStyle   = 'mInline mRightMargin mWidth250';
+                extraCssStyle   = this.props.extraCssStyle;
 
         const choosers = rivals.map((rival, rivalIndex) => {
             return (
@@ -87,7 +89,6 @@ const   SportsManager = React.createClass({
                 serverField     = "name"
                 placeholder     = "Please select sport"
                 onSelect        = { this.onSelectSport.bind(null, rivals.length) }
-                extraCssStyle	= { extraCssStyle }
             />
         );
         return (
