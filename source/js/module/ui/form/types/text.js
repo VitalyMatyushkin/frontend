@@ -1,4 +1,5 @@
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
+		TextInput	= require('module/ui/text_input'),
 		React 		= require('react'),
 		Morearty	= require('morearty');
 
@@ -15,43 +16,29 @@ const TypeText =  React.createClass({
 			this.fullValidate(binding.get('defaultValue'));
 		});
 	},
-	componentDidUpdate: function () {
-		if (this.props.textType !== 'email' && this.cursor >= 0){
-			this.refs.input.setSelectionRange(this.cursor, this.cursor);
-		}
+	handleBlur: function(value) {
+		this.setValue(value);
 	},
-	handleBlur: function(event) {
-		if (this.props.textType !== 'email') {
-			this.cursor = -1;	//it is necessary to block the installation of the cursor after a loss of focus.
-		}
-		this.setValue(event.target.value);
-	},
-	handleChange: function(event) {
-		if (this.props.textType !== 'email') {
-			this.cursor = event.target.selectionStart;
-		}
-		this.changeValue(event.target.value);
+	handleChange: function(value) {
+		this.changeValue(value);
 	},
 	render: function () {
 		const value	= this.getDefaultBinding().get('value');
 
+		// Use wrapper for input component because
+		// input component with Morearty state has incorrect behaviour - cursor jump to end while user type text
 		return (
-			<input
-				autoComplete="new-password"
-				autoCapitalize="none"
-				id={this.props.id}
-				ref="input"
-				value={value}
-				type={this.props.textType || 'text'}
-				placeholder={this.props.placeholder}
-				onBlur={this.handleBlur}
-				onFocus={() => {}}
-				disabled={!!this.props.isDisabled}
-				onChange={this.handleChange}
-				autoCorrect="off"
-				spellCheck="false"
+			<TextInput
+				id				= {this.props.id}
+				textType		= {this.props.textType}
+				value			= {value}
+				placeholder		= {this.props.placeholder}
+				disabled		= {this.props.isDisabled}
+				onBlur			= {this.handleBlur}
+				onFocus			= {() => {}}
+				handleChange	= {this.handleChange}
 			/>
-		)
+		);
 	}
 });
 

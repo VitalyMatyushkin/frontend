@@ -61,9 +61,14 @@ const EventForm = React.createClass({
 	getOpponentSchoolInfoArray: function() {
 		const binding = this.getDefaultBinding();
 
-		return binding.toJS('rivals')
-			.filter(r => r.school.id !== this.props.activeSchoolId)
-			.map(r => r.school);
+		let schools = [];
+		if(binding.toJS('model.type') === 'inter-schools') {
+			schools = binding.toJS('rivals')
+				.filter(r => r.school.id !== this.props.activeSchoolId)
+				.map(r => r.school);
+		}
+
+		return schools;
 	},
 	handleChangeFartherThan: function (eventDescriptor) {
 		const	binding	= this.getDefaultBinding(),
