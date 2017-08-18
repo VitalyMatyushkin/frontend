@@ -54,7 +54,10 @@ const RivalInfoOptionsHelper = {
 		// main rule
 		if(
 			event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-			TeamHelper.isInterSchoolsEventForTeamSport(event) && TeamHelper.isMultiparty(event) // only for inter-school multiparty event
+			(
+				TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+				TeamHelper.isInterSchoolsEventForIndividualSport(event)
+			) && TeamHelper.isMultiparty(event) // only for inter-school multiparty event
 		) {
 			// fork for case when active school is inviter school or not
 			if(activeSchoolId === event.inviterSchoolId) {

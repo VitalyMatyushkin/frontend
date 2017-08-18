@@ -1017,6 +1017,24 @@ const Event = React.createClass({
 			}
 		);
 	},
+	/**
+	 * Function removes individual players from event for current rival
+	 * @param rivalId
+	 * @returns {Array}
+	 */
+	removePlayerByRivalId: function(rivalId) {
+		const binding = this.getDefaultBinding();
+
+		const rival = binding.toJS('rivals').find(rival => rival.id === rivalId);
+
+		return rival.players.map(p =>
+			TeamHelper.deleteIndividualPlayer(
+				rival.school.id,
+				binding.toJS('model').id,
+				p.id
+			)
+		);
+	},
 	removeRivalByRivalId: function(rivalId) {
 		const rivals = this.getDefaultBinding().toJS('rivals');
 
@@ -1079,7 +1097,8 @@ const Event = React.createClass({
 		binding.set("isDeleteEventPopupOpen", false);
 	},
 	handleClickRemoveTeamButton: function(rivalId) {
-		const	rivals		= this.getDefaultBinding().toJS('rivals'),
+		const	event		= this.getDefaultBinding().toJS('model'),
+				rivals		= this.getDefaultBinding().toJS('rivals'),
 				rival		= rivals.find(rival => rival.id === rivalId),
 				rivalSchool	= rival.school;
 
@@ -1093,8 +1112,12 @@ const Event = React.createClass({
 			"Ok",
 			"Cancel",
 			() => {
-				if(typeof rival.team !== 'undefined') {
+				// Delete team or individual players
+				if(TeamHelper.isInterSchoolsEventForTeamSport(event) && typeof rival.team !== 'undefined') {
 					promises = promises.concat(this.removeTeamByRivalId(rivalId));
+				}
+				if(TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
+					promises = promises.concat(this.removePlayerByRivalId(rivalId));
 				}
 
 				const currentSchoolRivals = rivals.filter(rival => rival.school.id === rivalSchool.id);
@@ -1367,6 +1390,8 @@ const Event = React.createClass({
 				);
 			// sync and any mode excluding edit_squad
 			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
+				console.log(this.getDefaultBinding().toJS('model'));
+
 				return (
 					<div className={EventContainerStyle}>
 						<If condition={isNewEvent}>
