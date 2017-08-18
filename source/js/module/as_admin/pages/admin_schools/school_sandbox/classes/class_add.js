@@ -12,6 +12,7 @@ const ClassAddPage = React.createClass({
 		this.FORM_URL = `school_sandbox/${schoolId}/forms`;
 	},
 	submitAdd: function(data) {
+		data.age = Number(data.age);
 		window.Server.schoolForms.post(this.schoolId, data).then( () => {
 			document.location.hash = this.FORM_URL;
 		}).catch( (err) => {

@@ -176,14 +176,6 @@ const SchoolForm = React.createClass({
 						>
 							Public student view type
 						</FormField>
-						<FormField
-							type 		= "dropdown"
-							id 			= "school_age_groups_naming_checkbox"
-							field 		= "ageGroupsNaming"
-							options 	= { SchoolConsts.AGE_GROUPS_NAMING_OPTIONS }
-						>
-							Age groups naming
-						</FormField>
 					</FormColumn>
 				</Form>
 			</div>

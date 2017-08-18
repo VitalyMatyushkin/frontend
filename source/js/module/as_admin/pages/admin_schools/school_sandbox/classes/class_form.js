@@ -20,19 +20,18 @@ const ClassForm = React.createClass({
 		const 	schoolId 	= this.props.schoolId,
 				binding 	= this.getDefaultBinding();
 		
-		window.Server.ageGroups.get( {schoolId} ).then(
+		window.Server.ageGroups.get({schoolId}).then(
 			ages => {
-				const agesObject = ages.map( (age,index) => {
+				const agesObject = ages.map( (age, index) => {
 					return {
-						value: age,
-						age: index,
-						id: index
+						value: index,
+						text: age
 					}
 				});
 				binding.atomically()
-				.set('ages', 	agesObject)
-				.set('isSync', 	true)
-				.commit();
+					.set('ages', 			agesObject)
+					.set('isSyncAges', 		true)
+					.commit();
 			},
 			//if server return 404
 			err => {
@@ -41,28 +40,32 @@ const ClassForm = React.createClass({
 	},
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
-				isSync 	= binding.toJS('isSync'),
+				isSync 	= Boolean(binding.toJS('isSyncAges')),
 				ages 	= binding.toJS('ages');
 		
 		if (isSync) {
 			return (
 				<Form
-					name 		= { this.props.title }
-					onSubmit 	= { this.props.onFormSubmit }
-					binding 	= { binding }
+					formStyleClass 	= "mNarrow"
+					name 			= { this.props.title }
+					onSubmit 		= { this.props.onFormSubmit }
+					binding 		= { binding.sub('formData') }
+					submitButtonId	= 'school_form_submit'
+					cancelButtonId	= 'school_form_cancel'
 				>
 					<FormField
 						type 		= "text"
 						field 		= "name"
+						id 			= "school_form_name"
 						validation 	= "required"
 					>
 						Form name
 					</FormField>
 					<FormField
-						type 			= "select"
-						sourceArray 	= { ages }
-						field 			= "age"
-						validation 		= "required"
+						type 		= "dropdown"
+						id 			= "school_age_group_checkbox"
+						field 		= "age"
+						options 	= { ages }
 					>
 						Age group
 					</FormField>
