@@ -19,22 +19,24 @@ const 	React			= require('react'),
  *  * eventsData - Immutable Map where keys are date in following format: 2016-8-29. Month starts from 0. Both month and day number don't have leading zero: 2016-1-1. Value is boolean
  */
 const MonthDaysPanel = React.createClass({
+	mixins: [PureRenderMixin],	// yes, it is pure. I hope :)
 	propTypes: {
-		isSync:			React.PropTypes.bool.isRequired,
+		isSync:			React.PropTypes.bool,
 		monthDate:		React.PropTypes.instanceOf(Date).isRequired,			// like Date(2016, 7)
 		todayDate:		React.PropTypes.instanceOf(Date),
 		selectedDate:	React.PropTypes.instanceOf(Date),
 		eventsData:		React.PropTypes.instanceOf(Immutable.Map),	// date -> data dictionary: '2016-01-10': { isActive: true, isSelected: true, isToday: true,  }
 		onClick:		React.PropTypes.func 						// func to trigger on date
 	},
-
-	mixins: [PureRenderMixin],	// yes, it is pure. I hope :)
-
+	getDefaultProps: function(){
+		return {
+			isSync: true
+		};
+	},
 	/** How much days in given month of given year */
 	daysInMonth: function(year, month) {
 		return new Date(year, month + 1, 0).getDate();
 	},
-
 	/**
 	 * For given year and month return array of all dates visible in calendar.
 	 * It will add some days in begining from previous month and some days to end.
@@ -71,7 +73,6 @@ const MonthDaysPanel = React.createClass({
 
 		return datesToDraw;
 	},
-
 	getEventDataAtDate: function(date){
 		const 	eventsData	= this.props.eventsData,
 				strDate		= `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -81,7 +82,6 @@ const MonthDaysPanel = React.createClass({
 
 		return pulledData;
 	},
-
 	areDatesInSameDay: function(d1, d2){
 		return (
 			typeof d1 !== 'undefined' &&

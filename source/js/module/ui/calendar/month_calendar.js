@@ -27,7 +27,7 @@ const 	React 			= require('react'),
 
 const MonthCalendar = React.createClass({
 	propType: {
-		isSync:				React.PropTypes.bool.isRequired,
+		isSync:				React.PropTypes.bool,
 		monthDate:			React.PropTypes.instanceOf(Date).isRequired,	// Date with month to display
 		todayDate:			React.PropTypes.instanceOf(Date),				// Date to be considered as today
 		selectedDate:		React.PropTypes.instanceOf(Date),				// Date to be considered as selected (highlighted)
@@ -35,6 +35,11 @@ const MonthCalendar = React.createClass({
 		onPrevMonthClick:	React.PropTypes.func,							// Function to be called when user hit `prev` in MonthNavBar
 		onDateClick:		React.PropTypes.func,							// Function to be called when user hit any date panel. Function will receive one argument - date
 		eventsData:			React.PropTypes.instanceOf(Immutable.Map)		// Immutable map where keys are stringified dates (2016-1-9) and values are booleans, where true mean that date have events
+	},
+	getDefaultProps: function(){
+		return {
+			isSync: true
+		};
 	},
 	onMonthClick: function(date) {
 		this.props.isSync && this.props.onMonthClick(date);

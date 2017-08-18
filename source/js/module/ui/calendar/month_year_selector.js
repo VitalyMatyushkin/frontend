@@ -8,12 +8,17 @@ const MonthYearSelector = React.createClass({
 	DROPDOWN_CSS_STYLE: 'mDateSelector',
 
 	propTypes: {
-		isSync:			React.PropTypes.bool.isRequired,
+		isSync:			React.PropTypes.bool,
 		date:			React.PropTypes.object.isRequired,
 		onMonthClick:	React.PropTypes.func
 	},
 	componentWillMount: function(){
 		this.setState({dateState: this.props.date});
+	},
+	getDefaultProps: function(){
+		return {
+			isSync: true
+		};
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState({dateState: nextProps.date});
