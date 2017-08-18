@@ -15,8 +15,13 @@ const Calendar = React.createClass({
 		childIdList: React.PropTypes.array.isRequired
 	},
 	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+
+		const monthDate = new Date();
+
+		binding.set('monthDate', monthDate);
 		/** Loading initial data for this month */
-		CalendarActions.setCurrentMonth(new Date(), this.props.childIdList, this.getDefaultBinding());
+		CalendarActions.setCurrentMonth(monthDate, this.props.childIdList, binding);
 	},
 	componentWillUnmount: function () {
 		this.getDefaultBinding().clear();

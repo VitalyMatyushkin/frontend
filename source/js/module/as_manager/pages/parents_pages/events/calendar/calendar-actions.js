@@ -36,8 +36,8 @@ function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBind
 		});
 
 		eventsBinding.atomically()
-			.set('eventsData',			Immutable.fromJS(eventsData))
 			.set('isEventsDataSync',	true)
+			.set('eventsData',			Immutable.fromJS(eventsData))
 			.set('monthDate',			monthDate)
 			.commit();
 	});
