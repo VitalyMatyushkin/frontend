@@ -11,7 +11,9 @@ const	React 				= require('react'),
 		InviteComments		= require('./invite_comments'),
 		ConfirmDeclinePopup	= require('./confirm-decline-popup'),
 		InviteStyles 		= require('styles/pages/events/b_invite.scss'),
-		If					= require('../../../../ui/if/if');
+		If					= require('../../../../ui/if/if'),
+		SchoolHelper 		= require('module/helpers/school_helper'),
+		SchoolConst 		= require('module/helpers/consts/schools');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -49,9 +51,11 @@ const InviteView = React.createClass({
 	 * @returns {string}
 	 */
 	getAges: function (data) {
+		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
+				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']);
 		data = data || [];
 		return data
-			.map(elem => elem === 0 ? 'Reception' : 'Y' + elem)
+			.map(elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
 			.join(", ");
 	},
 

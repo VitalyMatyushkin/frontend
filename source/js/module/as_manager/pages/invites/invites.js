@@ -9,6 +9,7 @@ const 	RouterView 			= require('module/core/router'),
 		ArchiveComponent 	= require('module/as_manager/pages/invites/views/archive'),
 		AcceptComponent 	= require('module/as_manager/pages/invites/views/accept');
 
+const SchoolHelper = require('module/helpers/school_helper');
 
 const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -49,7 +50,7 @@ const InvitesView = React.createClass({
 			name: 'Archive',
 			key: 'Archive'
 		}];
-
+		SchoolHelper.loadActiveSchoolInfo(this);
 		this.addListeners();
 	},
 	addListeners: function() {

@@ -8,7 +8,10 @@ const 	React 			= require('react'),
 		GenderIcon		= require('module/ui/icons/gender_icon'),
 		Sport           = require('module/ui/icons/sport_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		GridModel 		= require('module/ui/grid/grid-model'),
+		SchoolConst 	= require('module/helpers/consts/schools'),
+		SchoolHelper 	= require('module/helpers/school_helper'),
+		propz 			= require('propz');
 
 /**
  * TeamListClass
@@ -28,6 +31,7 @@ class TeamListModel {
 		this.setColumns();
 		const binding = this.getDefaultBinding();
 		this.getSportsFromServer().then(sports => binding.set('sports', sports));
+		SchoolHelper.loadActiveSchoolInfo(this);
 	}
 	
 	reloadData() {
@@ -65,11 +69,13 @@ class TeamListModel {
 	 * @returns {string}
 	 */
 	getAges(item) {
-		const ages = item.ages;
+		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
+				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']);
 		
+		const ages = item.ages;
 		if(typeof ages !== 'undefined') {
 			return ages
-			.map( elem => elem === 0 ? 'Reception' : `Y${elem}`)
+			.map( elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
 			.join(", ");
 		}
 	}

@@ -7,7 +7,9 @@ const	Immutable			= require('immutable'),
 		Multiselect			= require('../../../../ui/multiselect/multiselect'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		Morearty			= require('morearty'),
-		classNames			= require('classnames');
+		classNames			= require('classnames'),
+		propz 				= require('propz'),
+		SchoolConst 		= require('module/helpers/consts/schools');
 
 const TeamForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -231,24 +233,19 @@ const TeamForm = React.createClass({
 	 * @returns {array}
 	 */
 	getAgeItems: function() {
-		const	self			= this,
-				availableAges	= self.getDefaultBinding().toJS('availableAges');
+		const 	binding 		= this.getDefaultBinding(),
+				availableAges 	= this.getDefaultBinding().toJS('availableAges'),
+				ageGroupsNaming = binding.toJS('school.ageGroupsNaming');
 
 		if(availableAges) {
 			return availableAges
 				.sort( (first, last) => first - last )
 				.map( age => {
-					if (age === 0) {
-						return {
-							id: age,
-							text: 'Reception'
-						};
-					} else {
-						return {
-							id: age,
-							text: 'Y' + age
-						};
-					}
+					const ageGroup = propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, age]);
+					return {
+						id: 	age,
+						text: 	ageGroup
+					};
 				});
 		}
 	},

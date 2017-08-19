@@ -59,6 +59,12 @@ const INVITE_ACTION_OPTIONS = [
 	{ text: 'Auto Reject', 				value: 'AUTO_REJECT' }
 ];
 
+// English: Reception, Y1..Y13 (14 age group)
+// Scottish: P1..P7, S1..S6 (13 age group, Y13 does not exist)
+const AGE_GROUPS = {
+	'ENGLISH': 	['Reception', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12', 'Y13'],
+	'SCOTTISH': ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'NotExist']
+};
 
 const SUBSCRIPTION_PLAN_OPTIONS = [
 	{text: 'Full', value: 'FULL'},
@@ -81,3 +87,5 @@ module.exports.PUBLIC_STUDENT_VIEW_OPTIONS 	= PUBLIC_STUDENT_VIEW_OPTIONS;
 module.exports.AGE_GROUPS_NAMING_OPTIONS 	= AGE_GROUPS_NAMING_OPTIONS;
 module.exports.INVITE_ACTION_OPTIONS 		= INVITE_ACTION_OPTIONS;
 module.exports.SUBSCRIPTION_PLAN_OPTIONS 	= SUBSCRIPTION_PLAN_OPTIONS;
+
+module.exports.AGE_GROUPS 									= AGE_GROUPS;

@@ -4,6 +4,9 @@ const	React			= require('react'),
 		classNames		= require('classnames'),
 		Morearty		= require('morearty'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		SchoolHelper	= require('module/helpers/school_helper'),
+		SchoolConst 	= require('module/helpers/consts/schools'),
+		propz 			= require('propz'),
 		Button			= require('module/ui/button/button'),
 		Immutable		= require('immutable');
 
@@ -23,6 +26,7 @@ const TeamChooser = React.createClass({
 		const self = this;
 
 		self._initBinding();
+		SchoolHelper.loadActiveSchoolInfo(this);
 	},
 	_initBinding: function() {
 		const	self = this,
@@ -76,11 +80,13 @@ const TeamChooser = React.createClass({
 	 * @private
 	 */
 	_geAgesView: function(ages) {
+		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
+				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']);
 		let	result = '';
 
 		if (ages !== undefined) {
 			result = ages.map(elem => {
-				return `Y${elem}`;
+				return propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]);
 			}).join("; ");
 		}
 

@@ -1,14 +1,21 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-
+		propz 				= require('propz'),
+		
+		SchoolConst 		= require('module/helpers/consts/schools'),
+		
 		MultiselectDropdown	= require('../../../../../../../ui/multiselect-dropdown/multiselect-dropdown');
 
 const AgeMultiselectDropdownWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	getAgeView: function(age) {
-		return age === 0 ? 'Reception' : 'Y' + age;
+		const 	binding = this.getDefaultBinding(),
+				ageGroupsNaming = binding.toJS('schoolInfo.ageGroupsNaming'),
+				ageGroup = propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, age]);
+
+		return ageGroup;
 	},
 	getAgeArray: function(ages) {
 		return ages.map(age => {
