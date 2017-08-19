@@ -27,6 +27,14 @@ const OpponentSchoolManager = React.createClass({
 	componentWillUnmount: function() {
 		this.getDefaultBinding().sub('opponentSchoolManager').clear();
 	},
+	getHeaderText: function() {
+		switch (this.props.mode) {
+			case 'REPLACE':
+				return 'Change Opponent';
+			case 'ADD':
+				return 'Add School';
+		}
+	},
 	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
@@ -215,7 +223,7 @@ const OpponentSchoolManager = React.createClass({
 			>
 				<div className='bChangeOpponentSchoolPopup'>
 					<h1 className="eChangeOpponentSchoolPopup_header">
-						Change opponent
+						{this.getHeaderText()}
 					</h1>
 					<If condition={this.isShowDistanceSelector()}>
 						<div className="bInputWrapper mZeroHorizontalMargin">
