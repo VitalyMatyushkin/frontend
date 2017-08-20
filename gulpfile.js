@@ -139,7 +139,7 @@ gulp.task('webpack', function() {
 
 /** Just deletes BUILD folder */
 gulp.task('clean', function (callback) {
-    del([BUILD], callback);
+    del([BUILD]).then( () => callback());
 });
 
 gulp.task('amdTestScripts', function(){

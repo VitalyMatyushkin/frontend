@@ -13,7 +13,8 @@ const babelPluginsList = [
 	"transform-es2015-classes",				// allow class syntax
 	"transform-class-properties",
 	"transform-es2015-parameters",			// transforming default values
-	"transform-es2015-shorthand-properties"
+	"transform-es2015-shorthand-properties",
+	"transform-es2015-destructuring"
 ];
 
 /*
@@ -76,10 +77,10 @@ module.exports = {
 	},
 	devtool: 'source-map',
 	plugins: [
-		//new webpack.optimize.UglifyJsPlugin({
-		//	mangle:		false,	// I'm not sure if mangling can be enabled safely. So disabling it for a while
-		//	sourceMap:	true
-		//}),
+		new webpack.optimize.UglifyJsPlugin({
+			mangle:		false,	// I'm not sure if mangling can be enabled safely. So disabling it for a while
+			sourceMap:	true
+		}),
 		new ExtractTextPlugin({
 			filename: 'styles.css',
 			allChunks: true
@@ -97,6 +98,7 @@ module.exports = {
 		filename: 	'bundle.js'					// with names like this
 	},
 	devServer: {
-		disableHostCheck: true
+		disableHostCheck: true,
+		port:	8080
 	}
 };
