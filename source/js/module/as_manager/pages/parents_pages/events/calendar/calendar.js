@@ -17,16 +17,21 @@ const Calendar = React.createClass({
 	componentWillMount: function () {
 		const binding = this.getDefaultBinding();
 
-		const monthDate = new Date();
-
-		binding.set('monthDate', monthDate);
+		this.initMonthDate();
 		/** Loading initial data for this month */
-		CalendarActions.setCurrentMonth(monthDate, this.props.childIdList, binding);
+		CalendarActions.setCurrentMonth(
+			binding.toJS('monthDate'),
+			this.props.childIdList,
+			binding
+		);
 	},
-	componentWillUnmount: function () {
-		this.getDefaultBinding().clear();
+	initMonthDate: function() {
+		this.getDefaultBinding().set(
+			'monthDate',
+			new Date()
+		);
 	},
-	render: function(){
+	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				todayDate		= binding.get('todayDate'),
 				monthDate		= binding.get('monthDate'),

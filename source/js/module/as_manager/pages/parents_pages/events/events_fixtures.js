@@ -12,31 +12,33 @@ const	React			= require('react'),
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const   self            = this,
-				binding         = self.getDefaultBinding();
-
-		self._setEvents();
+		this.initMonthDate();
+		this.setEvents();
 	},
 	componentDidMount: function () {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		/** Loading initial data for this month */
-		self.addBindingListener(binding, 'children', self._setEvents);
-		self.addBindingListener(binding, 'activeChildId', self._setEvents);
+		this.addBindingListener(binding, 'children', this.setEvents);
+		this.addBindingListener(binding, 'activeChildId', this.setEvents);
 	},
-	_setEvents: function() {
-		const   self    = this,
-				binding = self.getDefaultBinding().sub('calendar');
+	initMonthDate: function() {
+		this.getDefaultBinding().set(
+			'monthDate',
+			new Date()
+		);
+	},
+	setEvents: function() {
+		const binding = this.getDefaultBinding().sub('calendar');
 
 		const currentDate = binding.toJS('monthDate');
 
-		self._setEventsByDateRange(
+		this.setEventsByDateRange(
 			DateHelper.getStartDateTimeOfMonth(currentDate),
 			DateHelper.getEndDateTimeOfMonth(currentDate)
 		);
 	},
-	_setEventsByDateRange: function(gteDate, ltDate) {
+	setEventsByDateRange: function(gteDate, ltDate) {
 		const 	binding 		= this.getDefaultBinding(),
 				activeChildId 	= binding.toJS('activeChildId'),
 				childIdList 	= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
@@ -103,10 +105,11 @@ const EventFixtures = React.createClass({
 				binding			= this.getDefaultBinding();
 
 		return (
-				<Fixtures	events			= { binding.toJS('models') }
-							sync			= { binding.toJS('sync') }
-							onClick			= { this.onClickChallenge }
-							activeSchoolId 	= { activeSchoolId }
+				<Fixtures
+					events			= { binding.toJS('models') }
+					sync			= { binding.toJS('sync') }
+					onClick			= { this.onClickChallenge }
+					activeSchoolId 	= { activeSchoolId }
 				/>
 		);
 	}
