@@ -60,7 +60,7 @@
     "gulp-git": "^2.4.2",
     "gulp-if": "^2.0.2",
     "gulp-svgmin": "^1.0.0",
-    "gulp-svgstore": "^6.1.0",
+    "gulp-svgstore": "^3.0.0",
     "gulp-using": "^0.1.1",
     "html-webpack-plugin": "^2.30.0",
     "json-loader": "^0.5.7",
