@@ -14,7 +14,9 @@ const babelPluginsList = [
 	"transform-class-properties",
 	"transform-es2015-parameters",			// transforming default values
 	"transform-es2015-shorthand-properties",
-	"transform-es2015-destructuring"
+	"transform-object-rest-spread",
+	"transform-es2015-destructuring",
+	"transform-es2015-computed-properties"
 ];
 
 /*

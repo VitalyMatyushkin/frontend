@@ -2,18 +2,18 @@
  * Created by Anatoly on 24.10.2016.
  */
 
-const 	React 		= require('react'),
-		MaskedInput	= require('module/ui/masked_input'),
-		classNames 	= require('classnames'),
+const	React		= require('react'),
+		MaskedInput	= require('module/ui/masked_input/masked_input'),
+		classNames	= require('classnames');
 
-		ScoreConsts	= require('./score_consts');
+const	ScoreConsts	= require('./score_consts');
 
 const MaskedPoints = React.createClass({
 	propTypes:{
 		plainPoints:	React.PropTypes.number.isRequired,
 		value:			React.PropTypes.string,
 		mask:			React.PropTypes.string.isRequired,
-		onChange: 		React.PropTypes.func.isRequired,
+		onChange:		React.PropTypes.func.isRequired,
 		/**
 		 * Convert string value to points according to the mask.
 		 * @param {string} value - string masked value
@@ -38,7 +38,7 @@ const MaskedPoints = React.createClass({
 	getInitialState:function(){
 		return {
 			error: 			false,
-			stringValue: 	typeof this.props.value !== 'undefined' ? this.props.value : ''	//string value from component MaskedInput
+			stringValue:	typeof this.props.value !== 'undefined' ? this.props.value : ''	//string value from component MaskedInput
 		};
 	},
 	componentWillMount:function(){
@@ -50,8 +50,8 @@ const MaskedPoints = React.createClass({
 	},
 	setMask:function(mask){
 		this.setState({
-			mask: 			mask.replace(/[hkmsc]/g, '9'), 	// mask in format '999:999:999'
-			emptyValue: 	mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
+			mask:		mask.replace(/[hkmsc]/g, '1'), 	// mask in format '111:111:111'
+			emptyValue:	mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
 		});
 	},
 	onChange:function(e){
@@ -69,7 +69,7 @@ const MaskedPoints = React.createClass({
 		e.stopPropagation();
 	},
 	onFocus:function(e){
-		const 	value = this.state.stringValue;
+		const	value = this.state.stringValue;
 
 		this.setState({
 			stringValue: value === 0 ? this.state.emptyValue : value // if value===0, then empty value for current mask, else value
@@ -95,10 +95,10 @@ const MaskedPoints = React.createClass({
 		this.props.onChange(result);
 	},
 	render:function(){
-		const 	error 	= !!this.state.error,
-				title 	= error ? this.state.error : null,
-				mask 	= this.state.mask,
-				classes = classNames({
+		const	error	= !!this.state.error,
+				title	= error ? this.state.error : null,
+				mask	= this.state.mask,
+				classes	= classNames({
 					bScore: true,
 					mError: error
 				});
@@ -106,19 +106,20 @@ const MaskedPoints = React.createClass({
 		return (
 			<div className={classes}>
 				<MaskedInput
-					title		= {title}
-					value		= {this.state.stringValue}
-					className	= {`eScore_Points ${this.props.className}`}
-					mask		= {mask}
-					placeholder	= {this.props.mask}
-					onChange	= {this.onChange}
-					onBlur		= {this.onBlur}
-					onFocus		= {this.onFocus} />
+					type		= "text"
+					value		= { this.state.stringValue }
+					className	= { `eScore_Points ${this.props.className}`}
+					title		= { title }
+					mask		= { mask }
+					placeholder	= { this.props.mask }
+					onChange	= { this.onChange }
+					onBlur		= { this.onBlur }
+					onFocus		= { this.onFocus }
+				/>
 			</div>
 		);
 
 	}
 });
-
 
 module.exports = MaskedPoints;

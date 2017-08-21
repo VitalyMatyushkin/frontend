@@ -96,7 +96,7 @@ const ScoreHelper = {
 
 		return result;
 	},
-	plainPointsToTimeString: function(value, mask, separator = ':'){
+	plainPointsToTimeString: function(value, mask, mainSeparator = ':', secSeparator = '.'){
 		const	valueParts			= String(value).split('.'),
 				integerPartOfValue	= Number(valueParts[0]),
 				floatPartOfValue	= Number(typeof valueParts[1] !== 'undefined' ? valueParts[1] : 0);
@@ -116,7 +116,7 @@ const ScoreHelper = {
 
 				const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
 
-				timeString = hourString + separator;
+				timeString = hourString + mainSeparator;
 			} else if(maskPart.search(/m{1,2}/) !== -1) {
 				const minCount = this.getCountOfCurrentTimeUnit(remainder, 'MINUTES');
 				// remove minutes in sec from remainder
@@ -124,14 +124,14 @@ const ScoreHelper = {
 
 				const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
 
-				timeString += minString + separator;
+				timeString += minString + mainSeparator;
 			} else if(maskPart.search(/s{1,2}/) !== -1) {
 				// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
 				const secCount = remainder;
 
 				const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
 
-				timeString += secString + separator;
+				timeString += secString + secSeparator;
 			} else if(maskPart.search(/c{1,4}/) !== -1) {
 				const msecCount = String(floatPartOfValue);
 
@@ -143,7 +143,7 @@ const ScoreHelper = {
 
 		return timeString;
 	},
-	plainPointsToDistanceString: function(value, mask, separator = ':'){
+	plainPointsToDistanceString: function(value, mask, mainSeparator = ':', metersSeparator = '.'){
 		// just copy integer part of plain points
 		let remainder = Number(value);
 
@@ -159,7 +159,7 @@ const ScoreHelper = {
 
 				const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
 
-				distanceString = kmString + separator;
+				distanceString = kmString + mainSeparator;
 			} else if(maskPart.search(/m{1,3}/) !== -1) {
 				const mCount = this.getCountOfCurrentDistanceUnit(remainder, 'METERS');
 				// remove m in cm from remainder
@@ -167,14 +167,14 @@ const ScoreHelper = {
 
 				const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
 
-				distanceString += mString + separator;
+				distanceString += mString + mainSeparator;
 			} else if(maskPart.search(/c{1,2}/) !== -1) {
 				// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
 				const cmCount = remainder;
 
 				const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
 
-				distanceString += cmString + separator;
+				distanceString += cmString + metersSeparator;
 			}
 		});
 
