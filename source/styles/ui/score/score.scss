@@ -5,7 +5,7 @@
 }
 
 .bScore.mError .eScore_Points{
-  border: solid 1px red;
+  border-bottom: solid 1px red;
 }
 
 .eScore_Points {
@@ -13,7 +13,9 @@
   font-size: 14px;
 
   background: transparent;
-  border-width: 0 0 1px;
+  border: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #ccc;
 
   &.mTime{
     width: 90px;
