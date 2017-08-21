@@ -214,7 +214,7 @@ const AddInvite = React.createClass({
 					<FormField
 						type 		= "text"
 						field 		= "email"
-						validation 	= "alphanumeric required"
+						validation 	= "alphanumeric required server"
 					>
 						Email
 					</FormField>

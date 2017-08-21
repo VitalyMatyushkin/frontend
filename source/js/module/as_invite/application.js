@@ -7,10 +7,13 @@ const 	PhoneVerification 	= require('module/ui/phone_verification/phone_verifica
 		Loader 				= require('module/ui/loader'),
 		If 					= require('module/ui/if/if'),
 		Page404 			= require('module/ui/404_page'),
-		Button 				= require('module/ui/button/button');
+		Button 				= require('module/ui/button/button'),
+		NotificationAlert 	= require('module/ui/notification_alert/notification_alert'),
+		ConfirmAlert 		= require('module/ui/confirm_alert/confirm_alert');
+
+const domainHelper = require('module/helpers/domain_helper');
 
 const UserInvitePageStyles = require('styles/pages/user/b_user_invite.scss');
-//const AuthorizationServices = require('module/core/services/AuthorizationServices');
 
 const Application = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -119,8 +122,13 @@ const Application = React.createClass({
 	handleClickContinueButton: function(){
 		const hostName = document.location.hostname.replace('invite', 'app');
 		
-		document.location.hash = 'login';
-		document.location.hostname = hostName;
+		window.simpleAlert(
+			'Please check your email inbox, we sent your password.',
+			'Ok',
+			() => {
+				window.location.href = domainHelper.getLoginUrl();
+			}
+		);
 	},
 	handleChangePhone: function(phone){
 		const binding = this.getDefaultBinding();
@@ -182,6 +190,12 @@ const Application = React.createClass({
 								</If>
 							</div>
 						</div>
+						<NotificationAlert
+							binding = { binding.sub('notificationAlertData')}
+						/>
+						<ConfirmAlert
+							binding = { binding.sub('confirmAlertData')}
+						/>
 					</div>
 				</div>
 			);
