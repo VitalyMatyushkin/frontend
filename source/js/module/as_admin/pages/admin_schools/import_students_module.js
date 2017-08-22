@@ -21,10 +21,10 @@ const ImportStudentsModule = React.createClass({
 		const binding	= this.getDefaultBinding();
 
 		binding.remove('importIsSync');
-		window.Server.schoolForms.get({schoolId: schoolId}, {filter: {limit: 20}})
+		window.Server.schoolForms.get({schoolId: schoolId}, {filter: {limit: 100}})
 			.then(forms => {
 				school.forms = forms;
-				return window.Server.schoolHouses.get({schoolId: schoolId})
+				return window.Server.schoolHouses.get({schoolId: schoolId}, {filter: {limit: 100}})
 			})
 			.then(houses => {
 				school.houses = houses;
