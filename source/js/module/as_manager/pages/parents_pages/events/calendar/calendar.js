@@ -40,8 +40,7 @@ const Calendar = React.createClass({
 
 		return (
 			<MonthCalendar
-				//isSync			= { binding.toJS('isEventsDataSync') }
-				isSync			= { false }
+				isSync			= { binding.toJS('isEventsDataSync') }
 				monthDate		= { monthDate }
 				todayDate		= { todayDate }
 				selectedDate	= { selectedDate }

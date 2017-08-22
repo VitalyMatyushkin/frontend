@@ -180,16 +180,22 @@ const ManagerWrapper = React.createClass({
 		return _rivals;
 	},
 	getSchoolInfo: function(event, rivals, selectedRivalIndex) {
-		if(TeamHelper.isNewEvent(event) && !EventHelper.isHousesEvent(event)) {
-			const school = rivals[selectedRivalIndex].school;
+		switch (true) {
+			case TeamHelper.isNewEvent(event) && EventHelper.isInterSchoolsEvent(event): {
+				const school = rivals[selectedRivalIndex].school;
 
-			if(school.id === event.inviterSchoolId) {
-				return event.inviterSchool;
-			} else {
-				return event.invitedSchools.find(s => s.id === school.id);
+				if(school.id === event.inviterSchoolId) {
+					return event.inviterSchool;
+				} else {
+					return event.invitedSchools.find(s => s.id === school.id);
+				}
 			}
-		} else {
-			return event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
+			case !TeamHelper.isNewEvent(event) && EventHelper.isInterSchoolsEvent(event): {
+				return event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
+			}
+			case EventHelper.isHousesEvent(event) || EventHelper.isInternalEvent(event): {
+				return event.inviterSchool;
+			}
 		}
 	},
 	getManagerBinding: function() {

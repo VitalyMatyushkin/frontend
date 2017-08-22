@@ -1390,8 +1390,6 @@ const Event = React.createClass({
 				);
 			// sync and any mode excluding edit_squad
 			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
-				console.log(this.getDefaultBinding().toJS('model'));
-
 				return (
 					<div className={EventContainerStyle}>
 						<If condition={isNewEvent}>
