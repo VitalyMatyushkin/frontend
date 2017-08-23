@@ -18,6 +18,7 @@ const   EditUser            = require('./user_edit'),
         Immutable           = require('immutable'),
         Morearty            = require('morearty'),
         UserViewSummary     = require('module/shared_pages/users/user_view_summary'),
+	    AddRole		        = require('./add_role'),
         If                  = require('module/ui/if/if'),
 		propz				= require('propz'),
         SVG 	            = require('module/ui/svg');
@@ -40,6 +41,7 @@ const UserDetail= React.createClass({
 
         binding.set('popup',false);
         binding.set('editPermission',false);
+        binding.set('addRole',false);
         this.request = window.Server.user.get(this.params).then( user => {
             user.permissions.sort(this.sortPermission);
             binding.set('userWithPermissionDetail',Immutable.fromJS(user));
@@ -47,10 +49,11 @@ const UserDetail= React.createClass({
         });
         this.addBindingListener(binding, 'popup', this.userReload);
         this.addBindingListener(binding, 'editPermission', this.userReload);
+        this.addBindingListener(binding, 'addRole', this.userReload);
     },
     userReload: function () {
-        const binding         = this.getDefaultBinding();
-        if(binding.get('editPermission')===false){
+        const binding = this.getDefaultBinding();
+        if(binding.get('editPermission')===false || binding.get('addRole')===false){
             window.Server.user.get(this.params)
                 .then((user) => {
                     user.permissions.sort(this.sortPermission);
@@ -77,6 +80,12 @@ const UserDetail= React.createClass({
         binding.set('popup',true);
         evt.stopPropagation();
     },
+	onAddRoleClick:function(evt){
+		const   binding = this.getDefaultBinding();
+
+		binding.set('addRole',true);
+		evt.stopPropagation();
+	},
     onEditPermissionClick:function(permissionId){
         const   binding = this.getDefaultBinding();
 
@@ -144,7 +153,10 @@ const UserDetail= React.createClass({
         const binding = this.getDefaultBinding();
         binding.set('editPermission',false);
     },
-
+	_closeAddRolePopup:function(){
+		const binding = this.getDefaultBinding();
+		binding.set('addRole',false);
+	},
     render: function() {
         let selectedUserData, listItems;
         const binding = this.getDefaultBinding();
@@ -161,6 +173,7 @@ const UserDetail= React.createClass({
                             <h3>Actions</h3>
                             <div>
                                 <a onClick={this.onEditClick} className="bButton">Edit...</a>
+                                <a onClick={this.onAddRoleClick} className="bButton">Add role</a>
                             </div>
                         </div>
                     </If>
@@ -196,14 +209,25 @@ const UserDetail= React.createClass({
                     />
                 </Popup>
                 <Popup
-                    binding         ={binding}
+                    binding         = {binding}
                     stateProperty   = {'editPermission'}
                     onRequestClose  = {this._closeEditPermissionPopup}
-                    otherClass      = "bPopupPermissionEdit"
+                    otherClass      = "bPopupPermission"
                 >
                     <EditPermission
                         binding     = {binding}
                         onCancel    = {this._closeEditPermissionPopup}
+                    />
+                </Popup>
+                <Popup
+                    binding         = {binding}
+                    stateProperty   = {'addRole'}
+                    onRequestClose  = {this._closeAddRolePopup}
+                    otherClass      = "bPopupPermission"
+                >
+                    <AddRole
+                        binding     = {binding}
+                        onCancel    = {this._closeAddRolePopup}
                     />
                 </Popup>
             </div>

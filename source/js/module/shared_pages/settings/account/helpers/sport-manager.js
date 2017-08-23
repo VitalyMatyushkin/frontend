@@ -64,7 +64,7 @@ const   SportsManager = React.createClass({
 
         const choosers = rivals.map((rival, rivalIndex) => {
             return (
-                <div className="eForm_field">
+                <div key={rivalIndex} className="eForm_field">
                 <Autocomplete
                     key			    = { `sport_input_${rivalIndex}` }
                     defaultItem     = { binding.toJS(`rivals.${rivalIndex}`) }
@@ -84,6 +84,7 @@ const   SportsManager = React.createClass({
 
         choosers.push(
             <Autocomplete
+                key			    = { `sport_input_${rivals.length}` }
                 defaultItem     = { binding.toJS(`rivals.${rivals.length}`) }
                 serviceFilter   = { this.sportsService }
                 serverField     = "name"

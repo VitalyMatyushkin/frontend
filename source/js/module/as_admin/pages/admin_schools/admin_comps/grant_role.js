@@ -9,7 +9,8 @@ const	Form				= require('../../../../ui/form/form'),
 		Immutable			= require('immutable'),
 		classNames			= require('classnames'),
 		RoleList			= require('module/data/roles_data'),
-		SchoolUnionRoleList	= require('module/data/school_union_role_list');
+		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
+		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
 const GrantRole = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -23,7 +24,7 @@ const GrantRole = React.createClass({
 				ids     = self.props.userIdsBinding.toJS();
 
 		this.selectedSchool = undefined;
-
+		this.initCountSportFieldsBlocks();
 		if(!ids)
 			console.error('Error! "userIdsBinding" is not set.');
 	},
@@ -32,7 +33,7 @@ const GrantRole = React.createClass({
 	},
 	getStudents:function(filter){
 		const   self        = this,
-			binding     = self.getDefaultBinding(),
+			binding     = self.getDefaultBinding().sub('formGrantRole'),
 			schoolId    = binding.meta('schoolId.value').toJS();
 
 		return window.Server.schoolStudents.filter(schoolId, filter);
@@ -69,6 +70,8 @@ const GrantRole = React.createClass({
 		};
 	},
 	continueButtonClick:function(model){
+		const   binding = this.getDefaultBinding(),
+				sports		= binding.toJS('rivals');
 		let ids = this.props.userIdsBinding.toJS();
 		ids = ids && typeof ids === 'string' ? [ids] : ids;
 
@@ -80,6 +83,15 @@ const GrantRole = React.createClass({
 					body = {
 						preset:     model.preset.toUpperCase(),
 						schoolId:   model.schoolId,
+						studentId:  model.studentId
+					};
+					break;
+				case 'coach':
+				case 'teacher':
+					body = {
+						preset:     model.preset.toUpperCase(),
+						schoolId:   model.schoolId,
+						sportIds:	sports.map(r => r.id),
 						studentId:  model.studentId
 					};
 					break;
@@ -100,15 +112,32 @@ const GrantRole = React.createClass({
 	handleSelectSchool: function(schoolId, schoolData) {
 		this.selectedSchool = schoolData;
 	},
+	getSchoolSelectedId: function() {
+		const binding = this.getDefaultBinding().sub('formGrantRole');
+		return binding.meta().toJS('schoolId.value');
+	},
+	initCountSportFieldsBlocks: function() {
+		const binding = this.getDefaultBinding();
+
+		const countSportFields = binding.toJS('countSportFields');
+
+		if(typeof countSportFields === 'undefined' || countSportFields < 0) {
+			binding.set('countSportFields', 0);
+		}
+		binding.set('rivals', Immutable.fromJS([]));
+	},
 	render:function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				isParent	= Boolean(binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS());
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				bindingForm			= self.getDefaultBinding().sub('formGrantRole'),
+				isParent			= Boolean(bindingForm.meta('preset.value').toJS() === 'parent' && bindingForm.meta('schoolId.value').toJS()),
+				isCoachOrTeacher 	= Boolean((bindingForm.meta('preset.value').toJS() === 'coach' || bindingForm.meta('preset.value').toJS() === 'teacher')
+					&& bindingForm.meta('schoolId.value').toJS());
 
 		return (
 			<Form	name				= "New Permission"
 					updateBinding		= { true }
-					binding				= { binding }
+					binding				= { bindingForm }
 					onSubmit			= { self.continueButtonClick }
 					onCancel			= { this.props.handleClickCancel }
 					hideCancelButton	= { false}
@@ -129,6 +158,21 @@ const GrantRole = React.createClass({
 				>
 					Role
 				</FormField>
+				{ isCoachOrTeacher ?
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
+							Sports
+						</div>
+						<SportManager
+							binding		= { binding }
+							schoolId	= { this.getSchoolSelectedId() }
+							serviceName = "sports"
+							extraCssStyle	= "mInline mRightMargin mWidth250"
+						/>
+					</div>
+					:
+					<div></div>
+				}
 				<FormField	type			= "autocomplete"
 							field			= "studentId"
 							serverField		= "fullName"
