@@ -21,7 +21,8 @@ const   EditUser            = require('./user_edit'),
 	    AddRole		        = require('./add_role'),
         If                  = require('module/ui/if/if'),
 		propz				= require('propz'),
-        SVG 	            = require('module/ui/svg');
+        SVG 	            = require('module/ui/svg'),
+	    DateHelper 	        = require('module/helpers/date_helper');
 
 const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
@@ -119,8 +120,10 @@ const UserDetail= React.createClass({
                         activated = role.activatedAt ? new Date(role.activatedAt) : null,
                         deactivated = role.deactivatedAt ? new Date(role.deactivatedAt) : null,
                         statusRole = (role.status === 'ACTIVE' && activated && deactivated && (today < activated || today > deactivated)) ? `${role.status}/Outdated` : role.status,
-                        dateInterval = (role.status === 'ACTIVE' && activated && deactivated) ? `${activated.toLocaleDateString()} - ${deactivated.toLocaleDateString()}` : '';
-                return(
+                        dateInterval = (role.status === 'ACTIVE' && activated && deactivated)
+                            ? `${DateHelper.getDateShortTimeString(activated)} 
+                            - ${DateHelper.getDateShortTimeString(deactivated)}` : '';
+				return(
                     <div key={i} className="eDataList_listItem">
                         <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={imageSrc}/></span></div>
                         <div className="eDataList_listItemCell">{role.school ? role.school.name: 'n/a'}</div>

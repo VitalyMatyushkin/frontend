@@ -46,6 +46,10 @@ const DateHelper = {
 		return `${date}, ${time}`;
 	},
 
+	getFormatDateTimeUTCString: function(dateTime: Date): string {
+		return Moment(dateTime).utc().format();
+	},
+
 	getDateTimeString: function(dateTime: Date): string {
 		const 	date = this.getDateStringFromDateObject(dateTime),
 				time = this.getTimeStringFromDateObject(dateTime);
@@ -54,10 +58,8 @@ const DateHelper = {
 	},
 
 	getDateShortTimeString: function(dateTime: Date): string {
-		const 	date = this.getDateStringFromDateObject(dateTime),
-				time = this.getShortTimeStringFromDateObject(dateTime);
-
-		return `${date} ${time}`;
+		dateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm');
+		return dateTime;
 	},
 
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
@@ -124,9 +126,11 @@ const DateHelper = {
 		return result;
 	},
 
-		isValidDateTime:function(value: any): boolean {
+	isValidDateTime:function(value: any): boolean {
 		let result = false;
-		
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-MM-DD HH:mm');
+		}
 		if(Date.parse(value)){
 			const 	date 		= new Date(value),
 					valueArray 	= value.split(' '),

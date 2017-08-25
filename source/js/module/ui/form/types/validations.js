@@ -28,11 +28,31 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-		const minValue = new Date('1900-01-01'),
-			maxValue = new Date('2100-01-01');
+		const 	minValue = new Date('1900-01-01'),
+				maxValue = new Date('2100-01-01');
 
 		if(value){
 			if(!DateHelper.isValid(value)){
+				return 'Incorrect date!';
+			}
+
+			const date = new Date(value);
+
+			if(date <= minValue){
+				return 'Date should be > "01/01/1900"';
+			}
+			if(date >= maxValue){
+				return 'Date should be < "01/01/2100"';
+			}
+		}
+
+		return false;
+	},
+	datetime:function(value){
+		const 	minValue = new Date('1900-01-01'),
+				maxValue = new Date('2100-01-01');
+		if(value){
+			if(!DateHelper.isValidDateTime(value)){
 				return 'Incorrect date!';
 			}
 

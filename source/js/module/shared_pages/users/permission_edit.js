@@ -5,7 +5,8 @@ const   React           = require('react'),
         Immutable       = require('immutable'),
         Morearty        = require('morearty'),
         Form 		    = require('module/ui/form/form'),
-        FormField 	    = require('module/ui/form/form_field');
+        FormField 	    = require('module/ui/form/form_field'),
+        DateHelper 	    = require('module/helpers/date_helper');
 
 const STATUS = {
     ACTIVE:     'ACTIVE',
@@ -59,10 +60,12 @@ const EditPermission = React.createClass({
                 userId = binding.get('userWithPermissionDetail.id'),
                 permissionId = binding.get('editPermissionId');
 
-
-        if (data.activatedAt) data.activatedAt += 'T00:00:00.000Z';
-        if (data.deactivatedAt) data.deactivatedAt += 'T00:00:00.000Z';
-
+		if (data.activatedAt){
+            data.activatedAt = DateHelper.getFormatDateTimeUTCString(data.activatedAt);
+		}
+		if (data.deactivatedAt){
+			data.deactivatedAt = DateHelper.getFormatDateTimeUTCString(data.deactivatedAt);
+		}
         window.Server.userPermission.put({userId, permissionId}, data)
         .then((res) => {
             binding.set('editPermission',false);
@@ -83,8 +86,8 @@ const EditPermission = React.createClass({
                     onCancel        = {this.props.onCancel}
                 >
                     <FormField type="dropdown"  field="status" options={this.getStatus()}>Status</FormField>
-                    <FormField type="date"      field="activatedAt" validation="date">Activated</FormField>
-                    <FormField type="date"      field="deactivatedAt" validation="date">Deactivated</FormField>
+                    <FormField type="datetime"  field="activatedAt" validation="datetime">Activated</FormField>
+                    <FormField type="datetime"  field="deactivatedAt" validation="datetime">Deactivated</FormField>
                 </Form>
             </div>
         );
