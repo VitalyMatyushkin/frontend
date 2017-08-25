@@ -483,16 +483,14 @@ function isOneOnOneSport(event) {
 		return false;
 }
 
-function isTeamDataCorrect(event, validationData) {
-	const	self	= this;
-
+function isTeamDataCorrect(validationData) {
 	let isError = false;
 
-	// for inter-schools event we can edit only one team - our team:)
-	if(self.getEventType(event) === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
-		isError = validationData[0].isError;
-	} else {
-		isError = !(!validationData[0].isError && !validationData[1].isError);
+	for(let i = 0; i < validationData.length; i++) {
+		if(validationData[i].isError) {
+			isError = true;
+			break;
+		}
 	}
 
 	return !isError;

@@ -29,6 +29,7 @@ const	TeamsManagerStyles		= require('../../../../styles/ui/teams_manager/b_teams
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		activeSchoolId			: React.PropTypes.string.isRequired,
 		isShowRivals			: React.PropTypes.bool,
 		isInviteMode			: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
@@ -38,35 +39,23 @@ const Manager = React.createClass({
 	listeners: [],
 	teamWrapperListeners: [],
 	componentWillMount: function () {
-		const self = this;
+		this.initDefaultBinding();
+		this.initErrorBinding();
+		this.addListeners();
 
-		self.initDefaultBinding();
-		self.initErrorBinding();
-		self.addListeners();
+		const	binding		= this.getDefaultBinding(),
+				teamWrapper	= binding.toJS('teamModeView.teamWrapper');
 
-		if(typeof this.props.indexOfDisplayingRival !== 'undefined') {
-			let rivalId = this.props.indexOfDisplayingRival;
-			if(
-				EventHelper.isInterSchoolsEvent(
-					this.getDefaultBinding().toJS('model')
-				)
-			) {
-				rivalId = this.getBinding('rivals').toJS()[this.props.indexOfDisplayingRival].id;
-			}
-
-			self.validate(rivalId);
-		} else {
-			const	binding		= this.getDefaultBinding(),
-					teamWrapper	= binding.toJS('teamModeView.teamWrapper');
-
-			teamWrapper.forEach(tw => this.validate(tw.rivalId));
-		}
+		teamWrapper.forEach(tw => this.validate(tw.rivalId));
 	},
 	componentWillUnmount: function() {
 		const binding = this.getDefaultBinding();
 
 		this.listeners.forEach(l => binding.removeListener(l));
 		this.removeAllTeamWrapperListeners();
+	},
+	getActiveSchool: function() {
+		return this.getDefaultBinding().toJS('schoolInfo');
 	},
 	removeAllTeamWrapperListeners: function() {
 		const binding = this.getDefaultBinding();
@@ -98,15 +87,13 @@ const Manager = React.createClass({
 		// Init rival index if need
 		const	selectedRivalIndex	= typeof this.props.selectedRivalIndex !== 'undefined' ? this.props.selectedRivalIndex : this.initRivalIndex(),
 				teamTable			= this.getTeamTables(),
-				teamWrapper			= this.getTeamWrappers(),
-				rivalsCount			= this.getBinding('rivals').toJS().length;
+				teamWrapper			= this.getTeamWrappers();
 
 		defaultBinding
 			.atomically()
 			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
-					rivalsCount:		Immutable.fromJS(rivalsCount),
 					selectedRivalIndex:	Immutable.fromJS(selectedRivalIndex),
 					players:			this.getInitPlayers(),
 					teamTable:			teamTable,
@@ -138,13 +125,28 @@ const Manager = React.createClass({
 		const	rivals			= this.getBinding().rivals.toJS(),
 				currentRival	= rivals[rivalIndex];
 
+
+
 		const	teamId			= this.getTeamIdByOrder(rivalIndex),
-				teamName		= this.getTeamNameByOrder(rivalIndex),
-				schoolId		= this.getSchoolIdByRivalId(currentRival.id);
+				teamName		= this.getTeamNameByOrder(rivalIndex);
+
+		// TODO It's temporary
+		let	schoolId;
+		if(
+			EventHelper.isHousesEvent(
+				this.getDefaultBinding().toJS('model')
+			)
+		) {
+			schoolId = this.getActiveSchool().id;
+		} else {
+			schoolId = currentRival.school.id
+		}
 
 		return {
 			rivalId: currentRival.id,
-			willRemove: false,
+			// team wrapper from active school is active
+			// team wrapper from other school is not active by default
+			isActive: schoolId === this.props.activeSchoolId,
 			isLoadingTeam: false,
 			filter: undefined,
 			schoolId: schoolId,
@@ -246,32 +248,6 @@ const Manager = React.createClass({
 		}
 
 		return teamId;
-	},
-	/**
-	 * Return schoolId for rival by rivalId
-	 * Only for Interschools multyparty event
-	 * @param order
-	 * @returns {*}
-	 */
-	getSchoolIdByRivalId: function(rivalId) {
-		let schoolId;
-
-		const event = this.getDefaultBinding().toJS('model');
-		if(
-			EventHelper.isInterSchoolsEvent(event) &&
-			TeamHelper.isMultiparty(event)
-		) {
-			const binding = this.getBinding();
-
-			if(typeof binding.rivals !== "undefined") {
-				const	rivals			= binding.rivals.toJS(),
-						currentRival	= rivals.find(r => r.id === rivalId);
-
-				schoolId = propz.get(currentRival, ['school', 'id']);
-			}
-		}
-
-		return schoolId;
 	},
 	getTeamTypeByOrder: function(order) {
 		const	binding	= this.getBinding();
@@ -400,17 +376,17 @@ const Manager = React.createClass({
 
 		if(typeof teamWrapper !== 'undefined') {
 			const	errorArray			= errorBinding.toJS(),
-				errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
-				isSetTeamLater		= teamWrapper.isSetTeamLater,
-				subscriptionPlan	= binding.toJS('schoolInfo.subscriptionPlan');
+					errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
+					isSetTeamLater		= teamWrapper.isSetTeamLater,
+					subscriptionPlan	= this.getActiveSchool().subscriptionPlan;
 
 			let result = {
 				isError:	false,
 				text:		''
 			};
-			// process data if setTeamLater is FALSE
+			// process data if setTeamLater is FALSE and team wrapper is active
 			// in any other case just set def validation result data
-			if(!isSetTeamLater) {
+			if(!isSetTeamLater && teamWrapper.isActive) {
 				const event = binding.toJS('model');
 
 				if(
@@ -470,7 +446,7 @@ const Manager = React.createClass({
 		let		currentRivalIndex;
 
 		if(EventHelper.isInterSchoolsEvent(event)) {
-			let	activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+			let	activeSchoolId	= this.props.activeSchoolId,
 				rivals			= self.getBinding().rivals.toJS();
 
 			for(let rivalIndex in rivals) {
@@ -490,7 +466,11 @@ const Manager = React.createClass({
 				rivals			= this.getBinding().rivals.toJS(),
 				teamModeView	= binding.toJS('teamModeView');
 
-		rivals.push(new InternalRivalModel());
+		rivals.push(
+			new InternalRivalModel(
+				this.getActiveSchool()
+			)
+		);
 
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
@@ -508,8 +488,6 @@ const Manager = React.createClass({
 		teamModeView.teamWrapper.push(
 			this.getTeamWrapperByRivalIndex(newRivalIndex)
 		);
-
-		teamModeView.rivalsCount = rivals.length;
 
 		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
@@ -552,8 +530,6 @@ const Manager = React.createClass({
 		const teamWrapper = this.getTeamWrapperByRivalIndex(newRivalIndex);
 		teamModeView.teamWrapper.push(teamWrapper);
 
-		teamModeView.rivalsCount = rivals.length;
-
 		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
 
 		const error = this.getBinding('error').toJS();
@@ -568,38 +544,44 @@ const Manager = React.createClass({
 	removeRival: function(rivalId) {
 		const binding = this.getDefaultBinding();
 
+		const	rivals				= this.getBinding().rivals.toJS(),
+				teamModeView		= binding.toJS('teamModeView'),
+				selectedRivalIndex	= teamModeView.selectedRivalIndex,
+				selectedRival		= rivals[selectedRivalIndex];
+
 		// FIRST REMOVE LISTENERS
 		// remove listeners
 		this.removeTeamWrapperListenersByRivaId(rivalId);
 
 		// remove rival
-		const	rivals				= this.getBinding().rivals.toJS(),
-				currentRivalIndex	= rivals.findIndex(r => r.id === rivalId);
-
-		rivals.splice(currentRivalIndex, 1);
+		const rivalIndexToRemove = rivals.findIndex(r => r.id === rivalId);
+		rivals.splice(rivalIndexToRemove, 1);
 
 		// remove team mode view
-		const	teamModeView			= binding.toJS('teamModeView'),
-				currentTeamWrapperIndex	= teamModeView.teamWrapper.findIndex(tw => tw.rivalId === rivalId);
+		const teamWrapperIndexToRemove = teamModeView.teamWrapper.findIndex(tw => tw.rivalId === rivalId);
 
 		// call object to remove listeners
-		teamModeView.teamWrapper[currentTeamWrapperIndex].willRemoveListeners = true;
-		binding.set('teamModeView',	Immutable.fromJS(teamModeView));
+		binding.set(`teamModeView.teamWrapper.${teamWrapperIndexToRemove}.isActive`, false);
 
-		teamModeView.teamWrapper.splice(currentTeamWrapperIndex, 1);
-		teamModeView.rivalsCount = rivals.length;
+		teamModeView.teamWrapper.splice(teamWrapperIndexToRemove, 1);
 
 		// remove team table
-		const currentTeamTableIndex	= teamModeView.teamTable.findIndex(tt => tt.rivalId === rivalId);
-		teamModeView.teamTable.splice(currentTeamTableIndex, 1);
-
-		// TODO remove players
+		const teamTableIndexToRemove	= teamModeView.teamTable.findIndex(tt => tt.rivalId === rivalId);
+		teamModeView.teamTable.splice(teamTableIndexToRemove, 1);
 
 		// remove error info object
 		const error = this.getBinding('error').toJS();
 		error.splice(
 			error.findIndex(e => e.rivalId === rivalId),
 			1
+		);
+
+		//set new selected rival index
+		teamModeView.selectedRivalIndex = this.getNewSelectedRivalIndex(
+			rivals,
+			rivalIndexToRemove,
+			selectedRival.id,
+			selectedRivalIndex
 		);
 
 		// save changes
@@ -622,7 +604,7 @@ const Manager = React.createClass({
 			// For inter schools event we add new rival only for active school.
 			// It's business logic.
 			// School info it is active school data
-			const activeSchool = binding.toJS('schoolInfo');
+			const activeSchool = this.getActiveSchool();
 			this.addNewEmptyRivalForInterSchoolsEventBySchool(activeSchool);
 
 			selectNewRival();
@@ -637,34 +619,48 @@ const Manager = React.createClass({
 				event	= binding.toJS('model');
 
 		if(EventHelper.isInterSchoolsEvent(event) && event.sportModel.multiparty) {
-			const	activeSchoolId		= this.getDefaultBinding().toJS('schoolInfo.id'),
-					rivals				= this.getBinding('rivals').toJS(),
-					removedRivalIndex	= rivals.findIndex(r => r.id === rivalId),
-					selectedRivalIndex	= binding.toJS('teamModeView.selectedRivalIndex'),
-					selectedRival		= rivals[selectedRivalIndex];
-
-			// remove rival
 			this.removeRival(rivalId);
+		}
+	},
+	/**
+	 * Function calculates new selected rival index after rival was removed
+	 * @param updRivals - new rivals array without removed rival
+	 * @param removedRivalIndex - index of removed rival
+	 * @param selectedRivalId - id of current selected rival
+	 * @param selectedRivalIndex - index of current selected rival
+	 * @returns {number}
+	 */
+	getNewSelectedRivalIndex: function(updRivals, removedRivalIndex, selectedRivalId, selectedRivalIndex) {
+		let newSelectedRivalIndex = -1;
 
-			// change selected rival index
-			if(removedRivalIndex === selectedRivalIndex) {
-				const updRivals = this.getBinding('rivals').toJS();
+		const activeSchoolId = this.props.activeSchoolId
 
-				// just find index of next rival
-				for(let i = 0; i < updRivals.length; i++) {
-					if(updRivals[i].school.id === activeSchoolId) {
-						binding.set('teamModeView.selectedRivalIndex', Immutable.fromJS(i));
-						break;
-					}
+		const getFirstActiveSchoolRivalIndex = () => {
+			for(let i = 0; i < updRivals.length; i++) {
+				if(updRivals[i].school.id === activeSchoolId) {
+					return i;
 				}
-			} else if(removedRivalIndex < selectedRivalIndex) {
- 				// just find index of selected rival in updated rival array
-				const	updRivals				= this.getBinding('rivals').toJS(),
-						updSelectedRivalIndex	= updRivals.findIndex(r => r.id === selectedRival.id);
+			}
+		};
 
-				binding.set('teamModeView.selectedRivalIndex', Immutable.fromJS(updSelectedRivalIndex));
+		switch (true) {
+			case removedRivalIndex === selectedRivalIndex: {
+				newSelectedRivalIndex = getFirstActiveSchoolRivalIndex();
+				break;
+			}
+			default: {
+				// just find index of selected rival in updated rival array
+				newSelectedRivalIndex = updRivals.findIndex(r => r.id === selectedRivalId);
+				break;
 			}
 		}
+
+		// it's plan B, if for some reason newSelectedRivalIndex was not found
+		if(newSelectedRivalIndex === -1) {
+			newSelectedRivalIndex = getFirstActiveSchoolRivalIndex();
+		}
+
+		return newSelectedRivalIndex;
 	},
 	renderGameField: function() {
 		const binding = this.getDefaultBinding();
@@ -685,6 +681,7 @@ const Manager = React.createClass({
 			return (
 				<RivalChooser
 					binding					= { this.getBinding() }
+					activeSchoolId			= { this.props.activeSchoolId }
 					isInviteMode			= { this.props.isInviteMode }
 					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
@@ -712,7 +709,7 @@ const Manager = React.createClass({
 				{ this.renderRivals() }
 				<div className="eTeamsManager_body">
 					<TeamBundle binding={teamBundleBinding}/>
-					{this.renderGameField()}
+					{ this.renderGameField() }
 				</div>
 			</div>
 		);

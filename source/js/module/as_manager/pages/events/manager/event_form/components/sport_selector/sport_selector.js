@@ -70,7 +70,12 @@ const SportSelector = React.createClass({
 				rivals = [];
 				break;
 			case 'internal':
-				rivals = RivalsHelper.getDefaultRivalsForInternalSchoolsEvent();
+				const schoolInfo = binding.toJS('schoolInfo');
+
+				rivals = RivalsHelper.getDefaultRivalsForInternalSchoolsEvent(
+					schoolInfo,
+					binding.toJS('model.sportModel')
+				);
 				break;
 		}
 

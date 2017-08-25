@@ -31,7 +31,7 @@ const NewManagerWrapperHelper = {
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
-				rival = new InternalRivalModel();
+				rival = new InternalRivalModel(_rival.school);
 				break;
 		}
 

@@ -20,9 +20,9 @@ const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/model
 
 const InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin],
-    // ID of current school
-    // Will set on componentWillMount event
-    activeSchoolId: undefined,
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
     display: 'InviteAccept',
 	// debounce decorator for changeControlButtonState func
 	onDebounceChangeControlButtonState: undefined,
@@ -31,7 +31,7 @@ const InviteAcceptView = React.createClass({
 	 */
 	changeControlButtonState: function() {
 		const	self	= this,
-			binding	= self.getDefaultBinding();
+				binding	= self.getDefaultBinding();
 
 		binding.set('isControlButtonActive', this.isControlButtonActive());
 	},
@@ -41,20 +41,18 @@ const InviteAcceptView = React.createClass({
             binding = self.getDefaultBinding(),
             inviteId = rootBinding.get('routing.pathParameters.0');
 
-        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
         binding.clear();
 		binding.set('isSavingChangesModePopupOpen', false);
         let invite;
-        window.Server.schoolInvite.get({schoolId: self.activeSchoolId, inviteId: inviteId})
+        window.Server.schoolInvite.get({schoolId: this.props.activeSchoolId, inviteId: inviteId})
 			.then(_invite => {
 				invite = _invite;
 
-				return window.Server.school.get(self.activeSchoolId)
+				return window.Server.school.get(this.props.activeSchoolId)
 				.then(currentSchool => {
 					invite.invitedSchool = currentSchool;
 
-					return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
+					return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
 				})
 				.then(_ => {
 					return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
@@ -64,7 +62,7 @@ const InviteAcceptView = React.createClass({
 					});
 				})
 				.then(_ => {
-					return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
+					return window.Server.schoolEvent.get({schoolId: this.props.activeSchoolId, eventId: invite.eventId});
 				})
 				.then(event => {
 					invite.event = event;
@@ -203,13 +201,13 @@ const InviteAcceptView = React.createClass({
             // add new individuals
             Promise
                 .all(TeamHelper.addIndividualPlayersToEvent(
-                    self.activeSchoolId,
+					this.props.activeSchoolId,
                     event,
                     binding.toJS(`teamModeView.teamWrapper`
                 )))
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
-                        schoolId: self.activeSchoolId,
+                        schoolId: this.props.activeSchoolId,
                         inviteId: binding.get('invite.id')
                     })
                 )
@@ -223,7 +221,7 @@ const InviteAcceptView = React.createClass({
 			return Promise
 				.all(
 					SavingEventHelper.processSavingChangesMode(
-						self.activeSchoolId,
+						this.props.activeSchoolId,
 						binding.toJS(`rivals`),
 						binding.toJS('model'),
 						binding.toJS(`teamModeView.teamWrapper`)
@@ -238,10 +236,10 @@ const InviteAcceptView = React.createClass({
 					));
 				})
                 // add it to event
-                .then(teams => Promise.all(TeamHelper.addTeamsToEvent(self.activeSchoolId, event, teams)))
+                .then(teams => Promise.all(TeamHelper.addTeamsToEvent(this.props.activeSchoolId, event, teams)))
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
-                        schoolId: self.activeSchoolId,
+                        schoolId: this.props.activeSchoolId,
                         inviteId: binding.get('invite.id')
                     })
                 )
@@ -261,16 +259,12 @@ const InviteAcceptView = React.createClass({
 	isControlButtonActive: function() {
 		const	binding			= this.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				validationData	= [
-					binding.toJS('error.0'),
-					binding.toJS('error.1')
-				];
+		const	validationData	= binding.toJS('error');
 
 		if(
 			binding.toJS('isTeamManagerSync') &&
 			!binding.toJS('isSubmitProcessing') &&
-			TeamHelper.isTeamDataCorrect(event, validationData)
+			TeamHelper.isTeamDataCorrect(validationData)
 		) {
 			return true;
 		} else {
@@ -308,6 +302,7 @@ const InviteAcceptView = React.createClass({
 
 		return (
 			<Manager
+				activeSchoolId		= { this.props.activeSchoolId }
 				isShowRivals		= { isShowRivals }
 				isInviteMode		= { true }
 				isShowAddTeamButton	= { false }
@@ -339,7 +334,7 @@ const InviteAcceptView = React.createClass({
 						</div>
 					</div>
 					<SavingPlayerChangesPopup	binding			= { binding }
-												activeSchoolId	= { this.activeSchoolId }
+												activeSchoolId	= { this.props.activeSchoolId }
 												submit			= { () => this._submit() }
 					/>
 				</div>

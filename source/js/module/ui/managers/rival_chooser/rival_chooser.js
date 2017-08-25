@@ -17,6 +17,7 @@ const RivalChooser = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
+		activeSchoolId			: React.PropTypes.string,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		handleClickAddTeam		: React.PropTypes.func,
 		handleClickRemoveTeam	: React.PropTypes.func,
@@ -37,6 +38,7 @@ const RivalChooser = React.createClass({
 			return (
 				<InterSchoolsMultipartyRivals
 					binding					= { this.getBinding() }
+					activeSchoolId			= { this.props.activeSchoolId }
 					isInviteMode			= { this.props.isInviteMode }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.props.handleClickAddTeam }
@@ -48,6 +50,7 @@ const RivalChooser = React.createClass({
 			return (
 				<DefaultRivals
 					binding					= { this.getBinding() }
+					activeSchoolId			= { this.props.activeSchoolId }
 					isShowAddTeamButton		= { this.props.isShowAddTeamButton }
 					indexOfDisplayingRival	= { this.props.indexOfDisplayingRival }
 					handleClickAddTeam		= { this.props.handleClickAddTeam }

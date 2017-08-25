@@ -113,13 +113,12 @@ const ManagerWrapper = React.createClass({
 	isControlButtonActive: function() {
 		const	binding			= this.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				validationData	= this.getValidationData();
+		const validationData = this.getValidationData();
 
 		if(
 			binding.get('isTeamManagerSync') &&
 			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
-			TeamHelper.isTeamDataCorrect(event, validationData)
+			TeamHelper.isTeamDataCorrect(validationData)
 		) {
 			return true;
 		} else {
@@ -230,21 +229,9 @@ const ManagerWrapper = React.createClass({
 		this.getDefaultBinding().set('mode', 'general');
 	},
 	getValidationData: function() {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		const event = binding.toJS('model');
-
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			return [
-				binding.toJS('teamManagerWrapper.default.error.0')
-			];
-		} else {
-			return [
-				binding.toJS('teamManagerWrapper.default.error.0'),
-				binding.toJS('teamManagerWrapper.default.error.1')
-			];
-		}
+		return binding.toJS('teamManagerWrapper.default.error');
 	},
 	getTeamWrappers: function() {
 		return this.getDefaultBinding().toJS('teamManagerWrapper.default.teamModeView.teamWrapper');
@@ -296,6 +283,7 @@ const ManagerWrapper = React.createClass({
 
 		return (
 			<Manager
+				activeSchoolId			= { this.props.activeSchoolId }
 				binding					= { managerBinding }
 				selectedRivalIndex		= { binding.toJS('selectedRivalIndex') }
 				isShowRivals			= { this.isShowRivals() }

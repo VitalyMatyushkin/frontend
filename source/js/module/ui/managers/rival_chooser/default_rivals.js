@@ -15,6 +15,7 @@ const DefaultRivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isShowAddTeamButton		: React.PropTypes.bool,
+		activeSchoolId			: React.PropTypes.string,
 		handleClickAddTeam		: React.PropTypes.func,
 		indexOfDisplayingRival	: React.PropTypes.number,
 		handleChooseRival		: React.PropTypes.func.isRequired

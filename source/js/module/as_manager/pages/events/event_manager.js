@@ -406,32 +406,26 @@ const EventManager = React.createClass({
 			this.setDefaultStateForActiveSchoolRivalsForInterSchoolEvent();
 		}
 	},
-	_changeRivalFocusToErrorForm: function() {
-		const self = this,
-			binding    = self.getDefaultBinding(),
-			eventType  = binding.toJS('model.type'),
-			sportModel = binding.toJS('model.sportModel');
+	changeRivalFocusToErrorForm: function() {
+		const binding = this.getDefaultBinding();
 
-		let incorrectRivalIndex = null;
+		let incorrectRivalIndex = -1;
 
-		// for inter-schools event we can edit only one team - our team:)
-		if(eventType === 'inter-schools') {
-			incorrectRivalIndex = 0;
-		} else {
-			let errors = self.getDefaultBinding().toJS('error');
-
-			for (let errIndex in errors) {
-				if (errors[errIndex].isError) {
-					incorrectRivalIndex = errIndex;
-					break;
-				}
+		const validationData = binding.toJS('error');
+		for(let i = 0; i < validationData.length; i++) {
+			if(validationData[i].isError) {
+				const rivalId = validationData[i].rivalId;
+				incorrectRivalIndex = binding.toJS(`rivals`).findIndex(r => r.id === rivalId);
+				break;
 			}
 		}
 
-		self.getDefaultBinding()
-			.atomically()
-			.set('teamModeView.selectedRivalIndex', Immutable.fromJS(incorrectRivalIndex))
-			.commit();
+		if(incorrectRivalIndex !== -1) {
+			this.getDefaultBinding()
+				.atomically()
+				.set('teamModeView.selectedRivalIndex', Immutable.fromJS(incorrectRivalIndex))
+				.commit();
+		}
 	},
 	isSaveButtonActive: function() {
 		const binding = this.getDefaultBinding();
@@ -455,45 +449,42 @@ const EventManager = React.createClass({
 		if(this.isSaveButtonActive()) {
 			const	event			= binding.toJS('model'),
 					teamWrappers	= this.getTeamWrappers(),
-					validationData	= [
-						binding.toJS('error.0'),
-						binding.toJS('error.1')
-					];
+					validationData	= binding.toJS('error');
 
 			switch (true) {
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
 						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
 						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
 						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
 						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
+				case TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isNonTeamSport(event):
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);
 					break;
 				// If teams data isn't correct
-				case !TeamHelper.isTeamDataCorrect(event, validationData):
+				case !TeamHelper.isTeamDataCorrect(validationData):
 					// So, let's show form with incorrect data
-					self._changeRivalFocusToErrorForm();
+					self.changeRivalFocusToErrorForm();
 					break;
 			}
 		}
@@ -686,8 +677,7 @@ const EventManager = React.createClass({
 		}
 	},
 	_isStepComplete: function(step) {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
+		const	self			= this;
 		let		isStepComplete	= false;
 
 		switch (step) {
@@ -695,25 +685,7 @@ const EventManager = React.createClass({
 				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
-				const	event		= binding.toJS('model'),
-						eventType	= event.type,
-						hasError	= binding.toJS('error')
-							.filter((err, index) => {
-								// filter some error bundles
-								if(
-									eventType === 'inter-schools' ||
-									TeamHelper.isInternalEventForIndividualSport(event)
-								) {
-									return index === 0;
-								} else {
-									return true;
-								}
-							})
-							.findIndex(err => err.isError) !== -1;
-
-				if(!hasError) {
-					isStepComplete = true;
-				}
+				isStepComplete = true;
 				break;
 		}
 
@@ -796,16 +768,18 @@ const EventManager = React.createClass({
 				event	= binding.toJS('model');
 
 		const managerBinding	= {
-									default				: binding,
-									rivals				: binding.sub('rivals'),
-									players				: binding.sub('players'),
-									error				: binding.sub('error')
-								};
+				default	: binding,
+				rivals	: binding.sub('rivals'),
+				players	: binding.sub('players'),
+				error	: binding.sub('error')
+			};
 
 		return (
-			<Manager	isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
-						isShowAddTeamButton	= { this.isShowAddTeamButton() }
-						binding				= { managerBinding }
+			<Manager
+				activeSchoolId		= { this.props.activeSchoolId }
+				isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
+				isShowAddTeamButton	= { this.isShowAddTeamButton() }
+				binding				= { managerBinding }
 			/>
 		);
 	},

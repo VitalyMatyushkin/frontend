@@ -5,10 +5,23 @@ const	EventHelper				= require('./../../../../../helpers/eventHelper'),
 
 const ManagerWrapperHelper = {
 	getRivals: function(activeSchoolId, event, isFakeTeams) {
-		const rivals = [
-			this.getRivalByOrder(activeSchoolId, event, 0, isFakeTeams),
-			this.getRivalByOrder(activeSchoolId, event, 1, isFakeTeams)
-		];
+		let rivals;
+
+		switch (true) {
+			case TeamHelper.isInternalEventForIndividualSport(event): {
+				rivals = [
+					this.getRivalByOrder(activeSchoolId, event, 0, isFakeTeams),
+				];
+				break;
+			}
+			default: {
+				rivals = [
+					this.getRivalByOrder(activeSchoolId, event, 0, isFakeTeams),
+					this.getRivalByOrder(activeSchoolId, event, 1, isFakeTeams)
+				];
+				break;
+			}
+		}
 
 		return rivals;
 	},
@@ -37,7 +50,7 @@ const ManagerWrapperHelper = {
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
-				rival = new InternalRivalModel();
+				rival = new InternalRivalModel(event.inviterSchool);
 				break;
 		}
 

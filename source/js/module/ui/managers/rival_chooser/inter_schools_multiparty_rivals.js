@@ -17,6 +17,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		isInviteMode			: React.PropTypes.bool,
+		activeSchoolId			: React.PropTypes.string,
 		handleClickAddTeam		: React.PropTypes.func.isRequired,
 		handleChooseRival		: React.PropTypes.func.isRequired,
 		handleClickRemoveTeam	: React.PropTypes.func
@@ -24,7 +25,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 	getSchools: function () {
 		const rivals = this.getBinding('rivals').toJS();
 
-		const schools = [];
+		let schools = [];
 		// collect unique schools
 		// because schools in rivals can be repeated
 		rivals.forEach(rival => {
@@ -33,6 +34,17 @@ const InterSchoolsMultipartyRivals = React.createClass({
 			if(typeof school === 'undefined') {
 				schools.push(rival.school);
 			}
+		});
+
+		schools = schools.sort((school1, school2) => {
+			if(school1.id === this.props.activeSchoolId && school2.id !== this.props.activeSchoolId) {
+				return -1;
+			}
+			if(school1.id !== this.props.activeSchoolId && school2.id === this.props.activeSchoolId) {
+				return 1;
+			}
+
+			return 0;
 		});
 
 		return schools.map((school, index) => {
@@ -95,7 +107,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 				eventType			= TeamHelper.getEventType(this.getDefaultBinding().toJS('model')),
 				text				= school.name;
 
-		if(index === 0) {
+		if(school.id === this.props.activeSchoolId) {
 			return (
 				<ActionList
 					buttonText					= { text }

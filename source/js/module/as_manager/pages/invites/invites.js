@@ -13,6 +13,7 @@ const SchoolHelper = require('module/helpers/school_helper');
 
 const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
+	activeSchoolId: undefined,
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			inbox: {
@@ -36,6 +37,8 @@ const InvitesView = React.createClass({
 				binding 		= self.getDefaultBinding(),
 				rootBinding 	= self.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
+
+		this.activeSchoolId = activeSchoolId;
 
 		self.menuItems = [{
 			href: '/#invites/inbox',
@@ -112,7 +115,12 @@ const InvitesView = React.createClass({
 							<Route path='/invites /invites/inbox'		binding={binding.sub('inbox')}		component={InboxComponent} />
 							<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
 							<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
-							<Route path='/invites/:inviteId/accept'		binding={this.getAcceptBinding()} 	component={AcceptComponent} />
+							<Route
+								path			= '/invites/:inviteId/accept'
+								binding			= { this.getAcceptBinding() }
+								activeSchoolId	= { this.activeSchoolId }
+								component		= { AcceptComponent }
+							/>
 						</RouterView>
 					</div>
 				</div>

@@ -20,7 +20,7 @@ const TeamManager = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			willRemoveListeners:		false,
+			isActive:		true,
 			filter:						undefined,
 			foundStudents:				[],
 			removedPlayers:				[],
@@ -46,29 +46,30 @@ const TeamManager = React.createClass({
 		self.initTeamValues();
 
 		self.listeners.push(binding.sub('filter').addListener(() => {
-			self.searchAndSetStudents(self.currentSearchText, binding);
+			this.isActive() && self.searchAndSetStudents(self.currentSearchText, binding);
 		}));
 		self.listeners.push(binding.sub('blackList').addListener(() => {
-			self.searchAndSetStudents(self.currentSearchText, binding);
+			this.isActive() && self.searchAndSetStudents(self.currentSearchText, binding);
 		}));
 		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
-			if(!descriptor.getCurrentValue()) {
-				self.clearTeamValues();
-			}
+			this.isActive() && !descriptor.getCurrentValue() && self.clearTeamValues();
 		}));
 		self.listeners.push(binding.sub('isNeedSearch').addListener((descriptor) => {
-			// if prev === false and curr === true
-			if(
+			if (
+				this.isActive() &&
+				// if prev === false and curr === true
 				descriptor.getPreviousValue() !== descriptor.getCurrentValue() &&
 				descriptor.getCurrentValue()
 			) {
 				self.searchAndSetStudents(self.currentSearchText, binding);
 			}
 		}));
-		self.listeners.push(binding.sub('willRemoveListeners').addListener((descriptor) => {
+		self.listeners.push(binding.sub('isActive').addListener((descriptor) => {
 			if(
+				// if prev value TRUE and current value FALSE
 				typeof descriptor.getCurrentValue() === 'boolean' &&
-				descriptor.getCurrentValue() === true
+				descriptor.getPreviousValue() &&
+				!descriptor.getCurrentValue()
 			) {
 				this.removeListeners();
 				this.cancelCurrentSearchRequest();
@@ -80,6 +81,12 @@ const TeamManager = React.createClass({
 		this.cancelCurrentSearchRequest();
 
 		this.getDefaultBinding().clear();
+	},
+	isActive: function() {
+		return (
+			typeof this.getDefaultBinding().get('isActive') === 'boolean' &&
+			this.getDefaultBinding().get('isActive')
+		);
 	},
 	removeListeners: function() {
 		const binding = this.getDefaultBinding();
@@ -124,11 +131,13 @@ const TeamManager = React.createClass({
 		const self = this;
 
 		return self.searchStudents(searchText).then(students => {
-			binding.atomically()
-				.set("selectedStudentIds",	Immutable.fromJS([]))
-				.set("foundStudents",		Immutable.fromJS(students))
-				.set("isNeedSearch",		Immutable.fromJS(false))
-				.commit();
+			if(this.isActive()) {
+				binding.atomically()
+					.set("selectedStudentIds",	Immutable.fromJS([]))
+					.set("foundStudents",		Immutable.fromJS(students))
+					.set("isNeedSearch",		Immutable.fromJS(false))
+					.commit();
+			}
 
 			return true;
 		});

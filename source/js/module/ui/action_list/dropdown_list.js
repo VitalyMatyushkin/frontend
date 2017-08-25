@@ -13,13 +13,13 @@ const DropdownList = React.createClass({
 	render: function () {
 		const items = this.props.actionList.map((action,index, actionList) =>
 			<ActionItem
-				key					= {action.id}
-				id					= {action.id}
-				text				= {action.text}
-				extraStyleClasses	= {index === actionList.length - 1 ? 'mLast' : ''}
-				onClick				= {this.props.handleClickActionItem}
-				onClickRemove		= {this.props.handleClickRemoveActionItem}
-				options				= {action.options}
+				key					= { action.id }
+				id					= { action.id }
+				text				= { action.text }
+				extraStyleClasses	= { index === actionList.length - 1 ? 'mLast' : '' }
+				onClick				= { this.props.handleClickActionItem }
+				onClickRemove		= { this.props.handleClickRemoveActionItem }
+				options				= { action.options }
 			/>
 		);
 

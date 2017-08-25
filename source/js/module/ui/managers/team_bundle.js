@@ -20,10 +20,8 @@ const TeamBundle = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	componentWillMount: function() {
-		const self = this;
-
-		self.initBinding();
-		self.addListeners();
+		this.initBinding();
+		this.addListeners();
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
@@ -32,7 +30,6 @@ const TeamBundle = React.createClass({
 	},
 	/** INIT FUNCTIONS **/
 	initBinding: function() {
-		this.initTeamWrapperFiltersBindings();
 		this.initTeamIdBlackListBindings();
 	},
 	initTeamIdBlackListBindings: function() {
@@ -64,36 +61,6 @@ const TeamBundle = React.createClass({
 
 		return teamIdBlackList;
 	},
-	initTeamWrapperFiltersBindings: function() {
-		const	self	= this,
-				rivals	= self.getBinding().rivals.toJS();
-
-		rivals.forEach(rival => self.initTeamWrapperFilterBindingByRival(rival));
-	},
-	initTeamWrapperFilterBindingByRival: function(rival) {
-		const	self					= this,
-				binding					= self.getDefaultBinding(),
-				teamWrappers			= binding.toJS(`teamWrapper`),
-				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === rival.id);
-
-		const	school	= self.getBinding('schoolInfo').toJS(),
-				model	= self.getBinding('model').toJS(),
-				gender	= TeamHelper.getFilterGender(model.gender),
-				ages	= model.ages,
-				houseId	= TeamHelper.getEventType(model) === 'houses' ? rival.id : undefined;
-
-		binding.set(
-			`teamWrapper.${currentTeamWrapperIndex}.___teamManagerBinding.filter`,
-			Immutable.fromJS(
-				TeamHelper.getTeamManagerSearchFilter(
-					school,
-					ages,
-					gender,
-					houseId
-				)
-			)
-		);
-	},
 
 	/** LISTENER FUNCTIONS **/
 	addListeners: function() {
@@ -107,15 +74,13 @@ const TeamBundle = React.createClass({
 			
 			self.addTeamPlayersListenerByRivalIndex(binding, rivalIndex)
 		});
-
-		this.addRivalsCountListener();
 	},
 	addTeamPlayersListenerByRivalIndex: function(binding, rivalIndex) {
 		const	rivals					= this.getBinding().rivals.toJS(),
 				currentRival			= rivals[rivalIndex],
 				teamWrappers			= binding.toJS('teamWrapper'),
 				currentTeamWrapperIndex	= teamWrappers.findIndex(tw => tw.rivalId === currentRival.id);
-		
+
 		// if players were change
 		// add players from one team to blacklist of other team
 		const listener = binding.sub(`teamWrapper.${currentTeamWrapperIndex}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
@@ -126,9 +91,8 @@ const TeamBundle = React.createClass({
 				anotherRivalIdArray.forEach(rivalId => {
 					const _teamWrappers				= binding.toJS('teamWrapper');
 					const _currentTeamWrapperIndex	= _teamWrappers.findIndex(tw => tw.rivalId === rivalId);
-					
-					const blackList = binding.toJS(`teamWrapper.${_currentTeamWrapperIndex}.___teamManagerBinding.blackList`);
 
+					const blackList = binding.toJS(`teamWrapper.${_currentTeamWrapperIndex}.___teamManagerBinding.blackList`);
 					binding.set(
 						`teamWrapper.${_currentTeamWrapperIndex}.___teamManagerBinding.blackList`,
 						Immutable.fromJS(
@@ -143,28 +107,6 @@ const TeamBundle = React.createClass({
 
 		this.listeners.push(listener);
 	},
-	/**
-	 * Function adds listener for teamWrapper count
-	 * That listener do some init operations for new team wrapper
-	 */
-	addRivalsCountListener: function() {
-		const binding = this.getDefaultBinding();
-
-		const listener = binding.sub(`rivalsCount`).addListener(descriptor => {
-			const	currentRivalsCount	= descriptor.getCurrentValue(),
-					prevRivalsCount		= descriptor.getPreviousValue();
-
-			if(currentRivalsCount > prevRivalsCount) {
-				const	newRivalIndex	= currentRivalsCount - 1,
-						rivals			= this.getBinding().rivals.toJS();
-
-				this.initTeamWrapperFilterBindingByRival(rivals[newRivalIndex]);
-				this.addTeamPlayersListenerByRivalIndex(binding, newRivalIndex);
-			}
-		});
-
-		this.listeners.push(listener);
-	},
 	/** HELPER FUNCTIONS **/
 	getTeamChooserBindings: function() {
 		const	binding			= this.getDefaultBinding();
@@ -174,7 +116,6 @@ const TeamBundle = React.createClass({
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers
-			.filter(tw => typeof tw.willRemove === 'boolean' && tw.willRemove === false)
 			.map(tw => {
 				const	currentRivalBinding		= this.getRivalBindingByTeamWrapper(event, tw),
 						currentTeamTableIndex	= teamTables.findIndex(tt => tt.rivalId === tw.rivalId);
@@ -193,17 +134,16 @@ const TeamBundle = React.createClass({
 				teamWrappers	= binding.toJS(`teamWrapper`);
 
 		return teamWrappers
-			.filter(tw => typeof tw.willRemove === 'boolean' && tw.willRemove === false)
 			.map((tw, index) => {
-
 				const errorIndex = this.getBinding('error').toJS().findIndex(e => e.rivalId === tw.rivalId);
 
 				return {
-					default	: binding.sub(`teamWrapper.${index}`),
-					model	: this.getBinding().model,
-					rival	: this.getRivalBindingByTeamWrapper(event, tw),
-					players	: binding.sub(`players.${index}`),
-					error	: this.getBinding('error').sub(errorIndex)
+					default		: binding.sub(`teamWrapper.${index}`),
+					schoolInfo	: this.getBinding('schoolInfo'),
+					model		: this.getBinding('model'),
+					rival		: this.getRivalBindingByTeamWrapper(event, tw),
+					players		: binding.sub(`players.${index}`),
+					error		: this.getBinding('error').sub(errorIndex)
 				};
 			}
 		);
@@ -386,10 +326,11 @@ const TeamBundle = React.createClass({
 			//so we can't just send new data to TeamChooser in some point of TeamChooser lifecycle
 			//and hope - everything will work good. NO!)
 			//All fall down. Sorrrry, mate.
+			const	selectedRivalIndex	= this.getDefaultBinding().toJS('selectedRivalIndex'),
+					selectedRivalId		= this.getBinding().rivals.toJS()[selectedRivalIndex].id;
+
 			teamChoosers = this.getTeamChooserBindings().map((binding, index) => {
-				const	selectedRivalIndex	= this.getDefaultBinding().toJS('selectedRivalIndex'),
-						rivals 				= this.getBinding().rivals.toJS(),
-						currentTeamTable	= binding.default.toJS();
+				const currentTeamTable = binding.default.toJS();
 
 				return (
 					<TeamChooser
@@ -397,7 +338,7 @@ const TeamBundle = React.createClass({
 						onTeamClick		= { this.handleTeamClick }
 						onTeamDeselect	= { this.deselectTeam }
 						binding			= { binding }
-						isEnable		= { currentTeamTable.rivalId === rivals[selectedRivalIndex].id }
+						isEnable		= { currentTeamTable.rivalId === selectedRivalId }
 					/>
 				);
 			});
@@ -408,16 +349,14 @@ const TeamBundle = React.createClass({
 	renderTeamWrapper: function() {
 		const _classNames = this.getClassNamesForTeamWrapper();
 
-		return this.getTeamWrapperBindings().map((binding, index) => {
+		const tw = this.getTeamWrapperBindings();
+
+		return tw.map((binding, index) => {
 			const rivalId = binding.default.toJS('rivalId');
 
 			return (
-				<div
-					key			= { `team_wrapper_${index}` }
-					className	= { _classNames[index] }
-				>
+				<div className = { _classNames[index] }>
 					<TeamWrapper
-						key						= { rivalId }
 						binding					= { binding }
 						otherTeamPlayers		= { this.getOtherTeamPlayersByRivalIndex(index) }
 						handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }

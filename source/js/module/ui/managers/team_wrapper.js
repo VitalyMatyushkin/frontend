@@ -47,6 +47,7 @@ const TeamWrapper = React.createClass({
 				binding = self.getDefaultBinding();
 
 		if(!binding.get('isInit')) {
+			this.initTeamWrapperFilter();
 			self._initRivalIndexData();
 			self._initPlugObjectData();
 			self._initRemovePlayersArray();
@@ -56,11 +57,33 @@ const TeamWrapper = React.createClass({
 			self._setPlayers(self.getBinding().players.toJS());
 			self.setBlackList(this.props.otherTeamPlayers);
 			binding.set('prevPlayers',			Immutable.fromJS(self.getBinding().players.toJS()));
-			binding.set('isSetTeamLater',		Immutable.fromJS(false));
+			binding.set('isSetTeamLater',		false);
 			binding.set('isTeamChanged',		false);
-			binding.set('isInit',				Immutable.fromJS(true));
-			binding.set('willRemoveListeners',	false);
+			binding.set('isInit',				true);
 		}
+	},
+	initTeamWrapperFilter: function() {
+		const	binding	= this.getDefaultBinding();
+
+		const	school	= this.getBinding('schoolInfo').toJS(),
+				rival	= this.getBinding('rival').toJS(),
+				model	= this.getBinding('model').toJS();
+
+		const	gender	= TeamHelper.getFilterGender(model.gender),
+				ages	= model.ages,
+				houseId	= TeamHelper.getEventType(model) === 'houses' ? binding.toJS('rivalId') : undefined;
+
+		binding.set(
+			`___teamManagerBinding.filter`,
+			Immutable.fromJS(
+				TeamHelper.getTeamManagerSearchFilter(
+					school,
+					ages,
+					gender,
+					houseId
+				)
+			)
+		);
 	},
 	setBlackList: function(players) {
 		const binding = this.getDefaultBinding();
@@ -78,7 +101,7 @@ const TeamWrapper = React.createClass({
 		self._addTeamIdListener();
 		self._addTeamNameListener();
 		self._addPlayersListener();
-		self.addWillRemoveListenersListener();
+		self.addIsActiveListener();
 	},
 	_initCreationModeBinding: function() {
 		const	self	= this,
@@ -155,6 +178,12 @@ const TeamWrapper = React.createClass({
 			}
 	   };
 	},
+	isActive: function() {
+		return (
+			typeof this.getDefaultBinding().get('isActive') === 'boolean' &&
+			this.getDefaultBinding().get('isActive')
+		);
+	},
 	/**
 	 * Add listener for selected team ID
 	 * @private
@@ -163,7 +192,7 @@ const TeamWrapper = React.createClass({
 		const self = this;
 
 		const listenerId = self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
-			self._changeTeam(descriptor.getCurrentValue());
+			this.isActive() && self._changeTeam(descriptor.getCurrentValue());
 		});
 
 		this.listeners.push(listenerId);
@@ -173,29 +202,31 @@ const TeamWrapper = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const listenerId = binding.sub('teamName.name').addListener(() => {
-			// check team name only if selectedTeamId isn't undefined
-			// it's equal situation when we have selected team.
-			const	isTeamNameChanged	= (
-				typeof binding.toJS('selectedTeamId') !== 'undefined' &&
-				binding.toJS('teamName.name') !== binding.toJS('teamName.prevName')
-			),
-			isTeamPlayersChanged	= binding.toJS('isTeamPlayersChanged');
+			if(this.isActive()) {
+				// check team name only if selectedTeamId isn't undefined
+				// it's equal situation when we have selected team.
+				const	isTeamNameChanged	= (
+						typeof self.getDefaultBinding().toJS('selectedTeamId') !== 'undefined' &&
+						self.getDefaultBinding().toJS('teamName.name') !== self.getDefaultBinding().toJS('teamName.prevName')
+					),
+					isTeamPlayersChanged	= self.getDefaultBinding().toJS('isTeamPlayersChanged');
 
-			binding.atomically()
-				.set('isTeamNameChanged',	isTeamNameChanged)
-				.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
-				.commit();
+				self.getDefaultBinding().atomically()
+					.set('isTeamNameChanged',	isTeamNameChanged)
+					.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
+					.commit();
+			}
 		});
 
 		this.listeners.push(listenerId);
 	},
-	addWillRemoveListenersListener: function() {
+	addIsActiveListener: function() {
 		const binding = this.getDefaultBinding();
 
-		const listenerId = binding.sub('willRemoveListeners').addListener(eventDescriptor => {
+		const listenerId = binding.sub('isActive').addListener(eventDescriptor => {
 			if(
 				typeof eventDescriptor.getCurrentValue() === 'boolean' &&
-				eventDescriptor.getCurrentValue() === true
+				!eventDescriptor.getCurrentValue()
 			) {
 				this.removeListeners();
 
@@ -210,16 +241,18 @@ const TeamWrapper = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const listenerId = binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
-			const	isTeamPlayersChanged	= (
-												typeof binding.toJS('selectedTeamId') !== 'undefined' &&
-												!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
-											),
+			if(this.isActive()) {
+				const	isTeamPlayersChanged	= (
+						typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+						!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
+					),
 					isTeamNameChanged		= binding.toJS('isTeamNameChanged');
 
-			binding.atomically()
-				.set('isTeamPlayersChanged',	isTeamPlayersChanged)
-				.set('isTeamChanged',			isTeamPlayersChanged || isTeamNameChanged)
-				.commit();
+				binding.atomically()
+					.set('isTeamPlayersChanged',	isTeamPlayersChanged)
+					.set('isTeamChanged',			isTeamPlayersChanged || isTeamNameChanged)
+					.commit();
+			}
 		});
 
 		this.listeners.push(listenerId);
@@ -403,7 +436,7 @@ const TeamWrapper = React.createClass({
 			.commit();
 	},
 	callTeamManagerToRemoveListeners: function() {
-		this.getDefaultBinding().set('___teamManagerBinding.willRemoveListeners', true);
+		this.getDefaultBinding().set('___teamManagerBinding.isActive', false);
 	},
 	handleChangeName: function(newName) {
 		this.getDefaultBinding().set('teamName.name', Immutable.fromJS(newName));
