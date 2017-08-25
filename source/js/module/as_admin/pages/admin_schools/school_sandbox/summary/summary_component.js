@@ -23,10 +23,10 @@ const SummaryComponent = React.createClass({
 	render: function() {
 		const school	= this.props.school;
 
-		let text, linkText, schoolImage;
+		let text, linkText, schoolImage, postcode = '';
 
 			if (typeof school !== 'undefined') {
-				schoolImage = school.pic + '?sizing=minvalue&value=170';
+				schoolImage = school.pic ? school.pic + '?sizing=minvalue&value=170' : '';
 				if (this.state.expanded) {
 						text = typeof school.description !== 'undefined' ? school.description : '';
 						linkText = 'Show Less';
@@ -38,6 +38,9 @@ const SummaryComponent = React.createClass({
 						}
 						linkText = 'Read More';
 					}
+				if (school.postcode){
+					postcode = school.postcode.postcode ? school.postcode.postcode : '';
+				}
 				return (
 					<div>
 						<div className='eSchoolSummary_wrap'>
@@ -52,7 +55,7 @@ const SummaryComponent = React.createClass({
 								<div className="eTextKey">Phone</div>
 								<div className="eTextValue">{school.phone}</div>
 								<div className="eTextKey">Postcode</div>
-								<div className="eTextValue">{school.postcode.postcode}</div>
+								<div className="eTextValue">{postcode}</div>
 								<div className="eTextKey">Address</div>
 								<div className="eTextValue">{school.address}</div>
 								<div className="eTextKey">Domain</div>
