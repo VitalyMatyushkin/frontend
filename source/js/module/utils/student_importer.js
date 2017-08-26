@@ -110,8 +110,11 @@ function readStudentsFromCSVFile(file) {
 
 function pullFormsAndHouses(result, school) {
 	result.students = result.students.map( (student, i)=> {
-		const	form	= Lazy(school.forms).findWhere({name: student.form.trim().replace(/\s{2,}/g, ' ')}),
-				house	= Lazy(school.houses).findWhere({name: student.house.trim().replace(/\s{2,}/g, ' ')}),
+		const	studentFormNoSpaces		= student.form ? student.form.replace(' ', '') : undefined,
+			  	studentHouseNoSpaces	= student.house ? student.house.replace(' ', '') : undefined;
+
+		const	form	= school.forms.find( form => form.name.replace(' ', '') === studentFormNoSpaces ),
+				house	= school.houses.find( house => house.name.replace(' ', '') === studentHouseNoSpaces),
 				formId	= form ? form.id : undefined,
 				houseId = house ? house.id : undefined;
 
