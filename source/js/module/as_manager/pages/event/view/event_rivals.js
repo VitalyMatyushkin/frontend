@@ -384,6 +384,17 @@ const EventRival = React.createClass({
 			binding.get('model.status') !== EventHelper.EVENT_STATUS.ACCEPTED &&
 			this.props.activeSchoolId === event.inviterSchoolId;
 	},
+	renderChangeOpponentSchoolButton: function(order) {
+		if( this.isShowChangeSchoolButton(order) ) {
+			return (
+				<div className="eEventRival_buttonContainer">
+					<PencilButton handleClick={this.props.handleClickChangeOpponentSchoolButton.bind(this, order)}/>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	_renderTeamByOrder: function(order) {
 		const eventRivalClassName = classNames({
 			"bEventRival"		: true,
@@ -393,13 +404,13 @@ const EventRival = React.createClass({
 
 		return (
 			<div className={eventRivalClassName}>
-				<If condition={this.isShowChangeSchoolButton(order)}>
-					<div className="eEventRival_buttonContainer">
-						<PencilButton handleClick={this.props.handleClickChangeOpponentSchoolButton.bind(this, order)}/>
-					</div>
-				</If>
-				<div className="eEventRival_logo">{ this.getPic(order) }</div>
-				<div className="eEventRival_rivalName">{ this.getRivalNameByOrder(order) }</div>
+				{ this.renderChangeOpponentSchoolButton(order) }
+				<div className="eEventRival_logo">
+					{ this.getPic(order) }
+				</div>
+				<div className="eEventRival_rivalName">
+					{ this.getRivalNameByOrder(order) }
+				</div>
 				{ this._renderPoints(order) }
 			</div>
 		);
@@ -408,8 +419,8 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	eventType		= binding.get('model.eventType'),
-				teamsData		= binding.toJS('model.teamsData');
+		const	eventType	= binding.get('model.eventType'),
+				teamsData	= binding.toJS('model.teamsData');
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);

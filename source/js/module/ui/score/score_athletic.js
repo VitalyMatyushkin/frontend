@@ -138,8 +138,8 @@ const AthleticScore = React.createClass({
 									value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
 									mask			= { mask }
 									onChange		= { this.getScoreAsObject }
-									stringToPoints	= { ScoreHelper.stringTimeToPoints }
-									validation		= { ScoreHelper.stringTimeValidation }
+									stringToPoints	= { ScoreHelper.stringTimeToPoints.bind(ScoreHelper) }
+									validation		= { ScoreHelper.validateStringTime.bind(ScoreHelper) }
 									className		= { "mTime " + playerTimeScoreClassName }
 									modeView		= { this.props.modeView }
 					/>

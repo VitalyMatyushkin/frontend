@@ -2,14 +2,14 @@
  * Created by Anatoly on 21.10.2016.
  */
 const ScoreHelper = {
-	DEFAULT_TIME_MASK:      'hh:mm:ss.ccc',
-	DEFAULT_DISTANCE_MASK:  'kk mmm.cc',
+	DEFAULT_TIME_MASK:		'hh:mm:ss.ccc',
+	DEFAULT_DISTANCE_MASK:	'kk mmm.cc',
 
 	/**
-	 * Validation result value according to 'plain' type
+	 * Function validates plain score
 	 * @param {Number} value - value to validation
 	 * @param {Number} pointsStep
-	 * @returns {boolean/string} - false or error message
+	 * @returns {boolean/string} - false(mean value is ok)/error message
 	 */
 	pointsPlainValidation: function(value, pointsStep){
 		return value % pointsStep === 0 ? false : 'Validation error!';
@@ -33,64 +33,68 @@ const ScoreHelper = {
 	},
 
 	/**
-	 * Validation string value according to 'time' type
+	 * Function validates time score
 	 * @param {string} value - value to validation
 	 * @param {string} mask - points.inputMask
-	 * @returns {boolean/string} - false or error message
+	 * @returns {boolean/string} - false(mean value is ok)/error message
 	 */
-	stringTimeValidation: function(value, mask){
-		const points = ScoreHelper.stringTimeToPoints(value, mask);
+	validateStringTime: function(value, mask){
+		const points = this.stringTimeToPoints(value, mask);
 
-		return points ? false : 'Validation error!';
+		// Points must be a number but not a Nan or Infinite
+		// Otherwise points are not valid
+		return typeof points === 'number' && isFinite(points) ? false : 'Validation error!';
 	},
 
 	/**
 	 * Convert string value to points according to the mask.
 	 * @param {string} value - string value
 	 * @param {string} mask - points.inputMask
-	 * @returns {number} - points
+	 * @returns {number} - points, if value is not valid returns Nan
 	 */
 	stringTimeToPoints: function(value, mask){
-		const   maskParts   = mask.replace(/[^hmsc]/g, ':').split(':'),
-			valueParts  = value.replace(/[^0-9_]/g, ':').split(':');
+		const	maskParts	= mask.replace(/[^hmsc]/g, ':').split(':'),
+				valueParts	= value.replace(/[^0-9_]/g, ':').split(':');
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
+			let currentMaskPart = maskParts[i];
+
 			let tmp = 0;
-			switch (maskParts[i]){
-				case 'h':       //here we use falling through
-				case 'hh':
-				case 'hhh':
-					tmp = valueParts[i]*3600;
+			switch (true){
+				case this.isHourMask(currentMaskPart): {
+					tmp = valueParts[i] * 3600;
 					break;
-				case 'm':
-				case 'mm':
-					if(valueParts[i] < 60)
+				}
+				case this.isMinuteMask(currentMaskPart): {
+					if(valueParts[i] < 60) {
 						tmp = valueParts[i]*60;
-					else
+					} else {
 						tmp = NaN;
-					break;
-				case 's':
-				case 'ss':
-					if(valueParts[i] < 60)
-						result += valueParts[i]*1;
-					else
-						tmp = NaN;
-					break;
-				case 'c':
-				case 'cc':
-				case 'ccc':
-				case 'cccc':
-					if (typeof valueParts[i] !== 'undefined') {
-						tmp = valueParts[i]*1/(Math.pow(10, valueParts[i].length));
 					}
 					break;
+				}
+				case this.isSecondMask(currentMaskPart): {
+					if(valueParts[i] < 60) {
+						result += valueParts[i]*1;
+					} else {
+						tmp = NaN;
+					}
+					break;
+				}
+				case this.isMillisecondMask(currentMaskPart): {
+					if (typeof valueParts[i] !== 'undefined') {
+						tmp = valueParts[i] * 1 / (Math.pow(10, valueParts[i].length));
+					}
+					break;
+				}
 				default:
 					tmp = NaN;
 					break;
 			}
-			if(isNaN(tmp))
+			if(isNaN(tmp)) {
 				return NaN;
+			}
 			result += tmp;
 		}
 
@@ -109,35 +113,44 @@ const ScoreHelper = {
 		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
 
 		maskParts.forEach(maskPart => {
-			if(maskPart.search(/h{1,3}/) !== -1) {
-				const hourCount = this.getCountOfCurrentTimeUnit(remainder, 'HOURS');
-				// remove hours in sec from remainder
-				remainder -= hourCount * 3600;
+			switch (true) {
+				case (this.isHourMask(maskPart)): {
+					const hourCount = this.getCountOfCurrentTimeUnit(remainder, 'HOURS');
+					// remove hours in sec from remainder
+					remainder -= hourCount * 3600;
 
-				const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
+					const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
 
-				timeString = hourString + mainSeparator;
-			} else if(maskPart.search(/m{1,2}/) !== -1) {
-				const minCount = this.getCountOfCurrentTimeUnit(remainder, 'MINUTES');
-				// remove minutes in sec from remainder
-				remainder -= minCount * 60;
+					timeString = hourString + mainSeparator;
+					break;
+				}
+				case (this.isMinuteMask(maskPart)): {
+					const minCount = this.getCountOfCurrentTimeUnit(remainder, 'MINUTES');
+					// remove minutes in sec from remainder
+					remainder -= minCount * 60;
 
-				const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
+					const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
 
-				timeString += minString + mainSeparator;
-			} else if(maskPart.search(/s{1,2}/) !== -1) {
-				// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
-				const secCount = remainder;
+					timeString += minString + mainSeparator;
+					break;
+				}
+				case (this.isSecondMask(maskPart)): {
+					// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
+					const secCount = remainder;
 
-				const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
+					const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
 
-				timeString += secString + secSeparator;
-			} else if(maskPart.search(/c{1,4}/) !== -1) {
-				const msecCount = String(floatPartOfValue);
+					timeString += secString + secSeparator;
+					break;
+				}
+				case (this.isMillisecondMask(maskPart)): {
+					const msecCount = String(floatPartOfValue);
 
-				const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart);
+					const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart);
 
-				timeString += msecString;
+					timeString += msecString;
+					break;
+				}
 			}
 		});
 
@@ -152,51 +165,60 @@ const ScoreHelper = {
 		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
 
 		maskParts.forEach(maskPart => {
-			if(maskPart.search(/k{1,3}/) !== -1) {
-				const kmCount = this.getCountOfCurrentDistanceUnit(remainder, 'KILOMETERS');
-				// remove km in cm from remainder
-				remainder -= kmCount * 100000;
+			switch (true) {
+				case (this.isKilometerMask(maskPart)): {
+					const kmCount = this.getCountOfCurrentDistanceUnit(remainder, 'KILOMETERS');
+					// remove km in cm from remainder
+					remainder -= kmCount * 100000;
 
-				const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
+					const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
 
-				distanceString = kmString + mainSeparator;
-			} else if(maskPart.search(/m{1,3}/) !== -1) {
-				const mCount = this.getCountOfCurrentDistanceUnit(remainder, 'METERS');
-				// remove m in cm from remainder
-				remainder -= mCount * 100;
+					distanceString = kmString + mainSeparator;
+					break;
+				}
+				case (this.isMeterMask(maskPart)): {
+					const mCount = this.getCountOfCurrentDistanceUnit(remainder, 'METERS');
+					// remove m in cm from remainder
+					remainder -= mCount * 100;
 
-				const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
+					const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
 
-				distanceString += mString + mainSeparator;
-			} else if(maskPart.search(/c{1,2}/) !== -1) {
-				// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
-				const cmCount = remainder;
+					distanceString += mString + mainSeparator;
+					break;
+				}
+				case (this.isMillisecondMask(maskPart)): {
+					// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
+					const cmCount = remainder;
 
-				const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
+					const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
 
-				distanceString += cmString + metersSeparator;
+					distanceString += cmString + metersSeparator;
+					break;
+				}
 			}
 		});
 
 		return distanceString;
 	},
 	/**
-	 * Validation string value according to 'distance' type
+	 * Function validates distance score
 	 * @param {string} value - value to validation
 	 * @param {string} mask - points.inputMask
-	 * @returns {boolean/string} - false or error message
+	 * @returns {boolean/string} - false(mean value is ok)/error message
 	 */
 	stringDistanceValidation: function(value, mask){
-		const points = ScoreHelper.stringDistanceToPoints(value, mask);
+		const points = this.stringDistanceToPoints(value, mask);
 
-		return points ? false : 'Validation error!';
+		// Points must be a number but not a Nan or Infinite
+		// Otherwise points are not valid
+		return typeof points === 'number' && isFinite(points) ? false : 'Validation error!';
 	},
 
 	/**
 	 * Convert string value to points according to the mask.
 	 * @param {string} value - string value
 	 * @param {string} mask - points.inputMask
-	 * @returns {number} - points
+	 * @returns {number} - points, if value is not valid returns Nan
 	 */
 	stringDistanceToPoints: function(value, mask){
 		const	maskParts	= mask.replace(/[^kmc]/g, ':').split(':'),
@@ -204,34 +226,37 @@ const ScoreHelper = {
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
+			let currentMaskPart = maskParts[i];
+
 			let tmp = 0;
-			switch (maskParts[i]){
-				case 'k':           //here we use falling through
-				case 'kk':
-				case 'kkk':
-					tmp = valueParts[i]*100000;
+			switch (true){
+				case (this.isKilometerMask(currentMaskPart)): {
+					tmp = valueParts[i] * 100000;
 					break;
-				case 'm':
-				case 'mm':
-				case 'mmm':
-					if(valueParts[i] < 1000)
+				}
+				case (this.isMeterMask(currentMaskPart)): {
+					if(valueParts[i] < 1000) {
 						tmp = valueParts[i]*100;
-					else
+					} else {
 						tmp = NaN;
+					}
 					break;
-				case 'c':
-				case 'cc':
-					if(valueParts[i] < 100)
-						result += valueParts[i]*1;
-					else
+				}
+				case (this.isCentimeterMask(currentMaskPart)): {
+					if (valueParts[i] < 100) {
+						result += valueParts[i] * 1;
+					} else {
 						tmp = NaN;
+					}
 					break;
+				}
 				default:
 					tmp = NaN;
 					break;
 			}
-			if(isNaN(tmp))
+			if(isNaN(tmp)) {
 				return NaN;
+			}
 			result += tmp;
 		}
 		return result;
@@ -263,12 +288,95 @@ const ScoreHelper = {
 		// convert value to string
 		let result = String(value);
 
+		switch (true) {
+			// For milliseconds we have different rules than for other units
+			// Because milliseconds are stored as fraction of float number
+			// So we should add zeros to end if it need
+			// Also we should cut off score string value
+			// if value length more than mask length
+			case this.isMillisecondMask(mask): {
+				if(mask.length > result.length) {
+					result = this.addZerosToEndByMask(result, mask);
+				} else if(mask.length < result.length) {
+					result = this.cutScoreValueByMask(result, mask);
+				}
+				break;
+			}
+			default: {
+				result = this.addZerosToStartByMask(result, mask);
+				break;
+			}
+		}
+
+		return result;
+	},
+	isHourMask: function(mask) {
+		return mask.search(/h{1,}/) !== -1;
+	},
+	isMinuteMask: function(mask) {
+		return mask.search(/m{1,2}/) !== -1;
+	},
+	isSecondMask: function(mask) {
+		return mask.search(/s{1,2}/) !== -1;
+	},
+	isMillisecondMask: function(mask) {
+		return mask.search(/c{1,}/) !== -1;
+	},
+	isKilometerMask: function(mask) {
+		return mask.search(/k{1,3}/) !== -1;
+	},
+	isMeterMask: function(mask) {
+		return mask.search(/m{1,3}/) !== -1;
+	},
+	isCentimeterMask: function(mask) {
+		return mask.search(/c{1,2}/) !== -1;
+	},
+	/**
+	 * Function converts value like this:
+	 * value - 1, mask - ccc
+	 * result - 100.
+	 * @param stringValue
+	 * @param mask
+	 * @returns {string}
+	 */
+	addZerosToEndByMask: function(stringValue, mask) {
+		let result = String( stringValue );
+
+		const zerosCount = mask.length - result.length;
+		for(let i = 0; i < zerosCount; i++) {
+			result = result + '0';
+		}
+
+		return result;
+	},
+	/**
+	 * Function converts value like this:
+	 * value - 1, mask - hh
+	 * result - 01.
+	 * @param stringValue
+	 * @param mask
+	 * @returns {string}
+	 */
+	addZerosToStartByMask: function(stringValue, mask) {
+		let result = String( stringValue );
+
 		const zerosCount = mask.length - result.length;
 		for(let i = 0; i < zerosCount; i++) {
 			result = '0' + result;
 		}
 
 		return result;
+	},
+	/**
+	 * Function converts value like this:
+	 * value - 12345, mask - ccc
+	 * result - 123.
+	 * @param stringValue
+	 * @param mask
+	 * @returns {string}
+	 */
+	cutScoreValueByMask: function(stringValue, mask) {
+		return stringValue.substring(0, mask.length);
 	}
 };
 

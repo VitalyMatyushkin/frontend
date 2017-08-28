@@ -98,8 +98,8 @@ const Score = React.createClass({
 							value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
 							mask			= { mask }
 							onChange		= { this.props.onChange }
-							stringToPoints	= { ScoreHelper.stringTimeToPoints }
-							validation		= { ScoreHelper.stringTimeValidation }
+							stringToPoints	= { ScoreHelper.stringTimeToPoints.bind(ScoreHelper) }
+							validation		= { ScoreHelper.validateStringTime.bind(ScoreHelper) }
 							className		= "mTime"
 							modeView		= { this.props.modeView }
 			/>
@@ -113,8 +113,8 @@ const Score = React.createClass({
 							value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
 							mask			= { mask }
 							onChange		= { this.props.onChange }
-							stringToPoints	= { ScoreHelper.stringDistanceToPoints }
-							validation		= { ScoreHelper.stringDistanceValidation }
+							stringToPoints	= { ScoreHelper.stringDistanceToPoints.bind(ScoreHelper) }
+							validation		= { ScoreHelper.stringDistanceValidation.bind(ScoreHelper) }
 							className		= "mDistance"
 							modeView		= { this.props.modeView }
 			/>
