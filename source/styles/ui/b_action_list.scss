@@ -9,6 +9,10 @@
   margin-top: 3px;
 
   z-index: 100;
+
+  &.mWide {
+    width: 248px;
+  }
 }
 
 .eActionList_itemListHead {
@@ -21,7 +25,6 @@
   width: 100%;
 
   border: solid 1px #c2c2c2;
-  border-top: none;
 
   background: white;
 }

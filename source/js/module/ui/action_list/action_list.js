@@ -27,7 +27,8 @@ const ActionList = React.createClass({
 		buttonText					: React.PropTypes.string.isRequired,
 		actionList					: React.PropTypes.array.isRequired,
 		handleClickActionItem		: React.PropTypes.func.isRequired,
-		handleClickRemoveActionItem	: React.PropTypes.func
+		handleClickRemoveActionItem	: React.PropTypes.func,
+		extraStyleClasses			: React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {
@@ -40,6 +41,7 @@ const ActionList = React.createClass({
 				actionList					= { this.props.actionList }
 				handleClickActionItem		= { this.props.handleClickActionItem }
 				handleClickRemoveActionItem	= { this.props.handleClickRemoveActionItem }
+				extraStyleClasses			= { this.props.extraStyleClasses }
 			/> :
 			null;
 	},
@@ -51,7 +53,7 @@ const ActionList = React.createClass({
 	},
 	render: function () {
 		return (
-			<div className="bActionList">
+			<div className='bActionList'>
 				<ActionButton	text	= {this.props.buttonText}
 								onClick	= {this.handleClick}
 								onBlur	= {this.handleBlur}

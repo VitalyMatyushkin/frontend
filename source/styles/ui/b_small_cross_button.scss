@@ -9,6 +9,10 @@
   text-align: center;
 
   &:hover {
-    color: #fff;
+    color: #fff !important;
+  }
+
+  &.mGray {
+    color: #c2c2c2;
   }
 }

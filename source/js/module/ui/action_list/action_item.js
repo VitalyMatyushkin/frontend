@@ -28,14 +28,16 @@ const ActionItem = React.createClass({
 
 		return typeof isRemoveButtonEnable !== 'undefined' ? isRemoveButtonEnable : false;
 	},
+	getExtraStyleClasses: function() {
+		return typeof this.props.extraStyleClasses !== 'undefined' ? this.props.extraStyleClasses : '';
+	},
 	renderRemoveButton: function() {
 		return this.isRemoveButtonEnable() ?
-			<SmallCrossButton onClick={this.onClickRemoveButton}/>:
+			<SmallCrossButton onClick={this.onClickRemoveButton} extraStyleClasses={'mGray'}/>:
 			null;
 	},
 	render: function () {
-		const	extraStyleClasses	= this.props.extraStyleClasses || '',
-				className			= `bActionItem ${extraStyleClasses}`;
+		const className = `bActionItem ${ this.getExtraStyleClasses() }`;
 
 		return (
 			<div

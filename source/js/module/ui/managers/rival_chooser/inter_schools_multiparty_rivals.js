@@ -114,6 +114,7 @@ const InterSchoolsMultipartyRivals = React.createClass({
 					actionList					= { this.getRivalActionList(school.id) }
 					handleClickActionItem		= { this.handleClickItemFromRivalActionList }
 					handleClickRemoveActionItem	= { this.handleClickRemoveRival }
+					extraStyleClasses			= { 'mWide' }
 				/>
 			);
 		} else {
@@ -135,24 +136,34 @@ const InterSchoolsMultipartyRivals = React.createClass({
 		}
 	},
 	getRivalActionList: function(schoolId) {
+		const binding = this.getDefaultBinding();
+
 		const rivals = this.getBinding('rivals').toJS();
 
 		const rivalActionList = [];
 
 		let teamCount = 0;
-		rivals.forEach(rival => {
+		rivals.forEach((rival, index) => {
 			if(rival.school.id === schoolId) {
 				teamCount++;
 
-				rivalActionList.push(
-					{
-						id:			rival.id,
-						text:		`Team ${teamCount}`,
-						options:	{
-							isRemoveButtonEnable: true
-						}
+				const team = {
+					id:			rival.id,
+					text:		`Team #${teamCount}`,
+					options:	{
+						isRemoveButtonEnable: true
 					}
-				);
+				};
+
+				if(
+					index === Number( binding.toJS('teamModeView.selectedRivalIndex') )
+				) {
+					team.cssStyle = 'mBold';
+				} else {
+					team.cssStyle = 'mGray';
+				}
+
+				rivalActionList.push(team);
 			}
 		});
 		if(teamCount === 1) {
@@ -161,10 +172,11 @@ const InterSchoolsMultipartyRivals = React.createClass({
 
 		rivalActionList.push(
 			{
-				id:		'add_team',
-				text:	'Add new team',
+				id:			'add_team',
+				text:		'Add new team',
+				cssStyle:	'mBold',
 				options:	{
-					isRemoveButtonEnable: false
+					isRemoveButtonEnable:	false
 				}
 			}
 		);
