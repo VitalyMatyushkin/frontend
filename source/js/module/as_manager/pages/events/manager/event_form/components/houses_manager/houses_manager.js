@@ -3,6 +3,7 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		HouseListItem		= require('module/ui/autocomplete2/custom_list_items/house_list_item/house_list_item'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
 
 const HousesManager = React.createClass({
@@ -62,13 +63,15 @@ const HousesManager = React.createClass({
 		const choosers = rivals.map((rival, rivalIndex) => {
 			return (
 				<span>
-					<Autocomplete	key				= { `house_input_${rivalIndex}` }
-									defaultItem		= { binding.toJS(`rivals.${rivalIndex}`) }
-									serviceFilter	= { this.houseService }
-									serverField		= "name"
-									placeholder		= "Enter house name"
-									onSelect		= { this.onSelectRival.bind(null, rivalIndex) }
-									extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
+					<Autocomplete
+						customListItem	= { HouseListItem }
+						key				= { `house_input_${rivalIndex}` }
+						defaultItem		= { binding.toJS(`rivals.${rivalIndex}`) }
+						serviceFilter	= { this.houseService }
+						serverField		= "name"
+						placeholder		= "Enter house name"
+						onSelect		= { this.onSelectRival.bind(null, rivalIndex) }
+						extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
 					/>
 					<SquareCrossButton
 						key			= { `cross_button_${rivalIndex}` }
@@ -88,12 +91,14 @@ const HousesManager = React.createClass({
 			)
 		) {
 			choosers.push(
-				<Autocomplete	defaultItem={ binding.toJS(`rivals.${rivals.length}`) }
-								serviceFilter={ this.houseService }
-								serverField="name"
-								placeholder="Enter house name"
-								onSelect={ this.onSelectRival.bind(null, rivals.length) }
-								extraCssStyle="mBigSize mWhiteBG"
+				<Autocomplete
+					customListItem={ HouseListItem }
+					defaultItem={ binding.toJS(`rivals.${rivals.length}`) }
+					serviceFilter={ this.houseService }
+					serverField="name"
+					placeholder="Enter house name"
+					onSelect={ this.onSelectRival.bind(null, rivals.length) }
+					extraCssStyle="mBigSize mWhiteBG"
 				/>
 			);
 		}

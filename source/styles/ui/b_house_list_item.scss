@@ -1,0 +1,39 @@
+.bHouseListItem {
+  padding: 10px;
+
+  &:hover {
+    background: #dadada;
+  }
+}
+
+.eHouseListItem_wrapper {
+  display: flex;
+}
+
+
+.eHouseListItem_picWrapper {
+  width: 40px;
+  height: 40px;
+
+  margin-right: 10px;
+}
+
+.eHouseListItem_pic {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.eHouseListItem_color {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.eHouseListItem_name {
+  text-overflow: ellipsis;
+  padding-top: 2px;
+  font-weight: bold;
+  font-size: 16px;
+
+  color: #3b3b3b;
+}

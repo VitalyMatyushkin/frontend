@@ -22,9 +22,15 @@ const ClassForm = React.createClass({
 				submitButtonId	= 'house_submit'
 				cancelButtonId	= 'house_cancel'
 			>
+				<FormField
+					type 		= "imageFile"
+					field 		= "pic"
+					labelText 	= "+"
+					typeOfFile 	= "image"
+				/>
 				<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
 				<FormField type="text" id="house_description" field="description">Description</FormField>
-				<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">House colors</FormField>
+				<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">Colours</FormField>
 			</Form></div>
 		)
 	}

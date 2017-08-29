@@ -76,6 +76,14 @@ HouseListModel.prototype.getColumns = function(){
 	
 	this.columns = [
 		{
+			text:'Logo',
+			isSorted:false,
+			cell:{
+				dataField:'pic',
+				type:'image'
+			}
+		},
+		{
 			text:'House name',
 			isSorted:true,
 			cell:{
@@ -98,7 +106,7 @@ HouseListModel.prototype.getColumns = function(){
 			}
 		},
 		{
-			text:'Color',
+			text:'Colours',
 			cell:{
 				dataField:'colors',
 				type:'colors'
