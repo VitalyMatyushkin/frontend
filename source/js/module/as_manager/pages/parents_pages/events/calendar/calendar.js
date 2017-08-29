@@ -52,6 +52,4 @@ const Calendar = React.createClass({
 	}
 });
 
-
-
 module.exports = Calendar;

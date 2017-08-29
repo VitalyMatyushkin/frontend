@@ -72,7 +72,7 @@ const StudentsFormHelper = {
 	getInitValueNextOfKinCount: function(student) {
 		const count = student.nextOfKin.length;
 
-		return typeof count != 0 ? count : 1;
+		return count === 0 ? this.DEF_COUNT_NEXT_KIN_BLOCK : count;
 	}
 };
 
