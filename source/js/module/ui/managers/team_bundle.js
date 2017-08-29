@@ -150,7 +150,7 @@ const TeamBundle = React.createClass({
 	},
 	getRivalBindingByTeamWrapper: function(event, teamWrapper) {
 		const	rivals				= this.getBinding().rivals.toJS(),
-				currentRivalIndex	= rivals.findIndex(rival => rival.id === teamWrapper.rivalIndex);
+				currentRivalIndex	= rivals.findIndex(rival => rival.id === teamWrapper.rivalId);
 
 		return this.getBinding().rivals.sub(currentRivalIndex);
 	},
