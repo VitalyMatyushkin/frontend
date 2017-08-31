@@ -1,4 +1,5 @@
-const React = require('react');
+const	React		= require('react'),
+		classNames	= require('classnames');
 
 const TeamName = React.createClass({
 	propTypes: {
@@ -17,15 +18,13 @@ const TeamName = React.createClass({
 			isShowError: false
 		};
 	},
-	componentDidMount(){
-		this.setState({
-			name: this.props.name
-		});
+	componentWillMount(){
+		typeof this.props.name !== 'undefined' && this.setState({name: this.props.name});
 	},
 	componentWillReceiveProps: function(newProps) {
 		const updName = newProps.name;
 
-		if(updName !== 'undefined' && updName !== this.state.name) {
+		if(typeof updName !== 'undefined' && updName !== this.state.name) {
 			this.setState({
 				name: updName
 			});
@@ -39,37 +38,33 @@ const TeamName = React.createClass({
 	},
 	handleFocus: function() {
 		this.setState({
-			isFocused : true,
-			name: ''
+			isFocused : true
 		});
 	},
 	handleBlur: function() {
 		this.setState({
-			isFocused	: false
+			isFocused: false
 		});
 	},
 	renderInput: function() {
-		// It shows warning input when isShowError is true and team name input isn't focused on.
-		if(this.props.isShowError && !this.state.isFocused) {
-			return (
-				<input	className	= 'eTeamName_nameForm mWarning'
-						type		= {'text'}
-						value		= {'Please enter team name'}
-						onFocus		= {this.handleFocus}
-				/>
-			);
-		} else {
-			return (
-				<input	className	= 'eTeamName_nameForm'
-						type		= { 'text' }
-						placeholder	= { 'Team name' }
-						onChange	= { this.handleChangeTeamName }
-						onFocus		= { this.handleFocus}
-						onBlur 		= { this.handleBlur }
-						value		= { this.state.name }
-				/>
-			);
-		}
+		const	isShowError	= this.props.isShowError && !this.state.isFocused,
+				className	= classNames({
+					"eTeamName_nameForm": true,
+					"mWarning": isShowError
+				}),
+				value		= isShowError ? 'Please enter team name' : this.state.name;
+
+		return (
+			<input
+				className	= { className }
+				type		= { 'text' }
+				placeholder	= { 'Team name' }
+				onChange	= { this.handleChangeTeamName }
+				onFocus		= { this.handleFocus}
+				onBlur 		= { this.handleBlur }
+				value		= { value }
+			/>
+		);
 	},
 	render: function() {
 		return (
