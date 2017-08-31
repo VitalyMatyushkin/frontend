@@ -81,7 +81,6 @@ const EventManager = React.createClass({
 				internal: []
 			},
 			rivals: [],
-			players: [[],[]],
 			error: [],
 			isEventManagerSync: false,
 			isSync: false,
@@ -770,7 +769,6 @@ const EventManager = React.createClass({
 		const managerBinding	= {
 				default	: binding,
 				rivals	: binding.sub('rivals'),
-				players	: binding.sub('players'),
 				error	: binding.sub('error')
 			};
 

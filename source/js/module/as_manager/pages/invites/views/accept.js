@@ -77,20 +77,10 @@ const InviteAcceptView = React.createClass({
 					.set('model', Immutable.fromJS(invite.event))
 					.set('model.sportModel', Immutable.fromJS(invite.event.sport))
 					.set('rivals', Immutable.fromJS(this.createRivalsByInvite(invite)))
-					.set('players', Immutable.fromJS([[],[]]))
 					.set('sync', true)
 					.set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
 					.set('isControlButtonActive', false)
-					.set('error', Immutable.fromJS([
-						{
-							isError: false,
-							text: ""
-						},
-						{
-							isError: false,
-							text: ""
-						}
-					]))
+					.set('error', Immutable.fromJS([]))
 					.commit();
 
 				// create debounce decorator for changeControlButtonState func

@@ -94,8 +94,7 @@ const Manager = React.createClass({
 			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
-					selectedRivalIndex:	Immutable.fromJS(selectedRivalIndex),
-					players:			this.getInitPlayers(),
+					selectedRivalIndex:	selectedRivalIndex,
 					teamTable:			teamTable,
 					teamWrapper:		teamWrapper
 				}
@@ -125,11 +124,10 @@ const Manager = React.createClass({
 		const	rivals			= this.getBinding().rivals.toJS(),
 				currentRival	= rivals[rivalIndex];
 
-
-
 		const	teamId			= this.getTeamIdByOrder(rivalIndex),
 				teamName		= this.getTeamNameByOrder(rivalIndex);
 
+		// get school id
 		// TODO It's temporary
 		let	schoolId;
 		if(
@@ -142,29 +140,32 @@ const Manager = React.createClass({
 			schoolId = currentRival.school.id
 		}
 
+		const teamStudents = this.getInitPlayersByOrder(rivalIndex);
+
 		return {
 			rivalId: currentRival.id,
+			savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
+			isSetTeamLater: false,
+			isTeamChanged: false,
 			// team wrapper from active school is active
 			// team wrapper from other school is not active by default
 			isActive: schoolId === this.props.activeSchoolId,
 			isLoadingTeam: false,
-			filter: undefined,
 			schoolId: schoolId,
 			prevSelectedTeamId: teamId,
 			selectedTeamId: teamId,
 			teamsSaveMode: undefined,
+			removedPlayers: [],
+			prevPlayers: teamStudents,
 			teamName: {
-				initName: teamName,
-				name: teamName,
-				mode: 'show'
+				initName:	teamName,
+				name:		teamName
 			},
 			___teamManagerBinding: {
-				teamStudents: [],
-				blackList: [],
-				positions: defaultBinding.get('model.sportModel.field.positions')
-			},
-			savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
-			isSetTeamLater: false
+				teamStudents:	teamStudents,
+				blackList:		[],
+				positions:		defaultBinding.get('model.sportModel.field.positions')
+			}
 		};
 	},
 	getTeamTables: function() {
@@ -202,13 +203,6 @@ const Manager = React.createClass({
 		}
 
 		return teamIdBlackList;
-	},
-	getInitPlayers: function() {
-		const binding = this.getBinding();
-
-		const rivals = binding.rivals.toJS();
-
-		return rivals.map((rival, rivalIndex) => this.getInitPlayersByOrder(rivalIndex));
 	},
 	getInitPlayersByOrder: function(order) {
 		const binding = this.getBinding();
@@ -336,7 +330,10 @@ const Manager = React.createClass({
 					}
 
 					// team wrapper isn't loading data
-					if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${teamWrapperIndex}.___teamManagerBinding.isSearch`)) {
+					if(
+						!eventDescriptor.getCurrentValue() &&
+						!binding.get(`teamModeView.teamWrapper.${teamWrapperIndex}.___teamManagerBinding.isSearch`)
+					) {
 						binding.set('isSync', true);
 					}
 				})
@@ -475,10 +472,6 @@ const Manager = React.createClass({
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
 		const newRivalIndex = rivals.length - 1;
-		// push empty players array
-		teamModeView.players.push(
-			this.getInitPlayersByOrder(newRivalIndex)
-		);
 
 		// push empty team table model to team table array
 		teamModeView.teamTable.push(
@@ -510,17 +503,11 @@ const Manager = React.createClass({
 				teamModeView	= binding.toJS('teamModeView');
 
 		// Add new rival
-		// New rival construct by
 		const rival = new InterSchoolsRivalModel(school);
 		rivals.push(rival);
-
 		this.getBinding().rivals.set(Immutable.fromJS(rivals));
 
 		const newRivalIndex = rivals.length - 1;
-		// push empty players array
-		teamModeView.players.push(
-			this.getInitPlayersByOrder(newRivalIndex)
-		);
 
 		// push empty team table model to team table array
 		teamModeView.teamTable.push(
@@ -703,6 +690,8 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
+
+		console.log( defaultBinding.toJS() );
 
 		return (
 			<div className="bTeamsManager">

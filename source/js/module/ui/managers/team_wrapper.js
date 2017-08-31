@@ -41,27 +41,11 @@ const TeamWrapper = React.createClass({
 
 		this.listeners = [];
 	},
-	/*HELPERS*/
 	_initBinding: function() {
-		const	self = this,
-				binding = self.getDefaultBinding();
-
-		if(!binding.get('isInit')) {
-			this.initTeamWrapperFilter();
-			self._initRivalIndexData();
-			self._initPlugObjectData();
-			self._initRemovePlayersArray();
-			self._initPlayerChooserBinding();
-			self._initCreationModeBinding();
-			self._fillPlugBinding();
-			self._setPlayers(self.getBinding().players.toJS());
-			self.setBlackList(this.props.otherTeamPlayers);
-			binding.set('prevPlayers',			Immutable.fromJS(self.getBinding().players.toJS()));
-			binding.set('isSetTeamLater',		false);
-			binding.set('isTeamChanged',		false);
-			binding.set('isInit',				true);
-		}
+		this.initTeamWrapperFilter();
+		this.setBlackList(this.props.otherTeamPlayers);
 	},
+	// TODO move to manager
 	initTeamWrapperFilter: function() {
 		const	binding	= this.getDefaultBinding();
 
@@ -90,11 +74,6 @@ const TeamWrapper = React.createClass({
 
 		binding.set("___teamManagerBinding.blackList", Immutable.fromJS(players));
 	},
-	_fillPlugBinding: function() {
-		const self = this;
-
-		self._changeTeam(undefined);
-	},
 	_addListeners: function() {
 		const self = this;
 
@@ -102,81 +81,6 @@ const TeamWrapper = React.createClass({
 		self._addTeamNameListener();
 		self._addPlayersListener();
 		self.addIsActiveListener();
-	},
-	_initCreationModeBinding: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('creationMode', Immutable.fromJS(undefined));
-	},
-	_initPlayerChooserBinding: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('playerChooser', Immutable.fromJS({
-			filter: binding.toJS('filter')
-		}));
-	},
-	/**
-	 * Init removed players array.
-	 * Removed players is a array for players that was deleted from team.
-	 * Main idea of this - create cache array for removed players, in case removed player be return back to team.
-	 * Because removed player - it's player in team and we should save his id and other data if there is the above.
-	 * @private
-	 */
-	_initRemovePlayersArray: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('removedPlayers', Immutable.fromJS([]));
-	},
-	/**
-	 * Init selected rival index for autocompleteTeam binding
-	 * In this context(TeamWrapper) we plug this object
-	 * Need fix autocompleteTeam in future
-	 * @private
-	 */
-	_initRivalIndexData: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('selectedRivalIndex', Immutable.fromJS(0));
-	},
-	/**
-	 * Init plug object for team and autocomplete team elements
-	 * @private
-	 */
-	_initPlugObjectData: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('teamTable', Immutable.fromJS(self._getDefTeamTableObject()));
-	},
-	_getDefTeamTableObject: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				model		= self.getBinding('model').toJS(),
-				houseId		= binding.get('rival.id');
-
-		//set type to houses if rival isn't empty
-		//it means - house vs house event
-		//and rival is house
-		//in other cases rival is empty
-		let type = '';
-		if(houseId) {
-			type = 'houses';
-		}
-
-	   return {
-			schoolInfo: {},
-			players: [],
-			model: {
-				type:		type,
-				ages:		undefined,
-				gender:		model ? model.gender : undefined,
-				sportModel:	model ? model.sportModel : {}
-			}
-	   };
 	},
 	isActive: function() {
 		return (
@@ -262,39 +166,24 @@ const TeamWrapper = React.createClass({
 	 * 1)Get team from server.
 	 * 2)Get new team players.
 	 * 3)Set new data to binding.
-	 * These data need for Team and AutocompleteTeam elements.
 	 * @private
 	 */
 	_changeTeam: function(teamId) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		if(teamId) {
-			let	schoolData,
-				players,
-				team;
+		if(typeof teamId !== 'undefined') {
+			let players, team;
 
 			binding.set('isLoadingTeam', true);
 
-			// TODO refactor
-			window.Server.school.get(self.activeSchoolId)
-				.then( _schoolData => {
-					schoolData = _schoolData;
-
-					// get forms data. they will inject to school
-					return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
-				})
-				.then( formsData => {
-					schoolData.forms = formsData;
-
-					return self._getPlayersFromServer(teamId);
-				})
-				.then((_players) => {
+			self._getPlayersFromServer(teamId)
+				.then(_players => {
 					players = _players;
 
 					return self._getTeamFromServer(teamId);
 				})
-				.then((_team) => {
+				.then(_team => {
 					team = _team;
 
 					return window.Server.teamPlayers.get(
@@ -303,9 +192,7 @@ const TeamWrapper = React.createClass({
 							teamId:		team.id
 						},
 						{
-							filter: {
-								limit: 100
-							}
+							filter: { limit: 100 }
 						}
 					)
 				})
@@ -314,9 +201,6 @@ const TeamWrapper = React.createClass({
 
 					binding
 						.atomically()
-						.set('teamTable.model.players',				Immutable.fromJS(updatedPlayers))
-						.set('teamTable.model.ages',				Immutable.fromJS(team.ages))
-						.set('teamTable.schoolInfo',				Immutable.fromJS(schoolData))
 						.set('prevPlayers',							Immutable.fromJS(updatedPlayers))
 						.set('removedPlayers',						Immutable.fromJS([]))
 						.set('___teamManagerBinding.teamStudents',	Immutable.fromJS(updatedPlayers))
@@ -329,7 +213,6 @@ const TeamWrapper = React.createClass({
 		} else {
 			binding
 				.atomically()
-				.set('teamTable',							Immutable.fromJS(self._getDefTeamTableObject()))
 				.set('prevPlayers',							Immutable.fromJS([]))
 				.set('removedPlayers',						Immutable.fromJS([]))
 				.set('___teamManagerBinding.teamStudents',	Immutable.fromJS([]))
@@ -412,7 +295,7 @@ const TeamWrapper = React.createClass({
 	},
 	/**
 	 * Handler for click to revert changes button
-	 * Set initial state of selected team as current
+	 * Set initial state of selected team as current 
 	 * @private
 	 */
 	_onRevertChangesButtonClick: function() {
