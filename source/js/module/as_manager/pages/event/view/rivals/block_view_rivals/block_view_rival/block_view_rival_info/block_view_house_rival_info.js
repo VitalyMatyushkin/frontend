@@ -9,11 +9,21 @@ const	React			= require('react'),
 
 const BlockViewHouseRivalInfo = React.createClass({
 	propTypes: {
-		rival:									React.PropTypes.object.isRequired,
-		event:									React.PropTypes.object.isRequired,
-		mode:									React.PropTypes.string.isRequired,
-		onChangeScore:							React.PropTypes.func.isRequired,
-		activeSchoolId:							React.PropTypes.string.isRequired
+		rival:			React.PropTypes.object.isRequired,
+		event:			React.PropTypes.object.isRequired,
+		mode:			React.PropTypes.string.isRequired,
+		onChangeScore:	React.PropTypes.func.isRequired,
+		activeSchoolId:	React.PropTypes.string.isRequired
+	},
+	getLogo: function() {
+		const houseLogo = this.props.rival.house.pic;
+
+		return typeof houseLogo !== 'undefined' ?
+			houseLogo :
+			this.getSchoolLogo();
+	},
+	getSchoolLogo: function() {
+		return this.props.rival.school.pic;
 	},
 	getRivalName: function() {
 		const	teamName	= this.getTeamName(),
@@ -120,13 +130,25 @@ const BlockViewHouseRivalInfo = React.createClass({
 			);
 		}
 	},
+	renderLogo: function() {
+		const logo = this.getLogo();
+
+		if(typeof logo !== 'undefined') {
+			return (
+				<img
+					className	= "eEventRivals_logoPic"
+					src			= { this.getLogo() }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (
 			<div className="bEventRival">
 				<div className="eEventRival_logo">
-					<img	className="eEventRivals_logoPic"
-							src={this.props.rival.school.pic}
-					/>
+					{ this.renderLogo() }
 				</div>
 				<div className="eEventRival_rivalName">
 					{ this.getRivalName() }

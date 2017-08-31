@@ -26,10 +26,9 @@ const EventRival = React.createClass({
 				binding = self.getDefaultBinding();
 
 		const	event		= binding.toJS('model'),
-				eventType	= event.eventType,
-				teamsData	= event.teamsData;
+				eventType	= event.eventType;
 
-		let team, pic;
+		let pic;
 
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
@@ -48,20 +47,17 @@ const EventRival = React.createClass({
 				}
 
 				pic = school.pic;
-				team = teamsData.find(t => t.schoolId === school.id);
-			break;
+				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 				const house = event.housesData[order];
-				team = teamsData.find(t => house && house.id === t.houseId);
-				pic = 	typeof binding.toJS('model.schoolsData.0') !== 'undefined' ?
-						binding.toJS('model.schoolsData.0.pic') :
-						undefined;
-			break;
+
+				pic = typeof house.pic !== 'undefined' ?
+					house.pic :
+					this.getActiveSchoolLogo();
+				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				pic = 	typeof binding.toJS('model.schoolsData.0') !== 'undefined' ?
-						binding.toJS('model.schoolsData.0.pic') :
-						undefined;
-			break;
+				pic = this.getActiveSchoolLogo();
+				break;
 		};
 
 		if(typeof pic !== 'undefined') {
@@ -73,6 +69,15 @@ const EventRival = React.createClass({
 		} else {
 			return null;
 		}
+	},
+	getActiveSchoolLogo: function() {
+		const binding = this.getDefaultBinding();
+
+		const activeSchool = binding.toJS('model.schoolsData.0');
+
+		return typeof activeSchool !== 'undefined' ?
+			activeSchool.pic :
+			undefined;
 	},
 	getSportIcon:function(sport) {
 		return <Sport name={sport} className="bIcon_invites" />;
