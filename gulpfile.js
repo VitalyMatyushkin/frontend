@@ -14,7 +14,10 @@ var SOURCE 			= './source',
 	git 			= require('gulp-git'),
 	fs 				= require('fs'),
 	webpack			= require('webpack'),
-	webpackStream	= require('webpack-stream');
+	webpackStream	= require('webpack-stream'),
+	mocha 			= require('gulp-mocha'),
+	WebpackDevServer = require('webpack-dev-server'),
+	webpackConfig = require('./webpack.config.js');
 
 gulp.task('copyLoader', function() {
 		gulp
@@ -184,4 +187,28 @@ gulp.task('default', function (done) {
 
 gulp.task('deploy', function (callback) {
     run('clean', 'svgSymbols', 'svgSymbolsIE', 'buildVersionFile', 'copyLoader', 'webpack', callback);
+});
+
+gulp.task('selenium-run-tests', function () {
+	return gulp
+		.src('tests_selenium/tests/**/*', {read: false})
+		.pipe(mocha());
+});
+
+gulp.task('selenium', function () {
+	const myConfig = Object.create(webpackConfig);
+	// Start a webpack-dev-server
+	new WebpackDevServer(webpack(myConfig), {
+		stats: {colors: true},
+		disableHostCheck: myConfig.devServer.disableHostCheck,
+		publicPath: "/" + myConfig.output.publicPath
+	})
+	.listen(myConfig.devServer.port, function(err) {
+		if(err){
+			console.log(err);
+		}
+	});
+	setTimeout(function () {
+		run('selenium-run-tests');
+	}, 60000);
 });
