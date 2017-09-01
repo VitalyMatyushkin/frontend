@@ -1,15 +1,18 @@
-const	Immutable			= require('immutable'),
-		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		TeamManager			= require('module/ui/managers/team_manager/team_manager'),
-		React				= require('react'),
-		If					= require('module/ui/if/if'),
-		Multiselect			= require('../../../../ui/multiselect/multiselect'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		Morearty			= require('morearty'),
-		classNames			= require('classnames'),
-		propz 				= require('propz'),
-		SchoolConst 		= require('module/helpers/consts/schools');
+const	Immutable					= require('immutable'),
+		Autocomplete				= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		MoreartyHelper				= require('module/helpers/morearty_helper'),
+		TeamManager					= require('module/ui/managers/team_manager/team_manager'),
+		React						= require('react'),
+		If							= require('module/ui/if/if'),
+		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		Morearty					= require('morearty'),
+		classNames					= require('classnames'),
+		propz 						= require('propz'),
+		MultiselectDropdown			= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		MultiselectDropdownHelper	= require('module/ui/multiselect-dropdown/multiselect_dropdown_helper'),
+		SchoolConst 				= require('module/helpers/consts/schools');
+
+const	MultiselectDropdownStyles	= require('../../../../../../styles/ui/multiselect_dropdown/bMultiSelectDropdown.scss');
 
 const TeamForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -93,7 +96,10 @@ const TeamForm = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return binding.toJS('gender') && binding.toJS('ages') && binding.toJS('ages').length !== 0;
+		return (
+			typeof binding.toJS('gender') !== 'undefined' &&
+			typeof binding.toJS('ages') !== 'undefined'
+		);
 	},
 	isHouseSelected: function() {
 		const	self	= this,
@@ -129,7 +135,6 @@ const TeamForm = React.createClass({
 		const self = this;
 
 		return	self.isGenderSelected() &&
-				self.isAgesSelected() &&
 				(
 					self.getHouseFilterCheckboxValue() ?	// if filtered by house then house should be selected
 					self.isHouseSelected() :				// for show team manager
@@ -249,9 +254,42 @@ const TeamForm = React.createClass({
 				});
 		}
 	},
+	getAgeGroupNaming: function() {
+		return this.getDefaultBinding().toJS('school.ageGroupsNaming');
+	},
+	_getAges: function() {
+		return MultiselectDropdownHelper.getAgeArray(
+			this.getDefaultBinding().toJS('availableAges'),
+			this.getAgeGroupNaming()
+		);
+	},
+	_getSelectedAges: function() {
+		const ages = typeof this.getDefaultBinding().toJS('ages') !== 'undefined' ?
+			this.getDefaultBinding().toJS('ages') :
+			[];
+
+		return MultiselectDropdownHelper.getAgeArray(
+				ages,
+				this.getAgeGroupNaming()
+			);
+	},
+	_handleChangeAges: function (ageItem) {
+		const ages = this.getDefaultBinding().toJS('ages');
+
+		const foundAgeIndex = ages.findIndex(a => a === ageItem.id);
+
+		if(foundAgeIndex !== -1) {
+			ages.splice(foundAgeIndex, 1);
+		} else {
+			ages.push(ageItem.id);
+		}
+
+		this.clearTeamPlayers();
+		this.getDefaultBinding().set('ages', Immutable.fromJS(ages));
+	},
 	getSelectedAges: function() {
 		const	self	= this,
-			ages	= self.getDefaultBinding().get('ages');
+				ages	= self.getDefaultBinding().get('ages');
 
 		return ages ? ages : [];
 	},
@@ -383,24 +421,26 @@ const TeamForm = React.createClass({
 		if(binding.get('isHouseSelected')) {
 			return (
 				<Autocomplete
-					defaultItem={binding.toJS('house')}
-					serviceFilter={self.houseService}
-					serverField="name"
-					placeholder={'Select House'}
-					onSelect={self.handleSelectHouse}
-					binding={binding.sub('___houseAutocompleteBinding')}
-					id="team_house_select"
+					extraCssStyle	= "mWide"
+					defaultItem		= {binding.toJS('house')}
+					serviceFilter	= {self.houseService}
+					serverField		= "name"
+					placeholder		= {'Select House'}
+					onSelect		= {self.handleSelectHouse}
+					binding			= {binding.sub('___houseAutocompleteBinding')}
+					id				= "team_house_select"
 				/>
 			);
 		} else {
 			return (
 				<Autocomplete
-					serviceFilter={self.houseService}
-					serverField="name"
-					placeholder={'Select House'}
-					onSelect={self.handleSelectHouse}
-					binding={binding.sub('___houseAutocompleteBinding')}
-					id="team_house_select"
+					extraCssStyle	= "mWide"
+					serviceFilter	= {self.houseService}
+					serverField		= "name"
+					placeholder		= {'Select House'}
+					onSelect		= {self.handleSelectHouse}
+					binding			= {binding.sub('___houseAutocompleteBinding')}
+					id				= "team_house_select"
 				/>
 			);
 		}
@@ -440,7 +480,7 @@ const TeamForm = React.createClass({
 						<div className="eManager_label">{'Team Name'}</div>
 						<input
 							ref="name"
-							className="eManager_field"
+							className="eManager_field mWide"
 							type="text"
 							id="team_name"
 							value={binding.get('name')}
@@ -453,7 +493,7 @@ const TeamForm = React.createClass({
 						<div className="eManager_label">{'Team Description'}</div>
 						<textarea
 							ref="description"
-							className="eManager_field mTextArea"
+							className="eManager_field mTextArea mHigh mWide"
 							type="text"
 							id="team_description"
 							value={binding.get('description')}
@@ -464,33 +504,43 @@ const TeamForm = React.createClass({
 					</div>
 					<div className="eManager_group">
 						<div className="eManager_label">{'Game'}</div>
-						<select	className="eManager_select"
-								id="team_sportSelect"
-								value={binding.toJS('sportId')}
-								onChange={self.handleChangeSport}
+						<select
+							id			= "team_sportSelect"
+							className	= "eManager_select mWide"
+							value		= {binding.toJS('sportId')}
+							onChange	= {self.handleChangeSport}
 						>
 							{self.getSports()}
 						</select>
 					</div>
 					<div className="eManager_group">
 						<div className="eManager_label">{'Genders'}</div>
-						<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
-								id="team_gender_select"
-								onChange={self.handleChangeGender}
-								disabled={!self.isSportSelected()}
+						<select
+							id			= "team_gender_select"
+							className	= {
+								classNames({
+									eManager_select:	true,
+									mWide:				true,
+									mDisabled:			!self.isSportSelected()
+								})
+							}
+							onChange	= {self.handleChangeGender}
+							disabled	= {!self.isSportSelected()}
 						>
 							{self.getGenders()}
 						</select>
 					</div>
 					<div className="eManager_group">
-						<div className="eManager_label">{'Ages'}</div>
-						<Multiselect
-							binding={binding.sub('___multiselect')}
-							items={self.getAgeItems()}
-							selections={self.getSelectedAges()}
-							onChange={self.handleChangeAges}
-							id="team_age_multiselect"
-						/>
+						<div className="eManager_label">
+							Ages
+						</div>
+						<div className="bMultiSelectDropdownWrapper">
+							<MultiselectDropdown
+								items			= {this._getAges()}
+								selectedItems	= {this._getSelectedAges()}
+								handleClickItem	= {this._handleChangeAges}
+							/>
+						</div>
 					</div>
 					<div className="eManager_group">
 						<div className="eManager_label">{'Filtered By House'}</div>

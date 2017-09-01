@@ -1,35 +1,30 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		propz 				= require('propz'),
-		
-		SchoolConst 		= require('module/helpers/consts/schools'),
-		
-		MultiselectDropdown	= require('../../../../../../../ui/multiselect-dropdown/multiselect-dropdown');
+const	React						= require('react'),
+		Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
+		propz 						= require('propz');
+
+const	MultiselectDropdown			= require('module/ui/multiselect-dropdown/multiselect_dropdown');
+
+const	MultiselectDropdownHelper	= require('module/ui/multiselect-dropdown/multiselect_dropdown_helper');
+
 
 const AgeMultiselectDropdownWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	getAgeView: function(age) {
-		const 	binding = this.getDefaultBinding(),
-				ageGroupsNaming = binding.toJS('schoolInfo.ageGroupsNaming'),
-				ageGroup = propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, age]);
-
-		return ageGroup;
-	},
-	getAgeArray: function(ages) {
-		return ages.map(age => {
-			return {
-				id		: age,
-				value	: this.getAgeView(age)
-			};
-		});
+	getAgeGroupNaming: function() {
+		return this.getDefaultBinding().toJS('schoolInfo.ageGroupsNaming');
 	},
 	getAges: function() {
-		return this.getAgeArray(this.getDefaultBinding().toJS('availableAges'));
+		return MultiselectDropdownHelper.getAgeArray(
+			this.getDefaultBinding().toJS('availableAges'),
+			this.getAgeGroupNaming()
+		);
 	},
 	getSelectedAges: function() {
-		return this.getAgeArray(this.getDefaultBinding().toJS('model.ages'));
+		return MultiselectDropdownHelper.getAgeArray(
+			this.getDefaultBinding().toJS('model.ages'),
+			this.getAgeGroupNaming()
+		);
 	},
 
 	handleClickAgeItem: function(ageItem) {
@@ -48,9 +43,10 @@ const AgeMultiselectDropdownWrapper = React.createClass({
 
 	render: function() {
 		return(
-			<MultiselectDropdown	items			= {this.getAges()}
-									selectedItems	= {this.getSelectedAges()}
-									handleClickItem	= {this.handleClickAgeItem}
+			<MultiselectDropdown
+				items			= { this.getAges() }
+				selectedItems	= { this.getSelectedAges() }
+				handleClickItem	= { this.handleClickAgeItem }
 			/>
 		);
 	}

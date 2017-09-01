@@ -69,14 +69,25 @@ class TeamListModel {
 	 * @returns {string}
 	 */
 	getAges(item) {
-		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
-				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']);
-		
-		const ages = item.ages;
-		if(typeof ages !== 'undefined') {
+		const	schoolInfo		= SchoolHelper.getActiveSchoolInfo(this),
+				ageGroupsNaming	= propz.get(schoolInfo, ['ageGroupsNaming']),
+				ages			= item.ages;
+
+		if(
+			typeof ages !== 'undefined' &&
+			ages.length > 0
+		) {
 			return ages
-			.map( elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
-			.join(", ");
+				.map( elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
+				.join(", ");
+		} else if (
+			typeof ages === 'undefined' ||
+			(
+				typeof ages !== 'undefined' &&
+				ages.length === 0
+			)
+		) {
+			return 'All ages';
 		}
 	}
 	
@@ -147,7 +158,7 @@ class TeamListModel {
 						keyField:'id',
 						valueField:'name'
 					},
-                    id:'find_team_sport'
+					id:'find_team_sport'
 				}
 			},
 			{
@@ -169,7 +180,7 @@ class TeamListModel {
 				},
 				filter:{
 					type:'string',
-                    id:'find_team_description'
+					id:'find_team_description'
 				}
 			},
 			{
@@ -188,7 +199,7 @@ class TeamListModel {
 						hideFilter:true,
 						hideButtons:true
 					},
-                    id:'find_team_gender'
+					id:'find_team_gender'
 				}
 			},
 			{

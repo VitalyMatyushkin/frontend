@@ -3,7 +3,8 @@ const   TeamForm		= require('module/as_manager/pages/school_admin/teams/team_for
         MoreartyHelper	= require('module/helpers/morearty_helper'),
         TeamHelper 		= require('module/ui/managers/helpers/team_helper'),
         Morearty		= require('morearty'),
-        React			= require('react');
+        React			= require('react'),
+		Loader			= require('module/ui/loader');
 
 const TeamAddPage = React.createClass({
     mixins: [Morearty.Mixin],
@@ -40,6 +41,8 @@ const TeamAddPage = React.createClass({
 
         let schoolData;
 
+        binding.set('isSync', false);
+
         //get school data
         window.Server.school.get(self.activeSchoolId)
             .then(_schoolData => {
@@ -74,12 +77,13 @@ const TeamAddPage = React.createClass({
                 // in the future, after refactoring that will be fixed
                 binding
                     .atomically()
+					.set('isSync',										true)
                     .set('teamForm.school',                             Immutable.fromJS(schoolData))
                     .set('teamForm.sports',                             Immutable.fromJS(sportsData))
                     .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.ages',                               Immutable.fromJS([]))
                     .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS([]))
                     .set('teamForm.___houseAutocompleteBinding',        Immutable.fromJS({}))
-                    .set('teamForm.error',                              Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });
     },
@@ -94,18 +98,6 @@ const TeamAddPage = React.createClass({
             schoolInfo: schoolData,
             model: {},
             players: []
-        };
-    },
-    /**
-     * Get object for error binding
-     * Error binding - container for validation data
-     * @returns {{isError: boolean, text: string}}
-     * @private
-     */
-    _getErrorObject: function() {
-        return {
-            isError: false,
-            text: ''
         };
     },
     _submitAdd: function() {
@@ -138,9 +130,21 @@ const TeamAddPage = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-        return (
-            <TeamForm title="Add new team..." onFormSubmit={self._submitAdd} binding={binding.sub('teamForm')} />
-        )
+		if(binding.toJS('isSync')) {
+			return (
+				<TeamForm
+					title			= "Add new team..."
+					onFormSubmit	= {self._submitAdd}
+					binding			= {binding.sub('teamForm')}
+				/>
+			);
+		} else {
+			return (
+				<div className="eSchoolMaster_loaderContainer">
+					<Loader condition={true}/>
+				</div>
+			);
+		}
     }
 });
 

@@ -73,6 +73,10 @@
   &.mDisabled {
     background-color: #c2c2c2;
   }
+
+  &.mWide {
+    width: 300px;
+  }
 }
 
 .eManager_field {
@@ -81,12 +85,21 @@
   display: inline-block;
   box-sizing: border-box;
   height: 35px;
+
+  &.mWide {
+    width: 300px;
+  }
+
+  &.mTextArea {
+    height: 35px;
+    padding-top: 9px;
+
+    &.mHigh {
+      min-height: 100px;
+    }
+  }
 }
 
-.eManager_field.mTextArea {
-  height: 35px;
-  padding-top: 9px;
-}
 
 .eManager_chooser {
   display: flex;

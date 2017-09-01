@@ -80,7 +80,7 @@ const TeamManager = React.createClass({
 		this.removeListeners();
 		this.cancelCurrentSearchRequest();
 
-		this.getDefaultBinding().clear();
+		//this.getDefaultBinding().clear();
 	},
 	isActive: function() {
 		return (

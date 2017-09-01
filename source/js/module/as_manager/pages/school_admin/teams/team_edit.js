@@ -1,10 +1,14 @@
-const   TeamForm        = require('module/as_manager/pages/school_admin/teams/team_form'),
-        React           = require('react'),
-        Promise         = require('bluebird'),
-        MoreartyHelper  = require('module/helpers/morearty_helper'),
-        TeamHelper      = require('module/ui/managers/helpers/team_helper'),
-        Morearty	    = require('morearty'),
-        Immutable       = require('immutable');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		Promise			= require('bluebird'),
+		propz			= require('propz');
+
+const	Loader			= require('module/ui/loader'),
+		TeamForm		= require('module/as_manager/pages/school_admin/teams/team_form'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper');
+
 
 const TeamEditPage = React.createClass({
     mixins: [Morearty.Mixin],
@@ -68,6 +72,8 @@ const TeamEditPage = React.createClass({
             sports,
             team;
 
+		binding.set('isSync', false);
+
         // TODO refactor
         //get school data
         window.Server.school.get(self.activeSchoolId)
@@ -130,15 +136,25 @@ const TeamEditPage = React.createClass({
                 )
             })
             .then(users => {
+                const	gender	= self.convertGenderToClientValue(team.gender),
+						houseId	= propz.get(team, ['house', 'id']),
+						filter	= TeamHelper.getTeamManagerSearchFilter(
+							schoolData,
+							team.ages,
+							gender,
+							houseId
+						);
+
                 return binding
                     .atomically()
+					.set('isSync',										true)
                     .set('teamForm.school',                             Immutable.fromJS(schoolData))
                     .set('teamForm.name',                               Immutable.fromJS(team.name))
                     .set('teamForm.description',                        Immutable.fromJS(team.description))
                     .set('teamForm.sportId',                            Immutable.fromJS(team.sportId))
                     .set('teamForm.sportModel',                         Immutable.fromJS(team.sport))
                     .set('teamForm.sports',                             Immutable.fromJS(sports))
-                    .set('teamForm.gender',                             Immutable.fromJS(self.convertGenderToClientValue(team.gender)))
+                    .set('teamForm.gender',                             Immutable.fromJS(gender))
                     .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
                     .set('teamForm.ages',                               Immutable.fromJS(team.ages))
                     .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(self._isHouseFilterEnable(team)))
@@ -148,6 +164,7 @@ const TeamEditPage = React.createClass({
                     .set('teamForm.house',                              Immutable.fromJS(team.house))
                     .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS(users))
                     .set('teamForm.___teamManagerBinding.positions',    Immutable.fromJS(team.sport.field.positions))
+                    .set('teamForm.___teamManagerBinding.filter',       Immutable.fromJS(filter))
                     .set('teamForm.___houseAutocompleteBinding',        Immutable.fromJS({}))
                     .set('initialPlayers',                              Immutable.fromJS(users))
                     .commit();
@@ -180,7 +197,7 @@ const TeamEditPage = React.createClass({
                 updatedTeam
             ).then( () => {
                 const   players         = binding.get('teamForm.___teamManagerBinding.teamStudents').toJS(),
-                        initialPlayers  =  binding.get('initialPlayers').toJS();
+                        initialPlayers  = binding.get('initialPlayers').toJS();
 
                 Promise.all(
                     TeamHelper.commitPlayers(initialPlayers, players, teamId, self.activeSchoolId)
@@ -196,9 +213,21 @@ const TeamEditPage = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        return (
-            <TeamForm title="Edit team..." onFormSubmit={self._submitEdit} binding={binding.sub('teamForm')} />
-        )
+		if(binding.toJS('isSync')) {
+			return (
+				<TeamForm
+					title			= "Edit team..."
+					onFormSubmit	= { self._submitEdit }
+					binding			= { binding.sub('teamForm') }
+				/>
+			);
+		} else {
+			return (
+				<div className="eSchoolMaster_loaderContainer">
+					<Loader condition={true}/>
+				</div>
+			);
+		}
     }
 });
 
