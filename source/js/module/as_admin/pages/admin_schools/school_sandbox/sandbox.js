@@ -11,6 +11,7 @@ const 	RouterView 				= require('module/core/router'),
 		EventsPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
 		SummaryPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
 		HousePageComponent		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
+		NotificationsComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
 		SportsComponent			= require('./favorite_sports/sports_page');
 
 const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
@@ -59,12 +60,18 @@ const SchoolSandbox = React.createClass({
 										name:'Summary',
 										key:'summary',
 										routes:[`/school_sandbox/${schoolId}/summary`]
-                                    },
+									},
 									{
 										href:`/#school_sandbox/${schoolId}/sports`,
 										name:'Sports',
 										key:'sports',
 										routes:[`/school_sandbox/${schoolId}/sports`]
+									},
+									{
+										href:`/#school_sandbox/${schoolId}/notifications`,
+										name:'Notifications',
+										key:'notifications',
+										routes:[`/school_sandbox/${schoolId}/notifications`]
 									}
 								];
 		//Set sub menu items in default binding
@@ -98,30 +105,35 @@ const SchoolSandbox = React.createClass({
 					</div>
 					<RouterView routes={subBinding.sub('routing')} binding={global}>
 						<Route
-							path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
-							binding={subBinding}
-							component={ClassesPageComponent}
+							path 		= "/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
+							binding 	= { subBinding }
+							component 	= { ClassesPageComponent }
 						/>
 						<Route
-							path="/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
-							binding={subBinding}
-							component={HousePageComponent}
+							path 		= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
+							binding 	= { subBinding }
+							component 	= { HousePageComponent }
 						/>
 						<Route
-							path="/school_sandbox/:schoolId/events"
-							binding={subBinding}
-							component={EventsPageComponent}
+							path 		= "/school_sandbox/:schoolId/events"
+							binding 	= { subBinding }
+							component 	= { EventsPageComponent }
 						/>
 						<Route
-							path="/school_sandbox/:schoolId/summary"
-							binding={binding}
-							component={SummaryPageComponent}
-                        />
-                        <Route
-                            path="/school_sandbox/:schoolId/sports"
-                            binding={binding}
-                            component={SportsComponent}
-                        />
+							path 		= "/school_sandbox/:schoolId/summary"
+							binding 	= { binding }
+							component 	= { SummaryPageComponent }
+						/>
+						<Route
+							path 		= "/school_sandbox/:schoolId/sports"
+							binding 	= { binding }
+							component 	= { SportsComponent }
+						/>
+						<Route
+							path 		= "/school_sandbox/:schoolId/notifications"
+							binding 	= { binding }
+							component 	= { NotificationsComponent }
+						/>
 					</RouterView>
 				</div>
 			</div>

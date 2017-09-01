@@ -151,7 +151,8 @@ const SystemAdminSchoolForm = React.createClass({
 						defaultItem 	= { postcode }
 						validation 		= "any"
 					>
-						Postcode</FormField>
+						Postcode
+					</FormField>
 					<FormField
 						type 		= "text"
 						field 		= "address"
@@ -173,10 +174,11 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Public Site Access
 					</FormField>
-					<FormField	type			= "password"
-								field			= "publicSite.password"
-								condition 		= { passActive }
-								validation 		= "required"
+					<FormField
+						type			= "password"
+						field			= "publicSite.password"
+						condition 		= { passActive }
+						validation 		= "required"
 					>
 						Public Site Access Password
 					</FormField>

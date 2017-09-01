@@ -19,6 +19,7 @@ const	React									= require('react'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
 		FavouriteSportPageWrapper				= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
 		PlacesPage								= require('./views/places_page/places_page'),
+		NotificationsPage 						= require('./views/notifications_page/notifications_page'),
 
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
@@ -129,6 +130,13 @@ const SchoolConsole = React.createClass({
 				key: 'import'
 			});
 		}
+		if (viewerRole === 'ADMIN' || viewerRole === 'MANAGER') {
+			menuItems.push({
+				href: '/#school_console/notifications',
+				name: 'Notifications',
+				key: 'notifications'
+			});
+		}
 		//we must show link integration only admin of school
 		if (viewerRole === 'ADMIN') {
 			menuItems.push({
@@ -156,16 +164,63 @@ const SchoolConsole = React.createClass({
 				<SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />
 				<div className='bSchoolMaster'>
 					<RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
-						<Route path='/school_console /school_console/users' binding={binding.sub('users')} component={UsersComponent}/>
-						<Route path='/school_console/requests' binding={binding.sub('requests')} component={AdminRequestsComponent}/>
-						<Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component={AdminPermissionAcceptComponent}  afterSubmitPage="/school_console/requests"/>
-						<Route path="/school_console/requests/accept-student" binding={binding.sub('studentPermission')} component={AdminPermissionAcceptStudentComponent}  afterSubmitPage="/school_console/requests"/>
-						<Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
-						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
-						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
-						<Route path='/school_console/integration' binding={binding.sub('integration')} component={IntegrationPage}/>
-						<Route path='/school_console/sports' binding={binding.sub('sports')} component={FavouriteSportPageWrapper}/>
-						<Route path='/school_console/venues /school_console/venues/:subPage' binding={binding.sub('places')} component={PlacesPage}/>
+						<Route
+							path 		= '/school_console /school_console/users'
+							binding 	= { binding.sub('users') }
+							component 	= { UsersComponent }
+						/>
+						<Route
+							path 		= '/school_console/requests'
+							binding 	= { binding.sub('requests') }
+							component 	= { AdminRequestsComponent }
+						/>
+						<Route
+							path 			= "/school_console/requests/accept"
+							binding 		= { binding.sub('parentPermission') }
+							component 		= { AdminPermissionAcceptComponent }
+							afterSubmitPage = "/school_console/requests"
+						/>
+						<Route
+							path 			= "/school_console/requests/accept-student"
+							binding 		= { binding.sub('studentPermission') }
+							component 		= { AdminPermissionAcceptStudentComponent }
+							afterSubmitPage = "/school_console/requests"
+						/>
+						<Route
+							path 		= '/school_console/archive'
+							binding 	= { binding.sub('archives') }
+							component 	= { RequestArchiveComponent }
+						/>
+						<Route
+							path 		= '/school_console/import_students'
+							binding 	= { binding.sub('import') }
+							component 	= { ImportStudents }
+						/>
+						<Route
+							path 		= '/school_console/moderation'
+							binding 	= { binding.sub('moderation') }
+							component 	= { ModerationPage }
+						/>
+						<Route
+							path 		= '/school_console/integration'
+							binding 	= { binding.sub('integration') }
+							component 	= { IntegrationPage }
+						/>
+						<Route
+							path 		= '/school_console/sports'
+							binding 	= { binding.sub('sports') }
+							component 	= { FavouriteSportPageWrapper }
+						/>
+						<Route
+							path 		= '/school_console/venues /school_console/venues/:subPage'
+							binding 	= { binding.sub('places') }
+							component 	= { PlacesPage }
+						/>
+						<Route
+							path 		= '/school_console/notifications'
+							binding 	= { binding.sub('notifications') }
+							component 	= { NotificationsPage }
+						/>
 					</RouterView>
 				</div>
 			</div>
