@@ -92,7 +92,7 @@ const   timeout = 70000,
                     type: 'Houses',
                     houses: ['Grenfell', 'Livingstone'],
                     selectTeamLater: false,
-                    selectTeams: ['Football Boys Grenfell Clone', 'Football Boys Livingstone'],
+                    selectTeams: ['Football Boys Grenfell', 'Football Boys Livingstone'],
                     teams: false
                 },
                 {

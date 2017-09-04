@@ -24,6 +24,7 @@ class EventTools{
         this.comboxLocator = By.className('bCombobox');
         this.comboxListLocator = By.className('eCombobox_list');
         this.comboxOptionLocator = By.className('eCombobox_option');
+        this.houseOptionLocator = By.className('bHouseListItem');
         this.showAllSportCheckboxLocator = By.className('eSwitch');
         this.genderRadioButtonLocator = By.css('div.mGenderSelector div.eRadioButtonCustom_circle');
         this.agesButtonLocator = By.className('eCustomFont-plus');
@@ -121,7 +122,7 @@ class EventTools{
     async setEventHouses(houses){
         await this.driver.sleep(1000);
         for (let i = 0; i<houses.length; ++i){
-            await this.setOptionCombox(i+1, this.comboxOptionLocator, houses[i]);
+            await this.setOptionCombox(i+1, this.houseOptionLocator, houses[i]);
             await this.driver.sleep(1000);
         }
         return Promise.resolve(houses.length);

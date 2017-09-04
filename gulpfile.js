@@ -195,7 +195,7 @@ gulp.task('selenium-run-tests', function () {
 		.pipe(mocha());
 });
 
-gulp.task('selenium', function () {
+gulp.task('selenium', function ( callback ) {
 	const myConfig = Object.create(webpackConfig);
 	// Start a webpack-dev-server
 	new WebpackDevServer(webpack(myConfig), {
@@ -209,6 +209,6 @@ gulp.task('selenium', function () {
 		}
 	});
 	setTimeout(function () {
-		run('selenium-run-tests');
+		run('selenium-run-tests', callback);
 	}, 60000);
 });
