@@ -23,7 +23,13 @@ const CHANNEL_TYPE = [{
 	value: 	'ANDROID',
 	type: 	'ANDROID',
 	id: 	'ANDROID'
-}];
+}, {
+	value: 	'DEFAULT_EMAIL',
+	type: 	'DEFAULT_EMAIL',
+	id: 	'DEFAULT_EMAIL'
+}
+
+];
 
 const AdminUserNotificationChannel = React.createClass({
 	mixins: [Morearty.Mixin],
