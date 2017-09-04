@@ -44,7 +44,7 @@ const AdminUserNotificationChannel = React.createClass({
 		const	userId 	= this.props.userId,
 				binding = this.getDefaultBinding();
 
-		window.Server.notificationChannel.post(
+		window.Server.userNotificationChannels.post(
 			{
 				userId: userId
 			},

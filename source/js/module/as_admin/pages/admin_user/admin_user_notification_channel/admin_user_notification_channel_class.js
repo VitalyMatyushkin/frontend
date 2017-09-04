@@ -42,19 +42,36 @@ class AdminUserNotificationChannelClass {
 				userId 			= this.props.userId;
 		
 		this.dataLoader = 	new DataLoader({
-			serviceName: 	'notificationChannel',
+			serviceName: 	'userNotificationChannels',
 			params: 		{userId: userId},
 			grid: 			this.grid,
 			onLoad: 		this.getDataLoadedHandle()
 		});
 	}
-
 	onClick(){
 		const binding = this.getDefaultBinding();
 
 		binding.set('isPopupOpen', true);
 	}
-
+	getActions(){
+		return ['Remove'];
+	}
+	getQuickEditActionsFactory(itemId, action) {
+		const userId = this.props.userId;
+		
+		switch (action) {
+			case 'Remove':
+				window.Server.userNotificationChannel.delete({userId: userId, channelId: itemId}).then(
+					() => this.reloadData()
+				);
+			break;
+			default :
+				break;
+		}
+	}
+	reloadData(){
+		this.dataLoader.loadData();
+	}
 	setColumns(){
 		this.columns = [
 			{
@@ -84,10 +101,19 @@ class AdminUserNotificationChannelClass {
 					dataField:'type',
 					type: 'general'
 				}
+			},
+			{
+				text:'Actions',
+				cell:{
+					type:'action-list',
+					typeOptions:{
+						getActionList:this.getActions.bind(this),
+						actionHandler:this.getQuickEditActionsFactory.bind(this)
+					}
+				}
 			}
 		];
 	}
-	
 	getDataLoadedHandle(){
 		const binding = this.getDefaultBinding();
 		
