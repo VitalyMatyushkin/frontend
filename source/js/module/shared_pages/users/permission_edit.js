@@ -6,6 +6,7 @@ const   React           = require('react'),
         Morearty        = require('morearty'),
         Form 		    = require('module/ui/form/form'),
         FormField 	    = require('module/ui/form/form_field'),
+        SVG 	        = require('module/ui/svg'),
         DateHelper 	    = require('module/helpers/date_helper');
 
 const STATUS = {
@@ -25,8 +26,10 @@ const EditPermission = React.createClass({
                 userId          = binding.get('userWithPermissionDetail.id'),
                 permissionId    = binding.get('editPermissionId');
 
+        binding.set('dataUploaded', false);
         window.Server.userPermission.get({userId, permissionId})
         .then((data) => {
+			binding.set('dataUploaded', true);
             binding.set('formPermission',Immutable.fromJS(data));
             return data;
         });
@@ -73,24 +76,38 @@ const EditPermission = React.createClass({
         });
     },
     render: function() {
-        const binding = this.getDefaultBinding();
+        const   binding = this.getDefaultBinding(),
+                dataUploaded = binding.get('dataUploaded');
 
-        return (
-            <div className="bPopupEdit_container">
-                <Form
-                    formStyleClass  = "mNarrow"
-                    name            = "Edit permission"
-                    binding         = {binding.sub('formPermission')}
-                    onSubmit        = {this.onSubmitPermission}
-                    defaultButton   = "Save"
-                    onCancel        = {this.props.onCancel}
-                >
-                    <FormField type="dropdown"  field="status" options={this.getStatus()}>Status</FormField>
-                    <FormField type="datetime"  field="activatedAt" validation="datetime">Activated</FormField>
-                    <FormField type="datetime"  field="deactivatedAt" validation="datetime">Deactivated</FormField>
-                </Form>
-            </div>
-        );
+		if (dataUploaded) {
+			return (
+                <div className="bPopupEdit_container">
+                    <Form
+                        formStyleClass="mNarrow"
+                        name="Edit permission"
+                        binding={binding.sub('formPermission')}
+                        onSubmit={this.onSubmitPermission}
+                        defaultButton="Save"
+                        onCancel={this.props.onCancel}
+                    >
+                        <FormField type="dropdown" field="status" options={this.getStatus()}>Status</FormField>
+                        <FormField type="datetime" field="activatedAt" validation="datetime">Activated</FormField>
+                        <FormField type="datetime" field="deactivatedAt" validation="datetime">Deactivated</FormField>
+                    </Form>
+                </div>
+			);
+		} else {
+			return (
+                <div className="bPopupEdit_container">
+                    <div className="bForm mNarrow">
+                        <div className="eForm_atCenter" style={{width: '212px'}}>
+                            <h2>Edit permission</h2>
+                            <div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
+                        </div>
+                    </div>
+                </div>
+			);
+        }
     }
 });
 module.exports = EditPermission;

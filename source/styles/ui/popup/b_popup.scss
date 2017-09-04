@@ -188,6 +188,16 @@
   height:auto;
   float:left;
   position:relative;
+
+  .eLoader{
+    text-align: center;
+    margin-top: 50px;
+
+    .bIcon{
+      width: 60px;
+      height: 60px;
+    }
+  }
 }
 .bPopupEdit_row{
   width:100%;
