@@ -250,6 +250,10 @@ const serviceList = {
 		
 		//school notifications
 		serviceList.schoolNotifications = new Service('/i/schools/{schoolId}/notifications', binding);
+		
+		//user setting notifications
+		serviceList.userNotificationChannels = new Service('/i/notifications/channels', binding);
+		serviceList.userNotificationChannel = new Service('/i/notifications/channels/{channelId}', binding);
 
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)

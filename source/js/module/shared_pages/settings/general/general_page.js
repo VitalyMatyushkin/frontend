@@ -57,31 +57,99 @@ const GeneralSettingsPage = React.createClass({
 	},
 
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
 			<div className="container">
-				<Form formStyleClass="bSettingsForm mLeft row" onSubmit={self.submitEdit} binding={binding}
-					  defaultButton="Save" loadingButton="Saving..." formButtonsClass='col-md-10 col-md-offset-1'>
-
-					<FormColumn customStyle="col-md-5 col-md-offset-1">
+				<Form
+					formStyleClass 		= "bSettingsForm mLeft row"
+					onSubmit 			= { this.submitEdit }
+					binding 			= { binding }
+					defaultButton 		= "Save"
+					loadingButton 		= "Saving..."
+					formButtonsClass 	= 'col-md-10 col-md-offset-1'
+				>
+					<FormColumn
+						customStyle 	="col-md-5 col-md-offset-1"
+					>
 						<h3>YOUR PHOTO</h3>
-						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
+						<FormField
+							labelText 	= "+"
+							type 		= "imageFile"
+							typeOfFile 	= "image"
+							field 		= "avatar"
+						/>
 						<h3>NOTIFICATION SETTINGS</h3>
-						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendNews" >Send me news</FormField>
-						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
-						<FormField classNames="mSingleLine" type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
+						<FormField
+							classNames 	= "mSingleLine"
+							type 		= "checkbox"
+							field 		= "notification.sendNews"
+						>
+							Send me news
+						</FormField>
+						<FormField
+							classNames 	= "mSingleLine"
+							type 		= "checkbox"
+							field 		= "notification.sendInfoUpdates"
+						>
+							Information updates
+						</FormField>
+						<FormField
+							classNames 	= "mSingleLine"
+							type 		= "checkbox"
+							field 		= "notification.sendPromoOffers"
+						>
+							Promotional offers
+						</FormField>
 					</FormColumn>
-					<FormColumn customStyle="col-md-5">
+					<FormColumn
+						customStyle 	="col-md-5"
+					>
 					<h3>SUMMARY</h3>
-						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
-						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="dropdown" field="gender" options={self.getGender()}>Gender</FormField>
-						<FormField type="date" field="birthday" validation="birthday" >Date of birth</FormField>
+						<FormField
+							type 		= "text"
+							field 		= "firstName"
+							validation 	= "required alphanumeric"
+						>
+							Name
+						</FormField>
+						<FormField
+							type 		= "text"
+							field 		= "lastName"
+							validation 	= "required alphanumeric">
+							Surname
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							field 		= "gender"
+							options 	= { this.getGender() }
+						>
+							Gender
+						</FormField>
+						<FormField
+							type 		="date"
+							field 		="birthday"
+							validation 	="birthday"
+						>
+							Date of birth
+						</FormField>
 						<h3>VERIFICATION INFORMATION</h3>
-						<FormField type="text" field="email" validation="required email" isDisabled={true}>Email</FormField>
-						<FormField type="phone" field="phone" validation="phone" isDisabled={true}>Phone number</FormField>
+						<FormField
+							type 			= "text"
+							field 			= "email"
+							validation 		= "required email"
+							isDisabled 		= { true }
+						>
+							Email
+						</FormField>
+						<FormField
+							type 		="phone"
+							field 		="phone"
+							validation 	="phone"
+							isDisabled 	={ true }
+						>
+							Phone number
+						</FormField>
 						<br/>
 					</FormColumn>
 				</Form>

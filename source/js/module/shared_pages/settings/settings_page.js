@@ -8,7 +8,8 @@ const	RouterView						= require('module/core/router'),
 		ChangePasswordPageComponent		= require("module/shared_pages/settings/password/change_password_page"),
 		AccountRolesComponent			= require("module/shared_pages/settings/account/account_roles"),
 		AccountRequestsComponent		= require("module/shared_pages/settings/account/request-list"),
-		Verification					= require('./verification/verification');
+		Verification					= require('./verification/verification'),
+		Notifications					= require('./notifications/notifications');
 
 const SettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -46,28 +47,35 @@ const SettingsPage = React.createClass({
 				binding		= self.getDefaultBinding(),
 				rootBinding	= self.getMoreartyContext().getBinding(),
 				tab 		= rootBinding.get('routing.pathParameters.0');
-
+		
 		// tabListModel
-		self.tabListModel = [{
-			text: 'General',
-			value: 'general',
-			isActive:false
-		},
-		{
-			text:'Roles',
-			value:'roles',
-			isActive:false
-		},
-		{
-			text:'Requests',
-			value:'requests',
-			isActive:false
-		},
-		{
-			text:'Change Password',
-			value:'password',
-			isActive:false
-		}];
+		self.tabListModel = [
+			{
+				text: 'General',
+				value: 'general',
+				isActive:false
+			},
+			{
+				text:'Roles',
+				value:'roles',
+				isActive:false
+			},
+			{
+				text:'Requests',
+				value:'requests',
+				isActive:false
+			},
+			{
+				text:'Change Password',
+				value:'password',
+				isActive:false
+			},
+			{
+				text:'Notifications',
+				value:'notifications',
+				isActive:false
+			}
+		];
 
 		if(!this.isSuccessVerified()) {
 			this.tabListModel.push(
@@ -131,29 +139,34 @@ const SettingsPage = React.createClass({
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>
 						<Route
-							path="/settings/general"
-							binding={binding.sub('userInfo')}
-							component={GeneralPageComponent}
+							path 		="/settings/general"
+							binding 	={ binding.sub('userInfo') }
+							component 	={ GeneralPageComponent }
 						/>
 						<Route
-							path="/settings/password"
-							binding={binding.sub('password')}
-							component={ChangePasswordPageComponent}
+							path 		="/settings/password"
+							binding 	={ binding.sub('password') }
+							component 	={ ChangePasswordPageComponent }
 						/>
 						<Route
-							path="/settings/roles"
-							binding={binding.sub('roles')}
-							component={AccountRolesComponent}
+							path 		="/settings/roles"
+							binding 	={ binding.sub('roles') }
+							component 	={ AccountRolesComponent }
 						/>
 						<Route
-							path="/settings/requests /settings/requests/:subPage"
-							binding={binding.sub('requests')}
-							component={AccountRequestsComponent}
+							path 		="/settings/requests /settings/requests/:subPage"
+							binding 	={ binding.sub('requests') }
+							component 	={ AccountRequestsComponent }
 						/>
 						<Route
-							path="/settings/verification"
-							binding={binding.sub('verification')}
-							component={Verification}
+							path 		="/settings/verification"
+							binding 	={ binding.sub('verification') }
+							component 	={ Verification }
+						/>
+						<Route
+							path 		="/settings/notifications"
+							binding 	={ binding.sub('notifications') }
+							component 	={ Notifications }
 						/>
 					</RouterView>
 				</div>
