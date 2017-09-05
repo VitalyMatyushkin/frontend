@@ -9,4 +9,15 @@
   &.mLeft {
     @include make-md-column-offset(1)
   }
+
+}
+
+.bBlockViewRivalSingle {
+  @extend .col-md-10;
+  @extend .col-sm-10;
+  @extend .col-xs-10;
+
+  &.mLeft {
+    @include make-md-column-offset(1)
+  }
 }

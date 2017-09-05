@@ -1,0 +1,38 @@
+.bOverallPlayer {
+  padding: 10px 20px;
+
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.eOverallPlayer_info {
+  width: 200px;
+
+  text-align: left;
+  font-size: 1rem;
+  color: #333132;
+}
+
+.eOverallPlayer_school {
+  width: 200px;
+
+  text-align: left;
+  font-size: 1rem;
+  color: #333132;
+}
+
+.eOverallPlayer_score {
+  width: 200px;
+
+  text-align: left;
+  font-size: 1rem;
+  color: #333132;
+}
+
+.eOverallPlayer_medal {
+  width: 25px;
+
+  position: relative;
+}

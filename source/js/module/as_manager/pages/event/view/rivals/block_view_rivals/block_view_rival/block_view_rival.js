@@ -4,11 +4,13 @@ const	React						= require('react'),
 		BlockViewRivalInfo			= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_rival_info'),
 		Players						= require('module/as_manager/pages/event/view/rivals/players'),
 		IndividualScoreManager		= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
+		ViewModeConsts				= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		BlockViewRivalStyle			= require('../../../../../../../../../styles/ui/b_block_view_rivals/b_block_view_rival.scss');
 
 const BlockViewRival = React.createClass({
 	propTypes: {
+		viewMode:								React.PropTypes.string.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		rival:									React.PropTypes.object.isRequired,
 		rivalIndex:								React.PropTypes.number.isRequired,
@@ -69,24 +71,38 @@ const BlockViewRival = React.createClass({
 			return null;
 		}
 	},
+	renderBlockView: function () {
+		switch (true) {
+			case this.props.viewMode === ViewModeConsts.VIEW_MODE.BLOCK_VIEW: {
+				return (
+					<BlockViewRivalInfo
+						rival			= { this.props.rival }
+						event			= { this.props.event }
+						mode			= { this.props.mode }
+						onChangeScore	= { this.onChangeRivalInfoScore }
+						activeSchoolId	= { this.props.activeSchoolId }
+						options			= { this.props.rivalInfoOptions }
+					/>
+				);
+			}
+			case this.props.viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW: {
+				return null;
+			}
+		}
+	},
 	render: function() {
 		const rivalStyle = classNames({
-			bBlockViewRival	: true,
-			mLeft			: this.props.rivalIndex % 2 === 0
+			bBlockViewRival			: this.props.viewMode !== ViewModeConsts.VIEW_MODE.OVERALL_VIEW,
+			bBlockViewRivalSingle	: this.props.viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW,
+			mLeft					: this.props.rivalIndex % 2 === 0
 		});
 
 		return (
 			<div className={rivalStyle}>
-				<BlockViewRivalInfo
-					rival			= { this.props.rival }
-					event			= { this.props.event }
-					mode			= { this.props.mode }
-					onChangeScore	= { this.onChangeRivalInfoScore }
-					activeSchoolId	= { this.props.activeSchoolId }
-					options			= { this.props.rivalInfoOptions }
-				/>
+				{ this.renderBlockView() }
 				{ this.renderIndividualScoreAvailable() }
 				<Players
+					viewMode				= { this.props.viewMode }
 					rival					= { this.props.rival }
 					isOwner					= { true }
 					mode					= { this.props.mode }

@@ -42,6 +42,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		ConfirmPopup 					= require('module/ui/confirm_popup'),
 		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
+		ViewModeConsts					= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		RandomHelper					= require('module/helpers/random_helper'),
 		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
 		propz							= require('propz');
 
@@ -64,6 +66,8 @@ const Event = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			rivalsComponentKey: RandomHelper.getRandomString(),
+			viewMode: ViewModeConsts.VIEW_MODE.BLOCK_VIEW,
 			isRivalsSync: false,
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
@@ -503,6 +507,10 @@ const Event = React.createClass({
 
 		this.addListenerToEventTeams();
 
+		if(TeamHelper.isMultiparty(event)) {
+			this.addListenerToViewMode();
+		}
+
 		if(
 			!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 			!TeamHelper.isHousesEventForTeamSport(event) &&
@@ -668,6 +676,26 @@ const Event = React.createClass({
 
 		// reload players from server if isSync is false.
 		this.listeners.push(binding.sub('eventTeams.isSync').addListener(descriptor => !descriptor.getCurrentValue() && this.loadPlayers()));
+	},
+	addListenerToViewMode: function() {
+		const binding = this.getDefaultBinding();
+
+		this.listeners.push(
+			binding.sub('viewMode').addListener(descriptor => {
+				if(
+					descriptor.getCurrentValue() === ViewModeConsts.VIEW_MODE.OVERALL_VIEW ||
+					descriptor.getPreviousValue() === ViewModeConsts.VIEW_MODE.OVERALL_VIEW
+				) {
+					this.reloadRivals();
+				}
+			})
+		);
+	},
+	reloadRivals: function () {
+		this.getDefaultBinding().set(
+			'rivalsComponentKey',
+			RandomHelper.getRandomString()
+		);
 	},
 	/**
 	 * Load team players from server
@@ -1211,20 +1239,18 @@ const Event = React.createClass({
 	},
 	// It's temp function
 	renderRivalsStuff: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
+		const	binding			= this.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
-				showingComment	= binding.get('showingComment'),
-				mode			= binding.toJS('mode'),
-				point 			= binding.toJS('model.venue.postcodeData.point'),
-				isNewEvent		= binding.get('isNewEvent');
+				mode			= binding.toJS('mode');
 
 		//TODO it's temp. only for event refactoring period.
 		if(TeamHelper.isNewEvent(event)) {
 			return (
 				<Rivals
+					key										= { binding.toJS('rivalsComponentKey') }
 					binding									= { binding }
+					viewMode								= { binding.toJS('viewMode') }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
@@ -1250,7 +1276,7 @@ const Event = React.createClass({
 						event			= { event }
 					/>
 					<EventTeams
-						binding			= { self.getEventTeamsBinding() }
+						binding			= { this.getEventTeamsBinding() }
 						activeSchoolId	= { this.props.activeSchoolId }
 					/>
 				</span>

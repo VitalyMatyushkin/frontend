@@ -20,6 +20,7 @@ const	ViewModeConsts		= require('module/as_manager/pages/event/view/rivals/const
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		viewMode:								React.PropTypes.string.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
@@ -37,13 +38,11 @@ const Rivals = React.createClass({
 	componentWillMount: function() {
 		const	binding		= this.getDefaultBinding();
 
-		this.initViewMode();
-
 		const	event		= binding.toJS('model'),
 				eventType	= event.eventType;
 
 		// Get main part of rivals
-		let		rivals		= RivalManager.getRivalsByEvent(this.props.activeSchoolId, event);
+		let		rivals		= RivalManager.getRivalsByEvent(this.props.activeSchoolId, event, this.props.viewMode);
 
 		// Additional preparation
 		if(TeamHelper.isTeamSport(event)) {
@@ -71,9 +70,6 @@ const Rivals = React.createClass({
 			.commit();
 
 		this.addListenerForTeamScore();
-	},
-	initViewMode: function() {
-		this.getDefaultBinding().set('viewMode', ViewModeConsts.VIEW_MODE.BLOCK_VIEW);
 	},
 	getExtraScoreForRival: function(rival) {
 		let extraScoreRival = 0;
@@ -479,16 +475,17 @@ const Rivals = React.createClass({
 		if(this.isSync()) {
 			const	binding		= this.getDefaultBinding();
 
-			const	viewMode	= binding.toJS('viewMode'),
+			const	viewMode	= this.props.viewMode,
 					rivals		= binding.toJS('rivals'),
 					mode		= binding.toJS('mode'),
 					event		= binding.toJS('model');
 
-			switch (viewMode) {
-				case ViewModeConsts.VIEW_MODE.BLOCK_VIEW: {
+			switch (true) {
+				case viewMode === ViewModeConsts.VIEW_MODE.BLOCK_VIEW || viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW: {
 					return (
 						<BlockViewRivals
 							rivals									= { rivals }
+							viewMode								= { viewMode }
 							mode									= { mode }
 							event									= { event }
 							activeSchoolId							= { this.props.activeSchoolId }
@@ -501,7 +498,7 @@ const Rivals = React.createClass({
 						/>
 					);
 				}
-				case ViewModeConsts.VIEW_MODE.TABLE_VIEW: {
+				case viewMode === ViewModeConsts.VIEW_MODE.TABLE_VIEW: {
 					return (
 						<TableViewRivals
 							rivals									= { rivals }

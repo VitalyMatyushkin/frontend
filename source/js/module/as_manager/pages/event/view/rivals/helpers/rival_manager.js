@@ -1,10 +1,11 @@
 const	propz			= require('propz'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		ViewModeConsts	= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
 		RandomHelper	= require('module/helpers/random_helper');
 
 const RivalManager = {
-	getRivalsByEvent: function(activeSchoolId, event) {
+	getRivalsByEvent: function(activeSchoolId, event, viewMode) {
 		const eventType = event.eventType;
 
 		let rivals = [];
@@ -120,7 +121,13 @@ const RivalManager = {
 				});
 			}
 		} else if(TeamHelper.isIndividualSport(event)) {
-			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+			if(
+				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType &&
+				(
+					viewMode === ViewModeConsts.VIEW_MODE.TABLE_VIEW ||
+					viewMode === ViewModeConsts.VIEW_MODE.BLOCK_VIEW
+				)
+			) {
 				const	schoolsData	= event.schoolsData,
 						players		= event.individualsData,
 						scores		= propz.get(event, ['results', 'individualScore']);
@@ -161,6 +168,37 @@ const RivalManager = {
 
 					rivals.push(rival);
 				});
+			} else if(
+				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType &&
+				viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW
+			) {
+				const	rival	= {},
+						players	= event.individualsData,
+						scores	= propz.get(event, ['results', 'individualScore']);
+
+				rival.school = {};
+				rival.players = [];
+				players.forEach( player => {
+					const playerScoreObject = scores.find(score => score.userId === player.userId);
+
+					if (typeof playerScoreObject !== 'undefined') {
+						const	playerScore			= propz.get(playerScoreObject, ['score']),
+								playerExtraScore	= propz.get(playerScoreObject, ['richScore', 'points']);
+
+						player.score = playerScore;
+						player.extraScore = playerExtraScore;
+					} else {
+						player.score = 0;
+						player.extraScore = 0;
+					}
+
+					player.school = event.schoolsData.find(school => school.id === player.schoolId);
+
+					rival.players.push(player);
+
+				});
+
+				rivals.push(rival);
 			}
 		}
 

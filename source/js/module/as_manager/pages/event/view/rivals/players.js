@@ -1,10 +1,12 @@
 const	React			= require('react'),
 		Player			= require('module/as_manager/pages/event/view/rivals/player/player'),
+		OverallPlayer	= require('module/as_manager/pages/event/view/overall_view/player/player'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		PencilButton	= require('module/ui/pencil_button'),
 		propz			= require('propz'),
 		classNames		= require('classnames'),
+		ViewModeConsts	= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
 		PlayersStyle	= require('../../../../../../../styles/ui/b_block_view_rivals/b_players.scss');
 
 const SPORT_SORT = {
@@ -17,6 +19,7 @@ const SORTING = 'BY_EXTRA_SCORE';
 
 const Players = React.createClass({
 	propTypes: {
+		viewMode					: React.PropTypes.string.isRequired,
 		rival						: React.PropTypes.object.isRequired,
 		isOwner						: React.PropTypes.bool.isRequired,
 		mode						: React.PropTypes.string.isRequired,
@@ -315,21 +318,44 @@ const Players = React.createClass({
 			playersPlaceArray = this.getPlayersPlaceArray(players);
 		}
 
-		return players.map((player, playerIndex) =>
-			<Player
-				key							= {playerIndex}
-				playerIndex					= {playerIndex}
-				playerPlace 				= {playersPlaceArray.length !== 0 ? playersPlaceArray[playerIndex] : 0}
-				player						= {player}
-				isOwner						= {this.props.isOwner}
-				individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}
-				mode						= {this.props.mode}
-				isShowMedal					= {isShowMedal}
-				event						= {this.props.event}
-				onChangeScore				= {this.props.onChangeScore}
-				customCss					= {this.props.customPlayerCss}
-			/>
-		);
+		return players.map((player, playerIndex) => {
+			switch (this.props.viewMode) {
+				case ViewModeConsts.VIEW_MODE.OVERALL_VIEW: {
+					return (
+						<OverallPlayer
+							key							= {playerIndex}
+							playerIndex					= {playerIndex}
+							playerPlace 				= {playersPlaceArray.length !== 0 ? playersPlaceArray[playerIndex] : 0}
+							player						= {player}
+							isOwner						= {this.props.isOwner}
+							individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}
+							mode						= {this.props.mode}
+							isShowMedal					= {isShowMedal}
+							event						= {this.props.event}
+							onChangeScore				= {this.props.onChangeScore}
+							customCss					= {this.props.customPlayerCss}
+						/>
+					);
+				}
+				default: {
+					return (
+						<Player
+							key							= {playerIndex}
+							playerIndex					= {playerIndex}
+							playerPlace 				= {playersPlaceArray.length !== 0 ? playersPlaceArray[playerIndex] : 0}
+							player						= {player}
+							isOwner						= {this.props.isOwner}
+							individualScoreAvailable	= {this.props.rival.isIndividualScoreAvailable}
+							mode						= {this.props.mode}
+							isShowMedal					= {isShowMedal}
+							event						= {this.props.event}
+							onChangeScore				= {this.props.onChangeScore}
+							customCss					= {this.props.customPlayerCss}
+						/>
+					);
+				}
+			}
+		});
 	},
 	render: function() {
 		return (

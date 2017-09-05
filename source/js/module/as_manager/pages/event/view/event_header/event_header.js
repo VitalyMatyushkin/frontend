@@ -73,6 +73,7 @@ const EventHeader = React.createClass({
 		if(TeamHelper.isMultiparty(this.props.event)) {
 			return (
 				<ViewSelector
+					event		= { this.props.event }
 					handleClick	= { this.props.onClickViewMode }
 					viewMode	= { this.props.viewMode }
 				/>

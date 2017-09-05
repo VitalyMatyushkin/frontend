@@ -21,6 +21,7 @@ const BlockViewRivals = React.createClass({
 		// options
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
+		viewMode:								React.PropTypes.string,
 
 		// handlers
 		onChangeScore:							React.PropTypes.func.isRequired,
@@ -41,6 +42,7 @@ const BlockViewRivals = React.createClass({
 			row.push(
 				<BlockViewRival
 					key										= { `rival_${rivalIndex}` }
+					viewMode								= { this.props.viewMode }
 					rivalIndex								= { rivalIndex }
 					rival									= { rival }
 					event									= { event }
