@@ -72,7 +72,7 @@ const Buttons = React.createClass({
 			actionList.push({id:'send_consent_request', text:'Send Consent Request'});
 		}
 
-		if(this.isReportNotParticipateAvailable()) {
+		if(this.isReportNotParticipateAvailable() && EventHelper.isNotFinishedEvent(this.props.event)) {
 			actionList.push({id:'report_not_participate', text:'Report unavailability'});
 		}
 
