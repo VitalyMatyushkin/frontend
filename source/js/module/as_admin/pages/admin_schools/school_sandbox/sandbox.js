@@ -11,6 +11,7 @@ const 	RouterView 				= require('module/core/router'),
 		EventsPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
 		SummaryPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
 		HousePageComponent		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
+		StudentsPageComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/students/students_page'),
 		NotificationsComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
 		SportsComponent			= require('./favorite_sports/sports_page');
 
@@ -30,50 +31,68 @@ const SchoolSandbox = React.createClass({
 	componentWillMount:function(){
 		const 	binding 		= this.getDefaultBinding(),
 				globalBinding 	= this.getMoreartyContext().getBinding(),
+				schoolId 		= globalBinding.get('routing.pathParameters.0');
+		this.createSubMenu('*');
+		window.Server.schoolStudents.get(
+			{schoolId},
+			{
+				filter: {
+					limit: 1000
+				}
+			}
+		).then(students =>{
+				this.createSubMenu(students.length);
+				return true;
+			});
+	},
+	createSubMenu: function(countStudents) {
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0'),
-				menuItems 		= [
-									{
-										href:'/#schools/admin_views/list',
-										name: '← school list',
-										key:'back'
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/forms`,
-										name:'Forms',
-										key:'forms',
-										routes:[`/school_sandbox/${schoolId}/forms`]
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/houses`,
-										name:'Houses',
-										key:'houses',
-										routes:[`/school_sandbox/${schoolId}/houses`]
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/events`,
-										name:'Events',
-										key:'events',
-										routes:[`/school_sandbox/${schoolId}/events`]
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/summary`,
-										name:'Summary',
-										key:'summary',
-										routes:[`/school_sandbox/${schoolId}/summary`]
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/sports`,
-										name:'Sports',
-										key:'sports',
-										routes:[`/school_sandbox/${schoolId}/sports`]
-									},
-									{
-										href:`/#school_sandbox/${schoolId}/notifications`,
-										name:'Notifications',
-										key:'notifications',
-										routes:[`/school_sandbox/${schoolId}/notifications`]
-									}
-								];
+		menuItems 		= [
+			{
+				href:'/#schools/admin_views/list',
+				name: '← school list',
+				key:'back'
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/forms`,
+				name:'Forms',
+				key:'forms',
+				routes:[`/school_sandbox/${schoolId}/forms`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/students`,
+				name:'Students',
+				key:'students',
+				num		: '(' + countStudents + ')',
+				routes:[`/school_sandbox/${schoolId}/students`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/houses`,
+				name:'Houses',
+				key:'houses',
+				routes:[`/school_sandbox/${schoolId}/houses`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/events`,
+				name:'Events',
+				key:'events',
+				routes:[`/school_sandbox/${schoolId}/events`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/summary`,
+				name:'Summary',
+				key:'summary',
+				routes:[`/school_sandbox/${schoolId}/summary`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/sports`,
+				name:'Sports',
+				key:'sports',
+				routes:[`/school_sandbox/${schoolId}/sports`]
+			}
+		];
 		//Set sub menu items in default binding
 		binding.set('subMenuItems',Immutable.fromJS(menuItems));
 	},
@@ -108,6 +127,11 @@ const SchoolSandbox = React.createClass({
 							path 		= "/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
 							binding 	= { subBinding }
 							component 	= { ClassesPageComponent }
+						/>
+						<Route
+							path="/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
+							binding={subBinding}
+							component={StudentsPageComponent}
 						/>
 						<Route
 							path 		= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
