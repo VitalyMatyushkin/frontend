@@ -41,7 +41,7 @@ describe('Role switching test', function() {
     });
 
     for(let i in availableItem) {
-        test.it('Test role switching', async () => {
+        test.it('Test role switching ' + availableItem[i].roleName, async () => {
             let calendarPage = new CalendarPage(driver);
             await calendarPage.openDropdown();
             let webElem = (await calendarPage.getDropdownItems())[i];

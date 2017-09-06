@@ -38,7 +38,7 @@ test.describe('User login with multiple roles', function(){
     });
 
     for (let role of userRoles) {
-        test.it('Test', async () => {
+        test.it('Switch ' + role + ' role', async () => {
             let calendarPage = new CalendarPage(driver);
             await calendarPage.checkSelectRolePage();
             await calendarPage.switchRole(role.roleName);

@@ -115,21 +115,18 @@ class EventTools{
                 index = 4;
             }
         }
-        await this.driver.sleep(1000);
         return await genderButtons[index].click();
     }
 
     async setEventHouses(houses){
-        await this.driver.sleep(1000);
         for (let i = 0; i<houses.length; ++i){
-            await this.setOptionCombox(i+1, this.houseOptionLocator, houses[i]);
-            await this.driver.sleep(1000);
+			await this.driver.sleep(500);
+			await this.setOptionCombox(i+1, this.houseOptionLocator, houses[i]);
         }
         return Promise.resolve(houses.length);
     }
 
     async setDistance(distance){
-        await this.driver.sleep(1000);
         const wrapElem = (await this.driver.findElements(this.dropdownLocator))[3];
         await wrapElem.click();
         await OftenUsed.clickSelectOption(wrapElem, this.optionLocator, distance);
@@ -137,16 +134,15 @@ class EventTools{
     }
 
     async setEventSchools(schools){
-        await this.driver.sleep(1000);
         for (let i = 0; i<schools.length; ++i){
+			await this.driver.sleep(500);
             await this.setOptionCombox(i+1, this.schoolComboxOptionLocator, schools[i]);
-            await this.driver.sleep(1000);
         }
         return Promise.resolve(schools.length);
     }
 
     async setEventPostcode(postcode, index){
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         return await this.setOptionCombox(index, this.placeItemOptionLocator, postcode);
     }
 
@@ -193,13 +189,12 @@ class EventTools{
 
 
     async addPlayers(players, indexTeam){
-        await this.driver.sleep(2500);
+        await this.driver.sleep(1000);
         const selectPlayer = (await this.driver.findElements(this.selectPlayerLocator))[indexTeam];
         for (const player of players){
             await OftenUsed.clickSelectOption(selectPlayer, this.playerNameLocator, player);
         }
         await selectPlayer.findElement(this.addPlayersButtonLocator).click();
-        await this.driver.sleep(1000);
         return Promise.resolve(true);
     }
 
@@ -212,7 +207,7 @@ class EventTools{
                 await selectLater.click();
                 if (i !== (rivalChoosers.length - 1)){
                     await rivalChoosers[i+1].click();
-                    this.driver.sleep(1000);
+                    this.driver.sleep(500);
                 }
             }
         } else {
@@ -225,7 +220,7 @@ class EventTools{
     async waitTeamList(indexTeam){
         const teamChooserListContainers = await this.driver.findElements(this.teamChooserListContainerLocator);
         await this.driver.wait(until.elementIsVisible(teamChooserListContainers[indexTeam]), timerWait);
-        await this.driver.sleep(2500); //костыльный таймер. Почему иногда лист с тимами подгружается сначала пустой
+        await this.driver.sleep(1000); //костыльный таймер. Почему иногда лист с тимами подгружается сначала пустой
         return Promise.resolve(true);
     }
 
@@ -235,8 +230,8 @@ class EventTools{
 		await rivalChoosers[0].click();
         if (teamsName.length !== 1) {
             for ( let i = 0; i<teamsName.length; ++i){
-				await this.driver.sleep(1000);
-                await selectTeamButtons[i].click();
+				await this.driver.sleep(500);
+				await selectTeamButtons[i].click();
                 await this.waitTeamList(i);
                 const teamChooserList = (await this.driver.findElements(this.teamChooserListLocator))[i];
                 await OftenUsed.clickSelectOption(teamChooserList, this.teamChooserTeamNameLocator, teamsName[i]);
@@ -245,7 +240,7 @@ class EventTools{
                     const teamWrappers = await this.driver.findElements(this.teamWrapLocator);
                     await this.driver.wait(until.elementIsVisible(teamWrappers[i+1]), timerWait);
                 } else {
-                    await this.driver.sleep(2000);
+                    await this.driver.sleep(500);
                 }
             }
         } else {
@@ -453,7 +448,7 @@ class EventTools{
         return Promise.resolve(true);
     }
     async clickFinish(){
-        await this.driver.sleep(2000);
+        await this.driver.sleep(500);
         const finishButton = await this.driver.findElement(this.finishButtonLocator);
         await this.driver.wait(until.elementIsEnabled(finishButton), timerWait);
         return await finishButton.click();

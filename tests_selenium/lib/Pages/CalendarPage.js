@@ -22,11 +22,11 @@ class CalendarPage{
     }
 
     async checkCalendarPage(){
-        return await this.driver.wait(until.elementLocated(this.calendarPageLocator), 20000);
+        return await this.driver.wait(until.elementLocated(this.calendarPageLocator), 10000);
     }
 
     async checkSelectRolePage(){
-        return await this.driver.wait(until.elementLocated(this.sectorRolesLocator), 20000);
+        return await this.driver.wait(until.elementLocated(this.sectorRolesLocator), 10000);
     }
 
     async checkUrl() {
@@ -69,7 +69,7 @@ class CalendarPage{
         await this.checkRole(userRole.roleName);
         if (userRole.roleName === 'STUDENT'){
             for (let school of userRole.school){
-                this.driver.wait(until.elementLocated(this.schoolStudentLocator), 20000);
+                this.driver.wait(until.elementLocated(this.schoolStudentLocator), 10000);
                 await this.checkSchoolStudent(school);
             }
         } else {
@@ -131,7 +131,7 @@ class CalendarPage{
     async checkItem(webElem, item) {
         await Promise.all([this.checkRole(item.roleName, webElem), this.checkSchool(item.school, webElem)]);
         await webElem.click();
-        this.driver.sleep(7000);
+        this.driver.sleep(1000);
         await this.checkUrlForRole(item.roleName);
         return Promise.resolve(true);
     }
@@ -143,7 +143,7 @@ class CalendarPage{
      */
     static async checkAllPage(driver){
         await OftenUsed.checkPage(this.calendarPageLocator, driver);
-        await driver.sleep(2000);
+        await driver.sleep(500);
         await driver.findElement(By.className('eSubMenu_item ')).click();
         await OftenUsed.checkPage(this.calendarPageLocator, driver);
         return Promise.resolve(true);

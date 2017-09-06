@@ -17,7 +17,7 @@ class FixturesPage{
     static async checkAllPage(driver){
         await driver.navigate().to(urlEventsFixtures);
         await OftenUsed.checkPage(fixturesLocator, driver);
-        await driver.sleep(2000);
+        await driver.sleep(500);
         await driver.findElement(By.className('eSubMenu_item ')).click();
         await OftenUsed.checkPage(fixturesLocator, driver);
         return Promise.resolve(true);

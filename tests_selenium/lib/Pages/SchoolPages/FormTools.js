@@ -62,7 +62,7 @@ class FindFormTools{
     }
 
     async checkResult(form){
-        await this.driver.sleep(2000);
+        await this.driver.sleep(500);
         const items = await this.driver.findElements(this.dataListItemLocator);
         let result = 0;
         for (let i=1; i<items.length; ++i){

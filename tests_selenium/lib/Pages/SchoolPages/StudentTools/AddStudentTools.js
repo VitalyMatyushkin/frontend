@@ -36,8 +36,8 @@ class AddStudentTools{
         const imageField = await SchoolPage.getFieldElem(this.driver, 0, 0);
         const imageInput = await imageField.findElement(this.inputLocator);
         await imageInput.sendKeys(filePath);
-        await this.driver.wait(until.elementLocated(this.loaderLocator), 20000);
-        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.loaderLocator), 10000);
+        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 10000);
         return Promise.resolve(true);
     }
 
@@ -73,7 +73,7 @@ class AddStudentTools{
         const formField = await SchoolPage.getFieldElem(this.driver, 5, 0);
         const formDropdown = await formField.findElement(this.dropdownLocator);
         await formDropdown.click();
-        await this.driver.wait(until.elementIsVisible(await formDropdown.findElement(this.dropdownListLocator)),20000);
+        await this.driver.wait(until.elementIsVisible(await formDropdown.findElement(this.dropdownListLocator)),10000);
         await SchoolPage.clickDropdownElem(formDropdown, form, this.dropdownOptionLocator);
         return Promise.resolve(true);
     }
@@ -82,7 +82,7 @@ class AddStudentTools{
         const houseField = await SchoolPage.getFieldElem(this.driver, 6, 0);
         const houseDropdown = await houseField.findElement(this.dropdownLocator);
         await houseDropdown.click();
-        await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),20000);
+        await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),10000);
         await SchoolPage.clickDropdownElem(houseDropdown, house, this.dropdownOptionLocator);
         return Promise.resolve(true);
     }

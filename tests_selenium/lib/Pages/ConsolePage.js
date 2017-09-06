@@ -29,9 +29,9 @@ class ConsolePage{
     static async checkAllPage(driver){
         for (let page of consolePageTables){
             await driver.navigate().to(page.url);
-            await driver.sleep(2000);
+            await driver.sleep(1000);
             await OftenUsed.checkPage(consoleTableLocator, driver);
-			await driver.sleep(2000);
+			await driver.sleep(1000);
             await OftenUsed.checkTextWebElem(driver, consoleTableLocator, page.text);
         }
         await driver.navigate().to(urlConsoleModeration);

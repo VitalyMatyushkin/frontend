@@ -17,8 +17,8 @@ const   timeout = 70000,
             ages: ['P5', 'P6'],
             house: 'Grenfell',
             players: [
-                'Davion Littel',
-                'Adriel Koss'
+                'Lori Pfannerstill',
+                'Soll Soll'
             ]
         },
         teamFind = {

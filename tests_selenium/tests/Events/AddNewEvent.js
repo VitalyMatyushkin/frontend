@@ -64,7 +64,7 @@ const   timeout = 70000,
                     distance: '40 miles',
                     schools: ['TBD'],
                     selectTeamLater: false,
-                    selectTeams: ['Football Boys Livingstone'],
+                    selectTeams: ['Football Boys Grenfell'],
                     teams: false
                 },
                 {

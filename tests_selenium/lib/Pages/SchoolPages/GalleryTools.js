@@ -37,7 +37,7 @@ class EditSchoolSummaryTools{
         await this.waitLoadBackground();
         const album = await this.driver.findElement(this.albumLocator);
         await this.driver.actions().mouseMove(album).perform();
-        await this.driver.sleep(4000);
+        await this.driver.sleep(2000);
         const edit = (await album.findElements(this.toolsButtonLocator))[0];
         await edit.click();
         return Promise.resolve(true);
@@ -47,10 +47,10 @@ class EditSchoolSummaryTools{
         await this.waitLoadBackground();
         const album = await this.driver.findElement(this.albumLocator);
         await this.driver.actions().mouseMove(album).perform();
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         const deleteAlbum = (await album.findElements(this.toolsButtonLocator))[1];
         await deleteAlbum.click();
-        await this.driver.wait(until.elementLocated(this.popupLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.popupLocator), 10000);
         const alert = await this.driver.findElement(this.popupLocator);
         const okButton = (await alert.findElements(this.buttonLocator))[1];
         // await okButton.click();
@@ -58,7 +58,7 @@ class EditSchoolSummaryTools{
     }
 
     async checkEditPage(){
-        await this.driver.wait(until.elementLocated(this.editFormLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.editFormLocator), 10000);
         await this.driver.sleep(1000);
         return Promise.resolve(true);
     }
@@ -79,13 +79,13 @@ class EditSchoolSummaryTools{
     }
 
     async waitLoadBackground(){
-        await this.driver.wait(until.elementLocated(this.albumLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.albumLocator), 10000);
         await this.driver.wait( async () => {
             const background = await this.driver.findElement(this.albumLocator).getAttribute('style');
             if (background !== 'background-image: url("/images/no-image.jpg");') {
                 return background;
             }
-        },20000);
+        },10000);
         return Promise.resolve(true);
     }
 
@@ -93,21 +93,21 @@ class EditSchoolSummaryTools{
         await this.waitLoadBackground();
         const album = await this.driver.findElement(this.albumLocator);
         await album.click();
-        await this.driver.wait(until.elementLocated(this.galleryViewLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.galleryViewLocator), 10000);
         return Promise.resolve(true);
     }
 
     async addNewPhoto(filePath){
         const addPhotoLink = (await this.driver.findElements(this.submenuItemLocator))[1];
         await addPhotoLink.click();
-        await this.driver.wait(until.elementLocated(this.addPhotoFormLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.addPhotoFormLocator), 10000);
         const inputFile = await this.driver.findElement(this.inputFileLocator);
         await inputFile.sendKeys(filePath);
-        await this.driver.wait(until.elementLocated(this.cropLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.cropLocator), 10000);
         const buttonPanel = await this.driver.findElement(this.buttonPanelLocator);
         const unload = (await buttonPanel.findElements(this.buttonLocator))[1];
         await unload.click();
-        await this.driver.wait(until.elementLocated(this.popupLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.popupLocator), 10000);
         const alert = await this.driver.findElement(this.popupLocator);
         await alert.findElement(this.buttonLocator).click();
 
@@ -117,10 +117,10 @@ class EditSchoolSummaryTools{
     async deletePhoto(){
         const firstPhoto = (await this.driver.findElements(this.photoLocator))[0];
         await this.driver.actions().mouseMove(firstPhoto).perform();
-        await this.driver.sleep(1000);
+        await this.driver.sleep(5000);
         const deleteButton = (await firstPhoto.findElements(this.toolsButtonLocator))[2];
         await deleteButton.click();
-        await this.driver.wait(until.elementLocated(this.popupLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.popupLocator), 10000);
         const alert = await this.driver.findElement(this.popupLocator);
         const okButton = (await alert.findElements(this.buttonLocator))[1];
         await okButton.click();
@@ -130,10 +130,10 @@ class EditSchoolSummaryTools{
     async setAlbumCover(){
         const firstPhoto = (await this.driver.findElements(this.photoLocator))[0];
         await this.driver.actions().mouseMove(firstPhoto).perform();
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         const coverButton = (await firstPhoto.findElements(this.toolsButtonLocator))[0];
         await coverButton.click();
-        await this.driver.wait(until.elementLocated(this.popupLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.popupLocator), 10000);
         const alert = await this.driver.findElement(this.popupLocator);
         await alert.findElement(this.buttonLocator).click();
         return Promise.resolve(true);
@@ -142,11 +142,11 @@ class EditSchoolSummaryTools{
     async editPhoto(photoDescription){
         const firstPhoto = (await this.driver.findElements(this.photoLocator))[0];
         await this.driver.actions().mouseMove(firstPhoto).perform();
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         const editButton = (await firstPhoto.findElements(this.toolsButtonLocator))[1];
         await editButton.click();
-        await this.driver.wait(until.elementLocated(this.editFormLocator), 20000);
-        await this.driver.sleep(1000);
+        await this.driver.wait(until.elementLocated(this.editFormLocator), 10000);
+        await this.driver.sleep(500);
         const photoTextarea = await this.driver.findElement(this.photoDecriptionLocator);
         await photoTextarea.clear();
         await OftenUsed.characterByCharacter(this.driver,  photoTextarea, photoDescription);

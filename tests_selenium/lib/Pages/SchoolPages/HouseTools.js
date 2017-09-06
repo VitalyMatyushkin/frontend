@@ -29,16 +29,16 @@ class HouseTools{
     }
 
     async setHouseName(houseName){
-        return await SchoolPage.setTextFieldInput(this.driver, 0, houseName);
+		return await SchoolPage.setTextFieldInput(this.driver, 1, houseName);
     }
 
     async setHouseDescription(description){
-        return await SchoolPage.setTextFieldInput(this.driver, 1, description);
+        return await SchoolPage.setTextFieldInput(this.driver, 2, description);
     }
 
     //Добавляем цвет из палитры. Если уже есть 2 цвета, то не добавляем
     async setColor(){
-        const   colorField = (await this.driver.findElements(this.formFieldLocator))[2],
+        const   colorField = (await this.driver.findElements(this.formFieldLocator))[3],
                 addedColor = await colorField.findElements(this.colorRemovableLocator);
         if (addedColor.length < 2){
             await colorField.findElement(this.addColorLocator).click();
@@ -54,7 +54,7 @@ class HouseTools{
     }
 
     async editClick(resultLine){
-        return await SchoolPage.clickEditInTable(this.driver, resultLine, 3);
+        return await SchoolPage.clickEditInTable(this.driver, resultLine, 4);
     }
 
     async checkEditPage(){
@@ -62,11 +62,11 @@ class HouseTools{
     }
 
     async editHouseName(houseName){
-        return await SchoolPage.editTextFieldInput(this.driver, 0, houseName);
+        return await SchoolPage.editTextFieldInput(this.driver, 1, houseName);
     }
 
     async editHouseDescription(description){
-        return await SchoolPage.editTextFieldInput(this.driver, 1, description);
+        return await SchoolPage.editTextFieldInput(this.driver, 2, description);
 
     }
 
@@ -95,16 +95,16 @@ class HouseTools{
     }
 
     async checkResult(house){
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         const items = await this.driver.findElements(this.dataListItemLocator);
         let result = 0;
         for (let i=1; i<items.length; ++i){
             const item = (await this.driver.findElements(this.dataListItemLocator))[i],
-                    cellHouseName = (await item.findElements(this.itemCellLocator))[0],
+                    cellHouseName = (await item.findElements(this.itemCellLocator))[1],
                     textNameCell = await cellHouseName.getText(),
-                    cellDescription = (await item.findElements(this.itemCellLocator))[1],
+                    cellDescription = (await item.findElements(this.itemCellLocator))[2],
                     textDescriptionCell = await cellDescription.getText();
-            if (textNameCell === house.houseName && textDescriptionCell === house.description && this.checkColor(i)){
+            if (textNameCell === house.houseName && textDescriptionCell === house.description &&  (await this.checkColor(i))){
                 result = i;
                 break;
             }

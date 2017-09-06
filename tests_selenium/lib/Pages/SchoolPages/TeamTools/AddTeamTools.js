@@ -28,14 +28,18 @@ class AddTeamTools{
         this.savePanelLocator = By.className('eForm_savePanel');
         this.buttonLocator = By.tagName('button');
         this.buttonSubmitLocator = By.className('bButton');
-    }
+		this.agesButtonLocator = By.className('eCustomFont-plus');
+		this.multiSelectDropdownLocator = By.className('bMultiSelectDropdown');
+		this.multiSelectOptionLocator = By.className('eMultiSelectDropdown_item');
+	}
 
     async visitAddTeamPage(){
-        return await SchoolPage.visit(this.driver, this.urlAddTeam);
-    }
+        await SchoolPage.visit(this.driver, this.urlAddTeam);
+		return await this.driver.wait(until.elementLocated(this.formFieldLocator), 5000);
+	}
 
     async setName(name){
-        const teamNameField = (await this.driver.findElements(this.formFieldLocator))[0];
+		const teamNameField = (await this.driver.findElements(this.formFieldLocator))[0];
         const teamNameInput = await teamNameField.findElement(this.inputLocator);
         await OftenUsed.characterByCharacter(this.driver,  teamNameInput, name);
         return Promise.resolve(true);
@@ -51,28 +55,25 @@ class AddTeamTools{
     async setGender(gender){
         const genderField = (await this.driver.findElements(this.formFieldLocator))[3];
         await genderField.findElement(this.selectLocator).click();
-        await this.driver.sleep(2000);
+        await this.driver.sleep(500);
         await SchoolPage.clickDropdownElem(genderField, gender, this.optionLocator);
         return Promise.resolve(true);
     }
 
     async setGame(game){
-		await this.driver.sleep(2000);
+		await this.driver.sleep(500);
         const gameField = (await this.driver.findElements(this.formFieldLocator))[2];
         await gameField.findElement(this.selectLocator).click();
-        await this.driver.sleep(2000);
+        await this.driver.sleep(500);
         await SchoolPage.clickDropdownElem(gameField, game, this.optionLocator);
         return Promise.resolve(true);
     }
 
     async setAges(ages){
-        const agesField = (await this.driver.findElements(this.formFieldLocator))[4];
-        if (ages === 'Select all'){
-            const deselect = (await agesField.findElements(this.buttonLocator))[0];
-            await deselect.click();
-        } else {
-            await SchoolPage.markElemMultiselect(agesField, ages);
-        }
+		const agesButton = await this.driver.findElement(this.agesButtonLocator);
+		await agesButton.click();
+		await this.setOptionsMultiSelect(this.multiSelectDropdownLocator, ages);
+		return await agesButton.click();
         return Promise.resolve(true);
     }
 
@@ -84,18 +85,18 @@ class AddTeamTools{
     async filteredByHouse(house){
         if(house !== ''){
             await this.clickCheckboxFilterByHouse();
-            await this.driver.wait(until.elementLocated(By.className('bCombobox  ')),20000);
+            await this.driver.wait(until.elementLocated(By.className('bCombobox  ')),10000);
             const selectHouseFilterField = (await this.driver.findElements(this.formFieldLocator))[6];
             const houseDropdown = await selectHouseFilterField.findElement(this.dropdownLocator);
             await houseDropdown.click();
-            await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),20000);
+            await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),10000);
             await SchoolPage.clickDropdownElem(houseDropdown, house, this.dropdownOptionLocator);
         }
     }
 
     async addPlayers(players){
-		await this.driver.wait(until.elementLocated(this.selectPlayerLocator),20000);
-		await this.driver.sleep(2000);
+		await this.driver.wait(until.elementLocated(this.selectPlayerLocator),10000);
+		await this.driver.sleep(500);
         const selectPlayer = await this.driver.findElement(this.selectPlayerLocator);
         for (const player of players){
             await SchoolPage.clickDropdownElem(selectPlayer, player, this.playerNameLocator);
@@ -118,7 +119,13 @@ class AddTeamTools{
         return Promise.resolve(true);
     }
 
-
+	async setOptionsMultiSelect(wrapLocator, items){
+		const fieldElem = await this.driver.findElement(wrapLocator);
+		for (let itemName of items){
+			await OftenUsed.clickSelectOption(fieldElem, this.multiSelectOptionLocator, itemName);
+		}
+		return Promise.resolve(true);
+	}
 }
 
 module.exports = AddTeamTools;

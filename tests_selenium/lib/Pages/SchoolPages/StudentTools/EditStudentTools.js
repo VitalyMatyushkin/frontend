@@ -36,7 +36,7 @@ class EditStudentTools{
     }
 
     async checkEditPage(){
-        await this.driver.wait(until.elementLocated(this.studentFormLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.studentFormLocator), 10000);
         await this.driver.sleep(1000);
         return Promise.resolve(true);
     }
@@ -45,8 +45,8 @@ class EditStudentTools{
         const imageField = await SchoolPage.getFieldElem(this.driver, 0, 0);
         const imageInput = await imageField.findElement(this.inputLocator);
         await imageInput.sendKeys(filePath);
-        await this.driver.wait(until.elementLocated(this.loaderLocator), 20000);
-        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.loaderLocator), 10000);
+        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 10000);
         return Promise.resolve(true);
     }
 
@@ -87,7 +87,7 @@ class EditStudentTools{
         const inputDropdown = await formDropdown.findElement(this.dropdownInputLocator);
         await OftenUsed.clearText(inputDropdown);
         await formDropdown.click();
-        await this.driver.wait(until.elementIsVisible(await formDropdown.findElement(this.dropdownListLocator)),20000);
+        await this.driver.wait(until.elementIsVisible(await formDropdown.findElement(this.dropdownListLocator)),10000);
         await SchoolPage.clickDropdownElem(formDropdown, form, this.dropdownOptionLocator);
         return Promise.resolve(true);
     }
@@ -98,7 +98,7 @@ class EditStudentTools{
         const inputDropdown = await houseDropdown.findElement(this.dropdownInputLocator);
         await OftenUsed.clearText(inputDropdown);
         await houseDropdown.click();
-        await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),20000);
+        await this.driver.wait(until.elementIsVisible(await houseDropdown.findElement(this.dropdownListLocator)),10000);
         await SchoolPage.clickDropdownElem(houseDropdown, house, this.dropdownOptionLocator);
         return Promise.resolve(true);
     }

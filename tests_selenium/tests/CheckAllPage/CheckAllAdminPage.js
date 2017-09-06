@@ -40,7 +40,7 @@ test.describe('Check all admin page', function(){
         OftenUsed.checkPage(selectRoleLocator, driver);
         let calendarPage = new CalendarPage(driver);
         await calendarPage.switchRole(role);
-        await driver.sleep(1000);
+        await driver.sleep(500);
     });
 
     test.it('Event page', async () => {
@@ -64,6 +64,6 @@ test.describe('Check all admin page', function(){
     });
 
     test.after(async () => {
-        // await driver.quit()
+        await driver.quit()
     });
 });

@@ -59,7 +59,7 @@ class SchoolPage{
 
         for (let page of schoolPageTables) {
             await driver.navigate().to(page.url);
-            await driver.sleep(2000);
+            await driver.sleep(500);
             await OftenUsed.checkPage(schoolTableLocator, driver);
             await OftenUsed.checkTextWebElem(driver, schoolTableLocator, page.text);
         }
@@ -126,7 +126,7 @@ class SchoolPage{
 	}
 
     static async getLineResultTable(driver, indexLine){
-        driver.sleep(2000);
+        driver.sleep(500);
         const item = (await driver.findElements(dataListItemLocator))[indexLine];
         return await item.findElements(itemCellLocator);
     }
@@ -177,7 +177,7 @@ class SchoolPage{
         const field = (await driver.findElements(formFieldLocator))[indexField];
         const dropdown = await field.findElement(dropdownLocator);
         await dropdown.click();
-        await driver.wait(until.elementIsVisible(await dropdown.findElement(dropdownListLocator)),20000);
+        await driver.wait(until.elementIsVisible(await dropdown.findElement(dropdownListLocator)),10000);
         return await SchoolPage.clickDropdownElem(dropdown, optionText, dropdownOptionLocator);
     }
 
@@ -198,8 +198,8 @@ class SchoolPage{
     }
 
     static async checkPage(driver, pageLocator){
-        await driver.wait(until.elementLocated(pageLocator), 20000);
-        await driver.sleep(2000);
+        await driver.wait(until.elementLocated(pageLocator), 10000);
+        await driver.sleep(500);
         return Promise.resolve(true);
     }
 
@@ -219,8 +219,8 @@ class SchoolPage{
         const imageField = (await driver.findElements(formFieldLocator))[indexField];
         const imageInput = await imageField.findElement(inputLocator);
         await imageInput.sendKeys(filePath);
-        await driver.wait(until.elementLocated(loaderLocator), 20000);
-        await driver.wait(until.elementLocated(loaderHideLocator), 20000);
+        await driver.wait(until.elementLocated(loaderLocator), 10000);
+        await driver.wait(until.elementLocated(loaderHideLocator), 10000);
         return Promise.resolve(true);
     }
 
@@ -240,8 +240,8 @@ class SchoolPage{
      */
     static async waitLoader(driver){
         const loader = await driver.findElement(loaderFindLocator);
-        await driver.wait(until.elementIsVisible(loader),20000);
-        await driver.wait(until.elementIsNotVisible(loader),20000);
+        await driver.wait(until.elementIsVisible(loader),10000);
+        await driver.wait(until.elementIsNotVisible(loader),10000);
         return Promise.resolve(true);
     }
 }

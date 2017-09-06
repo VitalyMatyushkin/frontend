@@ -8,7 +8,7 @@ const   {By,Builder, Capabilities}  = require('selenium-webdriver'),
         LoginPage                   = require('../lib/LoginPage.js'),
 	    Driver                      = require('./Driver.js');
 
-const   timeout = 2000000;
+const   timeout = 1000000;
 
 Promise.USE_PROMISE_MANAGER = false;
 

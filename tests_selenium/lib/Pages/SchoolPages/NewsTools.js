@@ -105,7 +105,7 @@ class NewsTools{
     }
 
     async checkResult(news){
-        await this.driver.sleep(1000);
+        await this.driver.sleep(500);
         const items = await this.driver.findElements(this.dataListItemLocator);
         let result = 0;
         for (let i=1; i<items.length; ++i){

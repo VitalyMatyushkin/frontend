@@ -34,14 +34,14 @@ class EditSchoolSummaryTools{
     }
 
     async editClick(){
-        await this.driver.wait(until.elementLocated(this.editSchoolLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.editSchoolLocator), 10000);
         const edit = await this.driver.findElement(this.editSchoolLocator);
         await edit.click();
     }
 
     async checkEditPage(){
-        await this.driver.wait(until.elementLocated(this.editScoolPageLocator), 20000);
-        await this.driver.sleep(1000);
+        await this.driver.wait(until.elementLocated(this.editScoolPageLocator), 10000);
+        await this.driver.sleep(500);
         return Promise.resolve(true);
     }
 
@@ -49,8 +49,8 @@ class EditSchoolSummaryTools{
         const imageField = await SchoolPage.getFieldElem(this.driver, 0, 0);
         const imageInput = await imageField.findElement(this.inputLocator);
         await imageInput.sendKeys(filePath);
-        await this.driver.wait(until.elementLocated(this.loaderLocator), 20000);
-        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 20000);
+        await this.driver.wait(until.elementLocated(this.loaderLocator), 10000);
+        await this.driver.wait(until.elementLocated(this.loaderHideLocator), 10000);
         return Promise.resolve(true);
     }
 
@@ -108,7 +108,7 @@ class EditSchoolSummaryTools{
         const inputDropdown = await postcodeDropdown.findElement(this.dropdownInputLocator);
         await OftenUsed.clearText(inputDropdown);
         await postcodeDropdown.click();
-        await this.driver.wait(until.elementIsVisible(await postcodeDropdown.findElement(this.dropdownListLocator)),20000);
+        await this.driver.wait(until.elementIsVisible(await postcodeDropdown.findElement(this.dropdownListLocator)),10000);
         await SchoolPage.clickDropdownElem(postcodeDropdown, postcode, this.dropdownOptionLocator);
         return Promise.resolve(true);
     }
