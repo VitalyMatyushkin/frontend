@@ -8,23 +8,24 @@ const RivalInfoOptionsHelper = {
 	getOptionsObjectForRivalInfoByRival: function(rival, activeSchoolId, event, rivals, isShowControlButtons, handlers) {
 		let options = {};
 
-		if(isShowControlButtons) {
-			options = {
-				// it's buttons for additional functional
-				buttonsList: [
-					new SchoolRivalInfoButtonData(
-						SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON,
-						this.isShowChangeSchoolButtonByRival(rival, activeSchoolId, event),
-						handlers.handleClickOpponentSchoolManagerButton
-					),
-					new SchoolRivalInfoButtonData(
-						SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
-						this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
-						handlers.handleClickRemoveTeamButton
-					)
-				]
-			};
-		}
+		// TODO it's temp. waiting fix from server
+		// if(isShowControlButtons) {
+		// 	options = {
+		// 		// it's buttons for additional functional
+		// 		buttonsList: [
+		// 			new SchoolRivalInfoButtonData(
+		// 				SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON,
+		// 				this.isShowChangeSchoolButtonByRival(rival, activeSchoolId, event),
+		// 				handlers.handleClickOpponentSchoolManagerButton
+		// 			),
+		// 			new SchoolRivalInfoButtonData(
+		// 				SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
+		// 				this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
+		// 				handlers.handleClickRemoveTeamButton
+		// 			)
+		// 		]
+		// 	};
+		// }
 
 		return options;
 	},

@@ -94,15 +94,17 @@ const Buttons = React.createClass({
 	isAddSchoolAvailable: function() {
 		const eventStatus = this.props.event.status;
 
-		return (
-			this.props.isUserSchoolWorker &&
-			TeamHelper.isMultiparty(this.props.event) &&
-			EventHelper.isInterSchoolsEvent(this.props.event) &&
-			this.props.isInviterSchool &&
-			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
-			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
-			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
-		);
+		// TODO it's temp waiting server
+		// return (
+		// 	this.props.isUserSchoolWorker &&
+		// 	TeamHelper.isMultiparty(this.props.event) &&
+		// 	EventHelper.isInterSchoolsEvent(this.props.event) &&
+		// 	this.props.isInviterSchool &&
+		// 	eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
+		// 	eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+		// 	eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+		// );
+		return false;
 	},
 	isAddTeamAvailable: function() {
 		const eventStatus = this.props.event.status;
