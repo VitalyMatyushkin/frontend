@@ -4,7 +4,7 @@ const	React						= require('react'),
 		BlockViewRivalInfo			= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/block_view_rival_info'),
 		Players						= require('module/as_manager/pages/event/view/rivals/players'),
 		IndividualScoreManager		= require('module/as_manager/pages/event/view/rivals/individual_score_manager/individual_score_manager'),
-		ViewModeConsts				= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		ViewModeConsts				= require('module/ui/view_selector/consts/view_mode_consts'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		BlockViewRivalStyle			= require('../../../../../../../../../styles/ui/b_block_view_rivals/b_block_view_rival.scss');
 

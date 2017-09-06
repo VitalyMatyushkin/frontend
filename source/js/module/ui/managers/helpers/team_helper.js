@@ -1340,14 +1340,20 @@ function clearIndividualScore(event, teamId) {
  * @returns {*|boolean}
  */
 function isNewEvent(event) {
-	return (
-		(
-			this.isInterSchoolsEventForTeamSport(event) ||
-			this.isHousesEventForTeamSport(event) ||
-			this.isInternalEventForTeamSport(event) ||
-			this.isInterSchoolsEventForIndividualSport(event)
-		) && this.isMultiparty(event)
-	);
+	const multipartyRule = (
+		this.isInterSchoolsEventForTeamSport(event) ||
+		this.isHousesEventForTeamSport(event) ||
+		this.isInternalEventForTeamSport(event) ||
+		this.isInterSchoolsEventForIndividualSport(event) ||
+		this.isHousesEventForIndividualSport(event)
+	) && this.isMultiparty(event);
+
+	const nonMultipartyRule = (
+		this.isInterSchoolsEventForIndividualSport(event) ||
+		this.isHousesEventForIndividualSport(event)
+	) && !this.isMultiparty(event);
+
+	return multipartyRule || nonMultipartyRule;
 }
 
 /**
@@ -1358,14 +1364,20 @@ function isNewEvent(event) {
  * @returns {*|boolean}
  */
 function mustUseNewManagerWraperHelper(event) {
-	return (
-		(
-			this.isHousesEventForTeamSport(event) ||
-			this.isInternalEventForTeamSport(event) ||
-			this.isInterSchoolsEventForIndividualSport(event) ||
-			this.isInterSchoolsEventForTeamSport(event)
-		) && this.isMultiparty(event)
-	);
+	const multipartyRule = (
+		this.isHousesEventForTeamSport(event) ||
+		this.isInternalEventForTeamSport(event) ||
+		this.isInterSchoolsEventForTeamSport(event) ||
+		this.isInterSchoolsEventForIndividualSport(event) ||
+		this.isHousesEventForIndividualSport(event)
+	) && this.isMultiparty(event);
+
+	const nonMultipartyRule = (
+		this.isInterSchoolsEventForIndividualSport(event) ||
+		this.isHousesEventForIndividualSport(event)
+	) && !this.isMultiparty(event);
+
+	return multipartyRule || nonMultipartyRule;
 }
 
 /**

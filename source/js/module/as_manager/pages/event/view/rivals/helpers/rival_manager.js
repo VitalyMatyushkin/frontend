@@ -1,7 +1,7 @@
 const	propz			= require('propz'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		ViewModeConsts	= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		ViewModeConsts	= require('module/ui/view_selector/consts/view_mode_consts'),
 		RandomHelper	= require('module/helpers/random_helper');
 
 const RivalManager = {
@@ -169,6 +169,47 @@ const RivalManager = {
 					rivals.push(rival);
 				});
 			} else if(
+				EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType &&
+				(
+					viewMode === ViewModeConsts.VIEW_MODE.TABLE_VIEW ||
+					viewMode === ViewModeConsts.VIEW_MODE.BLOCK_VIEW
+				)
+			) {
+				const	schoolsData	= event.schoolsData,
+						housesData	= event.housesData,
+						players		= event.individualsData,
+						scores		= propz.get(event, ['results', 'individualScore']);
+				// iterate all schools
+				housesData.forEach(house => {
+					const rival = {};
+
+					rival.school = schoolsData[0];
+					rival.house = house;
+
+					// search all players for current school
+					rival.players = [];
+					players.forEach( player => {
+						const playerScoreObject = scores.find(score => score.userId === player.userId);
+
+						if (typeof playerScoreObject !== 'undefined') {
+							const	playerScore			= propz.get(playerScoreObject, ['score']),
+									playerExtraScore	= propz.get(playerScoreObject, ['richScore', 'points']);
+
+							player.score = playerScore;
+							player.extraScore = playerExtraScore;
+						} else {
+							player.score = 0;
+							player.extraScore = 0;
+						}
+
+						if(player.houseId === house.id) {
+							rival.players.push(player);
+						}
+					});
+
+					rivals.push(rival);
+				});
+			} else if(
 				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType &&
 				viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW
 			) {
@@ -199,8 +240,42 @@ const RivalManager = {
 				});
 
 				rivals.push(rival);
+			} else if(
+				EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType &&
+				viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW
+			) {
+				const	rival		= {},
+						schoolsData	= event.schoolsData,
+						housesData	= event.housesData,
+						players		= event.individualsData,
+						scores		= propz.get(event, ['results', 'individualScore']);
+
+				rival.school = schoolsData[0];
+				rival.players = [];
+				players.forEach(player => {
+					const playerScoreObject = scores.find(score => score.userId === player.userId);
+
+					if (typeof playerScoreObject !== 'undefined') {
+						const	playerScore			= propz.get(playerScoreObject, ['score']),
+							playerExtraScore	= propz.get(playerScoreObject, ['richScore', 'points']);
+
+						player.score = playerScore;
+						player.extraScore = playerExtraScore;
+					} else {
+						player.score = 0;
+						player.extraScore = 0;
+					}
+
+					player.school = rival.school;
+					player.house = housesData.find(house => house.id === player.houseId);
+
+					rival.players.push(player);
+				});
+
+				rivals.push(rival);
 			}
 		}
+
 
 		rivals.forEach(rival => {
 			rival.id = RandomHelper.getRandomString();

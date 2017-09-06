@@ -2,6 +2,7 @@ const	React			= require('react'),
 		PlayerInfo		= require('module/as_manager/pages/event/view/overall_view/player/player_info'),
 		PlayerMedal		= require('module/as_manager/pages/event/view/overall_view/player/player_medal'),
 		PlayerSchool	= require('module/as_manager/pages/event/view/overall_view/player/player_school'),
+		PlayerHouse		= require('module/as_manager/pages/event/view/overall_view/player/player_house'),
 		CaptainStar		= require('module/as_manager/pages/event/view/overall_view/player/captain_star'),
 		PlayerScore		= require('module/as_manager/pages/event/view/overall_view/player/player_score'),
 		If				= require('module/ui/if/if'),
@@ -27,6 +28,16 @@ const Player = React.createClass({
 	isNonInternalEventForOneOnOneSport: function(event) {
 		return TeamHelper.isOneOnOneSport(event) && !EventHelper.isInternalEvent(event);
 	},
+	renderInfo: function () {
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(this.props.event): {
+				return <PlayerSchool player={this.props.player}/>;
+			}
+			case EventHelper.isHousesEvent(this.props.event): {
+				return <PlayerHouse player={this.props.player}/>;
+			}
+		}
+	},
 	render: function() {
 		const	playerIndex					= this.props.playerIndex,
 				player						= this.props.player,
@@ -48,9 +59,7 @@ const Player = React.createClass({
 					playerPlace = {playerPlace}
 					isShowMedal = {isShowMedal}
 				/>
-				<PlayerSchool
-					player		= {player}
-				/>
+				{ this.renderInfo() }
 				<If condition={
 						!this.isNonInternalEventForOneOnOneSport(event) &&
 						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing') &&

@@ -87,7 +87,10 @@ const HousesManager = React.createClass({
 				rivals.length >= 2 &&
 				typeof sport !== 'undefined' &&
 				sport.multiparty &&
-				TeamHelper.isTeamSport(event)
+				(
+					TeamHelper.isTeamSport(event) ||
+					TeamHelper.isIndividualSport(event)
+				)
 			)
 		) {
 			choosers.push(

@@ -6,7 +6,7 @@ const	React			= require('react'),
 		PencilButton	= require('module/ui/pencil_button'),
 		propz			= require('propz'),
 		classNames		= require('classnames'),
-		ViewModeConsts	= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		ViewModeConsts	= require('module/ui/view_selector/consts/view_mode_consts'),
 		PlayersStyle	= require('../../../../../../../styles/ui/b_block_view_rivals/b_players.scss');
 
 const SPORT_SORT = {
@@ -47,7 +47,11 @@ const Players = React.createClass({
 				return this.renderPlayersForInterSchoolsEvent();
 			}
 		} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-			return this.renderPlayersForHousesEvent();
+			if (TeamHelper.isIndividualSport(event)) {
+				return this.renderPlayersForIndividualHousesEvent();
+			} else {
+				return this.renderPlayersForHousesEvent();
+			}
 		} if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
 			return this.renderPlayersForInternalEvent();
 		}
@@ -75,6 +79,15 @@ const Players = React.createClass({
 			return this.renderPlayers(players);
 		} else {
 			return this.renderNotificationTextForInterSchoolsEvent();
+		}
+	},
+	renderPlayersForIndividualHousesEvent: function() {
+		const players = propz.get(this.props.rival, ['players']);
+
+		if(typeof players !== 'undefined' && players.length !== 0) {
+			return this.renderPlayers(players);
+		} else {
+			return this.renderText(this.SELECT_TEAM_LATER);
 		}
 	},
 	renderNotificationTextForInterSchoolsEvent: function() {
@@ -171,6 +184,8 @@ const Players = React.createClass({
 
 		switch (true) {
 			case !this.props.isShowControlButtons:
+				return null;
+			case this.props.isShowControlButtons && this.props.viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW:
 				return null;
 			case this.props.isShowControlButtons && EventHelper.isInterSchoolsEvent(event) && rivalSchoolId !== this.props.activeSchoolId:
 				return null;
@@ -319,6 +334,7 @@ const Players = React.createClass({
 		}
 
 		return players.map((player, playerIndex) => {
+
 			switch (this.props.viewMode) {
 				case ViewModeConsts.VIEW_MODE.OVERALL_VIEW: {
 					return (

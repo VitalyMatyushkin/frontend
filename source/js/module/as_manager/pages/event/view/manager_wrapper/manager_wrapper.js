@@ -272,7 +272,8 @@ const ManagerWrapper = React.createClass({
 				event	= binding.toJS('model');
 
 		return (
-			!EventHelper.isInterSchoolsEvent(event) && TeamHelper.isMultiparty(event) &&
+			!EventHelper.isInterSchoolsEvent(event) &&
+			TeamHelper.isMultiparty(event) &&
 			!TeamHelper.isInternalEventForIndividualSport(event) &&
 			!TeamHelper.isInternalEventForTeamSport(event)
 		)
@@ -280,6 +281,8 @@ const ManagerWrapper = React.createClass({
 	renderManager: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
+
+		console.log( binding.toJS('selectedRivalIndex') );
 
 		return (
 			<Manager

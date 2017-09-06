@@ -60,7 +60,10 @@ const PlayerScore = React.createClass({
 					/>
 				</div>
 			);
-		} else if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
+		} else if (
+			TeamHelper.isInterSchoolsEventForIndividualSport(event) ||
+			TeamHelper.isHousesEventForIndividualSport(event)
+		) {
 			return (
 				<span className="ePlayer_scoreAthleticContainer">
 					<ScoreAthletic	isChangeMode			= { RivalHelper.isShowScoreButtons(event, mode, isOwner) && individualScoreAvailable }

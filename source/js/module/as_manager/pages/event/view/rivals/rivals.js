@@ -14,7 +14,7 @@ const	RivalManager		= require('module/as_manager/pages/event/view/rivals/helpers
 		EventHelper			= require('module/helpers/eventHelper');
 
 // consts
-const	ViewModeConsts		= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+const	ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts'),
 		ManagerConsts		= require('module/ui/managers/helpers/manager_consts');
 
 const Rivals = React.createClass({
@@ -52,7 +52,10 @@ const Rivals = React.createClass({
 				this.initResultsForRival(rival, event);
 			});
 		} else if(TeamHelper.isIndividualSport(event)) {
-			if(EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType) {
+			if(
+				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType ||
+				EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType
+			) {
 				rivals.forEach(rival => {
 					rival.isIndividualScoreAvailable = true;
 					rival.isTeamScoreWasChanged = false;

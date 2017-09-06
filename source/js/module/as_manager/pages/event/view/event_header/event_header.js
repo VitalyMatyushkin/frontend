@@ -11,9 +11,10 @@ const	Lazy				= require('lazy.js'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button'),
-		ViewSelector		= require('module/as_manager/pages/event/view/event_header/view_selector');
+		ViewSelector		= require('module/ui/view_selector/view_selector'),
+		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
 
-const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
+const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
 	propTypes: {
@@ -70,12 +71,12 @@ const EventHeader = React.createClass({
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.event.status !== "FINISHED";
 	},
 	renderViewModeLinks: function(){
-		if(TeamHelper.isMultiparty(this.props.event)) {
+		if(TeamHelper.isNewEvent(this.props.event)) {
 			return (
 				<ViewSelector
-					event		= { this.props.event }
-					handleClick	= { this.props.onClickViewMode }
-					viewMode	= { this.props.viewMode }
+					selectorList	= { ViewSelectorHelper.getSelectorList(this.props.event) }
+					handleClick		= { this.props.onClickViewMode }
+					viewMode		= { this.props.viewMode }
 				/>
 			);
 		} else {

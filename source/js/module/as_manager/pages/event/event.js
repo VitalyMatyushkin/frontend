@@ -42,7 +42,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		MessageListActions				= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		ConfirmPopup 					= require('module/ui/confirm_popup'),
 		EventHeaderActions 				= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
-		ViewModeConsts					= require('module/as_manager/pages/event/view/rivals/consts/view_mode_consts'),
+		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		RandomHelper					= require('module/helpers/random_helper'),
 		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
 		propz							= require('propz');
@@ -507,7 +507,7 @@ const Event = React.createClass({
 
 		this.addListenerToEventTeams();
 
-		if(TeamHelper.isMultiparty(event)) {
+		if(TeamHelper.isNewEvent(event)) {
 			this.addListenerToViewMode();
 		}
 
