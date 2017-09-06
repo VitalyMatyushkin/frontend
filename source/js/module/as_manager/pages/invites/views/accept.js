@@ -219,7 +219,7 @@ const InviteAcceptView = React.createClass({
 				).then(() => {
 					// create new team
 					return Promise.all(TeamHelper.createTeams(
-						self.activeSchoolId,
+						this.props.activeSchoolId,
 						binding.toJS('model'),
 						binding.toJS(`rivals`),
 						binding.toJS(`teamModeView.teamWrapper`)
