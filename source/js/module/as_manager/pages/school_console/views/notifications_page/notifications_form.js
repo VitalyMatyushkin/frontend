@@ -40,21 +40,21 @@ const NotificationsForm = React.createClass({
 						type 			= "checkbox"
 						field 			= "PERMISSION_REQUEST_ACCEPTED"
 					>
-						The role request has been confirmed
+						User’s role request has been accepted
 					</FormField>
 					<FormField
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_REQUEST_REJECTED"
 					>
-						The role request has been declined
+						User’s role request has been denied
 					</FormField>
 					<FormField
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_CREATED"
 					>
-						New role has been granted
+						The user has been granted a new role
 					</FormField>
 					<h3>User management</h3>
 					<FormField
@@ -94,21 +94,21 @@ const NotificationsForm = React.createClass({
 						type 			= "checkbox"
 						field 			= "INVITE_INCOMING"
 					>
-						New incoming invite from opposing school
+						New event invite from an opposing school
 					</FormField>
 					<FormField
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "INVITE_ACCEPTED_BY_OPPONENT"
 					>
-						Outgoing invite has been accepted by opposing school
+						An opposing school has accepted your event invite
 					</FormField>
 					<FormField
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "INVITE_REJECTED_BY_OPPONENT"
 					>
-						Outgoing invite has been rejected by opposing school
+						An opposing school has rejected your event invite
 					</FormField>
 				</FormColumn>
 			</Form>

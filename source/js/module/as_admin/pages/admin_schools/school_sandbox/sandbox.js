@@ -91,6 +91,12 @@ const SchoolSandbox = React.createClass({
 				name:'Sports',
 				key:'sports',
 				routes:[`/school_sandbox/${schoolId}/sports`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/notifications`,
+				name:'Notifications',
+				key:'notifications',
+				routes:[`/school_sandbox/${schoolId}/notifications`]
 			}
 		];
 		//Set sub menu items in default binding
