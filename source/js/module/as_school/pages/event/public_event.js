@@ -7,7 +7,8 @@ const	React				= require('react'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
 		PublicMatchReport	= require('./public_match_report'),
-		PublicEventGallery	= require('./public_event_gallery');
+		PublicEventGallery	= require('./public_event_gallery'),
+		ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -134,6 +135,7 @@ const PublicEvent = React.createClass({
 		if(TeamHelper.isNewEvent(event)) {
 			return (
 				<Rivals	binding									= { binding }
+						viewMode								= { ViewModeConsts.VIEW_MODE.BLOCK_VIEW }
 						activeSchoolId							= { this.props.activeSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
