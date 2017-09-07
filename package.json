@@ -82,7 +82,8 @@
   "scripts": {
     "dev": "webpack-dev-server",
     "deploy": "gulp deploy",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "clean-deploy": "rm -rf ./node_modules && npm install && npm run deploy"
   },
   "repository": {
     "type": "git",
