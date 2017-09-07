@@ -45,6 +45,7 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		RandomHelper					= require('module/helpers/random_helper'),
 		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
+		SchoolHelper 					= require('module/helpers/school_helper'),
 		propz							= require('propz');
 
 const Event = React.createClass({
@@ -129,6 +130,8 @@ const Event = React.createClass({
 
 		self.role = role;
 		self.eventId = rootBinding.get('routing.pathParameters.0');
+
+		SchoolHelper.loadActiveSchoolInfo(this);
 
 		this.initIsNewEventFlag();
 

@@ -3,6 +3,7 @@
 const	React				= require('react');
 
 const	Lazy				= require('lazy.js'),
+		Morearty			= require('morearty'),
 		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
@@ -11,12 +12,16 @@ const	Lazy				= require('lazy.js'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button'),
+		propz				= require('propz'),
+		SchoolConst 		= require('module/helpers/consts/schools'),
+		SchoolHelper 		= require('module/helpers/school_helper'),
 		ViewSelector		= require('module/ui/view_selector/view_selector'),
 		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
 
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
+	mixins: [Morearty.Mixin],
 	propTypes: {
 		event:							React.PropTypes.object.isRequired,
 		challengeModel:					React.PropTypes.object.isRequired,
@@ -58,11 +63,13 @@ const EventHeader = React.createClass({
 	 * @returns {string}
 	 */
 	getEventAges: function(){
-		return Lazy(this.props.eventAges)
+		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
+				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']),
+				data = this.props.eventAges;
+		return data
 			.sort()
-			.toArray()
-			.map(age => age === 0 ? 'Reception' : age)
-			.join(', ');
+			.map(elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
+			.join(", ");
 	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
