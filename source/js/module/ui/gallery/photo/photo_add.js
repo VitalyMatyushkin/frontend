@@ -31,7 +31,7 @@ const PhotoAddComponent = React.createClass({
 	onCropButtonClick: function(){
 		const 	canvas 	= this.refs.canvasImage,
 				file 	= CropImageHelper.dataURLtoFile(canvas.toDataURL("image/jpeg"), 'image-squadintouch.jpeg');
-		
+
 		window.Server.images.upload(file)
 		.then( picUrl => {
 			const 	albumId = this.getAlbumId(),
@@ -55,39 +55,46 @@ const PhotoAddComponent = React.createClass({
 		});
 	},
 	onCropComplete: function(crop, pixelCrop){
+		this.resizeCanvas(crop, pixelCrop);
+	},
+	onImageLoaded: function(crop, image, pixelCrop){
+		this.resizeCanvas(crop, pixelCrop);
+	},
+
+	resizeCanvas: function (crop, pixelCrop) {
 		const 	canvas 			= this.refs.canvasImage,
 				imageObject 	= this.refs.imageSrc;
-		
+
 		canvas.width = pixelCrop.width;
 		canvas.height = pixelCrop.height;
-		
+
 		canvas
-		.getContext("2d")
-		.drawImage(imageObject, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
+			.getContext("2d")
+			.drawImage(imageObject, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
 	},
-	
+
 	onInputFileImageChange: function(event){
 		const file = event.target.files.item(0);
 		const imageType = /^image\//;
-		
+
 		if (!file || !imageType.test(file.type)) {
 			return;
 		}
-		
+
 		const reader = new window.FileReader();
-		
+
 		reader.onload = (eventOnLoad) => {
 			this.setState({
 				fileImage: eventOnLoad.target.result
 			});
 		};
-		
+
 		reader.readAsDataURL(file);
 	},
 	isFileImageSelectInInput: function(){
 		return this.state.fileImage !== '';
 	},
-	
+
 	getAlbumId: function(){
 		const hash = window.location.hash;
 		//example hash: #school-albums/view/albumId/add
@@ -108,14 +115,6 @@ const PhotoAddComponent = React.createClass({
 				</div>
 				<If condition={this.isFileImageSelectInInput()}>
 					<div>
-						<ReactCrop
-							src 			= { this.state.fileImage }
-							minWidth 		= { 10 }
-							minHeight 		= { 10 }
-							crop 			= { ReactCropConfig }
-							keepSelection 	= { true }
-							onComplete 		= { this.onCropComplete }
-						/>
 						<canvas
 							ref 		= "canvasImage"
 							className 	= "mDisplayNone"
@@ -126,6 +125,15 @@ const PhotoAddComponent = React.createClass({
 								className 	= "mDisplayNone"
 							/>
 						</canvas>
+						<ReactCrop
+							src 			= { this.state.fileImage }
+							minWidth 		= { 10 }
+							minHeight 		= { 10 }
+							crop 			= { ReactCropConfig }
+							keepSelection 	= { true }
+							onComplete 		= { this.onCropComplete }
+							onImageLoaded 	= { this.onImageLoaded }
+						/>
 					</div>
 				</If>
 				<div className="bButtonsPhotoAdd">
