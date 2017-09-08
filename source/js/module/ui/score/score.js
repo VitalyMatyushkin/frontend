@@ -94,14 +94,15 @@ const Score = React.createClass({
 		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
 
 		return (
-			<MaskedPoints	plainPoints		= { this.props.plainPoints }
-							value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
-							mask			= { mask }
-							onChange		= { this.props.onChange }
-							stringToPoints	= { ScoreHelper.stringTimeToPoints.bind(ScoreHelper) }
-							validation		= { ScoreHelper.validateStringTime.bind(ScoreHelper) }
-							className		= "mTime"
-							modeView		= { this.props.modeView }
+			<MaskedPoints
+				plainPoints		= { this.props.plainPoints }
+				value			= { ScoreHelper.plainPointsToTimeString(this.props.plainPoints, mask, ':') }
+				mask			= { mask }
+				onChange		= { this.props.onChange }
+				stringToPoints	= { ScoreHelper.stringTimeToPoints.bind(ScoreHelper) }
+				validation		= { ScoreHelper.validateStringTime.bind(ScoreHelper) }
+				className		= "mTime"
+				modeView		= { this.props.modeView }
 			/>
 		);
 	},
@@ -109,14 +110,15 @@ const Score = React.createClass({
 		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_DISTANCE_MASK;
 
 		return (
-			<MaskedPoints	plainPoints		= { this.props.plainPoints }
-							value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
-							mask			= { mask }
-							onChange		= { this.props.onChange }
-							stringToPoints	= { ScoreHelper.stringDistanceToPoints.bind(ScoreHelper) }
-							validation		= { ScoreHelper.stringDistanceValidation.bind(ScoreHelper) }
-							className		= "mDistance"
-							modeView		= { this.props.modeView }
+			<MaskedPoints
+				plainPoints		= { this.props.plainPoints }
+				value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
+				mask			= { mask }
+				onChange		= { this.props.onChange }
+				stringToPoints	= { ScoreHelper.stringDistanceToPoints.bind(ScoreHelper) }
+				validation		= { ScoreHelper.stringDistanceValidation.bind(ScoreHelper) }
+				className		= "mDistance"
+				modeView		= { this.props.modeView }
 			/>
 		);
 	},

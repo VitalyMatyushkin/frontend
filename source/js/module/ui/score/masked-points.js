@@ -50,7 +50,7 @@ const MaskedPoints = React.createClass({
 	},
 	setMask:function(mask){
 		this.setState({
-			mask:		mask.replace(/[hkmsc]/g, '1'), 	// mask in format '111:111:111'
+			mask:		mask.replace(/[hkmsc]/g, '1'),	// mask in format '111:111:111'
 			emptyValue:	mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
 		});
 	},

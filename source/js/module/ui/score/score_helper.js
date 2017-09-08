@@ -5,6 +5,20 @@ const ScoreHelper = {
 	DEFAULT_TIME_MASK:		'hh:mm:ss.ccc',
 	DEFAULT_DISTANCE_MASK:	'kk mmm.cc',
 
+	HOUR_REGEX:							/h{1,}/i,
+	HOUR_WITH_DELIMITER_REGEX:			/h{1,}(.)/i,
+	MINUTE_REGEX:						/m{1,2}/i,
+	MINUTE_WITH_DELIMITER_REGEX:		/m{1,2}(.)/i,
+	SECOND_REGEX:						/s{1,2}/i,
+	SECOND_WITH_DELIMITER_REGEX:		/s{1,2}(.)/i,
+	MILLISECOND_REGEX:					/c{1,}/i,
+
+	KILOMETER_REGEX:					/k{1,3}/i,
+	KILOMETER_WITH_DELIMITER_REGEX:		/k{1,3}(.)/i,
+	METER_REGEX:						/m{1,3}/i,
+	METER_WITH_DELIMITER_REGEX:			/m{1,3}(.)/i,
+	CENTIMETER_REGEX:					/s{1,2}/i,
+
 	/**
 	 * Function validates plain score
 	 * @param {Number} value - value to validation
@@ -100,7 +114,7 @@ const ScoreHelper = {
 
 		return result;
 	},
-	plainPointsToTimeString: function(value, mask, mainSeparator = ':', secSeparator = '.'){
+	plainPointsToTimeString: function(value, mask){
 		const	valueParts			= String(value).split('.'),
 				integerPartOfValue	= Number(valueParts[0]),
 				floatPartOfValue	= Number(typeof valueParts[1] !== 'undefined' ? valueParts[1] : 0);
@@ -110,7 +124,7 @@ const ScoreHelper = {
 
 		let timeString = '';
 
-		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
+		const maskParts = mask.replace(/[^hmsc]/g, '.').split('.');
 
 		maskParts.forEach(maskPart => {
 			switch (true) {
@@ -121,7 +135,7 @@ const ScoreHelper = {
 
 					const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
 
-					timeString = hourString + mainSeparator;
+					timeString = hourString + this.getDelimiterByMaskAndRegex(mask, this.HOUR_WITH_DELIMITER_REGEX);
 					break;
 				}
 				case (this.isMinuteMask(maskPart)): {
@@ -131,7 +145,7 @@ const ScoreHelper = {
 
 					const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
 
-					timeString += minString + mainSeparator;
+					timeString += minString + this.getDelimiterByMaskAndRegex(mask, this.MINUTE_WITH_DELIMITER_REGEX);
 					break;
 				}
 				case (this.isSecondMask(maskPart)): {
@@ -140,7 +154,7 @@ const ScoreHelper = {
 
 					const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
 
-					timeString += secString + secSeparator;
+					timeString += secString + this.getDelimiterByMaskAndRegex(mask, this.SECOND_WITH_DELIMITER_REGEX);
 					break;
 				}
 				case (this.isMillisecondMask(maskPart)): {
@@ -156,7 +170,7 @@ const ScoreHelper = {
 
 		return timeString;
 	},
-	plainPointsToDistanceString: function(value, mask, mainSeparator = ':', metersSeparator = '.'){
+	plainPointsToDistanceString: function(value, mask){
 		// just copy integer part of plain points
 		let remainder = Number(value);
 
@@ -173,7 +187,7 @@ const ScoreHelper = {
 
 					const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
 
-					distanceString = kmString + mainSeparator;
+					distanceString = kmString + this.getDelimiterByMaskAndRegex(mask, this.KILOMETER_WITH_DELIMITER_REGEX);
 					break;
 				}
 				case (this.isMeterMask(maskPart)): {
@@ -183,16 +197,16 @@ const ScoreHelper = {
 
 					const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
 
-					distanceString += mString + mainSeparator;
+					distanceString += mString + this.getDelimiterByMaskAndRegex(mask, this.METER_WITH_DELIMITER_REGEX);
 					break;
 				}
-				case (this.isMillisecondMask(maskPart)): {
+				case (this.isCentimeterMask(maskPart)): {
 					// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
 					const cmCount = remainder;
 
 					const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
 
-					distanceString += cmString + metersSeparator;
+					distanceString += cmString;
 					break;
 				}
 			}
@@ -311,25 +325,30 @@ const ScoreHelper = {
 		return result;
 	},
 	isHourMask: function(mask) {
-		return mask.search(/h{1,}/) !== -1;
+		return mask.search(this.HOUR_REGEX) !== -1;
 	},
 	isMinuteMask: function(mask) {
-		return mask.search(/m{1,2}/) !== -1;
+		return mask.search(this.MINUTE_REGEX) !== -1;
 	},
 	isSecondMask: function(mask) {
-		return mask.search(/s{1,2}/) !== -1;
+		return mask.search(this.SECOND_REGEX) !== -1;
 	},
 	isMillisecondMask: function(mask) {
-		return mask.search(/c{1,}/) !== -1;
+		return mask.search(this.MILLISECOND_REGEX) !== -1;
 	},
 	isKilometerMask: function(mask) {
-		return mask.search(/k{1,3}/) !== -1;
+		return mask.search(this.KILOMETER_REGEX) !== -1;
 	},
 	isMeterMask: function(mask) {
-		return mask.search(/m{1,3}/) !== -1;
+		return mask.search(this.METER_REGEX) !== -1;
 	},
 	isCentimeterMask: function(mask) {
-		return mask.search(/c{1,2}/) !== -1;
+		return mask.search(this.CENTIMETER_REGEX) !== -1;
+	},
+	getDelimiterByMaskAndRegex: function (mask, regex) {
+		const result = mask.match(regex);
+
+		return result[1];
 	},
 	/**
 	 * Function converts value like this:
