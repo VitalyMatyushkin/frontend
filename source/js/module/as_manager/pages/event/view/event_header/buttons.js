@@ -72,7 +72,7 @@ const Buttons = React.createClass({
 			actionList.push({id:'send_consent_request', text:'Send Consent Request'});
 		}
 
-		if(this.isReportNotParticipateAvailable() && EventHelper.isNotFinishedEvent(this.props.event)) {
+		if(this.isReportNotParticipateAvailable() && EventHelper.isNotFinishedEvent(this.props.event) && this.isNotExpiredEventTime()) {
 			actionList.push({id:'report_not_participate', text:'Report unavailability'});
 		}
 
@@ -136,6 +136,11 @@ const Buttons = React.createClass({
 			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED
 		);
+	},
+	isNotExpiredEventTime: function() {
+		const 	today = new Date(),
+				eventTime = new Date(this.props.event.startTime);
+		return (today < eventTime);
 	},
 	isChangeScoreEventActionAvailable: function() {
 		const eventStatus = this.props.event.status;
