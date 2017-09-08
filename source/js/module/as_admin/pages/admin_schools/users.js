@@ -12,6 +12,7 @@ const	React									= require('react'),
 const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
         AdminRequestsComponent					= require('module/shared_pages/permission_requests/request-list'),
         AdminArchiveComponent					= require('module/shared_pages/permission_requests/request-archive'),
+	    AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
         UserComponent							= require('module/as_admin/pages/admin_add/user'),
         UserActivityComponent					= require('module/as_admin/pages/admin_schools/user_activity/user-activity');
 
@@ -118,6 +119,12 @@ const OneSchoolPage = React.createClass({
                             path 				= "/users/admin_views/create_user"
                             binding 			= { binding.sub('userDetailPage') }
                             component 			= { UserComponent }
+                        />
+                        <Route
+                            path 				= "/users/admin_views/requests/accept"
+                            binding 			= { binding.sub('parentPermission') }
+                            component 			= { AdminPermissionAcceptComponent }
+                            afterSubmitPage 	= "/admin_schools/admin_views/requests"
                         />
                     </RouterView>
                 </div>
