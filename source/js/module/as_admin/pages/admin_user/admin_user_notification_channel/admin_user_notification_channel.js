@@ -45,6 +45,35 @@ const AdminUserNotificationChannel = React.createClass({
 		const binding = this.getDefaultBinding();
 		binding.set('isPopupOpen', false);
 	},
+	onClosePopupSendMessageClick:function(){
+		const binding = this.getDefaultBinding();
+		binding.set('isPopupSendMessageFormOpen', false);
+	},
+	
+	onSubmitPopupSendMessage:function(data){
+		const	userId 		= this.props.userId,
+				binding 	= this.getDefaultBinding(),
+				channelId 	= binding.toJS('channelId'),
+				title 		= data.title,
+				body 		= data.body;
+		
+		window.Server.userNotificationChannelMessage.post({userId, channelId}, {title, body}).then(
+			(notification) => {
+				binding.set('isPopupSendMessageFormOpen', false);
+				window.simpleAlert(
+					`The message has been send!`,
+					'Ok'
+				);
+			},
+			(error) => {
+				binding.set('isPopupSendMessageFormOpen', false);
+				const errorText = propz.get(error, ["xhr", "responseJSON", "details", "text"]);
+				window.simpleAlert(
+					`Rejected from server with response: ${errorText}`,
+					'Ok'
+				);
+			});
+	},
 
 	onSubmit: function(data){
 		const	userId 	= this.props.userId,
@@ -83,7 +112,7 @@ const AdminUserNotificationChannel = React.createClass({
 
 	render: function () {
 		const binding = this.getDefaultBinding();
-
+		
 		if (typeof this.model.grid !== 'undefined') {
 			return (
 				<div className="bNotificationChannel">
@@ -138,10 +167,42 @@ const AdminUserNotificationChannel = React.createClass({
 							</Form>
 						</ConfirmPopup>
 					</If>
+					<If condition={Boolean(binding.toJS('isPopupSendMessageFormOpen'))}>
+						<ConfirmPopup
+							customStyle		= { 'ePopup' }
+							isShowButtons	= { false }
+						>
+							<div className="eClose" onClick={this.onClosePopupSendMessageClick}>
+								<SVG icon="icon_delete"/>
+							</div>
+							<div className="eHeader">Send message in channel</div>
+							<Form
+								binding				= { binding }
+								onSubmit			= { this.onSubmitPopupSendMessage }
+								defaultButton 		= { "Send message" }
+								hideCancelButton 	= { true }
+							>
+								<FormField
+									type		= "text"
+									field		= "title"
+									validation	= "required"
+								>
+									Title
+								</FormField>
+								<FormField
+									type		= "text"
+									field		= "body"
+									validation	= "required"
+								>
+									Body
+								</FormField>
+							</Form>
+						</ConfirmPopup>
+					</If>
 				</div>
 			);
 		} else {
-		    return null;
+			return null;
 		}
 
 	}

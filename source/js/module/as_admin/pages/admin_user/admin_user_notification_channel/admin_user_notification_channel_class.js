@@ -54,10 +54,11 @@ class AdminUserNotificationChannelClass {
 		binding.set('isPopupOpen', true);
 	}
 	getActions(){
-		return ['Remove'];
+		return ['Message', 'Remove'];
 	}
 	getQuickEditActionsFactory(itemId, action) {
 		const userId = this.props.userId;
+		const binding = this.getDefaultBinding();
 		
 		switch (action) {
 			case 'Remove':
@@ -65,6 +66,12 @@ class AdminUserNotificationChannelClass {
 					() => this.reloadData()
 				);
 			break;
+			case 'Message':
+				binding.atomically()
+				.set('isPopupSendMessageFormOpen', true)
+				.set('channelId', itemId)
+				.commit();
+				break;
 			default :
 				break;
 		}
