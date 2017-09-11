@@ -3,7 +3,10 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		If 					= require('module/ui/if/if'),
 		Autocomplete 		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Loader				= require('module/ui/loader'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
+
+const	MiddleWideContainer	= require('styles/ui/b_middle_wide_container.scss');
 
 const PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,9 +21,11 @@ const PermissionAcceptPage = React.createClass({
 			permissionId: null,
 			comment: null,
 			schoolId: null,
+			school: null,
 			formId: null,
 			houseId: null,
-			studentId: null
+			studentId: null,
+			isSync: false
 		});
 	},
 	componentWillMount: function() {
@@ -40,15 +45,22 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('schoolId', schoolId);
 
 		if (prId) {
-			window.Server.permissionRequest.get(
-				{
-					prId:		prId,
-					schoolId:	schoolId
-				}
-			)
+			window.Server.school.get( {schoolId: schoolId} )
+			.then(data => {
+				binding.set('school', Immutable.fromJS(data));
+
+				return	window.Server.permissionRequest.get(
+					{
+						prId:		prId,
+						schoolId:	schoolId
+					}
+				)
+			})
 			.then(data => {
 				binding.set('comment', data.requestedPermission.comment);
+				binding.set('isSync', true);
 			});
+
 		}
 	},
 	generatePostcodeInputKey: function() {
@@ -201,64 +213,78 @@ const PermissionAcceptPage = React.createClass({
 
 		const comment = binding.get('comment');
 
-		return (
-			<div className='bForm'>
-				<div className="eForm_atCenter">
+		let content;
+		if(binding.toJS('isSync')) {
+			content = (
+				<div className='bForm'>
+					<div className="eForm_atCenter">
 
-					<h2>Accept parent permission. Please choose student.</h2>
+						<h2>`{ binding.toJS('school.name') }`.</h2>
 
-					<h3>Comment from parent: {comment}</h3>
+						<h2>Accept parent permission. Please choose student.</h2>
 
-					<div className='eForm_field'>
-						<Autocomplete
-							serviceFilter	= { this.serviceFormFilter }
-							serverField		= 'name'
-							onSelect		= { this.onSelectForm }
-							binding			= { binding.sub('_formAutocomplete') }
-							placeholder		= 'form name'
-						/>
+						<h3>Comment from parent: {comment}</h3>
+
+						<div className='eForm_field'>
+							<Autocomplete
+								serviceFilter	= { this.serviceFormFilter }
+								serverField		= 'name'
+								onSelect		= { this.onSelectForm }
+								binding			= { binding.sub('_formAutocomplete') }
+								placeholder		= 'form name'
+							/>
+						</div>
+
+						<If condition={typeof binding.get('formId') !== 'undefined'}>
+							<div className='eForm_field'>
+								<Autocomplete
+									key				= { binding.toJS('houseInputKey') }
+									serviceFilter	= { this.serviceHouseFilter }
+									serverField		= 'name'
+									onSelect		= { this.onSelectHouse}
+									binding			= { binding.sub('_houseAutocomplete') }
+									placeholder		= 'house name'
+									extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
+								/>
+								<SquareCrossButton
+									handleClick={this.onClickDeselectHouse}
+								/>
+							</div>
+						</If>
+
+						<If condition={typeof binding.get('formId') !== 'undefined'}>
+							<div className='eForm_field'>
+								<Autocomplete
+									serviceFilter	= { this.serviceStudentsFilter}
+									serverField		= 'name'
+									onSelect		= { this.onSelectStudent }
+									binding			= { binding.sub('_studentAutocomplete') }
+									placeholder		= 'Student name'
+								/>
+							</div>
+						</If>
+
+						<If condition={typeof binding.get('formId') !== 'undefined' && typeof binding.get('studentId') !== 'undefined'}>
+							<div
+								className	= "bButton"
+								onClick		= { this.onAcceptPermission }
+							>
+								Accept permission
+							</div>
+						</If>
 					</div>
-
-					<If condition={typeof binding.get('formId') !== 'undefined'}>
-						<div className='eForm_field'>
-							<Autocomplete
-								key				= { binding.toJS('houseInputKey') }
-								serviceFilter	= { this.serviceHouseFilter }
-								serverField		= 'name'
-								onSelect		= { this.onSelectHouse}
-								binding			= { binding.sub('_houseAutocomplete') }
-								placeholder		= 'house name'
-								extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
-							/>
-							<SquareCrossButton
-								handleClick={this.onClickDeselectHouse}
-							/>
-						</div>
-					</If>
-
-					<If condition={typeof binding.get('formId') !== 'undefined'}>
-						<div className='eForm_field'>
-							<Autocomplete
-								serviceFilter	= { this.serviceStudentsFilter}
-								serverField		= 'name'
-								onSelect		= { this.onSelectStudent }
-								binding			= { binding.sub('_studentAutocomplete') }
-								placeholder		= 'Student name'
-							/>
-						</div>
-					</If>
-
-					<If condition={typeof binding.get('formId') !== 'undefined' && typeof binding.get('studentId') !== 'undefined'}>
-						<div
-							className	= "bButton"
-							onClick		= { this.onAcceptPermission }
-						>
-							Accept permission
-						</div>
-					</If>
 				</div>
+			)
+		} else {
+			content = <Loader condition={true}/>;
+		}
+
+		return (
+			<div className='bMiddleWideContainer'>
+				{content}
 			</div>
-		)
+		);
+
 	}
 });
 
