@@ -1168,18 +1168,15 @@ const Event = React.createClass({
 		);
 	},
 	handleClickOpponentSchoolManagerButton: function(rivalId) {
-		const	event		= this.getDefaultBinding().toJS(`model`),
-				rivals		= this.getDefaultBinding().toJS('rivals'),
-				rivalIndex	= rivals.findIndex(rival => rival.id === rivalId);
+		const event = this.getDefaultBinding().toJS(`model`);
 
-		const	newValue	= !this.getDefaultBinding().get('opponentSchoolManager.isOpen');
-
+		const newValue = !this.getDefaultBinding().get('opponentSchoolManager.isOpen');
 		if(newValue) {
 			let opponentSchoolId;
 			if(TeamHelper.isNewEvent(event)) {
-				opponentSchoolId = this.getDefaultBinding().toJS(`rivals.${rivalIndex}.school.id`)
+				opponentSchoolId = this.getDefaultBinding().toJS('rivals').find(rival => rival.id === rivalId).school.id;
 			} else {
-				opponentSchoolId = this.getDefaultBinding().toJS(`model.schoolsData.${rivalIndex}.id`);
+				opponentSchoolId = event.invitedSchoolIds[0];
 			}
 
 			this.getDefaultBinding()

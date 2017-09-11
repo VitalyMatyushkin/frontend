@@ -8,24 +8,25 @@ const RivalInfoOptionsHelper = {
 	getOptionsObjectForRivalInfoByRival: function(rival, activeSchoolId, event, rivals, isShowControlButtons, handlers) {
 		let options = {};
 
-		// TODO it's temp. waiting fix from server
-		// if(isShowControlButtons) {
-		// 	options = {
-		// 		// it's buttons for additional functional
-		// 		buttonsList: [
-		// 			new SchoolRivalInfoButtonData(
-		// 				SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON,
-		// 				this.isShowChangeSchoolButtonByRival(rival, activeSchoolId, event),
-		// 				handlers.handleClickOpponentSchoolManagerButton
-		// 			),
-		// 			new SchoolRivalInfoButtonData(
-		// 				SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
-		// 				this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
-		// 				handlers.handleClickRemoveTeamButton
-		// 			)
-		// 		]
-		// 	};
-		// }
+		if(isShowControlButtons) {
+			options = {
+				// it's buttons for additional functional
+				buttonsList: [
+					new SchoolRivalInfoButtonData(
+						SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON,
+						this.isShowChangeSchoolButtonByRival(rival, activeSchoolId, event),
+						handlers.handleClickOpponentSchoolManagerButton
+					)
+					//TODO it's temp. waiting fix from server
+					// ,
+					// new SchoolRivalInfoButtonData(
+					// 	SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
+					// 	this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
+					// 	handlers.handleClickRemoveTeamButton
+					// )
+				]
+			};
+		}
 
 		return options;
 	},
@@ -41,7 +42,9 @@ const RivalInfoOptionsHelper = {
 					event.status !== EventHelper.EVENT_STATUS.ACCEPTED
 				);
 
+		//TODO it's temp. waiting fix from server
 		return (
+			rival.school.name === 'TBD' &&
 			activeSchoolId === event.inviterSchoolId &&	// Active school is inviter school
 			activeSchoolId !== rival.school.id &&		// Current rival is not active school
 			!isInviteAccepted &&

@@ -387,7 +387,8 @@ const EventRival = React.createClass({
 			EventHelper.isInterSchoolsEvent(event) &&
 			binding.get('model.status') !== EventHelper.EVENT_STATUS.FINISHED &&
 			binding.get('model.status') !== EventHelper.EVENT_STATUS.ACCEPTED &&
-			this.props.activeSchoolId === event.inviterSchoolId;
+			this.props.activeSchoolId === event.inviterSchoolId &&
+			event.invitedSchools[0].name === 'TBD';
 	},
 	renderChangeOpponentSchoolButton: function(order) {
 		if( this.isShowChangeSchoolButton(order) ) {
