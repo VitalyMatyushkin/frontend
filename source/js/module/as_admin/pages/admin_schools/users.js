@@ -124,7 +124,7 @@ const OneSchoolPage = React.createClass({
                             path 				= "/users/admin_views/requests/accept"
                             binding 			= { binding.sub('parentPermission') }
                             component 			= { AdminPermissionAcceptComponent }
-                            afterSubmitPage 	= "/admin_schools/admin_views/requests"
+                            afterSubmitPage 	= "/users/admin_views/requests"
                         />
                     </RouterView>
                 </div>
