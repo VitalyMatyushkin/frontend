@@ -219,7 +219,7 @@ const PermissionAcceptPage = React.createClass({
 				<div className='bForm'>
 					<div className="eForm_atCenter">
 
-						<h2>`{ binding.toJS('school.name') }`.</h2>
+						<h2>{ binding.toJS('school.name') }.</h2>
 
 						<h2>Accept parent permission. Please choose student.</h2>
 
@@ -231,7 +231,7 @@ const PermissionAcceptPage = React.createClass({
 								serverField		= 'name'
 								onSelect		= { this.onSelectForm }
 								binding			= { binding.sub('_formAutocomplete') }
-								placeholder		= 'form name'
+								placeholder		= 'Form'
 							/>
 						</div>
 
@@ -243,7 +243,7 @@ const PermissionAcceptPage = React.createClass({
 									serverField		= 'name'
 									onSelect		= { this.onSelectHouse}
 									binding			= { binding.sub('_houseAutocomplete') }
-									placeholder		= 'house name'
+									placeholder		= 'House'
 									extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
 								/>
 								<SquareCrossButton

@@ -113,7 +113,7 @@ const AdminPermissionAcceptStudentComponent = React.createClass({
 						serviceFilter={this.serviceFormFilter}
 						serverField='name'
 						onSelect={this.onSelectForm}
-						placeholder='form name'
+						placeholder='Form'
 					/>
 				</div>
 				<div className='eForm_field'>
@@ -121,7 +121,7 @@ const AdminPermissionAcceptStudentComponent = React.createClass({
 						serviceFilter={this.serviceHouseFilter}
 						serverField='name'
 						onSelect={this.onSelectHouse}
-						placeholder='house name'
+						placeholder='House'
 					/>
 				</div>
 				<div className="bButton" onClick={this.onAcceptPermission}>Accept permission</div>
