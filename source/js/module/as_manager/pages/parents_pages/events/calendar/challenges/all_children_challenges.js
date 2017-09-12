@@ -31,18 +31,32 @@ const AllChildrenChallenges = React.createClass({
 
 		switch (true) {
 			/* when no day selected */
-			case isDaySelected !== true:
+			case !isDaySelected: {
 				return <NoResultItem text="Please select day"/>;
+			}
 			/* when data is still loading */
-			case isSync !== true:
+			case !isSync: {
 				return <NoResultItem text="Loading..."/>;
+			}
 			/* when there are some events */
-			case children && children.count() > 0 && events && events.count() > 0:
-				return children.map( child =>  {
-					return <ChildChallenges key={child.get('id')} child={child} events={events} onClick={onEventClick}/>;
-				});
-			default:
+			case (
+				typeof children !== 'undefined' &&
+				children.count() > 0 &&
+				typeof events !== 'undefined' &&
+				events.count() > 0
+			): {
+				return children.map(child =>
+					<ChildChallenges
+						key		= { child.get('id') }
+						child	= { child }
+						events	= { events }
+						onClick	= { onEventClick }
+					/>
+				);
+			}
+			default: {
 				return <NoResultItem text="There are no events for selected day"/>;
+			}
 		}
 	},
 	render: function() {

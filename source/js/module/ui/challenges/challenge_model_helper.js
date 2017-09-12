@@ -37,7 +37,7 @@ const ChallengeModelHelper = {
 			}
 		});
 
-		return score
+		return score;
 	},
 	getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent: function(event) {
 		const places = [];

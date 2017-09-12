@@ -304,8 +304,15 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 				return p.schoolIds.find(id => id === activeSchoolId);
 			});
 
-			const numberOfPlayers = event.invitedSchoolIds.length + 1;
-			return `Place ${activeSchoolPlace.place} of ${numberOfPlayers}`;
+			if(typeof activeSchoolPlace !== 'undefined') {
+				const numberOfPlayers = event.invitedSchoolIds.length + 1;
+
+				return `Place ${activeSchoolPlace.place} of ${numberOfPlayers}`;
+			} else {
+				console.error('ERROR: Cannot find active school in places array.');
+
+				return '';
+			}
 		}
 	}
 
