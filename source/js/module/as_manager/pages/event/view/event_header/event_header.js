@@ -66,10 +66,11 @@ const EventHeader = React.createClass({
 		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
 				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']),
 				data = this.props.eventAges;
-		return data
+		return data.length > 0 ? data
 			.sort()
 			.map(elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))
-			.join(", ");
+			.join(", ")
+			: "All ages";
 	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
