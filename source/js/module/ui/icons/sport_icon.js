@@ -575,6 +575,12 @@ const SportIcon = React.createClass({
 			case 	sport === 'rounders ball throw':
 				icon="rounders_ball_throw";
 				break;
+			case 	sport === 'angling':
+				icon="angling";
+				break;
+			case 	sport === 'angling (mt)':
+				icon="angling_mini_tournament";
+				break;
 			case 	sport === 'relays (4x100 metres)' ||
 					sport === 'relays (4x400 metres)' ||
 					sport === 'relays (4x 75 metres)' || //TODO: replace extra spaces in sport name and then delete it
