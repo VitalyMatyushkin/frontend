@@ -13,6 +13,7 @@ const 	RouterView 				= require('module/core/router'),
 		HousePageComponent		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
 		StudentsPageComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/students/students_page'),
 		NotificationsComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
+		ExportComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/export_students/export_students'),
 		SportsComponent			= require('./favorite_sports/sports_page');
 
 const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
@@ -97,6 +98,12 @@ const SchoolSandbox = React.createClass({
 				name:'Notifications',
 				key:'notifications',
 				routes:[`/school_sandbox/${schoolId}/notifications`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/export`,
+				name:'Export',
+				key:'export',
+				routes:[`/school_sandbox/${schoolId}/export`]
 			}
 		];
 		//Set sub menu items in default binding
@@ -118,7 +125,8 @@ const SchoolSandbox = React.createClass({
 	render:function(){
 		const 	binding 	= this.getDefaultBinding(),
 				subBinding 	= binding.sub('schoolSandboxRouting'),
-				global 		= this.getMoreartyContext().getBinding();
+				global 		= this.getMoreartyContext().getBinding(),
+				schoolId 	= global.get('routing.pathParameters.0');
 
 		return (
 			<div>
@@ -163,6 +171,12 @@ const SchoolSandbox = React.createClass({
 							path 		= "/school_sandbox/:schoolId/notifications"
 							binding 	= { binding }
 							component 	= { NotificationsComponent }
+						/>
+						<Route
+							path 		= "/school_sandbox/:schoolId/export"
+							binding 	= { binding }
+							schoolId 	= { schoolId }
+							component 	= { ExportComponent }
 						/>
 					</RouterView>
 				</div>

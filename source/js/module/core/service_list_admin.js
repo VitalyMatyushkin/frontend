@@ -77,6 +77,9 @@ const serviceList = {
 		
 		//age group
 		serviceList.ageGroups = new Service('/superadmin/schools/{schoolId}/ages', binding);
+		
+		//export students
+		serviceList.exportStudents = new Service('/superadmin/schools/{schoolId}/export/students', binding);
 
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)
