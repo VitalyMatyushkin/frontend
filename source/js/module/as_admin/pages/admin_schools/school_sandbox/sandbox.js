@@ -137,9 +137,9 @@ const SchoolSandbox = React.createClass({
 							component 	= { ClassesPageComponent }
 						/>
 						<Route
-							path="/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
-							binding={subBinding}
-							component={StudentsPageComponent}
+							path		= "/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
+							binding		= {subBinding}
+							component	= {StudentsPageComponent}
 						/>
 						<Route
 							path 		= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"

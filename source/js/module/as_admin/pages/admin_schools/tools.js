@@ -13,6 +13,7 @@ const 	RouterView 	= require('module/core/router'),
         SubMenu 	= require('module/ui/menu/sub_menu');
 
 const 	ImportStudentsComponent	= require('module/as_admin/pages/admin_schools/import_students_module'),
+        PostcodesComponent	    = require('module/as_admin/pages/admin_schools/postcodes/postcodes_page'),
         InvitesComponent	    = require('module/as_admin/pages/tools/tools');
 
 const Tools = React.createClass({
@@ -36,6 +37,12 @@ const Tools = React.createClass({
                     name:'Import Students',
                     key:'import_students'
                 },
+				{
+					href:'/#tools/postcodes',
+					name:'Postcodes',
+					key:'postcodes'
+				},
+
                 {
                     href:'/#school-invite/add-invite',
                     name: 'Invites',
@@ -77,6 +84,11 @@ const Tools = React.createClass({
                             path 		= "/tools /tools/import_students"
                             binding 	= { binding.sub('importStudents') }
                             component 	= { ImportStudentsComponent }
+                        />
+                        <Route
+                            path 		= "/tools/postcodes"
+                            binding 	= { binding.sub('postcodes') }
+                            component 	= { PostcodesComponent }
                         />
                         <Route
                             path 		= "/school-invite/add-invite"

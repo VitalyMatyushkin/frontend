@@ -43,6 +43,7 @@ const serviceList = {
 
 		// postcode
 		serviceList.postCodes = new Service('/superadmin/postcodes', binding);
+		serviceList.postCode = new Service('/superadmin/postcodes/{postcodeId}', binding);
 
 		// forms
 		serviceList.schoolForms = new Service('/superadmin/schools/{schoolId}/forms', binding);
