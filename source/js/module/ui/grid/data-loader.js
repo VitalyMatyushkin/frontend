@@ -12,6 +12,7 @@
 const DataLoader = function(options){
 	this.serviceName = options.serviceName;
 	this.dataModel = options.dataModel;
+	this.modelParams = options.modelParams;
 	this.params = options.params;
 	this.grid = options.grid;
 	this.filter = this.grid.filter;
@@ -43,13 +44,29 @@ DataLoader.prototype = {
 				filters = this.filter.getFilters(),
 				service = this.getService(self.serviceName);
 
+		let modelParams = null;
 		if(service) {
+			/*
+			Temporary feature, it will be deleted, when it will be realized on server. Now filter works only on frontend.
+			 It works for 'User&Permission' table by superadmin.  Grid model - UserModel
+			filterPermissionStatus - this is unique field name, it will be deleted after request to server.
+			*/
+			if(filters.filter.where && filters.filter.where.filterPermissionStatus){
+				modelParams = filters.filter.where.filterPermissionStatus.$in;
+				delete filters.filter.where.filterPermissionStatus;
+			}
 			const promise = self.params ? service.get(this.params, filters): service.get(filters);
 			return promise.then(data => {
+				/*
+				 Added this filter back, that this filter worked, when added new filter after this
+				 */
+				if(self.filter.where){
+					self.filter.where.filterPermissionStatus = {$in: modelParams};
+				}
 				var res = data;
 				if(self.dataModel){
 					res = data.map( item => {
-						return new self.dataModel(item);
+						return new self.dataModel(item, modelParams);
 					});
 				}
 				self.grid.setData(res);

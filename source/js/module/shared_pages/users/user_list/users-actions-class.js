@@ -20,7 +20,7 @@ class UsersActionsClass {
 		this.rootBinding = page.getMoreartyContext().getBinding();
 		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 		this.props = page.props;
-		
+
 		this.getColumns();
 	}
 	
@@ -296,6 +296,29 @@ class UsersActionsClass {
 				}
 			},
 			{
+				text:'Status',
+				hidden:true,
+				cell:{
+					dataField:'filterPermissionStatus'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: [
+							{
+								key:'ACTIVE',
+								value:'ACTIVE'
+							},
+							{
+								key:'ACTIVE/Outdated',
+								value:'ACTIVE/Outdated'
+							}
+						],
+						hideFilter:true
+					}
+				}
+			},
+			{
 				text:'Role',
 				hidden:true,
 				cell:{
@@ -387,7 +410,7 @@ class UsersActionsClass {
 			handleClick: this.props.handleClick,
 			filters:{limit:20}
 		});
-		
+
 		this.dataLoader = 	new DataLoader({
 			serviceName:'users',
 			dataModel: 	UserModel,
@@ -414,7 +437,7 @@ class UsersActionsClass {
 			},
 			badges: grid.filterPanel.badgeArea
 		});
-		
+
 		this.dataLoader = 	new DataLoader({
 			serviceName:'users',
 			dataModel: 	UserModel,

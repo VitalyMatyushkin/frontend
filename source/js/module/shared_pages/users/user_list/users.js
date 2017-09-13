@@ -26,7 +26,7 @@ const Users = React.createClass({
 	componentWillMount: function () {
 		const 	binding 	= this.getDefaultBinding(),
 				grid 		= binding.toJS('grid');
-		
+
 		if (grid) {
 			this.model = new UserActions(this).createGridFromExistingData(grid);
 		} else {
@@ -62,9 +62,8 @@ const Users = React.createClass({
 		}
 	},
 	render: function () {
-		
-		const binding = this.getDefaultBinding();
-		
+		const 	binding = this.getDefaultBinding();
+
 		binding.set('grid', Immutable.fromJS(this.model.grid));
 		return this.model.grid ? (
 			<div className="eTable_view">
