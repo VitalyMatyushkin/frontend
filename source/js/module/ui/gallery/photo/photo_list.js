@@ -56,7 +56,7 @@ const PhotoList = React.createClass({
 				binding = self.getDefaultBinding(),
 				albumId = binding.get('id');
 
-        this.service.photos.get(albumId).then(function(res){
+        this.service.photos.get(albumId,{filter:{limit: 100}}).then(function(res){
             binding
                 .atomically()
                 .set('photos', Immutable.fromJS(res))

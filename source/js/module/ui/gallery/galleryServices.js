@@ -57,10 +57,10 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
         }
     };
     self.photos = {
-        get: function (albumId) {
+        get: function (albumId, filter) {
             const params = self._getParamsWithAlbumId(albumId);
 
-            return self._serviceList.photos.get(params);
+            return self._serviceList.photos.get(params, filter);
         },
         post: function (albumId, newPhoto) {
             const params = self._getParamsWithAlbumId(albumId);
