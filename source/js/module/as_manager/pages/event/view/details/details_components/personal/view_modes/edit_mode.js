@@ -70,9 +70,10 @@ const EditMode = React.createClass({
 					"permissions.preset"	: {
 						"$in"	: roles
 					},
-					lastName				: {
-						like	: searchText
-					}
+					$or: [
+						{firstName: {like: searchText, options: 'i'}},
+						{lastName: {like: searchText, options: 'i'}}
+					]
 				},
 				limit	: 20
 			}
