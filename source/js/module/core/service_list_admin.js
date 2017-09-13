@@ -54,6 +54,7 @@ const serviceList = {
 
 		// students
 		serviceList.schoolStudents = new Service('/superadmin/schools/{schoolId}/students', binding);
+		serviceList.schoolStudentsCount = new Service('/superadmin/schools/{schoolId}/students/count', binding);
 		serviceList.schoolStudent = new Service('/superadmin/schools/{schoolId}/students/{studentId}', binding);
 
 		// activity logs
@@ -63,7 +64,7 @@ const serviceList = {
 		//events
 		serviceList.events = new Service('/superadmin/schools/{schoolId}/events', binding);
 		serviceList.event = new Service('/superadmin/schools/{schoolId}/events/{eventId}', binding);
-		
+
 		//Notifications
 		serviceList.userNotificationChannels = new Service('/superadmin/users/{userId}/notifications/channels', binding);
 		serviceList.userNotificationChannel = new Service('/superadmin/users/{userId}/notifications/channels/{channelId}', binding);
