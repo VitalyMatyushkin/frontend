@@ -15,6 +15,7 @@ class HouseTools{
         this.dataListItemLocator = By.className('eDataList_listItem');
         this.itemCellLocator = By.className('eDataList_listItemCell');
         this.colorCellLocator = By.className('eDataList_listItemColor');
+        this.imageCellLocator = By.css('div.eDataList_listItemCell img');
         this.formLocator = By.className('bForm');
         this.formFieldLocator = By.className('eForm_field');
         this.addColorLocator = By.className('eColorsSelect_addButton');
@@ -27,6 +28,10 @@ class HouseTools{
     async visitAddHousePage(){
         return await SchoolPage.visit(this.driver, this.urlAddHouse);
     }
+
+	async setHouseImage(filePath){
+		return await SchoolPage.addNewImage(this.driver, 0, filePath);
+	}
 
     async setHouseName(houseName){
 		return await SchoolPage.setTextFieldInput(this.driver, 1, houseName);
@@ -94,6 +99,11 @@ class HouseTools{
         return await item.findElement(this.colorCellLocator);
     }
 
+	async checkImage(indexLine){
+		let item = (await this.driver.findElements(this.dataListItemLocator))[indexLine];
+		return await item.findElement(this.imageCellLocator);
+	}
+
     async checkResult(house){
         await this.driver.sleep(500);
         const items = await this.driver.findElements(this.dataListItemLocator);
@@ -104,7 +114,8 @@ class HouseTools{
                     textNameCell = await cellHouseName.getText(),
                     cellDescription = (await item.findElements(this.itemCellLocator))[2],
                     textDescriptionCell = await cellDescription.getText();
-            if (textNameCell === house.houseName && textDescriptionCell === house.description &&  (await this.checkColor(i))){
+            if (textNameCell === house.houseName && textDescriptionCell === house.description
+                &&  (await this.checkColor(i)) &&  (await this.checkImage(i))){
                 result = i;
                 break;
             }
