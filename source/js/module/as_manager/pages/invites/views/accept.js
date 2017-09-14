@@ -217,16 +217,22 @@ const InviteAcceptView = React.createClass({
 						binding.toJS(`teamModeView.teamWrapper`)
 					)
 				).then(() => {
-					// create new team
-					return Promise.all(TeamHelper.createTeams(
+
+					const teams = TeamHelper.createTeams(
 						this.props.activeSchoolId,
 						binding.toJS('model'),
 						binding.toJS(`rivals`),
 						binding.toJS(`teamModeView.teamWrapper`)
-					));
+					);
+
+					return Promise.all(
+						TeamHelper.addTeamsToEvent(
+							this.props.activeSchoolId,
+							event.id,
+							teams
+						)
+					);
 				})
-                // add it to event
-                .then(teams => Promise.all(TeamHelper.addTeamsToEvent(this.props.activeSchoolId, event, teams)))
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
                         schoolId: this.props.activeSchoolId,

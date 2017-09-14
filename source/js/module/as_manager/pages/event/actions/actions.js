@@ -108,33 +108,29 @@ function removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding) 
 };
 
 function changeTeamByOrder(order, activeSchoolId, binding) {
-	let team;
+	const team = TeamHelper.createTeam(
+		activeSchoolId,
+		binding.toJS('model'),
+		binding.toJS(`teamManagerWrapper.default.rivals.${order}`),
+		binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`)
+	);
 
-	return TeamHelper.createTeam(
+	const prevSelectedTeamId =
+		binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+
+	let deleteTeamFromEventPromise = true;
+	if(typeof prevSelectedTeamId !== 'undefined') {
+		deleteTeamFromEventPromise = TeamHelper.deleteTeamFromEvent(
 			activeSchoolId,
-			binding.toJS('model'),
-			binding.toJS(`teamManagerWrapper.default.rivals.${order}`),
-			binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`)
-		)
-		.then(_team => {
-			team = _team;
+			binding.toJS('model').id,
+			prevSelectedTeamId
+		);
+	}
 
-			const prevSelectedTeamId =
-				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
-
-			if(typeof prevSelectedTeamId !== 'undefined') {
-				return TeamHelper.deleteTeamFromEvent(
-					activeSchoolId,
-					binding.toJS('model').id,
-					prevSelectedTeamId
-				);
-			} else {
-				return Promise.resolve(true);
-			}
-		})
+	return Promise.resolve( deleteTeamFromEventPromise )
 		.then(() => TeamHelper.addTeamsToEvent(
 			activeSchoolId,
-			binding.toJS('model'),
+			binding.toJS('model').id,
 			[team]
 		))
 		.then(() => {
@@ -167,30 +163,28 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
  * @returns {*}
  */
 function submitAllChanges(activeSchoolId, binding) {
-	switch (true) {
-		case binding.toJS('teamManagerMode') === 'ADD_TEAM': {
+	switch ( binding.toJS('teamManagerMode') ) {
+		case 'ADD_TEAM': {
 			const	selectedRivalIndex	= binding.toJS('teamManagerWrapper.default.teamModeView.selectedRivalIndex'),
 					event				= binding.toJS('model'),
 					rival				= binding.toJS(`teamManagerWrapper.default.rivals.${selectedRivalIndex}`),
 					teamWrappers		= binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper`),
 					teamWrapper			= teamWrappers.find(tw => tw.rivalId === rival.id);
 
-			return TeamHelper
-				.createTeam(
-					activeSchoolId,
-					event,
-					rival,
-					teamWrapper
-				)
-				.then(team => {
-					return TeamHelper.addTeamsToEvent(
-						activeSchoolId,
-						event,
-						[team]
-					);
-				});
+			const team = TeamHelper.createTeam(
+				activeSchoolId,
+				event,
+				rival,
+				teamWrapper
+			);
+
+			return TeamHelper.addTeamsToEvent(
+				activeSchoolId,
+				event.id,
+				[team]
+			);
 		}
-		case binding.toJS('teamManagerMode') === 'CHANGE_TEAM': {
+		case 'CHANGE_TEAM': {
 			return changeTeamNames(activeSchoolId, binding)
 				.then(() => commitPlayersChanges(activeSchoolId, binding))
 				.then(() => {
