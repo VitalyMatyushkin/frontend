@@ -195,6 +195,7 @@ const ComboBox2 = React.createClass({
 					} else {
 						currentIndex -= 1;
 					}
+					this.refs['option_'+currentIndex].scrollIntoViewIfNeeded(true);
 				}
 				self.markElement(currentIndex);
 				break;
@@ -207,6 +208,7 @@ const ComboBox2 = React.createClass({
 					} else {
 						currentIndex += 1;
 					}
+					this.refs['option_'+currentIndex].scrollIntoViewIfNeeded(false);
 				}
 				self.markElement(currentIndex);
 				break;
@@ -383,7 +385,7 @@ const ComboBox2 = React.createClass({
 
 		const key = data.id ? data.id : self.props.getElementTitle(data);
 		return (
-			<div key={key} className={cssStyle} onMouseDown={self.onListItemClick.bind(self, index)}>
+			<div key={key} ref={'option_'+index} className={cssStyle} onMouseDown={self.onListItemClick.bind(self, index)}>
 				{this.getMenuItemText(data)}
 			</div>
 		);
