@@ -28,7 +28,7 @@ const PostcodeForm = React.createClass({
 					type 		= "text"
 					field 		= "postcode"
 					id 			= "postcode_name"
-					validation 	= "required"
+					validation 	= "required postcode"
 				>
 					Postcode name
 				</FormField>
@@ -36,7 +36,7 @@ const PostcodeForm = React.createClass({
 					type 		= "number"
 					field 		= "point.lng"
 					id 			= "postcode_lng"
-					validation 	= "required"
+					validation 	= "required longitude"
 				>
 					Longitude
 				</FormField>
@@ -44,7 +44,7 @@ const PostcodeForm = React.createClass({
 					type 		= "number"
 					field 		= "point.lat"
 					id 			= "postcode_lat"
-					validation 	= "required"
+					validation 	= "required latitude"
 				>
 					Latitude
 				</FormField>

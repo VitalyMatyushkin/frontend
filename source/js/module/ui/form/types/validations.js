@@ -81,6 +81,27 @@ var validationsSet = {
 
 		return result;
 	},
+	postcode:function (value) {
+		if(!(/^[a-zA-Z0-9\/]{2,4}\s[a-zA-Z0-9\/]{3}$/).test(value)){
+			return 'should be have one of formats XXXX XXX, XXX XXX, XX XXX and should contain only characters and digits';
+		} else {
+			return false;
+		}
+	},
+	longitude:function (value) {
+		let result = false;
+		if (value && (value >= 180 || value <= -180)) {
+			result = 'Longitude should be >= -180 and <= 180';
+		}
+		return result;
+	},
+	latitude:function (value) {
+		let result = false;
+		if (value && (value >= 90 || value <= -90)) {
+			result = 'Latitude should be >= -90 and <= 90';
+		}
+		return result;
+	},
 	email: function(value) {
 		var self = this;
 
