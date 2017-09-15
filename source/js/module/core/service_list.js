@@ -186,6 +186,10 @@ const serviceList = {
 
 		serviceList.sendInvitationMessagesForEvent	= new Service('/i/schools/{schoolId}/events/{eventId}/players/messages/invite', binding);
 		serviceList.doGotItActionForEventMessage	= new Service('/i/schools/{schoolId}/events/messages/{messageId}/gotit', binding);
+		
+		//event message comments
+		serviceList.schoolEventMessageComments = new Service('/i/schools/{schoolId}/events/messages/{messageId}/comments', binding);
+		serviceList.schoolEventMessageCommentsCount = new Service('/i/schools/{schoolId}/events/messages/{messageId}/comments/count', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);
