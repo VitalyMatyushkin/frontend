@@ -73,15 +73,17 @@ const MessageListWrapper = React.createClass({
 		.set(`messages.${messageIndex}.isSyncComments`, false)
 		.commit();
 		
-		!isShowComments && window.Server.childrenEventMessageComments.get({messageId}).then(
-			comments => {
-				binding.atomically()
-				.set(`messages.${messageIndex}.comments`, 		Immutable.fromJS(comments))
-				.set(`messages.${messageIndex}.commentsCount`, 	comments.length)
-				.set(`messages.${messageIndex}.isSyncComments`, true)
-				.commit();
-			}
-		);
+		if (!isShowComments) {
+			window.Server.childrenEventMessageComments.get({messageId}).then(
+				comments => {
+					binding.atomically()
+					.set(`messages.${messageIndex}.comments`, 		Immutable.fromJS(comments))
+					.set(`messages.${messageIndex}.commentsCount`, 	comments.length)
+					.set(`messages.${messageIndex}.isSyncComments`, true)
+					.commit();
+				}
+			);
+		}
 	},
 	onClickSubmitComment: function(newCommentText, replyComment, messageId){
 		const 	binding 		= this.getDefaultBinding(),
