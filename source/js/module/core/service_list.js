@@ -226,6 +226,9 @@ const serviceList = {
 		serviceList.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
 		serviceList.childMessageReject = new Service('/i/children/events/messages/{messageId}/reject', binding);
 
+		//children event message comments
+		serviceList.childrenEventMessageComments = new Service('/i/children/events/messages/{messageId}/comments', binding);
+		serviceList.childrenEventMessageCommentsCount = new Service('/i/children/events/messages/{messageId}/comments/count', binding);
 		// new role student
 		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
