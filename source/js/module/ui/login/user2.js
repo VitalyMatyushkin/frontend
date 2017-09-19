@@ -22,8 +22,9 @@ const LoginUserPage = React.createClass({
 		}
 	},
 	getDefaultState: function () {
-		return Immutable.Map({
-			showError: false
+		return Immutable.fromJS({
+			showError:		false,
+			isRememberMe:	false
 		});
 	},
 	onSuccess: function() {
@@ -75,10 +76,12 @@ const LoginUserPage = React.createClass({
 				break;
 			case showError === false:
 				currentView = (
-					<LoginForm	customName	= {this.formName}
-								onError		= {this.showError}
-								onSuccess	= {this.onSuccess}
-								binding		= {this.getDefaultBinding()}
+					<LoginForm
+						customName			= { this.formName }
+						onError				= { this.showError }
+						onSuccess			= { this.onSuccess }
+						onChangeRememberMe	= { this.onChangeRememberMe }
+						binding				= { this.getDefaultBinding() }
 					/>
 				);
 				break;
@@ -89,14 +92,19 @@ const LoginUserPage = React.createClass({
 		const isFirstVisit = typeof this.getDefaultBinding().get('isFirstVisit') === 'undefined';
 		return isFirstVisit && bowser.mobile;
 	},
-	onClickWebVersion: function(){
+	onChangeRememberMe: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('isRememberMe', !binding.toJS('isRememberMe'));
+	},
+	onClickWebVersion: function() {
 		const binding = this.getDefaultBinding();
 		binding.set('isFirstVisit', false);
 	},
-	onClickIOSVersion: function (){
+	onClickIOSVersion: function () {
 		window.open(ApplicationConst.APPLICATION_LINKS.IOS);
 	},
-	onClickAndroidVersion: function (){
+	onClickAndroidVersion: function () {
 		window.open(ApplicationConst.APPLICATION_LINKS.ANDROID);
 	},
 	render: function() {

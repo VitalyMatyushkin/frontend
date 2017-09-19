@@ -53,9 +53,8 @@ UserDataClass.onChangeSessions = function (eventDescriptor) {
 			currentSessionsData.get('loginSession'),
 			previousSessionsData.get('loginSession')
 		): {
-			Helpers.cookie.set('loginSession', SessionHelper.getLoginSession(bindObject));
-			// TODO May be it should be a empty object
-			Helpers.SessionStorage.set('roleSession', undefined);
+			this.setLoginSessionToCookie();
+			Helpers.SessionStorage.remove('roleSession');
 			bindObject.withDisabledListener(
 				this.sessionListener,
 				() => SessionHelper.getRoleSessionBinding(bindObject).set(undefined)
@@ -76,6 +75,21 @@ UserDataClass.onChangeSessions = function (eventDescriptor) {
 	self.setupAjax(
 		SessionHelper.getActiveSessionBinding(bindObject)
 	);
+};
+
+UserDataClass.setLoginSessionToCookie = function () {
+	const	self		= this,
+			bindObject	= self.bindObject;
+
+	if(bindObject.toJS('isRememberMe')) {
+		Helpers.cookie.set(
+			'loginSession',
+			SessionHelper.getLoginSession(bindObject),
+			{ expires : 365 } // one year cookie. just count of days because js-cookie convert days to msec itself
+		);
+	} else {
+		Helpers.cookie.set('loginSession', SessionHelper.getLoginSession(bindObject));
+	}
 };
 
 /**

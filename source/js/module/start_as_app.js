@@ -122,30 +122,31 @@ function runManagerMode() {
 	userDataInstance.setBinding(binding.sub('userData'));
 	userRulesInstance.setBinding(binding.sub('userRules'));
 
-	// initializing all services (open too) only when we got all vars set in window.
-	// this is not too very brilliant idea, but there is no other way to fix it quick
-	// TODO: fix me
+	// TODO: initializing all services (open too) only when we got all vars set in window.
+	// TODO:this is not too very brilliant idea, but there is no other way to fix it quick
 	serviceList.initializeOpenServices();
-	// Enable servises
+
 	serviceList.initialize(
 		binding.sub('userData')
 	);
 
-	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize({
-		binding: binding
-	});
+	authController
+		.initialize({binding: binding})
+		.then(() =>{
+			// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 
-	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
-	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-	// Инициализация приложения
-	ReactDom.render(
-		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-		document.getElementById('jsMain')
-	);
+			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-	initTawkTo();
+			// Инициализация приложения
+			ReactDom.render(
+				React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+				document.getElementById('jsMain')
+			);
+
+			initTawkTo();
+		});
 }
 
 module.exports = runManagerMode;

@@ -99,7 +99,7 @@ const  RoleList = React.createClass({
 		this.roleBecome(roleName, school.kind);
 	},
 	roleBecome:function(roleName){
-		Auth.become(roleName);
+		Auth.become(roleName).then(() => window.location.reload());
 	},
 	renderRole:function(permission, active){
 		const	role			= permission.role,
@@ -107,12 +107,22 @@ const  RoleList = React.createClass({
 				schoolName		= role !== 'PARENT' && role !== 'STUDENT' ? permission.school.name : null;
 
 		return (
-			<div	key			={permission.id}
-					className	="eRole"
-					onClick		={active ? this.onSetRole.bind(null, role, permission.school) : null}
+			<div
+				key			= { permission.id }
+				className	= "eRole"
+				onClick		= { active ? this.onSetRole.bind(null, role, permission.school) : null }
 			>
-				<span className="eRole_schoolName" title={schoolName}>{schoolName}</span>
-				<span className="eRole_name">{roleClientView}</span>
+				<span
+					className	= "eRole_schoolName"
+					title		= { schoolName }
+				>
+					{ schoolName }
+				</span>
+				<span
+					className="eRole_name"
+				>
+					{ roleClientView }
+				</span>
 			</div>
 		);
 	},

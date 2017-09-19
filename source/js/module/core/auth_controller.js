@@ -1,6 +1,8 @@
-const	DomainHelper	= require('module/helpers/domain_helper'),
-		SessionHelper	= require('module/helpers/session_helper'),
-		propz			= require('propz');
+const	DomainHelper			= require('module/helpers/domain_helper'),
+		SessionHelper			= require('module/helpers/session_helper'),
+		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
+		Promise 				= require('bluebird'),
+		propz					= require('propz');
 
 const authСontroller = {
 	requestedPage:	undefined,
@@ -8,11 +10,40 @@ const authСontroller = {
 	initialize: function(options) {
 		this.saveRequestedPage(options);
 		this.initBinding(options);
-		this.redirectUserByUserAuthData();
 
-		SessionHelper.getSessionsDataBinding(
-			this.binding.sub('userData')
-		).addListener(this.handleUpdateUserAuthData.bind(this));
+		let initPromises = [];
+		if(this.hasUserOnlyOneLoginRole()) {
+			initPromises = this.becomeOneRole();
+		}
+
+		return Promise.resolve(initPromises).then(() => {
+			this.redirectUserByUserAuthData();
+
+			SessionHelper.getSessionsDataBinding(
+				this.binding.sub('userData')
+			).addListener(this.handleUpdateUserAuthData.bind(this));
+
+			return true;
+		});
+	},
+	hasUserOnlyOneLoginRole: function () {
+		return (
+			typeof SessionHelper.getLoginSession(this.binding.sub('userData')) !== 'undefined' &&
+			typeof SessionHelper.getRoleSession(this.binding.sub('userData')) === 'undefined'
+		);
+	},
+	/**
+	 * Function gets user role session if user has one role
+	 */
+	becomeOneRole: function () {
+		return window.Server.roles.get()
+			.then(roles => {
+				if(roles && roles.length == 1) {
+					return AuthorizationServices.become(roles[0].name);
+				} else {
+					return Promise.resolve(true);
+				}
+			});
 	},
 	saveRequestedPage: function(options) {
 		const isEmptyCurrentHash = document.location.hash === '';
@@ -62,14 +93,11 @@ const authСontroller = {
 			} else if (isUserOnRole) {								// When user under some role
 				if (typeof this.requestedPage === 'undefined') {
 					this.redirectToDefaultPage();
-					window.location.reload();
 				} else {
 					this.redirectToRequestedPage();
-					window.location.reload();
 				}
 			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
 				window.location.href = DomainHelper.getLoginUrl();
-				window.location.reload();
 			}
 		}
 	},
@@ -122,7 +150,7 @@ const authСontroller = {
 	 */
 	isPublicPage: function() {
 		const	self	= this,
-				path	= document.location.hash;
+				path	= window.location.hash;
 
 		return self.publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
