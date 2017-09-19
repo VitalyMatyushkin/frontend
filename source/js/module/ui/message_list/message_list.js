@@ -5,9 +5,13 @@ const	React								= require('react'),
 
 const MessageList = React.createClass({
 	propTypes: {
-		messages:		React.PropTypes.array.isRequired,
-		messageType:	React.PropTypes.string.isRequired,
-		onAction:		React.PropTypes.func.isRequired
+		messages:				React.PropTypes.array.isRequired,
+		messageType:			React.PropTypes.string.isRequired,
+		onAction:				React.PropTypes.func.isRequired,
+		user: 					React.PropTypes.object.isRequired,
+		onClickShowComments: 	React.PropTypes.func.isRequired,
+		onClickSubmitComment: 	React.PropTypes.func.isRequired,
+		checkComments: 			React.PropTypes.func.isRequired
 	},
 	renderMessages: function() {
 		let messages = null;
@@ -21,19 +25,27 @@ const MessageList = React.createClass({
 					case MessageConsts.MESSAGE_KIND.INVITATION:
 						return (
 							<EventInvitationMessage
-								key			= {message.id}
-								message		= {message}
-								type		= {this.props.messageType}
-								onAction	= {this.props.onAction}
+								key						= {message.id}
+								message					= {message}
+								type					= {this.props.messageType}
+								onAction				= {this.props.onAction}
+								user 					= {this.props.user}
+								onClickShowComments 	= {this.props.onClickShowComments}
+								onClickSubmitComment 	= {this.props.onClickSubmitComment}
+								checkComments 			= {this.props.checkComments}
 							/>
 						);
 					case MessageConsts.MESSAGE_KIND.REFUSAL:
 						return (
 							<EventParticipationRefusalMessage
-								key			= {message.id}
-								message		= {message}
-								type		= {this.props.messageType}
-								onAction	= {this.props.onAction}
+								key						= {message.id}
+								message					= {message}
+								type					= {this.props.messageType}
+								onAction				= {this.props.onAction}
+								user 					= {this.props.user}
+								onClickShowComments 	= {this.props.onClickShowComments}
+								onClickSubmitComment 	= {this.props.onClickSubmitComment}
+								checkComments 			= {this.props.checkComments}
 							/>
 						);
 				}

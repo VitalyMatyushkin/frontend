@@ -4,7 +4,7 @@ const	React			= require('react'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 
-const Message = React.createClass({
+const Venue = React.createClass({
 	propTypes: {
 		message: React.PropTypes.object.isRequired
 	},
@@ -23,4 +23,4 @@ const Message = React.createClass({
 	}
 });
 
-module.exports = Message;
+module.exports = Venue;

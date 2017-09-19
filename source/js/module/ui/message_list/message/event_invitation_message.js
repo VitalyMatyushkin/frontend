@@ -9,14 +9,37 @@ const	React							= require('react'),
 		Venue							= require('module/ui/message_list/message/components/venue'),
 		MessageStatus					= require('module/ui/message_list/message/components/message_status'),
 		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
+		EventMessageComments 			= require('module/ui/message_list/message/components/comments/event_message_comments'),
+		If 								= require('module/ui/if/if'),
 		Bootstrap						= require('styles/bootstrap-custom.scss'),
 		InviteStyles					= require('styles/pages/events/b_invite.scss');
 
 const EventInvitationMessage = React.createClass({
 	propTypes: {
-		message:	React.PropTypes.object.isRequired,
-		type:		React.PropTypes.string.isRequired,
-		onAction:	React.PropTypes.func.isRequired
+		message:				React.PropTypes.object.isRequired,
+		type:					React.PropTypes.string.isRequired,
+		onAction:				React.PropTypes.func.isRequired,
+		onClickShowComments: 	React.PropTypes.func.isRequired,
+		onClickSubmitComment: 	React.PropTypes.func.isRequired,
+		checkComments: 			React.PropTypes.func.isRequired
+	},
+	componentWillUnmount: function(){
+		clearInterval(this.timerID);
+	},
+	/**
+	 * Function start timer, which send request on server with count comment
+	 * If count don't equal old count, then call function with get comments
+	 */
+	componentWillReceiveProps: function(newProps){
+		if (Boolean(this.props.message.isShowComments) === false && Boolean(newProps.message.isShowComments) === true) {
+			this.timerID = setInterval(
+				() => this.props.checkComments(newProps.message.id),
+				30000
+			);
+		}
+		if (Boolean(this.props.message.isShowComments) === true && Boolean(newProps.message.isShowComments) === false) {
+			clearInterval(this.timerID);
+		}
 	},
 	onAccept: function() {
 		const	messageId	= this.props.message.id,
@@ -66,7 +89,23 @@ const EventInvitationMessage = React.createClass({
 				return null;
 		}
 	},
+	onClickShowComments: function(){
+		this.props.onClickShowComments(this.props.message.id);
+	},
+	onClickSubmitComment:function(newCommentText, replyComment){
+		this.props.onClickSubmitComment(newCommentText, replyComment, this.props.message.id);
+	},
 	render: function() {
+		const 	isShowComments = Boolean(this.props.message.isShowComments),
+				isSyncComments = Boolean(this.props.message.isSyncComments),
+				comments = typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
+		
+		let linkText;
+		if (isShowComments) {
+			linkText = 'Hide chat';
+		} else {
+			linkText = 'Chat';
+		}
 		return (
 			<div className='bInvite'>
 				<div className="row">
@@ -90,6 +129,9 @@ const EventInvitationMessage = React.createClass({
 								/>
 								{ this.renderButtons() }
 								{ this.renderStatus() }
+								<div className="eInviteDiscussionLink">
+									<a onClick = {this.onClickShowComments}>{ linkText }</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -99,6 +141,16 @@ const EventInvitationMessage = React.createClass({
 						/>
 					</div>
 				</div>
+				<If condition = { isShowComments }>
+					<div className="eInvite_comments">
+						<EventMessageComments
+							user			= {this.props.user}
+							comments		= {comments}
+							onSubmitComment	= {this.onClickSubmitComment}
+							isSyncComments 	= {isSyncComments}
+						/>
+					</div>
+				</If>
 			</div>
 		);
 	}

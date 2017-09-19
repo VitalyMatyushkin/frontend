@@ -186,6 +186,10 @@ const serviceList = {
 
 		serviceList.sendInvitationMessagesForEvent	= new Service('/i/schools/{schoolId}/events/{eventId}/players/messages/invite', binding);
 		serviceList.doGotItActionForEventMessage	= new Service('/i/schools/{schoolId}/events/messages/{messageId}/gotit', binding);
+		
+		//event message comments
+		serviceList.schoolEventMessageComments = new Service('/i/schools/{schoolId}/events/messages/{messageId}/comments', binding);
+		serviceList.schoolEventMessageCommentsCount = new Service('/i/schools/{schoolId}/events/messages/{messageId}/comments/count', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);
@@ -222,6 +226,9 @@ const serviceList = {
 		serviceList.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
 		serviceList.childMessageReject = new Service('/i/children/events/messages/{messageId}/reject', binding);
 
+		//children event message comments
+		serviceList.childrenEventMessageComments = new Service('/i/children/events/messages/{messageId}/comments', binding);
+		serviceList.childrenEventMessageCommentsCount = new Service('/i/children/events/messages/{messageId}/comments/count', binding);
 		// new role student
 		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
