@@ -1,5 +1,6 @@
-const 	log 		= require('loglevel'),
-		AJAX 		= require('module/core/AJAX');
+const 	log 			= require('loglevel'),
+		SessionHelper	= require('module/helpers/session_helper'),
+		AJAX 			= require('module/core/AJAX');
 
 
 /**
@@ -58,11 +59,14 @@ const ServiceConstructor = (function() {
 		 * @private
 		 */
 		_callService: function(type, options, data) {
-			let 	self 				= this,
-					url 				= self.url,
-					filter 				= options && options.filter || data && data.filter || '',
-					key 				='filter',
-					authorizationInfo 	= self.binding ? self.binding.toJS() : undefined;
+			let	self			= this,
+				url				= self.url,
+				filter			= options && options.filter || data && data.filter || '',
+				key				='filter';
+
+			const activeSession = typeof self.binding !== 'undefined' ?
+					SessionHelper.getActiveSession(self.binding) :
+					undefined;
 
 			if (self.requredParams) {
 				url = url.replace(/\{(.*?)\}/g, function(match, param) {
@@ -92,9 +96,9 @@ const ServiceConstructor = (function() {
 				dataType: 		'json',
 				contentType: 	'application/json',
 				beforeSend: function (xhr) {
-                    if (authorizationInfo && authorizationInfo.id) {
-                        const headerName = authorizationInfo.adminId ? "asid" : "usid";
-                        xhr.setRequestHeader(headerName, authorizationInfo.id);
+                    if (activeSession && activeSession.id) {
+                        const headerName = activeSession.adminId ? "asid" : "usid";
+                        xhr.setRequestHeader(headerName, activeSession.id);
                     }
 				}
 			}, true); // TODO: sanitize me

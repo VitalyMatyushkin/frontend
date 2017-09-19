@@ -1,13 +1,14 @@
-const 	React 		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable 	= require('immutable');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		SessionHelper	= require('module/helpers/session_helper');
 
 const SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
-			role = globalBinding.get('userData.authorizationInfo.role');
+			role = SessionHelper.getRoleFromSession(globalBinding.sub('userData'));
 
 		if(role) {
 			window.Server.getMaSchools.get(

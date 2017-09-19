@@ -3,6 +3,7 @@ const 	RouterView 					= require('module/core/router'),
 		React 						= require('react'),
 		Immutable 					= require('immutable'),
 		Morearty					= require('morearty'),
+		SessionHelper				= require('module/helpers/session_helper'),
 		SubMenu 					= require('module/ui/menu/sub_menu'),
 		SummaryPageComponent 		= require('module/as_manager/pages/school_admin/summary/summary_page'),
 		AdminStudentsPageComponent 	= require('module/as_manager/pages/school_admin/students/students_page'),
@@ -12,16 +13,12 @@ const 	RouterView 					= require('module/core/router'),
 		NewsPageComponent 			= require('module/as_manager/pages/school_admin/news/news_page'),
 		GalleryPageComponent 		= require('module/as_manager/pages/school_admin/gallery/gallery_page');
 
-
-
-
-
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		const 	self 			= this,
 				globalBinding 	= self.getMoreartyContext().getBinding(),
-				role 			= globalBinding.get('userData.authorizationInfo.role');
+				role 			= SessionHelper.getRoleFromSession(globalBinding.sub('userData'));
 
         if(!role)
             document.location.hash = 'settings/general';

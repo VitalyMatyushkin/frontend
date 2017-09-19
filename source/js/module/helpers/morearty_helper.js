@@ -1,3 +1,5 @@
+const SessionHelper = require('module/helpers/session_helper');
+
 /**
  * Return active school id
  * @param self - context(this) of react element that include morearty mixin
@@ -11,7 +13,9 @@ function getActiveSchoolId(self) {
  * @param self - context(this) of react element that include morearty mixin
  */
 function getLoggedInUserId(self) {
-    return self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+	return SessionHelper.getUserIdFromSession(
+		self.getMoreartyContext().getBinding().sub('userData')
+	);
 }
 
 const MoreartyHelper = {

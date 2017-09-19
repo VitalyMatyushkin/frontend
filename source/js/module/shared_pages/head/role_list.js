@@ -10,6 +10,7 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		DomainHelper	= require('module/helpers/domain_helper'),
 		RoleHelper		= require('module/helpers/role_helper'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		Auth			= require('module/core/services/AuthorizationServices');
 
 
@@ -75,7 +76,7 @@ const  RoleList = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding();
 
-		const	activeRoleName	= rootBinding.toJS('userData.authorizationInfo.role'),
+		const	activeRoleName	= SessionHelper.getRoleFromSession( rootBinding.sub('userData') ),
 				activeSchoolId	= rootBinding.toJS('userRules.activeSchoolId'),
 				permissions		= binding.toJS('permissions'),
 				arr				= permissions ? permissions.filter(p => p.role === activeRoleName):[];
@@ -163,10 +164,12 @@ const  RoleList = React.createClass({
 		window.location.hash = 'logout';
 	},
 	render: function() {
-		const	binding 	= this.getDefaultBinding(),
-				role        = this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role'),
-				listOpen    = binding.toJS('listOpen'),
-				show        = !!binding.toJS('permissions').length && !!role;
+		const	binding		= this.getDefaultBinding(),
+				role		= SessionHelper.getRoleFromSession(
+					this.getMoreartyContext().getBinding().sub('userData')
+				),
+				listOpen	= binding.toJS('listOpen'),
+				show		= !!binding.toJS('permissions').length && !!role;
 
 
 		return(

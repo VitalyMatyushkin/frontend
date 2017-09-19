@@ -4,6 +4,7 @@
 
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		SVG 			= require('module/ui/svg'),
 		GenderIcon		= require('module/ui/icons/gender_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
@@ -110,7 +111,7 @@ class StudentListClass{
 	}
 	
 	setAddButton(){
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		/**Only school admin and manager can add new students. All other users should not see that button.*/
@@ -123,7 +124,7 @@ class StudentListClass{
 	}
 	
 	setColumns(){
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.columns = [

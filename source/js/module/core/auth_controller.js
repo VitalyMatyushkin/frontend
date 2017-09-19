@@ -1,15 +1,18 @@
 const	DomainHelper	= require('module/helpers/domain_helper'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		propz			= require('propz');
 
 const authСontroller = {
-	requestedPage: undefined,
-	publicPages:['register', 'login', 'reset-request', 'reset'],
+	requestedPage:	undefined,
+	publicPages:	['register', 'login', 'reset-request', 'reset'],
 	initialize: function(options) {
 		this.saveRequestedPage(options);
 		this.initBinding(options);
 		this.redirectUserByUserAuthData();
 
-		this.binding.addListener('userData.authorizationInfo.id', this.handleUpdateUserAuthData.bind(this));
+		SessionHelper.getSessionsDataBinding(
+			this.binding.sub('userData')
+		).addListener(this.handleUpdateUserAuthData.bind(this));
 	},
 	saveRequestedPage: function(options) {
 		const isEmptyCurrentHash = document.location.hash === '';
@@ -75,10 +78,13 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isUserAuth: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const id = propz.get(data, ['id']);
+		const loginSession = SessionHelper.getLoginSession(
+			binding.sub('userData')
+		);
+
+		const id = propz.get(loginSession, ['id']);
 
 		return typeof id !== 'undefined';
 	},
@@ -87,26 +93,26 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isUserOnRole: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const	isBecome	= propz.get(data, ['isBecome']),
-				role		= propz.get(data, ['role']);
+		const hasUserRole = typeof SessionHelper.getRoleFromSession(binding.sub('userData')) !== 'undefined';
 
 		return	this.isUserAuth() &&
 				this.isRoleListExist() &&
-				typeof isBecome !== 'undefined' &&
-				typeof role !== 'undefined';
+				hasUserRole;
 	},
 	/**
 	 * Function returns true when user is Super Admin
 	 * @returns {boolean}
 	 */
 	isSuperAdmin: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const adminId = propz.get(data, ['adminId']);
+		const loginSession = SessionHelper.getLoginSession(
+			binding.sub('userData')
+		);
+
+		const adminId = propz.get(loginSession, ['adminId']);
 
 		return typeof adminId !== 'undefined';
 	},
@@ -115,8 +121,8 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isPublicPage: function() {
-		var self = this,
-			path = document.location.hash;
+		const	self	= this,
+				path	= document.location.hash;
 
 		return self.publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
@@ -133,18 +139,29 @@ const authСontroller = {
 	 * Function redirects to page default for current user role.
 	 */
 	redirectToDefaultPage: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
-			data.role.toLowerCase(),
-			this.getSchoolKind(data.role, binding.toJS('userData'))
+		const roleSession = SessionHelper.getRoleSession(
+			binding.sub('userData')
 		);
 
-		window.location.hash = defaultPageHash;
+		if(typeof roleSession !== 'undefined') {
+			const role = SessionHelper.getRoleFromSession(
+				binding.sub('userData')
+			);
 
-		// just in case
-		this.requestedPage = undefined;
+			const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
+				role.toLowerCase(),
+				this.getSchoolKind(role)
+			);
+
+			window.location.hash = defaultPageHash;
+
+			// just in case
+			this.requestedPage = undefined;
+		} else {
+			console.error('ERROR: There is no role session.');
+		}
 	},
 	/**
 	 * Function redirects to page default for superadmin.
@@ -218,7 +235,13 @@ const authСontroller = {
 		);
 	},
 	isFirstLogin: function() {
-		return typeof propz.get(this.binding.toJS('userData'), ['roleList']) === 'undefined';
+		const isRoleListExist = typeof propz.get(this.binding.toJS('userData'), ['roleList']) !== 'undefined';
+
+		const activeSchoolId = propz.get(this.binding.toJS('userRules'), ['activeSchoolId']);
+		// sometimes activeSchoolId is null
+		const isActiveSchoolExist = typeof activeSchoolId !== 'undefined' && typeof activeSchoolId === 'string';
+
+		return !isRoleListExist || !isActiveSchoolExist;
 	},
 	/**
 	 * Handler for user auth update event

@@ -9,6 +9,7 @@ const	RouterView						= require('module/core/router'),
 		AccountRolesComponent			= require("module/shared_pages/settings/account/account_roles"),
 		AccountRequestsComponent		= require("module/shared_pages/settings/account/request-list"),
 		Verification					= require('./verification/verification'),
+		SessionHelper					= require('module/helpers/session_helper'),
 		Notifications					= require('./notifications/notifications');
 
 const SettingsPage = React.createClass({
@@ -111,10 +112,14 @@ const SettingsPage = React.createClass({
 		return this.isEmailVerified() && this.isPhoneVerified();
 	},
 	isEmailVerified: function() {
-		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
+		return SessionHelper.getActiveSession(
+			this.getMoreartyContext().getBinding().sub('userData')
+		).verified.email;
 	},
 	isPhoneVerified: function() {
-		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.sms');
+		return SessionHelper.getActiveSession(
+			this.getMoreartyContext().getBinding().sub('userData')
+		).verified.sms;
 	},
 
 	render: function() {

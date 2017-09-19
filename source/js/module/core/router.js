@@ -1,8 +1,11 @@
-const 	Immutable 	= require('immutable'),
-		React 		= require('react'),
-		Router		= require('director'),
-		Bowser 		= require('bowser'),
-		Morearty	= require('morearty');
+const	Immutable 		= require('immutable'),
+		React 			= require('react'),
+		Router			= require('director'),
+		Bowser 			= require('bowser'),
+		SessionHelper	= require('module/helpers/session_helper'),
+		Helpers			= require('module/helpers/storage'),
+		propz			= require('propz'),
+		Morearty		= require('morearty');
 
 const RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -15,8 +18,10 @@ const RouterView = React.createClass({
 	 * do something strange with routing in case if user is authorized
 	 */
 	bindToAuthorization: function() {
-		const 	self 		= this,
-				authBinding = self.getDefaultBinding().sub('userData.authorizationInfo');
+		const	self		= this,
+				authBinding	= SessionHelper.getRoleSessionBinding(
+					self.getDefaultBinding().sub('userData')
+				);
 
 		function updateAuth() {
 			const data = authBinding.toJS();
@@ -197,6 +202,15 @@ const RouterView = React.createClass({
 		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
 
 	},
+	isLoginSessionValid: function () {
+		const loginSessionFromCookie = Helpers.cookie.get('loginSession');
+		const loginSessionFromBinding = SessionHelper.getLoginSession(
+			this.getDefaultBinding().sub('userData')
+		);
+
+		// Valid when login session in binding is equal login session in cookie
+		return propz.get(loginSessionFromCookie, ['id']) === propz.get(loginSessionFromBinding, ['id']);
+	},
 	componentWillMount: function() {
 		const 	self 	= this,
 				routes 	= self.normalizeAllRoutes(self.props.children);
@@ -241,6 +255,10 @@ const RouterView = React.createClass({
 		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
 			document.location = '#login';
+		}
+
+		if(!this.isLoginSessionValid()) {
+			window.location.reload();
 		}
 
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;

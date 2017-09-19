@@ -7,6 +7,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		GridModel 		= require('module/ui/grid/grid-model'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		RoleHelper 		= require('module/helpers/role_helper');
 
 /**
@@ -195,8 +196,10 @@ RequestListModel.prototype = {
 		};
 	},
 	setAddButton: function() {
-		const verified = this.rootBinding.toJS('userData.authorizationInfo.verified'),
-			changeAllowed = verified && verified.email && verified.sms;
+		const verified = SessionHelper.getActiveSession(
+			this.rootBinding.sub('userData')
+		).verified;
+		const changeAllowed = verified && verified.email && verified.sms;
 
 		/** Only verified users can add new requests. All other users should not see that button.*/
 		this.btnAdd = changeAllowed ?

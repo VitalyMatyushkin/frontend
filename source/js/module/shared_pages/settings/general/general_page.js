@@ -4,6 +4,7 @@ const	Form			= require('module/ui/form/form'),
 		React			= require('react'),
 		Morearty        = require('morearty'),
 		Immutable		= require('immutable'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		Bootstrap		= require('../../../../../styles/bootstrap-custom.scss');
 
 const USER = require('module/helpers/consts/user');
@@ -20,15 +21,21 @@ const GeneralSettingsPage = React.createClass({
 		});
 	},
 	submitEdit: function(data) {
-		const 	self 	= this,
-				binding	= self.getDefaultBinding(),
-				role 	= self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
+		const self = this;
+		const binding = self.getDefaultBinding();
+		const role = SessionHelper.getRoleFromSession(
+			self.getMoreartyContext().getBinding().sub('userData')
+		);
 
-		if(!data.birthday)
+		if(!data.birthday) {
 			data.birthday = null;
+		}
 
 		window.Server.profile.put(data).then(data => {
-			binding.set(Immutable.fromJS(data));
+			binding.set(
+				Immutable.fromJS(data)
+			);
+
 			if(role){
 				window.history.back();
 			}

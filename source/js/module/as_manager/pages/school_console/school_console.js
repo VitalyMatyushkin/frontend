@@ -21,6 +21,7 @@ const	React									= require('react'),
 		PlacesPage								= require('./views/places_page/places_page'),
 		NotificationsPage 						= require('./views/notifications_page/notifications_page'),
 
+		SessionHelper							= require('module/helpers/session_helper'),
 		MoreartyHelper							= require('module/helpers/morearty_helper');
 
 const SchoolConsole = React.createClass({
@@ -45,7 +46,7 @@ const SchoolConsole = React.createClass({
 	},
 	componentWillMount: function () {
 		const	rootBinding		= this.getMoreartyContext().getBinding(),
-				role 			= rootBinding.get('userData.authorizationInfo.role');
+				role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData'));
 
 		if(role !== "ADMIN" && role !== "MANAGER") {
 			document.location.hash = 'school_admin/summary';
@@ -67,7 +68,7 @@ const SchoolConsole = React.createClass({
 		this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
 	},
 	createSubMenu: function() {
-		const viewerRole = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+		const viewerRole = SessionHelper.getRoleFromSession(this.getMoreartyContext().getBinding().sub('userData'));
 
 		let requestFilter = {
 			status: 'NEW'
@@ -98,7 +99,7 @@ const SchoolConsole = React.createClass({
 	},
 	createSubMenuData: function(count) {
 		const	binding		= this.getDefaultBinding(),
-				viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+				viewerRole	= SessionHelper.getRoleFromSession(this.getMoreartyContext().getBinding().sub('userData'));
 
 		let menuItems = [{
 			href	: '/#school_console/users',

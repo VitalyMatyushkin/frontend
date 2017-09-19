@@ -2,15 +2,17 @@
  * Created by Anatoly on 10.04.2016.
  */
 
-const   StorageHelper 	= require('module/helpers/storage'),
-		Immutable   	= require('immutable'),
+const	StorageHelper	= require('module/helpers/storage'),
+		Immutable		= require('immutable'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		Promise 		= require('bluebird');
 
 /** Authorization Services */
 const AuthorizationServices ={
-    login: function(data){
-        const   service = window.Server._login,
-                binding = service.binding;
+	login: function(data){
+		const	service			= window.Server._login,
+				userDataBinding	= service.binding;
+
 		return service.post(data).then(
 			authData => {
 				if(authData.key) {
@@ -18,19 +20,23 @@ const AuthorizationServices ={
 						id: authData.key,
 						expireAt: authData.expireAt
 					};
-					if(authData.adminId)
+
+					if(authData.adminId) {
 						authInfo.adminId = authData.adminId;
-					else
+					} else {
 						authInfo.userId = authData.userId;
-				
-					binding.set(Immutable.fromJS(authInfo));
-					if(authData.userId){
+					}
+
+					SessionHelper.getLoginSessionBinding(
+						userDataBinding
+					).set(
+						Immutable.fromJS(authInfo)
+					);
+					if(authData.userId) {
 						return window.Server.roles.get().then(roles => {
-							if(roles && roles.length == 1){
+							if(roles && roles.length == 1) {
 								return AuthorizationServices.become(roles[0].name);
 							}
-							else
-								return AuthorizationServices.become('NOBODY');
 						});
 					}
 				
@@ -42,18 +48,18 @@ const AuthorizationServices ={
 				console.error(`Login failed: \nResponse text: ${error.xhr.responseText} \nStatus: ${error.xhr.status} \nStatus text: ${error.xhr.statusText}`);
 				return Promise.reject(error);
 			});
-    },
-    become:function(roleName){
-        const   service = window.Server._become,
-                binding = service.binding;
-		let authInfo;
+	},
+	become:function(roleName){
+		const	service			= window.Server._become,
+ 				userDataBinding	= service.binding;
+
+		let		authInfo;
 
 		return service.post(roleName).then(authData => {
 			if(authData.key) {
 				authInfo = {
 					id			: authData.key,
 					role		: authData.role,
-					isBecome	: true,
 					userId		: authData.userId,
 					expireAt	: authData.expireAt
 				};
@@ -64,18 +70,43 @@ const AuthorizationServices ={
 		}).then(profile => {
 			/** save verification status */
 			authInfo.verified = profile.verification && profile.verification.status;
-			binding.set(Immutable.fromJS(authInfo));
+			SessionHelper.getRoleSessionBinding(
+				userDataBinding
+			).set(
+				Immutable.fromJS(authInfo)
+			);
 			return authInfo;
 		});
     },
 	/** Clear authorization Info */
 	clear:function(){
-		const   service = window.Server._login,
+		this.removeSessionsForStorages();
+		this.setEmptyUserData();
+	},
+	/**
+	 * Function removes sessions for storages
+	 * - loginSession from cookie storage
+	 * - roleSession from session storage
+	 */
+	removeSessionsForStorages: function () {
+		StorageHelper.cookie.remove('loginSession');
+		StorageHelper.SessionStorage.remove('roleSession');
+	},
+	/**
+	 * Function set init state to userData binding
+	 * That contain some user data like and user sessions
+	 */
+	setEmptyUserData: function () {
+		const	service = window.Server._login,
 				binding = service.binding;
 
-		// clear authorizationInfo
-		StorageHelper.cookie.remove('authorizationInfo');
-		binding.clear();
+		binding.set(
+			Immutable.fromJS(
+				{
+					'sessions': SessionHelper.createSessionsObject(undefined,undefined)
+				}
+			)
+		);
 	}
 };
 

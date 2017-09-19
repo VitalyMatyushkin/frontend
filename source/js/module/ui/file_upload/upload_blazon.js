@@ -8,6 +8,7 @@ const   classNames  = require('classnames'),
         React       = require('react'),
         ReactDOM    = require('react-dom'),
         Morearty    = require('morearty'),
+	    SessionHelper	= require('module/helpers/session_helper'),
         $           = require('jquery');
 
 // TODO: delete me
@@ -63,12 +64,19 @@ const BlazonUpload = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         var file = e.target.files[0];
         ReactDOM.findDOMNode(self.refs.imageChanged).innerText = 'Processing...';
-        if(currentAction === 'add'){
-            window.Server.addAlbum.post(rootBinding.get('userData.authorizationInfo.userId'), {
-                name: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
-                description: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
-                eventId: rootBinding.get('userData.authorizationInfo.userId')
-            }).then(function(res){
+        if(currentAction === 'add') {
+			const userId = SessionHelper.getUserIdFromSession(
+				rootBinding.sub('userData')
+			);
+
+			window.Server.addAlbum.post(
+				userId,
+				{
+					name:			`blazon_${userId}_staging`,
+					description:	`blazon_${userId}_staging`,
+					eventId:		userId
+            	}
+            ).then(function(res){
                 albumDetails=res;
                 var formData = new FormData(),
                     uri = window.apiBase + '/storage/sqt_album_1433792142221_a340185653dd693a37c8a502_staging',
@@ -146,11 +154,14 @@ const BlazonUpload = React.createClass({
         }
     },
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            userId = rootBinding.get('userData.authorizationInfo.userId'),
-            isOwner = userId !== binding.get('ownerId');
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				rootBinding	= self.getMoreartyContext().getBinding();
+
+		const userId = SessionHelper.getUserIdFromSession(
+			rootBinding.sub('userData')
+		);
+		const isOwner = userId !== binding.get('ownerId');
 
         return <div className="bAlbums_list">
             <If condition={isOwner}>

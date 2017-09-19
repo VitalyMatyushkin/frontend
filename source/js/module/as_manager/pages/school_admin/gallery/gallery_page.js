@@ -1,8 +1,9 @@
 
-const   React       = require('react'),
-        Immutable   = require('immutable'),
-        Morearty	= require('morearty'),
-        Album	    = require('module/ui/gallery/album/album_item');
+const   React       	= require('react'),
+        Immutable   	= require('immutable'),
+        Morearty		= require('morearty'),
+	    SessionHelper	= require('module/helpers/session_helper'),
+        Album	    	= require('module/ui/gallery/album/album_item');
 
 const GalleryListPage = React.createClass({
     mixins:[Morearty.Mixin],
@@ -15,8 +16,8 @@ const GalleryListPage = React.createClass({
         var self 			= this,
             rootBinding 	= self.getMoreartyContext().getBinding(),
             activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
-            userId 			= rootBinding.get('userData.authorizationInfo.userId'),
-			role 			= rootBinding.get('userData.authorizationInfo.role');
+			role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData'));
+
 		if(role !== "ADMIN" && role !== "MANAGER")
 			document.location.hash = 'school_admin/summary';
 		else

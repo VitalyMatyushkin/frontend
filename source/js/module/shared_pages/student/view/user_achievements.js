@@ -4,7 +4,8 @@
 const   React           = require('react'),
 		EventRivals 	= require('./event-rivals'),
         Morearty        = require('morearty'),
-        Immutable       = require('immutable');
+        Immutable       = require('immutable'),
+	    SessionHelper	= require('module/helpers/session_helper');
 
 const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
@@ -42,7 +43,7 @@ const UserAchievements = React.createClass({
 		const   self 		= this,
 			rootBinding = self.getMoreartyContext().getBinding();
 
-		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 		= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
 				isParent 	= role === "PARENT";
 		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
 

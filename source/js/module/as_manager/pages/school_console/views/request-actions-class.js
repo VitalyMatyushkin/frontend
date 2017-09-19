@@ -7,6 +7,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		Morearty		= require('morearty'),
 		Lazy 			= require('lazy.js'),
 		GridModel 		= require('module/ui/grid/grid-model'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		RoleHelper 		= require('module/helpers/role_helper');
 
 /**
@@ -26,7 +27,7 @@ class RequestActionsClass {
 		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 		
 		// getting viewer role, because MANAGER will not obtain ADMIN's requests
-		this.viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+		this.viewerRole	= SessionHelper.getRoleFromSession(this.getMoreartyContext().getBinding().sub('userData'));
 		
 		this.updateSubMenu();
 		

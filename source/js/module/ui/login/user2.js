@@ -7,6 +7,7 @@ const	React				= require('react'),
 		RoleSelector		= require('../../as_login/pages/RoleSelector'),
 		ApplicationLinks 	= require('../../ui/application_links/application_links'),
 		ApplicationConst	= require('module/helpers/consts/application_links'),
+		SessionHelper		= require('module/helpers/session_helper'),
 		SVG					= require('../../ui/svg');
 
 const LoginUserPage = React.createClass({
@@ -25,16 +26,16 @@ const LoginUserPage = React.createClass({
 			showError: false
 		});
 	},
-	onSuccess: function(data) {
-		if(data.id) {
+	onSuccess: function() {
+		if(this.isAuthorized()) {
 			this.setPermissions();
 		}
 	},
 	showError: function() {
-		if(!this.isAuthorized()) {
-			this.getDefaultBinding().set('showError', true);
-		} else{
+		if(this.isAuthorized()) {
 			this.setPermissions();
+		} else{
+			this.getDefaultBinding().set('showError', true);
 		}
 	},
 	hideError: function() {
@@ -51,7 +52,9 @@ const LoginUserPage = React.createClass({
 		return window.Server.roles.get().then(roleList => binding.set('__allPermissions', roleList));
 	},
 	isAuthorized: function() {
-		return typeof this.getDefaultBinding().toJS("authorizationInfo.userId") !== 'undefined';
+		return typeof SessionHelper.getUserIdFromSession(
+			this.getDefaultBinding()
+		) !== 'undefined';
 	},
 	renderCurrentView: function(){
 		let currentView;

@@ -7,6 +7,7 @@ const	SchoolApplicationView		= require('./as_school/application'),
 		cookiePopupData 			= require('module/data/cookie_popup_data'),
 		authController 				= require('module/core/auth_controller'),
 		initTawkTo					= require('module/tawk_to/tawk_to'),
+		SessionHelper				= require('module/helpers/session_helper'),
 		Immutable					= require('immutable'),
 		ReactDom 					= require('react-dom'),
 		React 						= require('react'),
@@ -106,7 +107,9 @@ function initMainSchoolView(school) {
 	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
@@ -211,7 +214,9 @@ function initMainSchoolUnionView(school) {
 	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));

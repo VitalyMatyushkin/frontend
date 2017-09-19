@@ -11,6 +11,7 @@ const	ApplicationView 	= require('module/as_invite/application'),
 		authController 		= require('module/core/auth_controller'),
 		serviceList 		= require('module/core/service_list'),
 		initTawkTo			= require('module/tawk_to/tawk_to'),
+		SessionHelper		= require('module/helpers/session_helper'),
 		Morearty			= require('morearty'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react');
@@ -129,7 +130,9 @@ function runInviteMode() {
 	// TODO: fix me
 	serviceList.initializeOpenServices();
 	// Enable servises
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 	
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	/*authController.initialize({

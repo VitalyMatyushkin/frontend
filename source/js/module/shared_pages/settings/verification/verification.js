@@ -1,19 +1,23 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		SessionHelper		= require('module/helpers/session_helper'),
 		VerificationStep	= require('./../../../ui/register/user/verification_step');
 
 const Verification = React.createClass({
 	mixins: [Morearty.Mixin],
 
+	getUserDataBinding: function () {
+		return this.getMoreartyContext().getBinding().toJS('userData');
+	},
 	getEmail: function() {
-		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.email');
+		return SessionHelper.getLoginSession( this.getUserDataBinding() ).email;
 	},
 	isErrorEmailVerification: function() {
 		return !!this.getDefaultBinding().toJS('isErrorEmailVerification');
 	},
 	getPhone: function() {
-		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.phone');
+		return SessionHelper.getLoginSession( this.getUserDataBinding() ).phone;
 	},
 	isErrorPhoneVerification: function() {
 		return !!this.getDefaultBinding().toJS('isErrorPhoneVerification');
@@ -42,7 +46,7 @@ const Verification = React.createClass({
 	handleClickConfirmEmail: function (emailCode) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
-				verificationBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
+				verificationBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).sub('verification');
 
 		binding.set('isSync', false);
 
@@ -63,7 +67,7 @@ const Verification = React.createClass({
 	handleClickConfirmPhone: function (phoneCode) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
-				verificationBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
+				verificationBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).sub('verification');
 
 		binding.set('isSync', false);
 
@@ -96,10 +100,10 @@ const Verification = React.createClass({
 			});
 	},
 	handleSuccessEmailChange: function(newEmail) {
-		const	self						= this,
-				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
+		const	self					= this,
+				activeSessionBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() );
 
-		authorizationInfoBinding.set('email', Immutable.fromJS(newEmail));
+		activeSessionBinding.set('email', Immutable.fromJS(newEmail));
 		this.forceUpdate();
 	},
 	handleClickResendPhone: function() {
@@ -117,17 +121,17 @@ const Verification = React.createClass({
 			});
 	},
 	handleSuccessPhoneChange: function(newPhone) {
-		const	self						= this,
-				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
+		const	self					= this,
+				activeSessionBinding	= SessionHelper.getLoginSessionBinding(this.getUserDataBinding());
 
-		authorizationInfoBinding.set('phone', Immutable.fromJS(newPhone));
+		activeSessionBinding.set('phone', Immutable.fromJS(newPhone));
 		this.forceUpdate();
 	},
 	isEmailVerified: function() {
-		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
+		return !!SessionHelper.getLoginSession( this.getUserDataBinding() ).email;
 	},
 	isPhoneVerified: function() {
-		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.sms');
+		return !!SessionHelper.getLoginSession( this.getUserDataBinding() ).sms;
 	},
 
 	render: function() {

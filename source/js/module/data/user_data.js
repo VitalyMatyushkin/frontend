@@ -1,35 +1,81 @@
 const	DataPrototype	= require('module/data/data_prototype'),
+		Immutable		= require('immutable'),
 		UserDataClass	= Object.create(DataPrototype),
 		Helpers			= require('module/helpers/storage'),
-		propz			= require('propz'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		$				= require('jquery');
 
-/**
- * Getting initial state of UserData
- */
+UserDataClass.sessionListener = undefined;
+
 UserDataClass.getDefaultState = function () {
+	const loginSession = Helpers.cookie.get('loginSession');
+	let roleSession = Helpers.SessionStorage.get('roleSession');
+
+	if(
+		typeof loginSession === 'undefined' &&
+		typeof roleSession !== 'undefined'
+	) {
+		roleSession = undefined;
+		Helpers.SessionStorage.remove('roleSession');
+	}
+
 	return {
-		authorizationInfo:	Helpers.SessionStorage.get('authorizationInfo')
+		sessions: SessionHelper.createSessionsObject(
+			loginSession,
+			roleSession
+		)
 	};
 };
 
-/**
- * Binding to data update in UserData
- */
 UserDataClass.initBind = function () {
-	const	self = this,
-			bindObject = self.bindObject;
+	const	self		= this,
+			bindObject	= self.bindObject;
 
-	self._ajaxSetup(bindObject);
-	// Keeping authorization data
-	bindObject.addListener('authorizationInfo', function () {
-		const	authorizationInfo	= bindObject.toJS('authorizationInfo');
+	self.setupAjax(
+		SessionHelper.getActiveSessionBinding(bindObject)
+	);
+	bindObject.addListener('sessions', self.onChangeSessions.bind(self));
+};
 
-		if(typeof authorizationInfo !== 'undefined') {
-			self.setAuthData(authorizationInfo);
+UserDataClass.onChangeSessions = function (eventDescriptor) {
+	const	self		= this,
+			bindObject	= self.bindObject;
+
+	const	currentSessionsData		= eventDescriptor.getCurrentValue(),
+			previousSessionsData	= eventDescriptor.getPreviousValue();
+
+	switch (true) {
+		// If login session was changed then we should:
+		// 1) update login session in cookie
+		// 2) remove role session in session storage
+		// 3) remove role session in user data binding
+		case !Immutable.is(
+			currentSessionsData.get('loginSession'),
+			previousSessionsData.get('loginSession')
+		): {
+			Helpers.cookie.set('loginSession', SessionHelper.getLoginSession(bindObject));
+			// TODO May be it should be a empty object
+			Helpers.SessionStorage.set('roleSession', undefined);
+			bindObject.withDisabledListener(
+				this.sessionListener,
+				() => SessionHelper.getRoleSessionBinding(bindObject).set(undefined)
+			);
+			break;
 		}
-		self._ajaxSetup(bindObject);
-	});
+		// If role session was changed then we should:
+		// 1) update role session in session storage
+		case !Immutable.is(
+			currentSessionsData.get('roleSession'),
+			previousSessionsData.get('roleSession')
+		): {
+			Helpers.SessionStorage.set('roleSession', SessionHelper.getRoleSession(bindObject));
+			break;
+		}
+	}
+
+	self.setupAjax(
+		SessionHelper.getActiveSessionBinding(bindObject)
+	);
 };
 
 /**
@@ -37,36 +83,24 @@ UserDataClass.initBind = function () {
  * @param binding
  * @private
  */
-UserDataClass._ajaxSetup = function (binding){
-	const authorizationInfo = binding.toJS('authorizationInfo');
+UserDataClass.setupAjax = function (sessionBinding) {
+	const session = sessionBinding.toJS();
 
-	if(authorizationInfo){
-		const	h		= authorizationInfo.adminId ? "asid" : "usid",
-				options	= {headers:{}};
-
-		options.headers[h] = authorizationInfo.id;
+	if(typeof session !== 'undefined') {
+		const	usid	= session.adminId ? "asid" : "usid",
+				options	= { headers:{} };
+		options.headers[usid] = session.id;
 
 		// A function to be called when the request finishes (after success and error callbacks are executed).
 		// If status request is unauthorized, then remove session information.
-		options.complete = jqXHR => jqXHR.status === 401 && binding.sub('authorizationInfo').clear();
+		options.complete = jqXHR => {
+			jqXHR.status === 401 && sessionBinding.clear();
+		};
+
 		$.ajaxSetup(options);
+	} else {
+		$.ajaxSetup({});
 	}
-};
-
-UserDataClass.isValidAuthorizationInfo = function (authorizationInfo) {
-	const	id			= propz.get(authorizationInfo, ['id']),
-			userId		= propz.get(authorizationInfo, ['userId']),
-			expireAt	= propz.get(authorizationInfo, ['expireAt']);
-
-	return (
-		typeof id === 'string' &&
-		typeof userId === 'string' &&
-		typeof expireAt === 'string'
-	);
-};
-
-UserDataClass.setAuthData = function (authData) {
-	Helpers.SessionStorage.set('authorizationInfo', authData);
 };
 
 module.exports = UserDataClass;

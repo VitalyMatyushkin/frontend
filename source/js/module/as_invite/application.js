@@ -9,6 +9,7 @@ const 	PhoneVerification 	= require('module/ui/phone_verification/phone_verifica
 		Page404 			= require('module/ui/404_page'),
 		Button 				= require('module/ui/button/button'),
 		NotificationAlert 	= require('module/ui/notification_alert/notification_alert'),
+		SessionHelper		= require('module/helpers/session_helper'),
 		ConfirmAlert 		= require('module/ui/confirm_alert/confirm_alert');
 
 const domainHelper = require('module/helpers/domain_helper');
@@ -24,14 +25,14 @@ const Application = React.createClass({
 		if (inviteKey !== '') {
 			window.Server.invite.post(inviteKey).then(response => {
 				const sessionKey = propz.get(response, ['session', 'key']);
-				
+
+				const	userDataBinding		= binding.sub('userData'),
+						activeSessionName	= SessionHelper.getActiveSessionName(userDataBinding);
 				binding.atomically()
-					.set('inviteData', Immutable.fromJS(response))
-					.set('userData.authorizationInfo', Immutable.fromJS({
-						id: sessionKey
-					}))
-					.set('isSync', true)
-					.set('isInviteData', true)
+					.set('inviteData',						Immutable.fromJS(response))
+					.set(`userData.${activeSessionName}`,	Immutable.fromJS( {id: sessionKey} ))
+					.set('isSync',							true)
+					.set('isInviteData',					true)
 					.commit();
 				
 			},
