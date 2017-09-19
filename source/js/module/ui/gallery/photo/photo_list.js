@@ -25,7 +25,7 @@ const PhotoList = React.createClass({
         return (
             <Photo  binding={photoBinding} key={'photo-' + photoId}
                     onPhotoClick={self.onPhotoClick}
-                    onPhotoDelete={self.reloadPhotoList}
+                    reloadPhotoList={self.reloadPhotoList}
                     onPhotoPin={self.onPhotoPin}
                     service = {self.service}
             />
@@ -56,7 +56,7 @@ const PhotoList = React.createClass({
 				binding = self.getDefaultBinding(),
 				albumId = binding.get('id');
 
-        this.service.photos.get(albumId,{filter:{limit: 100}}).then(function(res){
+        return this.service.photos.get(albumId,{filter:{limit: 100}}).then(function(res){
             binding
                 .atomically()
                 .set('photos', Immutable.fromJS(res))
