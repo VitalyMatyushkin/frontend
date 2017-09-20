@@ -4,19 +4,26 @@
 const	React			= require('react'),
 		DomainHelper	= require('../../helpers/domain_helper'),
 		Auth			= require('../../core/services/AuthorizationServices'),
-		Morearty    	= require('morearty'),
-		SchoolHelper 	= require('module/helpers/school_helper'),
+		SchoolHelper	= require('module/helpers/school_helper'),
 		RSC				= require('./RoleSelectorComponent');
 
 const RoleSelector = React.createClass({
-	mixins: [Morearty.Mixin],
+	propTypes: {
+		availableRoles: React.PropTypes.array.isRequired
+	},
 	componentWillMount:function() {
 		const availableRoles = this.props.availableRoles;
 
 		if(availableRoles.length == 1) {
-			DomainHelper.redirectToStartPage(availableRoles[0].name, this.getSchoolKindFromRole(availableRoles[0]));
+			DomainHelper.redirectToStartPage(
+				availableRoles[0].name,
+				this.getSchoolKindFromRole(availableRoles[0])
+			);
 		} else if(availableRoles.length === 0) {
-			DomainHelper.redirectToStartPage('no_body', undefined);
+			DomainHelper.redirectToStartPage(
+				'no_body',
+				undefined
+			);
 		}
 	},
 	onRoleSelected: function(role) {
@@ -27,18 +34,29 @@ const RoleSelector = React.createClass({
 	 * @param role
 	 */
 	getSchoolKindFromRole: function(role) {
-		const 	activeSchoolId 		= SchoolHelper.getActiveSchoolId(this),
-				activeSchoolIndex 	= role.permissions.findIndex(permission => {
+		const	activeSchoolId		= SchoolHelper.getActiveSchoolId(this),
+				activeSchoolIndex	= role.permissions.findIndex(permission => {
 					return permission.schoolId === activeSchoolId;
 				});
+
 		return activeSchoolIndex === -1 ? role.permissions[0].school.kind : role.permissions[activeSchoolIndex].school.kind;
 	},
-	render: function(){
+	render: function() {
 		const availableRoles = this.props.availableRoles;
-		if(availableRoles.length > 1) {	// not drawing roles if there is only one. It will be selected automatically
-			return <RSC availableRoles={availableRoles} onRoleSelected={this.onRoleSelected}/>;
+
+		let content = null;
+
+		// not drawing roles if there is only one. It will be selected automatically
+		if(availableRoles.length > 1) {
+			content = (
+				<RSC
+					availableRoles	= { availableRoles }
+					onRoleSelected	= { this.onRoleSelected }
+				/>
+			);
 		}
-		return null;
+
+		return content;
 	}
 });
 

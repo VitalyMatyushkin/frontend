@@ -1,9 +1,9 @@
 /**
  * Created by vitaly on 12.09.17.
  */
-const 	React 			= 	require('react'),
-		Morearty 		= 	require('morearty'),
-		PostcodeForm 	= 	require('module/as_admin/pages/admin_schools/postcodes/postcode_form');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		PostcodeForm	= require('module/as_admin/pages/admin_schools/postcodes/postcode_form');
 
 const PostcodeAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,10 +13,10 @@ const PostcodeAddPage = React.createClass({
 	submitAdd: function(data) {
 		data.point.lng = Number(data.point.lng);
 		data.point.lat = Number(data.point.lat);
-		console.log(data);
+
 		window.Server.postCodes.post(data).then( () => {
 			document.location.hash = this.FORM_URL;
-		}).catch( (err) => {
+		}).catch(() => {
 			document.location.hash = this.FORM_URL;
 		});
 	},

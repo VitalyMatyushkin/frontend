@@ -212,8 +212,8 @@ const RouterView = React.createClass({
 		return propz.get(loginSessionFromCookie, ['id']) === propz.get(loginSessionFromBinding, ['id']);
 	},
 	componentWillMount: function() {
-		const 	self 	= this,
-				routes 	= self.normalizeAllRoutes(self.props.children);
+		const	self	= this,
+				routes	= self.normalizeAllRoutes(self.props.children);
 
 		self.isAuthorized 		= false;
 		self.RoutingBinding 	= self.props.routes;
@@ -248,12 +248,15 @@ const RouterView = React.createClass({
 
 	},
 	render: function() {
-		const 	self 			= this,
-				currentPath 	= self.currentPath,
-				siteComponent 	= self.siteComponents[currentPath];
+		const	self			= this,
+				currentPath		= self.currentPath,
+				siteComponent	= self.siteComponents[currentPath];
 
 		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
-		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
+		if (
+			document.location.href.indexOf('#') === -1 ||
+			document.location.hash === ''
+		) {
 			document.location = '#login';
 		}
 

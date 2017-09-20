@@ -130,15 +130,13 @@ function runManagerMode() {
 		binding.sub('userData')
 	);
 
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
+
+	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController
 		.initialize({binding: binding})
-		.then(() =>{
-			// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-
-
-			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
-			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
-
+		.then(() => {
 			// Инициализация приложения
 			ReactDom.render(
 				React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
