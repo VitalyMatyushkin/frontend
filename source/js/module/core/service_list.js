@@ -50,6 +50,10 @@ const serviceList = {
 		serviceList.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
 		serviceList.schoolSport = new Service('/i/schools/{schoolId}/sports/{sportId}', binding);
 
+		// clubs
+		serviceList.schoolClubs = new Service('/i/schools/{schoolId}/clubs', binding);
+		serviceList.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
+
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
 		serviceList.schoolPlace = new Service('/i/schools/{schoolId}/places/{placeId}', binding);
