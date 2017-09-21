@@ -21,8 +21,11 @@ const LoginPublicSchoolPage = React.createClass({
 				break;
 			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['PUBLIC_AVAILABLE']:
 				// if it wasn't protected, we will redirect user to the page which he request
-				if (typeof binding.toJS('hash') !== 'undefined' && binding.toJS('hash') !== '') {
-					document.location.hash = binding.toJS('hash');
+				if (
+					typeof binding.toJS('hashOfRedirectPageAfterLogin') !== 'undefined' &&
+					binding.toJS('hashOfRedirectPageAfterLogin') !== ''
+				) {
+					document.location.hash = binding.toJS('hashOfRedirectPageAfterLogin');
 				} else {
 					document.location.hash = 'home';
 				}
@@ -43,8 +46,11 @@ const LoginPublicSchoolPage = React.createClass({
 		).then(response => {
 			if(response.isMatch) {
 					//if user enter correct password we will redirect user to the page which he request
-					if (typeof binding.toJS('hash') !== 'undefined' && binding.toJS('hash') !== '') {
-						document.location.hash = binding.toJS('hash');
+					if (
+						typeof binding.toJS('hashOfRedirectPageAfterLogin') !== 'undefined' &&
+						binding.toJS('hashOfRedirectPageAfterLogin') !== ''
+					) {
+						document.location.hash = binding.toJS('hashOfRedirectPageAfterLogin');
 					} else {
 						document.location.hash = 'home';
 					}

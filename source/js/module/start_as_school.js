@@ -50,7 +50,7 @@ function initMainSchoolView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			loginPublicSchool: {
-				hash: ''
+				hashOfRedirectPageAfterLogin: 'home'
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,
@@ -96,9 +96,7 @@ function initMainSchoolView(school) {
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding:		binding,
-		defaultPath:	'loginPublicSchool',
-		requestedPage:	'loginPublicSchool',
-		asSchool:		true //Flag for public school page
+		asPublicSchool:	true
 	});
 
 	// initializing all services (open too) only when we got all vars set in window.
@@ -157,7 +155,7 @@ function initMainSchoolUnionView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			loginPublicSchool: {
-
+				hashOfRedirectPageAfterLogin: 'home'
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,
@@ -203,9 +201,7 @@ function initMainSchoolUnionView(school) {
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding:		binding,
-		defaultPath:	'loginPublicSchool',
-		requestedPage:	'loginPublicSchool',
-		asSchool:		true //Flag for public school page
+		asPublicSchool:	true
 	});
 
 	// initializing all services (open too) only when we got all vars set in window.
