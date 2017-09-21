@@ -113,7 +113,13 @@ ClubListModel.prototype.createGrid = function(){
 				)
 		},
 		columns:this.columns,
-		handleClick: this.props.handleClick
+		handleClick: this.props.handleClick,
+		filters: {
+			limit: 100,
+			where: {
+				status: "ACTIVE"
+			}
+		}
 	});
 
 	this.dataLoader = new DataLoader({

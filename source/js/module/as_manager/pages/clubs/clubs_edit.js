@@ -33,7 +33,7 @@ const ClubEditPage = React.createClass({
 		}
 	},
 	redirectToClubListPage: function () {
-		document.location.hash = 'clubs/clubsList';
+		document.location.hash = 'clubs/clubList';
 	},
 	submitEdit: function(data) {
 		window.Server.schoolClub.put(

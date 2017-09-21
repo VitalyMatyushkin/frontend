@@ -9,7 +9,7 @@ const ClubAddPage = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
 	redirectToClubListPage: function () {
-		document.location.hash = 'clubs/clubsList';
+		document.location.hash = 'clubs/clubList';
 	},
 	submitAdd: function(data) {
 		window.Server.schoolClubs.post(
