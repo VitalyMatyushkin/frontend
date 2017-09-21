@@ -1076,16 +1076,12 @@ const Event = React.createClass({
 	removeSchoolFromEventBySchoolId: function(schoolId) {
 		const event = this.getDefaultBinding().toJS('model');
 
-		event.invitedSchoolIds.splice(
-			event.invitedSchoolIds.findIndex(_schoolId => _schoolId === schoolId),
-			1
-		);
-		return window.Server.schoolEvent.put(
+		return window.Server.schoolEventOpponents.delete(
 			{
 				schoolId:	this.props.activeSchoolId,
 				eventId:	event.id
 			}, {
-				invitedSchoolIds: event.invitedSchoolIds
+				invitedSchoolIds: [schoolId]
 			}
 		);
 	},
