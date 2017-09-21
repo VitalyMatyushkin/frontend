@@ -3,18 +3,37 @@ const	DataPrototype	= require('module/data/data_prototype'),
 		UserDataClass	= Object.create(DataPrototype),
 		Helpers			= require('module/helpers/storage'),
 		SessionHelper	= require('module/helpers/session_helper'),
+		propz			= require('propz'),
 		$				= require('jquery');
 
 UserDataClass.sessionListener = undefined;
 
 UserDataClass.getDefaultState = function () {
-	const loginSession = Helpers.cookie.get('loginSession');
+	let loginSession = Helpers.cookie.get('loginSession');
 	let roleSession = Helpers.SessionStorage.get('roleSession');
 
 	if(
 		typeof loginSession === 'undefined' &&
 		typeof roleSession !== 'undefined'
 	) {
+		roleSession = undefined;
+		Helpers.SessionStorage.remove('roleSession');
+	}
+
+	console.log('LOGIN SESSION');
+	console.log(loginSession);
+
+	console.log('ROLE SESSION');
+	console.log(roleSession);
+
+	if(!this.isValidSession(loginSession)) {
+		console.log('LOGIN SESSION WAS BROKEN');
+		loginSession = undefined;
+		Helpers.cookie.remove('loginSession');
+	}
+
+	if(!this.isValidSession(roleSession)) {
+		console.log('ROLE SESSION WAS BROKEN');
 		roleSession = undefined;
 		Helpers.SessionStorage.remove('roleSession');
 	}
@@ -100,6 +119,9 @@ UserDataClass.setLoginSessionToCookie = function () {
 UserDataClass.setupAjax = function (sessionBinding) {
 	const session = sessionBinding.toJS();
 
+	console.log("AJAX SESSION");
+	console.log(session);
+
 	if(typeof session !== 'undefined') {
 		const	usid	= session.adminId ? "asid" : "usid",
 				options	= { headers:{} };
@@ -115,6 +137,18 @@ UserDataClass.setupAjax = function (sessionBinding) {
 	} else {
 		$.ajaxSetup({});
 	}
+};
+
+UserDataClass.isValidSession = function (session) {
+	const	id			= propz.get(session, ['id']),
+			userId		= propz.get(session, ['userId']),
+			expireAt	= propz.get(session, ['expireAt']);
+
+	return (
+		typeof id === 'string' &&
+		typeof userId === 'string' &&
+		typeof expireAt === 'string'
+	);
 };
 
 module.exports = UserDataClass;
