@@ -83,11 +83,16 @@ const SchoolsManager = React.createClass({
 		return name;
 	},
 	onSelectInterSchoolsRival: function (order, id, model) {
-		const binding	= this.getDefaultBinding();
+		const 	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
 			const rival = new InterSchoolsRivalModel(model);
-			binding.set(`rivals.${order}`, Immutable.fromJS(rival));
+			if(TeamHelper.isMultiparty(event)) {
+				binding.set(`rivals.${order}`, Immutable.fromJS(rival));
+			} else {
+				binding.set(`rivals.1`, Immutable.fromJS(rival));
+			}
 		}
 	},
 	onClickRemoveRivalSchool: function(rivalIndex) {
