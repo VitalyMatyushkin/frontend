@@ -146,6 +146,14 @@ const Head = React.createClass({
 				routes			: ['/events/:subPage'],
 				authorization	: true,
 				verified		: true
+			}, {
+				href			: '/#clubs/clubList',
+				icon			: '',
+				name			: 'Clubs',
+				key				: 'Clubs',
+				routes			: ['/clubs/:subPage'],
+				authorization	: true,
+				verified		: true
 			},
 			{
 				href			: '/#invites/inbox',
