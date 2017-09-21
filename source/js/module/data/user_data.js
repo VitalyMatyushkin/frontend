@@ -20,20 +20,12 @@ UserDataClass.getDefaultState = function () {
 		Helpers.SessionStorage.remove('roleSession');
 	}
 
-	console.log('LOGIN SESSION');
-	console.log(loginSession);
-
-	console.log('ROLE SESSION');
-	console.log(roleSession);
-
 	if(!this.isValidSession(loginSession)) {
-		console.log('LOGIN SESSION WAS BROKEN');
 		loginSession = undefined;
 		Helpers.cookie.remove('loginSession');
 	}
 
 	if(!this.isValidSession(roleSession)) {
-		console.log('ROLE SESSION WAS BROKEN');
 		roleSession = undefined;
 		Helpers.SessionStorage.remove('roleSession');
 	}
