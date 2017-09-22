@@ -5,7 +5,9 @@ const 	React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		Button 			= require('module/ui/button/button');
+		Button 			= require('module/ui/button/button'),
+		If 				= require('module/ui/if/if'),
+		ConfirmPopup 	= require('module/ui/confirm_popup');
 
 const StudentMergeComponentStyles = require('styles/pages/schools/b_school_student_merge.scss');
 
@@ -80,11 +82,23 @@ const StudentMergeComponent = React.createClass({
 		binding.set('studentWithoutHistoryId', studentId);
 	},
 	onClickMergeButton: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isPopupOpen', true);
+	},
+	onPopupCancelClick: function(){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('isPopupOpen', false);
+	},
+	onPopupOkClick: function(){
 		const 	binding 				= this.getDefaultBinding(),
 				studentWithoutHistoryId = binding.toJS('studentWithoutHistoryId'),
 				globalBinding 			= this.getMoreartyContext().getBinding(),
 				schoolId 				= globalBinding.get('routing.pathParameters.0'),
 				studentWithHistoryId 	= globalBinding.get('routing.pathParameters.3');
+		
+		binding.set('isPopupOpen', false);
 		
 		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {userId: studentWithoutHistoryId}).then(
 			res => {
@@ -109,26 +123,41 @@ const StudentMergeComponent = React.createClass({
 	render: function(){
 		const 	binding 			= this.getDefaultBinding(),
 				studentWithHistory 	= binding.toJS('studentWithHistory'),
-				isSync 				= Boolean(binding.toJS('isSync'));
+				isSync 				= Boolean(binding.toJS('isSync')),
+				isPopupOpen 		= Boolean(binding.toJS('isPopupOpen'));
 		
 		if (isSync) {
 			return (
-				<div className="bStudentMerge">
-					<p>{`You want merge`}</p>
-					<p>{`${studentWithHistory.firstName} ${studentWithHistory.lastName}`}</p>
-					<p>{`with`}</p>
-					<Autocomplete
-						serviceFilter	= { this.serviceStudentsFilter}
-						serverField		= 'name'
-						onSelect		= { this.onSelectStudent }
-						binding			= { binding.sub('_studentAutocomplete') }
-						placeholder		= 'Student name'
-					/>
-					<Button
-						text 				= "Merge"
-						onClick 			= { this.onClickMergeButton }
-						extraStyleClasses 	= "eStudentMergeButton"
-					/>
+				<div>
+					<div className="bStudentMerge">
+						<p>{`You want merge`}</p>
+						<p>{`${studentWithHistory.firstName} ${studentWithHistory.lastName}`}</p>
+						<p>{`with`}</p>
+						<Autocomplete
+							serviceFilter	= { this.serviceStudentsFilter}
+							serverField		= 'name'
+							onSelect		= { this.onSelectStudent }
+							binding			= { binding.sub('_studentAutocomplete') }
+							placeholder		= 'Student name'
+						/>
+						<Button
+							text 				= "Merge"
+							onClick 			= { this.onClickMergeButton }
+							extraStyleClasses 	= "eStudentMergeButton"
+						/>
+					</div>
+					<If condition = {isPopupOpen}>
+						<ConfirmPopup
+							isOkButtonDisabled			= { false }
+							customStyle 				= { 'ePopup' }
+							okButtonText 				= { "Merge" }
+							cancelButtonText 			= { 'Cancel' }
+							handleClickOkButton 		= { this.onPopupOkClick }
+							handleClickCancelButton 	= { this.onPopupCancelClick }
+						>
+							Are you really sure?
+						</ConfirmPopup>
+					</If>
 				</div>
 			);
 		} else {
