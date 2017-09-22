@@ -73,8 +73,11 @@ const EventHeader = React.createClass({
 			: "All ages";
 	},
 	getEventLocation: function(){
-		const eventVenue = this.props.event.venue;
-		return `${eventVenue.venueType.toLowerCase()}, ${eventVenue.postcodeData.postcode}`;
+		const 	eventVenue 	= this.props.event.venue,
+				venueType 	= eventVenue.venueType[0].toUpperCase() + eventVenue.venueType.toLowerCase().slice(1),
+				postcode	= eventVenue.postcodeData.postcode;
+		
+		return `${venueType}, ${postcode}`;
 	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
