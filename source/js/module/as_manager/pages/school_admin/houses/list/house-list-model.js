@@ -4,6 +4,7 @@
 //TODO Unused dependencies
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		SVG				= require('module/ui/svg'),
 		GridModel 		= require('module/ui/grid/grid-model');
@@ -71,7 +72,7 @@ HouseListModel.prototype.onRemove = function(data, event){
 };
 
 HouseListModel.prototype.getColumns = function(){
-	const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+	const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 	
 	this.columns = [
@@ -131,7 +132,7 @@ HouseListModel.prototype.getColumns = function(){
 };
 
 HouseListModel.prototype.createGrid = function(){
-	const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+	const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 	
 	this.grid = new GridModel({
@@ -163,7 +164,7 @@ HouseListModel.prototype.createGrid = function(){
 };
 
 HouseListModel.prototype.createGridFromExistingData = function(grid){
-	const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+	const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 	
 	this.grid = new GridModel({

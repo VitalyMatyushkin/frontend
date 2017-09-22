@@ -72,7 +72,7 @@ const Buttons = React.createClass({
 			actionList.push({id:'send_consent_request', text:'Send Consent Request'});
 		}
 
-		if(this.isReportNotParticipateAvailable() && EventHelper.isNotFinishedEvent(this.props.event) && this.isNotExpiredEventTime()) {
+		if(this.isReportNotParticipateAvailable()) {
 			actionList.push({id:'report_not_participate', text:'Report unavailability'});
 		}
 
@@ -94,17 +94,15 @@ const Buttons = React.createClass({
 	isAddSchoolAvailable: function() {
 		const eventStatus = this.props.event.status;
 
-		// TODO it's temp waiting server
-		// return (
-		// 	this.props.isUserSchoolWorker &&
-		// 	TeamHelper.isMultiparty(this.props.event) &&
-		// 	EventHelper.isInterSchoolsEvent(this.props.event) &&
-		// 	this.props.isInviterSchool &&
-		// 	eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
-		// 	eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
-		// 	eventStatus !== EventHelper.EVENT_STATUS.CANCELED
-		// );
-		return false;
+		return (
+			this.props.isUserSchoolWorker &&
+			TeamHelper.isMultiparty(this.props.event) &&
+			EventHelper.isInterSchoolsEvent(this.props.event) &&
+			this.props.isInviterSchool &&
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
+			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+		);
 	},
 	isAddTeamAvailable: function() {
 		const eventStatus = this.props.event.status;
@@ -138,9 +136,22 @@ const Buttons = React.createClass({
 		);
 	},
 	isNotExpiredEventTime: function() {
-		const 	today = new Date(),
-				eventTime = new Date(this.props.event.startTime);
-		return (today < eventTime);
+		const	today		= new Date(),
+				eventTime	= new Date(this.props.event.startTime);
+
+		const todayTimeStamp = new Date(
+			today.getFullYear(),
+			today.getMonth(),
+			today.getDate()
+		).getTime();
+
+		const eventTimeStamp = new Date(
+			eventTime.getFullYear(),
+			eventTime.getMonth(),
+			eventTime.getDate()
+		).getTime();
+
+		return (todayTimeStamp <= eventTimeStamp);
 	},
 	isChangeScoreEventActionAvailable: function() {
 		const eventStatus = this.props.event.status;
@@ -156,8 +167,9 @@ const Buttons = React.createClass({
 		return this.props.isUserSchoolWorker;
 	},
 	isReportNotParticipateAvailable: function() {
-		// TODO
-		return this.props.isParent;
+		return this.props.isParent &&
+			EventHelper.isNotFinishedEvent(this.props.event) &&
+			this.isNotExpiredEventTime();
 	},
 	handleClickActionItem: function(id: string) {
 		switch (id) {

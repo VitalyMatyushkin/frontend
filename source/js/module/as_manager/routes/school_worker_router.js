@@ -1,14 +1,18 @@
 const	React							= require('react'),
 		Morearty						= require('morearty'),
 
+		MoreartyHelper					= require('module/helpers/morearty_helper'),
+
 		RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
+		LoginRoute						= require('module/core/routes/login_route2'),
 		LogoutRoute						= require('module/core/routes/logout_route'),
 		SettingsRoute					= require('module/core/routes/settings_route'),
 
 		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
 		SchoolPageComponent				= require('module/as_manager/pages/schools/schools_page'),
 		EventsComponent					= require('module/as_manager/pages/events/events'),
+		ClubComponent					= require('module/as_manager/pages/clubs/clubs_page'),
 		EventComponent					= require('../pages/event/event_page'),
 		SchoolGalleryRoutesComponent	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
 		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
@@ -22,6 +26,9 @@ const	React							= require('react'),
  */
 const SchoolWorkerRouter = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -29,7 +36,8 @@ const SchoolWorkerRouter = React.createClass({
 			<RouterView	routes	= {binding.sub('routing')}
 						binding	= {binding}
 			>
-				<LogoutRoute	binding	= {binding.sub('userData')}/>
+				<LoginRoute		binding	= {binding.sub('userData')} />
+				<LogoutRoute	binding	= {binding.sub('userData')} />
 				<SettingsRoute	binding	= {binding.sub('userData')} />
 
 				<Route	path		= "/school_admin/:subPage /school_admin/:subPage/:mode"
@@ -50,6 +58,12 @@ const SchoolWorkerRouter = React.createClass({
 				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
 						binding		= {binding.sub('events')}
 						component	= {EventComponent}
+				/>
+
+				<Route	path			= "/clubs /clubs/:subPage /clubs/:mode"
+						binding			= { binding.sub('clubsPage') }
+						activeSchoolId	= { this.activeSchoolId }
+						component		= { ClubComponent }
 				/>
 
 				<Route	path		= "/school-albums /school-albums/:mode/:albumId /school-albums/:albumId/:mode/:photoId"

@@ -4,14 +4,16 @@ const	Form				= require('module/ui/form/form'),
 		React				= require('react'),
 		Morearty			= require('morearty'),
 		Auth				= require('module/core/services/AuthorizationServices'),
+		RememberMeCheckbox	= require('module/ui/login/user/form_components/remember_me_checkbox'),
 		bFormStyles			= require('../../../../../styles/ui/forms/b_form.scss');
 
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSuccess: 	React.PropTypes.func,
-		onError: 	React.PropTypes.func,
-		customName: React.PropTypes.string
+		onChangeRememberMe:	React.PropTypes.func.isRequired,
+		onSuccess:			React.PropTypes.func.isRequired,
+		onError:			React.PropTypes.func.isRequired,
+		customName:			React.PropTypes.string
 	},
 	componentWillMount:function(){
 		const subdomains 	= document.location.host.split('.');
@@ -53,6 +55,10 @@ const LoginUserForm = React.createClass({
 						validation="required"
 						binding={binding}
 						id="login_password"
+					/>
+					<RememberMeCheckbox
+						isChecked	= { binding.toJS('isRememberMe') }
+						onChange	= { this.props.onChangeRememberMe }
 					/>
 				</Form>
 				<If condition={this.props.customName === 'default'}>

@@ -6,6 +6,7 @@ const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
 		GameType 		= require('module/ui/challenges/event-game-type-with-score'),
 		Sport 			= require('module/ui/icons/sport_icon'),
+	    SessionHelper	= require('module/helpers/session_helper'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable');
 
@@ -62,7 +63,7 @@ const UserFixtures = React.createClass({
 				binding 	= self.getDefaultBinding(),
 				rootBinding = self.getMoreartyContext().getBinding();
 
-		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 		= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
 				isParent 	= role === "PARENT";
 		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
 

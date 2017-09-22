@@ -34,15 +34,9 @@ const SchoolSandbox = React.createClass({
 				globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
 		this.createSubMenu('*');
-		window.Server.schoolStudents.get(
-			{schoolId},
-			{
-				filter: {
-					limit: 1000
-				}
-			}
-		).then(students =>{
-				this.createSubMenu(students.length);
+		window.Server.schoolStudentsCount.get({schoolId})
+			.then(result => {
+				this.createSubMenu(result.count);
 				return true;
 			});
 	},
@@ -143,9 +137,9 @@ const SchoolSandbox = React.createClass({
 							component 	= { ClassesPageComponent }
 						/>
 						<Route
-							path="/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
-							binding={subBinding}
-							component={StudentsPageComponent}
+							path		= "/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
+							binding		= {subBinding}
+							component	= {StudentsPageComponent}
 						/>
 						<Route
 							path 		= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"

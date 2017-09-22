@@ -1,22 +1,59 @@
-const	DomainHelper	= require('module/helpers/domain_helper'),
-		propz			= require('propz');
+const	DomainHelper			= require('module/helpers/domain_helper'),
+		SessionHelper			= require('module/helpers/session_helper'),
+		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
+		Promise 				= require('bluebird'),
+		propz					= require('propz');
 
 const authСontroller = {
-	requestedPage: undefined,
-	publicPages:['register', 'login', 'reset-request', 'reset'],
+	requestedPage:	undefined,
+	publicPages:	['register', 'login', 'reset-request', 'reset'],
+	asPublicSchool:	false,
 	initialize: function(options) {
-		this.saveRequestedPage(options);
+		this.saveRequestedPage();
 		this.initBinding(options);
-		this.redirectUserByUserAuthData();
 
-		this.binding.addListener('userData.authorizationInfo.id', this.handleUpdateUserAuthData.bind(this));
+		if(options.asPublicSchool) {
+			this.asPublicSchool = options.asPublicSchool;
+		}
+
+		let initPromises = [];
+		if(this.hasUserOnlyOneLoginRole()) {
+			initPromises = this.becomeOneRole();
+		}
+
+		return Promise.resolve(initPromises).then(() => {
+			this.redirectUserByUserAuthData();
+
+			SessionHelper.getSessionsDataBinding(
+				this.binding.sub('userData')
+			).addListener(this.handleUpdateUserAuthData.bind(this));
+
+			return true;
+		});
 	},
-	saveRequestedPage: function(options) {
+	hasUserOnlyOneLoginRole: function () {
+		return (
+			typeof SessionHelper.getLoginSession(this.binding.sub('userData')) !== 'undefined' &&
+			typeof SessionHelper.getRoleSession(this.binding.sub('userData')) === 'undefined'
+		);
+	},
+	/**
+	 * Function gets user role session if user has one role
+	 */
+	becomeOneRole: function () {
+		return window.Server.roles.get()
+			.then(roles => {
+				if(roles && roles.length == 1) {
+					return AuthorizationServices.become(roles[0].name);
+				} else {
+					return Promise.resolve(true);
+				}
+			});
+	},
+	saveRequestedPage: function() {
 		const isEmptyCurrentHash = document.location.hash === '';
 
-		if(typeof options.requestedPage !== 'undefined') {
-			this.requestedPage = options.requestedPage;
-		} else if(
+		if(
 			!this.isPublicPage() &&
 			!isEmptyCurrentHash
 		) {
@@ -35,38 +72,45 @@ const authСontroller = {
 				isSuperAdmin			= this.isSuperAdmin();
 
 		if(!isRegistrationProcess) {								// When user isn't in registration process
-			if (isSuperAdmin) {										// For superadmin
-				this.redirectToDefaultPageForSuperAdmin();
-			} else if(												//Bypass authentication
-				this.requestedPage === 'loginPublicSchool' ||
-				this.requestedPage === 'home'
-			) {
-				window.location.hash = this.requestedPage;
-
-				// just in case
-				this.requestedPage = undefined;
-			} else if (												// When user is log in but doesn't have role
-				isUserAuth &&
-				!isUserOnRole
-			) {
-				// TODO i think it should be looks something else
-				// But now just don't do anything
-				// This case is processed by router
-
-				// Remove old requested page for case when user change role
-				// i don't know why but it must be here
-				this.requestedPage = undefined;
-			} else if (isUserOnRole) {								// When user under some role
-				if (typeof this.requestedPage === 'undefined') {
-					this.redirectToDefaultPage();
-					window.location.reload();
-				} else {
-					this.redirectToRequestedPage();
-					window.location.reload();
+			switch (true) {
+				case (isSuperAdmin): {
+					this.redirectToDefaultPageForSuperAdmin();
+					break;
 				}
-			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
-				window.location.href = DomainHelper.getLoginUrl();
-				window.location.reload();
+				case (this.asPublicSchool): {
+					// redirect to loginPublicSchool
+					window.location.hash = 'loginPublicSchool';
+
+					binding.set('loginPublicSchool.hashOfRedirectPageAfterLogin', this.requestedPage);
+					this.requestedPage = undefined;
+					break;
+				}
+				// When user is log in but doesn't have role
+				case (
+					isUserAuth &&
+					!isUserOnRole
+				): {
+					// TODO i think it should be looks something else
+					// But now just don't do anything
+					// This case is processed by router
+
+					// Remove old requested page for case when user change role
+					// i don't know why but it must be here
+					this.requestedPage = undefined;
+					break;
+				}
+				case (isUserOnRole): {
+					if (typeof this.requestedPage === 'undefined') {
+						this.redirectToDefaultPage();
+					} else {
+						this.redirectToRequestedPage();
+					}
+					break;
+				}
+				case (!this.isPublicPage()): {
+					window.location.href = DomainHelper.getLoginUrl();
+					break;
+				}
 			}
 		}
 	},
@@ -75,10 +119,13 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isUserAuth: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const id = propz.get(data, ['id']);
+		const loginSession = SessionHelper.getLoginSession(
+			binding.sub('userData')
+		);
+
+		const id = propz.get(loginSession, ['id']);
 
 		return typeof id !== 'undefined';
 	},
@@ -87,26 +134,26 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isUserOnRole: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const	isBecome	= propz.get(data, ['isBecome']),
-				role		= propz.get(data, ['role']);
+		const hasUserRole = typeof SessionHelper.getRoleFromSession(binding.sub('userData')) !== 'undefined';
 
 		return	this.isUserAuth() &&
 				this.isRoleListExist() &&
-				typeof isBecome !== 'undefined' &&
-				typeof role !== 'undefined';
+				hasUserRole;
 	},
 	/**
 	 * Function returns true when user is Super Admin
 	 * @returns {boolean}
 	 */
 	isSuperAdmin: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const adminId = propz.get(data, ['adminId']);
+		const loginSession = SessionHelper.getLoginSession(
+			binding.sub('userData')
+		);
+
+		const adminId = propz.get(loginSession, ['adminId']);
 
 		return typeof adminId !== 'undefined';
 	},
@@ -115,8 +162,8 @@ const authСontroller = {
 	 * @returns {boolean}
 	 */
 	isPublicPage: function() {
-		var self = this,
-			path = document.location.hash;
+		const	self	= this,
+				path	= window.location.hash;
 
 		return self.publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
@@ -133,18 +180,29 @@ const authСontroller = {
 	 * Function redirects to page default for current user role.
 	 */
 	redirectToDefaultPage: function() {
-		const	binding		= this.binding,
-				data		= binding.toJS('userData.authorizationInfo');
+		const binding = this.binding;
 
-		const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
-			data.role.toLowerCase(),
-			this.getSchoolKind(data.role, binding.toJS('userData'))
+		const roleSession = SessionHelper.getRoleSession(
+			binding.sub('userData')
 		);
 
-		window.location.hash = defaultPageHash;
+		if(typeof roleSession !== 'undefined') {
+			const role = SessionHelper.getRoleFromSession(
+				binding.sub('userData')
+			);
 
-		// just in case
-		this.requestedPage = undefined;
+			const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
+				role.toLowerCase(),
+				this.getSchoolKind(role)
+			);
+
+			window.location.hash = defaultPageHash;
+
+			// just in case
+			this.requestedPage = undefined;
+		} else {
+			console.error('ERROR: There is no role session.');
+		}
 	},
 	/**
 	 * Function redirects to page default for superadmin.
@@ -218,7 +276,13 @@ const authСontroller = {
 		);
 	},
 	isFirstLogin: function() {
-		return typeof propz.get(this.binding.toJS('userData'), ['roleList']) === 'undefined';
+		const isRoleListExist = typeof propz.get(this.binding.toJS('userData'), ['roleList']) !== 'undefined';
+
+		const activeSchoolId = propz.get(this.binding.toJS('userRules'), ['activeSchoolId']);
+		// sometimes activeSchoolId is null
+		const isActiveSchoolExist = typeof activeSchoolId !== 'undefined' && typeof activeSchoolId === 'string';
+
+		return !isRoleListExist || !isActiveSchoolExist;
 	},
 	/**
 	 * Handler for user auth update event

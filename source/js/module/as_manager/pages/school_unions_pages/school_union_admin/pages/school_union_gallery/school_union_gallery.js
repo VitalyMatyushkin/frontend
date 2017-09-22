@@ -1,7 +1,8 @@
-const 	React 		= require('react'),
-		Immutable 	= require('immutable'),
-		Morearty 	= require('morearty'),
-		Album 		= require('module/ui/gallery/album/album_item');
+const 	React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
+		Album			= require('module/ui/gallery/album/album_item');
 
 const SchoolUnionGallery = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -13,8 +14,7 @@ const SchoolUnionGallery = React.createClass({
 	componentWillMount:function(){
 		const 	rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
-				userId 			= rootBinding.get('userData.authorizationInfo.userId'),
-				role 			= rootBinding.get('userData.authorizationInfo.role');
+				role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData'));
 		//I'm not sure, but in SchoolUnion maybe only role admin?
 		if(role !== "ADMIN") {
 			document.location.hash = 'school_union_admin/summary';

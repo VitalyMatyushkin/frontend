@@ -15,6 +15,7 @@ const   React       = require('react'),
         classNames  = require('classnames'),
 		If			= require('module/ui/if/if'),
 		Morearty	= require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
         $           = require('jquery');
 
 // TODO: do something with all this
@@ -123,12 +124,14 @@ const Form = React.createClass({
 			window.history.back();
 	},
 	tryToSubmit: function () {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			token = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId'),
-			fields = self.getFormFields(),
-			metaToPost = binding.meta().sub('____metaToPost____'),
-			typeOfService = typeof self.props.service;
+		const self = this;
+		const binding = self.getDefaultBinding();
+		const token = SessionHelper.getUserIdFromSession(
+			self.getMoreartyContext().getBinding().sub('userData')
+		);
+		const fields = self.getFormFields();
+		const metaToPost = binding.meta().sub('____metaToPost____');
+		const typeOfService = typeof self.props.service;
 
 		let hereIsError = false,
 			dataToPost = {};

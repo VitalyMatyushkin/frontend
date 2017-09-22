@@ -6,6 +6,7 @@ const 	React 			= require('react'),
 		Morearty        = require('morearty'),
 		RoleList		= require('./role_list'),
 		Avatar 			= require('module/ui/avatar/avatar'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		classNames		= require('classnames');
 
 const UserBlock = React.createClass({
@@ -33,7 +34,7 @@ const UserBlock = React.createClass({
 				binding			= self.getDefaultBinding(),
 				userInfoBinding	= binding.sub('userInfo');
 
-		const	userId		= binding.get('authorizationInfo.userId');
+		const	userId		= SessionHelper.getUserIdFromSession(userInfoBinding);
 
 		if(userId) {
 			window.Server.profile.get().then(data => {
@@ -42,16 +43,16 @@ const UserBlock = React.createClass({
 		}
 	},
 	render: function() {
-		let		self = this,
-				binding = self.getDefaultBinding(),
-				authData = binding.toJS('authorizationInfo'),
-				UserButton = null,
-				userClasses = classNames({
+		let		self		= this,
+				binding		= self.getDefaultBinding(),
+				authData	= SessionHelper.getActiveSession(binding),
+				UserButton	= null,
+				userClasses	= classNames({
 					eTopMenu_photo:true,
 					mDisabled:self.props.asAdmin
 				}),
-				LoginButton = null,
-				RolesList = null;
+				LoginButton	= null,
+				RolesList	= null;
 
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {

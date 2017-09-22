@@ -10,6 +10,7 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		DomainHelper	= require('module/helpers/domain_helper'),
 		RoleHelper		= require('module/helpers/role_helper'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		Auth			= require('module/core/services/AuthorizationServices');
 
 
@@ -75,7 +76,7 @@ const  RoleList = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding();
 
-		const	activeRoleName	= rootBinding.toJS('userData.authorizationInfo.role'),
+		const	activeRoleName	= SessionHelper.getRoleFromSession( rootBinding.sub('userData') ),
 				activeSchoolId	= rootBinding.toJS('userRules.activeSchoolId'),
 				permissions		= binding.toJS('permissions'),
 				arr				= permissions ? permissions.filter(p => p.role === activeRoleName):[];
@@ -98,7 +99,7 @@ const  RoleList = React.createClass({
 		this.roleBecome(roleName, school.kind);
 	},
 	roleBecome:function(roleName){
-		Auth.become(roleName);
+		Auth.become(roleName).then(() => window.location.reload());
 	},
 	renderRole:function(permission, active){
 		const	role			= permission.role,
@@ -106,12 +107,22 @@ const  RoleList = React.createClass({
 				schoolName		= role !== 'PARENT' && role !== 'STUDENT' ? permission.school.name : null;
 
 		return (
-			<div	key			={permission.id}
-					className	="eRole"
-					onClick		={active ? this.onSetRole.bind(null, role, permission.school) : null}
+			<div
+				key			= { permission.id }
+				className	= "eRole"
+				onClick		= { active ? this.onSetRole.bind(null, role, permission.school) : null }
 			>
-				<span className="eRole_schoolName" title={schoolName}>{schoolName}</span>
-				<span className="eRole_name">{roleClientView}</span>
+				<span
+					className	= "eRole_schoolName"
+					title		= { schoolName }
+				>
+					{ schoolName }
+				</span>
+				<span
+					className="eRole_name"
+				>
+					{ roleClientView }
+				</span>
 			</div>
 		);
 	},
@@ -163,10 +174,12 @@ const  RoleList = React.createClass({
 		window.location.hash = 'logout';
 	},
 	render: function() {
-		const	binding 	= this.getDefaultBinding(),
-				role        = this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role'),
-				listOpen    = binding.toJS('listOpen'),
-				show        = !!binding.toJS('permissions').length && !!role;
+		const	binding		= this.getDefaultBinding(),
+				role		= SessionHelper.getRoleFromSession(
+					this.getMoreartyContext().getBinding().sub('userData')
+				),
+				listOpen	= binding.toJS('listOpen'),
+				show		= !!binding.toJS('permissions').length && !!role;
 
 
 		return(

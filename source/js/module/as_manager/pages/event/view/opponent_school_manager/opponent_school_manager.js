@@ -47,50 +47,73 @@ const OpponentSchoolManager = React.createClass({
 				event				= binding.toJS('model'),
 				newSchool			= binding.toJS('opponentSchoolManager.opponentSchoolInput.school');
 
+		let promises = [];
 		if(this.props.mode === 'REPLACE') {
-			const opponentSchoolIdIndex = event.invitedSchoolIds.findIndex(schoolId => schoolId === opponentSchoolId);
-			event.invitedSchoolIds[opponentSchoolIdIndex] = newSchool.id;
+			promises.push(
+				window.Server.schoolEventOpponents
+					.delete(
+						{
+							schoolId	: activeSchoolId,
+							eventId		: event.id
+						}, {
+							invitedSchoolIds: [opponentSchoolId]
+						}
+					)
+					.then(() =>
+						window.Server.schoolEventOpponents.post(
+						{
+							schoolId	: activeSchoolId,
+							eventId		: event.id
+						}, {
+							invitedSchoolIds: [newSchool.id]
+						}
+					))
+			);
 		} else {
-			event.invitedSchoolIds.push(newSchool.id);
+			// just add new school
+			promises.push(
+				window.Server.schoolEventOpponents.post(
+					{
+						schoolId	: activeSchoolId,
+						eventId		: event.id
+					}, {
+						invitedSchoolIds: [newSchool.id]
+					}
+				)
+			);
 		}
 
 		// change school on server
-		window.Server.schoolEventChangeOpponent.post(
-			{
-				schoolId	: activeSchoolId,
-				eventId		: event.id
-			}, {
-				invitedSchoolIds: event.invitedSchoolIds
-			}
-		)
-		.then(() => {
-			if(this.props.mode === 'REPLACE') {
-				const	venueType				= this.getVenueType(),
-						newSchoolPostcodeId		= propz.get(newSchool, ['postcodeId']),
-						activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
+		Promise
+			.all(promises)
+			.then(() => {
+				if(this.props.mode === 'REPLACE') {
+					const	venueType				= this.getVenueType(),
+							newSchoolPostcodeId		= propz.get(newSchool, ['postcodeId']),
+							activeSchoolPostcodeId	= propz.get(activeSchoolInfo, ['postcodeId']);
 
-				switch (true) {
-					case (
-						venueType === 'AWAY' &&
-						typeof newSchoolPostcodeId === 'undefined' &&
-						typeof activeSchoolPostcodeId === 'undefined'
-					):
-						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
-					case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
-						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
-					case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined':
-						return this.updateEventVenuePostcode(activeSchoolId, event.id, 'HOME', activeSchoolPostcodeId);
-					default:
-						return true;
+					switch (true) {
+						case (
+							venueType === 'AWAY' &&
+							typeof newSchoolPostcodeId === 'undefined' &&
+							typeof activeSchoolPostcodeId === 'undefined'
+						):
+							return this.updateEventVenuePostcode(activeSchoolId, event.id, 'TBD');
+						case venueType === 'AWAY' && typeof newSchoolPostcodeId !== 'undefined':
+							return this.updateEventVenuePostcode(activeSchoolId, event.id, 'AWAY', newSchoolPostcodeId);
+						case venueType === 'AWAY' && typeof newSchoolPostcodeId === 'undefined':
+							return this.updateEventVenuePostcode(activeSchoolId, event.id, 'HOME', activeSchoolPostcodeId);
+						default:
+							return true;
+					}
+				} else {
+					return Promise.resolve(true);
 				}
-			} else {
-				return Promise.resolve(true);
-			}
-		})
-		.then(() => {
-			this.closeSavingChangesModePopup();
-			this.props.onReload();
-		});
+			})
+			.then(() => {
+				this.closeSavingChangesModePopup();
+				this.props.onReload();
+			});
 	},
 	/**
 	 * Server side.

@@ -7,6 +7,7 @@ const	SchoolApplicationView		= require('./as_school/application'),
 		cookiePopupData 			= require('module/data/cookie_popup_data'),
 		authController 				= require('module/core/auth_controller'),
 		initTawkTo					= require('module/tawk_to/tawk_to'),
+		SessionHelper				= require('module/helpers/session_helper'),
 		Immutable					= require('immutable'),
 		ReactDom 					= require('react-dom'),
 		React 						= require('react'),
@@ -49,7 +50,7 @@ function initMainSchoolView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			loginPublicSchool: {
-				hash: ''
+				hashOfRedirectPageAfterLogin: 'home'
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,
@@ -95,9 +96,7 @@ function initMainSchoolView(school) {
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding:		binding,
-		defaultPath:	'loginPublicSchool',
-		requestedPage:	'loginPublicSchool',
-		asSchool:		true //Flag for public school page
+		asPublicSchool:	true
 	});
 
 	// initializing all services (open too) only when we got all vars set in window.
@@ -106,7 +105,9 @@ function initMainSchoolView(school) {
 	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
@@ -154,7 +155,7 @@ function initMainSchoolUnionView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			loginPublicSchool: {
-
+				hashOfRedirectPageAfterLogin: 'home'
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,
@@ -200,9 +201,7 @@ function initMainSchoolUnionView(school) {
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding:		binding,
-		defaultPath:	'loginPublicSchool',
-		requestedPage:	'loginPublicSchool',
-		asSchool:		true //Flag for public school page
+		asPublicSchool:	true
 	});
 
 	// initializing all services (open too) only when we got all vars set in window.
@@ -211,7 +210,9 @@ function initMainSchoolUnionView(school) {
 	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));

@@ -6,7 +6,8 @@ const   test                = require('selenium-webdriver/testing'),
         SchoolPage          = require('../../../lib/Pages/SchoolPages/SchoolPage.js'),
         OftenUsed           = require('../../../lib/OftenUsed.js'),
         HouseTools          = require('../../../lib/Pages/SchoolPages/HouseTools.js'),
-        Driver              = require('../../Driver.js');
+        Driver              = require('../../Driver.js'),
+        Constants           = require('../../../lib/Constants.js');
 
 const   timeout = 70000,
         house = {
@@ -14,7 +15,8 @@ const   timeout = 70000,
             description: 'Test description'
         },
         houseEdit = {
-            houseName: 'TestHouse',
+			filePath: Constants.imagePath,
+			houseName: 'TestHouse',
             description: 'Test description'
         };
 
@@ -39,7 +41,8 @@ test.describe('Edit form', function(){
 
         await toolsHouse.editClick(resultLine);
         await toolsHouse.checkEditPage();
-        await toolsHouse.editHouseName(houseEdit.houseName);
+		await toolsHouse.setHouseImage(houseEdit.filePath);
+		await toolsHouse.editHouseName(houseEdit.houseName);
         await toolsHouse.editHouseDescription(houseEdit.description);
         await toolsHouse.setColor();
         await toolsHouse.submit();

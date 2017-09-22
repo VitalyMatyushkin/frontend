@@ -6,6 +6,7 @@ const   ApplicationView 	= require('./as_bigscreen/application'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
 		Morearty			= require('morearty'),
+		SessionHelper		= require('module/helpers/session_helper'),
 
 		BigscreenConsts 	= require('./as_bigscreen/pages/consts/consts');
 
@@ -74,7 +75,9 @@ function initMainView(school) {
 	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	ReactDom.render(
 		React.createElement(

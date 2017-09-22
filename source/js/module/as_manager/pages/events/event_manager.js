@@ -496,7 +496,7 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		let teams, savedEvent;
+		let savedEvent;
 
 		switch (true) {
 			case TeamHelper.isNonTeamSport(eventModel):
@@ -522,25 +522,24 @@ const EventManager = React.createClass({
 							binding.toJS(`teamModeView.teamWrapper`)
 						)
 					)
-					.then(() => {
-						return Promise.all(
-							TeamHelper.createTeams(
+					.then(() => self.submitEvent())
+					.then(_event => {
+						savedEvent = _event;
+
+						const teams = TeamHelper.createTeams(
 								this.props.activeSchoolId,
 								binding.toJS('model'),
 								binding.toJS(`rivals`),
 								binding.toJS(`teamModeView.teamWrapper`)
+							);
+
+						return Promise.all(
+							TeamHelper.addTeamsToEvent(
+								this.props.activeSchoolId,
+								savedEvent.id,
+								teams
 							)
 						);
-					})
-					.then(_teams => {
-						teams = _teams;
-
-						return self.submitEvent();
-					})
-					.then(_event => {
-						savedEvent = _event;
-
-						return TeamHelper.addTeamsToEvent(this.props.activeSchoolId, savedEvent, teams);
 					})
 					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));

@@ -1061,31 +1061,31 @@ function getTeamBundles(event) {
  * Create teams for TeamManager.
  * @returns {*}
  */
-function createTeams(schoolId, event, rivals, teamWrappers) {
+function createTeams(schoolId, eventModel, rivals, teamWrappers) {
 	const self = this;
 
 	let filteredRivals;
-	if(EventHelper.isInterSchoolsEvent(event)) {
+	if(EventHelper.isInterSchoolsEvent(eventModel)) {
 		// only active school rivals
 		filteredRivals = rivals.filter(rival => rival.school.id === schoolId);
 	} else {
 		filteredRivals = rivals;
 	}
 
-	let teamPromises = [];
+	const teams = [];
 	filteredRivals.forEach((rival, i) => {
 		let currentTeamWrapper;
-		if(EventHelper.isInterSchoolsEvent(event)) {
+		if(EventHelper.isInterSchoolsEvent(eventModel)) {
 			currentTeamWrapper = teamWrappers.find(teamWrapper => teamWrapper.rivalId === rival.id);
 		} else {
 			currentTeamWrapper = teamWrappers[i];
 		}
 
 		if(!currentTeamWrapper.isSetTeamLater) {
-			teamPromises = teamPromises.concat(
+			teams.push(
 				self.createTeam(
 					schoolId,
-					event,
+					eventModel,
 					rival,
 					currentTeamWrapper
 				)
@@ -1093,34 +1093,36 @@ function createTeams(schoolId, event, rivals, teamWrappers) {
 		}
 	});
 
-	return teamPromises;
+	return teams;
 }
 
-function createTeam(schoolId, event, rival, teamWrapper) {
+function createTeam(schoolId, eventModel, rival, teamWrapper) {
 	const self = this;
 
 	const teamBody = {};
-	switch (self.getTypeOfNewTeam(teamWrapper)) {
-		case "CLONE":
-			teamBody.name		= teamWrapper.teamName.name;
-			teamBody.players	= teamWrapper.___teamManagerBinding.teamStudents;
+	teamBody.name			= teamWrapper.teamName.name;
+	teamBody.ages			= eventModel.ages;
+	teamBody.gender			= TeamHelper.convertGenderToServerValue(eventModel.gender);
+	teamBody.sportId		= eventModel.sportId;
+	teamBody.schoolId		= schoolId;
+	teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
+	self.getEventType(eventModel) === 'houses' && (teamBody.houseId = rival.id);
 
-			return self.createTeamByPrototype(
-				teamWrapper.selectedTeam,
-				teamBody
-			);
-		case "ADHOC":
-			teamBody.name			= teamWrapper.teamName.name;
-			teamBody.ages			= event.ages;
-			teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
-			teamBody.sportId		= event.sportId;
-			teamBody.schoolId		= schoolId;
-			teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
-			teamBody.teamType		= "ADHOC";
-			self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);
+	switch ( self.getTypeOfNewTeam(teamWrapper) ) {
+		case "CLONE": {
+			teamBody.teamType = "CLONE";
+			teamBody.cloneOf = teamWrapper.selectedTeam.id;
 
-			return self.createNewTeam(teamBody);
+			break;
+		}
+		case "ADHOC": {
+			teamBody.teamType = "ADHOC";
+
+			break;
+		}
 	}
+
+	return teamBody;
 }
 
 function createPrototypeTeam(schoolId, event, rival, teamWrapper) {
@@ -1208,14 +1210,13 @@ function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
 	);
 }
 
-function addTeamsToEvent(schoolId, event, teams) {
-	return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
+function addTeamsToEvent(schoolId, eventId, teams) {
+	return Promise.all(teams.map(team => window.Server.schoolEventTeams.post(
 		{
 			schoolId:	schoolId,
-			eventId:	event.id
-		}, {
-			teamId:		t.id
-		}
+			eventId:	eventId
+		},
+		team
 	)));
 }
 

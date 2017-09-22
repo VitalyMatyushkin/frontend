@@ -9,6 +9,7 @@ const   ApplicationView     = require('module/as_password/application'),
         authController      = require('module/core/auth_controller'),
         serviceList         = require('module/core/service_list'),
         initTawkTo			= require('module/tawk_to/tawk_to'),
+	    SessionHelper		= require('module/helpers/session_helper'),
         Morearty			= require('morearty'),
         ReactDom            = require('react-dom'),
         React               = require('react');
@@ -71,7 +72,9 @@ function runPasswordMode() {
     serviceList.initializeOpenServices();
 
     // Enable services
-    serviceList.initialize(binding.sub('userData.authorizationInfo'));
+    serviceList.initialize(
+		binding.sub('userData')
+    );
 
     // Связывания контроллера, отвечающего за контроль за авторизацией с данными
     authController.initialize(

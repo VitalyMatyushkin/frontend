@@ -6,6 +6,7 @@ const   ApplicationView     = require('module/as_admin/application'),
         authController      = require('module/core/auth_controller'),
         serviceListAdmin    = require('module/core/service_list_admin'),
         initTawkTo			= require('module/tawk_to/tawk_to'),
+	    SessionHelper		= require('module/helpers/session_helper'),
         Morearty			= require('morearty'),
         ReactDom            = require('react-dom'),
         React               = require('react');
@@ -114,7 +115,9 @@ function runAdminMode() {
 	serviceListAdmin.initializeOpenServices();
 
 // Включение авторизации сервисов
-    serviceListAdmin.initialize(binding.sub('userData.authorizationInfo'));
+    serviceListAdmin.initialize(
+		binding.sub('userData')
+    );
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
     authController.initialize({

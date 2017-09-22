@@ -50,6 +50,10 @@ const serviceList = {
 		serviceList.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
 		serviceList.schoolSport = new Service('/i/schools/{schoolId}/sports/{sportId}', binding);
 
+		// clubs
+		serviceList.schoolClubs = new Service('/i/schools/{schoolId}/clubs', binding);
+		serviceList.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
+
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
 		serviceList.schoolPlace = new Service('/i/schools/{schoolId}/places/{placeId}', binding);
@@ -121,6 +125,7 @@ const serviceList = {
 		serviceList.schoolEventTeam = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 		serviceList.schoolEventPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/photos/{photoId}', binding);
 		serviceList.schoolEventPhotos = new Service('/i/schools/{schoolId}/events/{eventId}/photos', binding);
+		serviceList.schoolEventOpponents = new Service('/i/schools/{schoolId}/events/{eventId}/opponents', binding);
 		// serviceList.schoolEventPdf = new Service('/i/schools/{schoolId}/events/{eventId}/pdf', binding);
 
 		// event individuals

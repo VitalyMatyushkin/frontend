@@ -1,5 +1,4 @@
 const	React				= require ('react'),
-		If					= require ('../../../../ui/if/if'),
 		propz				= require ('propz'),
 		HouseListItemStyle	= require('../../../../../../styles/ui/b_house_list_item.scss');
 
@@ -31,8 +30,8 @@ const HouseListItem = React.createClass({
 			return (
 				<div className="eHouseListItem_picWrapper">
 					<div
-						className="eHouseListItem_color"
-						style={{background: this.getHouseColor()}}
+						className	= "eHouseListItem_color"
+						style		= { { background: this.getHouseColor() } }
 					>
 					</div>
 				</div>
@@ -55,22 +54,21 @@ const HouseListItem = React.createClass({
 		return (
 			<div className = "eHouseListItem_picWrapper">
 				<img	className	= "eHouseListItem_pic"
-						src			= {this.props.data.pic}
+						src			= { this.props.data.pic }
 				/>
 			</div>
 		);
 	},
 	render: function() {
-		console.log(this.props.data);
-
 		return (
-			<div	className	= "bHouseListItem"
-					onMouseDown	= {this.props.onMouseDown}
+			<div
+				className	= "bHouseListItem"
+				onMouseDown	= { this.props.onMouseDown }
 			>
 				<div className="eHouseListItem_wrapper">
 					{ this.renderHouseImage() }
 					<div className= "eHouseListItem_name">
-						{this.props.data.name}
+						{ this.props.data.name }
 					</div>
 				</div>
 			</div>

@@ -4,6 +4,7 @@ const 	If 				= require('module/ui/if/if'),
 		FullScreenList 	= require('../photo/fullscreen_list'),
 		React			= require('react'),
 		Morearty        = require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		Immutable		= require('immutable');
 
 const AlbumView = React.createClass({
@@ -25,12 +26,14 @@ const AlbumView = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		const 	self 			= this,
-				rootBinding 	= self.getMoreartyContext().getBinding(),
-                binding 		= self.getDefaultBinding(),
-				params      	= rootBinding.toJS('routing.pathParameters'),
-				albumId 		= params && params.length ? params[params.length-1] : null,
-				userId 			= rootBinding.get('userData.authorizationInfo.userId');
+		const self = this;
+		const rootBinding = self.getMoreartyContext().getBinding();
+        const binding = self.getDefaultBinding();
+		const params = rootBinding.toJS('routing.pathParameters');
+		const albumId = params && params.length ? params[params.length-1] : null;
+		const userId = SessionHelper.getUserIdFromSession(
+			rootBinding.sub('userData')
+		);
 
 		self.service = self.props.service;
 		self.service.album.get(albumId)

@@ -7,34 +7,48 @@ const	React				= require('react'),
 		RoleSelector		= require('../../as_login/pages/RoleSelector'),
 		ApplicationLinks 	= require('../../ui/application_links/application_links'),
 		ApplicationConst	= require('module/helpers/consts/application_links'),
+		SessionHelper		= require('module/helpers/session_helper'),
+		Promise				= require('bluebird'),
 		SVG					= require('../../ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount:function(){
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			showError:		false,
+			isRememberMe:	false,
+			isSync:			false
+		});
+	},
+	componentWillMount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
 		const domain = window.location.host.split('.')[0];
 
 		this.formName = domain === 'admin' ? 'Administrator Login' : 'default';
 
+		let initPromises = [];
+		if(this.isAuthorized()) {
+			initPromises = initPromises.concat(this.setPermissions());
+		}
+
+		Promise
+			.all(initPromises)
+			.then(() => {
+				binding.set('isSync', Immutable.fromJS(true));
+			});
+	},
+	onSuccess: function() {
 		if(this.isAuthorized()) {
 			this.setPermissions();
 		}
 	},
-	getDefaultState: function () {
-		return Immutable.Map({
-			showError: false
-		});
-	},
-	onSuccess: function(data) {
-		if(data.id) {
-			this.setPermissions();
-		}
-	},
 	showError: function() {
-		if(!this.isAuthorized()) {
-			this.getDefaultBinding().set('showError', true);
-		} else{
+		if(this.isAuthorized()) {
 			this.setPermissions();
+		} else{
+			this.getDefaultBinding().set('showError', true);
 		}
 	},
 	hideError: function() {
@@ -48,16 +62,23 @@ const LoginUserPage = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return window.Server.roles.get().then(roleList => binding.set('__allPermissions', roleList));
+		return window.Server.roles.get()
+			.then(roleList => {
+				binding.set('__allPermissions', Immutable.fromJS(roleList));
+
+				return true;
+			});
 	},
 	isAuthorized: function() {
-		return typeof this.getDefaultBinding().toJS("authorizationInfo.userId") !== 'undefined';
+		return typeof SessionHelper.getUserIdFromSession(
+			this.getDefaultBinding()
+		) !== 'undefined';
 	},
-	renderCurrentView: function(){
-		let currentView;
+	renderCurrentView: function() {
+		let currentView = null;
 		
-		const	showError		= this.getDefaultBinding().get('showError'),
-				allPermissions	= this.getDefaultBinding().get('__allPermissions');
+		const	showError		= this.getDefaultBinding().toJS('showError'),
+				allPermissions	= this.getDefaultBinding().toJS('__allPermissions');
 		
 		switch (true) {
 			case showError === true:
@@ -68,14 +89,20 @@ const LoginUserPage = React.createClass({
 				);
 				break;
 			case showError === false && typeof allPermissions !== 'undefined':
-				currentView = <RoleSelector availableRoles={allPermissions}/>;
+				currentView = (
+					<RoleSelector
+						availableRoles={allPermissions}
+					/>
+				);
 				break;
 			case showError === false:
 				currentView = (
-					<LoginForm	customName	= {this.formName}
-								onError		= {this.showError}
-								onSuccess	= {this.onSuccess}
-								binding		= {this.getDefaultBinding()}
+					<LoginForm
+						customName			= { this.formName }
+						onError				= { this.showError }
+						onSuccess			= { this.onSuccess }
+						onChangeRememberMe	= { this.onChangeRememberMe }
+						binding				= { this.getDefaultBinding() }
 					/>
 				);
 				break;
@@ -86,36 +113,54 @@ const LoginUserPage = React.createClass({
 		const isFirstVisit = typeof this.getDefaultBinding().get('isFirstVisit') === 'undefined';
 		return isFirstVisit && bowser.mobile;
 	},
-	onClickWebVersion: function(){
+	onChangeRememberMe: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('isRememberMe', !binding.toJS('isRememberMe'));
+	},
+	onClickWebVersion: function() {
 		const binding = this.getDefaultBinding();
 		binding.set('isFirstVisit', false);
 	},
-	onClickIOSVersion: function (){
+	onClickIOSVersion: function () {
 		window.open(ApplicationConst.APPLICATION_LINKS.IOS);
 	},
-	onClickAndroidVersion: function (){
+	onClickAndroidVersion: function () {
 		window.open(ApplicationConst.APPLICATION_LINKS.ANDROID);
 	},
 	render: function() {
-		if (this.isFirstVisitFromMobile()) {
-			return (
-			<div className="bPageMessage">
-				<SVG classes="bLoginIcon" icon="icon_login"/>
-					<ApplicationLinks
-						onClickWebVersion 		= {this.onClickWebVersion}
-						onClickIOSVersion 		= {this.onClickIOSVersion}
-						onClickAndroidVersion 	= {this.onClickAndroidVersion}
-					/>
-			</div>
-			);
-		} else {
-			return (
-				<div className="bPageMessage">
-					<SVG classes="bLoginIcon" icon="icon_login"/>
-					{this.renderCurrentView()}
-				</div>
-			)
+		const isSync = this.getDefaultBinding().toJS('isSync');
+
+		let content = null;
+		switch (true) {
+			case (
+				isSync &&
+				this.isFirstVisitFromMobile()
+			): {
+				content = (
+					<div className="bPageMessage">
+						<SVG classes="bLoginIcon" icon="icon_login"/>
+						<ApplicationLinks
+							onClickWebVersion 		= {this.onClickWebVersion}
+							onClickIOSVersion 		= {this.onClickIOSVersion}
+							onClickAndroidVersion 	= {this.onClickAndroidVersion}
+						/>
+					</div>
+				);
+				break;
+			}
+			case isSync: {
+				content = (
+					<div className="bPageMessage">
+						<SVG classes="bLoginIcon" icon="icon_login"/>
+						{this.renderCurrentView()}
+					</div>
+				);
+				break;
+			}
 		}
+
+		return content;
 	}
 });
 

@@ -1,6 +1,7 @@
 const 	React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty'),
+		SessionHelper		= require('module/helpers/session_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		SummaryPanel		= require('./summary_panel');
 
@@ -46,7 +47,7 @@ const SchoolSummary = React.createClass({
 				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('userRules.activeSchoolId'),
-				role 			= rootBinding.get('userData.authorizationInfo.role'),
+				role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
 				schoolName		= binding.get('schoolData').get('name'),
 				postcode		= binding.get('schoolData.postcode.postcode'),
 				address			= binding.get('schoolData').get('address'),

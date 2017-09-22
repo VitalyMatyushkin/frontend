@@ -4,6 +4,7 @@
 
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		SVG 			= require('module/ui/svg'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
@@ -69,7 +70,7 @@ class NewsListModel {
 	}
 	
 	getColumns() {
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.columns = [
@@ -122,7 +123,7 @@ class NewsListModel {
 	}
 	
 	createGrid() {
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.grid = new GridModel({
@@ -154,7 +155,7 @@ class NewsListModel {
 	}
 	
 	createGridFromExistingData(grid) {
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 		
 		this.grid = new GridModel({

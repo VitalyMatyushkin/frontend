@@ -16,14 +16,12 @@ const RivalInfoOptionsHelper = {
 						SchoolRivalInfoConsts.BUTTON_TYPES.OPPONENT_SCHOOL_MANAGER_BUTTON,
 						this.isShowChangeSchoolButtonByRival(rival, activeSchoolId, event),
 						handlers.handleClickOpponentSchoolManagerButton
+					),
+					new SchoolRivalInfoButtonData(
+						SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
+						this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
+						handlers.handleClickRemoveTeamButton
 					)
-					//TODO it's temp. waiting fix from server
-					// ,
-					// new SchoolRivalInfoButtonData(
-					// 	SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
-					// 	this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
-					// 	handlers.handleClickRemoveTeamButton
-					// )
 				]
 			};
 		}
@@ -36,15 +34,13 @@ const RivalInfoOptionsHelper = {
 		return typeof inviteStatus !== 'undefined' ? inviteStatus === "ACCEPTED" : true;
 	},
 	isShowChangeSchoolButtonByRival: function(rival, activeSchoolId, event) {
-		const	isInviteAccepted			= this.isInviteAccepted(rival),
-				isValidEventStatus			= (
-					event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-					event.status !== EventHelper.EVENT_STATUS.ACCEPTED
-				);
+		const isInviteAccepted = this.isInviteAccepted(rival);
+		const isValidEventStatus = (
+			event.status !== EventHelper.EVENT_STATUS.FINISHED &&
+			event.status !== EventHelper.EVENT_STATUS.ACCEPTED
+		);
 
-		//TODO it's temp. waiting fix from server
 		return (
-			rival.school.name === 'TBD' &&
 			activeSchoolId === event.inviterSchoolId &&	// Active school is inviter school
 			activeSchoolId !== rival.school.id &&		// Current rival is not active school
 			!isInviteAccepted &&

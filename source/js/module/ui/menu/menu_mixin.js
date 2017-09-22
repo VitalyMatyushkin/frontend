@@ -4,6 +4,7 @@ const 	React 			= require('react'),
 		GoBackItem		= require('./sub_menu_items/go_back_item'),
 		ChooseFileItem 	= require('./sub_menu_items/choose_file_item'),
 		DefaultItem		= require('./sub_menu_items/default_item'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		HelpItem		= require('./sub_menu_items/help_item');
 
 const MenuMixin = {
@@ -34,7 +35,9 @@ const MenuMixin = {
 		}
 
 		// render
-		const userId 	= globalBinding.get('userData.authorizationInfo.id');
+		const userId = SessionHelper.getSessionId(
+			globalBinding.sub('userData')
+		);
 
 		switch (item.key) {
 			case 'goback':
@@ -55,11 +58,13 @@ const MenuMixin = {
 	},
 
 	getMenuNodes: function() {
-		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
-				binding 		= this.getDefaultBinding(),
-				itemsBinding 	= this.getBinding('itemsBinding'),
-				authorization 	= globalBinding.get('userData.authorizationInfo.id'),
-				currentPath 	= binding.get('currentPath') || '/';
+		const	globalBinding	= this.getMoreartyContext().getBinding(),
+				binding			= this.getDefaultBinding(),
+				itemsBinding	= this.getBinding('itemsBinding'),
+				authorization	= SessionHelper.getSessionId(
+					globalBinding.sub('userData')
+				),
+				currentPath		= binding.get('currentPath') || '/';
 
 		let menuItems;
 

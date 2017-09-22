@@ -6,10 +6,12 @@ const   test                = require('selenium-webdriver/testing'),
         SchoolPage          = require('../../../lib/Pages/SchoolPages/SchoolPage.js'),
         OftenUsed           = require('../../../lib/OftenUsed.js'),
         HouseTools          = require('../../../lib/Pages/SchoolPages/HouseTools.js'),
-        Driver              = require('../../Driver.js');
+        Driver              = require('../../Driver.js'),
+        Constants           = require('../../../lib/Constants.js');
 
 const   timeout = 70000,
         house = {
+            filePath: Constants.imagePath,
             houseName: 'TestHouse',
             description: 'Test description'
         };
@@ -31,6 +33,7 @@ test.describe('Add new house', function(){
     test.it('Add house', async () => {
         let toolsHouse = new HouseTools(driver);
         await toolsHouse.visitAddHousePage();
+        await toolsHouse.setHouseImage(house.filePath);
         await toolsHouse.setHouseName(house.houseName);
         await toolsHouse.setHouseDescription(house.description);
         await toolsHouse.setColor();
