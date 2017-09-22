@@ -7,9 +7,14 @@ const	DomainHelper			= require('module/helpers/domain_helper'),
 const authСontroller = {
 	requestedPage:	undefined,
 	publicPages:	['register', 'login', 'reset-request', 'reset'],
+	asPublicSchool:	false,
 	initialize: function(options) {
-		this.saveRequestedPage(options);
+		this.saveRequestedPage();
 		this.initBinding(options);
+
+		if(options.asPublicSchool) {
+			this.asPublicSchool = options.asPublicSchool;
+		}
 
 		let initPromises = [];
 		if(this.hasUserOnlyOneLoginRole()) {
@@ -45,12 +50,10 @@ const authСontroller = {
 				}
 			});
 	},
-	saveRequestedPage: function(options) {
+	saveRequestedPage: function() {
 		const isEmptyCurrentHash = document.location.hash === '';
 
-		if(typeof options.requestedPage !== 'undefined') {
-			this.requestedPage = options.requestedPage;
-		} else if(
+		if(
 			!this.isPublicPage() &&
 			!isEmptyCurrentHash
 		) {
@@ -69,35 +72,45 @@ const authСontroller = {
 				isSuperAdmin			= this.isSuperAdmin();
 
 		if(!isRegistrationProcess) {								// When user isn't in registration process
-			if (isSuperAdmin) {										// For superadmin
-				this.redirectToDefaultPageForSuperAdmin();
-			} else if(												//Bypass authentication
-				this.requestedPage === 'loginPublicSchool' ||
-				this.requestedPage === 'home'
-			) {
-				window.location.hash = this.requestedPage;
-
-				// just in case
-				this.requestedPage = undefined;
-			} else if (												// When user is log in but doesn't have role
-				isUserAuth &&
-				!isUserOnRole
-			) {
-				// TODO i think it should be looks something else
-				// But now just don't do anything
-				// This case is processed by router
-
-				// Remove old requested page for case when user change role
-				// i don't know why but it must be here
-				this.requestedPage = undefined;
-			} else if (isUserOnRole) {								// When user under some role
-				if (typeof this.requestedPage === 'undefined') {
-					this.redirectToDefaultPage();
-				} else {
-					this.redirectToRequestedPage();
+			switch (true) {
+				case (isSuperAdmin): {
+					this.redirectToDefaultPageForSuperAdmin();
+					break;
 				}
-			} else if(!this.isPublicPage()) {						// When user isn't log in, and it's not a public page
-				window.location.href = DomainHelper.getLoginUrl();
+				case (this.asPublicSchool): {
+					// redirect to loginPublicSchool
+					window.location.hash = 'loginPublicSchool';
+
+					binding.set('loginPublicSchool.hashOfRedirectPageAfterLogin', this.requestedPage);
+					this.requestedPage = undefined;
+					break;
+				}
+				// When user is log in but doesn't have role
+				case (
+					isUserAuth &&
+					!isUserOnRole
+				): {
+					// TODO i think it should be looks something else
+					// But now just don't do anything
+					// This case is processed by router
+
+					// Remove old requested page for case when user change role
+					// i don't know why but it must be here
+					this.requestedPage = undefined;
+					break;
+				}
+				case (isUserOnRole): {
+					if (typeof this.requestedPage === 'undefined') {
+						this.redirectToDefaultPage();
+					} else {
+						this.redirectToRequestedPage();
+					}
+					break;
+				}
+				case (!this.isPublicPage()): {
+					window.location.href = DomainHelper.getLoginUrl();
+					break;
+				}
 			}
 		}
 	},

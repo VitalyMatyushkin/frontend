@@ -111,9 +111,6 @@ UserDataClass.setLoginSessionToCookie = function () {
 UserDataClass.setupAjax = function (sessionBinding) {
 	const session = sessionBinding.toJS();
 
-	console.log("AJAX SESSION");
-	console.log(session);
-
 	if(typeof session !== 'undefined') {
 		const	usid	= session.adminId ? "asid" : "usid",
 				options	= { headers:{} };
