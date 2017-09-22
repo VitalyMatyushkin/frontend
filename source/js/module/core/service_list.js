@@ -125,6 +125,7 @@ const serviceList = {
 		serviceList.schoolEventTeam = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 		serviceList.schoolEventPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/photos/{photoId}', binding);
 		serviceList.schoolEventPhotos = new Service('/i/schools/{schoolId}/events/{eventId}/photos', binding);
+		serviceList.schoolEventOpponents = new Service('/i/schools/{schoolId}/events/{eventId}/opponents', binding);
 		// serviceList.schoolEventPdf = new Service('/i/schools/{schoolId}/events/{eventId}/pdf', binding);
 
 		// event individuals
