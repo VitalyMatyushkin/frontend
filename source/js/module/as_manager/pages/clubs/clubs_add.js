@@ -11,7 +11,12 @@ const ClubAddPage = React.createClass({
 	redirectToClubListPage: function () {
 		document.location.hash = 'clubs/clubList';
 	},
+	convertClientFormDataToServerFormData: function(data) {
+		data.sportIds = this.getDefaultBinding().toJS('sports').map(sport => sport.id);
+	},
 	submitAdd: function(data) {
+		this.convertClientFormDataToServerFormData(data);
+
 		window.Server.schoolClubs.post(
 			this.props.activeSchoolId,
 			data

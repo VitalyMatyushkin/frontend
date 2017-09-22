@@ -1,8 +1,13 @@
-const	React 				= require('react'),
-		Morearty			= require('morearty');
+const	React		= require('react'),
+		Immutable	= require('immutable'),
+		Morearty	= require('morearty');
 
-const	Form				= require('module/ui/form/form'),
-		FormField			= require('module/ui/form/form_field');
+const	Form		= require('module/ui/form/form'),
+		FormField	= require('module/ui/form/form_field');
+
+const	MultiselectWithAutocomplete = require('module/ui/multiselect_with_autocomplete/multiselect_with_autocomplete');
+
+const	EventFormActions = require('module/as_manager/pages/events/manager/event_form/event_form_actions');
 
 const ClubsForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -11,8 +16,36 @@ const ClubsForm = React.createClass({
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		onFormSubmit:	React.PropTypes.func.isRequired
 	},
+	componentWillMount: function () {
+		this.getDefaultBinding().set('sports', Immutable.fromJS([]));
+	},
+	handleSelectSport: function (sportId, sport) {
+		const sports = this.getDefaultBinding().toJS('sports');
+
+		sports.push(sport);
+
+		this.getDefaultBinding().set('sports', Immutable.fromJS(sports));
+	},
+	removeSport: function (sportId) {
+		const sports = this.getDefaultBinding().toJS('sports');
+
+		sports.splice(
+			sports.findIndex(sport => sport.id === sportId),
+			1
+		);
+
+		this.getDefaultBinding().set('sports', Immutable.fromJS(sports));
+	},
+	getSelectedSports: function () {
+		return this.getDefaultBinding().toJS('sports');
+	},
 	render: function() {
 		const self = this;
+
+		const service = EventFormActions.getSportService(
+			this.props.activeSchoolId,
+			false
+		);
 
 		return (
 			<div className ="eHouseForm">
@@ -39,6 +72,14 @@ const ClubsForm = React.createClass({
 					>
 						Description
 					</FormField>
+					<MultiselectWithAutocomplete
+						serverField				= { 'name' }
+						serviceFilter			= { service }
+						handleSelectItem		= { this.handleSelectSport }
+						placeholder				= 'Select sport'
+						selectedItems			= { this.getSelectedSports() }
+						handleClickRemoveItem	= { this.removeSport }
+					/>
 				</Form>
 			</div>
 		);
