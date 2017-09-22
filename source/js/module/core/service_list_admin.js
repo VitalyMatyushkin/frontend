@@ -57,6 +57,7 @@ const serviceList = {
 		serviceList.schoolStudents = new Service('/superadmin/schools/{schoolId}/students', binding);
 		serviceList.schoolStudentsCount = new Service('/superadmin/schools/{schoolId}/students/count', binding);
 		serviceList.schoolStudent = new Service('/superadmin/schools/{schoolId}/students/{studentId}', binding);
+		serviceList.schoolStudentMerge = new Service('/superadmin/schools/{schoolId}/students/{studentId}/merge', binding);
 
 		// activity logs
 		serviceList.useractivity = new Service('/superadmin/useractivity', binding);
