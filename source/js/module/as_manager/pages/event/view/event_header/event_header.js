@@ -72,6 +72,10 @@ const EventHeader = React.createClass({
 			.join(", ")
 			: "All ages";
 	},
+	getEventLocation: function(){
+		const eventVenue = this.props.event.venue;
+		return `${eventVenue.venueType.toLowerCase()}, ${eventVenue.postcodeData.postcode}`;
+	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
 		const role = this.props.role;
@@ -94,6 +98,7 @@ const EventHeader = React.createClass({
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
 				eventAges			= this.getEventAges(),
+				eventLocation		= this.getEventLocation(),
 				name				= challengeModel.name,
 				date				= DateHelper.toLocalWithMonthName(challengeModel.dateUTC),
 				time				= challengeModel.time,
@@ -123,6 +128,7 @@ const EventHeader = React.createClass({
 						</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
+						<div className="eEventHeader_field mLocation">{`Venue: ${eventLocation}`}</div>
 						<TweetButton
 							isTweetButtonRender 	= { this.props.isTweetButtonRender }
 							twitterData 			= { this.props.twitterData }
