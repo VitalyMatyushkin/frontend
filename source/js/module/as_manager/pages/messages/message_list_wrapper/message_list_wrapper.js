@@ -72,7 +72,10 @@ const MessageListWrapper = React.createClass({
 			.commit();
 		
 		if (!isShowComments) {
-			window.Server.childrenEventMessageComments.get({messageId}).then(
+			window.Server.schoolEventMessageComments.get({
+				schoolId: this.props.activeSchoolId,
+				messageId
+			}).then(
 				comments => {
 					binding.atomically()
 					.set(`messages.${messageIndex}.comments`, 		Immutable.fromJS(comments))
