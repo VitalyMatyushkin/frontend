@@ -1,11 +1,11 @@
-const	React 				= require('react'),
-	Autocomplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-	Loader 					= require('module/ui/loader'),
-	Promise					= require('bluebird'),
-	Morearty				= require('morearty'),
-	Immutable				= require('immutable'),
-	moment					= require('moment'),
-	StudentImporter			= require('module/utils/student_importer');
+const	React 			= require('react'),
+		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Loader 			= require('module/ui/loader'),
+		Promise			= require('bluebird'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		moment			= require('moment'),
+		StudentImporter	= require('module/utils/student_importer');
 
 const ImportStudentsModule = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -156,7 +156,6 @@ const ImportStudentsModule = React.createClass({
 							serviceFilter={self.serviceSchoolFilter}
 							serverField='name'
 							onSelect={self.onSchoolChange}
-							binding={binding.sub('schoolAutocomplete')}
 							placeholder='School Name'
 						/>
 					</div>

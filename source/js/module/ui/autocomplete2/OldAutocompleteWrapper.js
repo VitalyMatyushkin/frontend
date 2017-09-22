@@ -1,9 +1,7 @@
-const 	ComboBox2 	= require('./ComboBox2'),
-		Morearty    = require('morearty'),
-		React 		= require('react');
+const	React		= require('react'),
+		ComboBox2	= require('module/ui/autocomplete2/ComboBox2');
 
 const OldAutocompleteWrapper = React.createClass({
-	mixins: [Morearty.Mixin],
 	propTypes: {
 		serverField:		React.PropTypes.string,
 		serviceFullData:	React.PropTypes.func,

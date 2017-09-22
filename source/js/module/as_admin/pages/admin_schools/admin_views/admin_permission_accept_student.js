@@ -4,7 +4,6 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		If 				= require('module/ui/if/if'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AdminPermissionAcceptStudentComponent = React.createClass({

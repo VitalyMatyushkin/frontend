@@ -273,7 +273,6 @@ const OpponentSchoolManager = React.createClass({
 										serverField		= "name"
 										placeholder		= "enter school name"
 										onSelect		= {this.handleChangeOpponentSchool}
-										binding			= {binding.sub('opponentSchoolManager')}
 										extraCssStyle	= "ePopup mBigSize mWhiteBG"
 						/>
 					</div>
