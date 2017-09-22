@@ -90,10 +90,7 @@ const authСontroller = {
 					isUserAuth &&
 					!isUserOnRole
 				): {
-					// TODO i think it should be looks something else
-					// But now just don't do anything
-					// This case is processed by router
-
+					window.location.href = DomainHelper.getLoginUrl();
 					// Remove old requested page for case when user change role
 					// i don't know why but it must be here
 					this.requestedPage = undefined;
