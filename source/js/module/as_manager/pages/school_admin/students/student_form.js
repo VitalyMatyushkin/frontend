@@ -14,11 +14,11 @@ const	React				= require('react'),
 const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		schoolId: 		React.PropTypes.string.isRequired,
-		title: 			React.PropTypes.string.isRequired,
-		onFormSubmit: 	React.PropTypes.func,
-		initialForm: 	React.PropTypes.object,
-		initialHouse: 	React.PropTypes.object
+		schoolId:		React.PropTypes.string.isRequired,
+		title:			React.PropTypes.string.isRequired,
+		onFormSubmit:	React.PropTypes.func,
+		initialForm:	React.PropTypes.object,
+		initialHouse:	React.PropTypes.object
 	},
 	componentWillMount: function() {
 		this.initCountNextOfKinBlocks();

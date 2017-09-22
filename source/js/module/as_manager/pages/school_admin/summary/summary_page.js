@@ -40,12 +40,11 @@ const SchoolSummary = React.createClass({
 		});
     },
 	render: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
+		const	binding			= this.getDefaultBinding(),
 				schoolPicture	= binding.get('schoolData.pic') ? binding.get('schoolData.pic'):'images/no-image.jpg',
 				siteLink		= binding.get('schoolData.domain') ? DomainHelper.getSubDomain(binding.get('schoolData.domain')) :'',
 				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined,
-				rootBinding 	= self.getMoreartyContext().getBinding(),
+				rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('userRules.activeSchoolId'),
 				role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
 				schoolName		= binding.get('schoolData').get('name'),
@@ -57,18 +56,20 @@ const SchoolSummary = React.createClass({
 			return null;	// nothing to show if data still loading
 		}
 
-		return <SummaryPanel
-			showEditButton	= {role === 'ADMIN'}
-			activeSchoolId	= {activeSchoolId}
-			schoolName		= {schoolName}
-			schoolPic		= {schoolPicture}
-			postcode		= {postcode}
-			address			= {address}
-			description		= {description}
-			siteLink		= {siteLink}
-			geoPoint		= {geoPoint}
-			binding			= {binding}
-		/>;
+		return (
+			<SummaryPanel
+				showEditButton	= {role === 'ADMIN'}
+				activeSchoolId	= {activeSchoolId}
+				schoolName		= {schoolName}
+				schoolPic		= {schoolPicture}
+				postcode		= {postcode}
+				address			= {address}
+				description		= {description}
+				siteLink		= {siteLink}
+				geoPoint		= {geoPoint}
+				binding			= {binding}
+			/>
+		);
 
 	}
 });
