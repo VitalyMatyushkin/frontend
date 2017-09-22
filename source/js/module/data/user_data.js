@@ -29,13 +29,11 @@ UserDataClass.getDefaultState = function () {
 	}
 
 	if(!this.isValidSession(loginSession)) {
-		console.log('LOGIN SESSION:IT IS NOT A VALID SESSION.');
 		loginSession = undefined;
 		Helpers.cookie.remove('loginSession');
 	}
 
 	if(!this.isValidSession(roleSession)) {
-		console.log('ROLE SESSION:IT IS NOT A VALID SESSION.');
 		roleSession = undefined;
 		Helpers.SessionStorage.remove('roleSession');
 	}

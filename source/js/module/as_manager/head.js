@@ -9,6 +9,7 @@ const	Logo			= require('module/as_manager/head/logo'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		RoleHelper		= require('module/helpers/role_helper'),
+		SessionHelper	= require('module/helpers/session_helper'),
 		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
 		Avatar 			= require('module/ui/avatar/avatar'),
 		Bootstrap  		= require('styles/bootstrap-custom.scss');
@@ -281,11 +282,14 @@ const Head = React.createClass({
 		binding.set('topMenuItems', this.getMenuItems());
 	},
 	render: function() {
-		const 	binding = this.getDefaultBinding(),
-				loginSession = binding.get('userData.sessions.loginSession'),
-				roleSession = binding.get('userData.sessions.roleSession');
-
-		if (loginSession) {
+		const	binding = this.getDefaultBinding(),
+				loginSession = SessionHelper.getLoginSession(binding.sub('userData')),
+				roleSession = SessionHelper.getRoleSession(binding.sub('userData'));
+		console.log(window.location.hash);
+		if (
+			typeof loginSession !== 'undefined' &&
+			window.location.hash !== '#login'
+		) {
 			return (
 				<div className="bTopPanel container">
 					<div className="row">
