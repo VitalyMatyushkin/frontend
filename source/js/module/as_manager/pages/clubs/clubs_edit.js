@@ -51,6 +51,7 @@ const ClubEditPage = React.createClass({
 			return (
 				<ClubForm
 					title			= "Edit club..."
+					activeSchoolId	= { this.props.activeSchoolId }
 					onFormSubmit	= { this.submitEdit }
 					binding			= { binding }
 				/>

@@ -23,6 +23,7 @@ const ClubAddPage = React.createClass({
 		return (
 			<ClubForm
 				title			= "Add new club..."
+				activeSchoolId	= { this.props.activeSchoolId }
 				onFormSubmit	= { this.submitAdd }
 				binding			= { binding }
 			/>

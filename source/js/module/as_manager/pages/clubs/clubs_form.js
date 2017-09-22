@@ -1,13 +1,14 @@
-const	React 		= require('react'),
-		Morearty	= require('morearty');
+const	React 				= require('react'),
+		Morearty			= require('morearty');
 
-const	Form		= require('module/ui/form/form'),
-		FormField	= require('module/ui/form/form_field');
+const	Form				= require('module/ui/form/form'),
+		FormField			= require('module/ui/form/form_field');
 
 const ClubsForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title:			React.PropTypes.string.isRequired,
+		activeSchoolId:	React.PropTypes.string.isRequired,
 		onFormSubmit:	React.PropTypes.func.isRequired
 	},
 	render: function() {
@@ -24,17 +25,17 @@ const ClubsForm = React.createClass({
 					cancelButtonId	= 'club_cancel'
 				>
 					<FormField
-						type="text"
-						id="house_name"
-						field="name"
-						validation="required"
+						id			= "house_name"
+						type		= "text"
+						field		= "name"
+						validation	= "required"
 					>
 						Club name
 					</FormField>
 					<FormField
-						type="text"
-						id="house_description"
-						field="description"
+						id		= "house_description"
+						type	= "text"
+						field	= "description"
 					>
 						Description
 					</FormField>
