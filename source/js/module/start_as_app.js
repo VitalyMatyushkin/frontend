@@ -16,7 +16,6 @@ const	ApplicationView 	= require('module/as_manager/application'),
 function runManagerMode() {
 	const today = new Date();
 
-// Create Morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData:	userDataInstance.getDefaultState(),
@@ -117,10 +116,9 @@ function runManagerMode() {
 	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
-	// TODO: initializing all services (open too) only when we got all vars set in window.
-	// TODO:this is not too very brilliant idea, but there is no other way to fix it quick
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
 	serviceList.initializeOpenServices();
-
 	serviceList.initialize(
 		binding.sub('userData')
 	);
@@ -129,18 +127,15 @@ function runManagerMode() {
 		.then(sessions => {
 			binding.set('userData', Immutable.fromJS(sessions));
 
-			// Передача связывания контекста в классы данных
 			userDataInstance.setBinding(binding.sub('userData'));
 			userRulesInstance.setBinding(binding.sub('userRules'));
 
 			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-			// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 			authController
 				.initialize({binding: binding})
 				.then(() => {
-					// Инициализация приложения
 					ReactDom.render(
 						React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 						document.getElementById('jsMain')

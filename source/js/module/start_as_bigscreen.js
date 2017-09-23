@@ -57,33 +57,31 @@ function initMainView(school) {
 	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
-
-	// setting context binding to data classes
-	userDataInstance.setBinding(binding.sub('userData'));
-
-	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize({
-		binding:		binding,
-		defaultPath:	'home',
-		requestedPage:	'home',
-		asSchool:		true //Flag for public school page
-	});
-
 	// initializing all services (open too) only when we got all vars set in window.
 	// this is not too very brilliant idea, but there is no other way to fix it quick
-	// TODO: fix me
 	serviceList.initializeOpenServices();
+	authController.initialize({
+		binding:		binding,
+		asPublicSchool:	true
+	});
 
-	// Turning on authorization service
-	serviceList.initialize(
-		binding.sub('userData')
-	);
+	userDataInstance.checkAndGetValidSessions()
+		.then(sessions => {
+			binding.set('userData', Immutable.fromJS(sessions));
 
-	ReactDom.render(
-		React.createElement(
-			MoreartyContext.bootstrap(ApplicationView), null),
-			document.getElementById('jsMain')
-	);
+			userDataInstance.setBinding(binding.sub('userData'));
+
+			// Turning on authorization service
+			serviceList.initialize(
+				binding.sub('userData')
+			).then(() => {
+				ReactDom.render(
+					React.createElement(
+						MoreartyContext.bootstrap(ApplicationView), null),
+					document.getElementById('jsMain')
+				);
+			});
+		});
 }
 
 function init404View() {

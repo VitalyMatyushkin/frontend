@@ -11,6 +11,7 @@ const   ApplicationView     = require('module/as_password/application'),
         initTawkTo			= require('module/tawk_to/tawk_to'),
 	    SessionHelper		= require('module/helpers/session_helper'),
         Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
         ReactDom            = require('react-dom'),
         React               = require('react');
 
@@ -56,43 +57,41 @@ function runPasswordMode() {
     const binding = MoreartyContext.getBinding();
 
     window.Server = serviceList;
-
-    // Передача связывания контекста в классы данных
-    userDataInstance.setBinding(binding.sub('userData'));
-    userRulesInstance.setBinding(binding.sub('userRules'));
-
     // initializing all services (open too) only when we got all vars set in window.
     // this is not too very brilliant idea, but there is no other way to fix it quick
-    // TODO: fix me
     serviceList.initializeOpenServices();
-
-    // initializing all services (open too) only when we got all vars set in window.
-    // this is not too very brilliant idea, but there is no other way to fix it quick
-    // TODO: fix me
-    serviceList.initializeOpenServices();
-
     // Enable services
     serviceList.initialize(
 		binding.sub('userData')
     );
 
-    // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-    authController.initialize(
-        {
-            binding: binding
-        }
-    );
+	userDataInstance.checkAndGetValidSessions()
+		.then(sessions => {
+			binding.set('userData', Immutable.fromJS(sessions));
 
-    window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
-    window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
+			// Передача связывания контекста в классы данных
+			userDataInstance.setBinding(binding.sub('userData'));
+			userRulesInstance.setBinding(binding.sub('userRules'));
 
-    // Инициализация приложения
-    ReactDom.render(
-        React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-        document.getElementById('jsMain')
-    );
+			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-    initTawkTo();
+
+			// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+			authController.initialize(
+				{
+					binding: binding
+				}
+			).then(() => {
+				// Инициализация приложения
+				ReactDom.render(
+					React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+					document.getElementById('jsMain')
+				);
+
+				initTawkTo();
+			});
+		});
 }
 
 module.exports = runPasswordMode;

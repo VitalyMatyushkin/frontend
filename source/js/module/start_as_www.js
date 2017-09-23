@@ -3,8 +3,8 @@ const  	ApplicationView 	= require('module/as_www/application'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
 		initTawkTo			= require('module/tawk_to/tawk_to'),
-		SessionHelper		= require('module/helpers/session_helper'),
 		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react');
 
@@ -29,34 +29,30 @@ function runWwwMode() {
 	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
-
-	// Передача связывания контекста в классы данных
-	userDataInstance.setBinding(binding.sub('userData'));
-
 	// initializing all services (open too) only when we got all vars set in window.
 	// this is not too very brilliant idea, but there is no other way to fix it quick
 	// TODO: fix me
 	serviceList.initializeOpenServices();
-
 	// Включение авторизации сервисов
 	serviceList.initialize(
 		binding.sub('userData')
 	);
 
-	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize({
-		binding: binding,
-		defaultPath: '/'
-	});
+	userDataInstance.checkAndGetValidSessions()
+		.then(sessions => {
+			binding.set('userData', Immutable.fromJS(sessions));
 
+			authController
+				.initialize({binding: binding})
+				.then(() => {
+					ReactDom.render(
+						React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+						document.getElementById('jsMain')
+					);
 
-	// Инициализация приложения
-	ReactDom.render(
-		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-		document.getElementById('jsMain')
-	);
-
-	initTawkTo();
+					initTawkTo();
+				});
+		});
 }
 
 module.exports = runWwwMode;
