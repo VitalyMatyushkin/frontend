@@ -38,8 +38,8 @@ const AlbumRoutes = React.createClass({
 
 		return (
 			<RouterView
-				routes 	= { binding }
-				binding = { binding }
+				routes 	= { this.getMoreartyContext().getBinding() }
+				binding = { this.getMoreartyContext().getBinding() }
 			>
 				<Route
 					path 		= { "/" + this.props.basePath + "/edit/:albumId" }
