@@ -12,15 +12,15 @@ const 	React 		= require('react'),
  * 
  */
 function RoleSelectorComponent(props) {
-	const	onRoleSelected		= props.onRoleSelected,
-			availableRoles		= props.availableRoles;
+	const	onRoleSelected	= props.onRoleSelected,
+			roleList		= props.roleList;
 
 	return (
 		<div className="bRoleSelector">
-			{availableRoles.map(role =>
-				<Button	key		= {role.name}
-						text	= {RoleHelper.ROLE_TO_PERMISSION_MAPPING[role.name]}
-						onClick	= {() => onRoleSelected(role)}
+			{roleList.map(roleName =>
+				<Button	key		= {roleName}
+						text	= {RoleHelper.ROLE_TO_PERMISSION_MAPPING[roleName]}
+						onClick	= {() => onRoleSelected(roleName)}
 				/>
 			)}
 		</div>
@@ -28,7 +28,8 @@ function RoleSelectorComponent(props) {
 }
 
 RoleSelectorComponent.propTypes = {
-	availableRoles: React.PropTypes.oneOfType([				// expecting array of object or Immutable.List with strings
+	// expecting array of object or Immutable.List with strings
+	roleList: React.PropTypes.oneOfType([
 		React.PropTypes.arrayOf(React.PropTypes.object),
 		React.PropTypes.instanceOf(Immutable.List)
 	]).isRequired,

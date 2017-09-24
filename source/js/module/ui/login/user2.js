@@ -1,15 +1,18 @@
-const	React				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty			= require('morearty'),
-		bowser 				= require('bowser'),
-		LoginForm			= require('../../ui/login/user/form'),
-		LoginError			= require('../../ui/login/user/error'),
-		RoleSelector		= require('../../as_login/pages/RoleSelector'),
-		ApplicationLinks 	= require('../../ui/application_links/application_links'),
-		ApplicationConst	= require('module/helpers/consts/application_links'),
-		SessionHelper		= require('module/helpers/session_helper'),
-		Promise				= require('bluebird'),
-		SVG					= require('../../ui/svg');
+const	React					= require('react'),
+		Immutable				= require('immutable'),
+		Morearty				= require('morearty'),
+		bowser 					= require('bowser'),
+		LoginForm				= require('../../ui/login/user/form'),
+		LoginError				= require('../../ui/login/user/error'),
+		RoleSelector			= require('../../as_login/pages/RoleSelector'),
+		RoleHelper 				= require('module/helpers/role_helper'),
+		RoleListHelper			= require('module/shared_pages/head/role_list_helper'),
+		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
+		ApplicationLinks 		= require('../../ui/application_links/application_links'),
+		ApplicationConst		= require('module/helpers/consts/application_links'),
+		SessionHelper			= require('module/helpers/session_helper'),
+		Promise					= require('bluebird'),
+		SVG						= require('../../ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -23,6 +26,8 @@ const LoginUserPage = React.createClass({
 	componentWillMount: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		self.getMoreartyContext().getBinding().sub('userRules').set('activeSchoolId', null);
 
 		const domain = window.location.host.split('.')[0];
 
@@ -59,14 +64,23 @@ const LoginUserPage = React.createClass({
 		this.hideError();
 	},
 	setPermissions: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		return window.Server.roles.get()
-			.then(roleList => {
-				binding.set('__allPermissions', Immutable.fromJS(roleList));
+		RoleListHelper.getUserRoles()
+			.then(permissions => {
+				binding.set(
+					'roleList',
+					Immutable.fromJS({
+						permissions: permissions
+					})
+				);
 
-				return true;
+				const roleList = this.getRoleListByPermissionList(permissions);
+				if(roleList.length == 1) {
+					return AuthorizationServices.become(roleList[0]);
+				} else {
+					return true;
+				}
 			});
 	},
 	isAuthorized: function() {
@@ -77,8 +91,8 @@ const LoginUserPage = React.createClass({
 	renderCurrentView: function() {
 		let currentView = null;
 		
-		const	showError		= this.getDefaultBinding().toJS('showError'),
-				allPermissions	= this.getDefaultBinding().toJS('__allPermissions');
+		const	showError	= this.getDefaultBinding().toJS('showError'),
+				permissions	= this.getDefaultBinding().toJS('roleList.permissions');
 		
 		switch (true) {
 			case showError === true:
@@ -88,10 +102,10 @@ const LoginUserPage = React.createClass({
 					/>
 				);
 				break;
-			case showError === false && typeof allPermissions !== 'undefined':
+			case showError === false && typeof permissions !== 'undefined':
 				currentView = (
 					<RoleSelector
-						availableRoles={allPermissions}
+						roleList={ this.getRoleListByPermissionList(permissions) }
 					/>
 				);
 				break;
@@ -108,6 +122,17 @@ const LoginUserPage = React.createClass({
 				break;
 		}
 		return currentView;
+	},
+	getRoleListByPermissionList: function (permissions) {
+		const roleList = [];
+
+		Object.keys(RoleHelper.USER_ROLES).forEach(role => {
+			if(permissions.findIndex(p => p.role === role) !== -1) {
+				roleList.push(role);
+			}
+		});
+
+		return roleList;
 	},
 	isFirstVisitFromMobile: function(){
 		const isFirstVisit = typeof this.getDefaultBinding().get('isFirstVisit') === 'undefined';
