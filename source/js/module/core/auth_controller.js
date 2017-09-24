@@ -43,7 +43,7 @@ const authСontroller = {
 		);
 	},
 	setRoleList: function () {
-		RoleListHelper
+		return RoleListHelper
 			.getUserRoles()
 			.then(permissions => {
 				this.binding.set(
@@ -232,7 +232,29 @@ const authСontroller = {
 	getSchoolKind: function(role) {
 		let schoolKind;
 
-		schoolKind = this.getRandomSchoolKindByRole(role);
+		if(this.isUserInSystem()) {
+			schoolKind = this.getSchoolKindByRoleAndSchoolId(
+				role,
+				this.binding.toJS('userRules.activeSchoolId')
+			);
+		} else {
+			schoolKind = this.getRandomSchoolKindByRole(role)
+		}
+
+		return schoolKind;
+	},
+	getSchoolKindByRoleAndSchoolId: function(role, schoolId) {
+		const	binding = this.binding;
+		let		schoolKind;
+
+		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions']);
+		if(typeof permissions !== 'undefined') {
+			const permission = permissions.find(p => p.role === role && p.schoolId === schoolId);
+
+			if(typeof permission !== 'undefined') {
+				schoolKind = permission.school.kind;
+			}
+		}
 
 		return schoolKind;
 	},
@@ -266,14 +288,12 @@ const authСontroller = {
 			typeof propz.get(binding.toJS('userData'), ['roleList']) !== 'undefined'
 		);
 	},
-	isFirstLogin: function() {
-		const isRoleListExist = typeof propz.get(this.binding.toJS('userData'), ['roleList']) !== 'undefined';
-
+	isUserInSystem: function() {
 		const activeSchoolId = propz.get(this.binding.toJS('userRules'), ['activeSchoolId']);
 		// sometimes activeSchoolId is null
-		const isActiveSchoolExist = typeof activeSchoolId !== 'undefined' && typeof activeSchoolId === 'string';
+		const isActiveSchoolExist = typeof activeSchoolId === 'string';
 
-		return !isRoleListExist || !isActiveSchoolExist;
+		return isActiveSchoolExist;
 	},
 	/**
 	 * Handler for user auth update event

@@ -285,7 +285,7 @@ const Head = React.createClass({
 		const	binding = this.getDefaultBinding(),
 				loginSession = SessionHelper.getLoginSession(binding.sub('userData')),
 				roleSession = SessionHelper.getRoleSession(binding.sub('userData'));
-		console.log(window.location.hash);
+
 		if (
 			typeof loginSession !== 'undefined' &&
 			window.location.hash !== '#login'

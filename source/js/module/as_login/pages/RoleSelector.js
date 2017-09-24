@@ -7,21 +7,21 @@ const	React	= require('react'),
 
 const RoleSelector = React.createClass({
 	propTypes: {
-		availableRoles: React.PropTypes.array.isRequired
+		roleList: React.PropTypes.array.isRequired
 	},
-	onRoleSelected: function(role) {
-		Auth.become(role.name);
+	onRoleSelected: function(roleName) {
+		Auth.become(roleName);
 	},
 	render: function() {
-		const availableRoles = this.props.availableRoles;
+		const roleList = this.props.roleList;
 
 		let content = null;
 
 		// not drawing roles if there is only one. It will be selected automatically
-		if(availableRoles.length > 1) {
+		if(roleList.length > 1) {
 			content = (
 				<RSC
-					availableRoles	= { availableRoles }
+					roleList		= { roleList }
 					onRoleSelected	= { this.onRoleSelected }
 				/>
 			);
