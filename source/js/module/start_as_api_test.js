@@ -7,14 +7,10 @@ const   ApplicationView 	= require('module/as_api_test/application'),
         React 				= require('react');
 
 function runTestApi() {
-
-
-    // Инициализация приложения
     ReactDom.render(
         React.createElement(ApplicationView, null),
         document.getElementById('jsMain')
     );
-
 }
 
 module.exports = runTestApi;
