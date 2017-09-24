@@ -5,6 +5,7 @@ const	React				= require('react'),
 		LoginForm			= require('../../ui/login/user/form'),
 		LoginError			= require('../../ui/login/user/error'),
 		RoleSelector		= require('../../as_login/pages/RoleSelector'),
+		RoleListHelper		= require('module/shared_pages/head/role_list_helper'),
 		ApplicationLinks 	= require('../../ui/application_links/application_links'),
 		ApplicationConst	= require('module/helpers/consts/application_links'),
 		SessionHelper		= require('module/helpers/session_helper'),
@@ -59,12 +60,16 @@ const LoginUserPage = React.createClass({
 		this.hideError();
 	},
 	setPermissions: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		return window.Server.roles.get()
-			.then(roleList => {
-				binding.set('__allPermissions', Immutable.fromJS(roleList));
+		RoleListHelper.getUserRoles()
+			.then(permissions => {
+				binding.set(
+					'roleList',
+					Immutable.fromJS({
+						permissions: permissions
+					})
+				);
 
 				return true;
 			});
@@ -77,8 +82,8 @@ const LoginUserPage = React.createClass({
 	renderCurrentView: function() {
 		let currentView = null;
 		
-		const	showError		= this.getDefaultBinding().toJS('showError'),
-				allPermissions	= this.getDefaultBinding().toJS('__allPermissions');
+		const	showError	= this.getDefaultBinding().toJS('showError'),
+				permissions	= this.getDefaultBinding().toJS('roleList.permissions');
 		
 		switch (true) {
 			case showError === true:
@@ -88,10 +93,10 @@ const LoginUserPage = React.createClass({
 					/>
 				);
 				break;
-			case showError === false && typeof allPermissions !== 'undefined':
+			case showError === false && typeof roleList !== 'undefined':
 				currentView = (
 					<RoleSelector
-						availableRoles={allPermissions}
+						availableRoles={permissions}
 					/>
 				);
 				break;

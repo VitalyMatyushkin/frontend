@@ -1,6 +1,8 @@
 const	DomainHelper			= require('module/helpers/domain_helper'),
 		SessionHelper			= require('module/helpers/session_helper'),
 		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
+		RoleListHelper			= require('module/shared_pages/head/role_list_helper'),
+		Immutable 				= require('immutable'),
 		Promise 				= require('bluebird'),
 		propz					= require('propz');
 
@@ -17,11 +19,14 @@ const authСontroller = {
 		}
 
 		let initPromises = [];
+		if(this.isUserAuth()) {
+			initPromises.push(this.setRoleList());
+		}
 		if(this.hasUserOnlyOneLoginRole()) {
-			initPromises = this.becomeOneRole();
+			initPromises.push(this.becomeOneRole());
 		}
 
-		return Promise.resolve(initPromises).then(() => {
+		return Promise.all(initPromises).then(() => {
 			this.redirectUserByUserAuthData();
 
 			SessionHelper.getSessionsDataBinding(
@@ -36,6 +41,20 @@ const authСontroller = {
 			typeof SessionHelper.getLoginSession(this.binding.sub('userData')) !== 'undefined' &&
 			typeof SessionHelper.getRoleSession(this.binding.sub('userData')) === 'undefined'
 		);
+	},
+	setRoleList: function () {
+		RoleListHelper
+			.getUserRoles()
+			.then(permissions => {
+				this.binding.set(
+					'userData.roleList',
+					Immutable.fromJS({
+						permissions: permissions
+					})
+				);
+
+				return true;
+			});
 	},
 	/**
 	 * Function gets user role session if user has one role
@@ -211,32 +230,9 @@ const authСontroller = {
 		this.requestedPage = undefined;
 	},
 	getSchoolKind: function(role) {
-		const	binding = this.binding;
-		let		schoolKind;
+		let schoolKind;
 
-		if(this.isFirstLogin()) {
-			schoolKind = this.getRandomSchoolKindByRole(role);
-		} else {
-			schoolKind = this.getSchoolKindByRoleAndSchoolId(
-				role,
-				binding.toJS('userRules.activeSchoolId')
-			);
-		}
-
-		return schoolKind;
-	},
-	getSchoolKindByRoleAndSchoolId: function(role, schoolId) {
-		const	binding = this.binding;
-		let		schoolKind;
-
-		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions']);
-		if(typeof permissions !== 'undefined') {
-			const permission = permissions.find(p => p.role === role && p.schoolId === schoolId);
-
-			if(typeof permission !== 'undefined') {
-				schoolKind = permission.school.kind;
-			}
-		}
+		schoolKind = this.getRandomSchoolKindByRole(role);
 
 		return schoolKind;
 	},
@@ -251,11 +247,10 @@ const authСontroller = {
 		const	binding = this.binding;
 		let		schoolKind;
 
-		const	permissionsData	= binding.toJS('userData.__allPermissions').find(data => data.name === role),
-				permissions		= propz.get(permissionsData, ['permissions']);
+		const permissions = propz.get(binding.toJS(), ['userData', 'roleList', 'permissions']);
 
 		if(typeof permissions !== 'undefined') {
-			const permission = permissions.find(item => item.status === 'ACTIVE');
+			const permission = permissions.find(item => item.role === role && item.status === 'ACTIVE');
 
 			if(typeof permission !== 'undefined') {
 				schoolKind = permission.school.kind;
@@ -268,7 +263,6 @@ const authСontroller = {
 		const binding = this.binding;
 
 		return (
-			typeof propz.get(binding.toJS('userData'), ['__allPermissions']) !== 'undefined' ||
 			typeof propz.get(binding.toJS('userData'), ['roleList']) !== 'undefined'
 		);
 	},
