@@ -10,6 +10,10 @@
   font-size: 15px;
   line-height: 15px;
   cursor: pointer;
+
+  &.mSmallWide {
+    width: 260px;
+  }
 }
 
 .eMultiSelectDropdown_input {

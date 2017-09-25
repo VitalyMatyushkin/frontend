@@ -8,7 +8,8 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 
 const TypeText =  React.createClass({
 	propTypes: {
-		id:				React.PropTypes.string 		// just old good html id
+		id:			React.PropTypes.string, 		// just old good html id
+		isDisabled:	React.PropTypes.bool
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
@@ -34,7 +35,7 @@ const TypeText =  React.createClass({
 				id				= {this.props.id}
 				value			= {value}
 				placeholder		= {this.props.placeholder}
-				disabled		= {this.props.isDisabled}
+				isDisabled		= {this.props.isDisabled}
 				onBlur			= {this.handleBlur}
 				onFocus			= {() => {}}
 				handleChange	= {this.handleChange}

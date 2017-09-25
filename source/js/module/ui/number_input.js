@@ -8,7 +8,7 @@ const TextInput = React.createClass({
 		id:				React.PropTypes.string,
 		value:			React.PropTypes.string,
 		placeholder:	React.PropTypes.string,
-		disabled:		React.PropTypes.bool,
+		isDisabled:		React.PropTypes.bool,
 		handleBlur:		React.PropTypes.func,
 		handleFocus:	React.PropTypes.func,
 		handleChange:	React.PropTypes.func

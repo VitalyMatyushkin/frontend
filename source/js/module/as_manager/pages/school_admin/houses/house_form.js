@@ -13,25 +13,27 @@ const ClassForm = React.createClass({
 	render: function() {
 		var self = this;
 
-		return ( <div className ="eHouseForm">
-			<Form
-				formStyleClass="mNarrow"
-				name={self.props.title}
-				onSubmit={self.props.onFormSubmit}
-				binding={self.getDefaultBinding()}
-				submitButtonId	= 'house_submit'
-				cancelButtonId	= 'house_cancel'
-			>
-				<FormField
-					type 		= "imageFile"
-					field 		= "pic"
-					labelText 	= "+"
-					typeOfFile 	= "image"
-				/>
-				<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
-				<FormField type="text" id="house_description" field="description">Description</FormField>
-				<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">Colours</FormField>
-			</Form></div>
+		return (
+			<div className ="eHouseForm">
+				<Form
+					formStyleClass="mNarrow"
+					name={self.props.title}
+					onSubmit={self.props.onFormSubmit}
+					binding={self.getDefaultBinding()}
+					submitButtonId	= 'house_submit'
+					cancelButtonId	= 'house_cancel'
+				>
+					<FormField
+						type 		= "imageFile"
+						field 		= "pic"
+						labelText 	= "+"
+						typeOfFile 	= "image"
+					/>
+					<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
+					<FormField type="text" id="house_description" field="description">Description</FormField>
+					<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">Colours</FormField>
+				</Form>
+			</div>
 		)
 	}
 });
