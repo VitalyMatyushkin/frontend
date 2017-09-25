@@ -184,7 +184,7 @@ const MessageListWrapper = React.createClass({
 		} else if(isSync && messages.length === 0) {
 			return (
 				<div className="eInvites_processing">
-					<span>There is no messages.</span>
+					<span>There are no messages to display.</span>
 				</div>
 			);
 		}
