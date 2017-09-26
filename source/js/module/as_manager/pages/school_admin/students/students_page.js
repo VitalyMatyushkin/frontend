@@ -5,6 +5,7 @@ const 	RouterView 				= require('module/core/router'),
 		StudentsListComponent 	= require("module/as_manager/pages/school_admin/students/list/student-list"),
 		StudentsAddComponent 	= require("module/as_manager/pages/school_admin/students/student_add"),
 		StudentsEditComponent 	= require("module/as_manager/pages/school_admin/students/student_edit"),
+		StudentsMergeComponent 	= require("module/as_manager/pages/school_admin/students/student_with_permission_merge"),
 		StudentStatsComponent 	= require('module/as_manager/pages/school_admin/students/student-statistic');
 
 
@@ -35,6 +36,11 @@ const StudentPage = React.createClass({
 					path		="/school_admin/students/edit"
 					binding		={ binding.sub('studentForm') }
 					component	={ StudentsEditComponent }
+				/>
+				<Route
+					path		="/school_admin/students/merge"
+					binding		={ binding.sub('studentMerge') }
+					component	={ StudentsMergeComponent }
 				/>
 				<Route
 					path		="/school_admin/students/stats"
