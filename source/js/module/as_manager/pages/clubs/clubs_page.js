@@ -21,7 +21,12 @@ const ClubsPage = React.createClass({
 				clubsForm: {}
 			},
 			clubsEdit: {
-				clubsForm: {}
+				clubsEditRouting: {},
+				subMenuItems: {},
+				clubsMainInfoEdit: {
+					clubsForm: {}
+				},
+				clubsChildrenEdit: {}
 			},
 			clubsRouting: {}
 		});
@@ -50,7 +55,7 @@ const ClubsPage = React.createClass({
 				/>
 
 				<Route
-					path			= "/clubs/edit"
+					path			= "/clubs/editMainInfo /clubs/editChildren"
 					binding			= { binding.sub('clubsEdit') }
 					activeSchoolId	= { this.props.activeSchoolId }
 					component		= { ClubEdit }

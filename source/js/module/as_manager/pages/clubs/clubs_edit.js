@@ -2,11 +2,12 @@ const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Immutable	= require('immutable');
 
-const	ClubForm	= require('module/as_manager/pages/clubs/clubs_form/clubs_form'),
-		Loader		= require('module/ui/loader');
+const	RouterView	= require('module/core/router'),
+		Route		= require('module/core/route'),
+		SubMenu		= require('module/ui/menu/sub_menu');
 
-const	ClubsConst	= require('module/helpers/consts/clubs'),
-		ClubsHelper	= require('module/as_manager/pages/clubs/clubs_helper');
+const	ClubMainInfoEdit	= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
+		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit');
 
 const LoaderStyle = require('styles/ui/loader.scss');
 
@@ -15,76 +16,78 @@ const ClubEditPage = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
-	componentWillMount: function () {
-		const	binding			= this.getDefaultBinding(),
-				globalBinding	= this.getMoreartyContext().getBinding(),
-				routingData		= globalBinding.sub('routing.parameters').toJS(),
-				clubId			= routingData.id;
-
-		this.clubId = clubId;
-
-		binding.sub('clubsForm').clear();
-
-		binding.set('isSync', false);
-		if (typeof clubId !== 'undefined') {
-			window.Server.schoolClub.get(
-				{
-					schoolId:	this.props.activeSchoolId,
-					clubId:		clubId
-				}
-			).then(data => {
-				binding.set('isSync', true);
-				binding.set('clubsForm.ages', Immutable.fromJS(data.ages));
-				binding.set('clubsForm.form', Immutable.fromJS(data));
-				binding.set('clubsForm.form.price', Immutable.fromJS(data.price.price));
-				binding.set(
-					'clubsForm.form.priceType',
-					Immutable.fromJS(
-						ClubsConst.SERVER_TO_CLIENT_PRICING_MAPPING[data.price.priceType]
-					)
-				);
-			});
-		}
+	componentWillMount:function() {
+		this.createAndSetMenuItems();
 	},
-	redirectToClubListPage: function () {
-		document.location.hash = 'clubs/clubList';
-	},
-	submitEdit: function(data) {
-		ClubsHelper.convertClientToServerFormData(
-			data,
-			this.getDefaultBinding().toJS('clubsForm')
-		);
-
-		window.Server.schoolClub.put(
-			{
-				schoolId:	this.props.activeSchoolId,
-				clubId:		this.clubId
-			},
-			data
-		).then(() => this.redirectToClubListPage());
-	},
-	render: function() {
+	createAndSetMenuItems: function () {
 		const binding = this.getDefaultBinding();
 
-		let clubForm = null;
-		if(binding.toJS('isSync')) {
-			clubForm = (
-				<ClubForm
-					title			= "Edit club..."
-					activeSchoolId	= { this.props.activeSchoolId }
-					onFormSubmit	= { this.submitEdit }
-					binding			= { binding.sub('clubsForm') }
-				/>
-			)
-		} else {
-			clubForm = (
-				<div className='bLoaderWrapper'>
-					<Loader condition={true}/>
-				</div>
-			);
-		}
+		const clubId = this.getCurrentClubId();
 
-		return clubForm;
+		const menuItems = [
+			{
+				href: 	'/#clubs/clubList',
+				name: 	'← club list',
+				key: 	'back'
+			},
+			{
+				href: 		`/#clubs/editMainInfo?id=${clubId}`,
+				name: 		'Main info',
+				key: 		'Main_info',
+				routes: 	[`/#clubs/editMainInfo?id=${clubId}`]
+			},
+			{
+				href: 		`/#clubs/editChildren?id=${clubId}`,
+				name: 		'Children',
+				key: 		'Children',
+				routes: 	[`/#clubs/editChildren?id=${clubId}`]
+			}
+		];
+
+		binding.set('subMenuItems', Immutable.fromJS(menuItems));
+	},
+	getCurrentClubId: function () {
+		return this.getMoreartyContext().getBinding().sub('routing.parameters').toJS().id;
+	},
+	render: function(){
+		const binding = this.getDefaultBinding();
+		const globalBinding = this.getMoreartyContext().getBinding();
+		const clubId = this.getCurrentClubId();
+		const activeSchoolId = this.props.activeSchoolId;
+
+		return (
+			<div>
+				<SubMenu
+					binding= {
+						{
+							default:		binding.sub('clubsEditRouting'),
+							itemsBinding:	binding.sub('subMenuItems')
+						}
+					}
+				/>
+				<div className="bSchoolMaster">
+					<RouterView
+						routes	= { binding.sub('clubsEditRouting') }
+						binding	= { globalBinding }
+					>
+						<Route
+							path 			= "/clubs/editMainInfo"
+							binding 		= { binding.sub('clubsMainInfoEdit') }
+							component 		= { ClubMainInfoEdit }
+							activeSchoolId	= { activeSchoolId }
+							clubId			= { clubId }
+						/>
+						<Route
+							path			= "/clubs/editChildren"
+							binding			= { binding.sub('clubsChildrenEdit') }
+							component		= { ClubChildrenEdit }
+							activeSchoolId	= { activeSchoolId }
+							clubId			= { clubId }
+						/>
+					</RouterView>
+				</div>
+			</div>
+		);
 	}
 });
 

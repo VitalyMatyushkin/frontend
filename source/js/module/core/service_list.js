@@ -53,6 +53,8 @@ const serviceList = {
 		// clubs
 		serviceList.schoolClubs = new Service('/i/schools/{schoolId}/clubs', binding);
 		serviceList.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
+		serviceList.schoolClubParticipats = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants', binding);
+		serviceList.schoolClubParticipat = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants/{participantId}', binding);
 
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
