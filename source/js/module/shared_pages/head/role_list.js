@@ -145,8 +145,13 @@ const  RoleList = React.createClass({
 				role		= SessionHelper.getRoleFromSession(
 					this.getMoreartyContext().getBinding().sub('userData')
 				),
-				listOpen	= binding.toJS('listOpen'),
-				show		= !!binding.toJS('permissions').length && !!role;
+				listOpen	= binding.toJS('listOpen');
+
+		const show = (
+			typeof binding.toJS('permissions') !== 'undefined' &&
+			!!binding.toJS('permissions').length &&
+			!!role
+		);
 
 
 		return(

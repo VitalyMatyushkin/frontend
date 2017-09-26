@@ -8,6 +8,7 @@ const   RegisterDone        = require('module/ui/register/user/register_done'),
         $                   = require('jquery'),
         Morearty            = require('morearty'),
         Helpers             = require('module/helpers/storage'),
+	    propz				= require('propz'),
         SessionHelper		= require('module/helpers/session_helper');
 
 // TODO: remove jquery
@@ -80,15 +81,20 @@ const RegisterUserPage = React.createClass({
 		self.initStep();
     },
 	getUserDataBinding: function () {
-		return this.getMoreartyContext().getBinding().toJS('userData');
+		return this.getMoreartyContext().getBinding().sub('userData');
 	},
 	initStep:function(){
-		const   self            = this,
-			    binding         = self.getDefaultBinding(),
-			    rootBinding		= self.getMoreartyContext().getBinding(),
-			    verified		= SessionHelper.getLoginSession( this.getUserDataBinding() ).verified,
-			    isAuthorized	= !!SessionHelper.getLoginSession( this.getUserDataBinding() ).userId,
-			    isVerified		= verified && verified.email && verified.sms;
+		const binding = this.getDefaultBinding();
+
+		const loginSession = SessionHelper.getLoginSession(
+			this.getUserDataBinding()
+		);
+
+		const verified = propz.get(loginSession, ['verified']);
+
+		const isAuthorized = !!propz.get(loginSession, ['userId']);
+
+		const isVerified = verified && verified.email && verified.sms;
 
 		if(isAuthorized)
 			if(isVerified)
@@ -126,7 +132,11 @@ const RegisterUserPage = React.createClass({
                             phone: binding.toJS('formFields').phone
                         };
 
-                        serveBinding.set(Immutable.fromJS(activeSession));
+						const loginSessionBinding = SessionHelper.getLoginSessionBinding(
+							this.getUserDataBinding()
+						);
+						loginSessionBinding.set(Immutable.fromJS(activeSession));
+
                         binding.atomically()
                             .set('account',         Immutable.fromJS(activeSession))
                             .set('registerStep',    step)
@@ -163,7 +173,12 @@ const RegisterUserPage = React.createClass({
     },
     finish: function () {
 		Helpers.cookie.remove('loginSession');
-		SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).clear();
+
+		const loginSessionBinding = SessionHelper.getLoginSessionBinding(
+			this.getUserDataBinding()
+		);
+		typeof loginSessionBinding !== 'undefined' && loginSessionBinding.clear();
+
 		document.location.href = '/';
     },
     renderMainTitle: function (step) {
@@ -312,17 +327,33 @@ const RegisterUserPage = React.createClass({
         this.forceUpdate();
     },
     getEmail: function() {
-        return SessionHelper.getLoginSession( this.getUserDataBinding() ).email;
+    	const loginSessionBinding = SessionHelper.getLoginSession(
+    		this.getUserDataBinding()
+		);
+
+        return propz.get(loginSessionBinding, ['email']);
     },
     getPhone: function() {
-        return SessionHelper.getLoginSession( this.getUserDataBinding() ).phone;
+		const loginSessionBinding = SessionHelper.getLoginSession(
+			this.getUserDataBinding()
+		);
+
+		return propz.get(loginSessionBinding, ['phone']);
     },
 
     isEmailVerified: function() {
-        return SessionHelper.getLoginSession( this.getUserDataBinding() ).verified.email;
+		const loginSessionBinding = SessionHelper.getLoginSession(
+			this.getUserDataBinding()
+		);
+
+		return propz.get(loginSessionBinding, ['verified', 'email']);
     },
     isPhoneVerified: function() {
-        return SessionHelper.getLoginSession( this.getUserDataBinding() ).verified.sms;
+		const loginSessionBinding = SessionHelper.getLoginSession(
+			this.getUserDataBinding()
+		);
+
+		return propz.get(loginSessionBinding, ['verified', 'sms']);
     },
 
     isErrorEmailVerification: function() {

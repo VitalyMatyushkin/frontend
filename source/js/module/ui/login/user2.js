@@ -76,7 +76,9 @@ const LoginUserPage = React.createClass({
 				);
 
 				const roleList = this.getRoleListByPermissionList(permissions);
-				if(roleList.length == 1) {
+				if(roleList.length == 0) {
+					return AuthorizationServices.become('NOBODY');
+				} else if(roleList.length == 1) {
 					return AuthorizationServices.become(roleList[0]);
 				} else {
 					return true;
@@ -126,11 +128,16 @@ const LoginUserPage = React.createClass({
 	getRoleListByPermissionList: function (permissions) {
 		const roleList = [];
 
-		Object.keys(RoleHelper.USER_ROLES).forEach(role => {
-			if(permissions.findIndex(p => p.role === role) !== -1) {
-				roleList.push(role);
-			}
-		});
+		if(
+			typeof permissions !== 'undefined' &&
+			permissions.length > 0
+		) {
+			Object.keys(RoleHelper.USER_ROLES).forEach(role => {
+				if(permissions.findIndex(p => p.role === role) !== -1) {
+					roleList.push(role);
+				}
+			});
+		}
 
 		return roleList;
 	},

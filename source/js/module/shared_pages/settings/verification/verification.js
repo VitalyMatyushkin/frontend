@@ -8,7 +8,7 @@ const Verification = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	getUserDataBinding: function () {
-		return this.getMoreartyContext().getBinding().toJS('userData');
+		return this.getMoreartyContext().getBinding().sub('userData');
 	},
 	getEmail: function() {
 		return SessionHelper.getLoginSession( this.getUserDataBinding() ).email;
