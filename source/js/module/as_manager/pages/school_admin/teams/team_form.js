@@ -427,7 +427,6 @@ const TeamForm = React.createClass({
 					serverField		= "name"
 					placeholder		= {'Select House'}
 					onSelect		= {self.handleSelectHouse}
-					binding			= {binding.sub('___houseAutocompleteBinding')}
 					id				= "team_house_select"
 				/>
 			);
@@ -439,7 +438,6 @@ const TeamForm = React.createClass({
 					serverField		= "name"
 					placeholder		= {'Select House'}
 					onSelect		= {self.handleSelectHouse}
-					binding			= {binding.sub('___houseAutocompleteBinding')}
 					id				= "team_house_select"
 				/>
 			);

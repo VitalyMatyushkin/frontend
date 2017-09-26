@@ -449,7 +449,6 @@ const EventVenue = React.createClass({
 									customListItem		= { PlaceListItem }
 									getElementTitle		= { this.getPostcodeTitle }
 									serverField			= "postcode"
-									binding				= { binding }
 									defaultItem			= { this.getDefaultPostcode() }
 									serviceFilter		= { this.postcodeService }
 									onSelect			= { this.handleSelectPostcode }

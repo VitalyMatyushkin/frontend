@@ -16,9 +16,10 @@ const TypeDropDown = React.createClass({
 	mixins:[Morearty.Mixin, TypeMixin],
 	propTypes: {
 		options: React.PropTypes.array.isRequired,
+		defaultValue: React.PropTypes.string,
+		onSelect: React.PropTypes.func,
         id: React.PropTypes.string
 	},
-	
 	renderOptions:function(){
 		return this.props.options.map( (item, i) => {
 
@@ -42,6 +43,7 @@ const TypeDropDown = React.createClass({
 			binding.set('value', null);
 		} else {
 			this.setValue(value);
+			typeof this.props.onSelect !== 'undefined' && this.props.onSelect(value);
 		}
 
 		e.stopPropagation();

@@ -17,8 +17,12 @@ const ClubsPage = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			clubList: {},
-			clubsAdd: {},
-			clubsEdit: {},
+			clubsAdd: {
+				clubsForm: {}
+			},
+			clubsEdit: {
+				clubsForm: {}
+			},
 			clubsRouting: {}
 		});
 	},

@@ -13,7 +13,8 @@ const MultiselectDropdown = React.createClass({
 	propTypes: {
 		items:				React.PropTypes.array.isRequired,
 		selectedItems:		React.PropTypes.array.isRequired,
-		handleClickItem:	React.PropTypes.func.isRequired
+		handleClickItem:	React.PropTypes.func.isRequired,
+		extraStyle:			React.PropTypes.string.isRequired
 	},
 
 	componentDidMount: function () {
@@ -123,6 +124,9 @@ const MultiselectDropdown = React.createClass({
 		this.setState({isOpen: !this.state.isOpen});
 		eventDescritor.stopPropagation();
 	},
+	getExtraStyle: function () {
+		return typeof this.props.extraStyle !== 'undefined' ? this.props.extraStyle : '';
+	},
 	render: function() {
 		const inputClassName = classNames({
 			eMultiSelectDropdown_input	: true,
@@ -131,9 +135,10 @@ const MultiselectDropdown = React.createClass({
 		});
 
 		return (
-			<div	className	= "bMultiSelectDropdown"
-					onMouseDown	= {this.handleMouseDown}
-					onMouseUp	= {this.handleMouseUp}
+			<div
+				className	= { "bMultiSelectDropdown " + this.getExtraStyle() }
+				onMouseDown	= { this.handleMouseDown }
+				onMouseUp	= { this.handleMouseUp }
 			>
 				<div className={inputClassName}>
 					<AddButton handleClick={this.handleClickAddButton}/>

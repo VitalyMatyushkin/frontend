@@ -230,7 +230,6 @@ const PermissionAcceptPage = React.createClass({
 								serviceFilter	= { this.serviceFormFilter }
 								serverField		= 'name'
 								onSelect		= { this.onSelectForm }
-								binding			= { binding.sub('_formAutocomplete') }
 								placeholder		= 'Form'
 							/>
 						</div>
@@ -242,7 +241,6 @@ const PermissionAcceptPage = React.createClass({
 									serviceFilter	= { this.serviceHouseFilter }
 									serverField		= 'name'
 									onSelect		= { this.onSelectHouse}
-									binding			= { binding.sub('_houseAutocomplete') }
 									placeholder		= 'House'
 									extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
 								/>
@@ -258,7 +256,6 @@ const PermissionAcceptPage = React.createClass({
 									serviceFilter	= { this.serviceStudentsFilter}
 									serverField		= 'name'
 									onSelect		= { this.onSelectStudent }
-									binding			= { binding.sub('_studentAutocomplete') }
 									placeholder		= 'Student name'
 								/>
 							</div>
