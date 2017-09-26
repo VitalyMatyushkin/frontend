@@ -37,43 +37,6 @@ class StudentListClass{
 		this.dataLoader.loadData();
 	}
 	
-	onEdit(student, event){
-		document.location.hash = 'school_admin/students/edit?id=' + student.id;
-		event.stopPropagation();
-	}
-	
-	onView(student, event){
-		document.location.hash = 'school_admin/students/stats?id='+student.id;
-		event.stopPropagation();
-	}
-	
-	onRemove(student, event){
-		const	self		= this,
-				rootBinding	= self.getMoreartyContext().getBinding(),
-				schoolId	= rootBinding.get('userRules.activeSchoolId');
-		
-		const showAlert = function() {
-			window.simpleAlert(
-				'Sorry! You cannot perform this action. Please contact support',
-				'Ok',
-				() => {
-				}
-			);
-		};
-		
-		window.confirmAlert(
-			`Are you sure you want to remove student ${student.firstName} ${student.lastName}?`,
-			"Ok",
-			"Cancel",
-			() => window.Server.schoolStudent
-			.delete( {schoolId:schoolId, studentId:student.id} )
-			.then(() => self.reloadData())
-			.catch(() => showAlert()),
-			() => {}
-		);
-		event.stopPropagation();
-	}
-	
 	getParents(item){
 		const parents = item.parents;
 		
@@ -123,10 +86,61 @@ class StudentListClass{
 			) : null
 	}
 	
-	setColumns(){
+	getActions(){
+		const actionList = ['View']; // for all roles
+		
 		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+		/**
+		 * Only school admin and manager can edit, merge or delete students.
+		 * All other users should not see that button.
+		 * */
+		if (changeAllowed) {
+			actionList.push('Edit', 'Merge', 'Remove');
+		}
 		
+		return actionList;
+	}
+	
+	_getQuickEditActionFunctions(studentId, action) {
+		console.log(studentId);
+		switch (action){
+			case 'View':
+				document.location.hash = 'school_admin/students/stats?id=' + studentId;
+				break;
+			case 'Edit':
+				document.location.hash = 'school_admin/students/edit?id=' + studentId;
+				break;
+			case 'Merge':
+				document.location.hash = 'school_admin/students/merge?id=' + studentId;
+				break;
+			case 'Remove':
+				const showAlert = function() {
+					window.simpleAlert(
+						'Sorry! You cannot perform this action. Please contact support',
+						'Ok',
+						() => {
+						}
+					);
+				};
+				
+				window.confirmAlert(
+					`Are you sure you want to remove student?`,
+					"Ok",
+					"Cancel",
+					() => window.Server.schoolStudent
+					.delete( {schoolId: this.activeSchoolId, studentId: studentId} )
+					.then(() => this.reloadData())
+					.catch(() => showAlert()),
+					() => {}
+				);
+				break;
+			default :
+				break;
+		}
+	}
+	
+	setColumns(){
 		this.columns = [
 			{
 				text:'Gender',
@@ -141,7 +155,7 @@ class StudentListClass{
 						hideFilter:true,
 						hideButtons:true
 					},
-                    id:'find_student_gender'
+					id:'find_student_gender'
 				}
 			},
 			{
@@ -152,7 +166,7 @@ class StudentListClass{
 				},
 				filter:{
 					type:'string',
-                    id:'find_student_name'
+					id:'find_student_name'
 				}
 			},
 			{
@@ -163,7 +177,7 @@ class StudentListClass{
 				},
 				filter:{
 					type:'string',
-                    id:'find_student_surname'
+					id:'find_student_surname'
 				}
 			},
 			{
@@ -185,7 +199,7 @@ class StudentListClass{
 						valueField:'name',
 						keyField:'id'
 					},
-                    id:'find_student_class'
+					id:'find_student_class'
 				}
 			},
 			{
@@ -207,7 +221,7 @@ class StudentListClass{
 						valueField:'name',
 						keyField:'id'
 					},
-                    id:'find_student_house'
+					id:'find_student_house'
 				}
 			},
 			{
@@ -219,7 +233,7 @@ class StudentListClass{
 				},
 				filter:{
 					type:'between-date',
-                    id:'find_student_birthday'
+					id:'find_student_birthday'
 				}
 			},
 			{
@@ -235,15 +249,10 @@ class StudentListClass{
 			{
 				text:'Actions',
 				cell:{
-					type:'action-buttons',
+					type:'action-list',
 					typeOptions:{
-						/**
-						 * Only school admin and manager can edit or delete students.
-						 * All other users should not see that button.
-						 * */
-						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
-						onItemView:		this.onView.bind(this),
-						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
+						getActionList: this.getActions.bind(this),
+						actionHandler: this._getQuickEditActionFunctions.bind(this)
 					}
 				}
 			}

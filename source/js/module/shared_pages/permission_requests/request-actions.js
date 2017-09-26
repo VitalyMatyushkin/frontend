@@ -4,11 +4,11 @@
 
 const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
-		Morearty		= require('morearty'),
-		Lazy            = require('lazy.js'),
+		Morearty 		= require('morearty'),
+		Lazy 			= require('lazy.js'),
 		GridModel 		= require('module/ui/grid/grid-model'),
 		RoleHelper 		= require('module/helpers/role_helper'),
-		SessionHelper	= require('module/helpers/session_helper'),
+		SessionHelper 	= require('module/helpers/session_helper'),
 		propz 			= require('propz');
 
 /**
@@ -17,53 +17,52 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
  * @param {object} page
  *
  * */
-const RequestActions = function(page){
-	this.getDefaultBinding = page.getDefaultBinding;		// TODO: are you sure this is really good to miss original 'this'?
-	this.getMoreartyContext = page.getMoreartyContext;		// TODO: are you sure this is really good to miss original 'this'?
-	this.props = page.props;
-	this.state = page.state;
-
-	this.rootBinding = this.getMoreartyContext().getBinding();
-	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
-
-	// getting viewer role, because MANAGER will not obtain ADMIN's requests
-	this.viewerRole	= SessionHelper.getRoleFromSession(this.getMoreartyContext().getBinding().sub('userData'));
-
-	this.updateSubMenu();
-	this.getSchools();
-
-	this.setColumns();
-};
-
-RequestActions.prototype = {
-	reloadData:function(){
+class RequestActionsClass {
+	constructor(page){
+		this.getDefaultBinding = page.getDefaultBinding;		// TODO: are you sure this is really good to miss original 'this'?
+		this.getMoreartyContext = page.getMoreartyContext;		// TODO: are you sure this is really good to miss original 'this'?
+		this.props = page.props;
+		this.state = page.state;
+		
+		this.rootBinding = this.getMoreartyContext().getBinding();
+		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
+		
+		// getting viewer role, because MANAGER will not obtain ADMIN's requests
+		this.viewerRole	= SessionHelper.getRoleFromSession(this.getMoreartyContext().getBinding().sub('userData'));
+		
+		this.updateSubMenu();
+		this.getSchools();
+		
+		this.setColumns();
+	}
+	reloadData(){
 		this.dataLoader.loadData();
-	},
-	getRoleList:function(){
+	}
+	getRoleList(){
 		const roles = [];
-
+		
 		Object.keys(RoleHelper.USER_PERMISSIONS)
-			.filter( key => !(this.viewerRole === 'MANAGER' && key === 'ADMIN')) 		// MANAGER cannot use ADMIN filter
-			.forEach(key => {
+		.filter( key => !(this.viewerRole === 'MANAGER' && key === 'ADMIN')) 		// MANAGER cannot use ADMIN filter
+		.forEach(key => {
 			roles.push({
 				key: key,
 				value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
 			});
 		});
-
+		
 		return roles;
-	},
-	getSchools:function(){
+	}
+	getSchools(){
 		const 	self 	= this,
-				binding = self.getDefaultBinding();
-
+			binding = self.getDefaultBinding();
+		
 		window.Server.publicSchools.get({filter:{limit:10000,order:"name ASC"}}).then(schools => {
 			binding.set('schools', schools);
 		});
-	},
-	getSchoolEmblem:function(item){
+	}
+	getSchoolEmblem(item){
 		const pic = propz.get(item, ["requestedPermission", "school", "pic"]);
-
+		
 		if(typeof pic !== 'undefined'){
 			return (
 				<img
@@ -71,40 +70,41 @@ RequestActions.prototype = {
 				/>
 			);
 		}
-	},
-	getSchoolName:function(item){
+	}
+	getSchoolName(item){
 		const schoolName = propz.get(item, ["requestedPermission", "school", "name"]);
-
+		
 		if(typeof schoolName !== 'undefined'){
 			return schoolName;
 		}
-	},
-	updateSubMenu:function(){
+	}
+	
+	updateSubMenu(){
 		this.rootBinding.set('submenuNeedsUpdate', !this.rootBinding.get('submenuNeedsUpdate'));
-	},
-	refresh:function(){
+	}
+	refresh(){
 		this.updateSubMenu();
 		this.reloadData();
-	},
-	getCurrentPermission: function(id, permissions) {
+	}
+	getCurrentPermission(id, permissions) {
 		return Lazy(permissions).find(permission => permission.id && permission.id === id);
-	},
-	getConfirmMessage: function(email, phone) {
+	}
+	getConfirmMessage(email, phone) {
 		return (
 			<div>
 				<h2> Please Read Carefully! </h2>
-
+				
 				<p className="eSimpleAlert_text">We use reasonable measures to check the identity of each User
-					registering with Squad In Touch. We require
-					that each User provides a valid mobile phone number and email address so we check their validity via
-					confirmation codes.</p>
-
+	registering with Squad In Touch. We require
+	that each User provides a valid mobile phone number and email address so we check their validity via
+	confirmation codes.</p>
+				
 				<p className="eSimpleAlert_text">The Mobile phone and email address the User has verified is as
-					follows:
+	follows:
 					<p className="eSimpleAlert_mail">{email}</p>
 					<p className="eSimpleAlert_phone">{phone}</p>
 				</p>
-
+				
 				<p className="eSimpleAlert_text">Notwithstanding mobile phone and email address verification, it is the
 					responsibility of the School to
 					satisfy that the User’s identity has been verified prior to accepting a role request.
@@ -113,20 +113,31 @@ RequestActions.prototype = {
 					them any permissions in the system or simply decline a role request.</p>
 			</div>
 		);
-	},
-	_getQuickEditActionFunctions:function(itemId,action){
-		const   self      = this,
-				prId      = itemId,
-				binding   = self.getDefaultBinding().sub('data'),
-				currentPr = self.getCurrentPermission(prId, binding.toJS()),
-				schoolId  = currentPr ? currentPr.requestedPermission.schoolId : '',
-				email     = currentPr.requester.email,
-				phone 	  = currentPr.requester.phone;
+	}
+	getActions(item){
+		const actionList = ['Accept', 'Decline'];
+		
+		if (item.requestedPermission.preset === "STUDENT") {
+			actionList.push('Merge');
+		}
+		
+		return actionList;
+	}
+	_getQuickEditActionFunctions(itemId,action){
+		const 	prId 		= itemId,
+				binding 	= this.getDefaultBinding().sub('data'),
+				currentPr 	= this.getCurrentPermission(prId, binding.toJS()),
+				schoolId 	= currentPr ? currentPr.requestedPermission.schoolId : '',
+				email 		= currentPr.requester.email,
+				phone 		= currentPr.requester.phone,
+				studentId 	= currentPr.requesterId;
+		
 		let confirmMsg;
+		
 		switch (action){
 			case 'Accept':
 				window.confirmAlert(
-					self.getConfirmMessage(email, phone),
+					this.getConfirmMessage(email, phone),
 					"Ok",
 					"Cancel",
 					() => {
@@ -141,7 +152,7 @@ RequestActions.prototype = {
 							// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
 							// So, for manager schoolId is required, for admin isn't required.
 							window.Server.statusPermissionRequest.put({schoolId: schoolId, prId: prId}, {status: 'ACCEPTED'})
-								.then(_ => self.refresh());
+							.then(_ => this.refresh());
 						}
 					},
 					() => {}
@@ -155,16 +166,19 @@ RequestActions.prototype = {
 					() => {
 						// Pls look up at previous comment
 						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'})
-							.then(_ => self.refresh());
+						.then(_ => this.refresh());
 					},
 					() => {}
 				);
 				break;
+			case 'Merge':
+				document.location.hash = `${document.location.hash}/merge-student?studentId=${studentId}&schoolId=${schoolId}`;
+				break;
 			default :
 				break;
 		}
-	},
-	setColumns: function(){
+	}
+	setColumns(){
 		this.columns = [
 			{
 				text:'Date',
@@ -283,27 +297,24 @@ RequestActions.prototype = {
 				cell:{
 					type:'action-list',
 					typeOptions:{
-						getActionList:() => {return ['Accept','Decline']},
-						actionHandler:this._getQuickEditActionFunctions.bind(this)
+						getActionList:	this.getActions.bind(this),
+						actionHandler:	this._getQuickEditActionFunctions.bind(this)
 					}
 				}
 			}
 		];
-	},
-	init: function(){
-		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? true : false;
-
+	}
+	
+	createGrid(){
+		const classStyleAdmin = typeof this.viewerRole === 'undefined';
+		
 		let defaultFilter = {
 			where: {
 				status: 'NEW'
 			},
 			limit: 20
 		};
-
-		if(this.viewerRole === 'MANAGER') {
-			defaultFilter.where['requestedPermission.preset'] = { $ne: 'ADMIN'};
-		}
-
+		
 		this.grid = new GridModel({
 			actionPanel:{
 				title: 'New Requests',
@@ -313,25 +324,58 @@ RequestActions.prototype = {
 			filters: defaultFilter,
 			classStyleAdmin: classStyleAdmin
 		});
-
+		
 		this.dataLoader = 	new DataLoader({
 			serviceName:'permissionRequests',
 			params:		{ schoolId: this.activeSchoolId },
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});
-
+		
 		return this;
-	},
-	getDataLoadedHandle: function(data){
-		const self = this,
-			binding = self.getDefaultBinding();
-
+	}
+	createGridFromExistingData(grid){
+		const classStyleAdmin = typeof this.viewerRole === 'undefined';
+		
+		let defaultFilter = {
+			where: {
+				status: 'NEW'
+			},
+			limit: 20
+		};
+		
+		this.grid = new GridModel({
+			actionPanel:{
+				title: 'New Requests',
+				showStrip: true
+			},
+			columns: this.columns,
+			filters: {
+				where: grid.filter.where,
+				order: grid.filter.order
+			},
+			badges: grid.filterPanel.badgeArea,
+			classStyleAdmin: classStyleAdmin
+		});
+		
+		this.dataLoader = 	new DataLoader({
+			serviceName:'permissionRequests',
+			params:		{ schoolId: this.activeSchoolId },
+			grid:		this.grid,
+			onLoad: 	this.getDataLoadedHandle()
+		});
+		
+		return this;
+	}
+	getDataLoadedHandle(data){
+		const binding = this.getDefaultBinding();
+		
 		return function(data){
-			binding.set('data', self.grid.table.data);
+			binding.set('data', this.grid.table.data);
 		};
 	}
-};
+	
+	
+}
 
-
-module.exports = RequestActions;
+module.exports = RequestActionsClass;

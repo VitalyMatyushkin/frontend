@@ -92,15 +92,26 @@ class RequestActionsClass {
 		);
 	}
 	
-	_getQuickEditActionFunctions(itemId,action) {
+	getActions(item){
+		const actionList = ['Accept', 'Decline'];
+		
+		if (item.requestedPermission.preset === "STUDENT") {
+			actionList.push('Merge');
+		}
+		
+		return actionList;
+	}
+	
+	_getQuickEditActionFunctions(itemId, action) {
 		const 	self 		= this,
 				prId 		= itemId,
 				binding 	= self.getDefaultBinding().sub('data'),
 				currentPr 	= self.getCurrentPermission(prId, binding.toJS()),
 				schoolId 	= currentPr.requestedPermission.schoolId,
 				email 		= currentPr.requester.email,
-				phone 		= currentPr.requester.phone;
-		
+				phone 		= currentPr.requester.phone,
+				studentId 	= currentPr.requesterId;
+
 		let confirmMsg;
 		
 		switch (action){
@@ -140,12 +151,15 @@ class RequestActionsClass {
 					() => {}
 				);
 				break;
+			case 'Merge':
+				document.location.hash = `${document.location.hash}/merge-student?studentId=${studentId}&schoolId=${schoolId}`;
+				break;
 			default :
 				break;
 		}
 	}
 
-    getSportsName(item){
+	getSportsName(item){
 		const sports = item.sports;
 		return sports.map(sport => sport.name).join(", ");
 	}
@@ -225,23 +239,23 @@ class RequestActionsClass {
 					type:'string'
 				}
 			},
-            {
-                text:'Sports',
-                cell:{
-                    dataField:'sports',
-                    type:'custom',
-                    typeOptions:{
-                        parseFunction:this.getSportsName.bind(this)
-                    }
-                }
-            },
+			{
+				text:'Sports',
+				cell:{
+					dataField:'sports',
+					type:'custom',
+					typeOptions:{
+						parseFunction:this.getSportsName.bind(this)
+					}
+				}
+			},
 			{
 				text:'Actions',
 				cell:{
 					type:'action-list',
 					typeOptions:{
-						getActionList:() => {return ['Accept','Decline']},
-						actionHandler:this._getQuickEditActionFunctions.bind(this)
+						getActionList: this.getActions.bind(this),
+						actionHandler: this._getQuickEditActionFunctions.bind(this)
 					}
 				}
 			}
@@ -317,6 +331,6 @@ class RequestActionsClass {
 			binding.set('data', self.grid.table.data);
 		};
 	}
-};
+}
 
 module.exports = RequestActionsClass;

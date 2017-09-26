@@ -1,6 +1,7 @@
 /**
- * Created by Woland on 22.09.2017.
+ * Created by Woland on 25.09.2017.
  */
+
 const 	React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
@@ -11,25 +12,12 @@ const 	React 			= require('react'),
 
 const StudentMergeComponentStyles = require('styles/pages/schools/b_school_student_merge.scss');
 
-const StudentWithPermissionMergeComponent = React.createClass({
+const StudentWithoutPermissionMergeComponent = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount: function(){
-		const 	binding 		= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding(),
-				schoolId 		= globalBinding.get('routing.pathParameters.0'),
-				studentId 		= globalBinding.get('routing.pathParameters.3');
-
-		window.Server.schoolStudent.get({schoolId, studentId}).then(student => {
-			binding.atomically()
-			.set('studentWithHistory', Immutable.fromJS(student))
-			.set('isSync', true)
-			.commit();
-		});
-	},
 	serviceStudentsFilter: function(name) {
-		const 	binding = this.getDefaultBinding(),
-				globalBinding = this.getMoreartyContext().getBinding(),
-				schoolId = globalBinding.get('routing.pathParameters.0');
+		const 	globalBinding = this.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				schoolId 		= routingData.schoolId;
 		
 		let filter;
 		
@@ -78,8 +66,8 @@ const StudentWithPermissionMergeComponent = React.createClass({
 	},
 	onSelectStudent: function(studentId) {
 		const binding = this.getDefaultBinding();
-
-		binding.set('studentWithoutHistoryId', studentId);
+		
+		binding.set('studentWithHistoryId', studentId);
 	},
 	onClickMergeButton: function(){
 		const binding = this.getDefaultBinding();
@@ -93,10 +81,11 @@ const StudentWithPermissionMergeComponent = React.createClass({
 	},
 	onPopupOkClick: function(){
 		const 	binding 				= this.getDefaultBinding(),
-				studentWithoutHistoryId = binding.toJS('studentWithoutHistoryId'),
+				studentWithHistoryId 	= binding.toJS('studentWithHistoryId'),
 				globalBinding 			= this.getMoreartyContext().getBinding(),
-				schoolId 				= globalBinding.get('routing.pathParameters.0'),
-				studentWithHistoryId 	= globalBinding.get('routing.pathParameters.3');
+				routingData 			= globalBinding.sub('routing.parameters').toJS(),
+				studentWithoutHistoryId = routingData.studentId,
+				schoolId 				= routingData.schoolId;
 		
 		binding.set('isPopupOpen', false);
 		
@@ -106,7 +95,7 @@ const StudentWithPermissionMergeComponent = React.createClass({
 					'Merged successfully',
 					'Ok',
 					() => {
-						document.location.hash = `school_sandbox/${schoolId}/students`;
+						document.location.hash = this.props.afterSubmitPage;
 					}
 				);
 			},
@@ -121,18 +110,20 @@ const StudentWithPermissionMergeComponent = React.createClass({
 		);
 	},
 	render: function(){
-		const 	binding 			= this.getDefaultBinding(),
-				studentWithHistory 	= binding.toJS('studentWithHistory'),
-				isSync 				= Boolean(binding.toJS('isSync')),
-				isPopupOpen 		= Boolean(binding.toJS('isPopupOpen'));
+		const 	binding 				= this.getDefaultBinding(),
+				studentWithHistory 		= typeof binding.toJS('studentWithHistory') !== 'undefined' ? binding.toJS('studentWithHistory') : {},
+				isPopupOpen 			= Boolean(binding.toJS('isPopupOpen')),
+				globalBinding 			= this.getMoreartyContext().getBinding(),
+				routingData 			= globalBinding.sub('routing.parameters').toJS(),
+				studentWithoutHistoryId = routingData.studentId;
 		
-		if (isSync) {
-			return (
-				<div>
-					<div className="bStudentMerge">
-						<p>{`You want merge`}</p>
-						<p>{`${studentWithHistory.firstName} ${studentWithHistory.lastName}`}</p>
-						<p>{`with`}</p>
+		return (
+			<div>
+				<div className="bStudentMerge">
+					<p>{`You want merge`}</p>
+					<p>{`${studentWithoutHistoryId}`}</p>
+					<p>{`with`}</p>
+					<p>
 						<Autocomplete
 							serviceFilter	= { this.serviceStudentsFilter}
 							serverField		= 'name'
@@ -140,31 +131,28 @@ const StudentWithPermissionMergeComponent = React.createClass({
 							binding			= { binding.sub('_studentAutocomplete') }
 							placeholder		= 'Student name'
 						/>
-						<Button
-							text 				= "Merge"
-							onClick 			= { this.onClickMergeButton }
-							extraStyleClasses 	= "eStudentMergeButton"
-						/>
-					</div>
-					<If condition = {isPopupOpen}>
-						<ConfirmPopup
-							isOkButtonDisabled			= { false }
-							customStyle 				= { 'ePopup' }
-							okButtonText 				= { "Merge" }
-							cancelButtonText 			= { 'Cancel' }
-							handleClickOkButton 		= { this.onPopupOkClick }
-							handleClickCancelButton 	= { this.onPopupCancelClick }
-						>
-							Are you really sure?
-						</ConfirmPopup>
-					</If>
+					</p>
+					<Button
+						text 				= "Merge"
+						onClick 			= { this.onClickMergeButton }
+						extraStyleClasses 	= "eStudentMergeButton"
+					/>
 				</div>
-			);
-		} else {
-			return null;
-		}
-
+				<If condition = {isPopupOpen}>
+					<ConfirmPopup
+						isOkButtonDisabled			= { false }
+						customStyle 				= { 'ePopup' }
+						okButtonText 				= { "Merge" }
+						cancelButtonText 			= { 'Cancel' }
+						handleClickOkButton 		= { this.onPopupOkClick }
+						handleClickCancelButton 	= { this.onPopupCancelClick }
+					>
+						Are you really sure?
+					</ConfirmPopup>
+				</If>
+			</div>
+		);
 	}
 });
 
-module.exports = StudentWithPermissionMergeComponent;
+module.exports = StudentWithoutPermissionMergeComponent;

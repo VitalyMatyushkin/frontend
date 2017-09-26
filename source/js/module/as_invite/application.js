@@ -29,10 +29,10 @@ const Application = React.createClass({
 				const	userDataBinding		= binding.sub('userData'),
 						activeSessionName	= SessionHelper.getActiveSessionName(userDataBinding);
 				binding.atomically()
-					.set('inviteData',						Immutable.fromJS(response))
-					.set(`userData.${activeSessionName}`,	Immutable.fromJS( {id: sessionKey} ))
-					.set('isSync',							true)
-					.set('isInviteData',					true)
+					.set('inviteData',								Immutable.fromJS(response))
+					.set(`userData.sessions.${activeSessionName}`,	Immutable.fromJS( {id: sessionKey} ))
+					.set('isSync',									true)
+					.set('isInviteData',							true)
 					.commit();
 				
 			},

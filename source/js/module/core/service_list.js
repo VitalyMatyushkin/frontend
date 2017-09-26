@@ -67,6 +67,7 @@ const serviceList = {
 		serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 		serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
 		serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
+		serviceList.schoolStudentMerge = new Service('/i/schools/{schoolId}/students/{studentId}/merge', binding);
 
 
 		// forms
