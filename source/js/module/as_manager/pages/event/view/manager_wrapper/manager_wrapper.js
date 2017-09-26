@@ -282,8 +282,6 @@ const ManagerWrapper = React.createClass({
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
 
-		console.log( binding.toJS('selectedRivalIndex') );
-
 		return (
 			<Manager
 				activeSchoolId			= { this.props.activeSchoolId }

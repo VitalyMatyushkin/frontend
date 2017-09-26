@@ -27,7 +27,7 @@ ClubListModel.prototype.reloadData = function(){
 };
 
 ClubListModel.prototype.onEdit = function(data, event) {
-	document.location.hash = 'clubs/edit?id=' + data.id;
+	document.location.hash = 'clubs/editMainInfo?id=' + data.id;
 	event.stopPropagation();
 };
 

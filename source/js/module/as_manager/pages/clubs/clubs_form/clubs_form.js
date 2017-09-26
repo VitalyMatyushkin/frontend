@@ -40,6 +40,9 @@ const ClubsForm = React.createClass({
 			this.getDefaultBinding().set('isSync', true);
 		});
 	},
+	componentWillUnmount: function () {
+		this.getDefaultBinding().clear();
+	},
 	isShowPriceNumberField: function () {
 		const metaPriceTypeField = this.getDefaultBinding().sub('form').meta().toJS('priceType');
 
@@ -70,9 +73,9 @@ const ClubsForm = React.createClass({
 			form = (
 				<div className ="container">
 					<Form
-						name			= {this.props.title}
-						onSubmit		= {this.props.onFormSubmit}
-						binding			= {this.getDefaultBinding().sub('form')}
+						name			= { this.props.title }
+						onSubmit		= { this.props.onFormSubmit }
+						binding			= { this.getDefaultBinding().sub('form') }
 						submitButtonId	= 'club_submit'
 						cancelButtonId	= 'club_cancel'
 					>
@@ -135,7 +138,7 @@ const ClubsForm = React.createClass({
 		} else {
 			form = (
 				<div className='bLoaderWrapper'>
-					<Loader condition={true}/>
+					<Loader condition={ true }/>
 				</div>
 			);
 		}
