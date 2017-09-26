@@ -1,6 +1,7 @@
 /**
- * Created by Woland on 22.09.2017.
+ * Created by Woland on 25.09.2017.
  */
+
 const 	React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
@@ -15,10 +16,9 @@ const StudentWithPermissionMergeComponent = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function(){
 		const 	binding 		= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding(),
-				schoolId 		= globalBinding.get('routing.pathParameters.0'),
-				studentId 		= globalBinding.get('routing.pathParameters.3');
-
+				schoolId 		= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				studentId 		= this.getStudentIdFromUrl();
+		
 		window.Server.schoolStudent.get({schoolId, studentId}).then(student => {
 			binding.atomically()
 			.set('studentWithHistory', Immutable.fromJS(student))
@@ -26,10 +26,11 @@ const StudentWithPermissionMergeComponent = React.createClass({
 			.commit();
 		});
 	},
+	getStudentIdFromUrl: function() {
+		return this.getMoreartyContext().getBinding().sub('routing.parameters').toJS().id;
+	},
 	serviceStudentsFilter: function(name) {
-		const 	binding = this.getDefaultBinding(),
-				globalBinding = this.getMoreartyContext().getBinding(),
-				schoolId = globalBinding.get('routing.pathParameters.0');
+		const schoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 		
 		let filter;
 		
@@ -78,7 +79,7 @@ const StudentWithPermissionMergeComponent = React.createClass({
 	},
 	onSelectStudent: function(studentId) {
 		const binding = this.getDefaultBinding();
-
+		
 		binding.set('studentWithoutHistoryId', studentId);
 	},
 	onClickMergeButton: function(){
@@ -94,9 +95,8 @@ const StudentWithPermissionMergeComponent = React.createClass({
 	onPopupOkClick: function(){
 		const 	binding 				= this.getDefaultBinding(),
 				studentWithoutHistoryId = binding.toJS('studentWithoutHistoryId'),
-				globalBinding 			= this.getMoreartyContext().getBinding(),
-				schoolId 				= globalBinding.get('routing.pathParameters.0'),
-				studentWithHistoryId 	= globalBinding.get('routing.pathParameters.3');
+				schoolId 				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				studentWithHistoryId 	= this.getStudentIdFromUrl();
 		
 		binding.set('isPopupOpen', false);
 		
@@ -163,7 +163,7 @@ const StudentWithPermissionMergeComponent = React.createClass({
 		} else {
 			return null;
 		}
-
+		
 	}
 });
 

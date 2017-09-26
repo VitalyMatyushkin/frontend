@@ -15,6 +15,7 @@ const	React									= require('react'),
 		RequestArchiveComponent					= require('./views/request_archive'),
 		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
+		MergeStudentComponent 					= require('module/as_manager/pages/school_console/views/student_without_permission_merge_page/student_without_permission_merge'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
 		FavouriteSportPageWrapper				= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
@@ -185,6 +186,12 @@ const SchoolConsole = React.createClass({
 							path 			= "/school_console/requests/accept-student"
 							binding 		= { binding.sub('studentPermission') }
 							component 		= { AdminPermissionAcceptStudentComponent }
+							afterSubmitPage = "/school_console/requests"
+						/>
+						<Route
+							path 			= "/school_console/requests/merge-student"
+							binding 		= { binding.sub('studentData') }
+							component 		= { MergeStudentComponent }
 							afterSubmitPage = "/school_console/requests"
 						/>
 						<Route

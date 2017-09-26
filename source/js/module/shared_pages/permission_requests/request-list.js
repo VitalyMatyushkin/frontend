@@ -2,18 +2,29 @@
  * Created by Anatoly on 09.09.2016.
  */
 
-const   React 		= require('react'),
-		Morearty	= require('morearty'),
+const 	React 		= require('react'),
+		Morearty 	= require('morearty'),
+		Immutable 	= require('immutable'),
 		Actions 	= require('./request-actions'),
 		Grid 		= require('module/ui/grid/grid');
 
 const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.actions = new Actions(this).init();
+		const 	binding 	= this.getDefaultBinding(),
+				grid 		= binding.toJS('grid');
+		
+		if (grid) {
+			this.model = new Actions(this).createGridFromExistingData(grid);
+		} else {
+			this.model = new Actions(this).createGrid();
+		}
 	},
 	render: function () {
-		return <Grid model={this.actions.grid}/>;
+		const binding = this.getDefaultBinding();
+		
+		binding.set('grid', Immutable.fromJS(this.model.grid));
+		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 
