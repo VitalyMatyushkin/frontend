@@ -152,7 +152,7 @@ const authСontroller = {
 	isUserOnRole: function() {
 		const binding = this.binding;
 
-		const hasUserRole = typeof SessionHelper.getRoleFromSession(binding.sub('userData')) !== 'undefined';
+		const hasUserRole = typeof SessionHelper.getRoleSession(binding.sub('userData')) !== 'undefined';
 
 		return	this.isUserAuth() &&
 				this.isRoleListExist() &&
@@ -203,12 +203,15 @@ const authСontroller = {
 		);
 
 		if(typeof roleSession !== 'undefined') {
-			const role = SessionHelper.getRoleFromSession(
+			let role = SessionHelper.getRoleFromSession(
 				binding.sub('userData')
 			);
+			if(typeof role === 'undefined') {
+				role = 'no_body';
+			}
 
 			const defaultPageHash = DomainHelper.getDefaultPageByRoleNameAndSchoolKind(
-				role.toLowerCase(),
+				role,
 				this.getSchoolKind(role)
 			);
 
