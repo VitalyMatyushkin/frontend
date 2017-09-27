@@ -286,10 +286,7 @@ const Head = React.createClass({
 				loginSession = SessionHelper.getLoginSession(binding.sub('userData')),
 				roleSession = SessionHelper.getRoleSession(binding.sub('userData'));
 
-		if (
-			typeof loginSession !== 'undefined' &&
-			window.location.hash !== '#login'
-		) {
+		if (typeof loginSession !== 'undefined') {
 			return (
 				<div className="bTopPanel container">
 					<div className="row">
