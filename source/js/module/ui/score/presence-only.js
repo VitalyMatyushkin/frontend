@@ -13,8 +13,7 @@ const 	React 		= require('react'),
 const PlainPoints = React.createClass({
 	propTypes:{
 		presence:		React.PropTypes.number,
-		onChange: 		React.PropTypes.func.isRequired,
-		modeView:		React.PropTypes.string
+		onChange: 		React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function() {
 		return {
