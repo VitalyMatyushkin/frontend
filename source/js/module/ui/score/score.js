@@ -6,6 +6,7 @@ const	React			= require('react'),
 		SportConsts		= require('module/helpers/consts/sport'),
 		ScoreHelper		= require('./score_helper'),
 		PlainPoints		= require('./plain-points'),
+		PresenceOnly	= require('./presence-only'),
 		MaskedPoints	= require('./masked-points'),
 		ScoreConsts		= require('./score_consts'),
 
@@ -14,7 +15,8 @@ const	React			= require('react'),
 const Score = React.createClass({
 	propTypes: {
 		isChangeMode:	React.PropTypes.bool,
-		plainPoints:	React.PropTypes.number.isRequired,
+		presence:		React.PropTypes.number,
+		plainPoints:	React.PropTypes.number,
 		pointsType:		React.PropTypes.string.isRequired,
 		pointsStep:		React.PropTypes.number,
 		pointsMask:		React.PropTypes.string,
@@ -37,8 +39,9 @@ const Score = React.createClass({
 			"bTooltip":         true
 		});
 
-		let	result,
-			tooltip = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
+		let	result;
+		// let	result,
+		// 	tooltip = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
 
 		// points type
 		switch (this.props.pointsType) {
@@ -51,12 +54,15 @@ const Score = React.createClass({
 			case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
 				result = ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, '.');
 				break;
+			case SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY:
+				result = this.props.presence === 1 ? 'Presence' : 'No presence';
+				break;
 		}
 
 		return (
 			<div
 				className			= {playerScoreClassName}
-				data-description	= {tooltip}
+				// data-description	= {tooltip}
 			>
 				{result}
 			</div>
@@ -73,6 +79,8 @@ const Score = React.createClass({
 				return self.renderPlayerTimePointsInChangeMode();
 			case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
 				return self.renderPlayerDistancePointsInChangeMode();
+			case SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY:
+				return self.renderPlayerPresenceOnlyInChangeMode();
 		}
 	},
 
@@ -87,6 +95,14 @@ const Score = React.createClass({
 							step		= { this.props.pointsStep }
 							onChange	= { this.props.onChange }
 							modeView	= { this.props.modeView }
+			/>
+		);
+	},
+	renderPlayerPresenceOnlyInChangeMode: function() {
+		return (
+			<PresenceOnly
+				presence	= { this.props.presence }
+				onChange	= { this.props.onChange }
 			/>
 		);
 	},

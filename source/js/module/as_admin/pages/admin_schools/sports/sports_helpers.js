@@ -9,7 +9,8 @@ const SportsHelpers = {
     clientPointDisplayArray: [
     	'plain',
 		'time',
-		'distance'
+		'distance',
+        'presence only'
 	],
     clientScoringArray: [
         'More scores',
@@ -29,12 +30,14 @@ const SportsHelpers = {
 	pointsDisplayServerToClientMap: {
     	'PLAIN': 	'plain',
 		'TIME': 	'time',
-		'DISTANCE':	'distance'
+		'DISTANCE':	'distance',
+		'PRESENCE_ONLY': 'presence only'
 	},
 	pointsDisplayClientToServerMap: {
 		'plain': 	'PLAIN',
 		'time': 	'TIME',
-		'distance':	'DISTANCE'
+		'distance':	'DISTANCE',
+		'presence only': 'PRESENCE_ONLY'
 	},
     playersServerToClientMap: {
         '1X1':          '1x1',

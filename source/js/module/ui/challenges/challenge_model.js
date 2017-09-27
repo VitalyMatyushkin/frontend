@@ -50,9 +50,11 @@ const ChallengeModel = function(event, activeSchoolId){
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
 
     this.rivals 	= this._getRivals(event, activeSchoolId);
-	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
-	this.score 		= this._getScore(event);
-	this.textResult	= this._getTextResult(event, activeSchoolId);
+    if (this.sportPointsType !== 'PRESENCE_ONLY') {
+		this.scoreAr = this._getScoreAr(event, activeSchoolId);
+		this.score = this._getScore(event);
+		this.textResult = this._getTextResult(event, activeSchoolId);
+	}
 };
 
 ChallengeModel.prototype._getName = function(event, activeSchoolId){

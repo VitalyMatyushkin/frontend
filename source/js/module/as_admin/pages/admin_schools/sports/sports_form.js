@@ -383,7 +383,7 @@ const SportsForm = React.createClass({
 		const 	self    		= this,
 				binding 		= self.getDefaultBinding(),
 				pointsDisplay 	= binding.meta().get('pointsDisplay.value'),
-				showMask 		= pointsDisplay !== 'plain';
+				showMask 		= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
 
 		// This comment about field 'positions'
 		// As you can see - container for this field is <div> instead <FormField>.
