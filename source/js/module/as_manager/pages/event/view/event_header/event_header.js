@@ -21,6 +21,12 @@ const	Lazy				= require('lazy.js'),
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
+	VENUE_SERVER_CLIENT_MAP: {
+		"HOME"		: 'Home',
+		"AWAY"		: 'Away',
+		"CUSTOM"	: 'Away',
+		"TBD"		: 'TBD'
+	},
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		event:							React.PropTypes.object.isRequired,
@@ -74,10 +80,10 @@ const EventHeader = React.createClass({
 	},
 	getEventLocation: function(){
 		const 	eventVenue 	= this.props.event.venue,
-				venueType 	= eventVenue.venueType[0].toUpperCase() + eventVenue.venueType.toLowerCase().slice(1),
-				postcode	= eventVenue.postcodeData.postcode;
-		
-		return `${venueType}, ${postcode}`;
+				venueType 	= eventVenue.venueType,
+				venueTypeDisplay = this.VENUE_SERVER_CLIENT_MAP[venueType];
+
+		return venueType !== 'TBD' ? `${venueTypeDisplay}, ${eventVenue.postcodeData.postcode}`	: `${venueTypeDisplay}`
 	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
