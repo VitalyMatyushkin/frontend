@@ -83,6 +83,9 @@ const serviceList = {
 		
 		//export students
 		serviceList.exportStudents = new Service('/superadmin/schools/{schoolId}/export/students', binding);
+		
+		//activate students
+		serviceList.activateStudents = new Service('/superadmin/schools/{schoolId}/students/activate', binding);
 
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)
