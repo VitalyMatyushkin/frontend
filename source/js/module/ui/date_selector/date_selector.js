@@ -5,11 +5,46 @@ const	React				= require('react'),
 
 const DateSelector = React.createClass({
 
+	SMALL_DATE_SELECTOR_CSS_STYLE: 'mSmallView',
 	DROPDOWN_CSS_STYLE: 'mBigDateSelector',
+	SMALL_VIEW_DROPDOWN_CSS_STYLE: 'mSmallDateSelector',
 
 	propTypes: {
 		date:				React.PropTypes.string.isRequired,
-		handleChangeDate:	React.PropTypes.func.isRequired
+		handleChangeDate:	React.PropTypes.func.isRequired,
+		isSmallView:		React.PropTypes.bool,
+		extraStyle:			React.PropTypes.string
+	},
+	getDefaultProps: function(){
+		return {
+			isSmallMode: false
+		};
+	},
+
+	getExtraStyleForDateSelector: function () {
+		let extraStyle;
+
+		if(this.props.isSmallView) {
+			extraStyle = this.SMALL_DATE_SELECTOR_CSS_STYLE;
+		}
+
+		if(typeof this.props.extraStyle !== 'undefined') {
+			extraStyle += ' ' + this.props.extraStyle;
+		}
+
+		return extraStyle;
+	},
+	getExtraStyleForDropDown: function (type) {
+		switch (true) {
+			case this.props.isSmallView && type === 'DAY':
+				return `${this.SMALL_VIEW_DROPDOWN_CSS_STYLE} mMonthDay`;
+			case this.props.isSmallView && type === 'MONTH':
+				return this.SMALL_VIEW_DROPDOWN_CSS_STYLE;
+			case this.props.isSmallView && type === 'YEAR':
+				return `${this.SMALL_VIEW_DROPDOWN_CSS_STYLE} mYear`;
+			default:
+				return this.DROPDOWN_CSS_STYLE;
+		}
 	},
 
 	getCurrentDay: function() {
@@ -78,26 +113,26 @@ const DateSelector = React.createClass({
 		const dateObject = new Date(this.props.date);
 
 		return (
-			<div className="bDateSelector">
-				<div className="eDateSelector_leftSide">
+			<div className={ "bDateSelector " + this.getExtraStyleForDateSelector() }>
+				<div className={ "eDateSelector_leftSide " + this.getExtraStyleForDateSelector() }>
 					<Dropdown	optionsArray		= { this.getOptionsForDayDropdown(dateObject) }
 								currentOptionId		= { this.getCurrentDay() }
 								handleChange		= { this.handleChangeDay }
-								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+								extraCssStyle		= { this.getExtraStyleForDropDown('DAY') }
 					/>
 				</div>
-				<div className="eDateSelector_centerSide">
+				<div className={ "eDateSelector_centerSide " + this.getExtraStyleForDateSelector() }>
 					<Dropdown	optionsArray		= { this.getOptionsForMonthDropdown() }
 								currentOptionId		= { this.getCurrentMonth() }
 								handleChange		= { this.handleChangeMonth }
-								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+								extraCssStyle		= { this.getExtraStyleForDropDown('MONTH') }
 					/>
 				</div>
-				<div className="eDateSelector_rightSide">
+				<div className={ "eDateSelector_rightSide " + this.getExtraStyleForDateSelector() }>
 					<Dropdown	optionsArray		= { this.getOptionsForYearDropdown() }
 								currentOptionId		= { this.getCurrentYear() }
 								handleChange		= { this.handleChangeYear }
-								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+								extraCssStyle		= { this.getExtraStyleForDropDown('YEAR') }
 					/>
 				</div>
 			</div>

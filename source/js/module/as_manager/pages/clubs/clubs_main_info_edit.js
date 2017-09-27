@@ -30,6 +30,17 @@ const ClubMainInfoEdit = React.createClass({
 				}
 			).then(data => {
 				binding.set('isSync', true);
+
+				binding.set('clubsForm.startDate', Immutable.fromJS(data.startDate));
+				binding.set('clubsForm.finishDate', Immutable.fromJS(data.finishDate));
+				binding.set('clubsForm.time', Immutable.fromJS(data.time));
+				binding.set(
+					'clubsForm.shedule.days',
+					Immutable.fromJS(
+						ClubsHelper.convertWeekDaysFromServerToClient(data.days)
+					)
+				);
+
 				binding.set('clubsForm.ages', Immutable.fromJS(data.ages));
 				binding.set('clubsForm.form', Immutable.fromJS(data));
 				binding.set('clubsForm.form.price', Immutable.fromJS(data.price.price));
