@@ -28,6 +28,10 @@ const EventTeamsView = React.createClass({
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
+	getPresenceByStudent: function(event, userId) {
+		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
+		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].richScore.presence;
+	},
 	handleChangeScore: function(event, teamId, player, score) {
 		const self = this;
 
@@ -53,10 +57,19 @@ const EventTeamsView = React.createClass({
 				permissionId:	player.permissionId,
 				score:			0
 			};
+			if (event.sport.points.display === 'PRESENCE_ONLY') {
+				scoreData.richScore = {}
+			}
 			event.results.individualScore.push(scoreData);
 		}
 		/** set score */
-		scoreData.score = score.value;
+		if (event.sport.points.display === 'PRESENCE_ONLY') {
+			const value = score.value ? 1 : 0;
+			scoreData.richScore.presence = value;
+			scoreData.score = value;
+		} else {
+			scoreData.score =score.value;
+		}
 		scoreData.isChanged = true;
 		scoreData.isValid = score.isValid;
 		self.getBinding('event').set(Immutable.fromJS(event));
@@ -400,6 +413,7 @@ const EventTeamsView = React.createClass({
 				<span className="ePlayer_scoreContainer">
 					<Score	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
 							plainPoints		= { this.getPointsByStudent(event, player.userId) }
+							presence		= { this.getPresenceByStudent(event, player.userId) }
 							pointsStep		= { event.sport.points.pointsStep }
 							pointsType		= { event.sport.points.display }
 							pointsMask		= { event.sport.points.inputMask }
