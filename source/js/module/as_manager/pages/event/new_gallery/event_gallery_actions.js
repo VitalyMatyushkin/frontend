@@ -84,8 +84,14 @@ function getPhotosForEvent(role, binding, schoolId, eventId) {
 	}
 
 	return service.get({
-		schoolId:	schoolId,
-		eventId:	eventId
+			schoolId:	schoolId,
+			eventId:	eventId
+		},
+		{
+			filter:
+				{
+					limit: 100
+				}
 	}).then( photos => {
 		binding.atomically()
 			.set('photos',		Immutable.fromJS(photos))

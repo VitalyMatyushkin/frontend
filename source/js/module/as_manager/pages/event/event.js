@@ -772,6 +772,12 @@ const Event = React.createClass({
 		return service.get({
 			schoolId:	this.props.activeSchoolId,
 			eventId:	this.eventId
+		},
+		{
+			filter:
+				{
+					limit: 100
+				}
 		});
 	},
 	/**Init model for Tabs component*/
