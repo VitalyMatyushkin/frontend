@@ -12,7 +12,7 @@ const MessageText = React.createClass({
 
 		switch (message.kind) {
 			case MessageConsts.MESSAGE_KIND.INVITATION:
-				return `${playerName} is available to play.`;
+				return `Do you give your consent for ${playerName} to take part in this fixture?`;
 			case MessageConsts.MESSAGE_KIND.REFUSAL:
 				return `${playerName} is not available to take part.`;
 		}
