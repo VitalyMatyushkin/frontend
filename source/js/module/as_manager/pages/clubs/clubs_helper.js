@@ -1,4 +1,5 @@
 const ClubsConst = require('module/helpers/consts/clubs');
+const EventConsts = require('module/helpers/consts/events');
 
 const ClubsHeper = {
 	redirectToClubListPage: function () {
@@ -19,6 +20,7 @@ const ClubsHeper = {
 			time:			clubsFormPageData.time,
 			days:			this.convertWeekDaysFromClientToServer(clubsFormPageData.days)
 		};
+		data.gender = EventConsts.MAP_CLIENT_TO_SERVER_EVENT_GENDERS[clubsFormPageData.gender];
 	},
 	getWeekDays: function () {
 		return [

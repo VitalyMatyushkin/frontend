@@ -5,6 +5,7 @@ const	React					= require('react'),
 
 const	EventFormActions		= require('../../event_form_actions'),
 		If						= require('../../../../../../../ui/if/if'),
+		GenderHelper			= require('module/helpers/gender_helper'),
 		Autocomplete			= require('../../../../../../../ui/autocomplete2/OldAutocompleteWrapper');
 
 // Helpers
@@ -28,20 +29,6 @@ const SportSelector = React.createClass({
 	},
 	getActiveSchoolId: function() {
 		return this.getDefaultBinding().toJS('schoolInfo.id');
-	},
-	getDefaultGender: function(sportModel) {
-		switch (true) {
-			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && sportModel.genders.mixed:
-				return undefined;
-			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && !sportModel.genders.mixed:
-				return undefined;
-			case sportModel.genders.femaleOnly:
-				return 'femaleOnly';
-			case sportModel.genders.maleOnly:
-				return 'maleOnly';
-			case sportModel.genders.mixed:
-				return undefined;
-		}
 	},
 	isOnlyFavoriteSports: function() {
 		const	binding						= this.getDefaultBinding(),
@@ -82,7 +69,7 @@ const SportSelector = React.createClass({
 		binding.atomically()
 			.set('model.sportId',		id)
 			.set('model.sportModel',	Immutable.fromJS(sport))
-			.set('model.gender',		Immutable.fromJS(this.getDefaultGender(sport)))
+			.set('model.gender',		Immutable.fromJS(GenderHelper.getDefaultGender(sport)))
 			.set('rivals',				Immutable.fromJS(rivals))
 			.commit();
 	},

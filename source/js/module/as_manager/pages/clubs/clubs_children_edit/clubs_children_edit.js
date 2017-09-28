@@ -174,7 +174,7 @@ const ClubChildrenEdit = React.createClass({
 	},
 	doAfterSaveActions: function () {
 		this.getDefaultBinding().set('isSync', true);
-		window.simpleAlert('Participants was successfully saved.');
+		window.simpleAlert('The pupils have been added successfully.');
 	},
 	handleClickSubmitButton: function () {
 		if(this.isSaveButtonEnable()) {

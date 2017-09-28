@@ -7,7 +7,12 @@ const	React					= require('react'),
 const ControlPanel = React.createClass({
 	propTypes: {
 		// array with control react elements, like input, button, radio button or anything else
-		controlArray:	React.PropTypes.array.isRequired
+		controlArray:	React.PropTypes.array.isRequired,
+		extraStyle:		React.PropTypes.string
+	},
+
+	getStyle: function () {
+		return classNames('bControlPanel', this.props.extraStyle);
 	},
 
 	renderControlElements: function() {
@@ -26,7 +31,7 @@ const ControlPanel = React.createClass({
 
 	render: function(){
 		return (
-			<div className="bControlPanel">
+			<div className={this.getStyle()}>
 				{this.renderControlElements()}
 			</div>
 		);

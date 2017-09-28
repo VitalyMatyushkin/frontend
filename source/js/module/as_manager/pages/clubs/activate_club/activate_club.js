@@ -45,7 +45,7 @@ const ActivateClub = React.createClass({
 			.acvitateClub(this.props.activeSchoolId, this.props.clubId)
 			.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
 			.then(club => {
-				window.simpleAlert('Club was successfully activated.');
+				window.simpleAlert('The club has been activated successfully.');
 				binding.set('club', Immutable.fromJS(club));
 				binding.set('isSync', true);
 			});

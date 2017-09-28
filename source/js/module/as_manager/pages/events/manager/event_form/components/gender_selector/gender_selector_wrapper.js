@@ -1,19 +1,23 @@
 const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
 		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
 		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel'),
 		EventConsts			= require('../../../../../../../helpers/consts/events');
 
-const GenderSelectorWrapper = React.createClass({
-	mixins: [Morearty.Mixin],
+const	classNames			= require('classnames');
 
+const GenderSelectorWrapper = React.createClass({
 	CUSTOM_CSS_STYLE:	"mGenderSelector",
 	BOYS_TEXT:			"BOYS",
 	GIRLS_TEXT:			"GIRLS",
 	RADIO_BUTTON_IDS :	{
 		"BOYS_RADIOBUTTON":		"BOYS_RADIOBUTTON",
 		"GIRLS_RADIOBUTTON":	"GIRLS_RADIOBUTTON"
+	},
+	propTypes: {
+		gender:				React.PropTypes.object.isRequired,
+		sport:				React.PropTypes.object.isRequired,
+		handleChangeGender:	React.PropTypes.func.isRequired,
+		extraStyle:			React.PropTypes.string
 	},
 	getRadioButtonIdArray: function() {
 		const ids = [];
@@ -33,7 +37,7 @@ const GenderSelectorWrapper = React.createClass({
 		}
 	},
 	isBoysChecked: function() {
-		const gender = this.getDefaultBinding().toJS('model.gender');
+		const gender = this.props.gender;
 
 		switch (gender) {
 			case EventConsts.EVENT_GENDERS.FEMALE_ONLY:
@@ -47,7 +51,7 @@ const GenderSelectorWrapper = React.createClass({
 		}
 	},
 	isGirlsChecked: function() {
-		const gender = this.getDefaultBinding().toJS('model.gender');
+		const gender = this.props.gender;
 
 		switch (gender) {
 			case EventConsts.EVENT_GENDERS.FEMALE_ONLY:
@@ -69,10 +73,10 @@ const GenderSelectorWrapper = React.createClass({
 		}
 	},
 	isBoysDisabled: function() {
-		const sportModel = this.getDefaultBinding().get('model.sportModel') || this.getDefaultBinding().get('model.sport');
+		const sportModel = this.props.sport;
 
 		if(sportModel) {
-			const genders = sportModel.toJS().genders;
+			const genders = sportModel.genders;
 
 			return !(genders.maleOnly || genders.mixed);
 		} else {
@@ -80,10 +84,10 @@ const GenderSelectorWrapper = React.createClass({
 		}
 	},
 	isGirlsDisabled: function() {
-		const sportModel = this.getDefaultBinding().get('model.sportModel');
+		const sportModel = this.props.sport;
 
 		if(sportModel) {
-			const genders = sportModel.toJS().genders;
+			const genders = sportModel.genders;
 
 			return !(genders.femaleOnly || genders.mixed);
 		} else {
@@ -105,36 +109,36 @@ const GenderSelectorWrapper = React.createClass({
 		return this.GIRLS_TEXT;
 	},
 	handleClick: function(radiobuttonId) {
-		const sportModel = this.getDefaultBinding().get('model.sportModel');
+		const sportModel = this.props.sport;
 
 		if(sportModel) {
-			const	genders			= sportModel.toJS().genders,
-					currentGender	= this.getDefaultBinding().toJS('model.gender');
+			const	genders			= sportModel.genders,
+					currentGender	= this.props.gender;
 
 			switch (true) {
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.FEMALE_ONLY:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MIXED));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MIXED);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && currentGender === EventConsts.EVENT_GENDERS.FEMALE_ONLY:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && currentGender === EventConsts.EVENT_GENDERS.MIXED:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && typeof currentGender === 'undefined':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY)
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MIXED));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MIXED)
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY)
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && currentGender === EventConsts.EVENT_GENDERS.MIXED:
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY)
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && typeof currentGender === 'undefined':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY)
 					break;
 			}
 		}
@@ -146,14 +150,17 @@ const GenderSelectorWrapper = React.createClass({
 									isDisabled	= { this.isDisabledById(radiobuttonId) }
 									text		= { this.getTextById(radiobuttonId) }
 									onClick		= { this.handleClick.bind(null, radiobuttonId) }
-									customCSS	= "mGenderSelector"
+									customCSS	= { classNames("mGenderSelector", this.props.extraStyle) }
 				/>
 			);
 		});
 	},
 	render: function() {
 		return (
-			<ControlPanel controlArray={this.getRadiobuttonArray()}/>
+			<ControlPanel
+				controlArray	= { this.getRadiobuttonArray() }
+				extraStyle		= { this.props.extraStyle }
+			/>
 		);
 	}
 });

@@ -8,11 +8,15 @@
 
   border: 1px solid #d7d7d7;
   border-radius: 8px;
+
+  &.mSmallView {
+    width: 360px;
+    height: 40px;
+  }
 }
 
 .eControlPanel_section {
   flex-grow: 1;
-  height: 33px;
 
   border: 1px solid #d7d7d7;
   border-width: 0 1px 0 0;

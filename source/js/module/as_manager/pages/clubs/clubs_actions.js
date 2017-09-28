@@ -1,4 +1,23 @@
 const ClubsActions = {
+	getSportsService: function(schoolId) {
+		return (sportName) => {
+			const filter = {
+				filter: {
+					where: {
+						name: {
+							like: sportName,
+							options: 'i'
+						},
+						players: 'INDIVIDUAL'
+					},
+					limit: 50,
+					order:'name ASC'
+				}
+			};
+
+			return window.Server.schoolSports.get(schoolId, filter);
+		};
+	},
 	getClub: function (schoolId, clubId) {
 		return window.Server.schoolClub.get(
 			{
