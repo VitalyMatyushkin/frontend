@@ -131,5 +131,6 @@ function pullFormsAndHouses(result, school) {
 	return result;
 }
 
-module.exports.pullFormsAndHouses = pullFormsAndHouses;
-module.exports.loadFromCSV = readStudentsFromCSVFile;
+module.exports.pullFormsAndHouses 		= pullFormsAndHouses;
+module.exports.loadFromCSV 				= readStudentsFromCSVFile;
+module.exports.parseCSVFile 			= parseCSVFile;
