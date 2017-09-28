@@ -6,6 +6,7 @@ const	React		= require('react'),
 
 const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
 		Button		= require('module/ui/button/button'),
+		Header		= require('module/as_manager/pages/clubs/clubs_children_edit/header'),
 		Loader		= require('module/ui/loader');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
@@ -191,6 +192,7 @@ const ClubChildrenEdit = React.createClass({
 		if(binding.toJS('isSync')) {
 			return (
 				<div className='bClubChildrenManagerWrapper'>
+					<Header/>
 					<TeamManager
 						isNonTeamSport	= { true }
 						binding			= { binding.sub('teamManager') }

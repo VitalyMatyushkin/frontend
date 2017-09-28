@@ -62,36 +62,41 @@ ClubListModel.prototype.onRemove = function(data, event){
 ClubListModel.prototype.getColumns = function(){
 	this.columns = [
 		{
-			text:'Name',
-			isSorted:true,
-			cell: {
-				dataField:'name'
-			},
-			filter:{
-				type:'string',
-				id:'find_house_name'
-			}
+			text:		'Name',
+			isSorted:	true,
+			cell:		{ dataField:'name' },
+			filter:		{
+							id:		'club_name_filter',
+							type:	'string'
+						}
 		},
 		{
-			text:'Description',
-			isSorted:true,
-			cell:{
-				dataField:'description'
-			},
-			filter:{
-				type:'string',
-				id:'find_house_description'
-			}
+			text:		'Description',
+			isSorted:	false,
+			cell:		{ dataField:'description' },
+			filter:		{
+							id:		'club_description_filter',
+							type:	'string'
+						}
 		},
 		{
-			text:'Actions',
-			cell:{
-				type:'action-buttons',
-				typeOptions:{
-					onItemEdit:		this.onEdit.bind(this),
-					onItemRemove:	this.onRemove.bind(this)
-				}
-			}
+			text:		'Status',
+			isSorted:	true,
+			cell:		{ dataField:'status' },
+			filter:		{
+							id:		'club_status_filter',
+							type:	'string'
+						}
+		},
+		{
+			text:	'Actions',
+			cell:	{
+						type:			'action-buttons',
+						typeOptions:	{
+											onItemEdit:		this.onEdit.bind(this),
+											onItemRemove:	this.onRemove.bind(this)
+										}
+					}
 		}
 	];
 };
@@ -112,12 +117,12 @@ ClubListModel.prototype.createGrid = function(){
 					</div>
 				)
 		},
-		columns:this.columns,
+		columns: this.columns,
 		handleClick: this.props.handleClick,
 		filters: {
 			limit: 100,
 			where: {
-				status: "ACTIVE"
+				status:  {$in: ['DRAFT', 'ACTIVE']}
 			}
 		}
 	});

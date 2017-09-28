@@ -1,4 +1,21 @@
 const ClubsActions = {
+	getClub: function (schoolId, clubId) {
+		return window.Server.schoolClub.get(
+			{
+				schoolId:	schoolId,
+				clubId:		clubId
+			}
+		)
+	},
+	acvitateClub: function (schoolId, clubId) {
+		return window.Server.schoolClubActivate.post(
+			{
+				schoolId:	schoolId,
+				clubId:		clubId
+			},
+			{}
+		);
+	},
 	removeParticipant: function(schoolId, clubId, participantId) {
 		return window.Server.schoolClubParticipat.delete(
 			{

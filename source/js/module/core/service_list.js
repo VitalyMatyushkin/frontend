@@ -55,6 +55,7 @@ const serviceList = {
 		serviceList.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
 		serviceList.schoolClubParticipats = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants', binding);
 		serviceList.schoolClubParticipat = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants/{participantId}', binding);
+		serviceList.schoolClubActivate = new Service('/i/schools/{schoolId}/clubs/{clubId}/activate', binding);
 
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
@@ -68,7 +69,6 @@ const serviceList = {
 		serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
 		serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
 		serviceList.schoolStudentMerge = new Service('/i/schools/{schoolId}/students/{studentId}/merge', binding);
-
 
 		// forms
 		serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);

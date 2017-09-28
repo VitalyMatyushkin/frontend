@@ -26,7 +26,8 @@ const ClubsPage = React.createClass({
 				clubsMainInfoEdit: {
 					clubsForm: {}
 				},
-				clubsChildrenEdit: {}
+				clubsChildrenEdit: {},
+				activateClub: {}
 			},
 			clubsRouting: {}
 		});
