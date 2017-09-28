@@ -88,13 +88,18 @@ const AddPermissionRequest = React.createClass({
 		return !this.isSchoolSelected();
 	},
 	getRoles: function() {
-		const	formBinding		= this.getDefaultBinding().sub('form'),
-				fullSchoolData	= formBinding.meta('schoolId.fullValue').toJS();
+		const	formBinding			= this.getDefaultBinding().sub('form'),
+				fullSchoolData		= formBinding.meta('schoolId.fullValue').toJS(),
+				currentPermissions 	= this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions');
+
+		let currentRoles = [];
 		
 		// user roles for active school
-		const currentRoles = this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions')
-			.filter(p => p.schoolId === this.getSchoolSelectedId())
-			.map(p => p.role.toLowerCase());
+		if (Array.isArray(currentPermissions)) {
+			currentRoles = currentPermissions
+				.filter(p => p.schoolId === this.getSchoolSelectedId())
+				.map(p => p.role.toLowerCase());
+		}
 		
 		// if user also have role in this school, we must cut this role from role list
 		// but this restriction don't act on parent
