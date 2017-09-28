@@ -7,13 +7,13 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 
 		DateHelper		= require('../../../../helpers/date_helper'),
+		MonthNavBar		= require('module/ui/calendar/month_year_selector'),
 		Fixtures		= require('../../../../ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const binding = this.getDefaultBinding();
-
+		this.initMonthDate();
 		this.setEvents();
 	},
 	componentDidMount: function () {
@@ -23,10 +23,15 @@ const EventFixtures = React.createClass({
 		this.addBindingListener(binding, 'school', this.setEvents);
 		this.addBindingListener(binding, 'activeSchoolId', this.setEvents);
 	},
+	initMonthDate: function() {
+		this.getDefaultBinding().set(
+			'monthDate',
+			new Date()
+		);
+	},
 	setEvents: function() {
-		const binding = this.getDefaultBinding().sub('calendar');
-
-		const currentDate = binding.toJS('monthDate');
+		const 	binding = this.getDefaultBinding(),
+				currentDate = binding.get('monthDate');
 
 		this.setEventsByDateRange(
 			DateHelper.getStartDateTimeOfMonth(currentDate),
@@ -114,17 +119,30 @@ const EventFixtures = React.createClass({
 	onClickChallenge: function (eventId, schoolId) {
 		document.location.hash = 'event/' + eventId + "?schoolId=" + schoolId ;
 	},
+	onMonthClick: function (date) {
+		const binding = this.getDefaultBinding();
 
+		binding.set('sync', false);
+		binding.set('monthDate', date);
+
+		this.setEvents();
+	},
 	render: function () {
 		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				binding			= this.getDefaultBinding();
 
 		return (
-				<Fixtures	events			= {binding.toJS('models')}
-							sync			= {binding.toJS('sync')}
-							onClick			= {this.onClickChallenge}
-							activeSchoolId	= {activeSchoolId}
-				/>
+				<div className="bFixtures">
+					<MonthNavBar
+						date 			= {binding.get('monthDate')}
+						onMonthClick 	= {date => this.onMonthClick(date)}
+					/>
+					<Fixtures	events			= {binding.toJS('models')}
+								sync			= {binding.toJS('sync')}
+								onClick			= {this.onClickChallenge}
+								activeSchoolId	= {activeSchoolId}
+					/>
+				</div>
 		);
 	}
 });

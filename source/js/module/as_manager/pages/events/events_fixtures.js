@@ -24,13 +24,6 @@ const EventFixtures = React.createClass({
 		binding.set('dateCalendar', currentDate);
 		this._setEvents();
 	},
-	// getInitialState: function() {
-	// 	const 	binding = this.getBinding('calendar'),
-	// 			currentDate = binding.toJS('monthDate');
-	// 	return {
-	// 		dateState: currentDate
-	// 	};
-	// },
 	_setEvents: function() {
 		const 	binding = this.getDefaultBinding();
 		this._setEventsByDateRange(
