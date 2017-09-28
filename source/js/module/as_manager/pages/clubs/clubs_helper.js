@@ -1,6 +1,9 @@
 const ClubsConst = require('module/helpers/consts/clubs');
 
 const ClubsHeper = {
+	redirectToClubListPage: function () {
+		document.location.hash = 'clubs/clubList';
+	},
 	convertClientToServerFormData: function(data, clubsFormPageData) {
 		console.log(clubsFormPageData);
 
@@ -16,10 +19,6 @@ const ClubsHeper = {
 			time:			clubsFormPageData.time,
 			days:			this.convertWeekDaysFromClientToServer(clubsFormPageData.days)
 		};
-
-		delete data.price;
-		delete data.priceType;
-
 	},
 	getWeekDays: function () {
 		return [

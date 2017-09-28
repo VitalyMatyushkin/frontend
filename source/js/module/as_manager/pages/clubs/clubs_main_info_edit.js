@@ -8,7 +8,7 @@ const	ClubForm	= require('module/as_manager/pages/clubs/clubs_form/clubs_form'),
 const	ClubsConst	= require('module/helpers/consts/clubs'),
 		ClubsHelper	= require('module/as_manager/pages/clubs/clubs_helper');
 
-const LoaderStyle = require('styles/ui/loader.scss');
+const	LoaderStyle	= require('styles/ui/loader.scss');
 
 const ClubMainInfoEdit = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -31,11 +31,11 @@ const ClubMainInfoEdit = React.createClass({
 			).then(data => {
 				binding.set('isSync', true);
 
-				binding.set('clubsForm.startDate', Immutable.fromJS(data.startDate));
-				binding.set('clubsForm.finishDate', Immutable.fromJS(data.finishDate));
-				binding.set('clubsForm.time', Immutable.fromJS(data.time));
+				binding.set('clubsForm.startDate', Immutable.fromJS(data.schedule.startDate));
+				binding.set('clubsForm.finishDate', Immutable.fromJS(data.schedule.finishDate));
+				binding.set('clubsForm.time', Immutable.fromJS(data.schedule.time));
 
-				let days = data.days;
+				let days = data.schedule.days;
 				if(typeof days === 'undefined') {
 					days = [];
 				}
@@ -70,7 +70,7 @@ const ClubMainInfoEdit = React.createClass({
 				clubId:		this.props.clubId
 			},
 			data
-		).then(() => this.redirectToClubListPage());
+		).then(() => ClubsHelper.redirectToClubListPage());
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();

@@ -2,7 +2,7 @@ const	Morearty	= require('morearty'),
 		React		= require('react');
 
 const	ClubForm	= require('module/as_manager/pages/clubs/clubs_form/clubs_form');
-const	ClubsConst	= require('module/helpers/consts/clubs');
+
 const	ClubsHelper	= require('module/as_manager/pages/clubs/clubs_helper');
 
 const ClubAddPage = React.createClass({
@@ -13,9 +13,6 @@ const ClubAddPage = React.createClass({
 	componentWillMount: function () {
 		this.getDefaultBinding().sub('clubsForm').clear();
 	},
-	redirectToClubListPage: function () {
-		document.location.hash = 'clubs/clubList';
-	},
 	submitAdd: function(data) {
 		ClubsHelper.convertClientToServerFormData(
 			data,
@@ -25,7 +22,7 @@ const ClubAddPage = React.createClass({
 		window.Server.schoolClubs.post(
 			this.props.activeSchoolId,
 			data
-		).then(() => this.redirectToClubListPage());
+		).then(() => ClubsHelper.redirectToClubListPage());
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
