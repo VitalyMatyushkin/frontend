@@ -3,20 +3,22 @@ const	React		= require('react'),
 		propz		= require('propz'),
 		Morearty	= require('morearty');
 
-const	Form				= require('module/ui/form/form'),
-		FormField			= require('module/ui/form/form_field'),
-		FormColumn			= require('module/ui/form/form_column'),
-		Ages				= require('module/as_manager/pages/clubs/clubs_form/components/ages'),
-		DateSelector		= require('module/ui/date_selector/date_selector'),
-		FullTimeInput		= require('module/ui/full_time_input/full_time_input'),
-		MultiselectDropdown	= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
-		Loader				= require('module/ui/loader');
+const	Form					= require('module/ui/form/form'),
+		FormField				= require('module/ui/form/form_field'),
+		FormColumn				= require('module/ui/form/form_column'),
+		Ages					= require('module/as_manager/pages/clubs/clubs_form/components/ages'),
+		DateSelector			= require('module/ui/date_selector/date_selector'),
+		FullTimeInput			= require('module/ui/full_time_input/full_time_input'),
+		GenderSelectorWrapper	= require('module/as_manager/pages/events/manager/event_form/components/gender_selector/gender_selector_wrapper'),
+		MultiselectDropdown		= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		Loader					= require('module/ui/loader');
 
-const	TeamHelper	= require('module/ui/managers/helpers/team_helper'),
-		ClubsHelper	= require('module/as_manager/pages/clubs/clubs_helper'),
-		ClubsConst	= require('module/helpers/consts/clubs');
+const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		GenderHelper	= require('module/helpers/gender_helper'),
+		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper'),
+		ClubsConst		= require('module/helpers/consts/clubs');
 
-const EventFormActions = require('module/as_manager/pages/events/manager/event_form/event_form_actions');
+const ClubsActions = require('module/as_manager/pages/clubs/clubs_actions');
 
 const LoaderStyle = require('styles/ui/loader.scss');
 
@@ -83,7 +85,7 @@ const ClubsForm = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		const	timeString = binding.toJS('time'),
-			dateObject = new Date(timeString);
+				dateObject = new Date(timeString);
 
 		return dateObject;
 	},
@@ -152,6 +154,17 @@ const ClubsForm = React.createClass({
 
 		this.getDefaultBinding().set('ages', Immutable.fromJS(ages));
 	},
+	handleChangeGender: function (gender) {
+		this.getDefaultBinding().set('gender', Immutable.fromJS(gender));
+	},
+	handleChangeSport: function (sportId, sport) {
+		this.getDefaultBinding().set(
+			'gender',
+			Immutable.fromJS(
+				GenderHelper.getDefaultGender(sport)
+			)
+		);
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -189,15 +202,24 @@ const ClubsForm = React.createClass({
 								type			= 'autocomplete'
 								defaultItem		= { binding.toJS('form.sport') }
 								serviceFullData	= {
-									EventFormActions.getSportService(
-										this.props.activeSchoolId,
-										false
-									)
+									ClubsActions.getSportsService(this.props.activeSchoolId)
 								}
+								onSelect		= { this.handleChangeSport }
 								validation		= "required"
 							>
 								Sport
 							</FormField>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Gender
+								</div>
+								<GenderSelectorWrapper
+									gender				= { binding.toJS('gender') }
+									sport				= { binding.toJS('form.sport') }
+									handleChangeGender	= { this.handleChangeGender }
+									extraStyle			= { 'mSmallView' }
+								/>
+							</div>
 							<div className="eForm_field">
 								<div className="eForm_fieldName">
 									Ages

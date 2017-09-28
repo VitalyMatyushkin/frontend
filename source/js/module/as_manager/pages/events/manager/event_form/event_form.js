@@ -85,6 +85,11 @@ const EventForm = React.createClass({
 
 		binding.set('model.ages', Immutable.fromJS(selections));
 	},
+	handleChangeGender: function (gender) {
+		const binding = this.getDefaultBinding();
+
+		binding.set('model.gender', Immutable.fromJS(gender));
+	},
 	getSports: function () {
 		const	self	= this,
 				binding	= this.getDefaultBinding(),
@@ -138,6 +143,13 @@ const EventForm = React.createClass({
 
 		return type === 'inter-schools' && typeof postcode !== 'undefined';
 	},
+	getSport: function () {
+		const binding = this.getDefaultBinding();
+
+		return typeof binding.toJS('model.sportModel') !== 'undefined' ?
+			binding.toJS('model.sportModel') :
+			binding.toJS('model.sport');
+	},
 	render: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -162,7 +174,11 @@ const EventForm = React.createClass({
 					<div className="bInputLabel">
 						Genders
 					</div>
-					<GenderSelectorWrapper binding={binding}/>
+					<GenderSelectorWrapper
+						gender				= { binding.toJS('model.gender') }
+						sport				= { this.getSport() }
+						handleChangeGender	= { this.handleChangeGender }
+					/>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">

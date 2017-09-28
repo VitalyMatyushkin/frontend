@@ -5,8 +5,9 @@ const	React		= require('react'),
 const	ClubForm	= require('module/as_manager/pages/clubs/clubs_form/clubs_form'),
 		Loader		= require('module/ui/loader');
 
-const	ClubsConst	= require('module/helpers/consts/clubs'),
-		ClubsHelper	= require('module/as_manager/pages/clubs/clubs_helper');
+const	ClubsConst		= require('module/helpers/consts/clubs'),
+		EventConsts		= require('module/helpers/consts/events'),
+		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper');
 
 const	LoaderStyle	= require('styles/ui/loader.scss');
 
@@ -22,20 +23,27 @@ const ClubMainInfoEdit = React.createClass({
 		const clubId = this.props.clubId;
 
 		binding.set('isSync', false);
+		let club;
 		if (typeof clubId !== 'undefined') {
 			window.Server.schoolClub.get(
 				{
 					schoolId:	this.props.activeSchoolId,
 					clubId:		clubId
 				}
-			).then(data => {
+			)
+			.then(data => {
+				club = data;
+
+				return window.Server.sport.get(club.sportId);
+			})
+			.then(sport => {
 				binding.set('isSync', true);
 
-				binding.set('clubsForm.startDate', Immutable.fromJS(data.schedule.startDate));
-				binding.set('clubsForm.finishDate', Immutable.fromJS(data.schedule.finishDate));
-				binding.set('clubsForm.time', Immutable.fromJS(data.schedule.time));
+				binding.set('clubsForm.startDate', Immutable.fromJS(club.schedule.startDate));
+				binding.set('clubsForm.finishDate', Immutable.fromJS(club.schedule.finishDate));
+				binding.set('clubsForm.time', Immutable.fromJS(club.schedule.time));
 
-				let days = data.schedule.days;
+				let days = club.schedule.days;
 				if(typeof days === 'undefined') {
 					days = [];
 				}
@@ -46,13 +54,16 @@ const ClubMainInfoEdit = React.createClass({
 					)
 				);
 
-				binding.set('clubsForm.ages', Immutable.fromJS(data.ages));
-				binding.set('clubsForm.form', Immutable.fromJS(data));
-				binding.set('clubsForm.form.price', Immutable.fromJS(data.price.price));
+				binding.set('clubsForm.ages', Immutable.fromJS(club.ages));
+				binding.set('clubsForm.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS[club.gender]));
+
+				binding.set('clubsForm.form', Immutable.fromJS(club));
+				binding.set('clubsForm.form.sport', Immutable.fromJS(sport));
+				binding.set('clubsForm.form.price', Immutable.fromJS(club.price.price));
 				binding.set(
 					'clubsForm.form.priceType',
 					Immutable.fromJS(
-						ClubsConst.SERVER_TO_CLIENT_PRICING_MAPPING[data.price.priceType]
+						ClubsConst.SERVER_TO_CLIENT_PRICING_MAPPING[club.price.priceType]
 					)
 				);
 			});
