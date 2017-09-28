@@ -96,14 +96,15 @@ class StudentListClass{
 		 * All other users should not see that button.
 		 * */
 		if (changeAllowed) {
-			actionList.push('Edit', 'Merge', 'Remove');
+			//actionList.push('Edit', 'Merge', 'Remove');
+			//we hide merge students (it available by superadmin)
+			actionList.push('Edit', 'Remove');
 		}
 		
 		return actionList;
 	}
 	
 	_getQuickEditActionFunctions(studentId, action) {
-		console.log(studentId);
 		switch (action){
 			case 'View':
 				document.location.hash = 'school_admin/students/stats?id=' + studentId;
