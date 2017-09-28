@@ -137,6 +137,10 @@ const ActivateStudentsComponent = React.createClass({
 	renderStudentData: function(){
 		const 	binding 				= this.getDefaultBinding(),
 				activateStudentsData 	= binding.toJS('activateStudentsData');
+		
+		const 	domain 		= document.location.host.replace('admin', 'password'),
+				protocol 	= document.location.href.split('/')[0];
+		
 		if (Array.isArray(activateStudentsData)) {
 			return activateStudentsData.map((activeStudent, index) => {
 				return (
@@ -144,6 +148,7 @@ const ActivateStudentsComponent = React.createClass({
 						<p key={"studentId-" + index}>Student id: {activeStudent.id}</p>
 						<p key={"studentEmail-" + index}>Student email: {activeStudent.email}</p>
 						<p key={"studentToken-" + index}>Student token: {activeStudent.token}</p>
+						<p key={"studentUrl-" + index}>{`Student url: ${protocol}//${domain}/#reset?secretKey=${activeStudent.token}`}</p>
 					</div>
 				);
 			});
