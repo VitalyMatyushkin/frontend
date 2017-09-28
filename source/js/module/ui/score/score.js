@@ -36,12 +36,11 @@ const Score = React.createClass({
 		const playerScoreClassName = classNames({
 			"ePlayer_score":	true,
 			"mBig":				this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG,
-			"bTooltip":         true
+			"bTooltip":         this.props.pointsType === SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY ? false : true
 		});
 
-		let	result;
-		// let	result,
-		// 	tooltip = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
+		let	result,
+			tooltip = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str;
 
 		// points type
 		switch (this.props.pointsType) {
@@ -55,14 +54,14 @@ const Score = React.createClass({
 				result = ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, '.');
 				break;
 			case SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY:
-				result = this.props.presence === 1 ? 'Presence' : 'No presence';
+				result = TeamHelper.convertPoints(this.props.presence, this.props.pointsType).str;
 				break;
 		}
 
 		return (
 			<div
 				className			= {playerScoreClassName}
-				// data-description	= {tooltip}
+				data-description	= {tooltip}
 			>
 				{result}
 			</div>
