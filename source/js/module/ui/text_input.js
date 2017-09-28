@@ -47,7 +47,7 @@ const TextInput = React.createClass({
 				type			= { this.props.textType || 'text' }
 				placeholder		= { this.props.placeholder }
 				value			= { this.state.value }
-				disabled		= { !!this.props.isDisabled }
+				disabled		= { Boolean(this.props.disabled) }
 				onChange		= { this.handleChange }
 				onFocus			= { this.props.handleFocus }
 			/>
