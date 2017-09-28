@@ -7,9 +7,10 @@ const	RouterView	= require('module/core/router'),
 		SubMenu		= require('module/ui/menu/sub_menu');
 
 const	ClubMainInfoEdit	= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
-		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit');
+		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit'),
+		ActivateClub		= require('module/as_manager/pages/clubs/activate_club/activate_club');
 
-const LoaderStyle = require('styles/ui/loader.scss');
+const	LoaderStyle			= require('styles/ui/loader.scss');
 
 const ClubEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -41,6 +42,12 @@ const ClubEditPage = React.createClass({
 				name: 		'Children',
 				key: 		'Children',
 				routes: 	[`/#clubs/editChildren?id=${clubId}`]
+			},
+			{
+				href: 		`/#clubs/activateClub?id=${clubId}`,
+				name: 		'Activate club',
+				key: 		'Activate_club',
+				routes: 	[`/#clubs/activateClub?id=${clubId}`]
 			}
 		];
 
@@ -81,6 +88,13 @@ const ClubEditPage = React.createClass({
 							path			= "/clubs/editChildren"
 							binding			= { binding.sub('clubsChildrenEdit') }
 							component		= { ClubChildrenEdit }
+							activeSchoolId	= { activeSchoolId }
+							clubId			= { clubId }
+						/>
+						<Route
+							path			= "/clubs/activateClub"
+							binding			= { binding.sub('activateClub') }
+							component		= { ActivateClub }
 							activeSchoolId	= { activeSchoolId }
 							clubId			= { clubId }
 						/>
