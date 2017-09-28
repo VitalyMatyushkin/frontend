@@ -44,4 +44,30 @@
       border: none;
     }
   }
+
+  &.mSmallDateSelector{
+    display: block;
+
+    width: 100px;
+    height: 20px;
+
+    margin: 9px auto 0 auto;
+    padding: 0px;
+
+    font-size: 14px;
+
+    border: none;
+
+    &.mMonthDay {
+      width: 40px;
+    }
+
+    &.mYear {
+      width: 80px;
+    }
+
+    &:hover {
+      border: none;
+    }
+  }
 }
