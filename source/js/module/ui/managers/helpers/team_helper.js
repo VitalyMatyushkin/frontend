@@ -1006,6 +1006,11 @@ function convertPoints(countPoints, pointsType){
 		case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
 			result = getDistanceResult(countPoints);
 			break;
+		case SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY:
+			result = {
+				str: countPoints === 1 ? 'Presence' : 'No presence'
+			};
+			break;
 	}
 
 	return result;
