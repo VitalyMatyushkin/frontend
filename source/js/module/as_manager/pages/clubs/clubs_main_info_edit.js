@@ -34,10 +34,15 @@ const ClubMainInfoEdit = React.createClass({
 				binding.set('clubsForm.startDate', Immutable.fromJS(data.startDate));
 				binding.set('clubsForm.finishDate', Immutable.fromJS(data.finishDate));
 				binding.set('clubsForm.time', Immutable.fromJS(data.time));
+
+				let days = data.days;
+				if(typeof days === 'undefined') {
+					days = [];
+				}
 				binding.set(
-					'clubsForm.shedule.days',
+					'clubsForm.days',
 					Immutable.fromJS(
-						ClubsHelper.convertWeekDaysFromServerToClient(data.days)
+						ClubsHelper.convertWeekDaysFromServerToClient(days)
 					)
 				);
 
