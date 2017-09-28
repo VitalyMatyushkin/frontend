@@ -1,9 +1,14 @@
-input[type="text"].bSmallTimeInput {
-  width: 20px;
-  height: 20px;
-  padding: 0;
+.bSmallTimeInput {
+  /* So many important rules
+   because there are many places where we use this block in form context
+   ab=nd form styles write in shitty way by tag rules
+   */
+  width: 20px!important;
+  height: 20px!important;
+  padding: 0!important;
 
-  background: transparent;
-  border: solid #959595;
-  border-width: 0 0 1px;
+  background: transparent!important;
+  border: solid #959595!important;
+  border-width: 0 0 1px!important;
+  border-radius: 0!important;
 }
