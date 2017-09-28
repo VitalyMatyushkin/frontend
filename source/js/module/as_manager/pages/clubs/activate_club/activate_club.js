@@ -68,6 +68,9 @@ const ActivateClub = React.createClass({
 				content = (
 					<div className='bPageContent'>
 						<div className='bActivateClub'>
+							<h2>
+								Activate club
+							</h2>
 							<p>
 								{ActiveClubHelper.TEXT.DRAFT_TEXT[0]}
 							</p>
@@ -86,6 +89,9 @@ const ActivateClub = React.createClass({
 				content = (
 					<div className='bPageContent'>
 						<div className='bActivateClub'>
+							<h2>
+								Activate club
+							</h2>
 							<p>
 								{ActiveClubHelper.TEXT.ACTIVE_TEXT[0]}
 							</p>

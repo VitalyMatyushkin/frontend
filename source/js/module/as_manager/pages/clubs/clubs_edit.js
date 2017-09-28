@@ -7,7 +7,7 @@ const	RouterView	= require('module/core/router'),
 		SubMenu		= require('module/ui/menu/sub_menu');
 
 const	ClubMainInfoEdit	= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
-		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit'),
+		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit/clubs_children_edit'),
 		ActivateClub		= require('module/as_manager/pages/clubs/activate_club/activate_club');
 
 const	LoaderStyle			= require('styles/ui/loader.scss');
