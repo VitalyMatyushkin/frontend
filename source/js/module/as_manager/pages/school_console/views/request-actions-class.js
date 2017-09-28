@@ -94,10 +94,10 @@ class RequestActionsClass {
 	
 	getActions(item){
 		const actionList = ['Accept', 'Decline'];
-		
-		if (item.requestedPermission.preset === "STUDENT") {
+		//we hide merge students (it available by superadmin)
+		/*if (item.requestedPermission.preset === "STUDENT") {
 			actionList.push('Merge');
-		}
+		}*/
 		
 		return actionList;
 	}
