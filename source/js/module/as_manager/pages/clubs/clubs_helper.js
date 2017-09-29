@@ -9,6 +9,7 @@ const ClubsHeper = {
 		console.log(clubsFormPageData);
 
 		data.ages = clubsFormPageData.ages;
+		data.sport = clubsFormPageData.sport;
 		data.price = {
 			price:		data.price,
 			priceType:	ClubsConst.CLIENT_TO_SERVER_PRICING_MAPPING[data.priceType]

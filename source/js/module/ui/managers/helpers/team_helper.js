@@ -1,4 +1,5 @@
 const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_validator'),
+		EventConsts				= require('module/helpers/consts/events'),
 		EventHelper				= require('module/helpers/eventHelper'),
 		RoleHelper				= require('module/helpers/role_helper'),
 		SportConsts				= require('module/helpers/consts/sport'),
@@ -92,7 +93,7 @@ function getPlayersWithUserInfo(players, users) {
 	});
 };
 
-function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
+function commitIndividualPlayers(schoolId, eventId, initialPlayers, players, changeMode = EventConsts.CHANGE_MODE.SINGLE) {
 	const self = this;
 
 	const promises = [];
@@ -104,7 +105,8 @@ function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
 			self.deleteIndividualPlayer(
 				schoolId,
 				eventId,
-				initialPlayer.id
+				initialPlayer.id,
+				changeMode
 			)
 		)
 	);
@@ -112,7 +114,7 @@ function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
 	// Add new player promises to promise array.
 	// A little trick:
 	// user without userId - is a new user.
-	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p) ));
+	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p, changeMode) ));
 
 	return promises;
 };

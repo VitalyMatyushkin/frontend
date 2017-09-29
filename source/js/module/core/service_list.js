@@ -134,6 +134,7 @@ const serviceList = {
 		// event individuals
 		serviceList.schoolEventIndividual = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/{individualId}', binding);
 		serviceList.schoolEventIndividuals = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/', binding);
+		serviceList.schoolEventIndividuals = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/', binding);
 		serviceList.schoolEventIndividualsBatch = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/batch', binding);
 
 		// event individual performance
