@@ -123,14 +123,13 @@ class RequestActionsClass {
 		
 		return actionList;
 	}
-	_getQuickEditActionFunctions(itemId,action){
+	_getQuickEditActionFunctions(itemId, action){
 		const 	prId 		= itemId,
 				binding 	= this.getDefaultBinding().sub('data'),
 				currentPr 	= this.getCurrentPermission(prId, binding.toJS()),
 				schoolId 	= currentPr ? currentPr.requestedPermission.schoolId : '',
 				email 		= currentPr.requester.email,
-				phone 		= currentPr.requester.phone,
-				studentId 	= currentPr.requesterId;
+				phone 		= currentPr.requester.phone;
 		
 		let confirmMsg;
 		
@@ -172,7 +171,7 @@ class RequestActionsClass {
 				);
 				break;
 			case 'Merge':
-				document.location.hash = `${document.location.hash}/merge-student?studentId=${studentId}&schoolId=${schoolId}`;
+				document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
 				break;
 			default :
 				break;
