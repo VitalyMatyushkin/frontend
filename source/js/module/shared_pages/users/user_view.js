@@ -22,7 +22,8 @@ const   EditUser            = require('./user_edit'),
         If                  = require('module/ui/if/if'),
 		propz				= require('propz'),
         SVG 	            = require('module/ui/svg'),
-	    DateHelper 	        = require('module/helpers/date_helper');
+	    DateHelper 	        = require('module/helpers/date_helper'),
+	    loaderUtils	        = require('module/helpers/loader_utils');
 
 const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
@@ -39,7 +40,7 @@ const UserDetail= React.createClass({
 
         //Parameters services for the super-administrator and managers
         this.params = {schoolId, userId};
-
+        this.superadminModel = loaderUtils.parseDomainName(document.location.hostname).model === 'admin' ? true : false;
         binding.set('popup',false);
         binding.set('editPermission',false);
         binding.set('addRole',false);
@@ -133,16 +134,20 @@ const UserDetail= React.createClass({
                             <div>{statusRole}</div>
                             <div className="bItemDateInterval">{dateInterval}</div>
                         </div>
-                        <div className="eDataList_listItemCell">
-                            <span key={i+"edit"} id="edit_row" onClick={this.onEditPermissionClick.bind(null, role.id)}
-                                className="bLinkLike bTooltip" data-description="Edit">
+						{this.superadminModel &&
+                            <div className="eDataList_listItemCell">
+                            <span key={i + "edit"} id="edit_row"
+                                  onClick={this.onEditPermissionClick.bind(null, role.id)}
+                                  className="bLinkLike bTooltip" data-description="Edit">
                                 <SVG icon="icon_edit"/>
                             </span>
-                            <span key={i+"remove"} id="remove_row" onClick={this.revokePermission.bind(null, role.id)}
-                                className="bLinkLike delete_btn bTooltip" data-description="Delete">
+                                <span key={i + "remove"} id="remove_row"
+                                      onClick={this.revokePermission.bind(null, role.id)}
+                                      className="bLinkLike delete_btn bTooltip" data-description="Delete">
                                 <SVG icon="icon_delete"/>
 			                </span>
-                        </div>
+                            </div>
+						}
                     </div>
                 )
             });
@@ -195,7 +200,9 @@ const UserDetail= React.createClass({
                                 <div className="eDataList_listItemCell" style={{width:23+'%'}}>Child</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>Role</div>
                                 <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
-                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Actions</div>
+								{this.superadminModel &&
+                                    <div className="eDataList_listItemCell" style={{width: 10 + '%'}}>Actions</div>
+								}
                             </div>
                             {listItems}
                         </div>
