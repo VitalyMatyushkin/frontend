@@ -6,6 +6,7 @@ const 	React					= require('react'),
 		propz					= require('propz'),
 		MultipartyOpponentSide	= require('module/as_school/pages/school_home/fixture_list/multiparty_opponent_side/multiparty_opponent_side'),
 		TwoTeamOpponentSide		= require('module/as_school/pages/school_home/fixture_list/two_team_opponent_side'),
+		IndividualInternalSide	= require('module/as_school/pages/school_home/fixture_list/individual_internal_side'),
 		DateTimeMixin			= require('module/mixins/datetime'),
 		EventHelper				= require('module/helpers/eventHelper'),
 		SportIcon				= require('module/ui/icons/sport_icon'),
@@ -35,10 +36,20 @@ const FixtureItem = React.createClass({
 	renderOpponentSide: function() {
 		const	event				= this.props.event,
 				activeSchoolId		= this.props.activeSchoolId;
-
+		/*
+		 The second part of the condition:
+		 If event is internal and sport for this event is individual
+		 */
 		if(event.sport.multiparty && event.teams.length !== 2) {
 			return (
 				<MultipartyOpponentSide
+					event			= { event }
+					activeSchoolId	= { activeSchoolId }
+				/>
+			);
+		} else if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping.internal && event.sport.individualResultsAvailable) {
+			return (
+				<IndividualInternalSide
 					event			= { event }
 					activeSchoolId	= { activeSchoolId }
 				/>
