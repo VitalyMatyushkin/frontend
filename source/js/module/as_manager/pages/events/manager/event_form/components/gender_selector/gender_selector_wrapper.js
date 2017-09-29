@@ -126,19 +126,19 @@ const GenderSelectorWrapper = React.createClass({
 					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && typeof currentGender === 'undefined':
-					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY)
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
-					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MIXED)
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MIXED);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
-					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY)
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && currentGender === EventConsts.EVENT_GENDERS.MIXED:
-					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY)
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.MALE_ONLY);
 					break;
 				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && !this.isGirlsDisabled() && typeof currentGender === 'undefined':
-					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY)
+					this.props.handleChangeGender(EventConsts.EVENT_GENDERS.FEMALE_ONLY);
 					break;
 			}
 		}

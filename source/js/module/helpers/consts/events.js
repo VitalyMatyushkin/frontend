@@ -38,8 +38,22 @@ const EVENT_GENDERS_FILTER = {
 	MIXED:			'MIXED'
 };
 
+const CHANGE_MODE = {
+	GROUP: 'GROUP',
+	SINGLE: 'SINGLE'
+};
+
+const VENUE_SERVER_CLIENT_MAP = {
+	"HOME":		'Home',
+	"AWAY":		'Away',
+	"CUSTOM":	'Away',
+	"TBD":		'TBD'
+}
+
 module.exports.EVENT_STATUS							= EVENT_STATUS;
 module.exports.EVENT_GENDERS						= EVENT_GENDERS;
 module.exports.EVENT_GENDERS_FILTER					= EVENT_GENDERS_FILTER;
 module.exports.EVENT_GENDERS_SERVER					= EVENT_GENDERS_SERVER;
 module.exports.MAP_CLIENT_TO_SERVER_EVENT_GENDERS	= MAP_CLIENT_TO_SERVER_EVENT_GENDERS;
+module.exports.CHANGE_MODE							= CHANGE_MODE;
+module.exports.VENUE_SERVER_CLIENT_MAP				= VENUE_SERVER_CLIENT_MAP;

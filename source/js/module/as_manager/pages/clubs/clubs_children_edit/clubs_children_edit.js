@@ -10,6 +10,7 @@ const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
 		Loader		= require('module/ui/loader');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		EventConsts		= require('module/helpers/consts/events'),
 		ClubsActions	= require('module/as_manager/pages/clubs/clubs_actions');
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
@@ -83,6 +84,8 @@ const ClubChildrenEdit = React.createClass({
 		this.getDefaultBinding().clear();
 	},
 	getTeamManagerDefaultState: function (school, club, sport, participants) {
+		const genders = TeamHelper.getFilterGender(club.gender);
+
 		return {
 			teamStudents:	participants,
 			blackList:		[],
@@ -90,7 +93,7 @@ const ClubChildrenEdit = React.createClass({
 			filter:			TeamHelper.getTeamManagerSearchFilter(
 				school,
 				club.ages,
-				club.gender,
+				genders,
 				undefined
 			)
 		};

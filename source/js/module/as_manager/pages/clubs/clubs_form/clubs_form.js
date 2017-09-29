@@ -159,6 +159,15 @@ const ClubsForm = React.createClass({
 	},
 	handleChangeSport: function (sportId, sport) {
 		this.getDefaultBinding().set(
+			'sport',
+			Immutable.fromJS(sport)
+		);
+		this.getDefaultBinding().set(
+			'sportId',
+			Immutable.fromJS(sport)
+		);
+
+		this.getDefaultBinding().set(
 			'gender',
 			Immutable.fromJS(
 				GenderHelper.getDefaultGender(sport)
@@ -215,7 +224,7 @@ const ClubsForm = React.createClass({
 								</div>
 								<GenderSelectorWrapper
 									gender				= { binding.toJS('gender') }
-									sport				= { binding.toJS('form.sport') }
+									sport				= { binding.toJS('sport') }
 									handleChangeGender	= { this.handleChangeGender }
 									extraStyle			= { 'mSmallView' }
 								/>

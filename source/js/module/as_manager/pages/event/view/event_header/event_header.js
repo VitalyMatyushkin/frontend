@@ -13,6 +13,7 @@ const	Lazy				= require('lazy.js'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button'),
 		propz				= require('propz'),
+		EventConsts			= require('module/helpers/consts/events'),
 		SchoolConst 		= require('module/helpers/consts/schools'),
 		SchoolHelper 		= require('module/helpers/school_helper'),
 		ViewSelector		= require('module/ui/view_selector/view_selector'),
@@ -21,12 +22,6 @@ const	Lazy				= require('lazy.js'),
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
-	VENUE_SERVER_CLIENT_MAP: {
-		"HOME"		: 'Home',
-		"AWAY"		: 'Away',
-		"CUSTOM"	: 'Away',
-		"TBD"		: 'TBD'
-	},
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		event:							React.PropTypes.object.isRequired,
@@ -79,11 +74,16 @@ const EventHeader = React.createClass({
 			: "All ages";
 	},
 	getEventLocation: function(){
-		const 	eventVenue 	= this.props.event.venue,
-				venueType 	= eventVenue.venueType,
-				venueTypeDisplay = this.VENUE_SERVER_CLIENT_MAP[venueType];
+		const venue = this.props.event.venue;
+		const venueType = EventConsts.VENUE_SERVER_CLIENT_MAP[venue.venueType];
 
-		return venueType !== 'TBD' ? `${venueTypeDisplay}, ${eventVenue.postcodeData.postcode}`	: `${venueTypeDisplay}`
+		let eventLocation = venueType;
+		const postcode = propz.get(venue, ['postcodeData', 'postcode']);
+		if(typeof postcode !== 'undefined') {
+			eventLocation += `, ${postcode}`;
+		}
+
+		return eventLocation;
 	},
 	//We don't show the pencil (edit) button for parent, student and if event is finished
 	isShowPencilButton: function(){
