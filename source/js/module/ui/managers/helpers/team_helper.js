@@ -1010,7 +1010,7 @@ function convertPoints(countPoints, pointsType){
 			break;
 		case SportConsts.SPORT_POINTS_TYPE.PRESENCE_ONLY:
 			result = {
-				str: countPoints === 1 ? 'Presence' : 'No presence'
+				str: countPoints === 1 ? 'Present' : 'Absent'
 			};
 			break;
 	}
