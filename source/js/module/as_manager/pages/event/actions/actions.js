@@ -72,9 +72,8 @@ function commitIndividualPlayerChanges(activeSchoolId, binding) {
 		initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding);
 	}
 
-	const changeMode = binding.toJS('changeMode');
 	return Promise.all(
-		TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players, changeMode)
+		TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players)
 	);
 };
 

@@ -93,7 +93,7 @@ function getPlayersWithUserInfo(players, users) {
 	});
 };
 
-function commitIndividualPlayers(schoolId, eventId, initialPlayers, players, changeMode = EventConsts.CHANGE_MODE.SINGLE) {
+function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
 	const self = this;
 
 	const promises = [];
@@ -106,7 +106,6 @@ function commitIndividualPlayers(schoolId, eventId, initialPlayers, players, cha
 				schoolId,
 				eventId,
 				initialPlayer.id,
-				changeMode
 			)
 		)
 	);
@@ -114,7 +113,7 @@ function commitIndividualPlayers(schoolId, eventId, initialPlayers, players, cha
 	// Add new player promises to promise array.
 	// A little trick:
 	// user without userId - is a new user.
-	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p, changeMode) ));
+	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p) ));
 
 	return promises;
 };

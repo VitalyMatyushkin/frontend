@@ -69,7 +69,6 @@ const ManagerWrapper = React.createClass({
 			.set('isTeamManagerSync',				false)
 			.set('isControlButtonActive',			false)
 			.set('isShowChangeModeManagerPopup',	false)
-			.set('changeMode',						EventConsts.CHANGE_MODE.SINGLE)
 			.commit();
 
 		this.addListeners();
@@ -247,12 +246,8 @@ const ManagerWrapper = React.createClass({
 		// if true - then user click to finish button
 		// so we shouldn't do anything
 		if(this.isControlButtonActive()) {
-			if(this.isGroupEvent()) {
-				this.showChangeModeManagerPopup();
-			} else {
-				binding.set('isSubmitProcessing', true);
-				this.submit();
-			}
+			binding.set('isSubmitProcessing', true);
+			this.submit();
 		}
 	},
 	isGroupEvent: function () {
