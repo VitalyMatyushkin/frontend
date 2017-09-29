@@ -409,11 +409,13 @@ const EventTeamsView = React.createClass({
 				</span>
 			);
 		} else {
+			//Crutch for presence. If type of points is PRESENCE_ONLY, then read points from richScore.presence 
+			const presencePoints = event.sport.points.display === 'PRESENCE_ONLY' ? this.getPresenceByStudent(event, player.userId) : '';
 			return (
 				<span className="ePlayer_scoreContainer">
 					<Score	isChangeMode	= { EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable) }
 							plainPoints		= { this.getPointsByStudent(event, player.userId) }
-							presence		= { this.getPresenceByStudent(event, player.userId) }
+							presence		= { presencePoints }
 							pointsStep		= { event.sport.points.pointsStep }
 							pointsType		= { event.sport.points.display }
 							pointsMask		= { event.sport.points.inputMask }
