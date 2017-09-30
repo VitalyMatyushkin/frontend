@@ -13,7 +13,6 @@ const	Manager							= require('./../../../../../ui/managers/manager'),
 
 const	Actions							= require('../../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
-		ChangeModeManager				= require('module/as_manager/pages/event/view/manager_wrapper/change_mode_manager/change_mode_manager'),
 		EventConsts						= require('module/helpers/consts/events'),
 		SavingEventHelper				= require('../../../../../helpers/saving_event_helper');
 
@@ -311,25 +310,6 @@ const ManagerWrapper = React.createClass({
 		binding.set('isSubmitProcessing', true);
 		this.submit();
 	},
-	renderChangeModeManagerPopup: function () {
-		const binding = this.getDefaultBinding();
-
-		const isShow = binding.toJS('isShowChangeModeManagerPopup');
-
-		if(isShow) {
-			return (
-				<ChangeModeManager
-					binding				= { binding }
-					activeSchoolId		= { this.props.activeSchoolId }
-					isSubmitProcessing	= { binding.toJS('teamManagerWrapper.default.isSubmitProcessing') }
-					submit				= { this.submitChaneModeManager }
-					handleClose			= { this.handleCloseChaneModeManager }
-				/>
-			);
-		} else {
-			return null;
-		}
-	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -356,7 +336,6 @@ const ManagerWrapper = React.createClass({
 					binding	= { binding.sub('teamManagerWrapper.default') }
 					submit	= { this.handleClickPopupSubmit }
 				/>
-				{this.renderChangeModeManagerPopup()}
 			</div>
 		);
 	}

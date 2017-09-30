@@ -5,6 +5,7 @@ const	React				= require('react'),
 // EditEventForm React components
 const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 		FullTimeInput		= require('../../../../../ui/full_time_input/full_time_input'),
+		SaveChangesManager	= require('module/as_manager/pages/event/view/edit_event_popup/save_changes_manager'),
 		EventVenue			= require('../../../events/manager/event_venue');
 
 // Helpers
@@ -19,7 +20,7 @@ const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scs
 const EditEventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId	: React.PropTypes.string.isRequired
+		activeSchoolId: React.PropTypes.string.isRequired
 	},
 	getActiveSchoolInfo: function() {
 		const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
@@ -56,6 +57,19 @@ const EditEventForm = React.createClass({
 
 		binding.set('model.startTime', dateObject.toISOString());
 	},
+	renderSaveChangesManager: function () {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isShowChangesManager')) {
+			return (
+				<SaveChangesManager
+					binding = { this.getDefaultBinding() }
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -66,7 +80,7 @@ const EditEventForm = React.createClass({
 		return (
 			<div className="bEventEdit">
 				Edit event
-				<div className="bInputWrapper mZeroHorizontalMargin">
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<div className="bInputLabel">
 						Date
 					</div>
@@ -74,7 +88,7 @@ const EditEventForm = React.createClass({
 									handleChangeDate	= {this.handleChangeDate}
 					/>
 				</div>
-				<div className="bInputWrapper mZeroHorizontalMargin">
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<div className="bInputLabel">
 						Time
 					</div>
@@ -84,13 +98,14 @@ const EditEventForm = React.createClass({
 									handleChangeMinutes	= {this.handleChangeMinutes}
 					/>
 				</div>
-				<div className="bInputWrapper mZeroHorizontalMargin">
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<EventVenue	binding					= {binding}
 								eventType				= {EventHelper.serverEventTypeToClientEventTypeMapping[binding.toJS('model.eventType')]}
 								activeSchoolInfo		= {this.getActiveSchoolInfo()}
 								opponentSchoolInfoArray	= {this.getOpponentSchoolInfoArray()}
 					/>
 				</div>
+				{ this.renderSaveChangesManager() }
 			</div>
 		);
 	}
