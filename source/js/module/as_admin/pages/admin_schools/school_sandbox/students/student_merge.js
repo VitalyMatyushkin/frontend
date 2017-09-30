@@ -169,8 +169,8 @@ const StudentWithPermissionMergeComponent = React.createClass({
 								Note:
 							</h3>
 							<ul>
-								<li>The student without history should not has events</li>
-								<li>The student without history should not has than one permission</li>
+								<li>The student without history should not have events</li>
+								<li>The student without history should not have than one permission</li>
 								<li>The student without history should not be a member of a team</li>
 							</ul>
 						</div>
