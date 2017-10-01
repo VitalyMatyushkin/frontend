@@ -25,6 +25,14 @@ const EditEventPopup = React.createClass({
 			.set('eventEditForm.isShowChangesManager',	false)
 			.set('eventEditForm.originModel',			Immutable.fromJS(this.props.event))
 			.commit();
+		if(typeof this.props.event.endTime === "undefined") {
+			this.initEndTime();
+		}
+	},
+	initEndTime: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('eventEditForm.model.endTime', Immutable.fromJS(this.props.event.startTime));
 	},
 	/**
 	 * Function returns TRUE if event data was changed.
@@ -35,15 +43,41 @@ const EditEventPopup = React.createClass({
 	isDataChanged: function(origin, current) {
 		return (
 			origin.startTime !== current.startTime ||
+			origin.endTime !== current.endTime ||
 			this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue)
+		);
+	},
+	/**
+	 * Function returns true if event data for group edit was changed
+	 * @param origin - original state of event
+	 * @param current - current state of event
+	 * @returns {*}
+	 */
+	isGroupDataChanged: function (origin, current) {
+		return (
+			this.isStartTimeChanged(origin, current) ||
+			this.isFinishTimeChanged(origin, current) ||
+			this.isPostcodeChanged(origin, current)
 		);
 	},
 	isPostcodeChanged: function (origin, current) {
 		return this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue);
 	},
-	isTimeChanged: function (origin, current) {
+	isStartTimeChanged: function (origin, current) {
 		const originStartDate = origin.startTime;
 		const currentStartDate= current.startTime;
+
+		const originStartDateObject = new Date(originStartDate);
+		const currentStartDateObject = new Date(currentStartDate);
+
+		return (
+			originStartDateObject.getHours() !== currentStartDateObject.getHours() ||
+			originStartDateObject.getMinutes() !== currentStartDateObject.getMinutes()
+		);
+	},
+	isFinishTimeChanged: function (origin, current) {
+		const originStartDate = origin.endTime;
+		const currentStartDate= current.endTime;
 
 		const originStartDateObject = new Date(originStartDate);
 		const currentStartDateObject = new Date(currentStartDate);
@@ -97,11 +131,10 @@ const EditEventPopup = React.createClass({
 				originEvent		= binding.toJS('eventEditForm.originModel');
 
 		switch (true) {
+			// For club events
+			// When user changed data enable for group editing and click save button first time
 			case (
-				(
-					this.isTimeChanged(originEvent, currentEvent) ||
-					this.isPostcodeChanged(originEvent, currentEvent)
-				) &&
+				this.isGroupDataChanged(originEvent, currentEvent) &&
 				!this.isShowChangesManager() &&
 				this.isGroupEvent()
 			): {
@@ -112,7 +145,8 @@ const EditEventPopup = React.createClass({
 				this.isDataChanged(originEvent, currentEvent)
 			): {
 				const body = {
-					startTime: currentEvent.startTime
+					startTime:	currentEvent.startTime,
+					endTime:	currentEvent.endTime
 				};
 
 				// TODO copy cat from event_manager.setEventVenue

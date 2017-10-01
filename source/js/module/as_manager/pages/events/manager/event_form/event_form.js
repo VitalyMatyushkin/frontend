@@ -165,9 +165,15 @@ const EventForm = React.createClass({
 				<DateSelectorWrapper binding={binding.sub('model.startTime')}/>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
-						Time
+						Start Time
 					</div>
 					<TimeInputWrapper binding={binding.sub('model.startTime')}/>
+				</div>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Finish Time
+					</div>
+					<TimeInputWrapper binding={binding.sub('model.endTime')}/>
 				</div>
 				<SportSelectorWrapper binding={binding}/>
 				<div className="bInputWrapper">

@@ -50,6 +50,8 @@ const ClubsForm = React.createClass({
 		let time = binding.toJS('time');
 		if(typeof time === 'undefined') {
 			time = new Date();
+			time.setHours(10);
+			time.setMinutes(0);
 			binding.set('time', Immutable.fromJS(time));
 		}
 
