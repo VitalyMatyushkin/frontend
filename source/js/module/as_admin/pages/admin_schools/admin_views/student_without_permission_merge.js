@@ -6,6 +6,8 @@
 const 	React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
+		propz 			= require('propz'),
+	
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		Button 			= require('module/ui/button/button'),
 		If 				= require('module/ui/if/if'),
@@ -15,6 +17,20 @@ const StudentMergeComponentStyles = require('styles/pages/schools/b_school_stude
 
 const StudentWithoutPermissionMergeComponent = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function(){
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				permissionId 	= routingData.permissionId;
+		
+		window.Server.permissionRequest.get({prId: permissionId}).then(permisionRequest => {
+			binding.set('studentWithoutHistoryPermission', Immutable.fromJS(permisionRequest));
+		});
+	},
+	componentWillUnmount: function(){
+		const binding = this.getDefaultBinding();
+		binding.clear();
+	},
 	serviceStudentsFilter: function(name) {
 		const 	globalBinding = this.getMoreartyContext().getBinding(),
 				routingData 	= globalBinding.sub('routing.parameters').toJS(),
@@ -68,7 +84,9 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 	onSelectStudent: function(studentId) {
 		const binding = this.getDefaultBinding();
 		
-		binding.set('studentWithHistoryId', studentId);
+		window.Server.user.get({userId: studentId}).then(user => {
+			binding.set('studentWithHistory', user);
+		});
 	},
 	onClickMergeButton: function(){
 		const binding = this.getDefaultBinding();
@@ -81,12 +99,14 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		binding.set('isPopupOpen', false);
 	},
 	onPopupOkClick: function(){
-		const 	binding 				= this.getDefaultBinding(),
-				studentWithHistoryId 	= binding.toJS('studentWithHistoryId'),
-				globalBinding 			= this.getMoreartyContext().getBinding(),
-				routingData 			= globalBinding.sub('routing.parameters').toJS(),
-				studentWithoutHistoryId = routingData.studentId,
-				schoolId 				= routingData.schoolId;
+		const 	binding 						= this.getDefaultBinding(),
+				studentWithHistory 				= binding.toJS('studentWithHistory'),
+				studentWithHistoryId 			= propz.get(studentWithHistory, ['id']),
+				studentWithoutHistoryPermission = binding.toJS('studentWithoutHistoryPermission'),
+				studentWithoutHistoryId 		= propz.get(studentWithoutHistoryPermission, ['requesterId']),
+				globalBinding 					= this.getMoreartyContext().getBinding(),
+				routingData 					= globalBinding.sub('routing.parameters').toJS(),
+				schoolId 						= routingData.schoolId;
 		
 		binding.set('isPopupOpen', false);
 		
@@ -111,20 +131,24 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		);
 	},
 	render: function(){
-		const 	binding 				= this.getDefaultBinding(),
-				studentWithHistory 		= typeof binding.toJS('studentWithHistory') !== 'undefined' ? binding.toJS('studentWithHistory') : {},
-				isPopupOpen 			= Boolean(binding.toJS('isPopupOpen')),
-				globalBinding 			= this.getMoreartyContext().getBinding(),
-				routingData 			= globalBinding.sub('routing.parameters').toJS(),
-				studentWithoutHistoryId = routingData.studentId;
+		const 	binding 						= this.getDefaultBinding(),
+				isPopupOpen 					= Boolean(binding.toJS('isPopupOpen')),
+				studentWithHistory 				= binding.toJS('studentWithHistory'),
+				studentWithHistoryFirstName 	= propz.get(studentWithHistory, ['firstName']),
+				studentWithHistoryLastName 		= propz.get(studentWithHistory, ['lastName']),
+				studentWithHistoryEmail 		= propz.get(studentWithHistory, ['email']),
+				studentWithHistoryId 			= propz.get(studentWithHistory, ['id']),
+				studentWithoutHistoryPermission = binding.toJS('studentWithoutHistoryPermission'),
+				studentWithoutHistoryFirstName 	= propz.get(studentWithoutHistoryPermission, ['requester', 'firstName']),
+				studentWithoutHistoryLastName 	= propz.get(studentWithoutHistoryPermission, ['requester', 'lastName']),
+				studentWithoutHistoryEmail 		= propz.get(studentWithoutHistoryPermission, ['requester', 'email']),
+				studentWithoutHistoryId 		= propz.get(studentWithoutHistoryPermission, ['requesterId']);
 		
 		return (
 			<div>
 				<div className="bStudentMerge">
-					<p>{`You want merge`}</p>
-					<p>{`${studentWithoutHistoryId}`}</p>
-					<p>{`with`}</p>
-					<p>
+					<p>{`You want merge student with history`}</p>
+					<div className="eStudentMergeAutocomplete">
 						<Autocomplete
 							serviceFilter	= { this.serviceStudentsFilter}
 							serverField		= 'name'
@@ -132,12 +156,25 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 							binding			= { binding.sub('_studentAutocomplete') }
 							placeholder		= 'Student name'
 						/>
-					</p>
+					</div>
+					<p>{`with student without history`}</p>
+					<p>{`${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName}`}</p>
 					<Button
 						text 				= "Merge"
 						onClick 			= { this.onClickMergeButton }
 						extraStyleClasses 	= "eStudentMergeButton"
+						isDisabled 			= { typeof binding.toJS('studentWithHistory') === 'undefined' }
 					/>
+					<div className="eStudentMergeNote">
+						<h3>
+							Note:
+						</h3>
+						<ul>
+							<li>The student without history should not have events</li>
+							<li>The student without history should not have than one permission</li>
+							<li>The student without history should not be a member of a team</li>
+						</ul>
+					</div>
 				</div>
 				<If condition = {isPopupOpen}>
 					<ConfirmPopup
@@ -148,7 +185,21 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 						handleClickOkButton 		= { this.onPopupOkClick }
 						handleClickCancelButton 	= { this.onPopupCancelClick }
 					>
-						Are you really sure?
+						<p>
+							{`You going to merge following students:`}<br />
+							{`* ${studentWithHistoryFirstName} ${studentWithHistoryLastName} [with history, email=${studentWithHistoryEmail} id=${studentWithHistoryId}]`}<br />
+							{`* ${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName} [no history, email=${studentWithoutHistoryEmail} id=${studentWithoutHistoryId}]`}
+						</p>
+						<p>
+							As result of this operation student will have following credentials:<br />
+							{`* First name: ${studentWithHistoryFirstName}`}<br />
+							{`* Last name: ${studentWithHistoryLastName}`}<br />
+							{`* Email: ${studentWithoutHistoryEmail}`}<br />
+							{`while user with ${studentWithoutHistoryId} will be changed in status to 'REMOVED'`}
+						</p>
+						<p>
+							Are you really sure?
+						</p>
 					</ConfirmPopup>
 				</If>
 			</div>

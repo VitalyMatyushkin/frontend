@@ -27,10 +27,14 @@ const StudentWithPermissionMergeComponent = React.createClass({
 			.commit();
 		});
 	},
+	componentWillUnmount: function(){
+		const binding = this.getDefaultBinding();
+		binding.clear();
+	},
 	serviceStudentsFilter: function(name) {
-		const 	binding = this.getDefaultBinding(),
-				globalBinding = this.getMoreartyContext().getBinding(),
-				schoolId = globalBinding.get('routing.pathParameters.0');
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				schoolId 		= globalBinding.get('routing.pathParameters.0');
 		
 		let filter;
 		
@@ -158,14 +162,15 @@ const StudentWithPermissionMergeComponent = React.createClass({
 							text 				= "Merge"
 							onClick 			= { this.onClickMergeButton }
 							extraStyleClasses 	= "eStudentMergeButton"
+							isDisabled 			= { typeof binding.toJS('studentWithoutHistory') === 'undefined' }
 						/>
 						<div className="eStudentMergeNote">
 							<h3>
 								Note:
 							</h3>
 							<ul>
-								<li>The student without history should not has events</li>
-								<li>The student without history should not has than one permission</li>
+								<li>The student without history should not have events</li>
+								<li>The student without history should not have than one permission</li>
 								<li>The student without history should not be a member of a team</li>
 							</ul>
 						</div>
