@@ -292,6 +292,12 @@ const ClubsForm = React.createClass({
 												handleChangeMinutes	= { this.handleChangeMinutes }
 								/>
 							</div>
+							<FormField
+								field		= 'duration'
+								type		= 'number'
+							>
+								Duration(min)
+							</FormField>
 							<div className="eForm_field">
 								<div className="eForm_fieldName">
 									Week days
