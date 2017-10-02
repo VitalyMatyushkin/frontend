@@ -17,7 +17,7 @@ const ScoreHelper = {
 	KILOMETER_WITH_DELIMITER_REGEX:		/k{1,3}(.)/i,
 	METER_REGEX:						/m{1,3}/i,
 	METER_WITH_DELIMITER_REGEX:			/m{1,3}(.)/i,
-	CENTIMETER_REGEX:					/s{1,2}/i,
+	CENTIMETER_REGEX:					/c{1,2}/i,
 
 	/**
 	 * Function validates plain score
@@ -176,7 +176,7 @@ const ScoreHelper = {
 
 		let distanceString = '';
 
-		const maskParts = mask.replace(/[^hmsc]/g, ':').split(':');
+		const maskParts = mask.replace(/[^kmc]/g, ':').split(':');
 
 		maskParts.forEach(maskPart => {
 			switch (true) {
