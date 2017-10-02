@@ -41,6 +41,9 @@ const ChallengeModel = function(event, activeSchoolId){
 	this.dateUTC	= event.startTime;
 	this.date 		= DateHelper.getDate(event.startTime);
 	this.time 		= DateHelper.getTime(event.startTime);
+	if(typeof event.endTime !== 'undefined') {
+		this.endTime 	= DateHelper.getTime(event.endTime);
+	}
 	this.eventType 	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 

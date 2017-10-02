@@ -4,7 +4,6 @@ const	React		= require('react'),
 		Button		= require('./button/button');
 
 const ConfirmPopup = React.createClass({
-
 	propTypes: {
 		isOkButtonDisabled:			React.PropTypes.bool,
 		okButtonText:				React.PropTypes.oneOfType([
@@ -22,11 +21,8 @@ const ConfirmPopup = React.createClass({
 			isShowButtons: true
 		};
 	},
-	handleClickOkButton: function(event) {
-		if(!this.props.isOkButtonDisabled) {
-			event.target.disabled = true;
-			this.props.handleClickOkButton();
-		}
+	handleClickOkButton: function() {
+		this.props.handleClickOkButton();
 	},
 	getConfirmPopupStyle: function() {
 		let style = "bConfirmPopup";

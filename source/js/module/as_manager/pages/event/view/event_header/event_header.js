@@ -104,6 +104,17 @@ const EventHeader = React.createClass({
 			return null;
 		}
 	},
+	renderFinishTime: function () {
+		const finishTime = this.props.challengeModel.endTime;
+
+		if(typeof finishTime !== 'undefined') {
+			return (
+				<div className="eEventHeader_field mDate">{`Finish time: ${finishTime}`}</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
 				eventAges			= this.getEventAges(),
@@ -112,7 +123,7 @@ const EventHeader = React.createClass({
 				date				= DateHelper.toLocalWithMonthName(challengeModel.dateUTC),
 				time				= challengeModel.time,
 				sport				= challengeModel.sport,
-				protocol 			= document.location.protocol + '//',
+				protocol			= document.location.protocol + '//',
 				eventId				= challengeModel.id,
 				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
 				linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
@@ -135,7 +146,9 @@ const EventHeader = React.createClass({
 								</div>
 							</If>
 						</div>
-						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
+						<div className="eEventHeader_field mDate">{`${date} / ${sport}`}</div>
+						<div className="eEventHeader_field mDate">{`Start time: ${time}`}</div>
+						{ this.renderFinishTime() }
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 						<div className="eEventHeader_field mLocation">{`Venue: ${eventLocation}`}</div>
 						<TweetButton

@@ -5,11 +5,11 @@ const	React				= require('react'),
 // EditEventForm React components
 const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 		FullTimeInput		= require('../../../../../ui/full_time_input/full_time_input'),
+		SaveChangesManager	= require('module/as_manager/pages/event/view/edit_event_popup/save_changes_manager'),
 		EventVenue			= require('../../../events/manager/event_venue');
 
 // Helpers
-const	EventHelper			= require('../../../events/eventHelper'),
-		SchoolHelper		= require('../../../../../helpers/school_helper');
+const	EventHelper			= require('../../../events/eventHelper');
 
 // Styles
 const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scss'),
@@ -19,7 +19,7 @@ const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scs
 const EditEventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId	: React.PropTypes.string.isRequired
+		activeSchoolId: React.PropTypes.string.isRequired
 	},
 	getActiveSchoolInfo: function() {
 		const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
@@ -33,64 +33,127 @@ const EditEventForm = React.createClass({
 
 		return invitedSchools.length !== 0 ? invitedSchools : undefined;
 	},
+	getStartDate: function () {
+		return this.getDefaultBinding().toJS('model.startTime');
+	},
+	getStartDateObject: function () {
+		return new Date(this.getStartDate());
+	},
+	getStartTimeHours: function () {
+		return this.getStartDateObject().getHours();
+	},
+	getStartTimeMinutes: function () {
+		return this.getStartDateObject().getMinutes();
+	},
+	getFinishDate: function () {
+		return this.getDefaultBinding().toJS('model.endTime');
+	},
+	getFinishDateObject: function () {
+		return new Date( this.getFinishDate() );
+	},
+	getFinishTimeHours: function () {
+		return this.getFinishDateObject().getHours();
+	},
+	getFinishTimeMinutes: function () {
+		return this.getFinishDateObject().getMinutes();
+	},
 	handleChangeDate: function(date) {
 		this.getDefaultBinding().set('model.startTime', date);
 	},
-	handleChangeHour: function(hour) {
+	handleChangeStartTimeHour: function(hour) {
 		const binding = this.getDefaultBinding();
 
-		const	timeString = binding.toJS('model.startTime'),
-				dateObject = new Date(timeString);
+		const startDateObject = this.getStartDateObject();
+		startDateObject.setHours(hour);
 
-		dateObject.setHours(hour);
-
-		binding.set('model.startTime', dateObject.toISOString());
+		binding.set('model.startTime', startDateObject.toISOString());
 	},
-	handleChangeMinutes: function(minute) {
+	handleChangeStartTimeMinutes: function(minute) {
 		const binding = this.getDefaultBinding();
 
-		const	timeString = binding.toJS('model.startTime'),
-				dateObject = new Date(timeString);
+		const startDateObject = this.getStartDateObject();
+		startDateObject.setMinutes(minute);
 
-		dateObject.setMinutes(minute);
+		binding.set('model.startTime', startDateObject.toISOString());
+	},
+	handleChangeFinishTimeHour: function(hour) {
+		const binding = this.getDefaultBinding();
 
-		binding.set('model.startTime', dateObject.toISOString());
+		const finishDateObject = this.getFinishDateObject();
+		finishDateObject.setHours(hour);
+
+		binding.set('model.endTime', finishDateObject.toISOString());
+	},
+	handleChangeFinishTimeMinutes: function(hour) {
+		const binding = this.getDefaultBinding();
+
+		const finishDateObject = this.getFinishDateObject();
+		finishDateObject.setMinutes(hour);
+
+		binding.set('model.endTime', finishDateObject.toISOString());
+	},
+	renderSaveChangesManager: function () {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isShowChangesManager')) {
+			return (
+				<SaveChangesManager
+					binding = { this.getDefaultBinding() }
+				/>
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	date		= binding.toJS('model.startTime'),
-				dateObject	= new Date(date);
-
 		return (
 			<div className="bEventEdit">
 				Edit event
-				<div className="bInputWrapper mZeroHorizontalMargin">
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<div className="bInputLabel">
 						Date
 					</div>
-					<DateSelector	date				= {date}
-									handleChangeDate	= {this.handleChangeDate}
+					<DateSelector
+						date				= { this.getStartDate() }
+						handleChangeDate	= { this.handleChangeDate }
 					/>
 				</div>
-				<div className="bInputWrapper mZeroHorizontalMargin">
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<div className="bInputLabel">
-						Time
+						Start Time
 					</div>
-					<FullTimeInput	hourValue			= {dateObject.getHours()}
-									minutesValue		= {dateObject.getMinutes()}
-									handleChangeHour	= {this.handleChangeHour}
-									handleChangeMinutes	= {this.handleChangeMinutes}
+					<FullTimeInput
+						hourValue			= { this.getStartTimeHours() }
+						minutesValue		= { this.getStartTimeMinutes() }
+						handleChangeHour	= { this.handleChangeStartTimeHour }
+						handleChangeMinutes	= { this.handleChangeStartTimeMinutes }
 					/>
 				</div>
-				<div className="bInputWrapper mZeroHorizontalMargin">
-					<EventVenue	binding					= {binding}
-								eventType				= {EventHelper.serverEventTypeToClientEventTypeMapping[binding.toJS('model.eventType')]}
-								activeSchoolInfo		= {this.getActiveSchoolInfo()}
-								opponentSchoolInfoArray	= {this.getOpponentSchoolInfoArray()}
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
+					<div className="bInputLabel">
+						Finish Time
+					</div>
+					<FullTimeInput
+						hourValue			= { this.getFinishTimeHours() }
+						minutesValue		= { this.getFinishTimeMinutes() }
+						handleChangeHour	= { this.handleChangeFinishTimeHour }
+						handleChangeMinutes	= { this.handleChangeFinishTimeMinutes }
 					/>
 				</div>
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
+					<EventVenue
+						binding					= {binding}
+						eventType				= {
+							EventHelper.serverEventTypeToClientEventTypeMapping[ binding.toJS('model.eventType') ]
+						}
+						activeSchoolInfo		= {this.getActiveSchoolInfo()}
+						opponentSchoolInfoArray	= {this.getOpponentSchoolInfoArray()}
+					/>
+				</div>
+				{ this.renderSaveChangesManager() }
 			</div>
 		);
 	}

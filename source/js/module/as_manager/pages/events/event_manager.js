@@ -65,6 +65,7 @@ const EventManager = React.createClass({
 			model: {
 				name:			'',
 				startTime:		currentDate,
+				endTime:		currentDate,
 				sportId:		undefined,
 				gender:			undefined,
 				ages:			[],
@@ -565,6 +566,7 @@ const EventManager = React.createClass({
 			ages:					model.ages,
 			sportId:				model.sportId,
 			startTime:				model.startTime,
+			endTime:				model.endTime,
 			startRegistrationTime:	model.startRegistrationTime,
 			endRegistrationTime:	model.endRegistrationTime
 		};
