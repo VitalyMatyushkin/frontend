@@ -3,7 +3,7 @@
  */
 const ScoreHelper = {
 	DEFAULT_TIME_MASK:		'hh:mm:ss.ccc',
-	DEFAULT_DISTANCE_MASK:	'kk mmm cc',
+	DEFAULT_DISTANCE_MASK:	'kk mmm.cc',
 
 	HOUR_REGEX:							/h{1,}/i,
 	HOUR_WITH_DELIMITER_REGEX:			/h{1,}(.)/i,
