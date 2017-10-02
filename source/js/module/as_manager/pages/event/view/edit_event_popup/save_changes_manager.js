@@ -21,13 +21,16 @@ const SaveChangesManager 	= React.createClass({
 
 		return (
 			<div className="eSavingPlayerChangesModePanel_radioButtons">
-				<RadioButton	id			= { 'update_only_this_event_button' }
-								text		= { 'Update only this event' }
+				<span>
+					Would you like to change this event only or this and all following events in the series?
+				</span>
+				<RadioButton	id			= { 'radio_button_only_this_event' }
+								text		= { 'Only this event' }
 								isChecked	= { binding.toJS('changeMode') === EventConsts.CHANGE_MODE.SINGLE}
 								onClick		= { this.handleChange.bind(this, EventConsts.CHANGE_MODE.SINGLE) }
 				/>
-				<RadioButton	id			= { 'update_all_events_in_group' }
-								text		= { 'Update all events in group' }
+				<RadioButton	id			= { 'radio_button_following_events' }
+								text		= { 'Following events' }
 								isChecked	= { binding.toJS('changeMode') === EventConsts.CHANGE_MODE.GROUP}
 								onClick		= { this.handleChange.bind(this, EventConsts.CHANGE_MODE.GROUP) }
 				/>
