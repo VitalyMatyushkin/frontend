@@ -93,6 +93,8 @@ const ClubChildrenEdit = React.createClass({
 	},
 	componentWillUnmount: function () {
 		this.getDefaultBinding().clear();
+
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	addListeners: function () {
 		this.listeners.push(
