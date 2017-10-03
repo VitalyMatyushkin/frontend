@@ -53,7 +53,7 @@ const AthleticScore = React.createClass({
 			};
 		}
 		
-		
+
 		this.props.onChangeScoreAthletic(result);
 		
 	},
@@ -154,7 +154,7 @@ const AthleticScore = React.createClass({
 		const playerDistanceScoreClassName = classNames({
 			"mMedium":		this.props.isPlayerScore
 		});
-		
+
 		return (
 			<div>
 				<div className={"ePlayer_scoreAthletics " + playerDistanceScoreClassName}>
@@ -163,8 +163,8 @@ const AthleticScore = React.createClass({
 									value			= { ScoreHelper.plainPointsToDistanceString(this.props.plainPoints, mask, ':') }
 									mask			= { mask }
 									onChange		= { this.getScoreAsObject }
-									stringToPoints	= { ScoreHelper.stringDistanceToPoints }
-									validation		= { ScoreHelper.stringDistanceValidation }
+									stringToPoints	= { ScoreHelper.stringDistanceToPoints.bind(ScoreHelper) }
+									validation		= { ScoreHelper.stringDistanceValidation.bind(ScoreHelper) }
 									className		= { "mDistance " +  playerDistanceScoreClassName}
 									modeView		= { this.props.modeView }
 					/>
