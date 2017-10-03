@@ -383,8 +383,8 @@ const SportsForm = React.createClass({
 		const 	self    					= this,
 				binding 					= self.getDefaultBinding(),
 				pointsDisplay 				= binding.meta().get('pointsDisplay.value'),
-				individualResultsAvailable 	= binding.meta().get('individualResultsAvailable.value'),
-				optionsPoint				= individualResultsAvailable ? SportsHelpers.clientPointDisplayArray
+				individualType 				= binding.meta().get('players.value'),
+				optionsPoint				= individualType === 'Individual' ? SportsHelpers.clientPointDisplayArray
 												: SportsHelpers.clientPointDisplayArray.filter(p => p !== 'presence only'),
 				showMask 					= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
 
