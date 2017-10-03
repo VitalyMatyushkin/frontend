@@ -154,6 +154,10 @@ select::-ms-expand {
 .eForm_field {
   padding: 8px 0;
 
+  &.mBlue {
+    color: #007abf;
+  }
+
   &.mPaddingBottomOnly {
     padding: 0 0 8px;
   }
