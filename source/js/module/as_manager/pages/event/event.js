@@ -1041,17 +1041,10 @@ const Event = React.createClass({
 				rivals	= binding.toJS('rivals'),
 				rival	= rivals.find(rival => rival.id === rivalId);
 
-		event.teams.splice(
-			event.teams.findIndex(teamId => teamId === rival.team.id),
-			1
-		);
-		return window.Server.schoolEvent.put(
-			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	event.id
-			}, {
-				teams: event.teams
-			}
+		return TeamHelper.deleteTeamFromEvent(
+			this.props.activeSchoolId,
+			event.id,
+			rival.team.id
 		);
 	},
 	/**
