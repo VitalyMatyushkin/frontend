@@ -7,6 +7,7 @@ const	React		= require('react'),
 const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
 		Button		= require('module/ui/button/button'),
 		Header		= require('module/as_manager/pages/clubs/clubs_children_edit/header'),
+		Error		= require('module/ui/managers/models/error'),
 		Loader		= require('module/ui/loader');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
@@ -22,6 +23,7 @@ const ClubChildrenEdit = React.createClass({
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		clubId:			React.PropTypes.string.isRequired
 	},
+	listeners: [],
 	componentWillMount: function () {
 		const binding = this.getDefaultBinding();
 
@@ -49,6 +51,13 @@ const ClubChildrenEdit = React.createClass({
 				club = _club;
 
 				binding.set('club', Immutable.fromJS(club));
+				binding.set('error', Immutable.fromJS(
+					new Error(
+						undefined,
+						'',
+						false
+					)
+				));
 
 				return window.Server.schoolClubParticipats.get(
 					{
@@ -77,11 +86,40 @@ const ClubChildrenEdit = React.createClass({
 					)
 				);
 				binding.set('isSync', true);
+				this.validate();
+				this.addListeners();
 			});
 		}
 	},
 	componentWillUnmount: function () {
 		this.getDefaultBinding().clear();
+
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
+	addListeners: function () {
+		this.listeners.push(
+			this.getDefaultBinding().sub('teamManager.teamStudents').addListener(() => {
+				this.validate();
+			})
+		);
+	},
+	validate: function () {
+		const binding = this.getDefaultBinding();
+		const error = binding.toJS('error');
+		const isValid = this.isSaveButtonEnable();
+
+		switch (true) {
+			case (isValid):
+				error.isError = false;
+				error.text = '';
+				break;
+			default:
+				error.isError = true;
+				error.text = `Number of players should be less or equal ${this.getMaxParticipants()}`;
+				break;
+		}
+
+		binding.set('error', Immutable.fromJS(error));
 	},
 	getTeamManagerDefaultState: function (school, club, sport, participants) {
 		const genders = TeamHelper.getFilterGender(club.gender);
@@ -99,7 +137,20 @@ const ClubChildrenEdit = React.createClass({
 		};
 	},
 	isSaveButtonEnable: function () {
-		return this.getDefaultBinding().toJS('teamManager.teamStudents').length > 0;
+		const clubStudentsCount = this.getDefaultBinding().toJS('teamManager.teamStudents').length;
+		const maxParticipants = this.getMaxParticipants();
+
+		return (
+			clubStudentsCount > 0 &&
+			(
+				typeof maxParticipants !== 'undefined' ?
+					clubStudentsCount <= maxParticipants :
+					true
+			)
+		);
+	},
+	getMaxParticipants: function () {
+		return this.getDefaultBinding().toJS('club.maxParticipants');
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
@@ -198,7 +249,12 @@ const ClubChildrenEdit = React.createClass({
 					<Header/>
 					<TeamManager
 						isNonTeamSport	= { true }
-						binding			= { binding.sub('teamManager') }
+						binding			= {
+							{
+								default:	binding.sub('teamManager'),
+								error:		binding.sub('error')
+							}
+						}
 					/>
 					<div className="eClubChildrenManagerWrapper_footer">
 						<Button

@@ -58,15 +58,16 @@ const DefaultTeam = React.createClass({
 		}
 
 		xmlPlayers = xmlPlayers.concat(players.map((player, index) =>
-			<Player	number						= {index + 1}
-					key							= {player.id}
-					isNonTeamSport				= {self.props.isNonTeamSport}
-					player						= {player}
-					positions					= {positions}
-					handleClickPlayer			= {self.props.handleClickPlayer}
-					handleChangePlayerPosition	= {self.props.handleChangePlayerPosition}
-					handleClickPlayerSub		= {self.props.handleClickPlayerSub}
-					handleClickPlayerIsCaptain	= {self.props.handleClickPlayerIsCaptain}
+			<Player
+				number						= {index + 1}
+				key							= {player.id}
+				isNonTeamSport				= {self.props.isNonTeamSport}
+				player						= {player}
+				positions					= {positions}
+				handleClickPlayer			= {self.props.handleClickPlayer}
+				handleChangePlayerPosition	= {self.props.handleChangePlayerPosition}
+				handleClickPlayerSub		= {self.props.handleClickPlayerSub}
+				handleClickPlayerIsCaptain	= {self.props.handleClickPlayerIsCaptain}
 			/>
 		));
 

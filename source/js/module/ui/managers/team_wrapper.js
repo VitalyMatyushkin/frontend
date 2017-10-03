@@ -375,9 +375,9 @@ const TeamWrapper = React.createClass({
 		return (
 			<div className="bTeamWrapper mMarginTop">
 				<SetTeamsLaterBlock
-					binding					=	{ this.getDefaultBinding() }
-					event					=	{ event }
-					handleIsSelectTeamLater	=	{ this.props.handleIsSelectTeamLater }
+					binding					= { this.getDefaultBinding() }
+					event					= { event }
+					handleIsSelectTeamLater	= { this.props.handleIsSelectTeamLater }
 				/>
 				<div className={plugClass}>
 				</div>

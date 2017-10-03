@@ -6,7 +6,7 @@ const ClubsHeper = {
 		document.location.hash = 'clubs/clubList';
 	},
 	convertClientToServerFormData: function(data, clubsFormPageData) {
-		console.log(clubsFormPageData);
+		data.maxParticipants = Number(data.maxParticipants);
 
 		data.ages = clubsFormPageData.ages;
 		data.sport = clubsFormPageData.sport;

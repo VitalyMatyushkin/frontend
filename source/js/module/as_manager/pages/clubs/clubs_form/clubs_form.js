@@ -243,6 +243,12 @@ const ClubsForm = React.createClass({
 								/>
 							</div>
 							<FormField
+								field	= 'maxParticipants'
+								type	= 'number'
+							>
+								Maximum number of pupils
+							</FormField>
+							<FormField
 								field		= 'priceType'
 								type		= 'dropdown'
 								options		= { ClubsConst.PRICING_ARRAY }
