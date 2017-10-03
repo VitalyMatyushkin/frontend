@@ -37,7 +37,11 @@ const Head = React.createClass({
 			) {
 				this.setInvitesCountToMenu();
 			}
-			this.setMessagesCountToMenu();
+			if(
+				role !== RoleHelper.USER_ROLES.STUDENT
+			) {
+				this.setMessagesCountToMenu();
+			}
 		}
 	},
 	/**
