@@ -298,7 +298,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		event.sport.multiparty &&
 		activeSchoolId !== '' && //for school union public site activeSchoolId maybe ''
 		activeSchoolId !== null &&  //for parent activeSchoolId maybe null
-        event.teams.length !== 2
+        event.teamsData.length !== 2
 	) {
 		const places = ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(event);
 
