@@ -103,7 +103,7 @@ ChallengeModel.prototype._getScore = function(event) {
 		this.isFinished &&
 		TeamHelper.isTeamSport(event) &&
 		event.sport.multiparty &&
-        event.teams.length !== 2
+        event.teamsData.length !== 2
 	) {
 		return '';
 	} else if(this.isFinished && this.isIndividualSport) {
