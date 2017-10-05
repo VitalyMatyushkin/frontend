@@ -1,14 +1,19 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		FixtureListItem		= require('./../school_home/fixture_list_item'),
-		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
-		EventResultHelper	= require('./../../../helpers/event_result_helper'),
-		ViewModeConsts 		= require('module/ui/view_selector/consts/view_mode_consts'),
-		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
-		PublicEventTeams	= require('./public_event_teams'),
-		PublicMatchReport	= require('./public_match_report'),
-		PublicEventGallery	= require('./public_event_gallery');
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
+
+		ViewModeConsts 					= require('module/ui/view_selector/consts/view_mode_consts'),
+	
+		PublicEventTeams				= require('./public_event_teams'),
+		PublicMatchReport				= require('./public_match_report'),
+		PublicEventGallery				= require('./public_event_gallery'),
+		PublicEventHeaderSchoolUnion 	= require('./event_header/public_event_header'),
+		FixtureListItem					= require('./../school_home/fixture_list_item'),
+
+		Rivals							= require('module/as_manager/pages/event/view/rivals/rivals'),
+	
+		TeamHelper						= require('./../../../ui/managers/helpers/team_helper'),
+		EventResultHelper				= require('./../../../helpers/event_result_helper');
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -109,9 +114,6 @@ const PublicEvent = React.createClass({
 			});
 		});
 	},
-	handleClickGoBack: function() {
-		document.location.hash = 'home';
-	},
 	renderMatchReport: function() {
 		const	binding			= this.getDefaultBinding(),
 				report			= binding.toJS('report');
@@ -120,14 +122,10 @@ const PublicEvent = React.createClass({
 
 		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
 	},
-	onClickViewMode: function(mode){
-		const binding = this.getDefaultBinding();
-		
-		binding.set('view_mode', mode);
-	},
 	renderTeams: function() {
 		const	binding			= this.getDefaultBinding(),
 				event			= binding.toJS('model'),
+				viewMode 		= typeof binding.toJS('viewMode') !== 'undefined' ? binding.toJS('viewMode') : ViewModeConsts.VIEW_MODE.BLOCK_VIEW,
 				inviterSchoolId	= event.inviterSchoolId;
 
 		//TODO it's temp. only for event refactoring period.
@@ -137,8 +135,8 @@ const PublicEvent = React.createClass({
 						activeSchoolId							= { inviterSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
-						isSchoolUnion 							= { true }
-						viewMode 								= { ViewModeConsts.VIEW_MODE.BLOCK_VIEW }
+						viewMode 								= { viewMode }
+						isSchoolUnion 							= {	true }
 				/>
 			);
 		} else {
@@ -149,18 +147,29 @@ const PublicEvent = React.createClass({
 			);
 		}
 	},
+	onClickViewMode: function(mode: string){
+		const binding = this.getDefaultBinding();
+		
+		binding.set('viewMode', mode);
+	},
+
 	render: function() {
 		const 	binding			= this.getDefaultBinding(),
 				isSync			= binding.get('sync'),
+				viewMode 		= binding.toJS('viewMode'),
 				eventModel		= binding.toJS('model'),
 				inviterSchoolId	= eventModel.inviterSchoolId;
 
 		if(isSync) {
 			return (
 				<div className="bPublicEvent">
-					<FixtureListItem	event			= { binding.toJS('model') }
+					<PublicEventHeaderSchoolUnion
+						event			= { eventModel }
+						viewMode 		= { viewMode }
+						onClickViewMode = { this.onClickViewMode }
+					/>
+					<FixtureListItem	event			= { eventModel }
 										activeSchoolId	= { inviterSchoolId }
-										onClickViewMode = { this.onClickViewMode }
 					/>
 					{ this.renderTeams() }
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
