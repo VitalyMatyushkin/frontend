@@ -151,7 +151,8 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 			tw.prevPlayers,
 			tw.___teamManagerBinding.teamStudents,
 			tw.selectedTeamId,
-			activeSchoolId
+			activeSchoolId,
+			binding.toJS('model').id
 		)
 	);
 };

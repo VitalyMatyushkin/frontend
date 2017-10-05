@@ -155,6 +155,7 @@ const serviceList = {
 		serviceList.schoolEventResultCricket = new Service('/i/schools/{schoolId}/events/{eventId}/results/cricket', binding);
 		
 		serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
+		serviceList.schoolEventTeamPlayer = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players/{playerId}', binding);
 		serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
 		serviceList.schoolEventReport = new Service('/i/schools/{schoolId}/events/{eventId}/report', binding);
 		serviceList.schoolEventTasks = new Service('/i/schools/{schoolId}/events/{eventId}/tasks', binding);

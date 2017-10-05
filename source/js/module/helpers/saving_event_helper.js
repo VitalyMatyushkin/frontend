@@ -53,7 +53,8 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 					initialPlayers,
 					players,
 					teamWrapper.selectedTeamId,
-					schoolId
+					schoolId,
+					event.id
 				)
 			);
 			return promises;
@@ -85,7 +86,8 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 						initialPlayers,
 						players,
 						team.id,
-						schoolId
+						schoolId,
+						event.id
 					));
 				});
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES:

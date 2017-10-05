@@ -138,11 +138,26 @@ function deleteIndividualPlayer(schoolId, eventId, individualId) {
 	});
 };
 
-function commitPlayers(initialPlayers, players, teamId, schoolId) {
+function commitPlayers(initialPlayers, _players, teamId, schoolId, eventId) {
 	let promises = [];
 
+	const players = _players.map(p => {
+		// for users, not for players
+		if(typeof p.userId === 'undefined') {
+			p.userId = p.id;
+			// A little trick:
+			// user without userId - is a new user.
+			p.isNewUser = true;
+		}
+
+		return p;
+	});
+
 	promises = promises.concat(initialPlayers.map((initialPlayer) => {
-		let foundPlayer = players.find(p => p.id === initialPlayer.id);
+		let foundPlayer = players.find(p =>
+			p.userId === initialPlayer.userId &&
+			p.permissionId === initialPlayer.permissionId
+		);
 
 		if(foundPlayer) {
 			//Mmm, check for modifications
@@ -162,7 +177,8 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 						schoolId,
 						teamId,
 						initialPlayer.id,
-						changes
+						changes,
+						eventId
 					);
 			}
 		} else {
@@ -170,15 +186,14 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 			return deletePlayer(
 					schoolId,
 					teamId,
-					initialPlayer.id
+					initialPlayer.id,
+					eventId
 				);
 		}
 	})).filter(p => p !== undefined);
 
 	// Add new player promises to promise array.
-	// A little trick:
-	// user without userId - is a new user.
-	promises = promises.concat(players.filter(p => !p.userId).map(player => addPlayer(schoolId, teamId, player)).filter(p => p !== undefined));
+	promises = promises.concat(players.filter(p => p.isNewUser).map(player => addPlayer(schoolId, teamId, player, eventId)).filter(p => p !== undefined));
 
 	return promises;
 };
@@ -203,33 +218,65 @@ function getRemovedPlayers(prevPlayers, currentPlayers) {
 	return removedPlayers;
 };
 
-function addPlayer(schoolId, teamId, player) {
-	return window.Server.teamPlayers.post(
-		{
-			schoolId:  schoolId,
-			teamId:     teamId
-		},
-		getBodyForAddPlayersRequest(player)
-	);
+function addPlayer(schoolId, teamId, player, eventId) {
+	if(typeof eventId !== 'undefined') {
+		return window.Server.schoolEventTeamPlayers.post(
+			{
+				schoolId:	schoolId,
+				eventId:	eventId,
+				teamId:		teamId
+			},
+			getBodyForAddPlayersRequest(player)
+		);
+	} else {
+		return window.Server.teamPlayers.post(
+			{
+				schoolId:  schoolId,
+				teamId:     teamId
+			},
+			getBodyForAddPlayersRequest(player)
+		);
+	}
 };
 
-function deletePlayer(schoolId, teamId, playerId) {
-	return window.Server.teamPlayer.delete({
-		schoolId:   schoolId,
-		teamId:     teamId,
-		playerId:   playerId
-	});
-};
-
-function changePlayer(schoolId, teamId, playerId, changes) {
-	return window.Server.teamPlayer.put(
-		{
+function deletePlayer(schoolId, teamId, playerId, eventId) {
+	if(typeof eventId !== 'undefined') {
+		return window.Server.schoolEventTeamPlayer.delete({
+			schoolId:   schoolId,
+			eventId:	eventId,
+			teamId:     teamId,
+			playerId:   playerId
+		});
+	} else {
+		return window.Server.teamPlayer.delete({
 			schoolId:   schoolId,
 			teamId:     teamId,
 			playerId:   playerId
-		},
-		changes
-	);
+		});
+	}
+};
+
+function changePlayer(schoolId, teamId, playerId, changes, eventId) {
+	if(typeof eventId !== 'undefined') {
+		return window.Server.schoolEventTeamPlayer.put(
+			{
+				schoolId:   schoolId,
+				eventId:	eventId,
+				teamId:     teamId,
+				playerId:   playerId
+			},
+			changes
+		);
+	} else {
+		return window.Server.teamPlayer.put(
+			{
+				schoolId:   schoolId,
+				teamId:     teamId,
+				playerId:   playerId
+			},
+			changes
+		);
+	}
 };
 
 function convertGenderToServerValue(gender) {
