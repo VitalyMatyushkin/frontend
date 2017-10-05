@@ -1,5 +1,4 @@
 const 	React 					= require('react'),
-		DateTimeMixin			= require('module/mixins/datetime'),
 		EventHelper				= require('module/helpers/eventHelper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
@@ -9,26 +8,9 @@ const 	React 					= require('react'),
 
 const FixtureListItem = React.createClass({
 
-	mixins: [DateTimeMixin],
-
 	propTypes: {
 		event:				React.PropTypes.any.isRequired,
-		activeSchoolId: 	React.PropTypes.string.isRequired,
-		onClickViewMode: 	React.PropTypes.func
-	},
-	handleClickFixtureItem: function() {
-		document.location.hash = `event/${this.props.event.id}`;
-	},
-	getFixtureInfo: function(event) {
-		return(
-			<div>
-				<div className="eEventHeader_field mEvent">{event.generatedNames.official}</div>
-				<div className="eEventHeader_field mDate">
-					{`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
-				</div>
-				{ this.renderViewModeLinks() }
-			</div>
-		)
+		activeSchoolId: 	React.PropTypes.string.isRequired
 	},
 	renderOpponentSide: function (model, order) {
 		const 	rivalStyle 	= model === 0 ? '' : 'mRight',
@@ -64,32 +46,6 @@ const FixtureListItem = React.createClass({
 					</div>
 				</div>
 			);
-		}
-	},
-	renderViewModeLinks: function(){
-		const event = this.props.event;
-		
-		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
-			return (
-				<div className="bEventViewMode">
-					<a
-						className	= "eEventViewModeLink"
-						onClick		= { () => {this.props.onClickViewMode('general')} }
-						key 		= "general"
-					>
-						Show Separate
-					</a>
-					<a
-						className 	= "eEventViewModeLink"
-						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
-						key 		= "showAll"
-					>
-						Show All
-					</a>
-				</div>
-			);
-		} else {
-			return null;
 		}
 	},
 	renderGameResultForCricket: function(){
@@ -139,27 +95,9 @@ const FixtureListItem = React.createClass({
 				challengeModel	= new ChallengeModel(event, activeSchoolId);
 
 		return (
-			<div>
-				<div className="bEventHeader">
-					<div className="bEventHeader_leftSide">
-						<div className="eEventHeader_field mEvent">
-							{this.getFixtureInfo(event)}
-						</div>
-					</div>
-
-					<div className="bEventHeader_rightSide">
-						<div	onClick		= { this.handleClickGoBack }
-								className	= "bButton mCancel"
-							>
-							Go Back
-						</div>
-					</div>
-				</div>
-
 				<div className="bEventInfo">
 					{this.getEventRivals(challengeModel)}
 				</div>
-			</div>
 		)
 	}
 });
