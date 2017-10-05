@@ -33,9 +33,12 @@ const SetTeamsLater = React.createClass({
 			.set('teamName.name',						Immutable.fromJS(undefined))
 			.set('teamName.prevName',					Immutable.fromJS(undefined))
 			.set('___teamManagerBinding.teamStudents',	Immutable.fromJS([]))
-			.set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
 			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
 			.commit();
+		/*
+		 .set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
+		 If clear black list here, the list of students for teams can be duplicated
+		 */
 	},
 	render: function() {
 		if(this.isShowSetTeamsLater(this.props.event)) {
