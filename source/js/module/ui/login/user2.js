@@ -79,7 +79,7 @@ const LoginUserPage = React.createClass({
 				if(roleList.length == 0) {
 					return AuthorizationServices.become('NOBODY');
 				} else if(roleList.length == 1) {
-					return AuthorizationServices.become(roleList[0]);
+					return AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
 				} else {
 					return true;
 				}
