@@ -144,7 +144,10 @@ function commitPlayers(initialPlayers, _players, teamId, schoolId, eventId) {
 	const players = _players.map(p => {
 		// for users, not for players
 		if(typeof p.userId === 'undefined') {
-			p.id = p.userId;
+			p.userId = p.id;
+			// A little trick:
+			// user without userId - is a new user.
+			p.isNewUser = true;
 		}
 
 		return p;
@@ -190,9 +193,7 @@ function commitPlayers(initialPlayers, _players, teamId, schoolId, eventId) {
 	})).filter(p => p !== undefined);
 
 	// Add new player promises to promise array.
-	// A little trick:
-	// user without userId - is a new user.
-	promises = promises.concat(players.filter(p => !p.userId).map(player => addPlayer(schoolId, teamId, player, eventId)).filter(p => p !== undefined));
+	promises = promises.concat(players.filter(p => p.isNewUser).map(player => addPlayer(schoolId, teamId, player, eventId)).filter(p => p !== undefined));
 
 	return promises;
 };

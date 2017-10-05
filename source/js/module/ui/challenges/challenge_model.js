@@ -325,7 +325,8 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		this.isFinished &&
 		!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 		TeamHelper.isTeamSport(event) &&
-		event.sport.multiparty
+		event.sport.multiparty &&
+		event.teamsData.length !== 2
 	) {
 		return 'Multiple result'
 	}

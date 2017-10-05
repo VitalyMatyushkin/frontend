@@ -4,6 +4,7 @@ const	React				= require('react'),
 		FixtureListItem		= require('./../school_home/fixture_list_item'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
+		ViewModeConsts 		= require('module/ui/view_selector/consts/view_mode_consts'),
 		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
 		PublicEventTeams	= require('./public_event_teams'),
 		PublicMatchReport	= require('./public_match_report'),
@@ -136,7 +137,8 @@ const PublicEvent = React.createClass({
 						activeSchoolId							= { inviterSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
-						isSchoolUnion 							= {	true }
+						isSchoolUnion 							= { true }
+						viewMode 								= { ViewModeConsts.VIEW_MODE.BLOCK_VIEW }
 				/>
 			);
 		} else {

@@ -1141,8 +1141,10 @@ const Event = React.createClass({
 			() => {
 				// Delete team or individual players
 				if(
-					TeamHelper.isInterSchoolsEventForTeamSport(event) &&
-					TeamHelper.isInternalEventForTeamSport(event) &&
+					(
+						TeamHelper.isInterSchoolsEventForTeamSport(event) ||
+						TeamHelper.isInternalEventForTeamSport(event)
+					) &&
 					typeof rival.team !== 'undefined'
 				) {
 					promises = promises.concat(this.removeTeamByRivalId(rivalId));
