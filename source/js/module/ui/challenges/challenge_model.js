@@ -103,7 +103,7 @@ ChallengeModel.prototype._getScore = function(event) {
 		this.isFinished &&
 		TeamHelper.isTeamSport(event) &&
 		event.sport.multiparty &&
-		event.teamsData.length !== 2
+        event.teamsData.length !== 2
 	) {
 		return '';
 	} else if(this.isFinished && this.isIndividualSport) {
@@ -298,7 +298,7 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		event.sport.multiparty &&
 		activeSchoolId !== '' && //for school union public site activeSchoolId maybe ''
 		activeSchoolId !== null &&  //for parent activeSchoolId maybe null
-		event.teamsData.length !== 2
+        event.teamsData.length !== 2
 	) {
 		const places = ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(event);
 
@@ -325,7 +325,8 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 		this.isFinished &&
 		!TeamHelper.isInterSchoolsEventForTeamSport(event) &&
 		TeamHelper.isTeamSport(event) &&
-		event.sport.multiparty
+		event.sport.multiparty &&
+		event.teamsData.length !== 2
 	) {
 		return 'Multiple result'
 	}

@@ -380,10 +380,13 @@ const SportsForm = React.createClass({
 		binding.meta().set('performance', Immutable.fromJS(data.performance));
 	},
 	render: function() {
-		const 	self    		= this,
-				binding 		= self.getDefaultBinding(),
-				pointsDisplay 	= binding.meta().get('pointsDisplay.value'),
-				showMask 		= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
+		const 	self    					= this,
+				binding 					= self.getDefaultBinding(),
+				pointsDisplay 				= binding.meta().get('pointsDisplay.value'),
+				isIndividualType 			= binding.meta().get('players.value') === 'Individual',
+				optionsPoint				= isIndividualType ? SportsHelpers.clientPointDisplayArray
+												: SportsHelpers.clientPointDisplayArray.filter(p => p !== 'presence only'),
+				showMask 					= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
 
 		// This comment about field 'positions'
 		// As you can see - container for this field is <div> instead <FormField>.
@@ -526,7 +529,7 @@ const SportsForm = React.createClass({
 									Points step
 								</FormField>
 								<FormField field='pointsDisplay'
-										   options={SportsHelpers.clientPointDisplayArray}
+										   options={optionsPoint}
 										   type='dropdown'
 									>
 									How to display points

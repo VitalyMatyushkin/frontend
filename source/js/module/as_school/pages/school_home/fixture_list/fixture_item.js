@@ -47,7 +47,8 @@ const FixtureItem = React.createClass({
 					activeSchoolId	= { activeSchoolId }
 				/>
 			);
-		} else if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping.internal && event.sport.individualResultsAvailable) {
+		} else if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping.internal
+			&& event.sport.players === "INDIVIDUAL") {
 			return (
 				<IndividualInternalSide
 					event			= { event }
