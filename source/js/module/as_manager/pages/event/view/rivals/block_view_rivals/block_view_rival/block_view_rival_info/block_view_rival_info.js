@@ -44,6 +44,7 @@ const BlockViewRivalInfo = React.createClass({
 						event			= { this.props.event }
 						mode			= { this.props.mode }
 						onChangeScore	= { this.props.onChangeScore }
+						options			= { this.props.options }
 					/>
 				);
 			default:

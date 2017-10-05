@@ -12,7 +12,7 @@ const ClassForm = React.createClass({
 		title: 			React.PropTypes.string.isRequired,
 		onFormSubmit: 	React.PropTypes.func
 	},
-	
+
 	componentWillMount: function(){
 		this.getAllAges();
 	},
@@ -44,8 +44,10 @@ const ClassForm = React.createClass({
 		const 	binding = this.getDefaultBinding(),
 				isSync 	= Boolean(binding.toJS('isSyncAges')),
 				ages 	= binding.toJS('ages');
-		
+
 		if (isSync) {
+			const 	selectedAge = binding.sub('formData').get('age'),
+					defaultValue = selectedAge ? selectedAge :  ages[0].value;
 			return (
 				<Form
 					formStyleClass 	= "mNarrow"
@@ -64,10 +66,11 @@ const ClassForm = React.createClass({
 						Form name
 					</FormField>
 					<FormField
-						type 		= "dropdown"
-						id 			= "school_age_group_checkbox"
-						field 		= "age"
-						options 	= { ages }
+						type 			= "dropdown"
+						id 				= "school_age_group_checkbox"
+						field 			= "age"
+						options 		= { ages }
+						defaultValue 	= { defaultValue }
 					>
 						Age group
 					</FormField>

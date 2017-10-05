@@ -40,14 +40,15 @@ const FixtureItem = React.createClass({
 		 The second part of the condition:
 		 If event is internal and sport for this event is individual
 		 */
-		if(event.sport.multiparty && event.teams.length !== 2) {
+		if(event.sport.multiparty && event.teamsData.length !== 2) {
 			return (
 				<MultipartyOpponentSide
 					event			= { event }
 					activeSchoolId	= { activeSchoolId }
 				/>
 			);
-		} else if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping.internal && event.sport.individualResultsAvailable) {
+		} else if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping.internal
+			&& event.sport.players === "INDIVIDUAL") {
 			return (
 				<IndividualInternalSide
 					event			= { event }

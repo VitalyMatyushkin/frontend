@@ -75,6 +75,7 @@ const BlockViewSchoolRivalInfo = React.createClass({
 	handleClickButton: function(buttonData) {
 		buttonData.handler(this.props.rival.id);
 	},
+	// TODO copy paste, check other block view rivals type
 	renderButtons: function() {
 		let buttonsContainer = null;
 

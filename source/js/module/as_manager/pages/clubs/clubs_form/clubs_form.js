@@ -220,7 +220,7 @@ const ClubsForm = React.createClass({
 							>
 								Sport
 							</FormField>
-							<div className="eForm_field">
+							<div className="eForm_field mBlue">
 								<div className="eForm_fieldName">
 									Gender
 								</div>
@@ -246,7 +246,7 @@ const ClubsForm = React.createClass({
 								field	= 'maxParticipants'
 								type	= 'number'
 							>
-								Maximum number of pupils
+								Maximum number of students
 							</FormField>
 							<FormField
 								field		= 'priceType'

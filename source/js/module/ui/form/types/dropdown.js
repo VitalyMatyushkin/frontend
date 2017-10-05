@@ -20,6 +20,12 @@ const TypeDropDown = React.createClass({
 		onSelect: React.PropTypes.func,
         id: React.PropTypes.string
 	},
+	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+		if (typeof this.props.defaultValue !== 'undefined') {
+			binding.set('value', this.props.defaultValue);
+		}
+	},
 	renderOptions:function(){
 		return this.props.options.map( (item, i) => {
 
