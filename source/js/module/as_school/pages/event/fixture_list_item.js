@@ -12,49 +12,9 @@ const FixtureListItem = React.createClass({
 	
 	propTypes: {
 		event:				React.PropTypes.any.isRequired,
-		activeSchoolId: 	React.PropTypes.string.isRequired,
-		onClickViewMode: 	React.PropTypes.func
+		activeSchoolId: 	React.PropTypes.string.isRequired
 	},
-	handleClickFixtureItem: function() {
-		document.location.hash = `event/${this.props.event.id}`;
-	},
-	getFixtureInfo: function(event) {
-		return(
-			<div>
-				<div className="eEventHeader_field mEvent">{event.generatedNames.official}</div>
-				<div className="eEventHeader_field mDate">
-					{`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
-				</div>
-				{ this.renderViewModeLinks() }
-			</div>
-		)
-	},
-	renderViewModeLinks: function(){
-		const event = this.props.event;
-		
-		if (TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
-			return (
-				<div className="bEventViewMode">
-					<a
-						className	= "eEventViewModeLink"
-						onClick		= { () => {this.props.onClickViewMode('general')} }
-						key 		= "general"
-					>
-						Show Separate
-					</a>
-					<a
-						className 	= "eEventViewModeLink"
-						onClick 	= { () => {this.props.onClickViewMode('show_all')} }
-						key 		= "showAll"
-					>
-						Show All
-					</a>
-				</div>
-			);
-		} else {
-			return null;
-		}
-	},
+
 	renderOpponentSide: function (model, order) {
 		const 	rivalStyle 	= model === 0 ? '' : 'mRight',
 				event 		= this.props.event;
@@ -114,9 +74,6 @@ const FixtureListItem = React.createClass({
 			return null;
 		}
 	},
-	handleClickGoBack: function() {
-		document.location.hash = 'home';
-	},
 	renderGameResultForCricket: function(){
 		const sportName = this.props.event.sport.name.toLowerCase();
 		
@@ -138,23 +95,6 @@ const FixtureListItem = React.createClass({
 		
 		return (
 			<div>
-				<div className="bEventHeader">
-					<div className="bEventHeader_leftSide">
-						<div className="eEventHeader_field mEvent">
-							{ this.getFixtureInfo(event) }
-						</div>
-					</div>
-					
-					<div className="bEventHeader_rightSide">
-						<Button
-							onClick 			= { this.handleClickGoBack }
-							extraStyleClasses 	= "mCancel"
-							text 				= {"Go Back"}
-						>
-						</Button>
-					</div>
-				</div>
-				
 				<div className="bEventInfo">
 					{ this.renderGameResultForCricket() }
 					{ this.getEventRivals(challengeModel) }
