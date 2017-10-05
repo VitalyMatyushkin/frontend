@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		FixtureListItem		= require('./../school_home/fixture_list_item'),
-		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
-		EventResultHelper	= require('./../../../helpers/event_result_helper'),
-		ViewModeConsts 		= require('module/ui/view_selector/consts/view_mode_consts'),
-		Rivals				= require('module/as_manager/pages/event/view/rivals/rivals'),
-		PublicEventTeams	= require('./public_event_teams'),
-		PublicMatchReport	= require('./public_match_report'),
-		PublicEventGallery	= require('./public_event_gallery');
-=======
 const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
@@ -27,7 +14,6 @@ const	React							= require('react'),
 	
 		TeamHelper						= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper				= require('./../../../helpers/event_result_helper');
->>>>>>> 39b88168c... branch for cherry-pick
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -149,11 +135,8 @@ const PublicEvent = React.createClass({
 						activeSchoolId							= { inviterSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
-<<<<<<< HEAD
+						viewMode 								= { viewMode }
 						isSchoolUnion 							= {	true }
-=======
-						isSchoolUnion 							= { true }
->>>>>>> 39b88168c... branch for cherry-pick
 				/>
 			);
 		} else {
