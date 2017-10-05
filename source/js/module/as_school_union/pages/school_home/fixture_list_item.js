@@ -63,9 +63,9 @@ const FixtureListItem = React.createClass({
 		}
 	},
 	getEventRivals: function (model) {
-		if(!model.isEventWithOneIndividualTeam)
+		if(!model.isEventWithOneIndividualTeam && !TeamHelper.isNewEvent(this.props.event)) {
 			return (
-				<div>
+				<div className="bEventRivals">
 					{ this.renderGameResultForCricket() }
 					<div className="bEventRivals_row">
 						<div className="bEventRivals_column mLeft">
@@ -80,10 +80,10 @@ const FixtureListItem = React.createClass({
 						</div>
 					</div>
 				</div>
-
 			);
-
-		return null;
+		} else {
+			return null;
+		}
 	},
 	handleClickGoBack: function() {
 		document.location.hash = 'home';

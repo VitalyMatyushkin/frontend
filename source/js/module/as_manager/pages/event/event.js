@@ -1037,22 +1037,20 @@ const Event = React.createClass({
 	removeTeamByRivalId: function(rivalId) {
 		const binding = this.getDefaultBinding();
 
-		const	event	= binding.toJS('model'),
-				rivals	= binding.toJS('rivals'),
-				rival	= rivals.find(rival => rival.id === rivalId);
-
-		event.teams.splice(
-			event.teams.findIndex(teamId => teamId === rival.team.id),
-			1
-		);
-		return window.Server.schoolEvent.put(
-			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	event.id
-			}, {
-				teams: event.teams
-			}
-		);
+		const	event		= binding.toJS('model'),
+				rivals		= binding.toJS('rivals'),
+				rival		= rivals.find(rival => rival.id === rivalId),
+				schoolId 	= this.props.activeSchoolId,
+				eventId 	= event.id;
+		
+		if (Array.isArray(event.teamsData)) {
+			const 	teamData = event.teamsData.find(team => team.id === rival.team.id),
+					teamId = teamData.id;
+			
+			return window.Server.schoolEventTeam.delete({ schoolId, eventId, teamId })
+		} else {
+			console.error('Event teamsData should be array!');
+		}
 	},
 	/**
 	 * Function removes individual players from event for current rival

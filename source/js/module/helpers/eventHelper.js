@@ -102,7 +102,7 @@ const EventHelper = {
 		// don't show inter-schools events if invited school not yet accept invitation and
 		return !(
 			event.eventType === self.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
+			event.teamsData.length === 1 // if team count === 1 then opponent school not yet accept invitation
 		);
 	},
 	/**
