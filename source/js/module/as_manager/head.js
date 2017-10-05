@@ -74,9 +74,11 @@ const Head = React.createClass({
 						topMenuItems	= rootBinding.toJS('topMenuItems');
 
 				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
-				topMenuItems[inviteItemIndex].name = `Messages(${data.length})`;
+				if(inviteItemIndex !== -1) {
+					topMenuItems[inviteItemIndex].name = `Messages(${data.length})`;
 
-				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+					rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
+				}
 			}
 		});
 	},
