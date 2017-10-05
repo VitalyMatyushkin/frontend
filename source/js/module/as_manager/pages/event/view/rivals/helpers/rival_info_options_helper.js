@@ -54,28 +54,32 @@ const RivalInfoOptionsHelper = {
 		// main rule
 		if(
 			event.status !== EventHelper.EVENT_STATUS.FINISHED &&
-			(
+			TeamHelper.isMultiparty(event) // only for inter-school multiparty event
+		) {
+			if(
 				TeamHelper.isInterSchoolsEventForTeamSport(event) ||
 				TeamHelper.isInterSchoolsEventForIndividualSport(event)
-			) && TeamHelper.isMultiparty(event) // only for inter-school multiparty event
-		) {
-			// fork for case when active school is inviter school or not
-			if(activeSchoolId === event.inviterSchoolId) {
-				// fork for case when curent rival is active school school or not
-				if(activeSchoolId === currentRival.school.id) {
-					// user can remove active school team if active school teams more then 1
-					// because user cant remove last school
-					isShowRemoveTeamButton = activeSchoolRivals.length > 1;
+			) {
+				// fork for case when active school is inviter school or not
+				if(activeSchoolId === event.inviterSchoolId) {
+					// fork for case when curent rival is active school school or not
+					if(activeSchoolId === currentRival.school.id) {
+						// user can remove active school team if active school teams more then 1
+						// because user cant remove last school
+						isShowRemoveTeamButton = activeSchoolRivals.length > 1;
+					} else {
+						// user can remove other team if other teams more than 1
+						// because active school can't play with himself
+						isShowRemoveTeamButton = rivals.length - activeSchoolRivals.length > 1;
+					}
 				} else {
-					// user can remove other team if other teams more than 1
-					// because active school can't play with himself
-					isShowRemoveTeamButton = rivals.length - activeSchoolRivals.length > 1;
+					isShowRemoveTeamButton = (
+						activeSchoolId === currentRival.school.id &&
+						activeSchoolRivals.length > 1
+					);
 				}
-			} else {
-				isShowRemoveTeamButton = (
-					activeSchoolId === currentRival.school.id &&
-					activeSchoolRivals.length > 1
-				);
+			} else if(TeamHelper.isInternalEventForTeamSport(event)) {
+				isShowRemoveTeamButton = rivals.length > 1;
 			}
 		}
 

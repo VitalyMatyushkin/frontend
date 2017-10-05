@@ -57,6 +57,7 @@ const Event = React.createClass({
 		// it's main rule(top priority) for displaying control buttons at rivals
 		isShowControlButtons:	React.PropTypes.bool.isRequired
 	},
+
 	getDefaultProps: function(){
 		return {
 			isShowControlButtons: true
@@ -1144,7 +1145,11 @@ const Event = React.createClass({
 			"Cancel",
 			() => {
 				// Delete team or individual players
-				if(TeamHelper.isInterSchoolsEventForTeamSport(event) && typeof rival.team !== 'undefined') {
+				if(
+					TeamHelper.isInterSchoolsEventForTeamSport(event) &&
+					TeamHelper.isInternalEventForTeamSport(event) &&
+					typeof rival.team !== 'undefined'
+				) {
 					promises = promises.concat(this.removeTeamByRivalId(rivalId));
 				}
 				if(TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
