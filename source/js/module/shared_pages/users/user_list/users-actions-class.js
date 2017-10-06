@@ -76,10 +76,12 @@ class UsersActionsClass {
 			return item.id === itemId;
 		});
 		idAutoComplete.push(user.id);
+		const rolesAutoComplete = user.permissions;
 		switch (actionKey){
 			case 'Add Role':
 				binding.atomically()
 				.set('groupIds',idAutoComplete)
+				.set('groupPermissions',rolesAutoComplete)
 				.set('popup',true)
 				.commit();
 				break;

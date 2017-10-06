@@ -98,6 +98,36 @@ const GrantRole = React.createClass({
 			)
 		}
 	},
+	getRoles: function() {
+		const	activeSchoolId		= this.getMoreartyContext().getBinding().toJS('userRules.activeSchoolId'),
+				currentPermissions 	= this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions');
+
+		let currentRoles = [];
+
+		// user roles for active school
+		if (Array.isArray(currentPermissions)) {
+			currentRoles = currentPermissions
+				.filter(p => p.schoolId === activeSchoolId)
+				.map(p => p.role.toLowerCase());
+		}
+
+		// if user also have role in this school, we must cut this role from role list
+		// but this restriction don't act on parent
+		const hasUserCurrentRole = currentRole => {
+			if (currentRole !== 'parent') {
+				return currentRoles.find(role => role === currentRole);
+			}
+		};
+
+		//if in school disabled registration student, we must cut role 'student' from role list
+		return roleList.filter(role => {
+			if (role.id === 'student') {
+				return false;
+			} else {
+				return !hasUserCurrentRole(role.id);
+			}
+		});
+	},
 	render:function(){
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
@@ -116,7 +146,7 @@ const GrantRole = React.createClass({
 				<FormField
 					type		= "select"
 					field		= "preset"
-					sourceArray	= { roleList }
+					sourceArray	= { this.getRoles() }
 					validation 	= "required"
 				>
 					Role
