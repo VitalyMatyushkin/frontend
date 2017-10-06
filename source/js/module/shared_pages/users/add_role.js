@@ -7,6 +7,7 @@ const   React           	= require('react'),
 		Form 		    	= require('module/ui/form/form'),
 		FormField 	    	= require('module/ui/form/form_field'),
 		RoleList			= require('module/data/roles_data'),
+		ErrorAddRole		= require('module/data/text_add_role_error'),
 		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
 		RoleHelper			= require('module/helpers/role_helper'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
@@ -19,6 +20,7 @@ const AddRole = React.createClass({
 	componentWillMount: function(){
 		this.initCountSportFieldsBlocks();
 		this.selectedSchool = undefined;
+		this.getDefaultBinding().set('errorAddChild', false);
 	},
 	componentWillUnmount: function(){
 		this.getDefaultBinding().clear();
@@ -59,6 +61,11 @@ const AddRole = React.createClass({
 				.then(result => {
 					binding.set('addRole',false);
 					return this.props.onSuccess && this.props.onSuccess(result)
+				})
+				.catch((e) => {
+					if (e.xhr.status === 404) {
+						binding.set('errorAddChild', true);
+					}
 				});
 		}
 	},
@@ -69,13 +76,40 @@ const AddRole = React.createClass({
 		return window.Server.schoolStudents.filter(schoolId, filter);
 	},
 	getRoleList: function() {
-		switch (true) {
-			case typeof this.selectedSchool === 'undefined':
-				return [];
-			case this.selectedSchool.kind === "School":
-				return RoleList;
-			case this.selectedSchool.kind === "SchoolUnion":
-				return SchoolUnionRoleList;
+		if (typeof this.selectedSchool !== 'undefined') {
+			const fullSchoolData = this.selectedSchool,
+				currentPermissions = this.getDefaultBinding().toJS('userWithPermissionDetail.permissions');
+
+			let currentRoles = [];
+
+			// user roles for active school
+			if (Array.isArray(currentPermissions)) {
+				currentRoles = currentPermissions
+					.filter(p => p.schoolId === fullSchoolData.id && p.status === 'ACTIVE')
+					.map(p => p.preset.toLowerCase());
+			}
+			// if user also have role in this school, we must cut this role from role list
+			// but this restriction don't act on parent
+			const hasUserCurrentRole = currentRole => {
+				if (currentRole !== 'parent') {
+					return currentRoles.find(role => role === currentRole);
+				}
+			};
+			// for school union we leave only admin role
+			if (fullSchoolData && fullSchoolData.kind === 'SchoolUnion') {
+				return RoleList.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
+			}
+
+			//if in school disabled registration student, we must cut role 'student' from role list
+			return RoleList.filter(role => {
+				if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
+					return false;
+				} else {
+					return !hasUserCurrentRole(role.id);
+				}
+			});
+		} else {
+			return [];
 		}
 	},
 	getSchoolService: function() {
@@ -122,9 +156,11 @@ const AddRole = React.createClass({
 		binding.set('rivals', Immutable.fromJS([]));
 	},
 	render: function() {
-		const 	binding 	= this.getDefaultBinding(),
-				formBinding = binding.sub('formAddRole'),
-				isParent	= Boolean(formBinding.meta('preset.value').toJS() === 'parent' && formBinding.meta('schoolId.value').toJS());
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('formAddRole'),
+				errorAddChild 	= binding.get('errorAddChild'),
+				schoolId    	= formBinding.meta('schoolId.value').toJS(),
+				isParent		= Boolean(formBinding.meta('preset.value').toJS() === 'parent' && formBinding.meta('schoolId.value').toJS());
 		return (
 			<div className="bPopupEdit_container">
 				<Form
@@ -143,11 +179,11 @@ const AddRole = React.createClass({
 					>
 						School
 					</FormField>
-					<FormField	
-						type		= "select"
-						isDisabled	= { typeof this.selectedSchool === 'undefined' }
-						field		= "preset"
-						sourceArray	= { this.getRoleList() }
+					<FormField
+						type="select"
+						isDisabled={ typeof this.selectedSchool === 'undefined' }
+						field="preset"
+						sourceArray={ this.getRoleList() }
 					>
 						Role
 					</FormField>
@@ -165,6 +201,12 @@ const AddRole = React.createClass({
 						</div>
 						:
 						<div></div>
+					}
+					{
+						errorAddChild ?
+							<span className="verify_error">{ ErrorAddRole.addChild }</span>
+							:
+							<span></span>
 					}
 					<FormField	
 						type			= "autocomplete"

@@ -36,12 +36,12 @@ const FilteringServices = {
         return window.Server.schoolStudents.get(schoolId, {
             filter: {
                 where: {
-                    lastName: {
-                        like: filter,
-                        options: 'i'
-                    }
+					$or: [
+						{firstName: {like: filter, options: 'i'}},
+						{lastName: {like: filter, options: 'i'}}
+					]
                 },
-                limit: 10
+                limit: 100
             }
         }).then(students => {
             return Lazy(students).map(student => {

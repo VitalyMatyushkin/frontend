@@ -8,6 +8,8 @@ const	React				= require('react'),
 
 const	MiddleWideContainer	= require('styles/ui/b_middle_wide_container.scss');
 
+const 	ERROR_ADD_CHILD_TEXT = 'Unable to add permission to this user. Probably this user is already a parent of this student.';
+
 const PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -43,6 +45,7 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.set('prId', prId);
 		binding.set('schoolId', schoolId);
+		binding.set('errorAddChild', false);
 
 		if (prId) {
 			window.Server.school.get( {schoolId: schoolId} )
@@ -200,6 +203,11 @@ const PermissionAcceptPage = React.createClass({
 		)
 		.then(() => {
 			document.location.hash = this.props.afterSubmitPage;
+		})
+		.catch((e) => {
+			if (e.xhr.status === 404) {
+				binding.set('errorAddChild', true);
+			}
 		});
 	},
 	onClickDeselectHouse: function() {
@@ -209,9 +217,9 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 	},
 	render: function() {
-		const binding = this.getDefaultBinding();
-
-		const comment = binding.get('comment');
+		const 	binding = this.getDefaultBinding(),
+				errorAddChild = binding.get('errorAddChild'),
+				comment = binding.get('comment');
 
 		let content;
 		if(binding.toJS('isSync')) {
@@ -252,6 +260,10 @@ const PermissionAcceptPage = React.createClass({
 
 						<If condition={typeof binding.get('formId') !== 'undefined'}>
 							<div className='eForm_field'>
+								{
+									errorAddChild &&
+									<span className="verify_error">{ ERROR_ADD_CHILD_TEXT }</span>
+								}
 								<Autocomplete
 									serviceFilter	= { this.serviceStudentsFilter}
 									serverField		= 'name'

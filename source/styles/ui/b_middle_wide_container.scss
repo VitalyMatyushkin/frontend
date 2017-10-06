@@ -1,4 +1,9 @@
 .bMiddleWideContainer {
   max-width: 500px;
   margin: 0 auto;
+
+  .verify_error{
+    display: block;
+    width: 440px;
+  }
 }

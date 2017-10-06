@@ -9,6 +9,7 @@ const	Form				= require('../../../../ui/form/form'),
 		Immutable			= require('immutable'),
 		classNames			= require('classnames'),
 		RoleList			= require('module/data/roles_data'),
+		ErrorAddRole		= require('module/data/text_add_role_error'),
 		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
@@ -16,6 +17,7 @@ const GrantRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
 		userIdsBinding		: React.PropTypes.object,
+		userPermissionsBinding	: React.PropTypes.object,
 		onSuccess			: React.PropTypes.func,
 		handleClickCancel	: React.PropTypes.func
 	},
@@ -23,6 +25,7 @@ const GrantRole = React.createClass({
 		const   self    = this,
 				ids     = self.props.userIdsBinding.toJS();
 
+		this.getDefaultBinding().set('errorAddChild', false);
 		this.selectedSchool = undefined;
 		this.initCountSportFieldsBlocks();
 		if(!ids)
@@ -39,14 +42,40 @@ const GrantRole = React.createClass({
 		return window.Server.schoolStudents.filter(schoolId, filter);
 	},
 	getRoleList: function() {
+		if (typeof this.selectedSchool !== 'undefined') {
+			const 	fullSchoolData = this.selectedSchool,
+					currentPermissions = this.props.userPermissionsBinding.toJS();
 
-		switch (true) {
-			case typeof this.selectedSchool === 'undefined':
-				return [];
-			case this.selectedSchool.kind === "School":
-				return RoleList;
-			case this.selectedSchool.kind === "SchoolUnion":
-				return SchoolUnionRoleList;
+			let currentRoles = [];
+
+			// user roles for active school
+			if (Array.isArray(currentPermissions)) {
+				currentRoles = currentPermissions
+					.filter(p => p.schoolId === fullSchoolData.id && p.status === 'ACTIVE')
+					.map(p => p.preset.toLowerCase());
+			}
+			// if user also have role in this school, we must cut this role from role list
+			// but this restriction don't act on parent
+			const hasUserCurrentRole = currentRole => {
+				if (currentRole !== 'parent') {
+					return currentRoles.find(role => role === currentRole);
+				}
+			};
+			// for school union we leave only admin role
+			if (fullSchoolData && fullSchoolData.kind === 'SchoolUnion') {
+				return RoleList.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
+			}
+
+			//if in school disabled registration student, we must cut role 'student' from role list
+			return RoleList.filter(role => {
+				if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
+					return false;
+				} else {
+					return !hasUserCurrentRole(role.id);
+				}
+			});
+		} else {
+			return [];
 		}
 	},
 	getSchoolService: function() {
@@ -105,7 +134,12 @@ const GrantRole = React.createClass({
 
 			if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
 				window.Server.userPermissions.post(currentId, body)
-					.then(result => this.props.onSuccess && this.props.onSuccess(result));
+					.then(result => {this.props.onSuccess && this.props.onSuccess(result)})
+					.catch((e) => {
+						if (e.xhr.status === 404) {
+							binding.set('errorAddChild', true);
+						}
+					});
 			}
 		});
 	},
@@ -130,6 +164,7 @@ const GrantRole = React.createClass({
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
 				bindingForm			= self.getDefaultBinding().sub('formGrantRole'),
+				errorAddChild 		= binding.get('errorAddChild'),
 				isParent			= Boolean(bindingForm.meta('preset.value').toJS() === 'parent' && bindingForm.meta('schoolId.value').toJS()),
 				isCoachOrTeacher 	= Boolean((bindingForm.meta('preset.value').toJS() === 'coach' || bindingForm.meta('preset.value').toJS() === 'teacher')
 					&& bindingForm.meta('schoolId.value').toJS());
@@ -172,6 +207,12 @@ const GrantRole = React.createClass({
 					</div>
 					:
 					<div></div>
+				}
+				{
+					errorAddChild ?
+					<span className="verify_error">{ ErrorAddRole.addChild }</span>
+						:
+					<span></span>
 				}
 				<FormField	type			= "autocomplete"
 							field			= "studentId"
