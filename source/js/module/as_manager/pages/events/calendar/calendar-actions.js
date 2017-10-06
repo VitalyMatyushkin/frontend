@@ -90,7 +90,8 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 						'ACCEPTED',
 						'REJECTED',
 						'FINISHED',
-						'CANCELED'
+						'CANCELED',
+						'COLLECTING_INVITE_RESPONSE'
 					]}
 				}
 			]
