@@ -14,6 +14,7 @@ const Challenges = React.createClass({
 		isSync:					React.PropTypes.bool,
 		isDaySelected:			React.PropTypes.bool,
 		activeSchoolId:			React.PropTypes.string,
+		activeSchoolKind:		React.PropTypes.string,
 		events:					React.PropTypes.any,
 		onClickDeleteEvent: 	React.PropTypes.func,
 		isUserSchoolWorker: 	React.PropTypes.bool
@@ -28,6 +29,7 @@ const Challenges = React.createClass({
 				events				= this.props.events,
 				isDaySelected		= this.props.isDaySelected,
 				activeSchoolId		= this.props.activeSchoolId,
+				activeSchoolKind	= this.props.activeSchoolKind,
 				onEventClick		= this.props.onClick,
 				onClickDeleteEvent	= this.props.onClickDeleteEvent,
 				isUserSchoolWorker 	= this.props.isUserSchoolWorker;
@@ -42,7 +44,7 @@ const Challenges = React.createClass({
 			/* when there are some events */
 			case Array.isArray(events) && events.length > 0:		// actually it shouldn't be an array, but Immutable.List instead... but this is what we get from binding
 				return events.map( event =>  {
-					const	model = new ChallengeModel(event, activeSchoolId);
+					const	model = new ChallengeModel(event, activeSchoolId, activeSchoolKind);
 					return <ChallengeListItem
 						key 				= { event.id }
 						event 				= { event }

@@ -28,6 +28,7 @@ const HomeCalender = React.createClass({
 	render: function(){
 		const 	binding 					= this.getDefaultBinding().sub('events'),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('activeSchoolId'),
+				activeSchoolKind			= this.getMoreartyContext().getBinding().get('activeSchool.kind'),
 				todayDate					= binding.get('todayDate'),
 				selectedDate				= binding.get('selectedDate'),
 				isDistinctDatesInSync		= binding.get('distinctEventDatesData.isSync'),
@@ -63,11 +64,12 @@ const HomeCalender = React.createClass({
 						</div>
 						<div className="eEvents_rightSideContainer">
 							<Challenges
-								activeSchoolId	= {activeSchoolId}
-								isSync			= {isSelectedDateEventsInSync}
-								isDaySelected	= {true}
-								events			= {isSelectedDateEventsInSync ? selectedDateEvents.toJS() : {}}
-								onClick			= {this.handleClickEvent}
+								activeSchoolId		= {activeSchoolId}
+								activeSchoolKind	= {activeSchoolKind}
+								isSync				= {isSelectedDateEventsInSync}
+								isDaySelected		= {true}
+								events				= {isSelectedDateEventsInSync ? selectedDateEvents.toJS() : {}}
+								onClick				= {this.handleClickEvent}
 							/>
 						</div>
 					</div>
