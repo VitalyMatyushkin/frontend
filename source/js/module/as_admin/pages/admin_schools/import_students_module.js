@@ -51,7 +51,7 @@ const ImportStudentsModule = React.createClass({
 				currentSchool = binding.toJS('currentSchool');
 
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
-			const 	result			= StudentImporter.pullFormsAndHouses(studentData, currentSchool);
+			const 	result			= StudentImporter.pullFormsHousesPhones(studentData, currentSchool);
 
             binding.set('studentDataResult', Immutable.fromJS(result));
 
@@ -108,7 +108,9 @@ const ImportStudentsModule = React.createClass({
 				gender:		student.gender,
 				birthday:	student.birthday ? this.getBirthdayInServerFormat(student.birthday) : undefined,
 				formId: 	student.formId,
-				houseId: 	student.houseId
+				houseId: 	student.houseId,
+				nextOfKin:	student.nextOfKin
+
 			});
 		})).then(() => {
 			window.simpleAlert(
@@ -128,7 +130,7 @@ const ImportStudentsModule = React.createClass({
 	
 	getBirthdayInServerFormat: function(birthday) {
 		return moment(birthday, 'DD-MM-YYYY').format('YYYY-MM-DD');
-	},	
+	},
 
 	serviceSchoolFilter: function(schoolName) {
 		return window.Server.schools.get({

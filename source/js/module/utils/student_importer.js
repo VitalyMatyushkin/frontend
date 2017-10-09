@@ -32,7 +32,10 @@ const guessTable = {
 	gender: 	['gender'],
 	birthday: 	['birthday', 'bday', 'dob', 'date of birth'],
 	form: 		['form'],
-	house: 		['house']
+	house: 		['house'],
+	phone1: 	['phone1'],
+	phone2: 	['phone2'],
+	phone3: 	['phone3']
 };
 
 /**
@@ -62,7 +65,10 @@ const guessHeaders = function(fieldNamesArray) {
 		gender:		guessColumn(fieldNamesArray, 'gender'),
 		birthday:	guessColumn(fieldNamesArray, 'birthday'),
 		form:		guessColumn(fieldNamesArray, 'form'),
-		house:		guessColumn(fieldNamesArray, 'house')
+		house:		guessColumn(fieldNamesArray, 'house'),
+		phone1: 	guessColumn(fieldNamesArray, 'phone1'),
+		phone2: 	guessColumn(fieldNamesArray, 'phone2'),
+		phone3: 	guessColumn(fieldNamesArray, 'phone3')
 	}
 };
 
@@ -87,8 +93,11 @@ const objectToStudent = function(headers, obj) {
 		gender: 	gender ? guessGender(gender) : undefined,
 		birthday:	birthday ? dateParser(birthday) : undefined,
 		form:		obj[headers.form],
-		house: 		obj[headers.house]
-	};
+		house: 		obj[headers.house],
+		phone1: 	obj[headers.phone1],
+		phone2: 	obj[headers.phone2],
+		phone3: 	obj[headers.phone3]
+	}
 };
 
 function readStudentsFromCSVFile(file) {
@@ -108,7 +117,7 @@ function readStudentsFromCSVFile(file) {
 	});
 }
 
-function pullFormsAndHouses(result, school) {
+function pullFormsHousesPhones(result, school) {
 	result.students = result.students.map( (student, i)=> {
 		const	studentFormNoSpaces		= student.form ? student.form.replace(' ', '') : undefined,
 			  	studentHouseNoSpaces	= student.house ? student.house.replace(' ', '') : undefined;
@@ -116,21 +125,37 @@ function pullFormsAndHouses(result, school) {
 		const	form	= school.forms.find( form => form.name.replace(' ', '') === studentFormNoSpaces ),
 				house	= school.houses.find( house => house.name.replace(' ', '') === studentHouseNoSpaces),
 				formId	= form ? form.id : undefined,
-				houseId = house ? house.id : undefined;
+				houseId = house ? house.id : undefined,
+				phones	= [student.phone1, student.phone2, student.phone3].filter(p => p !== '');
 
 		student.formId = formId;
 		student.houseId = houseId;
+
 		if (typeof formId === 'undefined') result.errors.push( {
 			type:		'StudentFormMissed',
 			code:		'StudentFormMissed',
 			message: 	`There is no form with name: ${student.form}. Student is: ${student.firstName} ${student.lastName}`,
 			row:		i
 		});
+
+		student.nextOfKin = [];
+		phones.forEach(phone => {
+			if (!(/^((\+44|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone))) {
+				result.errors.push({
+					type: 'InvalidPhone',
+					code: 'InvalidPhone',
+					message: `There is not valid phone: ${phone}. Student is: ${student.firstName} ${student.lastName}`,
+					row: i
+				});
+			} else {
+				student.nextOfKin.push({phone: phone});
+			}
+		});
 		return student;
 	});
 	return result;
 }
 
-module.exports.pullFormsAndHouses 		= pullFormsAndHouses;
+module.exports.pullFormsHousesPhones 	= pullFormsHousesPhones;
 module.exports.loadFromCSV 				= readStudentsFromCSVFile;
 module.exports.parseCSVFile 			= parseCSVFile;
