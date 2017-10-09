@@ -8,7 +8,8 @@ const ClubsActions = {
 							like: sportName,
 							options: 'i'
 						},
-						players: 'INDIVIDUAL'
+						players: 'INDIVIDUAL',
+						'points.display': 'PRESENCE_ONLY'
 					},
 					limit: 50,
 					order:'name ASC'
