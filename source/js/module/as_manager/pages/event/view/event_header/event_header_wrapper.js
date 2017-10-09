@@ -20,7 +20,8 @@ const	ManagerConsts	= require('module/ui/managers/helpers/manager_consts');
 const EventHeaderWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		onReload:		React.PropTypes.func.isRequired
 	},
 	isInviterSchool: function() {
 		const event = this.getDefaultBinding().toJS('model');
@@ -83,11 +84,16 @@ const EventHeaderWrapper = React.createClass({
 				event			= binding.toJS('model'),
 				activeSchoolId	= this.props.activeSchoolId;
 
+		let promise;
 		if(this.getDefaultBinding().get('model.status') === "FINISHED") {
-			EventHeaderActions.submitScore(activeSchoolId, event, binding);
+			promise = EventHeaderActions.submitScore(activeSchoolId, event, binding);
 		} else {
-			EventHeaderActions.closeMatch(activeSchoolId, event, binding);
+			promise = EventHeaderActions.closeMatch(activeSchoolId, event, binding);
 		}
+
+		Promise.resolve(promise).then(() => {
+			this.props.onReload();
+		});
 	},
 	onClickEditEventButton: function() {
 		const binding = this.getDefaultBinding();

@@ -1424,8 +1424,10 @@ const Event = React.createClass({
 							<CreateOtherEventPanel eventId={event.id}/>
 						</If>
 						<div className="bEvent">
-							<EventHeaderWrapper	binding			= {binding}
-												activeSchoolId	= {this.props.activeSchoolId}
+							<EventHeaderWrapper
+								binding			= { binding }
+								onReload		= { this.props.onReload }
+								activeSchoolId	= { this.props.activeSchoolId }
 							/>
 							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>
@@ -1438,9 +1440,10 @@ const Event = React.createClass({
 								</div>
 							</If>
 							<div className="bEventMiddleSideContainer">
-								<Tabs	tabListModel	= {self.tabListModel}
-										onClick			= {self.changeActiveTab}
-										customButton	= {this.getCustomButtonForTabs()}
+								<Tabs
+									tabListModel	= {self.tabListModel}
+									onClick			= {self.changeActiveTab}
+									customButton	= {this.getCustomButtonForTabs()}
 								/>
 							</div>
 							<If condition={activeTab === 'performance'} >
