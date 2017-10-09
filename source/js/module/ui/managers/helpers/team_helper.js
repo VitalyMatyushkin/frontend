@@ -1222,11 +1222,29 @@ function createTeamByPrototype(prototype, teamBody) {
 		});
 }
 
-function updateTeam(schoolId, teamId, body) {
-	return window.Server.team.put({
-		schoolId: schoolId,
-		teamId: teamId
-	}, body);
+function updateTeam(schoolId, teamId, body, eventId) {
+	let result;
+
+	if(typeof eventId !== 'undefined') {
+		result = window.Server.schoolEventTeam.put(
+			{
+				schoolId:	schoolId,
+				eventId:	eventId,
+				teamId:		teamId
+			},
+			body
+		);
+	} else {
+		result = window.Server.team.put(
+			{
+				schoolId:	schoolId,
+				teamId:		teamId
+			},
+			body
+		);
+	}
+
+	return result;
 }
 
 function createNewTeam(body) {
