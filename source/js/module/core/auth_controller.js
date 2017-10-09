@@ -33,6 +33,11 @@ const authСontroller = {
 				this.binding.sub('userData')
 			).addListener(this.handleUpdateUserAuthData.bind(this));
 
+			console.log("Auth controller was init");
+			console.log(
+				this.binding.toJS()
+			);
+
 			return true;
 		});
 	},

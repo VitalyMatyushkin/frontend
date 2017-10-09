@@ -33,15 +33,16 @@ const LoginUserPage = React.createClass({
 
 		this.formName = domain === 'admin' ? 'Administrator Login' : 'default';
 
-		let initPromises = [];
+		let promise = true;
 		if(this.isAuthorized()) {
-			initPromises = initPromises.concat(this.setPermissions());
+			promise = this.setPermissions();
 		}
 
 		Promise
-			.all(initPromises)
+			.resolve(promise)
 			.then(() => {
 				binding.set('isSync', Immutable.fromJS(true));
+				console.log('User login form was sync.');
 			});
 	},
 	onSuccess: function() {
@@ -66,7 +67,7 @@ const LoginUserPage = React.createClass({
 	setPermissions: function() {
 		const binding = this.getDefaultBinding();
 
-		RoleListHelper.getUserRoles()
+		return RoleListHelper.getUserRoles()
 			.then(permissions => {
 				binding.set(
 					'roleList',
@@ -76,13 +77,16 @@ const LoginUserPage = React.createClass({
 				);
 
 				const roleList = this.getRoleListByPermissionList(permissions);
+				let promise;
 				if(roleList.length == 0) {
-					return AuthorizationServices.become('NOBODY');
+					promise =  AuthorizationServices.become('NOBODY');
 				} else if(roleList.length == 1) {
-					return AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
+					promise =  AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
 				} else {
-					return true;
+					promise = true;
 				}
+
+				return promise;
 			});
 	},
 	isAuthorized: function() {
@@ -95,7 +99,7 @@ const LoginUserPage = React.createClass({
 		
 		const	showError	= this.getDefaultBinding().toJS('showError'),
 				permissions	= this.getDefaultBinding().toJS('roleList.permissions');
-		
+
 		switch (true) {
 			case showError === true:
 				currentView = (
@@ -162,6 +166,11 @@ const LoginUserPage = React.createClass({
 	},
 	render: function() {
 		const isSync = this.getDefaultBinding().toJS('isSync');
+
+		console.log('User login form state:');
+		console.log(
+			this.getDefaultBinding().toJS()
+		);
 
 		let content = null;
 		switch (true) {
