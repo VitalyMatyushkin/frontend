@@ -205,7 +205,12 @@ const EventManager = React.createClass({
 			if(typeof postcodeId !== 'undefined') {
 				event.venue.postcodeData.id = postcodeId;
 			}
-
+			if (event.venue.venueType === "TBD") {
+				event.venue.postcodeData = {
+					id: "TBD",
+					postcode: "TBD"
+				}
+			}
 			const rivals = this.getRivals(event);
 
 			binding.atomically()
