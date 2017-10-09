@@ -23,13 +23,21 @@ function changeTeamNames(activeSchoolId, binding) {
 			!AfterRivalsChangesHelper.isTeamChangedByOrder(selectedRivalIndex, binding) &&
 			AfterRivalsChangesHelper.isNameTeamChangedByOrder(selectedRivalIndex, binding)
 		) {
-			promises = promises.concat(TeamHelper.updateTeam(
-				activeSchoolId,
-				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.selectedTeamId`),
-				{
-					name: binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.teamName.name`)
-				}
-			));
+			const selectedTeamId =
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.selectedTeamId`);
+			const name =
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${selectedRivalIndex}.teamName.name`);
+
+			promises = promises.concat(
+				TeamHelper.updateTeam(
+					activeSchoolId,
+					selectedTeamId,
+					{
+						name: name
+					},
+					event.id
+				)
+			);
 		}
 	}
 
