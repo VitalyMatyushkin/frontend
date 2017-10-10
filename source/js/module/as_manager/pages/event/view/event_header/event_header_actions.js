@@ -380,13 +380,23 @@ function doActionsAfterCloseEvent(activeSchoolId: string, event: any, binding: a
  * Event closing process started after click save button
  */
 function closeMatch(activeSchoolId: string, event: any, binding: any){
+	let promises = [];
 	if(TeamHelper.isNonTeamSport(event)) {
-		closeMatchForIndividualSport(activeSchoolId, event, binding);
+		promises = promises.concat(
+			closeMatchForIndividualSport(activeSchoolId, event, binding)
+		);
 	} else {
-		closeMatchForTeamsSport(activeSchoolId, event, binding);
+		promises = promises.concat(
+			closeMatchForTeamsSport(activeSchoolId, event, binding)
+		);
 	}
+
 	// match report save
-	submitMatchReport(activeSchoolId, event);
+	promises = promises.concat(
+		submitMatchReport(activeSchoolId, event)
+	);
+
+	return Promise.all(promises);
 }
 
 /**
@@ -394,7 +404,7 @@ function closeMatch(activeSchoolId: string, event: any, binding: any){
  */
 function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 
-	window.Server.finishSchoolEvent.post({
+	return window.Server.finishSchoolEvent.post({
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
@@ -407,7 +417,7 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
  */
 function closeMatchForTeamsSport(activeSchoolId, event, binding) {
 
-	window.Server.finishSchoolEvent.post({
+	return window.Server.finishSchoolEvent.post({
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
