@@ -141,6 +141,8 @@ function runManagerMode() {
 						document.getElementById('jsMain')
 					);
 
+					authController.redirectUserByUserAuthData();
+
 					initTawkTo();
 				});
 		});
