@@ -1,38 +1,38 @@
-const EventHelper = require('module/helpers/eventHelper');
-
 const savingPlayerChangesPopupHelper = {
 	isUserCreateNewTeam: function(event, teamWrappers) {
-		//const event = this.getDefaultBinding().toJS('model');
+		const resultArray = teamWrappers.map(tw => this.isUserCreateNewTeamByTeamWrapper(tw));
 
-		switch (true) {
-			case EventHelper.isInterSchoolsEvent(event):
-				return this.isUserCreateNewTeamByOrder(0, teamWrappers);
-			default :
-				return (
-					this.isUserCreateNewTeamByOrder(0, teamWrappers) ||
-					this.isUserCreateNewTeamByOrder(1, teamWrappers)
-				);
+		let result = false;
+		for(let i = 0; i < resultArray.length; i++) {
+			if(resultArray[i]) {
+				result = true;
+				break;
+			}
 		}
+
+		return result;
 	},
-	isUserCreateNewTeamByOrder: function(order, teamWrappers) {
+	isUserCreateNewTeamByTeamWrapper: function(teamWrapper) {
 		return (
-			typeof teamWrappers[order].selectedTeamId === 'undefined' &&
-			!teamWrappers[order].isSetTeamLater
+			typeof teamWrapper.selectedTeamId === 'undefined' &&
+			!teamWrapper.isSetTeamLater
 		);
 	},
 	isAnyTeamChanged: function(event, teamWrappers) {
-		switch (true) {
-			case EventHelper.isInterSchoolsEvent(event):
-				return this.isTeamChangedByOrder(0, teamWrappers);
-			default :
-				return (
-					this.isTeamChangedByOrder(0, teamWrappers) ||
-					this.isTeamChangedByOrder(1, teamWrappers)
-				);
+		const resultArray = teamWrappers.map(tw => this.isTeamChangedByTeamWrapper(tw));
+
+		let result = false;
+		for(let i = 0; i < resultArray.length; i++) {
+			if(resultArray[i]) {
+				result = true;
+				break;
+			}
 		}
+
+		return result;
 	},
-	isTeamChangedByOrder: function(order, teamWrappers) {
-		return teamWrappers[order].isTeamChanged;
+	isTeamChangedByTeamWrapper: function(teamWrapper) {
+		return teamWrapper.isTeamChanged;
 	}
 };
 

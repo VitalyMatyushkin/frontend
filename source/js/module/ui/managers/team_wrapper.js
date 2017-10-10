@@ -146,11 +146,18 @@ const TeamWrapper = React.createClass({
 
 		const listenerId = binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
 			if(this.isActive()) {
-				const	isTeamPlayersChanged	= (
-						typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+				const event = this.getBinding('model').toJS();
+
+				const isTeamPlayersChanged = (
+						(
+							TeamHelper.isTeamSport(event) ?
+								typeof binding.toJS('selectedTeamId') !== 'undefined' :
+								true
+						) &&
 						!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
-					),
-					isTeamNameChanged		= binding.toJS('isTeamNameChanged');
+					);
+
+				const isTeamNameChanged = !!binding.toJS('isTeamNameChanged');
 
 				binding.atomically()
 					.set('isTeamPlayersChanged',	isTeamPlayersChanged)
@@ -327,10 +334,16 @@ const TeamWrapper = React.createClass({
 	isShowRevertChangesButton: function() {
 		const binding = this.getDefaultBinding();
 
+		const event = this.getBinding('model').toJS();
+
 		// show button if isSetTeamLater === false and team was selected and team was changed(name or players)
 		return !!(
 			!this.isSetTeamLater() &&
-			typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+			(
+				TeamHelper.isTeamSport(event) ?
+					typeof binding.toJS('selectedTeamId') !== 'undefined' :
+					true
+			) &&
 			binding.toJS('isTeamChanged')
 		);
 	},

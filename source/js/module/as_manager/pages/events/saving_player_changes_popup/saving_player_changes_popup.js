@@ -21,17 +21,18 @@ const SavingPlayerChangesPopup = React.createClass({
 
 	getOriginalTeamName: function(teamWrappers, order) {
 		switch (true) {
-			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
+			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[order]):
 				return teamWrappers[order].teamName.name;
-			case SavingPlayerChangesPopupHelper.isTeamChangedByOrder(order, teamWrappers):
+			case SavingPlayerChangesPopupHelper.isTeamChangedByTeamWrapper(teamWrappers[order]):
 				return teamWrappers[order].prevTeamName;
 		}
 	},
+
 	getViewMode: function(order, teamWrappers) {
 		switch (true) {
-			case SavingPlayerChangesPopupHelper.isTeamChangedByOrder(order, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
+			case SavingPlayerChangesPopupHelper.isTeamChangedByTeamWrapper(teamWrappers[order]) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[order]):
 				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
-			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
+			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[order]):
 				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
 
 		}
@@ -72,8 +73,8 @@ const SavingPlayerChangesPopup = React.createClass({
 				teamWrappers.forEach((tw, index) => {
 					if(
 						(
-							SavingPlayerChangesPopupHelper.isTeamChangedByOrder(index, teamWrappers) ||
-							SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(index, teamWrappers)
+							SavingPlayerChangesPopupHelper.isTeamChangedByTeamWrapper(teamWrappers[index]) ||
+							SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[index])
 						) && activeSchoolId === tw.schoolId
 					) {
 						if(savingPlayerChangesModePanels.length !== 0) {
@@ -114,8 +115,8 @@ const SavingPlayerChangesPopup = React.createClass({
 			default: {
 				teamWrappers.forEach((tw, index) => {
 					if(
-						SavingPlayerChangesPopupHelper.isTeamChangedByOrder(index, teamWrappers) ||
-						SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(index, teamWrappers)
+						SavingPlayerChangesPopupHelper.isTeamChangedByTeamWrapper(teamWrappers[index]) ||
+						SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[index])
 					) {
 						if(savingPlayerChangesModePanels.length !== 0) {
 							savingPlayerChangesModePanels.push(
@@ -154,16 +155,17 @@ const SavingPlayerChangesPopup = React.createClass({
 
 		if(isSavingChangesModePopupOpen) {
 			return (
-				<ConfirmPopup	okButtonText			= "Create event"
-								cancelButtonText		= "Back"
-								isOkButtonDisabled		= { binding.toJS('isSubmitProcessing') }
-								handleClickOkButton		= {
-									() => {
-										binding.set('isSubmitProcessing', true);
-										this.props.submit();
-									}
-								}
-								handleClickCancelButton	= { this.closeSavingChangesModePopup }
+				<ConfirmPopup
+					okButtonText			= "Create event"
+					cancelButtonText		= "Back"
+					isOkButtonDisabled		= { binding.toJS('isSubmitProcessing') }
+					handleClickOkButton		= {
+						() => {
+							binding.set('isSubmitProcessing', true);
+							this.props.submit();
+						}
+					}
+					handleClickCancelButton	= { this.closeSavingChangesModePopup }
 				>
 					{ this.renderSavingPlayerChangesPopupBody(event) }
 				</ConfirmPopup>

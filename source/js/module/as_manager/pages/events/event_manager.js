@@ -212,7 +212,6 @@ const EventManager = React.createClass({
 				}
 			}
 			const rivals = this.getRivals(event);
-
 			binding.atomically()
 				.set('isSubmitProcessing',				false)
 				.set('isSavingChangesModePopupOpen',	false)
@@ -783,6 +782,7 @@ const EventManager = React.createClass({
 				activeSchoolId		= { this.props.activeSchoolId }
 				isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
 				isShowAddTeamButton	= { this.isShowAddTeamButton() }
+				isCopyMode			= { this.mode === EventHelper.EVENT_CREATION_MODE.COPY }
 				binding				= { managerBinding }
 			/>
 		);

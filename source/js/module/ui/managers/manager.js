@@ -32,6 +32,7 @@ const Manager = React.createClass({
 		activeSchoolId			: React.PropTypes.string.isRequired,
 		isShowRivals			: React.PropTypes.bool,
 		isInviteMode			: React.PropTypes.bool,
+		isCopyMode				: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number,
 		selectedRivalIndex		: React.PropTypes.number
@@ -125,6 +126,8 @@ const Manager = React.createClass({
 				currentRival	= rivals[rivalIndex];
 
 		const	teamId			= this.getTeamIdByOrder(rivalIndex),
+				team			= this.getTeamByOrder(rivalIndex),
+				teamType		= propz.get(team, ['teamType']),
 				teamName		= this.getTeamNameByOrder(rivalIndex);
 
 		// get school id
@@ -141,6 +144,7 @@ const Manager = React.createClass({
 		}
 
 		const teamStudents = this.getInitPlayersByOrder(rivalIndex);
+		const selectedTeamId = !!this.props.isCopyMode ? undefined : teamId;
 
 		return {
 			rivalId: currentRival.id,
@@ -152,8 +156,9 @@ const Manager = React.createClass({
 			isActive: schoolId === this.props.activeSchoolId,
 			isLoadingTeam: false,
 			schoolId: schoolId,
-			prevSelectedTeamId: teamId,
-			selectedTeamId: teamId,
+			prevTeamName: teamName,
+			prevSelectedTeamId: selectedTeamId,
+			selectedTeamId: selectedTeamId,
 			teamsSaveMode: undefined,
 			removedPlayers: [],
 			prevPlayers: teamStudents,
@@ -242,6 +247,18 @@ const Manager = React.createClass({
 		}
 
 		return teamId;
+	},
+	getTeamByOrder: function(order) {
+		const binding = this.getBinding();
+
+		let team;
+
+		if(typeof binding.rivals !== "undefined") {
+			const rivals = binding.rivals.toJS();
+			team = propz.get(rivals, [order, 'team']);
+		}
+
+		return team;
 	},
 	getTeamTypeByOrder: function(order) {
 		const	binding	= this.getBinding();
