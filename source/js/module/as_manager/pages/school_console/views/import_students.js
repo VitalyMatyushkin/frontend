@@ -37,7 +37,7 @@ const ImportStudents = React.createClass({
 		StudentImporter.loadFromCSV(file).then(
 			result => {
 				binding.set('studentData', Immutable.fromJS(result));
-				const formsAndHouses = StudentImporter.pullFormsAndHouses(result, activeSchool);
+				const formsAndHouses = StudentImporter.pullFormsHousesPhones(result, activeSchool);
 				binding.set('studentData', Immutable.fromJS(formsAndHouses));
 
 				this.validationEverything();
