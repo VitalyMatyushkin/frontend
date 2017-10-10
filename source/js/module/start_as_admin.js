@@ -133,6 +133,8 @@ function runAdminMode() {
                         document.getElementById('jsMain')
                     );
 
+                    authController.redirectUserByUserAuthData();
+
                     initTawkTo();
                 });
 		});

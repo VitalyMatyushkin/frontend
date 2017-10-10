@@ -89,13 +89,10 @@ function initMainSchoolView(school) {
 
 	window.Server = serviceList;
 
-	authController.initialize({
-		binding:		binding,
-		asPublicSchool:	true
-	});
-	// initializing all services (open too) only when we got all vars set in window.
-	// this is not too very brilliant idea, but there is no other way to fix it quick
 	serviceList.initializeOpenServices();
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -105,18 +102,21 @@ function initMainSchoolView(school) {
 			userDataInstance.setBinding(binding.sub('userData'));
 			cookiePopupData.setBinding(binding.sub('schoolHomePage'));
 
-			// Turning on authorization service
-			serviceList.initialize(
-				binding.sub('userData')
-			);
+			authController.initialize({
+					binding:		binding,
+					asPublicSchool:	true
+				})
+				.then(() => {
+					window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+					window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
-			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
+					ReactDom.render(
+						React.createElement(MoreartyContext.bootstrap(SchoolApplicationView), null),
+						document.getElementById('jsMain')
+					);
 
-			ReactDom.render(
-				React.createElement(MoreartyContext.bootstrap(SchoolApplicationView), null),
-				document.getElementById('jsMain')
-			);
+					authController.redirectUserByUserAuthData();
+				});
 		});
 }
 
@@ -195,17 +195,11 @@ function initMainSchoolUnionView(school) {
 	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
-
-	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize({
-		binding:		binding,
-		asPublicSchool:	true
-	});
-
-	// initializing all services (open too) only when we got all vars set in window.
-	// this is not too very brilliant idea, but there is no other way to fix it quick
 	// TODO: fix me
 	serviceList.initializeOpenServices();
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -215,17 +209,20 @@ function initMainSchoolUnionView(school) {
 			userDataInstance.setBinding(binding.sub('userData'));
 			cookiePopupData.setBinding(binding.sub('schoolHomePage'));
 
-			// Turning on authorization service
-			serviceList.initialize(
-				binding.sub('userData')
-			);
-				window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
-				window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
+			authController.initialize({
+					binding:		binding,
+					asPublicSchool:	true
+				}).then(() => {
+					window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+					window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
-				ReactDom.render(
-					React.createElement(MoreartyContext.bootstrap(SchoolUnionApplicationView), null),
-					document.getElementById('jsMain')
-				);
+					ReactDom.render(
+						React.createElement(MoreartyContext.bootstrap(SchoolUnionApplicationView), null),
+						document.getElementById('jsMain')
+					);
+
+					authController.redirectUserByUserAuthData();
+				});
 		});
 }
 

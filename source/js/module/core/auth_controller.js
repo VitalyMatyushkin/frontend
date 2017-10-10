@@ -27,8 +27,6 @@ const authСontroller = {
 		}
 
 		return Promise.all(initPromises).then(() => {
-			this.redirectUserByUserAuthData();
-
 			SessionHelper.getSessionsDataBinding(
 				this.binding.sub('userData')
 			).addListener(this.handleUpdateUserAuthData.bind(this));

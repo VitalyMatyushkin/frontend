@@ -22,6 +22,8 @@ UserDataClass.checkAndGetValidSessions = function () {
 	let loginSession = Helpers.cookie.get('loginSession');
 	let roleSession = Helpers.SessionStorage.get('roleSession');
 
+	console.log(loginSession);
+	console.log(roleSession);
 	// role session can't exist without loginSession
 	if(
 		typeof loginSession === 'undefined' &&
