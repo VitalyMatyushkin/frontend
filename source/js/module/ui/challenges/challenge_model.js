@@ -35,7 +35,7 @@ const   DateHelper				= require('module/helpers/date_helper'),
 
 const CRICKET_WICKETS = 10;
 
-const ChallengeModel = function(event, activeSchoolId){
+const ChallengeModel = function(event, activeSchoolId, activeSchoolKind){
 	this.id 		= event.id;
     this.name 		= this._getName(event, activeSchoolId);
 	this.dateUTC	= event.startTime;
@@ -56,7 +56,7 @@ const ChallengeModel = function(event, activeSchoolId){
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
 		this.scoreAr = this._getScoreAr(event, activeSchoolId);
 		this.score = this._getScore(event);
-		this.textResult = this._getTextResult(event, activeSchoolId);
+		this.textResult = this._getTextResult(event, activeSchoolId, activeSchoolKind);
 	}
 };
 
@@ -235,7 +235,7 @@ ChallengeModel.prototype.getScoreForCricket = function(eventType, teamScore, hou
 };
 
 
-ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
+ChallengeModel.prototype._getTextResult = function(event, activeSchoolId, activeSchoolKind){
 	// Cricket
 	if (this.isFinished && SportHelper.isCricket(event.sport.name)) { //то это полная жопа
 		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
@@ -314,9 +314,13 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId){
 
 				return `Place ${activeSchoolPlace.place} of ${numberOfPlayers}`;
 			} else {
-				console.error('ERROR: Cannot find active school in places array.');
+				if (activeSchoolKind === 'SchoolUnion') {
+					return 'Multiple result';
+				} else {
+					console.error('ERROR: Cannot find active school in places array.');
 
-				return '';
+					return '';
+				}
 			}
 		}
 	}
