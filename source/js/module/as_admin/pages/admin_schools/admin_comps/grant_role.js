@@ -36,8 +36,8 @@ const GrantRole = React.createClass({
 	},
 	getStudents:function(filter){
 		const   self        = this,
-			binding     = self.getDefaultBinding().sub('formGrantRole'),
-			schoolId    = binding.meta('schoolId.value').toJS();
+				binding     = self.getDefaultBinding().sub('formGrantRole'),
+				schoolId    = binding.meta('schoolId.value').toJS();
 
 		return window.Server.schoolStudents.filter(schoolId, filter);
 	},
@@ -120,8 +120,7 @@ const GrantRole = React.createClass({
 					body = {
 						preset:     model.preset.toUpperCase(),
 						schoolId:   model.schoolId,
-						sportIds:	sports.map(r => r.id),
-						studentId:  model.studentId
+						sportIds:	sports.map(r => r.id)
 					};
 					break;
 				default:
