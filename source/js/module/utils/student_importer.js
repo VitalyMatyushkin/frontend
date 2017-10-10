@@ -140,7 +140,7 @@ function pullFormsHousesPhones(result, school) {
 
 		student.nextOfKin = [];
 		phones.forEach(phone => {
-			if (!(/^((\+44|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone))) {
+			if (!(/^((\+44|\+7|0)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone))) {
 				result.errors.push({
 					type: 'InvalidPhone',
 					code: 'InvalidPhone',
