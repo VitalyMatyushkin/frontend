@@ -133,28 +133,28 @@ const InviteAcceptView = React.createClass({
 				case (
 						TeamHelper.isTeamSport(event) &&
 						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
-						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamSport(event) &&
 						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
-						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamSport(event) &&
 						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
-						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamSport(event) &&
 						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
-						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					binding.set('isSubmitProcessing', true);
 					this._submit();
@@ -309,8 +309,9 @@ const InviteAcceptView = React.createClass({
 	},
     render: function() {
         var self = this,
-            binding = self.getDefaultBinding(),
-            sport = binding.sub('model.sport');
+            binding = self.getDefaultBinding();
+
+        console.log(binding.toJS());
 
 		if(!!binding.get('sync')) {
 			// check control button state

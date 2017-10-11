@@ -26,6 +26,7 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		LocalEventHelper				= require('./eventHelper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
 		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
+		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
 
 // Styles
@@ -237,7 +238,7 @@ const EventManager = React.createClass({
 		let rivals;
 		if(TeamHelper.isNewEvent(event)) {
 			let filteredRivals = [];
-			RivalManager.getRivalsByEvent(this.props.activeSchoolId, event)
+			RivalManager.getRivalsByEvent(this.props.activeSchoolId, event, ViewModeConsts.VIEW_MODE.TABLE_VIEW)
 				.forEach(rival => {
 					if(rival.school.id === this.props.activeSchoolId) {
 						filteredRivals.push(rival);
@@ -458,25 +459,25 @@ const EventManager = React.createClass({
 			switch (true) {
 				case (
 						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
 						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);

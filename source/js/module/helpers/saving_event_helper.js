@@ -1,7 +1,8 @@
-const	ManagerConsts	= require('./../ui/managers/helpers/manager_consts'),
-		TeamHelper		= require('./../ui/managers/helpers/team_helper'),
-		EventHelper		= require('./eventHelper'),
-		Promise			= require('bluebird');
+const	ManagerConsts					= require('./../ui/managers/helpers/manager_consts'),
+		TeamHelper						= require('./../ui/managers/helpers/team_helper'),
+		EventHelper						= require('./eventHelper'),
+		SavingPlayerChangesPopupHelper	= require('module/as_manager/pages/events/saving_player_changes_popup/helper'),
+		Promise							= require('bluebird');
 
 function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 	switch (true) {
@@ -13,7 +14,7 @@ function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 			teamWrappers.forEach(teamWrapper => {
 				if(
 					teamWrapper.isTeamChanged ||
-					isUserCreateNewTeam(teamWrapper)
+					SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrapper)
 				) {
 					const currentRival = rivals.find(rival => rival.id === teamWrapper.rivalId);
 
@@ -58,7 +59,7 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 				)
 			);
 			return promises;
-		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM && isUserCreateNewTeam(teamWrapper):
+		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM && SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrapper):
 			return TeamHelper.createPrototypeTeam(schoolId, event, rival, teamWrapper);
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM:
 			let team;

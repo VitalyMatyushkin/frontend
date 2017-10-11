@@ -1273,12 +1273,16 @@ function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
 		{
 			individuals: players.map(p => {
 				return {
-					userId:			p.id,
+					userId:			this.getUserIdFromPlayer(p),
 					permissionId:	p.permissionId
 				};
 			})
 		}
 	);
+}
+
+function getUserIdFromPlayer(player) {
+	return typeof player.userId !== 'undefined' ? player.userId : player.id;
 }
 
 function addTeamsToEvent(schoolId, eventId, teams) {
@@ -1553,7 +1557,8 @@ const TeamHelper = {
 	isNewEvent:													isNewEvent,
 	mustUseNewManagerWraperHelper:								mustUseNewManagerWraperHelper,
 	isNewTabs:													isNewTabs,
-	isMultiparty:												isMultiparty
+	isMultiparty:												isMultiparty,
+	getUserIdFromPlayer:										getUserIdFromPlayer
 };
 
 module.exports = TeamHelper;

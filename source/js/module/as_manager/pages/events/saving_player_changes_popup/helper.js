@@ -1,6 +1,8 @@
 const savingPlayerChangesPopupHelper = {
-	isUserCreateNewTeam: function(event, teamWrappers) {
-		const resultArray = teamWrappers.map(tw => this.isUserCreateNewTeamByTeamWrapper(tw));
+	isUserCreateNewTeam: function(event, teamWrappers, activeSchoolId) {
+		const resultArray = teamWrappers
+			.filter(tw => tw.schoolId === activeSchoolId)
+			.map(tw => this.isUserCreateNewTeamByTeamWrapper(tw));
 
 		let result = false;
 		for(let i = 0; i < resultArray.length; i++) {
@@ -18,8 +20,10 @@ const savingPlayerChangesPopupHelper = {
 			!teamWrapper.isSetTeamLater
 		);
 	},
-	isAnyTeamChanged: function(event, teamWrappers) {
-		const resultArray = teamWrappers.map(tw => this.isTeamChangedByTeamWrapper(tw));
+	isAnyTeamChanged: function(event, teamWrappers, activeSchoolId) {
+		const resultArray = teamWrappers
+			.filter(tw => tw.schoolId === activeSchoolId)
+			.map(tw => this.isTeamChangedByTeamWrapper(tw));
 
 		let result = false;
 		for(let i = 0; i < resultArray.length; i++) {

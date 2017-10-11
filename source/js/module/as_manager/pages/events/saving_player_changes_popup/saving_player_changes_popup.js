@@ -39,11 +39,13 @@ const SavingPlayerChangesPopup = React.createClass({
 	},
 
 	closeSavingChangesModePopup: function() {
-		this.getDefaultBinding().atomically()
-			.set('isSavingChangesModePopupOpen',					false)
-			.set('teamModeView.teamWrapper.0.savingChangesMode',	Immutable.fromJS(ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES))
-			.set('teamModeView.teamWrapper.1.savingChangesMode',	Immutable.fromJS(ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES))
-			.commit();
+		const teamWrappers = this.getDefaultBinding().toJS('teamModeView.teamWrapper');
+		teamWrappers.forEach(tw => {
+			tw.savingChangesMode = ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES;
+		});
+
+		this.getDefaultBinding().set('isSavingChangesModePopupOpen', false);
+		this.getDefaultBinding().set('teamModeView.teamWrapper', Immutable.fromJS(teamWrappers));
 	},
 
 	handleClickSavingPlayerChangesModeRadioButton: function(teamWrapperIndex, currentMode) {
