@@ -172,14 +172,17 @@ const RegisterUserPage = React.createClass({
         $('.bButton').text('Continue →');   // TODO: remove that shit
     },
     finish: function () {
-		Helpers.cookie.remove('loginSession');
-
-		const loginSessionBinding = SessionHelper.getLoginSessionBinding(
-			this.getUserDataBinding()
-		);
-		typeof loginSessionBinding !== 'undefined' && loginSessionBinding.clear();
-
-		document.location.href = '/';
+        //Profile will not be allowed  without session data!
+		// Helpers.cookie.remove('loginSession');
+		// const loginSessionBinding = SessionHelper.getLoginSessionBinding(
+		// 	this.getUserDataBinding()
+		// );
+		// typeof loginSessionBinding !== 'undefined' && loginSessionBinding.clear();
+		// document.location.href = '/';
+		let subdomains = document.location.host.split('.');
+		    subdomains[0] = subdomains[0] !=='admin' ? 'app': subdomains[0];
+		const domain = subdomains.join(".");
+		window.location.href = `//${domain}/#settings/general`;
     },
     renderMainTitle: function (step) {
         const   self        = this,

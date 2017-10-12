@@ -11,7 +11,7 @@ userRulesInstance.getDefaultState = function(){
 
 	// Востановлении информации об активной школе
 	return {
-		activeSchoolId: Helpers.SessionStorage.get(schoolStorageName) || null
+		activeSchoolId: Helpers.cookie.get(schoolStorageName) || null
 	};
 };
 
@@ -26,7 +26,7 @@ userRulesInstance.initBind = function() {
     bindObject.addListener('activeSchoolId', function() {
         var data = bindObject.get('activeSchoolId');
 
-        Helpers.SessionStorage.set(schoolStorageName, data);
+        Helpers.cookie.set(schoolStorageName, data);
     });
 };
 
