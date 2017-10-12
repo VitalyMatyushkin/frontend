@@ -54,7 +54,6 @@ const TeamChooser = React.createClass({
 				where: {
 					gender:		TeamHelper.convertGenderToServerValue(model.gender),
 					sportId:	model.sportId,
-					teamType:	"PROTOTYPE",
 					removed:	false
 				}
 			}

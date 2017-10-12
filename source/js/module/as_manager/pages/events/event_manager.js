@@ -253,11 +253,10 @@ const EventManager = React.createClass({
 		} else {
 			rivals = ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, true);
 			if(TeamHelper.isNonTeamSport(event)) {
-				rivals[0].players.forEach(p => {
-					p.id = p.userId;
-				});
-				rivals[1].players.forEach(p => {
-					p.id = p.userId;
+				rivals.forEach(rival => {
+					rival.players.forEach(p => {
+						p.id = p.userId;
+					});
 				});
 			}
 

@@ -308,6 +308,10 @@ const ScoreHelper = {
 			// So we should add zeros to end if it need
 			// Also we should cut off score string value
 			// if value length more than mask length
+			case this.isCentimeterMask(mask): {
+				result = this.addZerosToStartByMask(result, mask);
+				break;
+			}
 			case this.isMillisecondMask(mask): {
 				if(mask.length > result.length) {
 					result = this.addZerosToEndByMask(result, mask);

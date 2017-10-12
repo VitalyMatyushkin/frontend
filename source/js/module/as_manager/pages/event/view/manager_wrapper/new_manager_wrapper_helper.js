@@ -27,7 +27,7 @@ const NewManagerWrapperHelper = {
 			case EventHelper.isHousesEvent(event):
 				rival = {
 					id:		_rival.house.id,
-					name:	_rival.name
+					name:	_rival.house.name
 				};
 				break;
 			case EventHelper.isInternalEvent(event):
