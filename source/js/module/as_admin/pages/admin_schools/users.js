@@ -77,10 +77,12 @@ const OneSchoolPage = React.createClass({
 		// so we should filter and count permissions by our hands
 		return window.Server.permissionRequests.get({
 			filter: {
+				where: {
+					status: 'NEW'
+				},
 				limit: 1000 //TODO: holy crap
 			}
 		})
-			.then(permissions => permissions.filter(permission => permission.status === "NEW"))
 			.then(permissions => {
 				_createSubMenuData(permissions.length);
 				// yep, always i'm right

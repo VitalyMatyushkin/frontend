@@ -335,14 +335,6 @@ class RequestActionsClass {
 	}
 	createGridFromExistingData(grid){
 		const classStyleAdmin = typeof this.viewerRole === 'undefined';
-		
-		let defaultFilter = {
-			where: {
-				status: 'NEW'
-			},
-			limit: 20
-		};
-		
 		this.grid = new GridModel({
 			actionPanel:{
 				title: 'New Requests',
