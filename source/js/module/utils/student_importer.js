@@ -126,7 +126,7 @@ function pullFormsHousesPhones(result, school) {
 				house	= school.houses.find( house => house.name.replace(' ', '') === studentHouseNoSpaces),
 				formId	= form ? form.id : undefined,
 				houseId = house ? house.id : undefined,
-				phones	= [student.phone1, student.phone2, student.phone3].filter(p => p !== '');
+				phones	= [student.phone1, student.phone2, student.phone3].filter(p => p !== '' && typeof p !== 'undefined');
 
 		student.formId = formId;
 		student.houseId = houseId;
