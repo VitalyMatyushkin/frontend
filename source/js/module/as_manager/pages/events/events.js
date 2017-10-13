@@ -10,6 +10,8 @@ const   React                       = require('react'),
         EventManagerComponent       = require('./event_manager'),
         EventFixturesComponent      = require('./events_fixtures'),
 
+        EventFormActions            = require('module/as_manager/pages/events/manager/event_form/event_form_actions'),
+
         MoreartyHelper              = require('module/helpers/morearty_helper');
 
 const EventView = React.createClass({
@@ -33,7 +35,7 @@ const EventView = React.createClass({
             models: [],
             sync: false,
             newEvent: {},
-            fixtures:{}
+            fixtures: {}
         });
     },
     componentWillMount: function () {
@@ -44,22 +46,9 @@ const EventView = React.createClass({
         self._initMenuItems();
 
         // set data
-        self._setSports();
-    },
-    _setSports: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-
-        window.Server.schoolSports.get(self.activeSchoolId, {
-            filter: {
-                limit: 100
-            }
-        })
-        .then(
-            sports => binding.atomically()
-                .set('sports.sync', true)
-                .set('sports.models', Immutable.fromJS(sports))
-                .commit()
+		EventFormActions.setSports(
+			self.activeSchoolId,
+		    this.getDefaultBinding()
         );
     },
     _initMenuItems: function() {

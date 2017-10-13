@@ -1,3 +1,5 @@
+const Immutable = require('immutable');
+
 const EventFormActions = {
 	getSportService: function(schoolId, isOnlyFavoriteSports) {
 		return (sportName) => {
@@ -20,7 +22,24 @@ const EventFormActions = {
 
 			return window.Server.schoolSports.get(schoolId, filter);
 		};
-	}
+	},
+	setSports: function(activeSchoolId, binding) {
+		window.Server.schoolSports
+			.get(
+				activeSchoolId,
+				{
+					filter: {
+						limit: 100
+					}
+				}
+			)
+			.then(
+				sports => binding.atomically()
+					.set('sports.sync',		true)
+					.set('sports.models',	Immutable.fromJS(sports))
+					.commit()
+			);
+	},
 };
 
 module.exports = EventFormActions;

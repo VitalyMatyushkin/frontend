@@ -10,9 +10,15 @@ const	EventsStyles	= require('styles/pages/events/b_events.scss');
 const CalendarWrapper = React.createClass({
 	mixins:[Morearty.Mixin ],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:	React.PropTypes.string.isRequired
 	},
-	render: function(){
+	redirectToManagerPage: function () {
+		document.location.hash = 'events/manager';
+	},
+	handleClickAddButton: function () {
+		this.redirectToManagerPage();
+	},
+	render: function() {
 		const binding = this.getDefaultBinding();
 
 		return (
@@ -21,7 +27,7 @@ const CalendarWrapper = React.createClass({
 					<div className="eEvents_row">
 						<div className="eEvents_leftSideContainer">
 							<Calendar
-								binding={binding}
+								binding	= { binding }
 							/>
 						</div>
 						<div className="eEvents_rightSideContainer">
@@ -34,7 +40,7 @@ const CalendarWrapper = React.createClass({
 								isUserSchoolWorker	= { true }
 							/>
 							<AddEventButton
-								handleClick	= { () => {} }
+								handleClick	= { this.handleClickAddButton }
 							/>
 						</div>
 					</div>
