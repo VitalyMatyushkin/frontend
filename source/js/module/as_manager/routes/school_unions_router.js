@@ -5,11 +5,17 @@ const	React								= require('react'),
 		LogoutRoute							= require('module/core/routes/logout_route'),
 		SettingsRoute						= require('module/core/routes/settings_route'),
 		SchoolUnionAdminComponent			= require('../pages/school_unions_pages/school_union_admin/school_union_admin'),
+		SchoolUnionEventsComponent			= require('module/as_manager/pages/school_unions_pages/school_union_events/school_union_events'),
 		SchoolUnionConsoleComponent			= require('../pages/school_unions_pages/school_union_console/school_union_console'),
 		SchoolUnionGalleryRoutesComponent	= require('../pages/school_unions_pages/school_union_admin/pages/school_union_gallery/schoolUnionGalleryRoutes');
 
+const MoreartyHelper = require('module/helpers/morearty_helper');
+
 const SchoolUnionsRouter = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -22,6 +28,11 @@ const SchoolUnionsRouter = React.createClass({
 				<Route	path		= "/school_union_admin/:subPage /school_union_admin/:subPage/:mode"
 						binding		= {binding.sub('activeSchool')}
 						component	= {SchoolUnionAdminComponent}
+				/>
+				<Route	path			= "/events /events/:subPage"
+						binding			= { binding.sub('events') }
+						component		= { SchoolUnionEventsComponent }
+						activeSchoolId	= { this.activeSchoolId }
 				/>
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"
 						binding		= {binding.sub('permissions')}
