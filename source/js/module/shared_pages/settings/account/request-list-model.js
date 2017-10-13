@@ -192,7 +192,11 @@ RequestListModel.prototype = {
 			binding = self.getDefaultBinding();
 
 		return function(data){
-			binding.set('data', self.grid.table.data);
+			const resultData = self.grid.table.data.map(r => {
+				r.status = r.status === 'NEW' ? 'PENDING' : r.status;
+				return r;
+			});
+			binding.set('data', resultData);
 		};
 	},
 	setAddButton: function() {
