@@ -40,7 +40,7 @@ const PlaceEdit = React.createClass({
 		this.getDefaultBinding().clear();
 	},
 	redirectToPlaceListPage: function() {
-		document.location.hash = 'school_console/venues';
+		document.location.hash = document.location.hash.split('/').slice(0, 2).join('/');
 	},
 	onSubmit: function(data) {
 		window.Server.schoolPlace.put(
