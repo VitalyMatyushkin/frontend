@@ -16,6 +16,7 @@ const	Form					= require('module/ui/form/form'),
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		GenderHelper	= require('module/helpers/gender_helper'),
 		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper'),
+		CurrencySymbol	= require('module/data/currancy_symbol'),
 		ClubsConst		= require('module/helpers/consts/clubs');
 
 const ClubsActions = require('module/as_manager/pages/clubs/clubs_actions');
@@ -203,7 +204,7 @@ const ClubsForm = React.createClass({
 								Club name
 							</FormField>
 							<FormField
-								type	= "text"
+								type	= "textarea"
 								field	= "description"
 							>
 								Description
@@ -256,18 +257,19 @@ const ClubsForm = React.createClass({
 							>
 								Price Type
 							</FormField>
-							<FormField
-								field		= 'price'
-								type		= 'number'
-								isDisabled	= { !this.isShowPriceNumberField() }
-							>
-								Price
-							</FormField>
 						</FormColumn>
 						<FormColumn
 							key			= 'column_2'
 							customStyle	= 'col-md-5 col-md-offset-1'
 						>
+							<FormField
+								field			= 'price'
+								type			= 'currency'
+								isDisabled		= { !this.isShowPriceNumberField() }
+								currencySymbol  = { CurrencySymbol.pound }
+							>
+								Price
+							</FormField>
 							<div className="eForm_field">
 								<div className="eForm_fieldName">
 									Start date
