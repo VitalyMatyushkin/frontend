@@ -78,7 +78,8 @@ const GrantRole = React.createClass({
 	continueButtonClick:function(model){
 		const 	rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
-				sports			= this.getDefaultBinding().toJS('rivals');;
+				studentId 		= this.getDefaultBinding().sub('formGrantRole').meta('studentId.value').toJS(),
+				sports			= this.getDefaultBinding().toJS('rivals');
 
 		let ids = this.props.userIdsBinding.toJS();
 		ids = ids && typeof ids === 'string' ? [ids] : ids;
@@ -92,7 +93,7 @@ const GrantRole = React.createClass({
 							//without uppercase don't work
 							preset: 	model.preset.toUpperCase(),
 							schoolId: 	activeSchoolId,
-							studentId: 	model.studentId
+							studentId: 	studentId
 						};
 						break;
 					case 'coach':
@@ -112,7 +113,7 @@ const GrantRole = React.createClass({
 						break;
 				}
 
-				if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
+				if((model.preset === 'parent' && typeof studentId !== 'undefined') || model.preset !== 'parent') {
 					window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
 					.then(result => this.props.onSuccess && this.props.onSuccess(result))
 					.catch((e) => {

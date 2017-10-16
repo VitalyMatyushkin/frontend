@@ -128,10 +128,10 @@ const Verification = React.createClass({
 		this.forceUpdate();
 	},
 	isEmailVerified: function() {
-		return !!SessionHelper.getLoginSession( this.getUserDataBinding() ).verified.email;
+		return !!SessionHelper.getActiveSession( this.getUserDataBinding() ).verified.email;
 	},
 	isPhoneVerified: function() {
-		return !!SessionHelper.getLoginSession( this.getUserDataBinding() ).verified.sms;
+		return !!SessionHelper.getActiveSession( this.getUserDataBinding() ).verified.sms;
 	},
 
 	render: function() {

@@ -9,9 +9,9 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		Immutable				= require('immutable');
 
 const OPERATION_TYPE = 	{
-							plus:'plus',
-							minus:'minus'
-						};
+	plus:	'plus',
+	minus:	'minus'
+};
 
 function isTeamEnableForEdit(activeSchoolId, event, team) {
 	switch (event.eventType){
@@ -20,7 +20,7 @@ function isTeamEnableForEdit(activeSchoolId, event, team) {
 		default:
 			return true;
 	}
-};
+}
 
 /**
  * Reduce available students ages for game from school object
@@ -38,7 +38,7 @@ function getAges(schoolData) {
 			return memo;
 		}, [])
 		.sort((a, b) => a - b);
-};
+}
 
 /**
  * Validate player objects
@@ -91,7 +91,7 @@ function getPlayersWithUserInfo(players, users) {
 			}
 		);
 	});
-};
+}
 
 function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
 	const self = this;
@@ -116,45 +116,43 @@ function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
 	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p) ));
 
 	return promises;
-};
+}
 
 function addIndividualPlayer(schoolId, eventId, player) {
-	return window.Server.schoolEventIndividuals.post(
-		{
-			schoolId:	schoolId,
-			eventId:	eventId
-		}, {
-			userId:			player.id,
-			permissionId:	player.permissionId
-		}
-	);
-};
+	return window.Server.schoolEventIndividuals.post({ schoolId, eventId }, {
+		userId:			player.id,
+		permissionId:	player.permissionId
+	});
+}
 
 function deleteIndividualPlayer(schoolId, eventId, individualId) {
-	return window.Server.schoolEventIndividual.delete({
-		schoolId:		schoolId,
-		eventId:		eventId,
-		individualId:	individualId
-	});
-};
+	return window.Server.schoolEventIndividual.delete({schoolId, eventId, individualId});
+}
 
-function commitPlayers(initialPlayers, _players, teamId, schoolId, eventId) {
+/**
+ *
+ * @param {Array.<Object>} initialPlayers players as they are before any edits
+ * @param {Array.<Object>} _finalPlayers players as they are after edit
+ * @param {string} teamId
+ * @param {string} schoolId
+ * @param {string} eventId
+ * @return {Array}
+ */
+function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId) {
 	let promises = [];
 
-	const players = _players.map(p => {
+	// normalize user array
+	const finalPlayers = _finalPlayers.map(p => {
 		// for users, not for players
 		if(typeof p.userId === 'undefined') {
 			p.userId = p.id;
-			// A little trick:
-			// user without userId - is a new user.
-			p.isNewUser = true;
 		}
 
 		return p;
 	});
 
 	promises = promises.concat(initialPlayers.map((initialPlayer) => {
-		let foundPlayer = players.find(p =>
+		let foundPlayer = finalPlayers.find(p =>
 			p.userId === initialPlayer.userId &&
 			p.permissionId === initialPlayer.permissionId
 		);
@@ -172,31 +170,47 @@ function commitPlayers(initialPlayers, _players, teamId, schoolId, eventId) {
 				changes.isCaptain = foundPlayer.isCaptain;
 			}
 
-			if(changes.positionId !== undefined || changes.sub !== undefined || changes.isCaptain !== undefined) {
+			if(typeof changes.positionId !== 'undefined' || typeof changes.sub !== 'undefined' || typeof changes.isCaptain !== 'undefined') {
 				return changePlayer(
-						schoolId,
-						teamId,
-						initialPlayer.id,
-						changes,
-						eventId
-					);
+					schoolId,
+					teamId,
+					initialPlayer.id,
+					changes,
+					eventId
+				);
 			}
 		} else {
 			//So, user delete player, let's delete player from server
 			return deletePlayer(
-					schoolId,
-					teamId,
-					initialPlayer.id,
-					eventId
-				);
+				schoolId,
+				teamId,
+				initialPlayer.id,
+				eventId
+			);
 		}
-	})).filter(p => p !== undefined);
+	})).filter(p => typeof p !== 'undefined');
+
+	const newPlayers = [];
+	finalPlayers.forEach(player => {
+		const isNewPlayer = initialPlayers.findIndex(_p =>
+			player.userId === _p.userId &&
+			player.permissionId === _p.permissionId
+		) === -1;
+
+		if(isNewPlayer) {
+			newPlayers.push(player);
+		}
+	});
 
 	// Add new player promises to promise array.
-	promises = promises.concat(players.filter(p => p.isNewUser).map(player => addPlayer(schoolId, teamId, player, eventId)).filter(p => p !== undefined));
+	promises = promises.concat(
+		newPlayers
+			.map(player => addPlayer(schoolId, teamId, player, eventId))
+			.filter(p => typeof p !== 'undefined')
+	);
 
 	return promises;
-};
+}
 
 /**
  * Just returns array with removed players.
@@ -216,68 +230,40 @@ function getRemovedPlayers(prevPlayers, currentPlayers) {
 	});
 
 	return removedPlayers;
-};
+}
 
 function addPlayer(schoolId, teamId, player, eventId) {
 	if(typeof eventId !== 'undefined') {
-		return window.Server.schoolEventTeamPlayers.post(
-			{
-				schoolId:	schoolId,
-				eventId:	eventId,
-				teamId:		teamId
-			},
-			getBodyForAddPlayersRequest(player)
-		);
+		return window.Server.schoolEventTeamPlayers.post({schoolId, eventId, teamId}, getBodyForAddPlayersRequest(player));
 	} else {
-		return window.Server.teamPlayers.post(
-			{
-				schoolId:  schoolId,
-				teamId:     teamId
-			},
-			getBodyForAddPlayersRequest(player)
-		);
+		return window.Server.teamPlayers.post({schoolId, teamId}, getBodyForAddPlayersRequest(player));
 	}
-};
+}
 
+/**
+ * Perform player delete from team.
+ * It will remove player from event-bounded team if eventId provided, otherwise it will delete player from prototype team
+ * @param {string} schoolId
+ * @param {string} teamId
+ * @param {string} playerId
+ * @param {string=} eventId if provided, player will be removed from event-bounded team
+ * @return {Promise.<*>}
+ */
 function deletePlayer(schoolId, teamId, playerId, eventId) {
 	if(typeof eventId !== 'undefined') {
-		return window.Server.schoolEventTeamPlayer.delete({
-			schoolId:   schoolId,
-			eventId:	eventId,
-			teamId:     teamId,
-			playerId:   playerId
-		});
+		return window.Server.schoolEventTeamPlayer.delete({schoolId, eventId, teamId, playerId});
 	} else {
-		return window.Server.teamPlayer.delete({
-			schoolId:   schoolId,
-			teamId:     teamId,
-			playerId:   playerId
-		});
+		return window.Server.teamPlayer.delete({schoolId, teamId, playerId});
 	}
-};
+}
 
 function changePlayer(schoolId, teamId, playerId, changes, eventId) {
 	if(typeof eventId !== 'undefined') {
-		return window.Server.schoolEventTeamPlayer.put(
-			{
-				schoolId:   schoolId,
-				eventId:	eventId,
-				teamId:     teamId,
-				playerId:   playerId
-			},
-			changes
-		);
+		return window.Server.schoolEventTeamPlayer.put({schoolId, eventId, teamId, playerId}, changes);
 	} else {
-		return window.Server.teamPlayer.put(
-			{
-				schoolId:   schoolId,
-				teamId:     teamId,
-				playerId:   playerId
-			},
-			changes
-		);
+		return window.Server.teamPlayer.put({ schoolId, teamId, playerId }, changes);
 	}
-};
+}
 
 function convertGenderToServerValue(gender) {
 	switch (gender) {
@@ -313,7 +299,7 @@ function getBodyForAddPlayersRequest(player) {
 	}
 
 	return body;
-};
+}
 
 /**
  * Method inject form data to each player
@@ -406,47 +392,39 @@ function isHousesEventForNonTeamSport(event) {
 
 		return EventHelper.isHousesEvent(event) && self.isNonTeamSport(event);
 	}
-};
+}
 
 function isHousesEventForTeamSport(event) {
 	if (typeof event !== 'undefined') {
-		const self = this;
-
-		return EventHelper.isHousesEvent(event) && self.isTeamSport(event);
+		return EventHelper.isHousesEvent(event) && this.isTeamSport(event);
 	}
-};
+}
 
 function isInternalEventForOneOnOneSport(event) {
 	if (typeof event !== 'undefined') {
-		const self = this;
-
-		return EventHelper.isInternalEvent(event) && self.isOneOnOneSport(event);
+		return EventHelper.isInternalEvent(event) && this.isOneOnOneSport(event);
 	}
-};
+}
 
 function isInternalEventForIndividualSport(event) {
 	if(typeof event !== 'undefined') {
-		const self = this;
-
 		const eventType = event.eventType ?
 			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
 			event.type;
 
-		return (eventType === 'internal') && self.isIndividualSport(event);
+		return (eventType === 'internal') && this.isIndividualSport(event);
 	}
-};
+}
 
 function isHousesEventForIndividualSport(event) {
 	if(typeof event !== 'undefined') {
-		const self = this;
-
 		const eventType = event.eventType ?
 			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
 			event.type;
 
-		return (eventType === 'houses') && self.isIndividualSport(event);
+		return (eventType === 'houses') && this.isIndividualSport(event);
 	}
-};
+}
 
 function isInternalEventForTeamSport(event) {
 	if(typeof event !== 'undefined') {
@@ -454,38 +432,32 @@ function isInternalEventForTeamSport(event) {
 
 		return EventHelper.isInternalEvent(event) && self.isTeamSport(event);
 	}
-};
+}
 
 
 function isInterSchoolsEventForTeamSport(event) {
 	if(typeof event !== 'undefined') {
-		const self = this;
-
-		return EventHelper.isInterSchoolsEvent(event) && self.isTeamSport(event);
+		return EventHelper.isInterSchoolsEvent(event) && this.isTeamSport(event);
 	}
-};
+}
 
 function isInterSchoolsEventForIndividualSport(event) {
 	if(typeof event !== 'undefined') {
-		const self = this;
-
 		const eventType = event.eventType ?
 			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
 			event.type;
 
-		return (eventType === 'inter-schools') && self.isIndividualSport(event);
+		return (eventType === 'inter-schools') && this.isIndividualSport(event);
 	}
-};
+}
 
 function isInterSchoolsEventForOneOnOneSport(event) {
 	if(typeof event !== 'undefined') {
-		const self = this;
-
 		const eventType = event.eventType ?
 			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
 			event.type;
 
-		return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
+		return (eventType === 'inter-schools') && this.isOneOnOneSport(event);
 	}
 }
 

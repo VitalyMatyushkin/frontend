@@ -22,7 +22,7 @@ const PermissionRequestList = React.createClass({
 		this.actions = new Actions(this).init();
 
 		// TODO: actually this is shit. This should not be done like this. 
-		if(activeSchoolId) {
+		if(activeSchoolId && activeSchoolId !== 'null') {
 			SchoolHelper.loadActiveSchoolInfoPublic(this).then(() => {
 				const binding = this.getDefaultBinding();
 				binding.set('isSync', true);

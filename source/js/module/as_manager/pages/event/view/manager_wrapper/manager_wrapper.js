@@ -119,6 +119,7 @@ const ManagerWrapper = React.createClass({
 
 		if(
 			binding.get('isTeamManagerSync') &&
+			!binding.get('isSubmitProcessing') &&
 			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
 			TeamHelper.isTeamDataCorrect(validationData)
 		) {
