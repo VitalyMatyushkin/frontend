@@ -8,8 +8,6 @@ const	RouterView	= require('module/core/router'),
 const	CalendarWrapper	= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/calendar_wrapper'),
 		Manager			= require('module/as_manager/pages/school_unions_pages/school_union_events/manager/manager');
 
-const	EventFormActions = require('module/as_manager/pages/events/manager/event_form/event_form_actions');
-
 const SchoolUnionEvents = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -19,18 +17,8 @@ const SchoolUnionEvents = React.createClass({
 		return Immutable.fromJS({
 			schoolUnionEventsRouting:	{},
 			calendar:					{},
-			newEvent:					{},
-			sports:						{
-				models:	[],
-				sync:	false
-			}
+			newEvent:					{}
 		});
-	},
-	componentWillMount: function () {
-		EventFormActions.setSports(
-			this.props.activeSchoolId,
-			this.getDefaultBinding()
-		);
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
@@ -55,7 +43,6 @@ const SchoolUnionEvents = React.createClass({
 							binding			= {
 								{
 									default:	binding.sub('newEvent'),
-									sports:		binding.sub('sports'),
 									calendar:	binding.sub('calendar')
 								}
 							}

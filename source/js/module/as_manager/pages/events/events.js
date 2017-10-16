@@ -10,8 +10,6 @@ const   React                       = require('react'),
         EventManagerComponent       = require('./event_manager'),
         EventFixturesComponent      = require('./events_fixtures'),
 
-        EventFormActions            = require('module/as_manager/pages/events/manager/event_form/event_form_actions'),
-
         MoreartyHelper              = require('module/helpers/morearty_helper');
 
 const EventView = React.createClass({
@@ -44,12 +42,6 @@ const EventView = React.createClass({
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initMenuItems();
-
-        // set data
-		EventFormActions.setSports(
-			self.activeSchoolId,
-		    this.getDefaultBinding()
-        );
     },
     _initMenuItems: function() {
         const self = this;
@@ -99,7 +91,6 @@ const EventView = React.createClass({
                             binding         = {
                                                 {
                                                     default:    binding.sub('newEvent'),
-                                                    sports:     binding.sub('sports'),
                                                     calendar:   binding.sub('calendar')
                                                 }
                                             }

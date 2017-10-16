@@ -23,8 +23,18 @@ const EventFormActions = {
 			return window.Server.schoolSports.get(schoolId, filter);
 		};
 	},
+	getSports: function (activeSchoolId) {
+		return window.Server.schoolSports.get(
+				activeSchoolId,
+				{
+					filter: {
+						limit: 100
+					}
+				}
+			);
+	},
 	setSports: function(activeSchoolId, binding) {
-		window.Server.schoolSports
+		return this.getSports(activeSchoolId)
 			.get(
 				activeSchoolId,
 				{

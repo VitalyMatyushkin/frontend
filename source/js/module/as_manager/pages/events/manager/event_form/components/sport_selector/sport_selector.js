@@ -20,7 +20,11 @@ const SportSelector = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	componentWillMount: function() {
-		this.getDefaultBinding().set('eventFormSportSelectorKey', Immutable.fromJS(this.getRandomString()));
+		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
+
+		this.getDefaultBinding().set('isShowAllSports',				!isSchoolHaveFavoriteSports );
+		this.getDefaultBinding().set('isSchoolHaveFavoriteSports',	isSchoolHaveFavoriteSports);
+		this.getDefaultBinding().set('eventFormSportSelectorKey',	Immutable.fromJS(this.getRandomString()));
 	},
 
 	getRandomString: function() {
@@ -40,6 +44,11 @@ const SportSelector = React.createClass({
 			case !binding.get('isShowAllSports'):
 				return true;
 		}
+	},
+	isSchoolHaveFavoriteSports: function() {
+		const sports = this.getDefaultBinding().toJS('sports');
+
+		return sports.filter(s => s.isFavorite).length > 0;
 	},
 	handleChangeCompleteSport: function (id, sport) {
 		const	binding		= this.getDefaultBinding(),

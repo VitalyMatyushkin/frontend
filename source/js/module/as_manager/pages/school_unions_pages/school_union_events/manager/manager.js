@@ -4,7 +4,11 @@ const	React			= require('react'),
 
 const	EventForm			= require('module/as_manager/pages/events/manager/event_form/event_form');
 
+const	EventFormActions	= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
+
 const	LocalEventHelper	= require('module/as_manager/pages/events/eventHelper');
+
+const	EventFormConsts		= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 const	Loader				= require('module/ui/loader');
 
@@ -16,7 +20,7 @@ const Manager = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
 	getDefaultState: function () {
-		var calendarBinding = this.getBinding('calendar');
+		const calendarBinding = this.getBinding('calendar');
 
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
@@ -39,13 +43,11 @@ const Manager = React.createClass({
 			},
 			schoolInfo: {},
 			inviteModel: {},
-			step: 1,
 			availableAges: [],
 			rivals: [],
 			error: [],
 			isEventManagerSync: false,
 			isSync: false,
-			isSavingChangesModePopupOpen: false,
 			fartherThen: LocalEventHelper.distanceItems[0].id,
 			eventFormOpponentSchoolKey: undefined,
 			isShowAllSports: false,
@@ -54,23 +56,36 @@ const Manager = React.createClass({
 	},
 	componentWillMount: function () {
 		this.isCopyMode = false;
-	},
-	render: function() {
-		const	binding				= this.getDefaultBinding(),
-				isEventManagerSync	= true;
 
-		const	commonBinding	= {
-			default		: binding,
-			sports		: this.getBinding('sports'),
+		EventFormActions.getSports(this.props.activeSchoolId).then(sports => {
+			this.getDefaultBinding().set('sports', Immutable.fromJS(sports));
+			this.getDefaultBinding().set('isSync', true);
+		});
+	},
+	isSync: function () {
+		return this.getDefaultBinding().toJS('isSync');
+	},
+	getEventFormBinding: function () {
+		return {
+			default		: this.getDefaultBinding(),
+			// this stupid design is legacy from prev developer
+			// i don't have any time for fix it
+			sports		: this.getDefaultBinding().sub('sports'),
 			calendar	: this.getBinding('calendar')
 		};
+	},
+	render: function() {
+		console.log(
+			this.getDefaultBinding().toJS()
+		);
 
 		let content;
-		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
+		if(this.isSync()) {
 			content = (
 				<EventForm
-					binding			= { commonBinding }
+					binding			= { this.getEventFormBinding() }
 					activeSchoolId	= { this.props.activeSchoolId }
+					mode			= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 					isCopyMode		= { this.isCopyMode }
 				/>
 			);

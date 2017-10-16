@@ -29,6 +29,8 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
 
+const	EventFormActions				= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
+
 // Styles
 const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
 
@@ -111,9 +113,13 @@ const EventManager = React.createClass({
 				}
 			})
 			.then(() => {
+				return EventFormActions.getSports(this.props.activeSchoolId);
+			})
+			.then(sports => {
 				this.addListeners();
 
 				binding.atomically()
+					.set('sports',				Immutable.fromJS(sports))
 					.set('isSync',				true)
 					.set('isEventManagerSync',	true)
 					.commit();
@@ -750,11 +756,10 @@ const EventManager = React.createClass({
 
 		const	commonBinding	= {
 				default				: binding,
-				sports				: this.getBinding('sports'),
 				calendar			: this.getBinding('calendar')
 			};
 
-		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
+		if(isEventManagerSync) {
 			return (
 				<EventForm	binding			= { commonBinding }
 							activeSchoolId	= { this.props.activeSchoolId }
