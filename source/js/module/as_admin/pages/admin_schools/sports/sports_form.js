@@ -379,6 +379,15 @@ const SportsForm = React.createClass({
 		data.performance.value.splice(id, 1);
 		binding.meta().set('performance', Immutable.fromJS(data.performance));
 	},
+	onSelectPlayers: function () {
+		const 	binding 			= this.getDefaultBinding(),
+				pointsDisplay 			= binding.meta().get('pointsDisplay.value'),
+				isIndividualType 		= binding.meta().get('players.value') === 'Individual';
+
+		if (!isIndividualType && pointsDisplay === 'presence only') {
+			binding.meta().set('pointsDisplay.value', 'plain');
+		}
+	},
 	render: function() {
 		const 	self    					= this,
 				binding 					= self.getDefaultBinding(),
@@ -429,9 +438,10 @@ const SportsForm = React.createClass({
 									Scoring
 								</FormField>
 								<FormField
-									field	= 'players'
-									options	= { SportsHelpers.clientPlayersArray }
-									type	= 'dropdown'
+									field		= 'players'
+									options		= { SportsHelpers.clientPlayersArray }
+									onSelect 	= { this.onSelectPlayers() }
+									type		= 'dropdown'
 								>
 									Type of players
 								</FormField>
