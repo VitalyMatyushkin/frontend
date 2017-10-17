@@ -73,6 +73,15 @@ const EventForm = React.createClass({
 				.filter(r => r.school.id !== this.props.activeSchoolId)
 				.map(r => r.school);
 		}
+		if(
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
+			typeof this.getDefaultBinding().toJS('inviterSchool') !== 'undefined'
+		) {
+			const inviterSchoolRival = this.getDefaultBinding().toJS('inviterSchool');
+			schools.push(
+				inviterSchoolRival.school
+			);
+		}
 
 		return schools;
 	},
@@ -148,6 +157,52 @@ const EventForm = React.createClass({
 
 		return result;
 	},
+	renderGameTypeSelector: function () {
+		let result;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				result = (
+					<div className="bInputWrapper">
+						<div className="bInputLabel">
+							Game Type
+						</div>
+						<GameTypeSelectorWrapper binding={ this.getDefaultBinding() }/>
+					</div>
+				);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				result = null;
+				break;
+			}
+		}
+
+		return result;
+	},
+	renderAgeMultiselectDropdownWrapper: function () {
+		let result;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				result = (
+					<div className="bInputWrapper">
+						<div className="bInputLabel">
+							Ages
+						</div>
+						<AgeMultiselectDropdownWrapper binding={ this.getDefaultBinding() }/>
+					</div>
+				);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				result = null;
+				break;
+			}
+		}
+
+		return result;
+	},
 	render: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -172,7 +227,11 @@ const EventForm = React.createClass({
 					</div>
 					<TimeInputWrapper binding={binding.sub('model.endTime')}/>
 				</div>
-				<SportSelectorWrapper binding={binding}/>
+				<SportSelectorWrapper
+					binding			= { binding }
+					activeSchoolId	= { this.props.activeSchoolId }
+					mode			= { this.props.mode }
+				/>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
 						Genders
@@ -183,18 +242,8 @@ const EventForm = React.createClass({
 						handleChangeGender	= { this.handleChangeGender }
 					/>
 				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
-						Ages
-					</div>
-					<AgeMultiselectDropdownWrapper binding={binding}/>
-				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
-						Game Type
-					</div>
-					<GameTypeSelectorWrapper binding={binding}/>
-				</div>
+				{ this.renderAgeMultiselectDropdownWrapper() }
+				{ this.renderGameTypeSelector() }
 				<If
 					condition	= {this.isShowDistanceSelector()}
 					key			= {'if-farther-then'}

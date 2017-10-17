@@ -22,12 +22,20 @@ const SchoolUnionSchoolsManager = React.createClass({
 	schoolService: function(schoolName) {
 		const	binding					= this.getDefaultBinding();
 
-		const	activeSchool			= binding.toJS('schoolInfo'),
-				activeSchoolPostcode	= activeSchool.postcode,
-				rivals					= binding.toJS('rivals'),
-				fartherThen				= binding.toJS('fartherThen');
+		const	activeSchool			= binding.toJS('schoolInfo');
+		const	activeSchoolPostcode	= activeSchool.postcode;
+		const	rivals					= binding.toJS('rivals');
+		if(this.isInviterSchoolExist()) {
+			rivals.push(
+				this.getDefaultBinding().toJS('inviterSchool')
+			);
+		}
+		const	fartherThen				= binding.toJS('fartherThen');
 
-		const filter = this.getMainSchoolFilter(rivals, schoolName);
+		const filter = this.getMainSchoolFilter(
+			rivals,
+			schoolName
+		);
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
 			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
@@ -82,18 +90,23 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return name;
 	},
+	isInviterSchoolExist: function () {
+		return typeof this.getDefaultBinding().toJS('inviterSchool') !== 'undefined';
+	},
 	onSelectInterSchoolsRival: function (order, id, model) {
-		const 	binding	= this.getDefaultBinding(),
-				event	= binding.toJS('model');
+		const binding = this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
 			const rival = new InterSchoolsRivalModel(model);
-			if(TeamHelper.isMultiparty(event)) {
-				binding.set(`rivals.${order}`, Immutable.fromJS(rival));
-			} else {
-				binding.set(`rivals.1`, Immutable.fromJS(rival));
-			}
+			binding.set(`rivals.${order}`, Immutable.fromJS(rival));
 		}
+	},
+	onSelectInviterSchoolRival: function (id, model) {
+		const rival = new InterSchoolsRivalModel(model);
+		this.getDefaultBinding().set('inviterSchool', Immutable.fromJS(rival));
+	},
+	onClickRemoveInviterSchool: function() {
+		this.getDefaultBinding().set('inviterSchool', undefined);
 	},
 	onClickRemoveRivalSchool: function(rivalIndex) {
 		const	binding	= this.getDefaultBinding();
@@ -108,52 +121,92 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return typeof schoolId !== 'undefined' && schoolId === this.props.activeSchoolId;
 	},
-	renderSelectedSchools: function() {
-		const	binding	= this.getDefaultBinding()
+	renderInviterSchool: function() {
+		const binding = this.getDefaultBinding();
 
-		const	event	= binding.toJS('model'),
-				rivals	= binding.toJS('rivals');
+		// for simplify input array creation in render
+		const inputs = [];
 
-		let schools = [];
-		if(TeamHelper.isMultiparty(event)) {
-			schools = rivals
-				.map((rival, rivalIndex) => {
-					if(!this.isActiveSchoolRival(rival)) {
-						return (
-							<span>
-							<Autocomplete	defaultItem		= { rivals[rivalIndex] }
-											serviceFilter	= { this.schoolService }
-											getElementTitle	= { this.getElementTitle }
-											placeholder		= "Enter school name"
-											onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
-											extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-											customListItem	= { SchoolItemList }
-							/>
-							<SquareCrossButton
-								handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
-							/>
-						</span>
-						);
-					} else {
-						return undefined;
-					}
-				})
-				.filter(r => typeof r !== 'undefined');
-		} else if(rivals.length > 1) {
-			schools.push(
+		if(this.isInviterSchoolExist()) {
+			const inviterSchool = binding.toJS('inviterSchool');
+
+			inputs.push(
+				<span>
+					<Autocomplete
+						key				= { 'inviter_school_autocomplete' }
+						defaultItem		= { inviterSchool }
+						serviceFilter	= { this.schoolService }
+						getElementTitle	= { this.getElementTitle }
+						placeholder		= "Enter inviter school name"
+						onSelect		= { this.onSelectInviterSchoolRival }
+						extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
+						customListItem	= { SchoolItemList }
+					/>
+					<SquareCrossButton
+						handleClick	= { this.onClickRemoveInviterSchool }
+					/>
+				</span>
+			);
+		} else {
+			inputs.push(
 				<Autocomplete
-					defaultItem		= { rivals[1] }
+					key				= { 'empty_inviter_school_autocomplete' }
 					serviceFilter	= { this.schoolService }
 					getElementTitle	= { this.getElementTitle }
-					placeholder		= "Enter school name"
-					onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
-					extraCssStyle	= "mBigSize mWhiteBG"
+					placeholder		= "Enter inviter school name"
+					onSelect		= { this.onSelectInviterSchoolRival }
+					extraCssStyle	= "mBigSize mWhiteBG mBottomMargin"
 					customListItem	= { SchoolItemList }
 				/>
 			);
 		}
 
-		return schools;
+		return inputs;
+	},
+	renderSelectedSchools: function() {
+		const	binding	= this.getDefaultBinding();
+
+		const	event	= binding.toJS('model'),
+				rivals	= binding.toJS('rivals');
+
+		// for simplify input array creation in render
+		const inputs = rivals
+			.map((rival, rivalIndex) => {
+				if(TeamHelper.isMultiparty(event)) {
+					return (
+						<span>
+							<Autocomplete
+								key				= { `invited_school_autocomplete_${rivalIndex}` }
+								defaultItem		= { rivals[rivalIndex] }
+								serviceFilter	= { this.schoolService }
+								getElementTitle	= { this.getElementTitle }
+								placeholder		= "Enter invited school name"
+								onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
+								extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
+								customListItem	= { SchoolItemList }
+							/>
+							<SquareCrossButton
+								handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
+							/>
+						</span>
+					);
+				} else {
+					return (
+						<Autocomplete
+							key				= { `simple_invited_school_autocomplete_${rivalIndex}` }
+							defaultItem		= { rivals[rivalIndex] }
+							serviceFilter	= { this.schoolService }
+							getElementTitle	= { this.getElementTitle }
+							placeholder		= "Enter invited school name"
+							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
+							extraCssStyle	= "mBigSize mWhiteBG"
+							customListItem	= { SchoolItemList }
+						/>
+					);
+				}
+			});
+
+		return inputs;
 	},
 	renderEmptySchoolInput: function() {
 		const	binding	= this.getDefaultBinding();
@@ -162,13 +215,13 @@ const SchoolUnionSchoolsManager = React.createClass({
 				sport	= event.sportModel,
 				rivals	= binding.toJS('rivals');
 
-		const filteredRivals = rivals.filter(rival => !this.isActiveSchoolRival(rival));
+		// for simplify input array creation in render
+		const inputs = [];
 
-		let input;
 		if(
-			filteredRivals.length === 0 ||
+			rivals.length === 0 ||
 			(
-				filteredRivals.length >= 1 &&
+				rivals.length >= 1 &&
 				typeof sport !== 'undefined' &&
 				TeamHelper.isMultiparty(event) &&
 				(
@@ -178,12 +231,12 @@ const SchoolUnionSchoolsManager = React.createClass({
 			)
 		) {
 			// need to break element when rival length was change
-			input = (
+			inputs.push(
 				<Autocomplete
 					key				= { `empty_rival_input_${rivals.length}` }
 					serviceFilter	= { this.schoolService }
 					getElementTitle	= { this.getElementTitle }
-					placeholder		= "Enter school name"
+					placeholder		= "Enter invited school name"
 					onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
 					extraCssStyle	= "mBigSize mWhiteBG"
 					customListItem	= { SchoolItemList }
@@ -191,15 +244,13 @@ const SchoolUnionSchoolsManager = React.createClass({
 			);
 		}
 
-		return input;
+		return inputs;
 	},
 	render: function() {
-		const	choosers			= this.renderSelectedSchools(),
-				emptySchoolInput	= this.renderEmptySchoolInput();
-
-		if(typeof emptySchoolInput !== 'undefined') {
-			choosers.push(emptySchoolInput);
-		}
+		let choosers = [];
+		choosers = choosers.concat(this.renderInviterSchool());
+		choosers = choosers.concat(this.renderSelectedSchools());
+		choosers = choosers.concat(this.renderEmptySchoolInput());
 
 		return (
 			<div className="bInputWrapper">

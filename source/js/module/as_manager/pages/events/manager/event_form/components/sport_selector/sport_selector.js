@@ -11,6 +11,8 @@ const	EventFormActions		= require('../../event_form_actions'),
 // Helpers
 const	RivalsHelper			= require('module/ui/managers/rival_chooser/helpers/rivals_helper');
 
+const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 // Styles
 const	InputWrapperStyles		= require('../../../../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles		= require('../../../../../../../../../styles/ui/b_input_label.scss'),
@@ -18,7 +20,10 @@ const	InputWrapperStyles		= require('../../../../../../../../../styles/ui/b_inpu
 
 const SportSelector = React.createClass({
 	mixins: [Morearty.Mixin],
-
+	propTypes: {
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		mode:			React.PropTypes.string.isRequired
+	},
 	componentWillMount: function() {
 		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
 
@@ -30,9 +35,6 @@ const SportSelector = React.createClass({
 	getRandomString: function() {
 		// just current date in timestamp view
 		return + new Date();
-	},
-	getActiveSchoolId: function() {
-		return this.getDefaultBinding().toJS('schoolInfo.id');
 	},
 	isOnlyFavoriteSports: function() {
 		const	binding						= this.getDefaultBinding(),
@@ -57,9 +59,7 @@ const SportSelector = React.createClass({
 
 		switch (eventType) {
 			case 'inter-schools': {
-				const schoolInfo = binding.toJS('schoolInfo');
-
-				rivals = RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolInfo);
+				rivals = this.getDefaultRivalsForInterSchoolsEvent();
 				break;
 			}
 			case 'houses':
@@ -81,6 +81,24 @@ const SportSelector = React.createClass({
 			.set('model.gender',		Immutable.fromJS(GenderHelper.getDefaultGender(sport)))
 			.set('rivals',				Immutable.fromJS(rivals))
 			.commit();
+	},
+	getDefaultRivalsForInterSchoolsEvent: function () {
+		let rivals;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				const schoolInfo = this.getDefaultBinding().toJS('schoolInfo');
+
+				rivals = RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolInfo);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				rivals = [];
+				break;
+			}
+		}
+
+		return rivals;
 	},
 	handleChangeShowAllSports: function() {
 		const binding = this.getDefaultBinding();
@@ -119,7 +137,7 @@ const SportSelector = React.createClass({
 				</div>
 				<Autocomplete
 					key				= { eventFormSportSelectorKey }
-					serviceFilter	= { EventFormActions.getSportService(this.getActiveSchoolId(), this.isOnlyFavoriteSports()) }
+					serviceFilter	= { EventFormActions.getSportService(this.props.activeSchoolId, this.isOnlyFavoriteSports()) }
 					defaultItem		= { sport }
 					serverField		= "name"
 					placeholder		= "Enter sport name"

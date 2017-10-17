@@ -14,7 +14,7 @@ const MultiselectDropdown = React.createClass({
 		items:				React.PropTypes.array.isRequired,
 		selectedItems:		React.PropTypes.array.isRequired,
 		handleClickItem:	React.PropTypes.func.isRequired,
-		extraStyle:			React.PropTypes.string.isRequired
+		extraStyle:			React.PropTypes.string
 	},
 
 	componentDidMount: function () {

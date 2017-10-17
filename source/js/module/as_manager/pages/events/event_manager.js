@@ -9,7 +9,7 @@ const	classNames						= require('classnames'),
 		propz							= require('propz'),
 		If								= require('../../../ui/if/if'),
 		Loader							= require('../../../ui/loader'),
-		Button							= require('../../../ui/button/button');
+		Button							= require('module/ui/button/button');
 
 // Special components
 const	Manager							= require('../../../ui/managers/manager'),
@@ -54,7 +54,7 @@ const EventManager = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	getDefaultState: function () {
-		var calendarBinding = this.getBinding('calendar');
+		const calendarBinding = this.getBinding('calendar');
 
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
@@ -79,11 +79,6 @@ const EventManager = React.createClass({
 			inviteModel: {},
 			step: 1,
 			availableAges: [],
-			autocomplete: {
-				'inter-schools': [],
-				houses: [],
-				internal: []
-			},
 			rivals: [],
 			error: [],
 			isEventManagerSync: false,
