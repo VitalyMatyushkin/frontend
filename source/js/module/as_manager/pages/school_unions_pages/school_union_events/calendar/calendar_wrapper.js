@@ -43,7 +43,8 @@ const CalendarWrapper = React.createClass({
 					<div className="eEvents_row">
 						<div className="eEvents_leftSideContainer">
 							<Calendar
-								binding	= { binding }
+								binding			= { binding }
+								activeSchoolId	= { this.props.activeSchoolId }
 							/>
 						</div>
 						<div className="eEvents_rightSideContainer">

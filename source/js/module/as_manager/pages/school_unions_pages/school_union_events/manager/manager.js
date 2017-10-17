@@ -176,8 +176,24 @@ const Manager = React.createClass({
 		}
 	},
 	submit: function () {
-		this.submitEvent();
-			// .then(event => this.activateEvent(event));
+		let event;
+
+		this.submitEvent()
+			.then(_event => {
+				event = _event;
+
+				return this.activateEvent(event);
+			})
+			.then(() => this.afterEventCreation(event))
+	},
+	afterEventCreation: function (newEvent) {
+		const binding = this.getDefaultBinding();
+
+		document.location.hash = 'event/' + newEvent.id + '?tab=gallery&new=true';
+		binding.clear();
+		binding.meta().clear();
+
+		return true;
 	},
 	handleClickFinishButton: function () {
 		if(

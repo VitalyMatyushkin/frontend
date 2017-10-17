@@ -23,30 +23,37 @@ const SchoolUnionsRouter = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		return (
-			<RouterView	routes	= {binding.sub('routing')}
-						binding	= {binding}
+			<RouterView
+				routes	= {binding.sub('routing')}
+				binding	= {binding}
 			>
 				<LogoutRoute	binding	= {binding.sub('userData')}/>
+
 				<SettingsRoute	binding	= {binding.sub('userData')} />
+
 				<Route	path		= "/school_union_admin/:subPage /school_union_admin/:subPage/:mode"
 						binding		= {binding.sub('activeSchool')}
 						component	= {SchoolUnionAdminComponent}
 				/>
+
 				<Route	path			= "/events /events/:subPage"
 						binding			= { binding.sub('events') }
 						component		= { SchoolUnionEventsComponent }
 						activeSchoolId	= { this.activeSchoolId }
 				/>
+
 				<Route	path					= "/event /event/:eventId /event/:eventId/:mode"
 						binding					= { binding.sub('schoolUnionEventPage') }
 						component				= { EventComponent }
 						mode					= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 						isShowControlButtons	= { false }
 				/>
+
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"
 						binding		= {binding.sub('permissions')}
 						component	= {SchoolUnionConsoleComponent}
 				/>
+
 				<Route	path		= "/school-union-albums /school-union-albums/:mode/:albumId /school-union-albums/:albumId/:mode/:photoId"
 						binding		= {binding.sub('school-union-albums')}
 						component	= {SchoolUnionGalleryRoutesComponent}
