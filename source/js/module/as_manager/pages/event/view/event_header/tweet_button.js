@@ -119,9 +119,9 @@ const TweetButton = React.createClass({
 					>
 						<div className="eTweetTitle">New tweet</div>
 						<select
-							value 		= { this.state.twitterId }
-							className 	= "eTweetAccountChooser"
-							onChange 	= { this.onSelectChange }
+							value		= { this.state.twitterId }
+							className	= "eTweetAccountChooser"
+							onChange	= { this.onSelectChange }
 						>
 							{this.renderTwitterAccountChooser()}
 						</select>
