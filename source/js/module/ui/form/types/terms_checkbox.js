@@ -43,16 +43,6 @@ const TermsCheckbox = React.createClass({
                         <a href="docs/pdf/acceptable_use_policy.pdf" target="_blank"> Acceptable Use Policy</a>
                     </label>
                 </div>
-                <div className="mNotRequired">
-                    <div>
-                        <input name="newsletter" type="checkbox" value="newsletter" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="newsletter">I agree to receive emails such as relevant news, updates and offers from SquadInTouch Limited (trading as SquadInTouch.com)</label>
-                    </div>
-                    <div>
-                        <input name="promotionalOffers" type="checkbox" value="promotionalOffers" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="promotionalOffers">I agree to receive emails such as promotional offers from carefully selected third parties companies</label>
-                    </div>
-                </div>
             </div>
         )
     }
