@@ -53,11 +53,11 @@ const Event = React.createClass({
 	listeners: [],
 	propTypes: {
 		activeSchoolId:			React.PropTypes.string.isRequired,
+		mode:					React.PropTypes.string.isRequired,
 		onReload:				React.PropTypes.func.isRequired,
 		// it's main rule(top priority) for displaying control buttons at rivals
 		isShowControlButtons:	React.PropTypes.bool.isRequired
 	},
-
 	getDefaultProps: function(){
 		return {
 			isShowControlButtons: true
@@ -1227,7 +1227,7 @@ const Event = React.createClass({
 		}
 	},
 	renderEditTeamButtons: function() {
-		if(TeamHelper.isShowEditEventButton(this)) {
+		if(TeamHelper.isShowEditEventButton(this, this.props.mode)) {
 			return (
 				<div className="bEventMiddleSideContainer">
 					<div className="bEventMiddleSideContainer_row">

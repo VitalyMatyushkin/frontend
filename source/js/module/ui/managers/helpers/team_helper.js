@@ -8,6 +8,8 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		Promise 				= require('bluebird'),
 		Immutable				= require('immutable');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const OPERATION_TYPE = 	{
 	plus:	'plus',
 	minus:	'minus'
@@ -550,10 +552,14 @@ function isShowScoreEventButtonsBlock(thiz) {
  * @returns {boolean}
  * @private
  */
-function isShowEditEventButton(thiz) {
+function isShowEditEventButton(thiz, eventMode) {
 	const isGeneralMode = thiz.getDefaultBinding().get('mode') === 'general';
 
-	return isGeneralMode && RoleHelper.isUserSchoolWorker(thiz);
+	return (
+		isGeneralMode &&
+		RoleHelper.isUserSchoolWorker(thiz) &&
+		eventMode === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+	);
 }
 
 function isSchoolHaveIndividualPlayers(event, schoolId) {

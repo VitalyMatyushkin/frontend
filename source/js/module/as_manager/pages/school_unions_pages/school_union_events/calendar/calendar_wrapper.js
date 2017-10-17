@@ -5,6 +5,8 @@ const	Calendar		= require('module/as_manager/pages/school_unions_pages/school_un
 		Challenges		= require('module/ui/challenges/challenges'),
 		AddEventButton	= require('module/as_manager/pages/events/calendar/add_event_button');
 
+const	CalendarActions	= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/actions');
+
 const	EventsStyles	= require('styles/pages/events/b_events.scss');
 
 const CalendarWrapper = React.createClass({
@@ -12,14 +14,28 @@ const CalendarWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId:	React.PropTypes.string.isRequired
 	},
+	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+
+		CalendarActions.setSelectedDate(
+			new Date(),
+			this.props.activeSchoolId,
+			binding
+		);
+	},
 	redirectToManagerPage: function () {
 		document.location.hash = 'events/manager';
+	},
+	handleEventClick: function(eventId){
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	handleClickAddButton: function () {
 		this.redirectToManagerPage();
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
+		const selectedDateEvents = binding.toJS('selectedDateEventsData.events');
+		const isSelectedDateEventsInSync = binding.get('selectedDateEventsData.isSync');
 
 		return (
 			<div className="bEvents">
@@ -33,9 +49,9 @@ const CalendarWrapper = React.createClass({
 						<div className="eEvents_rightSideContainer">
 							<Challenges
 								activeSchoolId 		= { this.props.activeSchoolId }
-								isSync				= { true }
-								events				= { [] }
-								onClick				= { () => {} }
+								isSync				= { isSelectedDateEventsInSync }
+								events				= { selectedDateEvents }
+								onClick				= { this.handleEventClick }
 								onClickDeleteEvent	= { () => {} }
 								isUserSchoolWorker	= { true }
 							/>

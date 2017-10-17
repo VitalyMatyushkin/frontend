@@ -4,10 +4,13 @@ const	React								= require('react'),
 		Route								= require('module/core/route'),
 		LogoutRoute							= require('module/core/routes/logout_route'),
 		SettingsRoute						= require('module/core/routes/settings_route'),
+		EventComponent						= require('module/as_manager/pages/event/event_page'),
 		SchoolUnionAdminComponent			= require('../pages/school_unions_pages/school_union_admin/school_union_admin'),
 		SchoolUnionEventsComponent			= require('module/as_manager/pages/school_unions_pages/school_union_events/school_union_events'),
 		SchoolUnionConsoleComponent			= require('../pages/school_unions_pages/school_union_console/school_union_console'),
 		SchoolUnionGalleryRoutesComponent	= require('../pages/school_unions_pages/school_union_admin/pages/school_union_gallery/schoolUnionGalleryRoutes');
+
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 const MoreartyHelper = require('module/helpers/morearty_helper');
 
@@ -33,6 +36,11 @@ const SchoolUnionsRouter = React.createClass({
 						binding			= { binding.sub('events') }
 						component		= { SchoolUnionEventsComponent }
 						activeSchoolId	= { this.activeSchoolId }
+				/>
+				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
+						binding		= { binding.sub('schoolUnionEventPage') }
+						component	= { EventComponent }
+						mode		= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 				/>
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"
 						binding		= {binding.sub('permissions')}
