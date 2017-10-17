@@ -36,6 +36,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 			rivals,
 			schoolName
 		);
+		filter.schoolUnionId = this.props.activeSchoolId;
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
 			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
@@ -44,7 +45,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 		}
 
 		let schools;
-		return window.Server.publicSchools.get(filter)
+		return window.Server.schoolUnionSchools.get(filter)
 			.then(_schools => {
 				schools = _schools;
 

@@ -8,12 +8,15 @@ const	TableViewRivalInfo		= require('module/as_manager/pages/event/view/rivals/t
 
 const	TeamHelper				= require('module/ui/managers/helpers/team_helper');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const	TableViewRivalStyle				= require('../../../../../../../../../styles/ui/b_table_view_rivals/b_table_view_rivals.scss'),
 		TableViewRivalPlayersBlocStyle	= require('../../../../../../../../../styles/ui/b_table_view_rivals/b_table_view_rival_players_block.scss');
 
 const TableViewRival = React.createClass({
 	propTypes: {
 		activeSchoolId:						React.PropTypes.string.isRequired,
+		schoolType:							React.PropTypes.object.isRequired,
 		rival:								React.PropTypes.object.isRequired,
 		rivalIndex:							React.PropTypes.number.isRequired,
 		event:								React.PropTypes.object.isRequired,
@@ -71,7 +74,8 @@ const TableViewRival = React.createClass({
 			this.props.mode === 'closing' &&
 			TeamHelper.isTeamSport(this.props.event) &&
 			this.hasTeamPlayers() &&
-			this.props.event.sport.individualResultsAvailable === true
+			this.props.event.sport.individualResultsAvailable === true &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
 	renderIndividualScoreAvailable: function() {
@@ -103,7 +107,9 @@ const TableViewRival = React.createClass({
 
 		if(this.state.isPlayersBlockOpen) {
 			let playersBlockComponents = [];
-			this.isShowIndividualScoreAvailableManager() && playersBlockComponents.push( this.renderIndividualScoreAvailable() );
+			if(this.isShowIndividualScoreAvailableManager()) {
+				playersBlockComponents.push( this.renderIndividualScoreAvailable() );
+			}
 			playersBlockComponents.push( this.renderPlayers() );
 
 			const classNameStyle =  classNames({
@@ -126,6 +132,7 @@ const TableViewRival = React.createClass({
 				<TableViewRivalInfo
 					onClick			= { this.onInfoBlockClick }
 					rivalIndex		= { this.props.rivalIndex }
+					schoolType		= { this.props.schoolType }
 					rival			= { this.props.rival }
 					event			= { this.props.event }
 					mode			= { this.props.mode }

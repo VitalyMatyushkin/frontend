@@ -27,6 +27,7 @@ const EventHeader = React.createClass({
 		event:							React.PropTypes.object.isRequired,
 		challengeModel:					React.PropTypes.object.isRequired,
 		mode:							React.PropTypes.string.isRequired,
+		schoolType:						React.PropTypes.string.isRequired,
 		viewMode:						React.PropTypes.string,
 		eventAges:						React.PropTypes.array,
 		isInviterSchool:				React.PropTypes.bool.isRequired,
@@ -165,6 +166,7 @@ const EventHeader = React.createClass({
 						<Buttons
 							event							= { this.props.event }
 							mode							= { this.props.mode }
+							schoolType						= { this.props.schoolType }
 							isInviterSchool 				= { this.props.isInviterSchool }
 							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
 							isParent		 				= { this.props.isParent }

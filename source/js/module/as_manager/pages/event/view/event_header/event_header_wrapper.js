@@ -21,6 +21,7 @@ const EventHeaderWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId:	React.PropTypes.string.isRequired,
+		mode:			React.PropTypes.string.isRequired,
 		onReload:		React.PropTypes.func.isRequired
 	},
 	isInviterSchool: function() {
@@ -182,6 +183,7 @@ const EventHeaderWrapper = React.createClass({
 						event							= { event }
 						challengeModel					= { challengeModel }
 						isInviterSchool					= { this.isInviterSchool() }
+						schoolType						= { this.props.mode }
 						mode 							= { mode }
 						viewMode						= { viewMode }
 						eventAges						= { eventAges }

@@ -48,6 +48,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		SchoolHelper 					= require('module/helpers/school_helper'),
 		propz							= require('propz');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
@@ -351,18 +353,24 @@ const Event = React.createClass({
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
-		if(!TeamHelper.isNewEvent(event)) {
-			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+		switch (true) {
+			case (this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION): {
 				return false;
-			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-				return true;
-			} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
-				return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
-			} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-				return true;
 			}
-		} else {
-			return false;
+			case (TeamHelper.isNewEvent(event)): {
+				return false;
+			}
+			default: {
+				if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+					return false;
+				} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+					return true;
+				} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+					return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+				} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+					return true;
+				}
+			}
 		}
 	},
 	hasTeamPlayersByOrder: function(event, order) {
@@ -1276,6 +1284,7 @@ const Event = React.createClass({
 						activeSchoolId	= { this.props.activeSchoolId }
 						mode			= { mode }
 						event			= { event }
+						schoolType		= { this.props.mode }
 					/>
 					<EventTeams
 						binding			= { this.getEventTeamsBinding() }
@@ -1428,6 +1437,7 @@ const Event = React.createClass({
 								binding			= { binding }
 								onReload		= { this.props.onReload }
 								activeSchoolId	= { this.props.activeSchoolId }
+								mode			= { this.props.mode }
 							/>
 							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>

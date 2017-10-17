@@ -17,10 +17,13 @@ const	RivalManager		= require('module/as_manager/pages/event/view/rivals/helpers
 const	ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts'),
 		ManagerConsts		= require('module/ui/managers/helpers/manager_consts');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const Rivals = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		viewMode:								React.PropTypes.string.isRequired,
+		schoolType:								React.PropTypes.string.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
@@ -143,7 +146,10 @@ const Rivals = React.createClass({
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS(`model`);
 
-		if(TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event)) {
+		if(
+			TeamHelper.isTeamSport(event) && EventHelper.isNotFinishedEvent(event) ||
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION
+		) {
 			return false;
 		} else if(TeamHelper.isTeamSport(event) && !EventHelper.isNotFinishedEvent(event)) {
 			let teamScoreData,
@@ -488,6 +494,7 @@ const Rivals = React.createClass({
 					return (
 						<BlockViewRivals
 							rivals									= { rivals }
+							schoolType								= { this.props.schoolType }
 							viewMode								= { viewMode }
 							mode									= { mode }
 							event									= { event }
@@ -505,6 +512,7 @@ const Rivals = React.createClass({
 					return (
 						<TableViewRivals
 							rivals									= { rivals }
+							schoolType								= { this.props.schoolType }
 							mode									= { mode }
 							event									= { event }
 							activeSchoolId							= { this.props.activeSchoolId }

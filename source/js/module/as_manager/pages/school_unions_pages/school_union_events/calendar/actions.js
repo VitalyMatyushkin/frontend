@@ -1,14 +1,7 @@
-/**
- * Created by Anatoly on 26.09.2016.
- */
-
 const Immutable = require('immutable');
 
-/** Load in binding data for all dates which have events
- *  Required for building calendar highlight - it requires only dates without event content, so loaded blazing fast
- */
 function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
-	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
+	const	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
 	eventsBinding.set('distinctEventDatesData.isSync', false);	// TODO: is it okay?
@@ -23,10 +16,12 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 			},
 			status: {
 				$in: [
+					'DRAFT',
 					'ACCEPTED',
 					'REJECTED',
 					'FINISHED',
 					'CANCELED',
+					'INVITES_SENT',
 					'COLLECTING_INVITE_RESPONSE'
 				]
 			}
@@ -65,10 +60,12 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 			},
 			status: {
 				$in: [
+					'DRAFT',
 					'ACCEPTED',
 					'REJECTED',
 					'FINISHED',
 					'CANCELED',
+					'INVITES_SENT',
 					'COLLECTING_INVITE_RESPONSE'
 				]
 			}
@@ -107,7 +104,7 @@ function setSelectedDate(date, activeSchoolId, eventsBinding) {
 	loadDailyEvents(date, activeSchoolId, eventsBinding);
 }
 
-module.exports.setNextMonth						= setNextMonth;
-module.exports.setPrevMonth						= setPrevMonth;
-module.exports.setSelectedDate					= setSelectedDate;
-module.exports.setCurrentMonth					= loadMonthDistinctEventDatesToBinding;
+module.exports.setNextMonth		= setNextMonth;
+module.exports.setPrevMonth		= setPrevMonth;
+module.exports.setSelectedDate	= setSelectedDate;
+module.exports.setCurrentMonth	= loadMonthDistinctEventDatesToBinding;

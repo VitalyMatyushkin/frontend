@@ -16,6 +16,7 @@ const TableViewRivals = React.createClass({
 		// data
 		rivals:									React.PropTypes.array.isRequired,
 		mode:									React.PropTypes.string.isRequired,
+		schoolType:								React.PropTypes.string.isRequired,
 		event:									React.PropTypes.object.isRequired,
 
 		// options
@@ -47,6 +48,7 @@ const TableViewRivals = React.createClass({
 				<TableViewRival
 					key										= { `rival_${rivalIndex}` }
 					rivalIndex								= { rivalIndex }
+					schoolType								= { this.props.schoolType }
 					rival									= { rival }
 					event									= { event }
 					mode									= { mode }
