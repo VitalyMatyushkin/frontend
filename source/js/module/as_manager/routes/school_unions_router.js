@@ -37,10 +37,11 @@ const SchoolUnionsRouter = React.createClass({
 						component		= { SchoolUnionEventsComponent }
 						activeSchoolId	= { this.activeSchoolId }
 				/>
-				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
-						binding		= { binding.sub('schoolUnionEventPage') }
-						component	= { EventComponent }
-						mode		= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
+				<Route	path					= "/event /event/:eventId /event/:eventId/:mode"
+						binding					= { binding.sub('schoolUnionEventPage') }
+						component				= { EventComponent }
+						mode					= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
+						isShowControlButtons	= { false }
 				/>
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"
 						binding		= {binding.sub('permissions')}
