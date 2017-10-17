@@ -13,9 +13,7 @@ const TermsCheckbox = React.createClass({
         //Setting up data structure to store all possible checkboxes, supposing all boxes are relevant
         return Immutable.fromJS({
             termsState:{
-                Terms:false,
-                newsletter:false,
-                promotionalOffers:false
+                Terms:false
             }
         });
     },
