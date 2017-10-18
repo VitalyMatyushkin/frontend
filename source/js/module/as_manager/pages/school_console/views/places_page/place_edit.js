@@ -50,7 +50,7 @@ const PlaceEdit = React.createClass({
 				postcodeId: data.postcode
 			}
 		).then(() => {
-			this.isMounted() && (PlaceHelper.redirectToPlaceListPage());
+			this.isMounted() && PlaceHelper.redirectToPlaceListPage();
 		});
 	},
 	render: function() {
