@@ -381,10 +381,10 @@ const SportsForm = React.createClass({
 	},
 	onSelectPlayers: function () {
 		const 	binding 			= this.getDefaultBinding(),
-				pointsDisplay 			= binding.meta().get('pointsDisplay.value'),
-				isIndividualType 		= binding.meta().get('players.value') === 'Individual';
+				isPresenceOnly		= binding.meta().get('pointsDisplay.value') === SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY'],
+				isIndividualType 	= binding.meta().get('players.value') === 'Individual';
 
-		if (!isIndividualType && pointsDisplay === SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY']) {
+		if (!isIndividualType && isPresenceOnly) {
 			binding.meta().set('pointsDisplay.value', 'plain');
 		}
 	},
