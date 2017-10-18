@@ -1205,11 +1205,13 @@ const Event = React.createClass({
 
 		if(binding.get("isEditEventPopupOpen")) {
 			return (
-				<EditEventPopup	binding				= {binding.sub('editEventPopup')}
-								activeSchoolId		= {this.props.activeSchoolId}
-								event				= {binding.toJS('model')}
-								handleSuccessSubmit	= {this.handleSuccessSubmit}
-								handleClosePopup	= {this.handleCloseEditEventPopup}
+				<EditEventPopup	binding				= { binding.sub('editEventPopup') }
+								activeSchool		= { this.getDefaultBinding().toJS('activeSchoolInfo') }
+								activeSchoolId		= { this.props.activeSchoolId }
+								event				= { binding.toJS('model') }
+								schoolType			= { this.props.mode }
+								handleSuccessSubmit	= { this.handleSuccessSubmit }
+								handleClosePopup	= { this.handleCloseEditEventPopup }
 				/>
 			)
 		} else {
@@ -1404,9 +1406,7 @@ const Event = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
-				showingComment	= binding.get('showingComment'),
 				activeTab		= this.getActiveTab(),
-				mode			= binding.toJS('mode'),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
 				isNewEvent		= binding.get('isNewEvent');
