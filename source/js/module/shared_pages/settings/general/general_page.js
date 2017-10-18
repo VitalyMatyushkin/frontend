@@ -86,28 +86,6 @@ const GeneralSettingsPage = React.createClass({
 							typeOfFile 	= "image"
 							field 		= "avatar"
 						/>
-						<h3>NOTIFICATION SETTINGS</h3>
-						<FormField
-							classNames 	= "mSingleLine"
-							type 		= "checkbox"
-							field 		= "notification.sendNews"
-						>
-							Send me news
-						</FormField>
-						<FormField
-							classNames 	= "mSingleLine"
-							type 		= "checkbox"
-							field 		= "notification.sendInfoUpdates"
-						>
-							Information updates
-						</FormField>
-						<FormField
-							classNames 	= "mSingleLine"
-							type 		= "checkbox"
-							field 		= "notification.sendPromoOffers"
-						>
-							Promotional offers
-						</FormField>
 					</FormColumn>
 					<FormColumn
 						customStyle 	="col-md-5"

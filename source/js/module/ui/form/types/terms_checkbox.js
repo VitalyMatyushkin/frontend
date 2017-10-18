@@ -13,9 +13,7 @@ const TermsCheckbox = React.createClass({
         //Setting up data structure to store all possible checkboxes, supposing all boxes are relevant
         return Immutable.fromJS({
             termsState:{
-                Terms:false,
-                newsletter:false,
-                promotionalOffers:false
+                Terms:false
             }
         });
     },
@@ -42,16 +40,6 @@ const TermsCheckbox = React.createClass({
                             and Conditions</a> and
                         <a href="docs/pdf/acceptable_use_policy.pdf" target="_blank"> Acceptable Use Policy</a>
                     </label>
-                </div>
-                <div className="mNotRequired">
-                    <div>
-                        <input name="newsletter" type="checkbox" value="newsletter" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="newsletter">I agree to receive emails such as relevant news, updates and offers from SquadInTouch Limited (trading as SquadInTouch.com)</label>
-                    </div>
-                    <div>
-                        <input name="promotionalOffers" type="checkbox" value="promotionalOffers" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="promotionalOffers">I agree to receive emails such as promotional offers from carefully selected third parties companies</label>
-                    </div>
                 </div>
             </div>
         )
