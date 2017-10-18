@@ -73,9 +73,26 @@ const Manager = React.createClass({
 			.then(schoolData => {
 				// get forms data
 				this.getDefaultBinding().set('schoolInfo', Immutable.fromJS(schoolData));
+				this.getDefaultBinding().set(
+					'availableAges',
+					Immutable.fromJS(
+						this.getAges(schoolData.ageGroups)
+					)
+				);
 
 				return true;
 			})
+	},
+	getAges: function (ageGroups) {
+		const ages = [];
+
+		let age = 0;
+		ageGroups.forEach(() => {
+			ages.push(age);
+			age++;
+		});
+
+		return ages;
 	},
 	isSync: function () {
 		return this.getDefaultBinding().toJS('isSync');
