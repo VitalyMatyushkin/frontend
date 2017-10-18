@@ -27,7 +27,8 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 				},
 				{	// external events created by me always visible with any status
 					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
-					inviterSchoolId: activeSchoolId
+					inviterSchoolId: activeSchoolId,
+					eventCreatorId: activeSchoolId
 				},
 				{	// external events where I'm invited shown only in some special statuses
 					eventType: { $in: ['EXTERNAL_SCHOOLS'] },

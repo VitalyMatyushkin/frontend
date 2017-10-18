@@ -123,6 +123,14 @@ const SchoolUnionForm = React.createClass({
 					<FormField type="checkbox" field="canEditFavoriteSports">
 						Can Admin Edit Favorite Sports
 					</FormField>
+					<FormField
+						type 		= "dropdown"
+						id 			= "school_age_groups_naming_checkbox"
+						field 		= "ageGroupsNaming"
+						options 	= { SchoolConsts.AGE_GROUPS_NAMING_OPTIONS }
+					>
+						Age groups naming
+					</FormField>
 				</FormColumn>
 			</Form>
 		);

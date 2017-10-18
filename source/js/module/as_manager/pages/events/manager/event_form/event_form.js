@@ -183,7 +183,7 @@ const EventForm = React.createClass({
 	renderAgeMultiselectDropdownWrapper: function () {
 		let result;
 
-		switch (this.props.mode) {
+		switch (EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
 			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
 				result = (
 					<div className="bInputWrapper">
