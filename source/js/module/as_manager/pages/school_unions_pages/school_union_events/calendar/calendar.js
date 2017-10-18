@@ -10,6 +10,13 @@ const Calendar = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	componentWillMount: function () {
+		CalendarActions.setCurrentMonth(
+			new Date(),
+			this.props.activeSchoolId,
+			this.getDefaultBinding()
+		);
+	},
 	onMonthClick: function (data) {
 		CalendarActions.setCurrentMonth(
 			data,

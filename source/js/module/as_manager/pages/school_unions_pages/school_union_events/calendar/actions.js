@@ -14,9 +14,9 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 				$gte: 	monthStartDate,
 				$lt: 	monthEndDate
 			},
+			eventType: { $in: ['EXTERNAL_SCHOOLS'] },
 			status: {
 				$in: [
-					'DRAFT',
 					'ACCEPTED',
 					'REJECTED',
 					'FINISHED',
@@ -58,9 +58,9 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 				$gte: dayStart,
 				$lt: dayEnd
 			},
+			eventType: { $in: ['EXTERNAL_SCHOOLS'] },
 			status: {
 				$in: [
-					'DRAFT',
 					'ACCEPTED',
 					'REJECTED',
 					'FINISHED',
