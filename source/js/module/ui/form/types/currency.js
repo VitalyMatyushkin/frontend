@@ -6,7 +6,7 @@ const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
 		React 			= require('react'),
 		Morearty		= require('morearty');
 
-const TypeText =  React.createClass({
+const TypeCurrency =  React.createClass({
 	propTypes: {
 		currencySymbol:	React.PropTypes.string,
 		textType: 		React.PropTypes.string,
@@ -46,4 +46,4 @@ const TypeText =  React.createClass({
 });
 
 
-module.exports = TypeText;
+module.exports = TypeCurrency;

@@ -3,7 +3,7 @@
  */
 const React = require('react');
 
-const TextInput = React.createClass({
+const CurrencyInput = React.createClass({
 	propTypes:{
 		id:				React.PropTypes.string,
 		textType:		React.PropTypes.string,
@@ -61,4 +61,4 @@ const TextInput = React.createClass({
 	}
 });
 
-module.exports = TextInput;
+module.exports = CurrencyInput;
