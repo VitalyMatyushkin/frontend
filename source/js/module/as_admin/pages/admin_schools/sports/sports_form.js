@@ -384,7 +384,7 @@ const SportsForm = React.createClass({
 				pointsDisplay 			= binding.meta().get('pointsDisplay.value'),
 				isIndividualType 		= binding.meta().get('players.value') === 'Individual';
 
-		if (!isIndividualType && pointsDisplay === 'presence only') {
+		if (!isIndividualType && pointsDisplay === SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY']) {
 			binding.meta().set('pointsDisplay.value', 'plain');
 		}
 	},
@@ -394,8 +394,9 @@ const SportsForm = React.createClass({
 				pointsDisplay 				= binding.meta().get('pointsDisplay.value'),
 				isIndividualType 			= binding.meta().get('players.value') === 'Individual',
 				optionsPoint				= isIndividualType ? SportsHelpers.clientPointDisplayArray
-												: SportsHelpers.clientPointDisplayArray.filter(p => p !== 'presence only'),
-				showMask 					= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
+												: SportsHelpers.clientPointDisplayArray.filter(p => p !== SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY']),
+				showMask 					= pointsDisplay !== SportsHelpers.pointsDisplayServerToClientMap['PLAIN'] &&
+					pointsDisplay !== SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY'];
 
 		// This comment about field 'positions'
 		// As you can see - container for this field is <div> instead <FormField>.
@@ -440,7 +441,7 @@ const SportsForm = React.createClass({
 								<FormField
 									field		= 'players'
 									options		= { SportsHelpers.clientPlayersArray }
-									onSelect 	= { this.onSelectPlayers() }
+									onSelect 	= { this.onSelectPlayers }
 									type		= 'dropdown'
 								>
 									Type of players
