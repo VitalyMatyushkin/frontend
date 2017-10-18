@@ -11,6 +11,8 @@ const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 // Helpers
 const	EventHelper			= require('../../../events/eventHelper');
 
+const	EventFormConsts		= require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 // Styles
 const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scss'),
 		InputWrapperStyle	= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
@@ -19,12 +21,21 @@ const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scs
 const EditEventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId:		React.PropTypes.string.isRequired,
+		activeSchool:	React.PropTypes.object.isRequired,
+		schoolType:			React.PropTypes.string.isRequired
 	},
 	getActiveSchoolInfo: function() {
-		const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
+		switch (this.props.schoolType) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				const schoolsData = this.getDefaultBinding().toJS('model.schoolsData');
 
-		return schoolsData.find(school => school.id === this.props.activeSchoolId);
+				return schoolsData.find(school => school.id === this.props.activeSchoolId);
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				return this.props.activeSchool;
+			}
+		}
 	},
 	getOpponentSchoolInfoArray: function() {
 		const invitedSchools = this.getDefaultBinding()

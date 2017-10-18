@@ -130,6 +130,15 @@ const Head = React.createClass({
 				routes			: ['/school_union_admin/:subPage'],
 				authorization	: true,
 				verified		: true
+			},
+			{
+				href			: '/#events/calendar',
+				icon			: '',
+				name			: 'Events',
+				key				: 'Events',
+				routes			: ['/events/:subPage'],
+				authorization	: true,
+				verified		: true
 			}
 		];
 	},

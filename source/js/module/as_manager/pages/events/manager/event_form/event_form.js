@@ -13,12 +13,15 @@ const	DateSelectorWrapper				= require('./components/date_selector/date_selector
 		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
 		TimeInputWrapper				= require('../time_input_wrapper'),
 		EventVenue						= require('../event_venue'),
+		SchoolUnionSchoolsManager		= require('module/as_manager/pages/events/manager/event_form/components/school_union_schools_manager/school_union_schools_manager'),
 		SchoolsManager					= require('module/as_manager/pages/events/manager/event_form/components/schools_manager/schools_manager'),
 		HousesManager					= require('module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager');
 
 // Helpers
 const	EventHelper						= require('../../eventHelper'),
 		RandomHelper					= require('module/helpers/random_helper');
+
+const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 // Styles
 const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
@@ -32,18 +35,21 @@ const EventForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId:	React.PropTypes.string.isRequired,
+		mode:			React.PropTypes.string.isRequired,
 		isCopyMode:		React.PropTypes.bool
+	},
+	getDefaultProps: function(){
+		return {
+			mode: EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		};
 	},
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
-		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
-
-		binding.atomically()
-			.set('isShowAllSports', !isSchoolHaveFavoriteSports )
-			.set('isSchoolHaveFavoriteSports', isSchoolHaveFavoriteSports)
-			.set('eventFormOpponentSchoolKey', Immutable.fromJS(RandomHelper.getRandomString()))
-			.commit();
+		binding.set(
+			'eventFormOpponentSchoolKey',
+			Immutable.fromJS(RandomHelper.getRandomString())
+		);
 	},
 	getMainSchoolFilter: function(rivals, schoolName) {
 		return {
@@ -66,6 +72,15 @@ const EventForm = React.createClass({
 			schools = binding.toJS('rivals')
 				.filter(r => r.school.id !== this.props.activeSchoolId)
 				.map(r => r.school);
+		}
+		if(
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
+			typeof this.getDefaultBinding().toJS('inviterSchool') !== 'undefined'
+		) {
+			const inviterSchoolRival = this.getDefaultBinding().toJS('inviterSchool');
+			schools.push(
+				inviterSchoolRival.school
+			);
 		}
 
 		return schools;
@@ -90,36 +105,7 @@ const EventForm = React.createClass({
 
 		binding.set('model.gender', Immutable.fromJS(gender));
 	},
-	getSports: function () {
-		const	self	= this,
-				binding	= this.getDefaultBinding(),
-				sports	= self.getBinding('sports').toJS();
-
-		const isSchoolHaveFavoriteSports = binding.get('isSchoolHaveFavoriteSports');
-
-		return sports.models.filter(sport => {
-			switch (true) {
-				case !isSchoolHaveFavoriteSports:
-					return true;
-				case binding.get('isShowAllSports'):
-					return true;
-				default:
-					return sport.isFavorite;
-			}
-		}).map(sport => {
-			return (
-				<option	value	= { sport.id }
-						key		= { sport.id }
-				>
-					{sport.name}
-				</option>
-			);
-		});
-	},
 	getFartherThenItems: function () {
-		const	self	= this,
-				sports	= self.getBinding('sports').toJS();
-
 		return EventHelper.distanceItems.map(item => {
 			return (
 				<option	value	= { item.id }
@@ -129,11 +115,6 @@ const EventForm = React.createClass({
 				</option>
 			);
 		});
-	},
-	isSchoolHaveFavoriteSports: function() {
-		const sports = this.getBinding('sports').toJS().models;
-
-		return sports.filter(s => s.isFavorite).length > 0;
 	},
 	isShowDistanceSelector: function() {
 		const	binding			= this.getDefaultBinding(),
@@ -150,13 +131,84 @@ const EventForm = React.createClass({
 			binding.toJS('model.sportModel') :
 			binding.toJS('model.sport');
 	},
+	renderSchoolManager: function () {
+		let result;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				result = (
+					<SchoolsManager
+						binding			= { this.getDefaultBinding() }
+						activeSchoolId	= { this.props.activeSchoolId }
+					/>
+				);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				result = (
+					<SchoolUnionSchoolsManager
+						binding			= { this.getDefaultBinding() }
+						activeSchoolId	= { this.props.activeSchoolId }
+					/>
+				);
+				break;
+			}
+		}
+
+		return result;
+	},
+	renderGameTypeSelector: function () {
+		let result;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				result = (
+					<div className="bInputWrapper">
+						<div className="bInputLabel">
+							Game Type
+						</div>
+						<GameTypeSelectorWrapper binding={ this.getDefaultBinding() }/>
+					</div>
+				);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				result = null;
+				break;
+			}
+		}
+
+		return result;
+	},
+	renderAgeMultiselectDropdownWrapper: function () {
+		let result;
+
+		switch (this.props.mode) {
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+				result = (
+					<div className="bInputWrapper">
+						<div className="bInputLabel">
+							Ages
+						</div>
+						<AgeMultiselectDropdownWrapper binding={ this.getDefaultBinding() }/>
+					</div>
+				);
+				break;
+			}
+			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+				result = null;
+				break;
+			}
+		}
+
+		return result;
+	},
 	render: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
 
 		const	event						= binding.toJS('model'),
 				fartherThen					= binding.get('fartherThen'),
-				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
 				type						= event.type,
 				opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
 
@@ -175,7 +227,11 @@ const EventForm = React.createClass({
 					</div>
 					<TimeInputWrapper binding={binding.sub('model.endTime')}/>
 				</div>
-				<SportSelectorWrapper binding={binding}/>
+				<SportSelectorWrapper
+					binding			= { binding }
+					activeSchoolId	= { this.props.activeSchoolId }
+					mode			= { this.props.mode }
+				/>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
 						Genders
@@ -186,18 +242,8 @@ const EventForm = React.createClass({
 						handleChangeGender	= { this.handleChangeGender }
 					/>
 				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
-						Ages
-					</div>
-					<AgeMultiselectDropdownWrapper binding={binding}/>
-				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
-						Game Type
-					</div>
-					<GameTypeSelectorWrapper binding={binding}/>
-				</div>
+				{ this.renderAgeMultiselectDropdownWrapper() }
+				{ this.renderGameTypeSelector() }
 				<If
 					condition	= {this.isShowDistanceSelector()}
 					key			= {'if-farther-then'}
@@ -219,10 +265,7 @@ const EventForm = React.createClass({
 					condition	= {type === 'inter-schools'}
 					key			= {'if-choose-school'}
 				>
-					<SchoolsManager
-						binding			= { binding }
-						activeSchoolId	= { this.props.activeSchoolId }
-					/>
+					{ this.renderSchoolManager() }
 				</If>
 				<If
 					condition={type === 'houses'}

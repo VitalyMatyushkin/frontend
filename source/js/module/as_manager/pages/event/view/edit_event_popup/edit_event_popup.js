@@ -11,7 +11,9 @@ const EditEventPopup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId		: React.PropTypes.string.isRequired,
+		activeSchool		: React.PropTypes.object.isRequired,
 		event				: React.PropTypes.object.isRequired,
+		schoolType			: React.PropTypes.string.isRequired,
 		handleSuccessSubmit	: React.PropTypes.func.isRequired,
 		handleClosePopup	: React.PropTypes.func.isRequired
 	},
@@ -203,6 +205,8 @@ const EditEventPopup = React.createClass({
 			>
 				<EventEditForm
 					activeSchoolId	= { this.props.activeSchoolId }
+					activeSchool	= { this.props.activeSchool }
+					schoolType		= { this.props.schoolType }
 					binding			= { binding.sub('eventEditForm') }
 				/>
 			</ConfirmPopup>

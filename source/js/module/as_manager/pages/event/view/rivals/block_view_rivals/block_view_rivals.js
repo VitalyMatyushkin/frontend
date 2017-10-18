@@ -16,6 +16,7 @@ const BlockViewRivals = React.createClass({
 		// data
 		rivals:									React.PropTypes.array.isRequired,
 		mode:									React.PropTypes.string.isRequired,
+		schoolType:								React.PropTypes.string.isRequired,
 		event:									React.PropTypes.object.isRequired,
 
 		// options
@@ -43,6 +44,7 @@ const BlockViewRivals = React.createClass({
 				<BlockViewRival
 					key										= { `rival_${rivalIndex}` }
 					viewMode								= { this.props.viewMode }
+					schoolType								= { this.props.schoolType }
 					rivalIndex								= { rivalIndex }
 					rival									= { rival }
 					event									= { event }

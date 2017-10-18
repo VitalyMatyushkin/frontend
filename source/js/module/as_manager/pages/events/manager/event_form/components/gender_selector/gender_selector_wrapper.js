@@ -14,8 +14,8 @@ const GenderSelectorWrapper = React.createClass({
 		"GIRLS_RADIOBUTTON":	"GIRLS_RADIOBUTTON"
 	},
 	propTypes: {
-		gender:				React.PropTypes.object.isRequired,
-		sport:				React.PropTypes.object.isRequired,
+		gender:				React.PropTypes.string,
+		sport:				React.PropTypes.object,
 		handleChangeGender:	React.PropTypes.func.isRequired,
 		extraStyle:			React.PropTypes.string
 	},

@@ -3,17 +3,20 @@ const	React 								= require('react'),
 		IndividualScoreAvailable			= require('./individual_score_available'),
 		IndividualScoreAvailableBlockHelper	= require('./helpers/individual_score_available_block_helper');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const EditingTeamsButtons = React.createClass({
 	propTypes: {
 		binding:		React.PropTypes.object.isRequired,
 
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		event:			React.PropTypes.object.isRequired,
-		mode:			React.PropTypes.string.isRequired
+		mode:			React.PropTypes.string.isRequired,
+		schoolType:		React.PropTypes.string.isRequired
 	},
 	render:function () {
 		let result = null;
-		if(this.props.mode === 'closing') {
+		if(this.props.mode === 'closing' && this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
 			const isShowIndividualScoresAvailableFlagArray = [
 				IndividualScoreAvailableBlockHelper.isShowIndividualScoresAvailableFlagByOrder(
 					this.props.activeSchoolId,

@@ -1,0 +1,6 @@
+const EVENT_FORM_MODE = {
+	'SCHOOL': 'SCHOOL',
+	'SCHOOL_UNION'	: 'SCHOOL_UNION'
+};
+
+module.exports.EVENT_FORM_MODE = EVENT_FORM_MODE;

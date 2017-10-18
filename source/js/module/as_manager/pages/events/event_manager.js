@@ -9,7 +9,7 @@ const	classNames						= require('classnames'),
 		propz							= require('propz'),
 		If								= require('../../../ui/if/if'),
 		Loader							= require('../../../ui/loader'),
-		Button							= require('../../../ui/button/button');
+		Button							= require('module/ui/button/button');
 
 // Special components
 const	Manager							= require('../../../ui/managers/manager'),
@@ -28,6 +28,8 @@ const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wr
 		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
 		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
+
+const	EventFormActions				= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
 
 // Styles
 const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
@@ -52,7 +54,7 @@ const EventManager = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	getDefaultState: function () {
-		var calendarBinding = this.getBinding('calendar');
+		const calendarBinding = this.getBinding('calendar');
 
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
@@ -77,11 +79,6 @@ const EventManager = React.createClass({
 			inviteModel: {},
 			step: 1,
 			availableAges: [],
-			autocomplete: {
-				'inter-schools': [],
-				houses: [],
-				internal: []
-			},
 			rivals: [],
 			error: [],
 			isEventManagerSync: false,
@@ -111,9 +108,13 @@ const EventManager = React.createClass({
 				}
 			})
 			.then(() => {
+				return EventFormActions.getSports(this.props.activeSchoolId);
+			})
+			.then(sports => {
 				this.addListeners();
 
 				binding.atomically()
+					.set('sports',				Immutable.fromJS(sports))
 					.set('isSync',				true)
 					.set('isEventManagerSync',	true)
 					.commit();
@@ -750,11 +751,10 @@ const EventManager = React.createClass({
 
 		const	commonBinding	= {
 				default				: binding,
-				sports				: this.getBinding('sports'),
 				calendar			: this.getBinding('calendar')
 			};
 
-		if(isEventManagerSync && this.getBinding('sports').toJS().sync) {
+		if(isEventManagerSync) {
 			return (
 				<EventForm	binding			= { commonBinding }
 							activeSchoolId	= { this.props.activeSchoolId }

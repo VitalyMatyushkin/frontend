@@ -33,7 +33,7 @@ const EventView = React.createClass({
             models: [],
             sync: false,
             newEvent: {},
-            fixtures:{}
+            fixtures: {}
         });
     },
     componentWillMount: function () {
@@ -42,25 +42,6 @@ const EventView = React.createClass({
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initMenuItems();
-
-        // set data
-        self._setSports();
-    },
-    _setSports: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-
-        window.Server.schoolSports.get(self.activeSchoolId, {
-            filter: {
-                limit: 100
-            }
-        })
-        .then(
-            sports => binding.atomically()
-                .set('sports.sync', true)
-                .set('sports.models', Immutable.fromJS(sports))
-                .commit()
-        );
     },
     _initMenuItems: function() {
         const self = this;
@@ -110,7 +91,6 @@ const EventView = React.createClass({
                             binding         = {
                                                 {
                                                     default:    binding.sub('newEvent'),
-                                                    sports:     binding.sub('sports'),
                                                     calendar:   binding.sub('calendar')
                                                 }
                                             }

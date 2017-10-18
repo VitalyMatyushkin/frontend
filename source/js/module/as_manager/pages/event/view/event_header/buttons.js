@@ -8,6 +8,8 @@ const	EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
 		LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 /**
  * This component displays the buttons "Close event", "Change score", "Save", "Cancel".
  * */
@@ -15,6 +17,7 @@ const Buttons = React.createClass({
 	propTypes: {
 		event							: React.PropTypes.object.isRequired,
 		mode							: React.PropTypes.string.isRequired,
+		schoolType						: React.PropTypes.string.isRequired,
 		// TRUE if active school id ==== inviter school id
 		isInviterSchool					: React.PropTypes.bool.isRequired,
 		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
@@ -113,7 +116,8 @@ const Buttons = React.createClass({
 			TeamHelper.isInterSchoolsEventForTeamSport(this.props.event) &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
-			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
 	isCancelEventActionAvailable: function() {
@@ -132,7 +136,14 @@ const Buttons = React.createClass({
 		return (
 			this.props.isUserSchoolWorker &&
 			this.props.isShowScoreEventButtonsBlock &&
-			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED
+			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED &&
+			(
+				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
+				(
+					this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
+					TeamHelper.isTeamSport(this.props.event)
+				)
+			)
 		);
 	},
 	isNotExpiredEventTime: function() {
@@ -159,17 +170,29 @@ const Buttons = React.createClass({
 		return (
 			this.props.isUserSchoolWorker &&
 			this.props.isShowScoreEventButtonsBlock &&
-			eventStatus === EventHelper.EVENT_STATUS.FINISHED
+			eventStatus === EventHelper.EVENT_STATUS.FINISHED &&
+			(
+				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
+					(
+						this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
+						TeamHelper.isTeamSport(this.props.event)
+					)
+			)
 		);
 	},
 	isSendConsentRequestAvailable: function() {
-		// TODO
-		return this.props.isUserSchoolWorker;
+		return (
+			this.props.isUserSchoolWorker &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		);
 	},
 	isReportNotParticipateAvailable: function() {
-		return this.props.isParent &&
+		return (
+			this.props.isParent &&
 			EventHelper.isNotFinishedEvent(this.props.event) &&
-			this.isNotExpiredEventTime();
+			this.isNotExpiredEventTime() &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		);
 	},
 	handleClickActionItem: function(id: string) {
 		switch (id) {

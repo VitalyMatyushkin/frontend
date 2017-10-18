@@ -48,16 +48,18 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		SchoolHelper 					= require('module/helpers/school_helper'),
 		propz							= require('propz');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
 	listeners: [],
 	propTypes: {
 		activeSchoolId:			React.PropTypes.string.isRequired,
+		mode:					React.PropTypes.string.isRequired,
 		onReload:				React.PropTypes.func.isRequired,
 		// it's main rule(top priority) for displaying control buttons at rivals
 		isShowControlButtons:	React.PropTypes.bool.isRequired
 	},
-
 	getDefaultProps: function(){
 		return {
 			isShowControlButtons: true
@@ -351,18 +353,24 @@ const Event = React.createClass({
 	},
 	getInitValueForIndividualScoreAvailableFlag: function(order, event) {
 		//TODO it's temp. only for event refactoring period.
-		if(!TeamHelper.isNewEvent(event)) {
-			if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+		switch (true) {
+			case (this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION): {
 				return false;
-			} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-				return true;
-			} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
-				return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
-			} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
-				return true;
 			}
-		} else {
-			return false;
+			case (TeamHelper.isNewEvent(event)): {
+				return false;
+			}
+			default: {
+				if(EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+					return false;
+				} else if(EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+					return true;
+				} else if(!EventHelper.isNotFinishedEvent(event) && TeamHelper.isTeamSport(event)) {
+					return this.isTeamHasGeneralScoreByOrder(order, event) && this.isTeamHasIndividualScoreByOrder(order, event);
+				} else if(!EventHelper.isNotFinishedEvent(event) && !TeamHelper.isTeamSport(event)) {
+					return true;
+				}
+			}
 		}
 	},
 	hasTeamPlayersByOrder: function(event, order) {
@@ -1197,11 +1205,13 @@ const Event = React.createClass({
 
 		if(binding.get("isEditEventPopupOpen")) {
 			return (
-				<EditEventPopup	binding				= {binding.sub('editEventPopup')}
-								activeSchoolId		= {this.props.activeSchoolId}
-								event				= {binding.toJS('model')}
-								handleSuccessSubmit	= {this.handleSuccessSubmit}
-								handleClosePopup	= {this.handleCloseEditEventPopup}
+				<EditEventPopup	binding				= { binding.sub('editEventPopup') }
+								activeSchool		= { this.getDefaultBinding().toJS('activeSchoolInfo') }
+								activeSchoolId		= { this.props.activeSchoolId }
+								event				= { binding.toJS('model') }
+								schoolType			= { this.props.mode }
+								handleSuccessSubmit	= { this.handleSuccessSubmit }
+								handleClosePopup	= { this.handleCloseEditEventPopup }
 				/>
 			)
 		} else {
@@ -1227,7 +1237,7 @@ const Event = React.createClass({
 		}
 	},
 	renderEditTeamButtons: function() {
-		if(TeamHelper.isShowEditEventButton(this)) {
+		if(TeamHelper.isShowEditEventButton(this, this.props.mode)) {
 			return (
 				<div className="bEventMiddleSideContainer">
 					<div className="bEventMiddleSideContainer_row">
@@ -1276,6 +1286,7 @@ const Event = React.createClass({
 						activeSchoolId	= { this.props.activeSchoolId }
 						mode			= { mode }
 						event			= { event }
+						schoolType		= { this.props.mode }
 					/>
 					<EventTeams
 						binding			= { this.getEventTeamsBinding() }
@@ -1395,9 +1406,7 @@ const Event = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
-				showingComment	= binding.get('showingComment'),
 				activeTab		= this.getActiveTab(),
-				mode			= binding.toJS('mode'),
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point'),
 				isNewEvent		= binding.get('isNewEvent');
@@ -1428,6 +1437,7 @@ const Event = React.createClass({
 								binding			= { binding }
 								onReload		= { this.props.onReload }
 								activeSchoolId	= { this.props.activeSchoolId }
+								mode			= { this.props.mode }
 							/>
 							{ this.renderRivalsStuff() }
 							<If condition={this.isShowMap()}>

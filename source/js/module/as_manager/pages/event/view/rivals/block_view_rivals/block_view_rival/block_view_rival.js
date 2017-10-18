@@ -8,9 +8,12 @@ const	React						= require('react'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		BlockViewRivalStyle			= require('../../../../../../../../../styles/ui/b_block_view_rivals/b_block_view_rival.scss');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const BlockViewRival = React.createClass({
 	propTypes: {
 		viewMode:								React.PropTypes.string.isRequired,
+		schoolType:								React.PropTypes.string.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		rival:									React.PropTypes.object.isRequired,
 		rivalIndex:								React.PropTypes.number.isRequired,
@@ -56,7 +59,8 @@ const BlockViewRival = React.createClass({
 			this.props.mode === 'closing' &&
 			TeamHelper.isTeamSport(this.props.event) &&
 			this.hasTeamPlayers() &&
-			this.props.event.sport.individualResultsAvailable === true
+			this.props.event.sport.individualResultsAvailable === true &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
 	renderIndividualScoreAvailable: function() {

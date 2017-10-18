@@ -104,7 +104,7 @@ const EventsCalendar = React.createClass({
 										onClick 			= { this.onEventClick }
 										onClickDeleteEvent 	= { this.onDeleteEvent }
 										isUserSchoolWorker 	= { isUserSchoolWorker }
-								/>
+							/>
 							<AddEventButton handleClick={this.handleClickAddEventButton}/>
 						</div>
 					</div>

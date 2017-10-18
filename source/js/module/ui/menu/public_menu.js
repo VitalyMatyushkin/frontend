@@ -19,6 +19,7 @@ const PublicMenu = React.createClass({
 	},
 	getMenuItems:function(){
 		const items = this.props.menuItems;
+
 		if(typeof items !== 'undefined'){
 			return items.map( node => {
 				return (<li key={node} className="ePublicMenu_item">
