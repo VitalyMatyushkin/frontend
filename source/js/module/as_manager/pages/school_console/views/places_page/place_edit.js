@@ -2,6 +2,7 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 		MoreartyHelper	= require('../../../../../helpers/morearty_helper'),
+		PlaceHelper		= require('./place_helper'),
 		PlaceForm		= require('./place_form');
 
 const PlaceEdit = React.createClass({
@@ -39,9 +40,6 @@ const PlaceEdit = React.createClass({
 	componentWillUnmount: function() {
 		this.getDefaultBinding().clear();
 	},
-	redirectToPlaceListPage: function() {
-		document.location.hash = document.location.hash.split('/').slice(0, 2).join('/');
-	},
 	onSubmit: function(data) {
 		window.Server.schoolPlace.put(
 			{
@@ -52,7 +50,7 @@ const PlaceEdit = React.createClass({
 				postcodeId: data.postcode
 			}
 		).then(() => {
-			this.isMounted() && (this.redirectToPlaceListPage());
+			this.isMounted() && (PlaceHelper.redirectToPlaceListPage());
 		});
 	},
 	render: function() {

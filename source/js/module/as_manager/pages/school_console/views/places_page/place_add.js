@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('../../../../../helpers/morearty_helper'),
+		PlaceHelper		= require('./place_helper'),
 		PlaceForm		= require('./place_form');
 
 const PlaceAdd = React.createClass({
@@ -11,9 +12,6 @@ const PlaceAdd = React.createClass({
 	componentWillUnmount: function() {
 		this.getDefaultBinding().clear();
 	},
-	redirectToPlaceListPage: function() {
-		document.location.hash = document.location.hash.split('/').slice(0, 2).join('/');
-	},
 	onSubmit: function(data) {
 		window.Server.schoolPlaces.post(
 			this.activeSchoolId,
@@ -22,7 +20,7 @@ const PlaceAdd = React.createClass({
 				postcodeId: data.postcode
 			}
 		).then(() => {
-			this.redirectToPlaceListPage();
+			PlaceHelper.redirectToPlaceListPage();
 		});
 	},
 	render: function() {
