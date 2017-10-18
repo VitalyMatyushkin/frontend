@@ -379,14 +379,24 @@ const SportsForm = React.createClass({
 		data.performance.value.splice(id, 1);
 		binding.meta().set('performance', Immutable.fromJS(data.performance));
 	},
+	onSelectPlayers: function () {
+		const 	binding 			= this.getDefaultBinding(),
+				isPresenceOnly		= binding.meta().get('pointsDisplay.value') === SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY'],
+				isIndividualType 	= binding.meta().get('players.value') === 'Individual';
+
+		if (!isIndividualType && isPresenceOnly) {
+			binding.meta().set('pointsDisplay.value', 'plain');
+		}
+	},
 	render: function() {
 		const 	self    					= this,
 				binding 					= self.getDefaultBinding(),
 				pointsDisplay 				= binding.meta().get('pointsDisplay.value'),
 				isIndividualType 			= binding.meta().get('players.value') === 'Individual',
 				optionsPoint				= isIndividualType ? SportsHelpers.clientPointDisplayArray
-												: SportsHelpers.clientPointDisplayArray.filter(p => p !== 'presence only'),
-				showMask 					= pointsDisplay !== 'plain' && pointsDisplay !== 'presence only';
+												: SportsHelpers.clientPointDisplayArray.filter(p => p !== SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY']),
+				showMask 					= pointsDisplay !== SportsHelpers.pointsDisplayServerToClientMap['PLAIN'] &&
+					pointsDisplay !== SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY'];
 
 		// This comment about field 'positions'
 		// As you can see - container for this field is <div> instead <FormField>.
@@ -429,9 +439,10 @@ const SportsForm = React.createClass({
 									Scoring
 								</FormField>
 								<FormField
-									field	= 'players'
-									options	= { SportsHelpers.clientPlayersArray }
-									type	= 'dropdown'
+									field		= 'players'
+									options		= { SportsHelpers.clientPlayersArray }
+									onSelect 	= { this.onSelectPlayers }
+									type		= 'dropdown'
 								>
 									Type of players
 								</FormField>
