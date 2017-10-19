@@ -41,7 +41,7 @@ const Players = React.createClass({
 				eventType	= event.eventType;
 
 		if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			if (TeamHelper.isIndividualSport(event)) {
+			if (TeamHelper.isNonTeamSport(event)) {
 				return this.renderPlayersForIndividualInterSchoolsEvent();
 			} else {
 				return this.renderPlayersForInterSchoolsEvent();

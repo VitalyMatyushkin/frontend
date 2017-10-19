@@ -151,9 +151,12 @@ const Event = React.createClass({
 			});
 		}).then(event => {
 			eventData = event;
+			eventData.schoolCreatorType = this.props.mode;
 
 			return TeamHelper.getSchoolsArrayWithFullDataByEvent(eventData);
-		}).then(schoolsData => {
+		}).then(_schoolsData => {
+			const schoolsData = _schoolsData.filter(s => s.kind !== 'SchoolUnion');
+
 			eventData.schoolsData = schoolsData;
 				if(TeamHelper.isIndividualSport(eventData)) {
 					eventData.individualsData = eventData.individualsData.sort((player1, player2) => {

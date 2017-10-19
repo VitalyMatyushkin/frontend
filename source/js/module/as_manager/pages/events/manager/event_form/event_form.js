@@ -73,15 +73,6 @@ const EventForm = React.createClass({
 				.filter(r => r.school.id !== this.props.activeSchoolId)
 				.map(r => r.school);
 		}
-		if(
-			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
-			typeof this.getDefaultBinding().toJS('inviterSchool') !== 'undefined'
-		) {
-			const inviterSchoolRival = this.getDefaultBinding().toJS('inviterSchool');
-			schools.push(
-				inviterSchoolRival.school
-			);
-		}
 
 		return schools;
 	},

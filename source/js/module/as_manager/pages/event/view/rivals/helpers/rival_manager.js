@@ -120,7 +120,7 @@ const RivalManager = {
 					return 0;
 				});
 			}
-		} else if(TeamHelper.isIndividualSport(event)) {
+		} else if(TeamHelper.isNonTeamSport(event)) {
 			if(
 				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType &&
 				(

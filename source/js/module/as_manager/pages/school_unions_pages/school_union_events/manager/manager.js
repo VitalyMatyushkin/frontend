@@ -122,12 +122,7 @@ const Manager = React.createClass({
 
 		let isStepComplete = false;
 
-		const inviterSchoolRival = binding.toJS('inviterSchool');
-
-		if(
-			binding.toJS('rivals').length > 0 &&
-			typeof inviterSchoolRival !== 'undefined'
-		) {
+		if(binding.toJS('rivals').length > 1) {
 			isStepComplete = true;
 		}
 
@@ -147,8 +142,6 @@ const Manager = React.createClass({
 
 		const model = binding.toJS('model');
 
-		const inviterSchoolRival = binding.toJS('inviterSchool');
-
 		const body = {
 			gender:					TeamHelper.convertGenderToServerValue(model.gender),
 			// invited
@@ -160,7 +153,7 @@ const Manager = React.createClass({
 			endTime:				model.endTime,
 			startRegistrationTime:	model.startRegistrationTime,
 			endRegistrationTime:	model.endRegistrationTime,
-			inviterSchoolId:		inviterSchoolRival.school.id
+			inviterSchoolId:		this.props.activeSchoolId
 		};
 
 		this.setVenueToBody(body);

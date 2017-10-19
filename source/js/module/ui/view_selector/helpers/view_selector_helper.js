@@ -18,7 +18,13 @@ const ViewSelectorHelper = {
 					new ViewSelectorModel(ViewModeConsts.VIEW_MODE.TABLE_VIEW,	'Table View')
 				];
 			}
-			case !TeamHelper.isMultiparty(event) && TeamHelper.isIndividualSport(event): {
+			case !TeamHelper.isMultiparty(event) && TeamHelper.isTeamSport(event): {
+				return [
+					new ViewSelectorModel(ViewModeConsts.VIEW_MODE.BLOCK_VIEW,	'Block View'),
+					new ViewSelectorModel(ViewModeConsts.VIEW_MODE.TABLE_VIEW,	'Table View')
+				];
+			}
+			case !TeamHelper.isMultiparty(event) && TeamHelper.isNonTeamSport(event): {
 				return [
 					new ViewSelectorModel(ViewModeConsts.VIEW_MODE.BLOCK_VIEW,		'Block View'),
 					new ViewSelectorModel(ViewModeConsts.VIEW_MODE.OVERALL_VIEW,	'Overall View')

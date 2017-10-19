@@ -54,7 +54,7 @@ const Rivals = React.createClass({
 				rival.isIndividualScoreAvailable = this.getInitValueForIsIndividualScoreAvailable(rival);
 				this.initResultsForRival(rival, event);
 			});
-		} else if(TeamHelper.isIndividualSport(event)) {
+		} else if(TeamHelper.isNonTeamSport(event)) {
 			if(
 				EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] === eventType ||
 				EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType
