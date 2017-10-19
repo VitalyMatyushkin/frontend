@@ -133,9 +133,10 @@ const Buttons = React.createClass({
 	isCloseEventActionAvailable: function() {
 		const eventStatus = this.props.event.status;
 
+		console.log(eventStatus);
+
 		return (
 			this.props.isUserSchoolWorker &&
-			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED &&
 			(
 				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
@@ -169,7 +170,6 @@ const Buttons = React.createClass({
 
 		return (
 			this.props.isUserSchoolWorker &&
-			this.props.isShowScoreEventButtonsBlock &&
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED &&
 			(
 				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||

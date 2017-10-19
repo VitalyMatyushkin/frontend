@@ -220,7 +220,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 		const inputs = [];
 
 		if(
-			rivals.length === 0 ||
+			rivals.length <= 1 ||
 			(
 				rivals.length >= 1 &&
 				typeof sport !== 'undefined' &&
@@ -249,7 +249,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 	},
 	render: function() {
 		let choosers = [];
-		choosers = choosers.concat(this.renderInviterSchool());
+		// choosers = choosers.concat(this.renderInviterSchool());
 		choosers = choosers.concat(this.renderSelectedSchools());
 		choosers = choosers.concat(this.renderEmptySchoolInput());
 

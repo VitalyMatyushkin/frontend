@@ -505,6 +505,15 @@ function isOneOnOneSport(event) {
 		return false;
 }
 
+function isTwoOnTwoSport(event) {
+	if(typeof event !== 'undefined') {
+		const sport = event.sportModel ? event.sportModel : event.sport;
+
+		return sport.players === SportConsts.SPORT_PLAYERS['2X2'];
+	} else
+		return false;
+}
+
 function isTeamDataCorrect(validationData) {
 	let isError = false;
 
@@ -1069,9 +1078,10 @@ function getSchoolsData(event) {
  * @param event
  */
 function getSchoolsArrayWithFullDataByEvent(event) {
-	return Promise.all(this.getSchoolsData(event).map(school => {
-		return window.Server.publicSchool.get(school.id);
-	}));
+	return Promise.all(
+		this.getSchoolsData(event)
+			.map(school => window.Server.publicSchool.get(school.id))
+	);
 }
 
 /** Return bundle with all schools participated in event data, all houses data and all teams data.
@@ -1403,7 +1413,8 @@ function isNewEvent(event) {
 	) && this.isMultiparty(event);
 
 	const nonMultipartyRule = (
-		this.isInterSchoolsEventForIndividualSport(event) ||
+		this.isInterSchoolsEventForTeamSport(event) ||
+		this.isInterSchoolsEventForNonTeamSport(event) ||
 		this.isHousesEventForIndividualSport(event)
 	) && !this.isMultiparty(event);
 
@@ -1485,6 +1496,7 @@ const TeamHelper = {
 	addIndividualPlayer:										addIndividualPlayer,
 	deleteIndividualPlayer:										deleteIndividualPlayer,
 	isOneOnOneSport:											isOneOnOneSport,
+	isTwoOnTwoSport:											isTwoOnTwoSport,
 	isNonTeamSport:												isNonTeamSport,
 	isInterSchoolsEventForNonTeamSport:							isInterSchoolsEventForNonTeamSport,
 	isHousesEventForTeamSport:									isHousesEventForTeamSport,

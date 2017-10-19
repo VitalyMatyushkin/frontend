@@ -93,7 +93,9 @@ const EventHeader = React.createClass({
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.event.status !== "FINISHED";
 	},
 	renderViewModeLinks: function(){
-		if(TeamHelper.isNewEvent(this.props.event)) {
+		if(
+			TeamHelper.isNewEvent(this.props.event)
+		) {
 			return (
 				<ViewSelector
 					selectorList	= { ViewSelectorHelper.getSelectorList(this.props.event) }

@@ -55,13 +55,6 @@ const InviteAcceptView = React.createClass({
 					return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
 				})
 				.then(_ => {
-					return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
-						invite.inviterSchool = inviterSchool;
-
-						return window.Server.publicSchoolForms.get(invite.inviterSchoolId, {filter:{limit:1000}}).then(forms => inviterSchool.forms = forms);
-					});
-				})
-				.then(_ => {
 					return window.Server.schoolEvent.get({schoolId: this.props.activeSchoolId, eventId: invite.eventId});
 				})
 				.then(event => {
