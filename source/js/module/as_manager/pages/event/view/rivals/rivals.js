@@ -60,7 +60,11 @@ const Rivals = React.createClass({
 				EventHelper.clientEventTypeToServerClientTypeMapping['houses'] === eventType
 			) {
 				rivals.forEach(rival => {
-					rival.isIndividualScoreAvailable = true;
+					if(TeamHelper.isIndividualSport(event)) {
+						rival.isIndividualScoreAvailable = true;
+					} else {
+						rival.isIndividualScoreAvailable = false;
+					}
 					rival.isTeamScoreWasChanged = false;
 
 					rival.score = this.getExtraScoreForRival(rival);

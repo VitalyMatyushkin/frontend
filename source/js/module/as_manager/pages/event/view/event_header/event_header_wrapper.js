@@ -162,7 +162,7 @@ const EventHeaderWrapper = React.createClass({
 	 * @returns {XML}
 	 */
 	render: function() {
-		const 	binding 						= this.getDefaultBinding(),
+		const	binding 						= this.getDefaultBinding(),
 				event							= binding.toJS('model'),
 				challengeModel					= new ChallengeModel(event, this.props.activeSchoolId),
 				mode 							= binding.toJS('mode'),
@@ -179,38 +179,38 @@ const EventHeaderWrapper = React.createClass({
 				schoolDomain 				= isPublicAvailableDomain && typeof binding.toJS('activeSchoolInfo.domain') !== 'undefined' ? binding.toJS('activeSchoolInfo.domain') : '';
 
 		return (
-					<EventHeader
-						event							= { event }
-						challengeModel					= { challengeModel }
-						isInviterSchool					= { this.isInviterSchool() }
-						schoolType						= { this.props.mode }
-						mode 							= { mode }
-						viewMode						= { viewMode }
-						eventAges						= { eventAges }
-						isUserSchoolWorker 				= { isUserSchoolWorker }
-						isParent						= { isParent }
-						isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
-						handleClickCancelEvent			= { this.handleClickCancelEvent }
-						handleClickCloseEvent			= { this.handleClickCloseEvent }
-						handleClickDownloadPdf			= { this.handleClickDownloadPdf }
-						onClickCloseCancel				= { this.onClickCloseCancel }
-						onClickOk						= { this.onClickOk }
-						onClickEditEventButton			= { this.onClickEditEventButton }
-						onSendConsentRequest			= { this.onSendConsentRequest }
-						onReportNotParticipate			= { this.onReportNotParticipate }
-						onClickAddSchool				= { this.onClickAddSchool }
-						onClickAddTeam					= { this.onClickAddTeam }
-						role 							= { role }
-						onClickDeleteEvent 				= { this.onClickDeleteEvent }
-						//props for tweet button
-						twitterData 					= { twitterData }
-						isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }
-						schoolDomain 					= { schoolDomain }
-						activeSchoolId 					= { this.props.activeSchoolId }
-						twitterIdDefault 				= { twitterIdDefault }
-						//props for view mode
-						onClickViewMode 				= { this.onClickViewMode }
-					/>
+			<EventHeader
+				event							= { event }
+				challengeModel					= { challengeModel }
+				isInviterSchool					= { this.isInviterSchool() }
+				schoolType						= { this.props.mode }
+				mode 							= { mode }
+				viewMode						= { viewMode }
+				eventAges						= { eventAges }
+				isUserSchoolWorker 				= { isUserSchoolWorker }
+				isParent						= { isParent }
+				isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
+				handleClickCancelEvent			= { this.handleClickCancelEvent }
+				handleClickCloseEvent			= { this.handleClickCloseEvent }
+				handleClickDownloadPdf			= { this.handleClickDownloadPdf }
+				onClickCloseCancel				= { this.onClickCloseCancel }
+				onClickOk						= { this.onClickOk }
+				onClickEditEventButton			= { this.onClickEditEventButton }
+				onSendConsentRequest			= { this.onSendConsentRequest }
+				onReportNotParticipate			= { this.onReportNotParticipate }
+				onClickAddSchool				= { this.onClickAddSchool }
+				onClickAddTeam					= { this.onClickAddTeam }
+				role 							= { role }
+				onClickDeleteEvent 				= { this.onClickDeleteEvent }
+				//props for tweet button
+				twitterData 					= { twitterData }
+				isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }
+				schoolDomain 					= { schoolDomain }
+				activeSchoolId 					= { this.props.activeSchoolId }
+				twitterIdDefault 				= { twitterIdDefault }
+				//props for view mode
+				onClickViewMode 				= { this.onClickViewMode }
+			/>
 		);
 	}
 });
