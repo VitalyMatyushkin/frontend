@@ -8,7 +8,8 @@ const	React								= require('react'),
 		SchoolUnionAdminComponent			= require('../pages/school_unions_pages/school_union_admin/school_union_admin'),
 		SchoolUnionEventsComponent			= require('module/as_manager/pages/school_unions_pages/school_union_events/school_union_events'),
 		SchoolUnionConsoleComponent			= require('../pages/school_unions_pages/school_union_console/school_union_console'),
-		SchoolUnionGalleryRoutesComponent	= require('../pages/school_unions_pages/school_union_admin/pages/school_union_gallery/schoolUnionGalleryRoutes');
+		SchoolUnionGalleryRoutesComponent	= require('../pages/school_unions_pages/school_union_admin/pages/school_union_gallery/schoolUnionGalleryRoutes'),
+		InvitesComponent					= require('module/as_manager/pages/invites/invites');
 
 const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
@@ -47,6 +48,12 @@ const SchoolUnionsRouter = React.createClass({
 						component				= { EventComponent }
 						mode					= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 						isShowControlButtons	= { false }
+				/>
+
+				<Route	path		= "/invites /invites/:filter /invites/:inviteId/:mode"
+						binding		= { binding.sub('invites') }
+						component	= { InvitesComponent }
+						schoolType	= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 				/>
 
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"

@@ -25,11 +25,6 @@ const SchoolUnionSchoolsManager = React.createClass({
 		const	activeSchool			= binding.toJS('schoolInfo');
 		const	activeSchoolPostcode	= activeSchool.postcode;
 		const	rivals					= binding.toJS('rivals');
-		if(this.isInviterSchoolExist()) {
-			rivals.push(
-				this.getDefaultBinding().toJS('inviterSchool')
-			);
-		}
 		const	fartherThen				= binding.toJS('fartherThen');
 
 		const filter = this.getMainSchoolFilter(
@@ -91,9 +86,6 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return name;
 	},
-	isInviterSchoolExist: function () {
-		return typeof this.getDefaultBinding().toJS('inviterSchool') !== 'undefined';
-	},
 	onSelectInterSchoolsRival: function (order, id, model) {
 		const binding = this.getDefaultBinding();
 
@@ -122,48 +114,6 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return typeof schoolId !== 'undefined' && schoolId === this.props.activeSchoolId;
 	},
-	renderInviterSchool: function() {
-		const binding = this.getDefaultBinding();
-
-		// for simplify input array creation in render
-		const inputs = [];
-
-		if(this.isInviterSchoolExist()) {
-			const inviterSchool = binding.toJS('inviterSchool');
-
-			inputs.push(
-				<span>
-					<Autocomplete
-						key				= { 'inviter_school_autocomplete' }
-						defaultItem		= { inviterSchool }
-						serviceFilter	= { this.schoolService }
-						getElementTitle	= { this.getElementTitle }
-						placeholder		= "Enter inviter school name"
-						onSelect		= { this.onSelectInviterSchoolRival }
-						extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-						customListItem	= { SchoolItemList }
-					/>
-					<SquareCrossButton
-						handleClick	= { this.onClickRemoveInviterSchool }
-					/>
-				</span>
-			);
-		} else {
-			inputs.push(
-				<Autocomplete
-					key				= { 'empty_inviter_school_autocomplete' }
-					serviceFilter	= { this.schoolService }
-					getElementTitle	= { this.getElementTitle }
-					placeholder		= "Enter inviter school name"
-					onSelect		= { this.onSelectInviterSchoolRival }
-					extraCssStyle	= "mBigSize mWhiteBG mBottomMargin"
-					customListItem	= { SchoolItemList }
-				/>
-			);
-		}
-
-		return inputs;
-	},
 	renderSelectedSchools: function() {
 		const	binding	= this.getDefaultBinding();
 
@@ -173,38 +123,23 @@ const SchoolUnionSchoolsManager = React.createClass({
 		// for simplify input array creation in render
 		const inputs = rivals
 			.map((rival, rivalIndex) => {
-				if(TeamHelper.isMultiparty(event)) {
-					return (
-						<span>
-							<Autocomplete
-								key				= { `invited_school_autocomplete_${rivalIndex}` }
-								defaultItem		= { rivals[rivalIndex] }
-								serviceFilter	= { this.schoolService }
-								getElementTitle	= { this.getElementTitle }
-								placeholder		= "Enter invited school name"
-								onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
-								extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-								customListItem	= { SchoolItemList }
-							/>
-							<SquareCrossButton
-								handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
-							/>
-						</span>
-					);
-				} else {
-					return (
+				return (
+					<span>
 						<Autocomplete
-							key				= { `simple_invited_school_autocomplete_${rivalIndex}` }
+							key				= { `invited_school_autocomplete_${rivalIndex}` }
 							defaultItem		= { rivals[rivalIndex] }
 							serviceFilter	= { this.schoolService }
 							getElementTitle	= { this.getElementTitle }
 							placeholder		= "Enter invited school name"
-							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
-							extraCssStyle	= "mBigSize mWhiteBG"
+							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
+							extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
 							customListItem	= { SchoolItemList }
 						/>
-					);
-				}
+						<SquareCrossButton
+							handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
+						/>
+					</span>
+				);
 			});
 
 		return inputs;
@@ -249,7 +184,6 @@ const SchoolUnionSchoolsManager = React.createClass({
 	},
 	render: function() {
 		let choosers = [];
-		// choosers = choosers.concat(this.renderInviterSchool());
 		choosers = choosers.concat(this.renderSelectedSchools());
 		choosers = choosers.concat(this.renderEmptySchoolInput());
 

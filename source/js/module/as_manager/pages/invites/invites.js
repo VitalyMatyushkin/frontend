@@ -11,9 +11,19 @@ const 	RouterView 			= require('module/core/router'),
 
 const SchoolHelper = require('module/helpers/school_helper');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
 	activeSchoolId: undefined,
+	propTypes: {
+		schoolType: React.PropTypes.string.isRequired
+	},
+	getDefaultProps: function() {
+		return {
+			mode: EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		};
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			inbox: {
@@ -33,26 +43,34 @@ const InvitesView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				rootBinding 	= self.getMoreartyContext().getBinding(),
-				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('userRules.activeSchoolId');
 
 		this.activeSchoolId = activeSchoolId;
 
-		self.menuItems = [{
-			href: '/#invites/inbox',
-			name: 'Inbox',
-			key: 'Inbox'
-		},{
-			href: '/#invites/outbox',
-			name: 'Outbox',
-			key: 'Outbox'
-		},{
-			href: '/#invites/archive',
-			name: 'Archive',
-			key: 'Archive'
-		}];
+		self.menuItems = [];
+		if(self.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
+			self.menuItems.push(
+				{
+					href: '/#invites/inbox',
+					name: 'Inbox',
+					key: 'Inbox'
+				}
+			);
+		}
+		self.menuItems.push(
+			{
+				href: '/#invites/outbox',
+				name: 'Outbox',
+				key: 'Outbox'
+			}, {
+				href: '/#invites/archive',
+				name: 'Archive',
+				key: 'Archive'
+			}
+		);
+
 		SchoolHelper.loadActiveSchoolInfo(this);
 		this.addListeners();
 	},
