@@ -99,11 +99,36 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 		}
 	};
 
-	return window.Server.events.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+	return window.Server.events.get( {schoolId: activeSchoolId}, { filter: filter}).then( _eventsData => {
+		const eventsData = filterEvents(_eventsData, activeSchoolId);
+
 		eventsBinding.atomically()
 			.set('selectedDateEventsData.events', Immutable.fromJS(eventsData))
 			.set('selectedDateEventsData.isSync', true)
 			.commit();
+	});
+}
+
+/**
+ * additional frontend filter for events
+ */
+function filterEvents(events, activeSchoolId) {
+	return events.filter(e => {
+		let result = true;
+
+		// doesn't show event if active school doesn't accept invite
+		if(e.eventType === 'EXTERNAL_SCHOOLS') {
+			const foundInvite = e.invites.find(i => i.invitedSchoolId === activeSchoolId);
+
+			if(
+				typeof foundInvite !== 'undefined' &&
+				foundInvite.status === 'NOT_READY'
+			) {
+				return false;
+			}
+		}
+
+		return result;
 	});
 }
 
