@@ -123,38 +123,23 @@ const SchoolUnionSchoolsManager = React.createClass({
 		// for simplify input array creation in render
 		const inputs = rivals
 			.map((rival, rivalIndex) => {
-				if(TeamHelper.isMultiparty(event)) {
-					return (
-						<span>
-							<Autocomplete
-								key				= { `invited_school_autocomplete_${rivalIndex}` }
-								defaultItem		= { rivals[rivalIndex] }
-								serviceFilter	= { this.schoolService }
-								getElementTitle	= { this.getElementTitle }
-								placeholder		= "Enter invited school name"
-								onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
-								extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-								customListItem	= { SchoolItemList }
-							/>
-							<SquareCrossButton
-								handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
-							/>
-						</span>
-					);
-				} else {
-					return (
+				return (
+					<span>
 						<Autocomplete
-							key				= { `simple_invited_school_autocomplete_${rivalIndex}` }
+							key				= { `invited_school_autocomplete_${rivalIndex}` }
 							defaultItem		= { rivals[rivalIndex] }
 							serviceFilter	= { this.schoolService }
 							getElementTitle	= { this.getElementTitle }
 							placeholder		= "Enter invited school name"
-							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
-							extraCssStyle	= "mBigSize mWhiteBG"
+							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
+							extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
 							customListItem	= { SchoolItemList }
 						/>
-					);
-				}
+						<SquareCrossButton
+							handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
+						/>
+					</span>
+				);
 			});
 
 		return inputs;

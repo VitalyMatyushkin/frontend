@@ -53,6 +53,7 @@ const SchoolUnionsRouter = React.createClass({
 				<Route	path		= "/invites /invites/:filter /invites/:inviteId/:mode"
 						binding		= { binding.sub('invites') }
 						component	= { InvitesComponent }
+						schoolType	= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 				/>
 
 				<Route	path		= "/school_union_console /school_union_console/:filter /school_union_console/:inviteId/:mode"
