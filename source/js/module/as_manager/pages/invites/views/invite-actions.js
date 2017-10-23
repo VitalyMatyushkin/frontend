@@ -28,7 +28,14 @@ const InviteActions = {
 
 				return invite;
 			});
-		}).then(invites => {
+		}).then(_invites => {
+			let invites;
+			if(inviteType === 'outbox') {
+				invites = _invites.filter(i => i.invitedSchool.name !== 'TBD');
+			} else {
+				invites = _invites;
+			}
+
 			// sorting invites by time of event start not event emission
 			return invites.sort((a, b) => {
 				const 	_a	= a.event.startTime,
