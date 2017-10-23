@@ -22,9 +22,10 @@ const InviteActions = {
 
 		return service.get(schoolId, {filter: {limit: 100}}).then(invites => {
 			return invites.map( invite => {
-				invite.sport 			= invite.event.sport;
-				invite.inviterSchool 	= invite.event.inviterSchool;
-				invite.invitedSchool 	= invite.event.invitedSchools[0];
+				invite.sport			= invite.event.sport;
+				invite.inviterSchool	= invite.event.inviterSchool;
+				invite.invitedSchool	= invite.event.invitedSchools.find(s => s.id === invite.invitedSchoolId);
+
 				return invite;
 			});
 		}).then(invites => {
