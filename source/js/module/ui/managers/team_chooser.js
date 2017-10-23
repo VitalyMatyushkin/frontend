@@ -180,7 +180,6 @@ const TeamChooser = React.createClass({
 			<div className={teamChooserClass}  ref="teamList">
 				<div className="eTeamChooser_teamListHead"></div>
 				<div className="eTeamChooser_teamList">
-
 					{teamItems}
 				</div>
 			</div>

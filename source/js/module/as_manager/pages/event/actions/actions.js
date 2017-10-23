@@ -143,10 +143,10 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 			binding.toJS('model').id,
 			[team]
 		))
-		.then(() => {
+		.then(teams => {
 			binding.set(
 				`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`,
-				Immutable.fromJS(team.id)
+				Immutable.fromJS(teams[0].id)
 			);
 		});
 };
@@ -209,6 +209,6 @@ function submitAllChanges(activeSchoolId, binding) {
 	}
 };
 
-module.exports.changeTeamNames				= changeTeamNames;
-module.exports.commitPlayersChanges			= commitPlayersChanges;
-module.exports.submitAllChanges				= submitAllChanges;
+module.exports.changeTeamNames		= changeTeamNames;
+module.exports.commitPlayersChanges	= commitPlayersChanges;
+module.exports.submitAllChanges		= submitAllChanges;

@@ -380,6 +380,8 @@ const TeamWrapper = React.createClass({
 	render: function() {
 		const event = this.getBinding('model').toJS();
 
+		console.log( this.getDefaultBinding().toJS() );
+
 		const plugClass = classNames({
 			eTeamWrapper_plug:	true,
 			mDisabled:			!this.isSetTeamLater()
