@@ -21,7 +21,7 @@ const InvitesView = React.createClass({
 	},
 	getDefaultProps: function() {
 		return {
-			mode: EventFormConsts.EVENT_FORM_MODE.SCHOOL
+			schoolType: EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		};
 	},
 	getDefaultState: function () {
