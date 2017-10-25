@@ -39,7 +39,7 @@ const CurrencyInput = React.createClass({
 		typeof this.props.handleChange !== 'undefined' && this.props.handleChange(newValue);
 	},
 	render: function () {
-
+		const value = this.state.value ? this.state.value : '';
 		// may be we don't need some hardcode props
 		// because it's copy paste from form text component
 		return (
@@ -52,7 +52,7 @@ const CurrencyInput = React.createClass({
 				id				= { this.props.id }
 				type			= { this.props.textType || 'text' }
 				placeholder		= { this.props.placeholder }
-				value			= { this.props.currencySymbol + this.state.value }
+				value			= { this.props.currencySymbol + value }
 				disabled		= { Boolean(this.props.disabled) }
 				onChange		= { this.handleChange }
 				onFocus			= { this.props.handleFocus }
