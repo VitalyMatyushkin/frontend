@@ -26,6 +26,7 @@ const Buttons = React.createClass({
 		handleClickCancelEvent			: React.PropTypes.func.isRequired,
 		handleClickCloseEvent			: React.PropTypes.func.isRequired,
 		handleClickDownloadPdf			: React.PropTypes.func.isRequired,
+		handleClickDownloadCSV			: React.PropTypes.func.isRequired,
 		onClickCloseCancel				: React.PropTypes.func.isRequired,
 		onClickOk						: React.PropTypes.func.isRequired,
 		onSendConsentRequest			: React.PropTypes.func.isRequired,
@@ -87,8 +88,15 @@ const Buttons = React.createClass({
 			actionList.push({id:'cancel', text:'Cancel Event'});
 		}
 
+		if(
+			this.props.isUserSchoolWorker &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		) {
+			actionList.push({id: 'download_pdf', text: 'Print'});
+			actionList.push({id: 'download_csv', text: 'Download CSV'});
+		}
+
 		if(this.props.isUserSchoolWorker) {
-			actionList.push({id: 'download_pdf', text: 'Download Pdf'});
 			actionList.push({id: 'delete_event', text: 'Delete Event'});
 		}
 
@@ -224,6 +232,9 @@ const Buttons = React.createClass({
 				break;
 			case 'download_pdf':
 				this.props.handleClickDownloadPdf();
+				break;
+			case 'download_csv':
+				this.props.handleClickDownloadCSV();
 				break;
 			case 'delete_event':
 				this.props.onClickDeleteEvent();

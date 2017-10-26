@@ -8,6 +8,8 @@ const 	Immutable 			= require('immutable'),
 		SportHelper			= require('module/helpers/sport_helper'),
 		Promise				= require('bluebird');
 
+const converter = require('json-2-csv');
+
 function downloadPdf(schoolId: string, eventId: string, event: any) {
 	/*
 	 * Currently there is no one good way (or even just a way) to download file with JS.
@@ -22,6 +24,70 @@ function downloadPdf(schoolId: string, eventId: string, event: any) {
 	} else {
 		window.simpleAlert('Sorry, there is no pdf template for this kind of event');
 	}
+}
+function downloadCSV(schoolId: string, event: any) {
+	let players = getPlayers(schoolId, event);
+
+	const filteredPlayers = players.map(p => {
+		return getCSVPlayer(
+			p.firstName,
+			p.lastName,
+			p.form.name,
+			typeof p.form.ageGroup !== 'undefined' ?
+				p.form.ageGroup :
+				'',
+			event.generatedNames[schoolId]
+		);
+	});
+
+	converter.json2csv(filteredPlayers, (err, csv) => {
+		if (err) throw err;
+
+		/*global Blob:true*/
+		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+		if (window.navigator.msSaveBlob) { // IE 10+
+			window.navigator.msSaveBlob(blob, 'file.csv');
+		} else {
+			const link = document.createElement("a");
+			if (link.download !== undefined) { // feature detection
+				// Browsers that support HTML5 download attribute
+				/*global URL:true*/
+				const url = URL.createObjectURL(blob);
+				link.setAttribute("href", url);
+				link.setAttribute("download", 'file.csv');
+				link.style.visibility = 'hidden';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			}
+		}
+	});
+}
+
+function getPlayers(schoolId: string, event: any) {
+	let players = [];
+
+	if(TeamHelper.isTeamSport(event)) {
+		event.teamsData.forEach(t => {
+			if(typeof t.players !== 'undefined') {
+				players = players.concat(t.players);
+			}
+		});
+	} else {
+		players = event.individualPlayers;
+	}
+
+	return players.filter(p => p.schoolId === schoolId);
+}
+
+function getCSVPlayer(firstName: string, lastName: string, form: string, ageGroup: string, event: string) {
+	return {
+		firstName,
+		lastName,
+		form,
+		ageGroup,
+		event
+	};
 }
 
 function cancelEvent(schoolId: string, eventId: string){
@@ -506,5 +572,6 @@ module.exports.revertScore 				= revertScore;
 module.exports.submitScore 				= submitScore;
 module.exports.closeMatch 				= closeMatch;
 module.exports.reportNotParticipate 	= reportNotParticipate;
+module.exports.downloadCSV 				= downloadCSV;
 module.exports.sendConsentRequest 		= sendConsentRequest;
 module.exports.deleteEvent 				= deleteEvent;

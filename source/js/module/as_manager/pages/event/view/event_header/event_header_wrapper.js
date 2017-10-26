@@ -37,6 +37,13 @@ const EventHeaderWrapper = React.createClass({
 
 		EventHeaderActions.downloadPdf(schoolId, eventId, event);
 	},
+	handleClickDownloadCSV: function() {
+		const 	binding		= this.getDefaultBinding(),
+				schoolId	= this.props.activeSchoolId,
+				event		= binding.toJS('model');
+
+		EventHeaderActions.downloadCSV(schoolId, event);
+	},
 	/**
 	 * The event handler when clicking the button "Cancel"
 	 */
@@ -193,6 +200,7 @@ const EventHeaderWrapper = React.createClass({
 				handleClickCancelEvent			= { this.handleClickCancelEvent }
 				handleClickCloseEvent			= { this.handleClickCloseEvent }
 				handleClickDownloadPdf			= { this.handleClickDownloadPdf }
+				handleClickDownloadCSV			= { this.handleClickDownloadCSV }
 				onClickCloseCancel				= { this.onClickCloseCancel }
 				onClickOk						= { this.onClickOk }
 				onClickEditEventButton			= { this.onClickEditEventButton }

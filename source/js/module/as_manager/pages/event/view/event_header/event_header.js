@@ -38,6 +38,7 @@ const EventHeader = React.createClass({
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickAddTeam:					React.PropTypes.func.isRequired,
 		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
+		handleClickDownloadCSV:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
 		onClickEditEventButton:			React.PropTypes.func.isRequired,
@@ -176,6 +177,7 @@ const EventHeader = React.createClass({
 							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
 							handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
+							handleClickDownloadCSV			= { this.props.handleClickDownloadCSV }
 							onClickCloseCancel				= { this.props.onClickCloseCancel }
 							onClickOk						= { this.props.onClickOk }
 							onSendConsentRequest			= { this.props.onSendConsentRequest }
