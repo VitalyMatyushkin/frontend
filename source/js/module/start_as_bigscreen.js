@@ -24,7 +24,9 @@ function initMainView(school) {
 				pathParameters:     [],     // параметры текущего пути (:someParam) в порядке объявления
 				parameters:         {}      // GET-параметры текущего пути
 			},
-            loginPublicSchool: {},
+            loginPublicSchool: {
+				hashOfRedirectPageAfterLogin: 'home'
+			},
 			bigScreenMainPage: {
 				events: {							// will keep all data related to showing events on main page here
 					prevSevenDaysFinishedEvents: {
@@ -60,10 +62,9 @@ function initMainView(school) {
 	// initializing all services (open too) only when we got all vars set in window.
 	// this is not too very brilliant idea, but there is no other way to fix it quick
 	serviceList.initializeOpenServices();
-	authController.initialize({
-		binding:		binding,
-		asPublicSchool:	true
-	});
+	serviceList.initialize(
+		binding.sub('userData')
+	);
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -72,14 +73,17 @@ function initMainView(school) {
 			userDataInstance.setBinding(binding.sub('userData'));
 
 			// Turning on authorization service
-			serviceList.initialize(
-				binding.sub('userData')
-			).then(() => {
+			authController.initialize({
+				binding:		binding,
+				asPublicSchool:	true
+			})
+			.then(() => {
 				ReactDom.render(
 					React.createElement(
 						MoreartyContext.bootstrap(ApplicationView), null),
 					document.getElementById('jsMain')
 				);
+				authController.redirectUserByUserAuthData();
 			});
 		});
 }
