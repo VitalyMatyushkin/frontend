@@ -3,14 +3,24 @@ const	React	= require('react'),
 
 const CommentList = React.createClass({
 	propTypes: {
-		comments:	React.PropTypes.array,
-		onReply:	React.PropTypes.func.isRequired
+		comments:			React.PropTypes.array,
+		onReply:			React.PropTypes.func.isRequired,
+		onRemove:			React.PropTypes.func.isRequired,
+		isShowRemoveLink:	React.PropTypes.bool.isRequired
 	},
 	renderBlogComments: function(comments) {
 		let result = null;
 		
 		if(typeof comments !== 'undefined') {
-			result = comments.map(comment => <Comment key={comment.id} comment={comment} onReply={this.props.onReply}/>);
+			result = comments.map(comment =>
+				<Comment
+					key					= { comment.id }
+					comment				= { comment }
+					onReply				= { this.props.onReply }
+					onRemove			= { this.props.onRemove }
+					isShowRemoveLink	= { this.props.isShowRemoveLink }
+				/>
+			);
 		}
 		
 		return result;

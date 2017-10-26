@@ -14,6 +14,9 @@ const Blog = React.createClass({
 		activeSchoolId			: React.PropTypes.string.isRequired,
 		isUserCanWriteComments	: React.PropTypes.bool.isRequired
 	},
+	isShowRemoveLink: function () {
+		return RoleHelper.getLoggedInUserRole(this) === 'ADMIN';
+	},
 	_setBlogCount:function(){
 		const binding = this.getDefaultBinding();
 
@@ -121,7 +124,25 @@ const Blog = React.createClass({
 		binding.remove('blogs');
 		clearInterval(this.intervalId);
 	},
-
+	onRemove: function (comment) {
+		window.confirmAlert(
+			`Are you sure?`,
+			"Ok",
+			"Cancel",
+			() => {
+				window.Server.schoolEventComment.delete(
+					{
+						schoolId	: this.props.activeSchoolId,
+						eventId		: this.props.eventId,
+						commentId	: comment.id
+					}
+				).then(() => {
+					this._setComments();
+				});
+			},
+			() => {}
+		);
+	},
 	onSubmitCommentClick: function(newCommentText, replyComment){
 		if(this.props.isUserCanWriteComments) {
 			const binding 	= this.getDefaultBinding();
@@ -167,9 +188,12 @@ const Blog = React.createClass({
 		if(binding.get('isSync')) {
 			return(
 				<div className="bBlogMain">
-					<Comments	user		= {loggedUser}
-								comments	= {dataBlog}
-								onSubmit	= {this.onSubmitCommentClick}
+					<Comments
+						user				= { loggedUser }
+						comments			= { dataBlog }
+						onSubmit			= { this.onSubmitCommentClick }
+						onRemove			= { this.onRemove }
+						isShowRemoveLink	= { this.isShowRemoveLink() }
 					/>
 				</div>
 			);
@@ -179,4 +203,5 @@ const Blog = React.createClass({
 
 	}
 });
+
 module.exports = Blog;

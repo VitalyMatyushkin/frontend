@@ -5,11 +5,13 @@ const	React			= require('react'),
 const Comments = React.createClass({
 	propTypes:{
 		// user of this comments module
-		user		: React.PropTypes.object.isRequired,
+		user				: React.PropTypes.object.isRequired,
 		// list of comments
-		comments	: React.PropTypes.array.isRequired,
-		// handler for submit new comment
-		onSubmit	: React.PropTypes.func.isRequired
+		comments			: React.PropTypes.array.isRequired,
+		onRemove			: React.PropTypes.func.isRequired,
+		// handler for submit new comment,onRemove
+		onSubmit			: React.PropTypes.func.isRequired,
+		isShowRemoveLink	: React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -69,8 +71,11 @@ const Comments = React.createClass({
 	render:function() {
 		return (
 				<div className="bInviteComments">
-					<CommentList	comments	= {this.props.comments}
-									onReply		= {this.onReply}
+					<CommentList
+						comments			= { this.props.comments }
+						onReply				= { this.onReply }
+						onRemove			= { this.props.onRemove }
+						isShowRemoveLink	= { this.props.isShowRemoveLink }
 					/>
 					<NewCommentForm	avatarPic		= {this.props.user.avatar}
 									text			= {this.state.newCommentText}

@@ -1,13 +1,14 @@
 const	React			= require('react'),
-		If				= require('../if/if'),
 		DateHelper		= require('../../helpers/date_helper'),
 		CommentAvatar	= require('./comment_avatar'),
 		CommentStyle	= require('../../../../styles/ui/comments/b_comment.scss');
 
 const Comment = React.createClass({
 	propTypes: {
-		comment:	React.PropTypes.object.isRequired,
-		onReply:	React.PropTypes.func.isRequired
+		comment:			React.PropTypes.object.isRequired,
+		onReply:			React.PropTypes.func.isRequired,
+		onRemove:			React.PropTypes.func.isRequired,
+		isShowRemoveLink:	React.PropTypes.bool.isRequired
 	},
 	getUserName: function(user) {
 		return `${user.firstName} ${user.lastName}`;
@@ -17,6 +18,12 @@ const Comment = React.createClass({
 	},
 	isShowReplyToBlock: function() {
 		return typeof this.props.comment.replyToUser !== "undefined";
+	},
+	onReply: function () {
+		this.props.onReply(this.props.comment);
+	},
+	onRemove: function () {
+		this.props.onRemove(this.props.comment);
 	},
 	renderCommentAvatar: function() {
 		let result = null;
@@ -42,6 +49,20 @@ const Comment = React.createClass({
 
 		return result;
 	},
+	renderRemoveLink: function () {
+		if(this.props.isShowRemoveLink) {
+			return (
+				<a
+					className	= "eComment_reply"
+					onClick		= { this.onRemove }
+				>
+					Remove
+				</a>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (
 			<div className="bComment">
@@ -56,10 +77,11 @@ const Comment = React.createClass({
 					</span>
 					<div>
 						<a	className	= "eComment_reply"
-							onClick		= {this.props.onReply.bind(null, this.props.comment)}
+							onClick		= { this.onReply }
 						>
 							Reply
 						</a>
+						{ this.renderRemoveLink() }
 						<span className="eComment_commentDate">
 							{DateHelper.getDateTimeString(this.props.comment.createdAt)}
 						</span>
