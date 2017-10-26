@@ -301,10 +301,8 @@ const InviteAcceptView = React.createClass({
 		);
 	},
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
-
-        console.log(binding.toJS());
+		var	self	= this,
+			binding	= self.getDefaultBinding();
 
 		if(!!binding.get('sync')) {
 			// check control button state

@@ -133,8 +133,6 @@ const Buttons = React.createClass({
 	isCloseEventActionAvailable: function() {
 		const eventStatus = this.props.event.status;
 
-		console.log(eventStatus);
-
 		return (
 			this.props.isUserSchoolWorker &&
 			eventStatus === EventHelper.EVENT_STATUS.ACCEPTED &&
@@ -142,7 +140,11 @@ const Buttons = React.createClass({
 				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
 				(
 					this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
-					TeamHelper.isTeamSport(this.props.event)
+					(
+						TeamHelper.isTeamSport(this.props.event) ||
+						TeamHelper.isOneOnOneSport(this.props.event) ||
+						TeamHelper.isTwoOnTwoSport(this.props.event)
+					)
 				)
 			)
 		);
@@ -175,7 +177,11 @@ const Buttons = React.createClass({
 				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
 					(
 						this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
-						TeamHelper.isTeamSport(this.props.event)
+						(
+							TeamHelper.isTeamSport(this.props.event) ||
+							TeamHelper.isOneOnOneSport(this.props.event) ||
+							TeamHelper.isTwoOnTwoSport(this.props.event)
+						)
 					)
 			)
 		);
