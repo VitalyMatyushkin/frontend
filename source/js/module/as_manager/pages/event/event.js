@@ -1266,6 +1266,7 @@ const Event = React.createClass({
 					key										= { binding.toJS('rivalsComponentKey') }
 					binding									= { binding }
 					viewMode								= { binding.toJS('viewMode') }
+					schoolType								= { this.props.mode }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					handleClickOpponentSchoolManagerButton	= { this.handleClickOpponentSchoolManagerButton }
