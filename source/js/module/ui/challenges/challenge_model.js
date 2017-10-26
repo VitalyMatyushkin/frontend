@@ -55,7 +55,7 @@ const ChallengeModel = function(event, activeSchoolId, activeSchoolKind){
     this.rivals 	= this._getRivals(event, activeSchoolId);
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
 		this.scoreAr = this._getScoreAr(event, activeSchoolId);
-		this.score = this._getScore(event);
+		this.score = this._getScore(event, activeSchoolId);
 		this.textResult = this._getTextResult(event, activeSchoolId, activeSchoolKind);
 	}
 };
@@ -96,14 +96,16 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 	}
 };
 
-ChallengeModel.prototype._getScore = function(event) {
+ChallengeModel.prototype._getScore = function(event, activeSchoolId) {
 	if(!this.isFinished) {
 		return '- : -';
+	} else if(event.inviterSchool.id === activeSchoolId && event.inviterSchool.kind === 'SchoolUnion') {
+		return '';
 	} else if (
 		this.isFinished &&
 		TeamHelper.isTeamSport(event) &&
 		event.sport.multiparty &&
-        event.teamsData.length !== 2
+		event.teamsData.length !== 2
 	) {
 		return '';
 	} else if(this.isFinished && this.isIndividualSport) {
@@ -235,7 +237,23 @@ ChallengeModel.prototype.getScoreForCricket = function(eventType, teamScore, hou
 };
 
 
-ChallengeModel.prototype._getTextResult = function(event, activeSchoolId, activeSchoolKind){
+ChallengeModel.prototype._getTextResult = function(event, activeSchoolId, activeSchoolKind) {
+	if(
+		this.isFinished &&
+		event.inviterSchool.id === activeSchoolId &&
+		event.inviterSchool.kind === 'SchoolUnion'
+	) {
+		return 'View results';
+	}
+
+	if(
+		!this.isFinished &&
+		event.inviterSchool.id === activeSchoolId &&
+		event.inviterSchool.kind === 'SchoolUnion'
+	) {
+		return `No result yet`;
+	}
+
 	// Cricket
 	if (this.isFinished && SportHelper.isCricket(event.sport.name)) { //то это полная жопа
 		const 	teamId 							= typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.who : undefined,
