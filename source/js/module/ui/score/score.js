@@ -124,8 +124,6 @@ const Score = React.createClass({
 	renderPlayerDistancePointsInChangeMode: function() {
 		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_DISTANCE_MASK;
 
-		console.log(this.props.plainPoints);
-
 		return (
 			<MaskedPoints
 				plainPoints		= { this.props.plainPoints }

@@ -56,6 +56,9 @@ const TeamName = React.createClass({
 
 		return (
 			<input
+				autoCorrect	= "off"
+				spellCheck	= "false"
+
 				className	= { className }
 				type		= { 'text' }
 				placeholder	= { 'Team name' }

@@ -1438,6 +1438,7 @@ function mustUseNewManagerWraperHelper(event) {
 	) && this.isMultiparty(event);
 
 	const nonMultipartyRule = (
+		this.isInterSchoolsEventForTeamSport(event) ||
 		this.isInterSchoolsEventForIndividualSport(event) ||
 		this.isHousesEventForIndividualSport(event)
 	) && !this.isMultiparty(event);

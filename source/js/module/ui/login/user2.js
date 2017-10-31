@@ -40,10 +40,7 @@ const LoginUserPage = React.createClass({
 
 		Promise
 			.resolve(promise)
-			.then(() => {
-				binding.set('isSync', Immutable.fromJS(true));
-				console.log('User login form was sync.');
-			});
+			.then(() => binding.set('isSync', Immutable.fromJS(true)));
 	},
 	onSuccess: function() {
 		if(this.isAuthorized()) {
@@ -166,11 +163,6 @@ const LoginUserPage = React.createClass({
 	},
 	render: function() {
 		const isSync = this.getDefaultBinding().toJS('isSync');
-
-		console.log('User login form state:');
-		console.log(
-			this.getDefaultBinding().toJS()
-		);
 
 		let content = null;
 		switch (true) {
