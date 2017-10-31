@@ -12,7 +12,7 @@ const RecentEvent = React.createClass({
 		const binding = this.getDefaultBinding().sub('events.footerEvents');
 
 		const	currentEventIndex	= binding.toJS('currentEventIndex'),
-			events				= binding.toJS('events');
+				events				= binding.toJS('events');
 
 		return events[currentEventIndex];
 	},

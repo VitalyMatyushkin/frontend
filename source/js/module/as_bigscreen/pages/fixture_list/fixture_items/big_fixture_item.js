@@ -15,7 +15,7 @@ const BigFixtureItem = React.createClass({
 
 		return (
 			<div className="bFixtureItem">
-				<BigEventResultView model={model}/>
+				<BigEventResultView model={model} event={this.props.event} activeSchoolId={this.props.activeSchoolId}/>
 				<FixtureItemFooterFooter model={model}/>
 			</div>
 		)

@@ -1,4 +1,6 @@
 const 	React 		= require('react'),
+		MultipartyOpponentSide	= require('module/as_bigscreen/pages/fixture_list/fixture_items/opponent_side/multiparty_opponent_side/multiparty_opponent_side'),
+		TwoTeamOpponentSide		= require('module/as_bigscreen/pages/fixture_list/fixture_items/opponent_side/two_team_opponent_side'),
 		SportHelper = require('module/helpers/sport_helper');
 
 const EventResultCricketViewStyles = require('styles/ui/bid_screen_fixtures/bEventResultCricketView.scss');
@@ -7,53 +9,27 @@ const BigEventResultView = React.createClass({
 	propTypes: {
 		model: React.PropTypes.object.isRequired
 	},
-	
-	renderResults: function(){
-		const 	model 				= this.props.model,
-				leftOpponent 		= model.rivals[0].value.replace(/\s+/g, ' '),
-				rightOpponent 		= model.rivals[1].value.replace(/\s+/g, ' '),
-				leftSideClasses 	= leftOpponent.length > 25 ? "mSmall" : "",
-				rightSideClasses 	= rightOpponent.length > 25 ? "mSmall" : "";
-		
-		if (SportHelper.isCricket(model.sport)) {
+
+	renderResults: function() {
+		const	event				= this.props.event,
+				activeSchoolId		= this.props.activeSchoolId;
+		/*
+		 The second part of the condition:
+		 If event is internal and sport for this event is individual
+		 */
+		if(event.sport.multiparty && event.teamsData.length !== 2) {
 			return (
-				<div className="bEventResultCricketView">
-					<div className="eEventResultCricketView_bodyLeftSide">
-						<div className="eEventResultCricketView_mainInfoBlock">
-							<div className={leftSideClasses}>{ leftOpponent }</div>
-						</div>
-					</div>
-					<div className="eEventResultCricketView_score mSmall">
-						{ model.textResult }
-					</div>
-					<div className="eEventResultCricketView_bodyRightSide">
-						<div className="eEventResultCricketView_mainInfoBlock">
-							<div className={rightSideClasses}>{ rightOpponent }</div>
-						</div>
-					</div>
-				</div>
+				<MultipartyOpponentSide
+					event			= { event }
+					activeSchoolId	= { activeSchoolId }
+				/>
 			);
-		} else {
-			return(
-				<div className="bEventResultView mBig">
-					<div className="bBigEventResultView_bodyLeftSide">
-						<div className="eEventResultView_mainInfoBlock">
-							<div className={leftSideClasses}>{ leftOpponent }</div>
-						</div>
-						<div className="eEventResultView_score mRight">
-							{ model.scoreAr[0] }
-						</div>
-					</div>
-					<span className="eSeparator"></span>
-					<div className="bBigEventResultView_bodyRightSide">
-						<div className="eEventResultView_score">
-							{ model.scoreAr[1] }
-						</div>
-						<div className="eEventResultView_mainInfoBlock mRight">
-							<div className={rightSideClasses}>{ rightOpponent }</div>
-						</div>
-					</div>
-				</div>
+		}  else {
+			return (
+				<TwoTeamOpponentSide
+					event			= { event }
+					activeSchoolId	= { activeSchoolId }
+				/>
 			);
 		}
 	},

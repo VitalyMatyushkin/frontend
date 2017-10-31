@@ -17,7 +17,7 @@ const Footer = React.createClass({
 			
 			return (
 				<div className="bFooter">
-					{`Upcoming: ${model.time} / ${model.sport} / ${model.rivals[0].value} vs. ${model.rivals[1].value}`}
+					{`Upcoming: ${model.time} / ${model.sport} / ${model.name}`}
 				</div>
 			);
 		} else {

@@ -19,7 +19,7 @@ const Center = React.createClass({
 			<div className={mainClass}>
 				<div className="bPageWrap">
 					<RouterView routes={binding.sub('routing')} binding={binding}>
-						<Route	path		= "/ /home"
+						<Route	path		= "/ /home /loginPublicSchool"
 								binding		= {binding.sub('bigScreenMainPage')}
 								component	= {BigScreenMainPage}
 						/>

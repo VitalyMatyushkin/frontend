@@ -15,7 +15,7 @@ const FixtureItem = React.createClass({
 
 		return (
 			<div className="bFixtureItem">
-				<EventResultView model={model}/>
+				<EventResultView model={model} event={this.props.event} activeSchoolId={this.props.activeSchoolId}/>
 				<FixtureItemFooter model={model}/>
 			</div>
 		)
