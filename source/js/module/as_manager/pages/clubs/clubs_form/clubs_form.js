@@ -245,8 +245,9 @@ const ClubsForm = React.createClass({
 								/>
 							</div>
 							<FormField
-								field	= 'maxParticipants'
-								type	= 'number'
+								field			= 'maxParticipants'
+								type			= 'number'
+								validation		= 'required'
 							>
 								Maximum number of students
 							</FormField>
