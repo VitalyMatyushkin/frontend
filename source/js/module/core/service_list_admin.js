@@ -10,6 +10,9 @@ const serviceList = {
 		// authorization
 		serviceList._login = new Service('/superadmin/login',binding);
 
+		serviceList.apps = new Service('/superadmin/apps', binding);
+		serviceList.app = new Service('/superadmin/apps/{appId}', binding);
+
 		// users
 		serviceList.users = new Service('/superadmin/users', binding);
 		serviceList.usersForceEmailVefication = new Service('/superadmin/users/{userId}/verification/status/email', binding);

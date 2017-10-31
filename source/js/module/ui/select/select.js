@@ -10,6 +10,7 @@ const	ComboboxOption	= require('./option'),
 const Select = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		defaultValue:	React.PropTypes.object,
 		/** function to call when option selected. (item.id, item.value) */
         onSelect: 		React.PropTypes.func,
 		/** array of data to display. Each item should have id and value properties */
@@ -19,9 +20,12 @@ const Select = React.createClass({
         id:			    React.PropTypes.string
 	},
 	getDefaultState: function () {
+		const selectedId = typeof this.props.defaultValue !== 'undefined' ? this.props.defaultValue.id : null;
+		const selectedValue = typeof this.props.defaultValue !== 'undefined' ? this.props.defaultValue.value : null;
+
 		return Immutable.fromJS({
-			selectedId: 	null,
-			selectedValue: 	null,
+			selectedId: 	selectedId,
+			selectedValue: 	selectedValue,
 			defaultId: 		null,
 			showList: 		false
 		});
