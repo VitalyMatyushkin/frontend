@@ -54,13 +54,25 @@ const Manager = React.createClass({
 			isSync: false,
 			fartherThen: LocalEventHelper.distanceItems[0].id,
 			eventFormOpponentSchoolKey: undefined,
-			isShowAllSports: false,
+			isShowAllSports: false
 		});
 	},
 	componentWillMount: function () {
 		this.isCopyMode = false;
 
+		LocalEventHelper.setParamsFromUrl(this);
+
 		this.setSchoolInfo()
+			.then(() => {
+				switch (this.mode) {
+					case EventHelper.EVENT_CREATION_MODE.COPY:
+						return LocalEventHelper.setEvent(this, this.eventId, EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION);
+					case EventHelper.EVENT_CREATION_MODE.ANOTHER:
+						return LocalEventHelper.setDateFromEventByEventId(this, this.eventId);
+					default:
+						return true;
+				}
+			})
 			.then(() => EventFormActions.getSports(this.props.activeSchoolId))
 			.then(sports => {
 				this.getDefaultBinding().set('sports', Immutable.fromJS(sports));

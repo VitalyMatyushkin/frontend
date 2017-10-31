@@ -17,17 +17,15 @@ const	Manager							= require('../../../ui/managers/manager'),
 		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
 
 // Helpers
-const	ManagerWrapperHelper			= require('../event/view/manager_wrapper/manager_wrapper_helper'),
-		NewManagerWrapperHelper			= require('../event/view/manager_wrapper/new_manager_wrapper_helper'),
-		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
-		RivalManager					= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager'),
+const	SavingEventHelper				= require('../../../helpers/saving_event_helper'),
 		EventConsts						= require('../../../helpers/consts/events'),
 		EventHelper						= require('../../../helpers/eventHelper'),
-		LocalEventHelper				= require('./eventHelper'),
+		LocalEventHelper				= require('module/as_manager/pages/events/eventHelper'),
 		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
 		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
-		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
+
+const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 const	EventFormActions				= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
 
@@ -94,15 +92,15 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		this.setParamsFromUrl();
+		LocalEventHelper.setParamsFromUrl(this);
 
 		this.setSchoolInfo()
 			.then(() => {
 				switch (this.mode) {
 					case EventHelper.EVENT_CREATION_MODE.COPY:
-						return this.setEvent(this.eventId);
+						return LocalEventHelper.setEvent(this, this.eventId, EventFormConsts.EVENT_FORM_MODE.SCHOOL);
 					case EventHelper.EVENT_CREATION_MODE.ANOTHER:
-						return this.setDateFromEventByEventId(this.eventId);
+						return LocalEventHelper.setDateFromEventByEventId(this, this.eventId);
 					default:
 						return true;
 				}
@@ -154,28 +152,6 @@ const EventManager = React.createClass({
 		});
 
 		binding.set('rivals', Immutable.fromJS(updRivals));
-	},
-	/**
-	 * Get event from server by eventId and set date from this event to event form.
-	 * It needs for 'another' creation mode - when user create event by click "add another event" button.
-	 */
-	setDateFromEventByEventId:function (eventId) {
-		return window.Server.schoolEvent.get({
-			schoolId	: this.props.activeSchoolId,
-			eventId		: eventId
-		}).then(event => {
-			this.getDefaultBinding().set('model.startTime', Immutable.fromJS(event.startTime));
-
-			return true;
-		});
-	},
-	setParamsFromUrl:function() {
-		const rootBinding	= this.getMoreartyContext().getBinding();
-
-		this.mode = rootBinding.get('routing.parameters.mode');
-		if(typeof this.mode !== 'undefined') {
-			this.eventId = rootBinding.get('routing.parameters.eventId');
-		}
 	},
 	setEvent: function(eventId) {
 		const binding = this.getDefaultBinding();
@@ -234,35 +210,6 @@ const EventManager = React.createClass({
 
 			return true;
 		});
-	},
-	getRivals: function(event) {
-		let rivals;
-		if(TeamHelper.isNewEvent(event)) {
-			let filteredRivals = [];
-			RivalManager.getRivalsByEvent(this.props.activeSchoolId, event, ViewModeConsts.VIEW_MODE.TABLE_VIEW)
-				.forEach(rival => {
-					if(rival.school.id === this.props.activeSchoolId) {
-						filteredRivals.push(rival);
-					} else if(
-						filteredRivals.findIndex(_rival => _rival.school.id === rival.school.id) === -1
-					) {
-						filteredRivals.push(rival);
-					}
-				});
-
-			return NewManagerWrapperHelper.getRivals(event, filteredRivals);
-		} else {
-			rivals = ManagerWrapperHelper.getRivals(this.props.activeSchoolId, event, true);
-			if(TeamHelper.isNonTeamSport(event)) {
-				rivals.forEach(rival => {
-					rival.players.forEach(p => {
-						p.id = p.userId;
-					});
-				});
-			}
-
-			return rivals;
-		}
 	},
 	convertServerGenderConstToClient: function(event) {
 		switch (event.gender) {
