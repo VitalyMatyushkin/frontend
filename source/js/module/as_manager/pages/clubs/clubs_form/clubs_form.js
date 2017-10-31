@@ -191,6 +191,7 @@ const ClubsForm = React.createClass({
 						binding			= { binding.sub('form') }
 						submitButtonId	= 'club_submit'
 						cancelButtonId	= 'club_cancel'
+						submitOnEnter 	= { false }
 					>
 						<FormColumn
 							key			= 'column_1'
