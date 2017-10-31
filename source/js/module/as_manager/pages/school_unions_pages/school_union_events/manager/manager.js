@@ -67,6 +67,9 @@ const Manager = React.createClass({
 				this.getDefaultBinding().set('isSync', true);
 			});
 	},
+	componentWillUnmount: function () {
+		this.getDefaultBinding().clear();
+	},
 	setSchoolInfo: function() {
 		//get school data
 		return window.Server.school.get(this.props.activeSchoolId)
