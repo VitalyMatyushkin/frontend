@@ -804,18 +804,29 @@ const Event = React.createClass({
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
-			}, {
-				value		: 'details',
-				text		: 'Details',
-				isActive	: false
-			}, {
-				value		: 'tasks',
-				text		: 'Jobs',
-				isActive	: false
 			}
 		];
 
-		if(self.hasSportPerformanceItems()) {
+		if(this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
+			self.tabListModel.push({
+				value		: 'details',
+				text		: 'Details',
+				isActive	: false
+			});
+		}
+
+		if(this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
+			self.tabListModel.push({
+				value		: 'tasks',
+				text		: 'Jobs',
+				isActive	: false
+			});
+		}
+
+		if(
+			self.hasSportPerformanceItems() &&
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		) {
 			self.tabListModel.push({
 				value		: 'performance',
 				text		: 'Performance',
@@ -823,7 +834,10 @@ const Event = React.createClass({
 			});
 		}
 
-		if(self.hasSportDisciplineItems()) {
+		if(
+			self.hasSportDisciplineItems() &&
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		) {
 			self.tabListModel.push({
 				value		: 'discipline',
 				text		: 'Discipline',
@@ -839,7 +853,10 @@ const Event = React.createClass({
 			}
 		);
 
-		if(this.isShowParentalConsentTab()) {
+		if(
+			this.isShowParentalConsentTab() &&
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		) {
 			self.tabListModel.push(
 				{
 					value		: 'parentalConsent',
@@ -849,7 +866,10 @@ const Event = React.createClass({
 			);
 		}
 
-		if(this.isShowParentalReportsTab()) {
+		if(
+			this.isShowParentalReportsTab() &&
+			this.props.mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+		) {
 			self.tabListModel.push(
 				{
 					value		: 'parentalReports',
