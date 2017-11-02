@@ -23,6 +23,8 @@ const MessageListWrapper = React.createClass({
 			this.props.activeSchoolId
 		).then(messages => {
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
+
+			this.setSync(true);
 		});
 	},
 	loadAndSetLoggedUser: function() {
