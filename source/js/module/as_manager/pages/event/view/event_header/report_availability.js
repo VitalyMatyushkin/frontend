@@ -52,18 +52,27 @@ const ReportAvailability = React.createClass({
 				userId = thisParentChildren[0].userId;
 				permissionId = thisParentChildren[0].permissionId;
 			}
+			const 	isTakePart = data.availabilityEnabled ? data.availabilityEnabled : false,
+					details = data.details ? data.details : '',
+					playerDetails = {
+						userId,
+						permissionId
+					};
+			window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
+				.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 		} else {
 			userId = rootBinding.get('userData.sessions.roleSession.userId'),
 			permissionId = this.getPermissionIdFromPlayers(userId);
+			const 	isTakePart = data.availabilityEnabled ? data.availabilityEnabled : false,
+					details = data.details ? data.details : '',
+					playerDetails = {
+						userId,
+						permissionId
+					};
+			window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
+				.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 		}
-		const 	isTakePart = data.availabilityEnabled ? data.availabilityEnabled : false,
-				details = data.details ? data.details : '',
-				playerDetails = {
-					userId,
-					permissionId
-				};
-		window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-			.then(() => this.getDefaultBinding().set('editReportAvailability', false));
+
 	},
 	getPermissionIdFromPlayers: function (userId){
 		const   binding = this.getDefaultBinding(),

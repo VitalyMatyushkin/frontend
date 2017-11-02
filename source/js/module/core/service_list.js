@@ -247,6 +247,7 @@ const serviceList = {
 		serviceList.studentSchoolEvents = new Service('/i/events', binding);
 		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
 		serviceList.studentEventReportAvailability = new Service('/i/events/{eventId}/messages/report', binding);
+		serviceList.parentEventReportAvailability = new Service('/i/children/events/{eventId}/messages/report', binding);
 
 		// Integrations
 		serviceList.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
