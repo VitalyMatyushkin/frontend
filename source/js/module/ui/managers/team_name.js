@@ -22,9 +22,13 @@ const TeamName = React.createClass({
 		typeof this.props.name !== 'undefined' && this.setState({name: this.props.name});
 	},
 	componentWillReceiveProps: function(newProps) {
-		const updName = newProps.name;
+		let updName = newProps.name;
 
-		if(typeof updName !== 'undefined' && updName !== this.state.name) {
+		if(updName !== this.state.name) {
+			if(typeof updName === 'undefined') {
+				updName = '';
+			}
+
 			this.setState({
 				name: updName
 			});
