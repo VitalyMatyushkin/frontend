@@ -12,6 +12,8 @@ const	Lazy				= require('lazy.js'),
 		Buttons				= require('./buttons'),
 		PencilButton		= require('../../../../../ui/pencil_button'),
 		TweetButton 		= require('./tweet_button'),
+		Popup               = require('module/ui/popup'),
+		ReportAvailability	= require('./report_availability'),
 		propz				= require('propz'),
 		EventConsts			= require('module/helpers/consts/events'),
 		SchoolConst 		= require('module/helpers/consts/schools'),
@@ -33,11 +35,13 @@ const EventHeader = React.createClass({
 		isInviterSchool:				React.PropTypes.bool.isRequired,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
 		isParent:						React.PropTypes.bool.isRequired,
+		isStudent:						React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickAddTeam:					React.PropTypes.func.isRequired,
 		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
+		onReportAvailabilityEvent:		React.PropTypes.func.isRequired,
 		handleClickDownloadCSV:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired,
@@ -93,6 +97,11 @@ const EventHeader = React.createClass({
 
 		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.event.status !== "FINISHED";
 	},
+	closeReportAvailabilityPopup: function () {
+		const 	binding		= this.getDefaultBinding();
+
+		binding.set('editReportAvailability', false);
+	},
 	renderViewModeLinks: function(){
 		if(
 			TeamHelper.isNewEvent(this.props.event)
@@ -121,6 +130,7 @@ const EventHeader = React.createClass({
 	},
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
+				binding         	= this.getDefaultBinding(),
 				eventAges			= this.getEventAges(),
 				eventLocation		= this.getEventLocation(),
 				name				= challengeModel.name,
@@ -173,6 +183,7 @@ const EventHeader = React.createClass({
 							isInviterSchool 				= { this.props.isInviterSchool }
 							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
 							isParent		 				= { this.props.isParent }
+							isStudent		 				= { this.props.isStudent }
 							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
 							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
@@ -182,12 +193,26 @@ const EventHeader = React.createClass({
 							onClickOk						= { this.props.onClickOk }
 							onSendConsentRequest			= { this.props.onSendConsentRequest }
 							onReportNotParticipate			= { this.props.onReportNotParticipate }
+							onReportAvailabilityEvent		= { this.props.onReportAvailabilityEvent }
 							onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
 							onClickAddSchool 				= { this.props.onClickAddSchool }
 							onClickAddTeam 					= { this.props.onClickAddTeam }
 						/>
 					</div>
 				</div>
+				<Popup
+					binding         = {binding}
+					stateProperty   = {'editReportAvailability'}
+					onRequestClose  = {this.closeReportAvailabilityPopup}
+					otherClass      = "bPopupPermission"
+				>
+					<ReportAvailability
+						binding     = {binding}
+						isParent	= { this.props.isParent }
+						eventId		= { eventId }
+						onCancel    = {this.closeReportAvailabilityPopup}
+					/>
+				</Popup>
 			</div>
 		);
 	}

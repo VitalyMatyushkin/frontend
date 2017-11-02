@@ -130,7 +130,7 @@ const MessageListActions = {
 				filter:		{
 					where:		{
 						eventId:	eventId,
-						kind:		MessageConsts.MESSAGE_KIND.REFUSAL
+						kind:		MessageConsts.MESSAGE_KIND.AVAILABILITY
 					},
 					limit:		1000
 				}

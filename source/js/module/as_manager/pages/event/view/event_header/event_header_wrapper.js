@@ -108,6 +108,16 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isEditEventPopupOpen', true);
 	},
+	/**
+	 * The event handler when clicking the button "Report Availability"
+	 */
+	onReportAvailabilityEvent: function () {
+		const 	binding		= this.getDefaultBinding(),
+				schoolId 	= this.props.activeSchoolId,
+				eventId 	= binding.toJS('model.id');
+
+		binding.set('editReportAvailability', true);
+	},
 	onSendConsentRequest: function() {
 		const	binding			= this.getDefaultBinding(),
 				event			= binding.toJS('model'),
@@ -177,6 +187,7 @@ const EventHeaderWrapper = React.createClass({
 				eventAges						= binding.toJS('model.ages'),
 				isUserSchoolWorker				= RoleHelper.isUserSchoolWorker(this),
 				isParent						= RoleHelper.isParent(this),
+				isStudent						= RoleHelper.isStudent(this),
 				isShowScoreEventButtonsBlock	= TeamHelper.isShowScoreEventButtonsBlock(this);
 		//const for tweet button
 		const 	twitterData 				= typeof binding.toJS('twitterData') !== 'undefined' ? binding.toJS('twitterData') : [],
@@ -187,6 +198,7 @@ const EventHeaderWrapper = React.createClass({
 
 		return (
 			<EventHeader
+				binding							= { binding }
 				event							= { event }
 				challengeModel					= { challengeModel }
 				isInviterSchool					= { this.isInviterSchool() }
@@ -196,11 +208,13 @@ const EventHeaderWrapper = React.createClass({
 				eventAges						= { eventAges }
 				isUserSchoolWorker 				= { isUserSchoolWorker }
 				isParent						= { isParent }
+				isStudent						= { isStudent }
 				isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
 				handleClickCancelEvent			= { this.handleClickCancelEvent }
 				handleClickCloseEvent			= { this.handleClickCloseEvent }
 				handleClickDownloadPdf			= { this.handleClickDownloadPdf }
 				handleClickDownloadCSV			= { this.handleClickDownloadCSV }
+				onReportAvailabilityEvent		= { this.onReportAvailabilityEvent }
 				onClickCloseCancel				= { this.onClickCloseCancel }
 				onClickOk						= { this.onClickOk }
 				onClickEditEventButton			= { this.onClickEditEventButton }

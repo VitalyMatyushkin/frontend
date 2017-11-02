@@ -873,7 +873,7 @@ const Event = React.createClass({
 			self.tabListModel.push(
 				{
 					value		: 'parentalReports',
-					text		: 'Parental Reports',
+					text		: 'Parental/Student Reports',
 					isActive	: false
 				}
 			);

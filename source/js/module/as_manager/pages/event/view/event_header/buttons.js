@@ -22,10 +22,12 @@ const Buttons = React.createClass({
 		isInviterSchool					: React.PropTypes.bool.isRequired,
 		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
 		isParent						: React.PropTypes.bool.isRequired,
+		isStudent						: React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
 		handleClickCancelEvent			: React.PropTypes.func.isRequired,
 		handleClickCloseEvent			: React.PropTypes.func.isRequired,
 		handleClickDownloadPdf			: React.PropTypes.func.isRequired,
+		onReportAvailabilityEvent		: React.PropTypes.func.isRequired,
 		handleClickDownloadCSV			: React.PropTypes.func.isRequired,
 		onClickCloseCancel				: React.PropTypes.func.isRequired,
 		onClickOk						: React.PropTypes.func.isRequired,
@@ -76,16 +78,16 @@ const Buttons = React.createClass({
 			actionList.push({id:'send_consent_request', text:'Send Consent Request'});
 		}
 
-		if(this.isReportNotParticipateAvailable()) {
-			actionList.push({id:'report_not_participate', text:'Report unavailability'});
-		}
-
 		if(this.isChangeScoreEventActionAvailable()) {
 			actionList.push({id:'change', text:'Update Scores'});
 		}
 
 		if(this.isCancelEventActionAvailable()) {
 			actionList.push({id:'cancel', text:'Cancel Event'});
+		}
+
+		if(this.isReportAvailabilityAvailable()) {
+			actionList.push({id:'report_availability', text:'Report Availability'});
 		}
 
 		if(
@@ -101,6 +103,13 @@ const Buttons = React.createClass({
 		}
 
 		return actionList;
+	},
+	isReportAvailabilityAvailable: function () {
+		return (
+			(this.props.isParent || this.props.isStudent) &&
+			EventHelper.isNotFinishedEvent(this.props.event) &&
+			this.isNotExpiredEventTime()
+		);
 	},
 	isAddSchoolAvailable: function() {
 		const eventStatus = this.props.event.status;
@@ -244,6 +253,9 @@ const Buttons = React.createClass({
 				break;
 			case 'add_team':
 				this.props.onClickAddTeam();
+				break;
+			case 'report_availability':
+				this.props.onReportAvailabilityEvent();
 				break;
 		}
 	},

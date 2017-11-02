@@ -27,13 +27,22 @@ const ParentalReportsTable = React.createClass({
 
 		if(typeof messages !== 'undefined') {
 			return messages.map(message => {
-				const name = `${message.playerDetailsData.firstName} ${message.playerDetailsData.lastName}`;
+				const 	name = `${message.playerDetailsData.firstName} ${message.playerDetailsData.lastName}`,
+						isTakePart = message.isTakePart ? 'Yes' : 'No',
+						details = message.details,
+						sender = (	message.playerDetails.permissionId 	=== message.sender.permissionId &&
+									message.playerDetails.userId 		=== message.sender.userId) ?
+							`${message.sender.fullName} (student)` :
+							`${message.sender.fullName} (${message.playerDetailsData.firstName}'s parent)`;
 
 				return (
 					<tr
 						key={message.id}
 					>
 						<td>{name}</td>
+						<td>{isTakePart}</td>
+						<td>{details}</td>
+						<td>{sender}</td>
 						<td>
 							{this.getStatus(message)}
 						</td>
@@ -51,6 +60,9 @@ const ParentalReportsTable = React.createClass({
 					<thead>
 					<tr>
 						<th>Name</th>
+						<th>Available</th>
+						<th>Details</th>
+						<th>Sender</th>
 						<th>Status</th>
 					</tr>
 					</thead>

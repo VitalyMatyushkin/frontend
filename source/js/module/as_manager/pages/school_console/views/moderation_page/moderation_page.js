@@ -70,6 +70,20 @@ const ModerationPage = React.createClass({
 					>
 						User can write comments for event
 					</FormField>
+					<FormField
+						type		= "checkbox"
+						field		= "availabilityStudentEnabled"
+						classNames	= "mSingleLine"
+					>
+						Report availability for student
+					</FormField>
+					<FormField
+						type		= "checkbox"
+						field		= "availabilityParentEnabled"
+						classNames	= "mSingleLine"
+					>
+						Report availability for parent
+					</FormField>
 				</Form>
 			</div>
 		);
