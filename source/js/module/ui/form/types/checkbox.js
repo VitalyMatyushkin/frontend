@@ -9,25 +9,22 @@ const	React		= require('react'),
 
 const TypeCheckbox =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
-    propTypes: {
-        id:				React.PropTypes.string 		// just old good html id
-    },
+		propTypes: {
+			id: React.PropTypes.string 		// just old good html id
+		},
 	onChange: function(event) {
-		const self = this;
-
-		self.setValue(event.target.checked);
+		this.setValue(event.target.checked);
 
 		event.stopPropagation();
 	},
 	render: function () {
-		const	self	= this,
-				value	= self.getDefaultBinding().get('value');
+		const value = Boolean(this.getDefaultBinding().get('value'));
 
 		return (
 			<Checkbox
 				isChecked	= { value }
-				onChange	= { self.onChange }
-				id			= { self.props.id }
+				onChange	= { this.onChange }
+				id			= { this.props.id }
 			/>
 		)
 	}

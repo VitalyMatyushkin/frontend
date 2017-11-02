@@ -4,7 +4,22 @@ const	React			= require('react'),
 
 const PlayerStatusTableBody = React.createClass({
 	propTypes: {
-		players: React.PropTypes.object.isRequired
+		players: React.PropTypes.array.isRequired
+	},
+	renderFields: function(player){
+		const fields = player.fields;
+		
+		if (Array.isArray(fields) && fields.length > 0) {
+			return (
+				fields.map((field, index) => {
+					return (
+						<p><span className="mBold">{field.heading}</span>{` ${field.value}`}</p>
+					)
+				})
+			);
+		} else {
+			return null;
+		}
 	},
 	renderRows: function() {
 		const players = this.props.players;
@@ -15,6 +30,7 @@ const PlayerStatusTableBody = React.createClass({
 					<tr key={player.id}>
 						<td>{player.name}</td>
 						<td>{MessageConsts.MESSAGE_INVITATION_STATUS_MAP[player.status]}</td>
+						<td>{this.renderFields(player)}</td>
 					</tr>
 				);
 			});

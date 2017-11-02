@@ -48,6 +48,9 @@ const MessageListActions = {
 				messageId: messageId
 			}
 		);
+	},
+	sendConsentRequestTemplateWithValue: function(messageId, templateData){
+		return window.Server.childMessage.put({ messageId: messageId }, { fields: templateData });
 	}
 };
 

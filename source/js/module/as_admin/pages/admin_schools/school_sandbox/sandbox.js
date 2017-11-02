@@ -1,20 +1,21 @@
 /**
  * Created by Bright on 25/03/2016.
  */
-const 	RouterView 				= require('module/core/router'),
-		Route 					= require('module/core/route'),
-		React 					= require('react'),
-		SubMenu 				= require('module/ui/menu/sub_menu'),
-		Morearty 				= require('morearty'),
-		Immutable 				= require('immutable'),
-		ClassesPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page'),
-		EventsPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
-		SummaryPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
-		HousePageComponent		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
-		StudentsPageComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/students/students_page'),
-		NotificationsComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
-		ExportComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/export_students/export_students'),
-		SportsComponent			= require('./favorite_sports/sports_page');
+const 	RouterView 							= require('module/core/router'),
+		Route 								= require('module/core/route'),
+		React 								= require('react'),
+		SubMenu 							= require('module/ui/menu/sub_menu'),
+		Morearty 							= require('morearty'),
+		Immutable 							= require('immutable'),
+		ClassesPageComponent 				= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page'),
+		EventsPageComponent 				= require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
+		SummaryPageComponent 				= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
+		HousePageComponent					= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page'),
+		StudentsPageComponent				= require('module/as_admin/pages/admin_schools/school_sandbox/students/students_page'),
+		NotificationsComponent 				= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
+		ExportComponent 					= require('module/as_admin/pages/admin_schools/school_sandbox/export_students/export_students'),
+		ConsentRequestTemplateComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/template/template'),
+		SportsComponent						= require('./favorite_sports/sports_page');
 
 const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
 
@@ -98,6 +99,12 @@ const SchoolSandbox = React.createClass({
 				name:'Export',
 				key:'export',
 				routes:[`/school_sandbox/${schoolId}/export`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/template`,
+				name:'Template',
+				key:'template',
+				routes:[`/school_sandbox/${schoolId}/template`]
 			}
 		];
 		//Set sub menu items in default binding
@@ -171,6 +178,12 @@ const SchoolSandbox = React.createClass({
 							binding 	= { binding }
 							schoolId 	= { schoolId }
 							component 	= { ExportComponent }
+						/>
+						<Route
+							path 		= "/school_sandbox/:schoolId/template"
+							binding 	= { binding }
+							schoolId 	= { schoolId }
+							component 	= { ConsentRequestTemplateComponent }
 						/>
 					</RouterView>
 				</div>

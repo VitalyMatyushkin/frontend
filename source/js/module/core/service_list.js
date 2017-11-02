@@ -230,7 +230,8 @@ const serviceList = {
 		serviceList.childEventPhotos = new Service('/i/children/events/{eventId}/photos', binding);
 		serviceList.childEventPhoto = new Service('/i/children/events/{eventId}/photos/{photoId}', binding);
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
-
+		
+		serviceList.childMessage = new Service('/i/children/events/messages/{messageId}', binding);
 		serviceList.childMessageInbox = new Service('/i/children/events/messages/inbox', binding);
 		serviceList.childMessageOutbox = new Service('/i/children/events/messages/outbox', binding);
 		serviceList.childMessageArchive = new Service('/i/children/events/messages/archive', binding);
@@ -273,6 +274,9 @@ const serviceList = {
 		//user setting notifications
 		serviceList.userNotificationChannels = new Service('/i/notifications/channels', binding);
 		serviceList.userNotificationChannel = new Service('/i/notifications/channels/{channelId}', binding);
+		
+		//consent request template
+		serviceList.consentRequestTemplate = new Service('/i/schools/{schoolId}/template', binding);
 
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)

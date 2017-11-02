@@ -1,23 +1,25 @@
 const	React					= require('react'),
 		PlayerStatusTableHead	= require('module/ui/player_status_table/player_status_table_head.js'),
 		PlayerStatusTableBody	= require('module/ui/player_status_table/player_status_table_body.js'),
-		ScoreTableStyle			= require('../../../../styles/ui/b_score_table/b_score_table.scss'),
+		PlayerStatusTableStyle	= require('../../../../styles/ui/b_player_status_table/b_player_status_table.scss'),
 		Bootstrap				= require('../../../../styles/bootstrap-custom.scss');
 
-const ScoreTable = React.createClass({
+const PlayerStatusTable = React.createClass({
 	propTypes: {
-		players: React.PropTypes.object.isRequired
+		players: React.PropTypes.array.isRequired
 	},
 	render: function(){
 		return (
-			<div className="bScoreTable">
+			<div className="bPlayerStatusTable">
 				<table className="table table-striped">
-					<PlayerStatusTableHead/>
-					<PlayerStatusTableBody players={this.props.players}/>
+					<PlayerStatusTableHead />
+					<PlayerStatusTableBody
+						players = { this.props.players }
+					/>
 				</table>
 			</div>
 		);
 	}
 });
 
-module.exports = ScoreTable;
+module.exports = PlayerStatusTable;

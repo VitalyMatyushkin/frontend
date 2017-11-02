@@ -134,6 +134,13 @@ var validationsSet = {
 			return false;
 		}
 	},
+	alphanumericAndComma: function(value) {
+		if (/[^a-zA-Z0-9 ,\/]/.test(value)) {//Special symbols " " (space) and "," (comma) should be allowed!
+			return 'Should contain only text characters, space and comma';
+		} else {
+			return false;
+		}
+	},
 	number: function(value) {
 		if(!isNaN(parseFloat(value)) && isFinite(value)) {
 			return false;

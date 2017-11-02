@@ -1,7 +1,7 @@
 const	React			= require('react'),
 		FormBlockStyle	= require('../../../../../styles/ui/forms/b_form_block.scss');
 
-const FromBlockHeader = React.createClass({
+const FormBlockHeader = React.createClass({
 	propTypes: {
 		onClick: React.PropTypes.func.isRequired
 	},
@@ -22,4 +22,4 @@ const FromBlockHeader = React.createClass({
 	}
 });
 
-module.exports = FromBlockHeader;
+module.exports = FormBlockHeader;

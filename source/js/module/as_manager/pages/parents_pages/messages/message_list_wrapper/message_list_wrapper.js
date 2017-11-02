@@ -1,6 +1,8 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		Lazy 				= require('lazy.js'),
+		Promise 			= require('bluebird'),
 		MessageListActions	= require('module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageList			= require('module/ui/message_list/message_list'),
 		MessageConsts		= require('module/ui/message_list/message/const/message_consts'),
@@ -12,43 +14,70 @@ const MessageListWrapper = React.createClass({
 		messageType: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		this.loadAndSetMessages();
-		this.loadAndSetLoggedUser();
+		//load user->load messages->load templates
+		const binding = this.getDefaultBinding();
+		this.loadAndSetLoggedUser()
+		.then(user => {
+			binding.set('loggedUser', Immutable.fromJS(user));
+			
+			return MessageListActions.loadMessages(this.props.messageType)
+		})
+		.then(messages => {
+			const schoolIds = Lazy(messages).map(message => message.schoolId).uniq().toArray();
+			binding.atomically()
+				.set('messages',		Immutable.fromJS(messages))
+				.set(`template.count`, 	schoolIds.length)
+				.commit();
+			
+			return this.loadAndSetConsentRequestTemplate(schoolIds)
+		})
+		.then(() => {
+			binding.set('isSync', true);
+		});
 	},
+	
 	loadAndSetMessages: function() {
 		MessageListActions.loadMessages(this.props.messageType).then(messages => {
 			this.getDefaultBinding().atomically()
-				.set('isSync',		true)
-				.set('messages',	Immutable.fromJS(messages))
-				.commit();
-		});
-	},
-	loadAndSetLoggedUser: function() {
-		return window.Server.profile.get()
-		.then(user => {
-			this.getDefaultBinding().atomically()
-			.set('loggedUser', 	Immutable.fromJS(user))
 			.set('isSync',		true)
+			.set('messages',	Immutable.fromJS(messages))
 			.commit();
 		});
+	},
+
+	loadAndSetLoggedUser: function() {
+		return window.Server.profile.get()
+	},
+	//we should load own template for different school
+	loadAndSetConsentRequestTemplate: function(schoolIds){
+		const binding = this.getDefaultBinding();
+		return Promise.all(schoolIds.map((schoolId, index) => {
+			return window.Server.consentRequestTemplate.get(schoolId).then(template => {
+				binding.set(`template.${index}`, Immutable.fromJS(template));
+			})
+		}));
 	},
 	setSync: function(value) {
 		this.getDefaultBinding().set('isSync', value);
 	},
-	onAction: function(messageId, messageKind, actionType) {
-		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType);
+	onAction: function(messageId, messageKind, actionType, templateData) {
+		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType, templateData);
 	},
-	onActionByMessageKindAndActionType: function(messageId, messageKind, actionType) {
+	onActionByMessageKindAndActionType: function(messageId, messageKind, actionType, templateData) {
 		switch (messageKind) {
 			case MessageConsts.MESSAGE_KIND.INVITATION:
-				this.onActionForRefusalMessageByActionType(messageId, actionType);
+				this.onActionForRefusalMessageByActionType(messageId, actionType, templateData);
 				break;
 		}
 	},
-	onActionForRefusalMessageByActionType: function(messageId, actionType) {
+	onActionForRefusalMessageByActionType: function(messageId, actionType, templateData) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
+				
 				MessageListActions.acceptInvitationMessage(messageId).then(() => {
+					return MessageListActions.sendConsentRequestTemplateWithValue(messageId, templateData)
+				})
+				.then(() => {
 					this.setSync(false);
 
 					this.loadAndSetMessages();
@@ -151,6 +180,16 @@ const MessageListWrapper = React.createClass({
 			return true;
 		});
 	},
+	getTemplatesFromBinding: function(binding){
+		let templates = [];
+		const templateCount = binding.toJS('template.count');
+		for (let index = 0; index < templateCount; index++){
+			templates.push(
+				binding.toJS(`template.${index}`)
+			);
+		}
+		return templates
+	},
 	render: function() {
 		const	binding		= this.getDefaultBinding();
 
@@ -166,6 +205,7 @@ const MessageListWrapper = React.createClass({
 				</div>
 			);
 		} else if(isSync && messages.length > 0) {
+			const templates = this.getTemplatesFromBinding(binding);
 			return (
 				<MessageList
 					messages				= {messages}
@@ -175,6 +215,7 @@ const MessageListWrapper = React.createClass({
 					onClickShowComments 	= {this.onClickShowComments}
 					onClickSubmitComment 	= {this.onClickSubmitComment}
 					checkComments 			= {this.checkComments}
+					templates 				= {templates}
 				/>
 			);
 		} else if(isSync && messages.length === 0) {

@@ -10,6 +10,7 @@ const	React							= require('react'),
 		MessageStatus					= require('module/ui/message_list/message/components/message_status'),
 		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
 		EventMessageComments 			= require('module/ui/message_list/message/components/comments/event_message_comments'),
+		ConsentRequestTemplate 			= require('module/ui/message_list/message/components/template/template'),
 		If 								= require('module/ui/if/if'),
 		Bootstrap						= require('styles/bootstrap-custom.scss'),
 		InviteStyles					= require('styles/pages/events/b_invite.scss');
@@ -21,10 +22,21 @@ const EventInvitationMessage = React.createClass({
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
-		checkComments: 			React.PropTypes.func.isRequired
+		checkComments: 			React.PropTypes.func.isRequired,
+		template:				React.PropTypes.object.isRequired
+	},
+	getDefaultProps: function(){
+		return {
+			template: {}
+		}
 	},
 	componentWillUnmount: function(){
 		clearInterval(this.timerID);
+	},
+	getInitialState: function(){
+		return {
+			templateData: []
+		}
 	},
 	/**
 	 * Function start timer, which send request on server with count comment
@@ -45,11 +57,14 @@ const EventInvitationMessage = React.createClass({
 		const	messageId	= this.props.message.id,
 				messageKind	= this.props.message.kind,
 				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT;
+		
+		const templateData = this.state.templateData;
 
 		this.props.onAction(
 			messageId,
 			messageKind,
-			actionType
+			actionType,
+			templateData
 		);
 	},
 	onDecline: function() {
@@ -95,6 +110,11 @@ const EventInvitationMessage = React.createClass({
 	onClickSubmitComment:function(newCommentText, replyComment){
 		this.props.onClickSubmitComment(newCommentText, replyComment, this.props.message.id);
 	},
+	onChange: function(templateData){
+		this.setState({
+			templateData: templateData
+		});
+	},
 	render: function() {
 		const 	isShowComments = Boolean(this.props.message.isShowComments),
 				isSyncComments = Boolean(this.props.message.isSyncComments),
@@ -126,6 +146,10 @@ const EventInvitationMessage = React.createClass({
 								/>
 								<MessageText
 									message={this.props.message}
+								/>
+								<ConsentRequestTemplate
+									template = {this.props.template}
+									onChange = {this.onChange}
 								/>
 								{ this.renderButtons() }
 								{ this.renderStatus() }

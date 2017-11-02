@@ -11,7 +11,14 @@ const MessageList = React.createClass({
 		user: 					React.PropTypes.object.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
-		checkComments: 			React.PropTypes.func.isRequired
+		checkComments: 			React.PropTypes.func.isRequired,
+		//array custom consent request template templates of school
+		templates: 				React.PropTypes.array.isRequired
+	},
+	getDefaultProps: function(){
+		return {
+			templates: []
+		}
 	},
 	renderMessages: function() {
 		let messages = null;
@@ -23,6 +30,9 @@ const MessageList = React.createClass({
 			messages = this.props.messages.map(message => {
 				switch (message.kind) {
 					case MessageConsts.MESSAGE_KIND.INVITATION:
+						//For each school, we show a separate consent request template,
+						//if it does not exist (template === undefined), the child component will correctly handle this case
+						const template = this.props.templates.find(template => template.schoolId === message.schoolId);
 						return (
 							<EventInvitationMessage
 								key						= {message.id}
@@ -33,6 +43,7 @@ const MessageList = React.createClass({
 								onClickShowComments 	= {this.props.onClickShowComments}
 								onClickSubmitComment 	= {this.props.onClickSubmitComment}
 								checkComments 			= {this.props.checkComments}
+								template 				= {template}
 							/>
 						);
 					case MessageConsts.MESSAGE_KIND.REFUSAL:

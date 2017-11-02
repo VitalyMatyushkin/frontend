@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		Promise 			= require('bluebird'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		MessageListActions	= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageList			= require('module/ui/message_list/message_list'),
@@ -14,8 +15,9 @@ const MessageListWrapper = React.createClass({
 		messageType:	React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		this.loadAndSetMessages();
-		this.loadAndSetLoggedUser();
+		Promise.all([this.loadAndSetMessages(), this.loadAndSetLoggedUser()]).then(() => {
+			this.getDefaultBinding().set('isSync', true);
+		});
 	},
 	loadAndSetMessages: function() {
 		MessageListActions.loadMessages(
@@ -30,10 +32,7 @@ const MessageListWrapper = React.createClass({
 	loadAndSetLoggedUser: function() {
 		return window.Server.profile.get()
 		.then(user => {
-			this.getDefaultBinding().atomically()
-				.set('loggedUser', 	Immutable.fromJS(user))
-				.set('isSync',		true)
-				.commit();
+			this.getDefaultBinding().set('loggedUser', 	Immutable.fromJS(user));
 		});
 	},
 	setSync: function(value) {

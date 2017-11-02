@@ -6,10 +6,11 @@ const	React			= require('react'),
 const FormBlock = React.createClass({
 	propTypes: {
 		type:				React.PropTypes.string.isRequired,
-		isVisible:			React.PropTypes.string.isRequired,
+		isVisible:			React.PropTypes.bool.isRequired,
 		isShowCloseButton:	React.PropTypes.bool,
 		onClickClose:		React.PropTypes.func,
-		id: React.PropTypes.string
+		id: 				React.PropTypes.string,
+		customStyle: 		React.PropTypes.string
 	},
 	getDefaultProps: function () {
 		return {
@@ -22,7 +23,7 @@ const FormBlock = React.createClass({
 		const className = classNames({
 			'bFormBlock':	true,
 			'mInvisible':	!this.props.isVisible
-		});
+		}, this.props.customStyle);
 
 		return (
 			<div className={className} id={this.props.id}>

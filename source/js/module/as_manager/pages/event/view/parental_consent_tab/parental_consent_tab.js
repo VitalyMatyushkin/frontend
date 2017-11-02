@@ -44,7 +44,8 @@ const ParentalConsentTab = React.createClass({
 			return {
 				id:		m.playerDetailsData.id,
 				name:	name,
-				status:	m.invitationStatus
+				status:	m.invitationStatus,
+				fields: m.fields
 			}
 		});
 	},

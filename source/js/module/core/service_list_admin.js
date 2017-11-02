@@ -89,6 +89,9 @@ const serviceList = {
 		
 		//activate students
 		serviceList.activateStudents = new Service('/superadmin/schools/{schoolId}/students/activate', binding);
+		
+		//consent request template
+		serviceList.consentRequestTemplate = new Service('/superadmin/schools/{schoolId}/template', binding);
 
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)
