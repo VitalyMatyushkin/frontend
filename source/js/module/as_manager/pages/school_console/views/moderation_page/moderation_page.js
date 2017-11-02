@@ -31,35 +31,42 @@ const ModerationPage = React.createClass({
 	},
 	handleSubmit: function(data) {
 		window.Server.schoolSettings.put(
-			{
-				schoolId: this.activeSchoolId
-			},
+			this.activeSchoolId,
 			{
 				commentsEnabled	: data.commentsEnabled,
 				photosEnabled	: data.photosEnabled
 			}
-		);
+		).then(() => {
+			window.simpleAlert(
+				'Moderation settings has been saved',
+				'Ok',
+				() => {}
+			);
+		});
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
 		return (
-			<div className="bModerationPage">
-				<Form	binding				= {binding.sub('moderationForm')}
-						onSubmit			= {this.handleSubmit}
-						submitOnEnter		= {false}
-						defaultButton		= {'Save'}
-						formStyleClass="mFitContent"
-					>
-					<FormField	type	= "checkbox"
-								field	= "photosEnabled"
-								classNames="mSingleLine"
+			<div className='bModerationPage'>
+				<Form
+					binding			= { binding.sub('moderationForm') }
+					onSubmit		= { this.handleSubmit }
+					submitOnEnter	= { false }
+					defaultButton	= 'Save'
+					formStyleClass	= 'mFitContent'
+				>
+					<FormField
+						type		= 'checkbox'
+						field		= 'photosEnabled'
+						classNames	= 'mSingleLine'
 					>
 						User can upload photos to event
 					</FormField>
-					<FormField	type	= "checkbox"
-								field	= "commentsEnabled"
-								classNames="mSingleLine"
+					<FormField
+						type		= 'checkbox'
+						field		= 'commentsEnabled'
+						classNames	= 'mSingleLine'
 					>
 						User can write comments for event
 					</FormField>

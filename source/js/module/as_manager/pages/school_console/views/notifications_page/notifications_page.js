@@ -12,9 +12,11 @@ const NotificationsForm = require('./notifications_form');
 const NotificationsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	onSubmit: function(data){
-		const 	binding 	= this.getDefaultBinding(),
-				schoolId 	= SchoolHelper.getActiveSchoolId(this);
-		window.Server.schoolNotifications.put({ schoolId }, data ).then( response => {
+		window.Server.schoolNotifications.put(
+			SchoolHelper.getActiveSchoolId(this),
+			data
+		)
+		.then( () => {
 			window.simpleAlert(
 				`Notifications settings has been saved`,
 				'Ok',
