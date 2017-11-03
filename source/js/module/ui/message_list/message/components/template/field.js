@@ -1,13 +1,14 @@
 /**
  * Created by Woland on 30.10.2017.
  */
-const React = require('react');
+const 	React 		= require('react'),
+		classNames  = require('classnames');
 
 const 	TextInput 	= require('module/ui/text_input'),
 		Checkbox 	= require('module/ui/checkbox/checkbox'),
 		Select 		= require('module/ui/select-react/select');
 
-const SchoolConst = require('module/helpers/consts/schools');
+const SchoolConst 	= require('module/helpers/consts/schools');
 
 const ConsentRequestTemplateFieldComponentStyles = require('styles/ui/b_consent_request_template/b_consent_request_template.scss');
 
@@ -18,10 +19,11 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 			type: 				React.PropTypes.oneOf(SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY_OF_STRING),
 			isRequired: 		React.PropTypes.bool,
 			enumOptions: 		React.PropTypes.arrayOf(React.PropTypes.string),
-			value: 				React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.number, React.PropTypes.bool)
+			value: 				React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.bool])
 		}).isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
-		defaultValue: 	React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]).isRequired
+		defaultValue: 	React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]).isRequired,
+		addErrorClass: 	React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -29,12 +31,12 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		const fieldInitialData = Object.assign({}, this.props.field, {value: this.props.defaultValue});
+		const fieldInitialData = Object.assign({}, this.props.field, { value: this.props.defaultValue });
 		this.props.onChange(fieldInitialData, true);
 	},
 
 	onChange: function(value){
-		const fieldData = Object.assign({}, this.props.field, {value: value});
+		const fieldData = Object.assign({}, this.props.field, { value: value });
 		
 		this.props.onChange(fieldData, false);
 		this.setState({
@@ -46,11 +48,20 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 		const field = this.props.field;
 		
 		switch(field.type){
-			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING || SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
+			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING:
 				return (
 					<TextInput
 						handleChange 	= { this.onChange }
 						isRequired 		= { field.isRequired }
+						customStyle 	= {'mFullWidth'}
+					/>
+				);
+			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
+				return (
+					<TextInput
+						handleChange 	= { this.onChange }
+						isRequired 		= { field.isRequired }
+						customStyle 	= {'mFullWidth'}
 					/>
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
@@ -72,10 +83,18 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 		}
 	},
 	render: function(){
-		const field = this.props.field;
+		const 	field 			= this.props.field,
+				addErrorClass 	= this.props.addErrorClass,
+				classes 		= classNames({
+					eConsentRequestTemplateWrapper:	true,
+					mError: 						addErrorClass
+				});
+		
 		return (
-			<div className="eConsentRequestTemplateWrapper">
-				<div className="eConsentRequestTemplateHeading">{field.heading}</div>
+			<div className={classes}>
+				<div className="eConsentRequestTemplateHeading">
+					{field.isRequired ? field.heading + ' (required)' : field.heading}
+					</div>
 				{this.renderBody()}
 			</div>
 		);

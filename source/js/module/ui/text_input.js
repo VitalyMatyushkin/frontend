@@ -9,7 +9,8 @@ const TextInput = React.createClass({
 		disabled:		React.PropTypes.bool,
 		handleBlur:		React.PropTypes.func,
 		handleFocus:	React.PropTypes.func,
-		handleChange:	React.PropTypes.func
+		handleChange:	React.PropTypes.func,
+		customStyle: 	React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {
@@ -47,7 +48,7 @@ const TextInput = React.createClass({
 				type			= { this.props.textType || 'text' }
 				placeholder		= { this.props.placeholder }
 				value			= { this.state.value }
-				disabled		= { Boolean(this.props.disabled) }
+				className 		= { this.props.customStyle ? this.props.customStyle : ''}
 				onChange		= { this.handleChange }
 				onFocus			= { this.props.handleFocus }
 			/>

@@ -35,7 +35,8 @@ const EventInvitationMessage = React.createClass({
 	},
 	getInitialState: function(){
 		return {
-			templateData: []
+			templateData: 			[],
+			indexFieldWithError: 	[]
 		}
 	},
 	/**
@@ -53,19 +54,33 @@ const EventInvitationMessage = React.createClass({
 			clearInterval(this.timerID);
 		}
 	},
+	//we check all field manually
+	isAllRequiredFieldFilled: function(){
+		const templateData = this.state.templateData;
+		const allRequiredFieldNotFilledIndexes = [];
+		templateData.forEach((field, index) => {
+			if (field.isRequired && field.value === '') {
+				allRequiredFieldNotFilledIndexes.push(index);
+			}
+		});
+		this.setState({indexFieldWithError: allRequiredFieldNotFilledIndexes});
+		return allRequiredFieldNotFilledIndexes.length === 0;
+	},
 	onAccept: function() {
 		const	messageId	= this.props.message.id,
 				messageKind	= this.props.message.kind,
 				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT;
 		
 		const templateData = this.state.templateData;
-
-		this.props.onAction(
-			messageId,
-			messageKind,
-			actionType,
-			templateData
-		);
+		
+		if (this.isAllRequiredFieldFilled()) {
+			this.props.onAction(
+				messageId,
+				messageKind,
+				actionType,
+				templateData
+			);
+		}
 	},
 	onDecline: function() {
 		const	messageId	= this.props.message.id,
@@ -148,8 +163,11 @@ const EventInvitationMessage = React.createClass({
 									message={this.props.message}
 								/>
 								<ConsentRequestTemplate
-									template = {this.props.template}
-									onChange = {this.onChange}
+									template 			= { this.props.template }
+									message 			= { this.props.message }
+									onChange 			= { this.onChange }
+									indexFieldWithError = { this.state.indexFieldWithError }
+									type 				= { this.props.type }
 								/>
 								{ this.renderButtons() }
 								{ this.renderStatus() }

@@ -16,5 +16,16 @@
 	margin-top: 10px;
 }
 .eConsentRequestTemplateWrapper{
-	margin-bottom: 10px;
+	padding: 10px;
+	&.mError{
+		border: 1px solid red;
+		border-radius:$borderRadius;
+	}
+	.mFullWidth{
+		width:100%;
+		height: 40px;
+		border: 1px solid #d7d7d7;
+		border-radius: 5px;
+		padding: 8px;
+	}
 }

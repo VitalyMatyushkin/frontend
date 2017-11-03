@@ -161,6 +161,8 @@ const ConsentRequestTemplateComponent = React.createClass({
 				globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
 			
+		binding.set('isSync', false);
+		
 		//data to transfer
 		const data = {
 			fields: []
@@ -190,6 +192,12 @@ const ConsentRequestTemplateComponent = React.createClass({
 		}
 		
 		window.Server.consentRequestTemplate.put(schoolId, data).then(template => {
+			const formData = this.getFieldsConverted(template.fields);
+			binding.atomically()
+				.set('consentRequestTemplateCountFields', template.fields.length)
+				.set('isSync', true)
+				.commit();
+			formBinding.set(Immutable.fromJS(formData));
 			window.simpleAlert(
 				'The template have been updated successfully!',
 				'Ok',
