@@ -7,6 +7,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		Morearty		= require('morearty'),
 		DateHelper 		= require('module/helpers/date_helper'),
 		EventHelper 	= require('module/helpers/eventHelper'),
+		EventsConst		= require('module/helpers/consts/events'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
@@ -171,6 +172,24 @@ EventsSchoolModel.prototype.setColumns = function(){
 			}
 		},
 		{
+			text:'Removed',
+			isSorted:true,
+			hidden:true,
+			cell:{
+				dataField:'_isRemoved',
+				type:'general'
+			},
+			filter:{
+				type:'multi-select',
+				typeOptions:{
+					items: [{ key:true, value:'Is removed' },
+							{ key:false, value:'Not removed' }],
+					hideFilter:true,
+					hideButtons:true
+				}
+			}
+		},
+		{
 			text:'Actions',
 			width:'150px',
 			cell:{
@@ -184,8 +203,11 @@ EventsSchoolModel.prototype.setColumns = function(){
 	];
 };
 
-EventsSchoolModel.prototype.getActions = function(){
+EventsSchoolModel.prototype.getActions = function(item){
 	const actionList = ['Delete'];
+	if (item._isRemoved === true) {
+		actionList.push('Restore');
+	}
 	return actionList;
 };
 
@@ -195,6 +217,9 @@ EventsSchoolModel.prototype.getQuickEditAction = function(itemId, action){
 	switch (actionKey){
 		case 'Delete':
 			this.getDeleteFunction(itemId);
+			break;
+		case 'Restore':
+			this.getRestoreFunction(itemId);
 			break;
 		default :
 			break;
@@ -218,6 +243,24 @@ EventsSchoolModel.prototype.getDeleteFunction = function(itemId){
 							return res.id !== itemId;
 						});
 					});
+					this.reloadData();
+				}
+			);
+		},
+		() => {}
+	);
+};
+
+EventsSchoolModel.prototype.getRestoreFunction = function(itemId){
+	const 	globalBinding 	= this.getMoreartyContext().getBinding(),
+			schoolId 		= globalBinding.get('routing.pathParameters.0');
+
+	window.confirmAlert(
+		"This will recover REMOVE/CANCELED event to ACTIVE state. Don't do this until you absolutely sure you need it.",
+		"Restore",
+		"Cancel",
+		() => {
+			window.Server.eventRecover.post({schoolId: schoolId, eventId: itemId}).then(() => {
 					this.reloadData();
 				}
 			);
