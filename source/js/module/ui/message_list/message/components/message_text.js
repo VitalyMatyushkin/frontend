@@ -1,4 +1,5 @@
 const	React			= require('react'),
+		propz 			= require('propz'),
 		MessageConsts	= require('module/ui/message_list/message/const/message_consts');
 
 const MessageText = React.createClass({
@@ -8,7 +9,7 @@ const MessageText = React.createClass({
 	getText: function() {
 		const	message		= this.props.message,
 				player		= message.playerDetailsData,
-				playerName	= `${player.firstName} ${player.lastName}`;
+				playerName	= `${propz.get(player, ['firstName'])} ${propz.get(player, ['lastName'])}`;
 
 		switch (message.kind) {
 			case MessageConsts.MESSAGE_KIND.INVITATION:
