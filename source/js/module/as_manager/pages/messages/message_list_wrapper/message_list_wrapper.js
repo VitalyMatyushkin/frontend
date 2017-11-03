@@ -15,9 +15,8 @@ const MessageListWrapper = React.createClass({
 		messageType:	React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		Promise.all([this.loadAndSetMessages(), this.loadAndSetLoggedUser()]).then(() => {
-			this.getDefaultBinding().set('isSync', true);
-		});
+		this.loadAndSetLoggedUser();
+		this.loadAndSetMessages();
 	},
 	loadAndSetMessages: function() {
 		MessageListActions.loadMessages(
@@ -25,7 +24,6 @@ const MessageListWrapper = React.createClass({
 			this.props.activeSchoolId
 		).then(messages => {
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
-
 			this.setSync(true);
 		});
 	},
@@ -46,6 +44,9 @@ const MessageListWrapper = React.createClass({
 			case MessageConsts.MESSAGE_KIND.REFUSAL:
 				this.onActionForRefusalMessageByActionType(messageId, actionType);
 				break;
+			case MessageConsts.MESSAGE_KIND.AVAILABILITY:
+				this.onActionForReportMessageByActionType(messageId, actionType);
+				break;
 		}
 	},
 	onActionForRefusalMessageByActionType: function(messageId, actionType) {
@@ -57,6 +58,20 @@ const MessageListWrapper = React.createClass({
 				).then(() => {
 					this.setSync(false);
 
+					this.loadAndSetMessages();
+				});
+				break;
+		}
+	},
+	onActionForReportMessageByActionType: function(messageId, actionType) {
+		switch (actionType) {
+			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
+				MessageListActions.gotItReportMessage(
+					this.props.activeSchoolId,
+					messageId
+				).then(() => {
+					this.setSync(false);
+					
 					this.loadAndSetMessages();
 				});
 				break;
@@ -160,7 +175,7 @@ const MessageListWrapper = React.createClass({
 		const	binding		= this.getDefaultBinding();
 
 		const	messages	= binding.toJS('messages'),
-				isSync		= binding.toJS('isSync');
+				isSync		= Boolean(binding.toJS('isSync'));
 		
 		const user = binding.toJS('loggedUser');
 

@@ -144,6 +144,14 @@ const MessageListActions = {
 				messageId:	messageId
 			}
 		);
+	},
+	gotItReportMessage: function(activeSchoolId, messageId) {
+		return window.Server.doGotItActionForEventMessage.post(
+			{
+				schoolId:	activeSchoolId,
+				messageId:	messageId
+			}
+		);
 	}
 };
 
