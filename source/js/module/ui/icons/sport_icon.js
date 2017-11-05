@@ -22,8 +22,23 @@ const SportIcon = React.createClass({
 		let icon;
 		sport = sport ? sport.trim().toLowerCase() : '';
 		switch (true){
-			case 	sport === 'football':
+			case	sport === 'football' ||
+					sport === 'football 7-a-side' ||
+					sport === 'football 7-a-side (mt)' ||
+					sport === 'football 8-a-side' ||
+					sport === 'football 8-a-side (mt)' :
 				icon = "ball";
+				break;
+			case	sport === 'skiing' ||
+					sport === 'skiing (mt)' :
+				icon = "skiing";
+				break;
+			case	sport === 'volleyball' ||
+					sport === 'volleyball (mt)' :
+				icon = "volleyball";
+				break;
+			case	sport === 'after school club':
+				icon = "club";
 				break;
 			case 	sport === 'football indoor':
 				icon = "ball_indoor";
@@ -33,6 +48,10 @@ const SportIcon = React.createClass({
 				break;
 			case sport === 'football 5-a-side':
 				icon = "football_five";
+				break;
+			case	sport === 'rugby 10-a-side' ||
+					sport === 'rugby 10-a-side (mt)':
+				icon = "rugby";
 				break;
 			case 	sport === 'rugby union' ||
 					sport === 'tag rugby' ||
@@ -113,7 +132,9 @@ const SportIcon = React.createClass({
 			case 	sport === 'netball high 5':
 				icon = "netball_five";
 				break;
-			case 	sport === 'hockey indoor':
+			case	sport === 'hockey indoor' ||
+					sport === 'hockey 6-a-side ' ||
+					sport === 'hockey 6-a-side (mt)' :
 				icon = "hockey_indoor";
 				break;
 			case 	sport === 'chess (individual)' ||
@@ -258,6 +279,9 @@ const SportIcon = React.createClass({
 					sport === 'swimming relays 4×100m medley' ||
 					sport === 'swimming individual medley 100m' ||
 					sport === 'swimming individual medley 200m' ||
+					sport === 'swimming backstroke 50m (mt)' ||
+					sport === 'swimming backstroke 100m (mt)' ||
+					sport === 'swimming backstroke 200m (mt)' ||
 					sport === 'swimming individual medley 400m':
 				icon = "swimming";
 			break;
