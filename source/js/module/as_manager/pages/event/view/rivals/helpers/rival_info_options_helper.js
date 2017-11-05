@@ -4,11 +4,17 @@ const	propz						= require('propz'),
 		SchoolRivalInfoConsts		= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/consts/school_rival_info_consts'),
 		SchoolRivalInfoButtonData	= require('module/as_manager/pages/event/view/rivals/block_view_rivals/block_view_rival/block_view_rival_info/models/school_rival_info_button_data');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const RivalInfoOptionsHelper = {
-	getOptionsObjectForRivalInfoByRival: function(rival, activeSchoolId, event, rivals, isShowControlButtons, handlers) {
+	getOptionsObjectForRivalInfoByRival: function(rival, activeSchoolId, schoolType, event, rivals, isShowControlButtons, handlers) {
 		let options = {};
 
-		if(isShowControlButtons) {
+		if(
+			schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ?
+				isShowControlButtons :
+				true
+		) {
 			options = {
 				// it's buttons for additional functional
 				buttonsList: [

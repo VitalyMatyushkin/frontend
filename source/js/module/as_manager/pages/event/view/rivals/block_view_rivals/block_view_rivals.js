@@ -56,6 +56,7 @@ const BlockViewRivals = React.createClass({
 						RivalInfoOptionsHelper.getOptionsObjectForRivalInfoByRival(
 							rival,
 							this.props.activeSchoolId,
+							this.props.schoolType,
 							event,
 							rivalsData,
 							this.props.isShowControlButtons,
