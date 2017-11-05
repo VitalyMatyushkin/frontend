@@ -152,7 +152,7 @@ const SchoolForm = React.createClass({
 							Public Site Access
 						</FormField>
 						<FormField
-							type 		= "password"
+							type 		= "text"
 							id 			= "school_access_password"
 							field 		= "publicSite.password"
 							condition 	= { passActive }

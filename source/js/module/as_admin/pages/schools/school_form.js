@@ -175,7 +175,7 @@ const SystemAdminSchoolForm = React.createClass({
 						Public Site Access
 					</FormField>
 					<FormField
-						type			= "password"
+						type			= "text"
 						field			= "publicSite.password"
 						condition 		= { passActive }
 						validation 		= "required"
