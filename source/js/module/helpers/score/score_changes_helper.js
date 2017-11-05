@@ -43,7 +43,7 @@ const ScoreChangesHelper = {
 		});
 
 		if(removedPlayerScorePoints.length !== 0) {
-			return removedPlayers.map(scoreData =>
+			return removedPlayerScorePoints.map(scoreData =>
 				ScoreCRUD.deleteIndividualScorePoint(schoolId, event.id, scoreData._id)
 			);
 		} else {
