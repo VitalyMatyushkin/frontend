@@ -303,11 +303,13 @@ const Rivals = React.createClass({
 		if(typeof scoreData === 'undefined') {
 			scoreData = {
 				schoolId:	schoolId,
-				score:		newScoreData.value
+				score:		newScoreData.value,
+				isValid:	newScoreData.isValid
 			};
 			schoolScoreArray.push(scoreData);
 		} else {
 			scoreData.score = newScoreData.value;
+			scoreData.isValid = newScoreData.isValid;
 		}
 
 		binding.set('model.results.schoolScore', Immutable.fromJS(results.schoolScore));
@@ -322,11 +324,13 @@ const Rivals = React.createClass({
 		if(typeof scoreData === 'undefined') {
 			scoreData = {
 				houseId:	houseId,
-				score:		newScoreData.value
+				score:		newScoreData.value,
+				isValid:	newScoreData.isValid
 			};
 			houseScoreArray.push(scoreData);
 		} else {
 			scoreData.score = newScoreData.value;
+			scoreData.isValid = newScoreData.isValid;
 		}
 
 		binding.set('model.results.houseScore', Immutable.fromJS(results.houseScore));
@@ -392,12 +396,14 @@ const Rivals = React.createClass({
 
 		if(typeof teamScoreData === 'undefined') {
 			teamScoreData = {
-				teamId:	teamId,
-				score:	newScoreData.value
+				teamId:		teamId,
+				score:		newScoreData.value,
+				isValid:	newScoreData.isValid
 			};
 			teamScoreArray.push(teamScoreData);
 		} else {
 			teamScoreData.score = newScoreData.value;
+			teamScoreData.isValid = newScoreData.isValid;
 		}
 		teamScoreData.isChanged = true;
 

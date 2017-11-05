@@ -92,16 +92,47 @@ const EventHeaderWrapper = React.createClass({
 				event			= binding.toJS('model'),
 				activeSchoolId	= this.props.activeSchoolId;
 
-		let promise;
-		if(this.getDefaultBinding().get('model.status') === "FINISHED") {
-			promise = EventHeaderActions.submitScore(activeSchoolId, event, binding);
-		} else {
-			promise = EventHeaderActions.closeMatch(activeSchoolId, event, binding);
-		}
+		if(this.isValidScore(event)) {
+			let promise;
+			if(this.getDefaultBinding().get('model.status') === "FINISHED") {
+				promise = EventHeaderActions.submitScore(activeSchoolId, event, binding);
+			} else {
+				promise = EventHeaderActions.closeMatch(activeSchoolId, event, binding);
+			}
 
-		Promise.resolve(promise).then(() => {
-			this.props.onReload();
+			Promise.resolve(promise).then(() => {
+				this.props.onReload();
+			});
+		}
+	},
+	isValidScore: function (event) {
+		let result = true;
+
+		event.results.schoolScore.forEach(score => {
+			if(typeof score.isValid !== 'undefined' && !score.isValid) {
+				result = false;
+			}
 		});
+
+		event.results.houseScore.forEach(score => {
+			if(typeof score.isValid !== 'undefined' && !score.isValid) {
+				result = false;
+			}
+		});
+
+		event.results.teamScore.forEach(score => {
+			if(typeof score.isValid !== 'undefined' && !score.isValid) {
+				result = false;
+			}
+		});
+
+		event.results.individualScore.forEach(score => {
+			if(typeof score.isValid !== 'undefined' && !score.isValid) {
+				result = false;
+			}
+		});
+
+		return result;
 	},
 	onClickEditEventButton: function() {
 		const binding = this.getDefaultBinding();
