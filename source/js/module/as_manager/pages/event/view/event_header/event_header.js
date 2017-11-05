@@ -104,7 +104,8 @@ const EventHeader = React.createClass({
 	},
 	renderViewModeLinks: function(){
 		if(
-			TeamHelper.isNewEvent(this.props.event)
+			TeamHelper.isNewEvent(this.props.event) &&
+			TeamHelper.isMultiparty(this.props.event)
 		) {
 			return (
 				<ViewSelector
