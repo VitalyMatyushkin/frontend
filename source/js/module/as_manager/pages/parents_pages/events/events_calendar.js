@@ -43,8 +43,7 @@ const EventsCalendar = React.createClass({
 		document.location.hash = 'event/' + eventId + '?schoolId=' + schoolId;
 	},
 	_renderChallengesListView: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
+		const 	binding		= this.getDefaultBinding(),
 				children 	= binding.get('children');
 
 		const 	calendar 					= this.getDefaultBinding().sub('calendar'),
@@ -53,7 +52,7 @@ const EventsCalendar = React.createClass({
 
 		let challengesList;
 
-		if(binding.get('activeChildId') == 'all') {
+		if(binding.get('activeChildId') === 'all') {
 			challengesList = (
 				<AllChildrenChallenges	isSync		= {isSelectedDateEventsInSync}
 										children	= {children}

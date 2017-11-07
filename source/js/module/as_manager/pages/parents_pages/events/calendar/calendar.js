@@ -30,6 +30,7 @@ const Calendar = React.createClass({
 			'monthDate',
 			new Date()
 		);
+		CalendarActions.setSelectedDate(new Date(), this.props.childIdList, this.getDefaultBinding());
 	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
