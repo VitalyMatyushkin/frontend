@@ -35,6 +35,19 @@ const SCHOOL_SUBSCRIPTION_PLAN = {
 	LITE: 'LITE'
 };
 
+const STATUS = {
+	ACTIVE: 				'ACTIVE',
+	INACTIVE: 				'INACTIVE',
+	SUSPENDED: 				'SUSPENDED',
+	EMAIL_NOTIFICATIONS: 	'EMAIL_NOTIFICATIONS',
+	REMOVED: 				'REMOVED'
+};
+	/*{ ACTIVE: 'ACTIVE' },
+	{ text: 'Inactive', 			value: 'INACTIVE' },
+	{ text: 'Suspended', 			value: 'SUSPENDED' },
+	{ text: 'Email Notifications', 	value: 'EMAIL_NOTIFICATIONS' }
+];*/
+
 //Options for element dropdown in school form
 const STATUS_OPTIONS = [
 	{ text: 'Active', 				value: 'ACTIVE' },
@@ -117,3 +130,5 @@ module.exports.AGE_GROUPS 											= AGE_GROUPS;
 module.exports.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE 					= CONSENT_REQUEST_TEMPLATE_FIELD_TYPE;
 module.exports.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY 			= CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY;
 module.exports.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY_OF_STRING 	= CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY_OF_STRING;
+
+module.exports.STATUS 												= STATUS;

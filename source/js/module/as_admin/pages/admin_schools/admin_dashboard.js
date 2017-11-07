@@ -8,7 +8,7 @@ const	React									= require('react'),
 
 const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
 		UserViewComponent						= require('module/shared_pages/users/user_view'),
-		AdminListComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin-list'),
+		AdminListComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin_schools_list'),
 		SchoolUnionListWrapper					= require('./school_union_list/school_union_list_wrapper'),
 		SchoolUnionEdit							= require('./school_union_list/school_union_edit/school_union_edit'),
 		SchoolUnionCreate						= require('./school_union_list/school_union_add/school_union_add'),
