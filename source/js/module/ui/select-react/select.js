@@ -9,9 +9,14 @@ const Select = React.createClass({
 		optionsArray:		React.PropTypes.array.isRequired,
 		currentOption:		React.PropTypes.string.isRequired,
 		handleChange:		React.PropTypes.func.isRequired,
-		extraCssStyle:		React.PropTypes.string
+		extraCssStyle:		React.PropTypes.string,
+		isDisabled: 		React.PropTypes.bool.isRequired
 	},
-	
+	getDefaultProps: function(){
+		return {
+			isDisabled: false
+		};
+	},
 	getSelectCssStyle: function() {
 		if(typeof this.props.extraCssStyle === 'undefined') {
 			return 'bDropdown';
@@ -40,6 +45,7 @@ const Select = React.createClass({
 			<select	className	= { this.getSelectCssStyle() }
 					value		= { this.props.currentOption }
 					onChange	= { this.handleChange }
+					disabled 	= { this.props.isDisabled }
 			>
 				{options}
 			</select>

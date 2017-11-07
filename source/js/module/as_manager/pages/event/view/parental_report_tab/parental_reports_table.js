@@ -5,7 +5,7 @@ const	React			= require('react'),
 
 const ParentalReportsTable = React.createClass({
 	propTypes: {
-		messages:	React.PropTypes.object.isRequired,
+		messages:	React.PropTypes.array.isRequired,
 		onGotIt:	React.PropTypes.func.isRequired
 	},
 	onGotIt: function(message) {

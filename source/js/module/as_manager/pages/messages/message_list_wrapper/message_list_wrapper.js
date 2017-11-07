@@ -15,8 +15,20 @@ const MessageListWrapper = React.createClass({
 		messageType:	React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		this.loadAndSetLoggedUser();
-		this.loadAndSetMessages();
+		Promise.all([
+			MessageListActions.loadMessages(this.props.messageType, this.props.activeSchoolId),
+			window.Server.profile.get()
+		]).then(result => {
+			const 	messages 	= result[0],
+					user 		= result[1];
+			
+			this.getDefaultBinding().atomically()
+				.set('messages', 	Immutable.fromJS(messages))
+				.set('loggedUser', 	Immutable.fromJS(user))
+				.commit();
+			
+			this.setSync(true);
+		});
 	},
 	loadAndSetMessages: function() {
 		MessageListActions.loadMessages(
@@ -25,12 +37,6 @@ const MessageListWrapper = React.createClass({
 		).then(messages => {
 			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
 			this.setSync(true);
-		});
-	},
-	loadAndSetLoggedUser: function() {
-		return window.Server.profile.get()
-		.then(user => {
-			this.getDefaultBinding().set('loggedUser', 	Immutable.fromJS(user));
 		});
 	},
 	setSync: function(value) {

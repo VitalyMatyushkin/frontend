@@ -321,13 +321,18 @@ const Event = React.createClass({
 		}
 	},
 	loadParentalConsentMessages: function() {
-		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
-			return MessageListActions.loadParentalConsentMessagesByEventId(
-				this.props.activeSchoolId,
-				this.eventId
-			);
-		} else {
-			return Promise.resolve([]);
+		switch(true){
+			case this.role === 'PARENT':
+				return MessageListActions.loadParentRoleParentalConsentMessagesByEventId(
+					this.eventId
+				);
+			case this.role !== 'STUDENT':
+				return MessageListActions.loadParentalConsentMessagesByEventId(
+					this.props.activeSchoolId,
+					this.eventId
+				);
+			default:
+				return Promise.resolve([]);
 		}
 	},
 	loadParentalReposrtsMessages: function() {
@@ -544,9 +549,10 @@ const Event = React.createClass({
 		) {
 			this.addListenerForTeamScore();
 		}
-
-		if(this.role !== 'STUDENT' && this.role !== 'PARENT') {
+		if (this.role !== 'STUDENT') {
 			this.addListenerForParentalConsentMessages();
+		}
+		if(this.role !== 'STUDENT' && this.role !== 'PARENT') {
 			this.addListenerForParentalReportMessages();
 		}
 	},

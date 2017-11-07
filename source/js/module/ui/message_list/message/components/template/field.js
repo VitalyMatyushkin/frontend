@@ -15,15 +15,16 @@ const ConsentRequestTemplateFieldComponentStyles = require('styles/ui/b_consent_
 const ConsentRequestTemplateFieldComponent = React.createClass({
 	propTypes: {
 		field: 			React.PropTypes.shape({
-			heading: 			React.PropTypes.string,
-			type: 				React.PropTypes.oneOf(SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY_OF_STRING),
-			isRequired: 		React.PropTypes.bool,
-			enumOptions: 		React.PropTypes.arrayOf(React.PropTypes.string),
-			value: 				React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.bool])
+			heading: 		React.PropTypes.string,
+			type: 			React.PropTypes.oneOf(SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY_OF_STRING),
+			isRequired: 	React.PropTypes.bool,
+			enumOptions: 	React.PropTypes.arrayOf(React.PropTypes.string),
+			value: 			React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.bool])
 		}).isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
 		defaultValue: 	React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]).isRequired,
-		addErrorClass: 	React.PropTypes.bool.isRequired
+		addErrorClass: 	React.PropTypes.bool.isRequired,
+		isDisabled: 	React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -45,7 +46,9 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 
 	},
 	renderBody: function(){
-		const field = this.props.field;
+		const 	field 		= this.props.field,
+				isDisabled 	= this.props.isDisabled,
+				value 		= this.state.value;
 		
 		switch(field.type){
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING:
@@ -54,6 +57,8 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 						handleChange 	= { this.onChange }
 						isRequired 		= { field.isRequired }
 						customStyle 	= {'mFullWidth'}
+						disabled 		= { isDisabled }
+						value 			= { value }
 					/>
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
@@ -62,22 +67,26 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 						handleChange 	= { this.onChange }
 						isRequired 		= { field.isRequired }
 						customStyle 	= {'mFullWidth'}
+						disabled 		= { isDisabled }
+						value 			= { value }
 					/>
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
 				return (
 					<Checkbox
-						isChecked				= { this.state.value }
+						isChecked				= { value }
 						onChange				= { this.onChange }
 						isReturnEventTarget 	= { false }
+						isDisabled 				= { isDisabled }
 					/>
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
 				return (
 					<Select
 						optionsArray 	= { field.enumOptions }
-						currentOption 	= { this.state.value === '' ? field.enumOptions[0] : this.state.value }
+						currentOption 	= { value === '' ? field.enumOptions[0] : value }
 						handleChange 	= { this.onChange }
+						isDisabled 		= { isDisabled }
 					/>
 				);
 		}

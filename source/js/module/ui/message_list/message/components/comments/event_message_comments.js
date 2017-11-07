@@ -1,5 +1,6 @@
 const 	React 		= require('react'),
-		Comments 	= require('module/ui/comments/comments');
+		Comments 	= require('module/ui/comments/comments'),
+		Loader 		= require('module/ui/loader');
 
 const EventMessageComments = React.createClass({
 	propTypes: {
@@ -18,7 +19,7 @@ const EventMessageComments = React.createClass({
 				/>
 			);
 		} else {
-			return null
+			return <Loader condition = { true } />
 		}
 	}
 });

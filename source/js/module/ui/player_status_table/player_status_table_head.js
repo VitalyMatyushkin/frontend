@@ -8,7 +8,8 @@ const PlayerStatusTableHead = React.createClass({
 			<tr>
 				<th>Name</th>
 				<th>Status</th>
-				<th>Additional Info</th>
+				<th>Parents</th>
+				<th></th>
 			</tr>
 			</thead>
 		);

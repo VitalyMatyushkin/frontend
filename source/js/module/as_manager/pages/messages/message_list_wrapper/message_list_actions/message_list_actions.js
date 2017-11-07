@@ -109,6 +109,19 @@ const MessageListActions = {
 			}
 		);
 	},
+	loadParentRoleParentalConsentMessagesByEventId: function(eventId) {
+		return window.Server.childEventMessages.get(
+			{
+				eventId:	eventId,
+				filter:		{
+					where:		{
+						kind:		MessageConsts.MESSAGE_KIND.INVITATION
+					},
+					limit:		1000
+				}
+			}
+		);
+	},
 	loadParentalConsentMessagesCountByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessagesCount.get(
 			{

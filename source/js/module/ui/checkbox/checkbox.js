@@ -8,11 +8,13 @@ const Checkbox =  React.createClass({
 		onChange:				React.PropTypes.func.isRequired,
 		id:						React.PropTypes.string,
 		customCss:				React.PropTypes.string,
-		isReturnEventTarget: 	React.PropTypes.bool.isRequired
+		isReturnEventTarget: 	React.PropTypes.bool.isRequired,
+		isDisabled: 			React.PropTypes.bool.isRequired
 	},
 	getDefaultProps:function(){
 		return {
-			isReturnEventTarget: true
+			isReturnEventTarget: 	true,
+			isDisabled: 			false
 		}
 	},
 	onChange: function(event){
@@ -31,6 +33,7 @@ const Checkbox =  React.createClass({
 					checked 	= { this.props.isChecked }
 					onChange 	= { this.onChange }
 					id 			= { this.props.id }
+					disabled 	= { this.props.isDisabled }
 				/>
 				<label/>
 			</div>

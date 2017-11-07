@@ -232,6 +232,7 @@ const serviceList = {
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
 		
 		serviceList.childMessage = new Service('/i/children/events/messages/{messageId}', binding);
+		serviceList.childEventMessages = new Service('/i/children/events/{eventId}/messages', binding);
 		serviceList.childMessageInbox = new Service('/i/children/events/messages/inbox', binding);
 		serviceList.childMessageOutbox = new Service('/i/children/events/messages/outbox', binding);
 		serviceList.childMessageArchive = new Service('/i/children/events/messages/archive', binding);

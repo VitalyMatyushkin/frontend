@@ -145,7 +145,7 @@ const MessageListWrapper = React.createClass({
 	},
 	checkComments: function(messageId) {
 		const 	binding 		= this.getDefaultBinding(),
-			messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId);
+				messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId);
 		
 		return window.Server.childrenEventMessageCommentsCount.get({
 			messageId: messageId
@@ -204,18 +204,18 @@ const MessageListWrapper = React.createClass({
 					<Loader/>
 				</div>
 			);
-		} else if(isSync && messages.length > 0) {
+		} else if (isSync && messages.length > 0) {
 			const templates = this.getTemplatesFromBinding(binding);
 			return (
 				<MessageList
-					messages				= {messages}
-					messageType				= {this.props.messageType}
-					onAction				= {this.onAction}
-					user 					= {user}
-					onClickShowComments 	= {this.onClickShowComments}
-					onClickSubmitComment 	= {this.onClickSubmitComment}
-					checkComments 			= {this.checkComments}
-					templates 				= {templates}
+					messages				= { messages }
+					messageType				= { this.props.messageType }
+					onAction				= { this.onAction }
+					user 					= { user }
+					onClickShowComments 	= { this.onClickShowComments }
+					onClickSubmitComment 	= { this.onClickSubmitComment }
+					checkComments 			= { this.checkComments }
+					templates 				= { templates }
 				/>
 			);
 		} else if(isSync && messages.length === 0) {

@@ -12,6 +12,11 @@ const TextInput = React.createClass({
 		handleChange:	React.PropTypes.func,
 		customStyle: 	React.PropTypes.string
 	},
+	getDefaultProps: function(){
+		return {
+			disabled: false
+		};
+	},
 	getInitialState: function(){
 		return {
 			value: ''
@@ -51,6 +56,7 @@ const TextInput = React.createClass({
 				className 		= { this.props.customStyle ? this.props.customStyle : ''}
 				onChange		= { this.handleChange }
 				onFocus			= { this.props.handleFocus }
+				disabled 		= { this.props.disabled }
 			/>
 		)
 	}

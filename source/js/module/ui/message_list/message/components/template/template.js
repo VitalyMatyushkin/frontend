@@ -2,6 +2,7 @@
  * Created by Woland on 30.10.2017.
  */
 const 	React = require('react'),
+		propz = require('propz'),
 		Field = require('./field');
 
 const MESSAGE_TYPE = require('module/ui/message_list/message/const/message_consts').MESSAGE_TYPE;
@@ -25,16 +26,32 @@ const ConsentRequestTemplateComponent = React.createClass({
 			templateData: []
 		}
 	},
-	getDefaultValue: function(field){
-		switch(field.type){
-			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING:
-				return '';
-			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
-				return '';
-			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
-				return false;
-			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
-				return field.enumOptions[0];
+	getDefaultValue: function(field, index){
+		const 	message 	= this.props.message,
+				type 		= this.props.type;
+		
+		if (type === MESSAGE_TYPE.ARCHIVE && Array.isArray(message.fields) && message.fields.length > 0) {
+			switch(field.type){
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING:
+					return propz.get(message, ['fields', index, 'value'], '');
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
+					return propz.get(message, ['fields', index, 'value'], '');
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
+					return propz.get(message, ['fields', index, 'value'], false);
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
+					return propz.get(message, ['fields', index, 'value'], field.enumOptions[0]);
+			}
+		} else {
+			switch(field.type){
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.STRING:
+					return '';
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
+					return '';
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
+					return false;
+				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
+					return field.enumOptions[0];
+			}
 		}
 	},
 	onChange: function(fieldData, isInitial, index){
@@ -54,7 +71,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 			this.props.onChange(Array);
 		}
 	},
-	renderField: function(fields){
+	renderField: function(fields, isDisabled){
 		return fields.map( (field, index) => {
 			delete field._id; //unused property, change server reviver?
 			
@@ -68,18 +85,11 @@ const ConsentRequestTemplateComponent = React.createClass({
 				<Field
 					field 			= { field }
 					key 			= { `field_${index}` }
-					defaultValue 	= { this.getDefaultValue(field) }
-					onChange 		= { (fieldData, isInitial) => {this.onChange(fieldData, isInitial, index)} }
+					defaultValue 	= { this.getDefaultValue(field, index) }
+					onChange 		= { isDisabled ? () => {} : (fieldData, isInitial) => { this.onChange(fieldData, isInitial, index) } }
 					addErrorClass 	= { addErrorClass }
+					isDisabled 		= { isDisabled }
 				/>
-			);
-		})
-	},
-	
-	renderFieldFilled: function(fields){
-		return fields.map( (field, index) => {
-			return (
-				<p key={`field_${index}`}><span className="mBold">{field.heading}</span> {String(field.value)}</p>
 			);
 		})
 	},
@@ -93,13 +103,13 @@ const ConsentRequestTemplateComponent = React.createClass({
 			case (type === MESSAGE_TYPE.ARCHIVE && Array.isArray(message.fields) && message.fields.length > 0):
 				return (
 					<div className="bConsentRequestTemplate">
-						{this.renderFieldFilled(message.fields)}
+						{this.renderField(message.fields, true)}
 					</div>
 				);
 			case (type === MESSAGE_TYPE.INBOX && Array.isArray(template.fields) && template.fields.length > 0):
 				return (
 					<div className="bConsentRequestTemplate">
-						{this.renderField(template.fields)}
+						{this.renderField(template.fields, false)}
 					</div>
 				);
 			default: return null;

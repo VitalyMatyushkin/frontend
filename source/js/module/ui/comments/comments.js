@@ -13,6 +13,12 @@ const Comments = React.createClass({
 		onSubmit			: React.PropTypes.func.isRequired,
 		isShowRemoveLink	: React.PropTypes.bool.isRequired
 	},
+	getDefaultProps: function(){
+		return {
+			isShowRemoveLink: false,
+			onRemove: () => {}
+		}
+	},
 	getInitialState: function(){
 		return {
 			// text of new comment
