@@ -18,6 +18,7 @@ const ReportAvailability = React.createClass({
 		const   binding         = this.getDefaultBinding();
 
 		binding.set('dataUploaded', false);
+		binding.set('availabilityError', false);
 		if (this.props.isParent) {
 			window.Server.children.get()
 				.then((data) => {
@@ -37,42 +38,61 @@ const ReportAvailability = React.createClass({
 	onSubmitPermission: function (data) {
 		const   bindingForm	= this.getDefaultBinding().sub('formAvailability'),
 				rootBinding = this.getMoreartyContext().getBinding(),
-				eventId = this.props.eventId;
+				eventId = this.props.eventId,
+				dataAvailabilityToServer = this.availabilityClientToData(data.availability);
+		if (dataAvailabilityToServer !== null) {
+			let userId, permissionId;
+			if (this.props.isParent) {
+				const thisParentChildren = this.participatEventChildren;
+				if (thisParentChildren.length > 1) {
+					const 	selectedChild = bindingForm.meta('children.value').toJS(),
+							indexOption = this.childrenOptionArray.indexOf(selectedChild);
 
-		let userId, permissionId;
-		if (this.props.isParent) {
-			const thisParentChildren = this.participatEventChildren;
-			if (thisParentChildren.length > 1) {
-				const 	selectedChild = bindingForm.meta('children.value').toJS(),
-						indexOption = this.childrenOptionArray.indexOf(selectedChild);
-
-				userId = thisParentChildren[indexOption].userId;
-				permissionId = thisParentChildren[indexOption].permissionId;
+					userId = thisParentChildren[indexOption].userId;
+					permissionId = thisParentChildren[indexOption].permissionId;
+				} else {
+					userId = thisParentChildren[0].userId;
+					permissionId = thisParentChildren[0].permissionId;
+				}
+				const 	isTakePart = dataAvailabilityToServer,
+						details = data.details ? data.details : '',
+						playerDetails = {
+							userId,
+							permissionId
+						};
+				window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
+					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 			} else {
-				userId = thisParentChildren[0].userId;
-				permissionId = thisParentChildren[0].permissionId;
+				userId = rootBinding.get('userData.sessions.roleSession.userId'),
+				permissionId = this.getPermissionIdFromPlayers(userId);
+				const 	isTakePart = dataAvailabilityToServer,
+						details = data.details ? data.details : '',
+						playerDetails = {
+							userId,
+							permissionId
+						};
+				window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
+					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 			}
-			const 	isTakePart = data.availabilityEnabled ? data.availabilityEnabled : false,
-					details = data.details ? data.details : '',
-					playerDetails = {
-						userId,
-						permissionId
-					};
-			window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-				.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 		} else {
-			userId = rootBinding.get('userData.sessions.roleSession.userId'),
-			permissionId = this.getPermissionIdFromPlayers(userId);
-			const 	isTakePart = data.availabilityEnabled ? data.availabilityEnabled : false,
-					details = data.details ? data.details : '',
-					playerDetails = {
-						userId,
-						permissionId
-					};
-			window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-				.then(() => this.getDefaultBinding().set('editReportAvailability', false));
+			this.getDefaultBinding().set('availabilityError', true);
 		}
 
+	},
+	availabilityClientToData: function (selectedAvailability) {
+		let dataAvailabilityToServer;
+		switch (selectedAvailability) {
+			case 'Not selected':
+				dataAvailabilityToServer = null;
+				break;
+			case 'Yes':
+				dataAvailabilityToServer = true;
+				break;
+			case 'No':
+				dataAvailabilityToServer = false;
+				break;
+		}
+		return dataAvailabilityToServer;
 	},
 	getPermissionIdFromPlayers: function (userId){
 		const   binding = this.getDefaultBinding(),
@@ -102,10 +122,14 @@ const ReportAvailability = React.createClass({
 		return this.participatEventChildren.map(c => {
 			return `${c.firstName} ${c.lastName}`})
 	},
+	getAvailabilityOptions: function () {
+		return ['Not selected', 'Yes', 'No'];
+	},
 	render: function() {
-		const   binding = this.getDefaultBinding(),
-				dataUploaded = binding.get('dataUploaded'),
-				isParent = this.props.isParent;
+		const   binding 			= this.getDefaultBinding(),
+				dataUploaded 		= binding.get('dataUploaded'),
+				availabilityError 	= binding.get('availabilityError'),
+				isParent 			= this.props.isParent;
 
 		if (dataUploaded) {
 			const 	childrenParticipatingEvent = isParent ? this.participatEventChildren : [],
@@ -123,24 +147,34 @@ const ReportAvailability = React.createClass({
 						onCancel		= {this.props.onCancel}
 					>
 						{ isParent && childrenParticipatingEvent.length > 1 ?
-							<FormField	field    		= 'children'
-										type     		= 'dropdown'
-										options  		= { this.childrenOptionArray }
-										defaultValue 	= { this.childrenOptionArray[0] }
+							<FormField
+								field    		= 'children'
+								type     		= 'dropdown'
+								options  		= { this.childrenOptionArray }
+								defaultValue 	= { this.childrenOptionArray[0] }
 							>
 								Select child
 							</FormField>
 							:
 							<div></div>
 						}
-						< FormField type        = "checkbox"
-									field       = "availabilityEnabled"
-									classNames  = "mSingleLine"
+						{
+							availabilityError ?
+								<span className="verify_error">Please, select availability.</span>
+								:
+								<span></span>
+						}
+						<FormField
+							field			= 'availability'
+							type			= 'dropdown'
+							options			= { this.getAvailabilityOptions() }
+							defaultValue	= { this.getAvailabilityOptions()[0] }
 						>
 							Availability
 						</FormField>
-						<FormField	type		= "textarea"
-									field		= "details"
+						<FormField
+							type		= "textarea"
+							field		= "details"
 						>
 							Details
 						</FormField>
