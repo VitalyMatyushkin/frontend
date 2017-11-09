@@ -67,7 +67,7 @@ const ParentalConsentTab = React.createClass({
 					<div
 						className="eParentalConsentTab_info"
 					>
-						There is no messages.
+						There are no messages to display.
 					</div>
 				</div>
 			);
