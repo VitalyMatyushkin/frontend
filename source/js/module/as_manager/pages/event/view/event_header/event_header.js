@@ -27,6 +27,7 @@ const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		event:							React.PropTypes.object.isRequired,
+		countRivals:					React.PropTypes.number,
 		challengeModel:					React.PropTypes.object.isRequired,
 		mode:							React.PropTypes.string.isRequired,
 		schoolType:						React.PropTypes.string.isRequired,
@@ -102,10 +103,12 @@ const EventHeader = React.createClass({
 
 		binding.set('editReportAvailability', false);
 	},
-	renderViewModeLinks: function(){
+	renderViewModeLinks: function() {
 		if(
 			TeamHelper.isNewEvent(this.props.event) &&
-			TeamHelper.isMultiparty(this.props.event)
+			TeamHelper.isMultiparty(this.props.event) &&
+			typeof this.props.countRivals !== 'undefined' &&
+			this.props.countRivals > 2
 		) {
 			return (
 				<ViewSelector

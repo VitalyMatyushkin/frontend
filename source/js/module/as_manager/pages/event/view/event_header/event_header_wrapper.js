@@ -8,6 +8,8 @@ const 	React 				= require('react'),
 
 		ChallengeModel		= require('module/ui/challenges/challenge_model'),
 
+		propz				= require('propz'),
+
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		RoleHelper			= require('module/helpers/role_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
@@ -28,6 +30,11 @@ const EventHeaderWrapper = React.createClass({
 		const event = this.getDefaultBinding().toJS('model');
 
 		return event.inviterSchoolId === this.props.activeSchoolId;
+	},
+	getRivalsCount: function () {
+		const data = this.getDefaultBinding().toJS();
+
+		return propz.get(data, ['rivals', 'length']);
 	},
 	handleClickDownloadPdf: function() {
 		const 	binding		= this.getDefaultBinding(),
@@ -230,6 +237,7 @@ const EventHeaderWrapper = React.createClass({
 		return (
 			<EventHeader
 				binding							= { binding }
+				countRivals						= { this.getRivalsCount() }
 				event							= { event }
 				challengeModel					= { challengeModel }
 				isInviterSchool					= { this.isInviterSchool() }
