@@ -80,7 +80,7 @@ const LoginPublicBigscreenPage = React.createClass({
 					handleClickCloseButton	= { this.handleClickClosePopup }
 			>
 				<div className="bPublicSchoolFormLogin">
-					<h2 className="ePublicSchoolFormLogin_header">Public School Site</h2>
+					<h2 className="ePublicSchoolFormLogin_header">Public School Bigscreen Site</h2>
 					<Form	binding				= { this.getDefaultBinding() }
 							onSubmit			= { this.handleFormSubmit }
 							hideCancelButton 	= { true }
