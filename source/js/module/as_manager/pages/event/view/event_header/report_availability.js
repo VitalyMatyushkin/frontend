@@ -1,11 +1,12 @@
 /**
  * Created by vitaly on 18.10.17.
  */
-const   React           	= require('react'),
-		Morearty        	= require('morearty'),
-		SVG 	        	= require('module/ui/svg'),
-		Form 		    	= require('module/ui/form/form'),
-		FormField 	    	= require('module/ui/form/form_field');
+const	React		= require('react'),
+		Morearty	= require('morearty'),
+		Immutable	= require('immutable'),
+		SVG			= require('module/ui/svg'),
+		Form		= require('module/ui/form/form'),
+		FormField	= require('module/ui/form/form_field');
 
 const ReportAvailability = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -14,15 +15,20 @@ const ReportAvailability = React.createClass({
 		isParent: React.PropTypes.bool.isRequired,
 		eventId:  React.PropTypes.string.isRequired
 	},
+	children: undefined,
+	participatEventChildren: undefined,
+	childrenOptionArray: undefined,
 	componentWillMount: function(){
-		const   binding         = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('dataUploaded', false);
-		binding.set('availabilityError', false);
+		binding.set('formAvailability', Immutable.fromJS({}));
+
 		if (this.props.isParent) {
 			window.Server.children.get()
-				.then((data) => {
+				.then(data => {
 					binding.set('dataUploaded', true);
+
 					this.children = data;
 					this.participatEventChildren = this.getChildrenParticipatingEvent();
 					this.childrenOptionArray = this.getSelectChildrenOption();
@@ -33,13 +39,16 @@ const ReportAvailability = React.createClass({
 	},
 	componentWillUnmount: function(){
 		const binding = this.getDefaultBinding();
+
 		binding.clear('formAvailability');
+		binding.sub('formAvailability').meta().clear();
 	},
 	onSubmitPermission: function (data) {
 		const   bindingForm	= this.getDefaultBinding().sub('formAvailability'),
 				rootBinding = this.getMoreartyContext().getBinding(),
 				eventId = this.props.eventId,
 				dataAvailabilityToServer = this.availabilityClientToData(data.availability);
+
 		if (dataAvailabilityToServer !== null) {
 			let userId, permissionId;
 			if (this.props.isParent) {
@@ -54,44 +63,47 @@ const ReportAvailability = React.createClass({
 					userId = thisParentChildren[0].userId;
 					permissionId = thisParentChildren[0].permissionId;
 				}
-				const 	isTakePart = dataAvailabilityToServer,
-						details = data.details ? data.details : '',
-						playerDetails = {
+
+				const	isTakePart		= dataAvailabilityToServer,
+						details			= data.details ? data.details : '',
+						playerDetails	= {
 							userId,
 							permissionId
 						};
+
 				window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
 					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 			} else {
 				userId = rootBinding.get('userData.sessions.roleSession.userId'),
 				permissionId = this.getPermissionIdFromPlayers(userId);
-				const 	isTakePart = dataAvailabilityToServer,
-						details = data.details ? data.details : '',
-						playerDetails = {
+				const	isTakePart		= dataAvailabilityToServer,
+						details			= data.details ? data.details : '',
+						playerDetails	= {
 							userId,
 							permissionId
 						};
+
 				window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
 					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
 			}
-		} else {
-			this.getDefaultBinding().set('availabilityError', true);
 		}
 
 	},
 	availabilityClientToData: function (selectedAvailability) {
 		let dataAvailabilityToServer;
+
 		switch (selectedAvailability) {
-			case 'Not selected':
-				dataAvailabilityToServer = null;
-				break;
-			case 'Yes':
+			case 'AVAILABLE':
 				dataAvailabilityToServer = true;
 				break;
-			case 'No':
+			case 'NOT_AVAILABLE':
 				dataAvailabilityToServer = false;
 				break;
+			default:
+				dataAvailabilityToServer = null;
+				break;
 		}
+
 		return dataAvailabilityToServer;
 	},
 	getPermissionIdFromPlayers: function (userId){
@@ -123,13 +135,25 @@ const ReportAvailability = React.createClass({
 			return `${c.firstName} ${c.lastName}`})
 	},
 	getAvailabilityOptions: function () {
-		return ['Not selected', 'Yes', 'No'];
+		return Promise.resolve(
+			[
+				{
+					id:		'AVAILABLE',
+					value:	'Available'
+				},
+				{
+					id:		'NOT_AVAILABLE',
+					value:	'Not available'
+				}
+			]
+		);
 	},
 	render: function() {
-		const   binding 			= this.getDefaultBinding(),
-				dataUploaded 		= binding.get('dataUploaded'),
-				availabilityError 	= binding.get('availabilityError'),
-				isParent 			= this.props.isParent;
+		const	binding			= this.getDefaultBinding(),
+				dataUploaded	= binding.get('dataUploaded'),
+				isParent		= this.props.isParent;
+
+		console.log(binding.toJS());
 
 		if (dataUploaded) {
 			const 	childrenParticipatingEvent = isParent ? this.participatEventChildren : [],
@@ -158,17 +182,11 @@ const ReportAvailability = React.createClass({
 							:
 							<div></div>
 						}
-						{
-							availabilityError ?
-								<span className="verify_error">Please, select availability.</span>
-								:
-								<span></span>
-						}
 						<FormField
-							field			= 'availability'
-							type			= 'dropdown'
-							options			= { this.getAvailabilityOptions() }
-							defaultValue	= { this.getAvailabilityOptions()[0] }
+							type			= "radio"
+							field			= "availability"
+							sourcePromise	= { this.getAvailabilityOptions }
+							validation		= "required"
 						>
 							Availability
 						</FormField>
