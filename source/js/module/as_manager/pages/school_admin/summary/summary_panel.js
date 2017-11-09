@@ -44,8 +44,9 @@ const SummaryPanel = React.createClass({
 				<p>
 					Site:
 					<a	href={'//' + siteLink}
-						  target="blank" title={siteLink}
-						  className="bSchoolLink">
+						target="blank" title={siteLink}
+						className="bSchoolLink"
+					>
 						{siteLink}
 						<SVG icon="icon_sch_link" />
 					</a>
@@ -56,6 +57,30 @@ const SummaryPanel = React.createClass({
 				<p>
 					Site:
 					School has no active domain
+				</p>
+			);
+		}
+	},
+	renderBigscreenLink: function () {
+		const siteLink = this.props.siteLink;
+		if(siteLink !== '') {
+			return (
+				<p>
+					Bigscreen:
+					<a	href={'//bigscreen_' + siteLink}
+						target="blank" title={siteLink}
+						className="bSchoolLink"
+					>
+						{`bigscreen_${siteLink}`}
+						<SVG icon="icon_sch_link" />
+					</a>
+				</p>
+			);
+		} else {
+			return (
+				<p>
+					Bigscreen:
+					School has no active bigscreen
 				</p>
 			);
 		}
@@ -118,6 +143,7 @@ const SummaryPanel = React.createClass({
 						</div>
 						{ this.renderDescription() }
 						{ this.renderSiteLink() }
+						{ this.renderBigscreenLink() }
 					</div>
 						<If condition={geoPoint !== undefined}>
 							<Map point={geoPoint} />

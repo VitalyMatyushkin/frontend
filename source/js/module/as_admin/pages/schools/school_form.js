@@ -44,15 +44,16 @@ const SystemAdminSchoolForm = React.createClass({
 		}
 	},
 	render: function () {
-		const 	binding 	= this.getDefaultBinding(),
-				rootBinding = this.getMoreartyContext().getBinding(),
-				statusActive = !rootBinding.get('userRules.activeSchoolId'),
-				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-				yesNoOptions = [
+		const 	binding 				= this.getDefaultBinding(),
+				rootBinding 			= this.getMoreartyContext().getBinding(),
+				statusActive 			= !rootBinding.get('userRules.activeSchoolId'),
+				passActive 				= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				passBigscreenActive 	= binding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
+				yesNoOptions 			= [
 					{ text: 'Yes',	value: true },
 					{ text: 'No',	value: false }
 				],
-				postcode 	= binding.toJS('postcode');
+				postcode 				= binding.toJS('postcode');
 
 		return (
 			<Form
@@ -181,6 +182,21 @@ const SystemAdminSchoolForm = React.createClass({
 						validation 		= "required"
 					>
 						Public Site Access Password
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "publicBigscreenSite.status"
+						options 	= { this.getPublicSiteAccessTypes() }
+					>
+						Public Bigscreen Site Access
+					</FormField>
+					<FormField
+						type			= "text"
+						field			= "publicBigscreenSite.password"
+						condition 		= { passBigscreenActive }
+						validation 		= "required"
+					>
+						Public Bigscreen Site Access Password
 					</FormField>
 					<FormField
 						type 				= "dropdown"

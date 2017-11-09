@@ -10,12 +10,17 @@ const authСontroller = {
 	requestedPage:	undefined,
 	publicPages:	['register', 'login', 'reset-request', 'reset'],
 	asPublicSchool:	false,
+	asBigscreen: false,
 	initialize: function(options) {
 		this.saveRequestedPage();
 		this.initBinding(options);
 
 		if(options.asPublicSchool) {
 			this.asPublicSchool = options.asPublicSchool;
+		}
+		
+		if(options.asBigscreen) {
+			this.asBigscreen = options.asBigscreen;
 		}
 
 		let initPromises = [];
@@ -99,6 +104,14 @@ const authСontroller = {
 					window.location.hash = 'loginPublicSchool';
 
 					binding.set('loginPublicSchool.hashOfRedirectPageAfterLogin', this.requestedPage);
+					this.requestedPage = undefined;
+					break;
+				}
+				case (this.asBigscreen): {
+					// redirect to loginPublicBigscreen
+					window.location.hash = 'loginPublicBigscreen';
+					
+					binding.set('loginPublicBigscreen.hashOfRedirectPageAfterLogin', this.requestedPage);
 					this.requestedPage = undefined;
 					break;
 				}

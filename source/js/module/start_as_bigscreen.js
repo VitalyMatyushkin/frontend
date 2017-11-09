@@ -24,7 +24,7 @@ function initMainView(school) {
 				pathParameters:     [],     // параметры текущего пути (:someParam) в порядке объявления
 				parameters:         {}      // GET-параметры текущего пути
 			},
-            loginPublicSchool: {
+			loginPublicBigscreen: {
 				hashOfRedirectPageAfterLogin: 'home'
 			},
 			bigScreenMainPage: {
@@ -75,7 +75,7 @@ function initMainView(school) {
 			// Turning on authorization service
 			authController.initialize({
 				binding:		binding,
-				asPublicSchool:	true
+				asBigscreen:	true
 			})
 			.then(() => {
 				ReactDom.render(

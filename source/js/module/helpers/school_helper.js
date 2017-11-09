@@ -94,11 +94,14 @@ const SchoolHelper = {
 	 * Method replace client publicSite.password field value by server value
 	 * @param data
 	 */
-	setServerPublicSiteAccessPasswordValue: function(data: any) {
+	setServerPublicSiteAndBigscreenAccessPasswordValue: function(data: any) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected && data.publicSite.password === defaultPassValue){
 			delete data.publicSite.password;
+		}
+		if(data.publicBigscreenSite.status === c.Protected && data.publicBigscreenSite.password === defaultPassValue){
+			delete data.publicBigscreenSite.password;
 		}
 	},
 	/**
@@ -106,11 +109,14 @@ const SchoolHelper = {
 	 * Method replace server publicSite.password field value by client value
 	 * @param data
 	 */
-	setClientPublicSiteAccessPasswordValue: function(data: any) {
+	setClientPublicSiteAndBigscreenAccessPasswordValue: function(data: any) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected){
 			data.publicSite.password = defaultPassValue;
+		}
+		if(data.publicBigscreenSite.status === c.Protected){
+			data.publicBigscreenSite.password = defaultPassValue;
 		}
 	}
 };

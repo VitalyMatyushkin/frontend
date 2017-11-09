@@ -16,6 +16,7 @@ const SchoolForm = React.createClass({
 		this.getDefaultBinding().clear();
 		// if it need
 		this.setDefaultPublicSiteAccess();
+		this.setDefaultPublicBigscreenSiteAccess();
 	},
 	getPublicSiteAccessTypes: function() {
 		const result = [];
@@ -39,25 +40,37 @@ const SchoolForm = React.createClass({
 			);
 		}
 	},
+	setDefaultPublicBigscreenSiteAccess: function() {
+		const binding = this.getDefaultBinding();
+		
+		if(typeof binding.toJS('publicBigscreenSite.status') === 'undefined') {
+			binding.set(
+				'publicBigscreenSite.status',
+				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE)
+			);
+		}
+	},
 	render: function () {
-		const 	binding 	= this.getDefaultBinding(),
-				rootBinding = this.getMoreartyContext().getBinding(),
-				statusActive = !rootBinding.get('userRules.activeSchoolId'),
-				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-				postcode 	= binding.toJS('postcode');
+		const 	binding 				= this.getDefaultBinding(),
+				rootBinding 			= this.getMoreartyContext().getBinding(),
+				statusActive 			= !rootBinding.get('userRules.activeSchoolId'),
+				passActive 				= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				passBigscreenActive 	= binding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
+				postcode 				= binding.toJS('postcode');
 
 		return (
 			<div className="container">
-				<Form formStyleClass 	= "row"
-					  name 				= { this.props.title }
-					  binding 			= { this.getDefaultBinding() }
-					  service 			= "i/schools/domains"
-					  onSubmit 			= { this.props.onSubmit }
-					  submitOnEnter 	= { false }
-					  formButtonsClass 	= "col-md-10 col-md-offset-1"
-					  formTitleClass 	= "col-md-10 col-md-offset-1"
-					  submitButtonId 	= "school_summary_submit"
-					  cancelButtonId 	= "school_summary_cancel">
+				<Form
+						formStyleClass 		= "row"
+						name 				= { this.props.title }
+						binding 			= { this.getDefaultBinding() }
+						service 			= "i/schools/domains"
+						onSubmit 			= { this.props.onSubmit }
+						submitOnEnter 		= { false }
+						formButtonsClass 	= "col-md-10 col-md-offset-1"
+						formTitleClass 		= "col-md-10 col-md-offset-1"
+						submitButtonId 		= "school_summary_submit"
+						cancelButtonId 		= "school_summary_cancel">
 					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<FormField
 							type 		= "imageFile"
@@ -159,6 +172,21 @@ const SchoolForm = React.createClass({
 							validation 	= "required"
 						>
 							Public Site Access Password
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							field 		= "publicBigscreenSite.status"
+							options 	= { this.getPublicSiteAccessTypes() }
+						>
+							Public Bigscreen Site Access
+						</FormField>
+						<FormField
+							type			= "text"
+							field			= "publicBigscreenSite.password"
+							condition 		= { passBigscreenActive }
+							validation 		= "required"
+						>
+							Public Bigscreen Site Access Password
 						</FormField>
 						<FormField
 							classNames 	= "mSingleLine"
