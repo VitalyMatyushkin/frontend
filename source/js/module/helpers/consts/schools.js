@@ -68,8 +68,8 @@ const AGE_GROUPS_NAMING_OPTIONS = [
 ];
 
 const INVITE_ACTION_OPTIONS = [
-	{ text: 'Manual Mode (default)', 	value: 'MANUAL' },
-	{ text: 'Auto Accept', 				value: 'AUTO_ACCEPT' },
+	{ text: 'Manual Mode', 				value: 'MANUAL' },
+	{ text: 'Auto Accept (default)', 	value: 'AUTO_ACCEPT' },
 	{ text: 'Auto Reject', 				value: 'AUTO_REJECT' }
 ];
 
