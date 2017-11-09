@@ -25,7 +25,7 @@ const RivalInfoOptionsHelper = {
 					),
 					new SchoolRivalInfoButtonData(
 						SchoolRivalInfoConsts.BUTTON_TYPES.REMOVE_TEAM_BUTTON,
-						this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, event, rivals),
+						this.isShowRemoveTeamButtonByRival(rival, activeSchoolId, schoolType, event, rivals),
 						handlers.handleClickRemoveTeamButton
 					)
 				]
@@ -53,7 +53,7 @@ const RivalInfoOptionsHelper = {
 			isValidEventStatus
 		);
 	},
-	isShowRemoveTeamButtonByRival: function(currentRival, activeSchoolId, event, rivals) {
+	isShowRemoveTeamButtonByRival: function(currentRival, activeSchoolId, schoolType, event, rivals) {
 		let isShowRemoveTeamButton = false;
 
 		const activeSchoolRivals = rivals.filter(rival => rival.school.id === activeSchoolId);
@@ -76,7 +76,18 @@ const RivalInfoOptionsHelper = {
 					} else {
 						// user can remove other team if other teams more than 1
 						// because active school can't play with himself
-						isShowRemoveTeamButton = rivals.length - activeSchoolRivals.length > 1;
+
+						let LIMIT;
+						switch (schoolType) {
+							case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+								LIMIT = 1;
+							}
+							case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+								LIMIT = 2;
+							}
+						}
+
+						isShowRemoveTeamButton = rivals.length - activeSchoolRivals.length > LIMIT;
 					}
 				} else {
 					isShowRemoveTeamButton = (
