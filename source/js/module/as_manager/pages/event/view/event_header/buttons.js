@@ -106,9 +106,13 @@ const Buttons = React.createClass({
 	},
 	isReportAvailabilityAvailable: function () {
 		return (
-			(this.props.isParent || this.props.isStudent) &&
+			(
+				this.props.isParent ||
+				this.props.isStudent
+			) &&
 			EventHelper.isNotFinishedEvent(this.props.event) &&
-			this.isNotExpiredEventTime()
+			this.isNotExpiredEventTime() &&
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
 	isAddSchoolAvailable: function() {
@@ -170,19 +174,29 @@ const Buttons = React.createClass({
 		const	today		= new Date(),
 				eventTime	= new Date(this.props.event.startTime);
 
-		const todayTimeStamp = new Date(
-			today.getFullYear(),
-			today.getMonth(),
-			today.getDate()
-		).getTime();
+		// not expired if event date is today
+		if(
+			today.getFullYear() === eventTime.getFullYear() &&
+			today.getMonth() === eventTime.getMonth() &&
+			today.getDate() === eventTime.getDate()
+		) {
+			return true;
+		} else {
+			const todayTimeStamp = new Date(
+				today.getFullYear(),
+				today.getMonth(),
+				today.getDate()
+			).getTime();
 
-		const eventTimeStamp = new Date(
-			eventTime.getFullYear(),
-			eventTime.getMonth(),
-			eventTime.getDate()
-		).getTime();
+			const eventTimeStamp = new Date(
+				eventTime.getFullYear(),
+				eventTime.getMonth(),
+				eventTime.getDate()
+			).getTime();
 
-		return (todayTimeStamp <= eventTimeStamp);
+			return (todayTimeStamp <= eventTimeStamp);
+		}
+
 	},
 	isChangeScoreEventActionAvailable: function() {
 		const eventStatus = this.props.event.status;
@@ -206,14 +220,6 @@ const Buttons = React.createClass({
 	isSendConsentRequestAvailable: function() {
 		return (
 			this.props.isUserSchoolWorker &&
-			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
-		);
-	},
-	isReportNotParticipateAvailable: function() {
-		return (
-			this.props.isParent &&
-			EventHelper.isNotFinishedEvent(this.props.event) &&
-			this.isNotExpiredEventTime() &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
