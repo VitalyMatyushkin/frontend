@@ -22,20 +22,32 @@ const StudentRouter = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		return (
-			<RouterView	routes	= {binding.sub('routing')}
-						binding	= {binding}
+			<RouterView
+				routes	= {binding.sub('routing')}
+				binding	= {binding}
 			>
-				<LogoutRoute	binding	= {binding.sub('userData')}/>
-				<VerifyRoute	binding	= {binding.sub('userData')}/>
-				<SettingsRoute	binding	= {binding.sub('userData')}/>
-
-				<Route	path		= "/events/calendar/:schoolId /events/fixtures/:schoolId /events/achievement/:schoolId"
-						binding		= {binding.sub('events')}
-						component	= {StudentEventsComponent}
+				<LogoutRoute
+					binding = {binding.sub('userData')}
 				/>
-				<Route	path		= "/event /event/:eventId"
-						binding		= {binding.sub('events')}
-						component	= {EventComponent}
+
+				<VerifyRoute
+					binding = {binding.sub('userData')}
+				/>
+
+				<SettingsRoute
+					binding = {binding.sub('userData')}
+				/>
+
+				<Route
+					path		= "/events/calendar/:schoolId /events/fixtures/:schoolId /events/achievement/:schoolId"
+					binding		= {binding.sub('events')}
+					component	= {StudentEventsComponent}
+				/>
+
+				<Route
+					path		= "/event /event/:eventId"
+					binding		= {binding.sub('events')}
+					component	= {EventComponent}
 				/>
 			</RouterView>
 		);
