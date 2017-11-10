@@ -141,7 +141,7 @@ const Head = React.createClass({
 				verified		: true
 			},
 			{
-				href			: '/#invites/inbox',
+				href			: '/#invites/outbox',
 				icon			: '',
 				name			: 'Invites',
 				key				: 'Invites',
