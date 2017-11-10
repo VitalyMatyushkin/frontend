@@ -81,9 +81,11 @@ const RivalInfoOptionsHelper = {
 						switch (schoolType) {
 							case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
 								LIMIT = 1;
+								break;
 							}
 							case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
 								LIMIT = 2;
+								break;
 							}
 						}
 
