@@ -29,7 +29,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000,
-					order: 'updatedAt DESC'
+					order: 'updatedAt DESC',
+					where: { allMessageTypes: true }
 				}
 			}
 		);
@@ -51,7 +52,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000,
-					order: 'updatedAt DESC'
+					order: 'updatedAt DESC',
+					where: { allMessageTypes: true }
 				}
 			}
 		);
@@ -62,7 +64,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					where: {
-						eventId: eventId
+						eventId: 			eventId,
+						allMessageTypes: 	true
 					},
 					limit: 1000
 				}
@@ -88,7 +91,8 @@ const MessageListActions = {
 				schoolId: activeSchoolId,
 				filter: {
 					where: {
-						eventId: eventId
+						eventId: 			eventId,
+						allMessageTypes: 	true
 					},
 					limit: 1000
 				}

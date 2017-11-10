@@ -22,7 +22,8 @@ const MessageListActions = {
 	loadOutboxMessages: function() {
 		return window.Server.childMessageOutbox.get({
 			filter: {
-				limit: 1000
+				limit: 1000,
+				where: { allMessageTypes: true }
 			},
 			order: 'updatedAt DESC'
 		});
@@ -30,7 +31,8 @@ const MessageListActions = {
 	loadArchiveMessages: function() {
 		return window.Server.childMessageArchive.get({
 			filter: {
-				limit: 1000
+				limit: 1000,
+				where: { allMessageTypes: true }
 			},
 			order: 'updatedAt DESC'
 		});
