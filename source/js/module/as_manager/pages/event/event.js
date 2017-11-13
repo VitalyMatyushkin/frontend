@@ -243,7 +243,7 @@ const Event = React.createClass({
 		}).then(_parentalConsentTabMessages => {
 			parentalConsentTabMessages = _parentalConsentTabMessages;
 
-			return this.loadParentalReposrtsMessages();
+			return this.loadParentalReportsMessages();
 		}).then(_parentalReportsTabMessages => {
 			parentalReportsTabMessages = _parentalReportsTabMessages;
 
@@ -335,7 +335,7 @@ const Event = React.createClass({
 				return Promise.resolve([]);
 		}
 	},
-	loadParentalReposrtsMessages: function() {
+	loadParentalReportsMessages: function() {
 		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
 			return MessageListActions.loadParentalReportsMessagesByEventId(
 				this.props.activeSchoolId,
