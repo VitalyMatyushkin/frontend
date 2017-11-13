@@ -48,9 +48,18 @@ const ConsentRequestTemplateComponent = React.createClass({
 				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER:
 					return '';
 				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
-					return false;
+					if (field.isRequired) {
+						return ''
+					} else {
+						return 'yes';
+					}
 				case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
-					return field.enumOptions[0];
+					if (field.isRequired && field.enumOptions[0] !== '') {
+						field.enumOptions.unshift('');
+						return field.enumOptions[0];
+					} else {
+						return field.enumOptions[0];
+					}
 			}
 		}
 	},

@@ -32,12 +32,45 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		const fieldInitialData = Object.assign({}, this.props.field, { value: this.props.defaultValue });
+		const fieldInitialData = this.getFieldData(this.props.defaultValue);
 		this.props.onChange(fieldInitialData, true);
+	},
+	
+	getFieldData: function(value){
+		let result;
+		//for field boolean we used magic: convert 'yes'/'no' -> true/false
+		if (this.props.field === SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN) {
+			if (this.props.field.isRequired) {
+				switch(value){
+					case 'yes':
+						result = Object.assign({}, this.props.field, { value: true });
+						break;
+					case 'no':
+						result = Object.assign({}, this.props.field, { value: false });
+						break;
+					case '':
+						result = Object.assign({}, this.props.field, { value: '' });
+						break;
+				}
+			} else {
+				result = Object.assign({}, this.props.field, { value: value === 'yes' });
+			}
+		} else {
+			result = Object.assign({}, this.props.field, { value: value });
+		}
+		return result;
+	},
+	getCurrentOptionFieldBoolean: function(value){
+		//for value boolean we used magic: convert true/false -> 'yes'/'no'
+		if (typeof value === 'boolean') {
+			return value ? 'yes' : 'no';
+		} else {
+			return value;
+		}
 	},
 
 	onChange: function(value){
-		const fieldData = Object.assign({}, this.props.field, { value: value });
+		const fieldData = this.getFieldData(value);
 		
 		this.props.onChange(fieldData, false);
 		this.setState({
@@ -73,11 +106,11 @@ const ConsentRequestTemplateFieldComponent = React.createClass({
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.BOOLEAN:
 				return (
-					<Checkbox
-						isChecked				= { value }
-						onChange				= { this.onChange }
-						isReturnEventTarget 	= { false }
-						isDisabled 				= { isDisabled }
+					<Select
+						optionsArray 	= { field.isRequired ? ['', 'yes', 'no'] : ['yes', 'no'] }
+						currentOption 	= { this.getCurrentOptionFieldBoolean(value) }
+						handleChange 	= { this.onChange }
+						isDisabled 		= { isDisabled }
 					/>
 				);
 			case SchoolConst.CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM:
