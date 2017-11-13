@@ -185,7 +185,7 @@ const InviteView = React.createClass({
 			return null;
 		}
 	},
-	getRivalName: function(inviterSchool, invitedSchool, invitedSchools, rival){
+	getRivalName: function(inviterSchool, invitedSchools, rival){
 		if (inviterSchool.kind === 'SchoolUnion') {
 			if (Array.isArray(invitedSchools)) {
 				return `${invitedSchools.filter(school=> school.id !== this.activeSchoolId).map(school => school.name).join(', ')}`;
@@ -198,7 +198,7 @@ const InviteView = React.createClass({
 	},
 	getSchoolInviteRecepient: function(inviterSchool, invitedSchool){
 		if (inviterSchool.kind === 'SchoolUnion' && inviterSchool.id === this.activeSchoolId) {
-			return <h4>To: {invitedSchool.name}</h4>
+			return <h4>To: {propz.get(invitedSchool, ['name'])}</h4>
 		} else {
 			return null;
 		}
@@ -246,7 +246,7 @@ const InviteView = React.createClass({
 							</div>
 							<div className="eInvite_info col-md-7 col-sm-7">
 								{ this.getSchoolUnionNameIfNeed(inviterSchool) }
-								<h4> { this.getRivalName(inviterSchool, invitedSchool, invitedSchools, rival) } </h4>
+								<h4> { this.getRivalName(inviterSchool, invitedSchools, rival) } </h4>
 								{ this.getSchoolInviteRecepient(inviterSchool, invitedSchool) }
 								{ this.getTeamDataName(teamData, inviterSchool, isInbox, isOutBox) }
 								<div className="eInvite_content">

@@ -22,11 +22,6 @@ const SchoolUnionEdit = React.createClass({
 	},
 	loadSchoolById: function(schoolId) {
 		window.Server.school.get(schoolId).then(school => {
-			/**
-			 * !!! Method modify arg !!!
-			 * Method replace server publicSite.password field value by client value
-			 */
-			SchoolHelper.setClientPublicSiteAccessPasswordValue(school);
 			this.getDefaultBinding()
 				.atomically()
 				.set('isSync',	true)
@@ -35,11 +30,6 @@ const SchoolUnionEdit = React.createClass({
 		});
 	},
 	handleSubmit: function(schoolData) {
-		/**
-		 * !!! Method modify arg !!!
-		 * Method replace client publicSite.password field value by server value
-		 */
-		SchoolHelper.setServerPublicSiteAccessPasswordValue(schoolData);
 		window.Server.school.put(this.getSchoolIdFromPageUrl(), schoolData).then(() => {
 			this.getDefaultBinding().clear();
 			document.location.hash = 'schools/school_unions';
