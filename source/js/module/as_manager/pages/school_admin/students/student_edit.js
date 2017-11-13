@@ -95,6 +95,10 @@ const StudentEditPage = React.createClass({
 				globalBinding			= this.getMoreartyContext().getBinding(),
 				activeSchoolId			= globalBinding.get('userRules.activeSchoolId'),
 				countNextOfKinBlocks	= binding.toJS('countNextOfKinBlocks');
+		
+		if (data.avatar === null) {
+			delete data.avatar;
+		}
 
 		StudentsFormHelper.convertNextOfKinToServerFormat(countNextOfKinBlocks, data);
 		return window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: this.studentId}, data)

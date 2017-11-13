@@ -82,10 +82,16 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		);
 	},
 	onSelectStudent: function(studentId) {
-		const binding = this.getDefaultBinding();
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				schoolId 		= routingData.schoolId;
+		//because service window.Server.user don't contain information about form
+		const filter = {where: {_id : studentId}};
 		
-		window.Server.user.get({userId: studentId}).then(user => {
-			binding.set('studentWithHistory', user);
+		window.Server.schoolStudents.get(schoolId, { filter: filter }).then(user => {
+			//user it is array with one element
+			binding.set('studentWithHistory', user[0]);
 		});
 	},
 	onClickMergeButton: function(){
@@ -138,6 +144,8 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 				studentWithHistoryLastName 		= propz.get(studentWithHistory, ['lastName']),
 				studentWithHistoryEmail 		= propz.get(studentWithHistory, ['email']),
 				studentWithHistoryId 			= propz.get(studentWithHistory, ['id']),
+				studentWithHistoryIdFormName 	= propz.get(studentWithHistory, ['form', 'name']),
+				studentWithHistoryIdDOB 		= propz.get(studentWithHistory, ['birthday']),
 				studentWithoutHistoryPermission = binding.toJS('studentWithoutHistoryPermission'),
 				studentWithoutHistoryFirstName 	= propz.get(studentWithoutHistoryPermission, ['requester', 'firstName']),
 				studentWithoutHistoryLastName 	= propz.get(studentWithoutHistoryPermission, ['requester', 'lastName']),
@@ -186,8 +194,13 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 						handleClickCancelButton 	= { this.onPopupCancelClick }
 					>
 						<p>
-							{`You going to merge following students:`}<br />
-							{`* ${studentWithHistoryFirstName} ${studentWithHistoryLastName} [with history, email=${studentWithHistoryEmail} id=${studentWithHistoryId}]`}<br />
+							{`You going to merge following students:`}
+							<br />
+							{
+								`* ${studentWithHistoryFirstName} ${studentWithHistoryLastName} [with history, email=${studentWithHistoryEmail} id=${studentWithHistoryId},
+								form=${studentWithHistoryIdFormName}, birthday=${studentWithHistoryIdDOB}]`
+							}
+							<br />
 							{`* ${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName} [no history, email=${studentWithoutHistoryEmail} id=${studentWithoutHistoryId}]`}
 						</p>
 						<p>

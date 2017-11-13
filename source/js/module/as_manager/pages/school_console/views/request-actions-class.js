@@ -94,10 +94,10 @@ class RequestActionsClass {
 	
 	getActions(item){
 		const actionList = ['Accept', 'Decline'];
-		//we hide merge students (it available by superadmin)
-		/*if (item.requestedPermission.preset === "STUDENT") {
+		//now we don't hide merge students (it available also by superadmin)
+		if (item.requestedPermission.preset === "STUDENT") {
 			actionList.push('Merge');
-		}*/
+		}
 		
 		return actionList;
 	}
@@ -152,7 +152,7 @@ class RequestActionsClass {
 				);
 				break;
 			case 'Merge':
-				document.location.hash = `${document.location.hash}/merge-student?studentId=${studentId}&schoolId=${schoolId}`;
+				document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
 				break;
 			default :
 				break;
