@@ -15,6 +15,8 @@ const	React						= require('react'),
 	
 		ViewModeConsts				= require('module/ui/view_selector/consts/view_mode_consts');
 
+const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
 
@@ -141,6 +143,7 @@ const PublicEvent = React.createClass({
 						activeSchoolId							= { this.props.activeSchoolId }
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
+						schoolType								= { EventFormConsts.EVENT_FORM_MODE.SCHOOL }
 				/>
 			);
 		} else {

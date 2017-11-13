@@ -98,7 +98,7 @@ const RivalInfoOptionsHelper = {
 					);
 				}
 			} else if(TeamHelper.isInternalEventForTeamSport(event)) {
-				isShowRemoveTeamButton = rivals.length > 1;
+				isShowRemoveTeamButton = rivals.length > 2;
 			}
 		}
 
