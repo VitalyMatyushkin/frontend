@@ -30,7 +30,7 @@ const FixtureItemTwoTeamOpponentSide = React.createClass({
 		return name;
 	},
 	renderLeftOpponentSide: function (event, model) {
-		const 	leftSideClasses = model.rivals[0].value.replace(/\s+/g, ' ').length > 25 ? "mSmall" : "";
+		const leftSideClasses = model.rivals[0].value.replace(/\s+/g, ' ').length > 25 ? "mSmall" : "";
 
 		return (
 			<div className="eEventResultView_bodyLeftSide">
@@ -38,35 +38,35 @@ const FixtureItemTwoTeamOpponentSide = React.createClass({
 					<div className={leftSideClasses}>{ this.cropOpponentName(model.rivals[0].value) }</div>
 				</div>
 				<div className="eEventResultView_score mRight">
-					{ model.scoreAr[0] }
+					{ this.getScoreByOrder(0, model) }
 				</div>
 			</div>
 		);
 	},
 
 	renderRightOpponentSide: function (event, model) {
-		const 	rightSideClasses = model.rivals[1].value.replace(/\s+/g, ' ').length > 25 ? "mSmall" : "";
+		const rightSideClasses = model.rivals[1].value.replace(/\s+/g, ' ').length > 25 ? "mSmall" : "";
 
 		return (
 			<div className="eEventResultView_bodyRightSide">
 				<div className="eEventResultView_score">
-					{ model.scoreAr[1] }
+					{ this.getScoreByOrder(1, model) }
 				</div>
 				<div className="eEventResultView_mainInfoBlock mRight">
 					<div className={rightSideClasses}>{ this.cropOpponentName(model.rivals[1].value) }</div>
 				</div>
 			</div>
 		);
-
 	},
+	getScoreByOrder: function (order, model) {
+		const score = propz.get(model, ['scoreAr', order]);
 
+		return typeof score !== 'undefined' ? score : '';
+	},
 	render: function() {
-		const	event				= this.props.event,
-			activeSchoolId		= this.props.activeSchoolId,
-			challengeModel		= new ChallengeModel(event, activeSchoolId),
-			isAwaitingOpponent	= event.status === 'INVITES_SENT',
-			score				= SportHelper.isCricket(challengeModel.sport) ? challengeModel.textResult : challengeModel.score,
-			scoreText			= SportHelper.isCricket(challengeModel.sport) ? '' : 'Score';
+		const	event			= this.props.event,
+				activeSchoolId	= this.props.activeSchoolId,
+				challengeModel	= new ChallengeModel(event, activeSchoolId);
 
 		return (
 			<div className="bEventResultView">
