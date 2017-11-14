@@ -93,10 +93,12 @@ class RequestActionsClass {
 	}
 	
 	getActions(item){
-		const actionList = ['Accept', 'Decline'];
+		let actionList;
 		//now we don't hide merge students (it available also by superadmin)
 		if (item.requestedPermission.preset === "STUDENT") {
-			actionList.push('Merge');
+			actionList = ['Accept and merge', 'Decline', 'Accept as a new (inactive)'];
+		} else {
+			actionList = ['Accept', 'Decline'];
 		}
 		
 		return actionList;
@@ -114,8 +116,8 @@ class RequestActionsClass {
 
 		let confirmMsg;
 		
-		switch (action){
-			case 'Accept':
+		switch (true){
+			case action === 'Accept':
 				window.confirmAlert(
 					self.getConfirmMessage(email, phone),
 					"Ok",
@@ -138,7 +140,7 @@ class RequestActionsClass {
 					() => {}
 				);
 				break;
-			case 'Decline':
+			case action === 'Decline':
 				window.confirmAlert(
 					"Are you sure you want to decline?",
 					"Ok",
@@ -151,10 +153,10 @@ class RequestActionsClass {
 					() => {}
 				);
 				break;
-			case 'Merge':
+			case action === 'Accept and merge':
 				document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
 				break;
-			default :
+			default:
 				break;
 		}
 	}
@@ -263,7 +265,7 @@ class RequestActionsClass {
 	}
 	
 	createGrid() {
-		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? true : false;
+		const classStyleAdmin = typeof this.viewerRole === 'undefined';
 		
 		let defaultFilter = {
 			where: {
@@ -297,7 +299,7 @@ class RequestActionsClass {
 	}
 	
 	createGridFromExistingData(grid) {
-		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? true : false;
+		const classStyleAdmin = typeof this.viewerRole === 'undefined';
 		
 		this.grid = new GridModel({
 			actionPanel:{

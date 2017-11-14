@@ -35,46 +35,45 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		let filter;
 		
 		if (name === '') {
-			filter = {
-				limit: 100
-			}
+			filter = { limit: 100 }
 		} else {
 			filter = {
 				limit: 100,
 				where: {
 					$or: [
-						{
-							firstName: {
-								like: name,
-								options: 'i'
-							}
-						},
-						{
-							lastName: {
-								like: name,
-								options: 'i'
-							}
-						}
+						{ firstName: { like: name, options: 'i'} },
+						{ lastName: { like: name, options: 'i' }}
 					]
 				}
 			}
 		}
 		
-		return window.Server.schoolStudents.get(
-			schoolId,
-			{ filter: filter }
-		)
-		.then(
-			students => {
+		return window.Server.schoolStudents.get(schoolId, { filter: filter }).then(students => {
 				students.forEach(student => {
-					student.name = student.firstName + " " + student.lastName;
+					const 	firstName 	= propz.get(student, ['firstName']),
+							lastName 	= propz.get(student, ['lastName']),
+							formName 	= propz.get(student, ['form', 'name']),
+							dateOfBirth = propz.get(student, ['birthday']);
+					
+					let studentData;
+					if (typeof firstName !== 'undefined') {
+						studentData = `${firstName} `;
+					}
+					if (typeof lastName !== 'undefined') {
+						studentData = studentData + `${lastName} `;
+					}
+					if (typeof formName !== 'undefined') {
+						studentData = studentData + `Form: ${formName} `;
+					}
+					if (typeof dateOfBirth !== 'undefined') {
+						studentData = studentData + `DOB: ${dateOfBirth}`;
+					}
+					student.data = studentData;
 				});
 				
 				return students;
 			},
-			error => {
-				console.error(error);
-			}
+			error => { console.error(error); }
 		);
 	},
 	onSelectStudent: function(studentId) {
@@ -136,6 +135,9 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 			}
 		);
 	},
+	onClickCancelButton: function(){
+		window.history.back();
+	},
 	render: function(){
 		const 	binding 						= this.getDefaultBinding(),
 				isPopupOpen 					= Boolean(binding.toJS('isPopupOpen')),
@@ -155,63 +157,51 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		return (
 			<div>
 				<div className="bStudentMerge">
-					<p>{`You want merge student with history`}</p>
+					<p>
+						{`Choose the existing student to merge with the request for the role on behalf of`}
+						<br />
+						{`${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName}`}
+					</p>
 					<div className="eStudentMergeAutocomplete">
 						<Autocomplete
-							serviceFilter	= { this.serviceStudentsFilter}
-							serverField		= 'name'
+							serviceFilter	= { this.serviceStudentsFilter }
+							serverField		= 'data'
 							onSelect		= { this.onSelectStudent }
 							binding			= { binding.sub('_studentAutocomplete') }
 							placeholder		= 'Student name'
 						/>
 					</div>
-					<p>{`with student without history`}</p>
-					<p>{`${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName}`}</p>
+					<Button
+						text 				= "Cancel"
+						onClick 			= { this.onClickCancelButton }
+						extraStyleClasses 	= "mCancel"
+					/>
 					<Button
 						text 				= "Merge"
 						onClick 			= { this.onClickMergeButton }
 						extraStyleClasses 	= "eStudentMergeButton"
 						isDisabled 			= { typeof binding.toJS('studentWithHistory') === 'undefined' }
 					/>
-					<div className="eStudentMergeNote">
-						<h3>
-							Note:
-						</h3>
-						<ul>
-							<li>The student without history should not have events</li>
-							<li>The student without history should not have than one permission</li>
-							<li>The student without history should not be a member of a team</li>
-						</ul>
-					</div>
 				</div>
 				<If condition = {isPopupOpen}>
 					<ConfirmPopup
 						isOkButtonDisabled			= { false }
-						customStyle 				= { 'ePopup' }
+						customStyle 				= { 'ePopup mTextAlignCenter' }
 						okButtonText 				= { "Merge" }
 						cancelButtonText 			= { 'Cancel' }
 						handleClickOkButton 		= { this.onPopupOkClick }
 						handleClickCancelButton 	= { this.onPopupCancelClick }
+						customFooterStyle 			= { 'mTextAlignCenter' }
 					>
 						<p>
-							{`You going to merge following students:`}
+							{`${studentWithHistoryFirstName} ${studentWithHistoryLastName} ${studentWithHistoryIdFormName} ${studentWithHistoryIdDOB}`}
 							<br />
-							{
-								`* ${studentWithHistoryFirstName} ${studentWithHistoryLastName} [with history, email=${studentWithHistoryEmail} id=${studentWithHistoryId},
-								form=${studentWithHistoryIdFormName}, birthday=${studentWithHistoryIdDOB}]`
-							}
+							{`will be merged with the request for the role on behalf of`}
 							<br />
-							{`* ${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName} [no history, email=${studentWithoutHistoryEmail} id=${studentWithoutHistoryId}]`}
+							{`${studentWithoutHistoryFirstName} ${studentWithoutHistoryLastName}`}
 						</p>
 						<p>
-							As result of this operation student will have following credentials:<br />
-							{`* First name: ${studentWithHistoryFirstName}`}<br />
-							{`* Last name: ${studentWithHistoryLastName}`}<br />
-							{`* Email: ${studentWithoutHistoryEmail}`}<br />
-							{`while user with ${studentWithoutHistoryId} will be changed in status to 'REMOVED'`}
-						</p>
-						<p>
-							Are you really sure?
+							Are you sure?
 						</p>
 					</ConfirmPopup>
 				</If>

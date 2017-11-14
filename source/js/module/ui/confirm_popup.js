@@ -14,7 +14,8 @@ const ConfirmPopup = React.createClass({
 		handleClickOkButton:		React.PropTypes.func,
 		handleClickCancelButton:	React.PropTypes.func,
 		isShowButtons:				React.PropTypes.bool,
-		customStyle:				React.PropTypes.string
+		customStyle:				React.PropTypes.string,
+		customFooterStyle: 			React.PropTypes.string
 	},
 	getDefaultProps: function() {
 		return {
@@ -46,7 +47,7 @@ const ConfirmPopup = React.createClass({
 			footerStyle = classNames({
 				eConfirmPopup_footer	: true,
 				mHide					: !this.props.isShowButtons
-			});
+			}, this.props.customFooterStyle);
 
 		return (
 			<div>

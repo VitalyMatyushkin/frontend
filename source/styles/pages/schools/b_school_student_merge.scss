@@ -1,17 +1,25 @@
 .bStudentMerge{
 	padding-top: 20px;
 	padding-bottom: 20px;
-	width: 300px;
+	width: 400px;
 	text-align: center;
 	margin: 0 auto;
+	.eConfirmPopup_footer{
+		text-align: center;
+	}
+
 }
 .eStudentMergeButton{
 	margin-bottom: 20px;
 	margin-top: 20px;
+	margin-left: 20px;
 }
 .eStudentMergeAutocomplete{
 	margin-bottom: 20px;
 }
 .eStudentMergeNote{
 	text-align: left;
+}
+.mTextAlignCenter{
+	text-align: center;
 }

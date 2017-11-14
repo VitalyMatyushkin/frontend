@@ -115,10 +115,12 @@ class RequestActionsClass {
 		);
 	}
 	getActions(item){
-		const actionList = ['Accept', 'Decline'];
-		
+		let actionList;
+
 		if (item.requestedPermission.preset === "STUDENT") {
-			actionList.push('Merge');
+			actionList = ['Accept and merge', 'Decline', 'Accept as a new (inactive)'];
+		} else {
+			actionList = ['Accept', 'Decline'];
 		}
 		
 		return actionList;
@@ -170,7 +172,7 @@ class RequestActionsClass {
 					() => {}
 				);
 				break;
-			case 'Merge':
+			case 'Accept and merge':
 				document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
 				break;
 			default :

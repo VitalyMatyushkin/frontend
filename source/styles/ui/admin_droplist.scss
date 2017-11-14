@@ -70,6 +70,10 @@
   //border-bottom: 1px solid #e6e8ea;
 }
 
+.wrapper-dropdown-5 .dropdown li span.mInactive{
+  color: #cccccc;
+}
+
 .wrapper-dropdown-5 .dropdown li:last-of-type span {
   border: none;
 }
@@ -84,6 +88,10 @@
 
 .wrapper-dropdown-5 .dropdown li:hover span {
   background: #e6e6e6;
+}
+
+.wrapper-dropdown-5 .dropdown li:hover span.mInactive {
+  background: #fff;
 }
 
 /* Active state */

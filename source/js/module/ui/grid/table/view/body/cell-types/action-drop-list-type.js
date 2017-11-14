@@ -14,10 +14,10 @@ const ActionDropListType = function(props){
 
 	return (
 		<div className="eDataList_listItemCell mActions">
-			<DropList key={'actions-' + item.id}
-					  itemId={item.id}
-					  listItems={actionList}
-					  listItemFunction={actionHandler}/>
+			<DropList 	key 				= { 'actions-' + item.id }
+						itemId 				= { item.id }
+						listItems 			= { actionList }
+						listItemFunction 	= { actionHandler} />
 		</div>
 	);
 
