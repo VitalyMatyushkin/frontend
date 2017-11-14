@@ -112,11 +112,15 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 				studentWithoutHistoryId 		= propz.get(studentWithoutHistoryPermission, ['requesterId']),
 				globalBinding 					= this.getMoreartyContext().getBinding(),
 				routingData 					= globalBinding.sub('routing.parameters').toJS(),
-				schoolId 						= routingData.schoolId;
+				schoolId 						= routingData.schoolId,
+				permissionId 					= routingData.permissionId;
 		
 		binding.set('isPopupOpen', false);
 		
-		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {userId: studentWithoutHistoryId}).then(
+		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {
+			userId: 		studentWithoutHistoryId,
+			permissionId: 	permissionId
+		}).then(
 			res => {
 				window.simpleAlert(
 					'Merged successfully',
