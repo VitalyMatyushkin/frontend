@@ -14,8 +14,8 @@ const AllSchoolChallenges = React.createClass({
 		onClick:		React.PropTypes.func,
 		isSync:			React.PropTypes.bool,
 		isDaySelected:	React.PropTypes.bool,
-		school:			React.PropTypes.instanceOf(Immutable.List).isRequired,
-		events:			React.PropTypes.instanceOf(Immutable.List)			// Immutable map events
+		schools:		React.PropTypes.instanceOf(Immutable.List).isRequired,
+		events:			React.PropTypes.instanceOf(Immutable.List)
 	},
 	getDefaultProps: function () {
 		return {
@@ -26,7 +26,7 @@ const AllSchoolChallenges = React.createClass({
 		const 	isSync			= this.props.isSync,
 				isDaySelected	= this.props.isDaySelected,
 				events			= this.props.events,
-				school			= this.props.school,
+				schools			= this.props.schools,
 				onEventClick	= this.props.onClick;
 
 		switch (true) {
@@ -37,9 +37,16 @@ const AllSchoolChallenges = React.createClass({
 			case isSync !== true:
 				return <NoResultItem text="Loading..."/>;
 			/* when there are some events */
-			case school && school.count() > 0 && events && events.count() > 0:
-				return school.map( sch =>  {
-					return <SchoolChallenges key={sch.get('id')} school={sch} events={events} onClick={onEventClick}/>;
+			case schools && schools.count() > 0 && events && events.count() > 0:
+				return schools.map(school =>  {
+					return (
+						<SchoolChallenges
+							key		= { school.get('id') }
+							school	= { school }
+							events	= { events }
+							onClick	= { onEventClick }
+						/>
+					);
 				});
 			default:
 				return <NoResultItem text="There are no events for selected day"/>;

@@ -9,10 +9,10 @@ const	React		= require('react'),
 		Sport		= require('../../../../../../ui/icons/sport_icon');
 
 const ChallengeItem = function(props){
-	const	event 		= props.event,
-			eventName	= event.toJS().generatedNames.official,
-			time		= DateHelper.getTime(event.get('startTime')),
-			sport		= event.get('sport').get('name');
+	const event = props.event;
+	const eventName = getEventNameBySchoolId(props.activeSchoolId, props.event.toJS());
+	const time = DateHelper.getTime(event.get('startTime'));
+	const sport = event.get('sport').get('name');
 	
 	const 	isCancelled	= event.get('status') === 'CANCELED';
 	
@@ -40,9 +40,16 @@ const ChallengeItem = function(props){
 	);
 };
 
+function getEventNameBySchoolId(schoolId, event) {
+	const name = event.generatedNames[schoolId];
+
+	return typeof name !== 'undefined' ? name : '';
+}
+
 ChallengeItem.propTypes = {
-	event: 		React.PropTypes.instanceOf(Immutable.Map).isRequired,			// Immutable map event
-	onClick: 	React.PropTypes.func
+	event: 			React.PropTypes.instanceOf(Immutable.Map).isRequired,			// Immutable map event
+	activeSchoolId:	React.PropTypes.string.isRequired,
+	onClick:		React.PropTypes.func
 };
 
 module.exports = ChallengeItem;

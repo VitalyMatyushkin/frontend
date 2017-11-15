@@ -7,28 +7,38 @@ const	React			= require('react'),
 
 		ChallengeItem	= require('./challenge_item');
 
-const SchoolChallenges = function(props){
+const SchoolChallenges = function(props) {
+	const school = props.school;
+	const events = props.events.filter(event =>
+		Boolean(
+			event.get('studentSchools').find(id => id === school.get('id'))
+		)
+	);
 
-	const	school 	= props.school,
-			events	= props.events.filter(function(ev){
-				return Boolean(ev.get('studentSchools').find(id => id === school.get('id')));
-			});
+	let result = null;
+	if(events.count() > 0) {
+		const schoolFixtures = events.map(event =>
+			<ChallengeItem
+				key				= { event.get('id') }
+				activeSchoolId	= { school.get('id') }
+				event			= { event.toJS() }
+				onClick			= { props.onClick.bind(null, school.toJS().id) }
+			/>
+		).toArray();
 
-	if(events.count()) {
-		//Iterate over the schools present in the bag
-		const	schoolFixtures	= events.map(event => {
-			return <ChallengeItem key={event.get('id')} event={event} onClick={props.onClick.bind(null, school.toJS().id)} />;
-		}).toArray();
-
-		return (
+		result = (
 			<div className= "eChallenge_all">
-				<div className="eChildFixturesAll"> {schoolFixtures}</div>
-				<div className="eChallenge_childName">{`${school.get('name')}`}</div>
+				<div className="eChildFixturesAll">
+					{schoolFixtures}
+				</div>
+				<div className="eChallenge_childName">
+					{`${school.get('name')}`}
+				</div>
 			</div>
 		);
 	}
 
-	return null;
+	return result;
 };
 
 SchoolChallenges.propTypes = {

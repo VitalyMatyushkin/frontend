@@ -73,13 +73,15 @@ const ChallengesList = React.createClass({
 				isDaySelected	= typeof selectedDay !== 'undefined' || selectedDay !== null,
 				events			= binding.toJS('selectedDayFixtures');
 
-		return <Challenges
-			isSync={isSync}
-			isDaySelected={isDaySelected}
-			activeSchoolId={this.activeSchoolId}
-			onClick={this._onClickEvent}
-			events={events}
-		/>;
+		return (
+			<Challenges
+				isSync			= { isSync }
+				isDaySelected	= { isDaySelected }
+				activeSchoolId	= { this.activeSchoolId }
+				onClick			= { this._onClickEvent }
+				events			= { events }
+			/>
+		);
 	}
 });
 

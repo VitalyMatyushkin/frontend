@@ -33,8 +33,8 @@ const EventsCalendar = React.createClass({
 		document.location.hash = 'event/' + eventId + '?schoolId=' + schoolId;
 	},
 	renderChallengesListView: function() {
-		const	binding		= this.getDefaultBinding(),
-				school 		= binding.get('school');
+		const	binding	= this.getDefaultBinding(),
+				schools	= binding.get('school');
 
 		const 	calendar 					= this.getDefaultBinding().sub('calendar'),
 				isSelectedDateEventsInSync	= calendar.get('selectedDateEventsData.isSync'),
@@ -44,19 +44,21 @@ const EventsCalendar = React.createClass({
 
 		if(binding.get('activeSchoolId') == 'all') {
 			challengesList = (
-				<AllSchoolChallenges	isSync		= {isSelectedDateEventsInSync}
-										school		= {school}
-										events		= {selectedDateEvents}
-										onClick		= {this.onEventClick}
+				<AllSchoolChallenges
+					isSync	= { isSelectedDateEventsInSync }
+					schools	= { schools }
+					events	= { selectedDateEvents }
+					onClick	= { this.onEventClick }
 				/>
 			);
 		} else {
-			const sch = this.getSchoolById(school.toJS(), binding.toJS('activeSchoolId'));
+			const sch = this.getSchoolById(schools.toJS(), binding.toJS('activeSchoolId'));
 			if(typeof sch !== 'undefined') {
 				challengesList = (
-					<Challenges	isSync	= {isSelectedDateEventsInSync}
-								events	= {selectedDateEvents.toJS()}
-								onClick	= {this.onEventClick.bind(null, sch.id)}
+					<Challenges
+						isSync	= { isSelectedDateEventsInSync }
+						events	= { selectedDateEvents.toJS() }
+						onClick	= { this.onEventClick.bind(null, sch.id) }
 					/>
 				);
 			} else {
@@ -70,11 +72,9 @@ const EventsCalendar = React.createClass({
 		return school.find(sch => sch.id === currentSchoolId);
 	},
 	render: function() {
-		const 	binding 		= this.getDefaultBinding(),
-				activeSchoolId 	= binding.get('activeSchoolId'),
-
-				schoolIdList 	= activeSchoolId === 'all' ? '' : [activeSchoolId];
-				//schoolIdList 	= activeSchoolId === 'all' ? binding.toJS('schoolIds') : [activeSchoolId];
+		const binding = this.getDefaultBinding();
+		const activeSchoolId = binding.get('activeSchoolId');
+		const schoolIdList = activeSchoolId === 'all' ? '' : [activeSchoolId];
 
 		return (
 			<div className="bEvents">
