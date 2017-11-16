@@ -1,0 +1,73 @@
+.bTrainingSlider {
+  width: 1280px;
+  height: 940px;
+  margin: 0;
+  padding: 0;
+  left: -55px;
+  top: -170px;
+
+  .ePopup_Close {
+    width: 38px;
+    height: 38px;
+    top: 2px;
+    right: 2px;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  .bTraining_slider {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .eSlider_next {
+    position: absolute;
+    right: 53px;
+    display: block;
+    width: 111px;
+    height: 111px;
+    bottom: 35px;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+
+  .eSlider_previous {
+    position: absolute;
+    left: 50px;
+    display: block;
+    width: 111px;
+    height: 111px;
+    bottom: 35px;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+
+  .bNavigation_panel {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+
+    .eSlide_buttons {
+      margin: 0 5px;
+      display: inline-block;
+      width: 20px;
+      background-color: #b2d7ec;
+      height: 20px;
+      border-radius: 50px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #008ed3;
+      }
+    }
+
+    .eSlide_buttons_active {
+      background-color: #007abf;
+    }
+  }
+
+}

@@ -78,6 +78,7 @@ const	popupPopup	= require('../styles/ui/popup/b_popup.scss'),
 		popupBack	= require('../styles/ui/popup/b_popup_back.scss');
 
 const popupMessage	= require('../styles/ui/popup_message/b_popup_message.scss');
+const trainingSlider	= require('../styles/ui/b_training_slider.scss');
 const publicSchoolLogin = require('../styles/ui/publicSchoolLogin/public_school_login.scss');
 const radioButton = require('../styles/ui/radio_button/radio_button.scss');
 const savingPlayerChanges = require('../styles/ui/saving_player_changes_mode_panel/saving_player_changes_mode_panel.scss');
