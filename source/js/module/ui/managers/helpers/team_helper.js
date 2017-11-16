@@ -675,7 +675,7 @@ function getRival(event, activeSchoolId, forLeftContext){
 	return {
 		name:name,
 		from:from,
-		schoolPic: school ? school.pic : schoolsData.length ? schoolsData[0].pic : null,
+		schoolPic: school && school.pic ? school.pic : schoolsData.length ? schoolsData[0].pic : null,
 		value: onlyFrom ? from : onlyName ? name : `${name} [${from}]`
 	};
 }
