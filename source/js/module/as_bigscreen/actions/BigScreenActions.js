@@ -25,6 +25,7 @@ function getLastFiveFinishedEvents(activeSchoolId) {
 		limit: 5,
 		order: "startTime DESC",
 		where: {
+			clubId: { $exists: false },
 			status: {
 				$in: ['FINISHED']
 			},
@@ -44,6 +45,7 @@ function getClosestFiveEvents(activeSchoolId) {
 		limit: 5,
 		order: "startTime ASC",
 		where: {
+			clubId: { $exists: false },
 			startTime: {
 				$gte:	dayStart
 			},
@@ -87,6 +89,7 @@ function getFooterEvents(activeSchoolId) {
 			filter: {
 				limit: 10,
 				where: {
+					clubId: { $exists: false },
 					startTime: {
 						$gte: dayStart
 					},
@@ -136,6 +139,7 @@ function getNextSevenDaysEvents(activeSchoolId) {
 	const filter = {
 		limit: 100,
 		where: {
+			clubId: { $exists: false },
 			startTime: {
 				$gte:	dayStart,
 				$lt:	dayEnd
@@ -227,7 +231,7 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 	eventsBinding.set('lastFiveEvents.isSync', false);
 
 	return getLastFiveFinishedEvents(activeSchoolId).then(eventsData => {
-		eventsBinding.set('lastFiveEvents.events',	Immutable.fromJS(eventsData));
+		eventsBinding.set('lastFiveEvents.events', Immutable.fromJS(eventsData));
 		setHighlightEvent(activeSchoolId,eventsBinding);
 		const eventsId = eventsData.map(event => event.id);
 
@@ -268,14 +272,14 @@ function setClosestFiveEvents(activeSchoolId, eventsBinding) {
  *
  */
 function setSchoolId(binding) {
-		return getSchoolData().then(school => {
-				const schoolId = school[0].id;
+	return getSchoolData().then(school => {
+		const schoolId = school[0].id;
 
-				binding.set('domainSchoolId', Immutable.fromJS(schoolId));
-				setLastFiveFinishedEvents(schoolId, binding);
-				setClosestFiveEvents(schoolId, binding);
-				setFooterEvents(schoolId, binding);
-		});
+		binding.set('domainSchoolId', Immutable.fromJS(schoolId));
+		setLastFiveFinishedEvents(schoolId, binding);
+		setClosestFiveEvents(schoolId, binding);
+		setFooterEvents(schoolId, binding);
+	});
 };
 
 function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
@@ -290,6 +294,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 		limit: 100,
 		order: "startTime DESC",
 		where: {
+			clubId: { $exists: false },
 			startTime: {
 				$gte:	dayStart,
 				$lt:	dayEnd
