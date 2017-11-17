@@ -51,7 +51,7 @@ const AlbumView = React.createClass({
 			 // who can't upload photo to album
 			//if (isOwner) {
 				self.menuItems.push({
-					href: `/#school-albums/view/${albumId}/add`,
+					href: `/#${binding.get('basePath')}/view/${albumId}/add`,
 					name: 'Add photo',
 					key: 'addPhoto'
 				});

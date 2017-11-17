@@ -35,7 +35,9 @@ const AlbumRoutes = React.createClass({
 
 	render: function() {
 		const 	binding = this.getDefaultBinding();
-
+		
+		binding.set('basePath', this.props.basePath);
+		
 		return (
 			<RouterView
 				routes 	= { this.getMoreartyContext().getBinding() }
