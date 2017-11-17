@@ -22,7 +22,9 @@ const UserModel = function(userData, userModelParams){
 	self.permissions = userData.permissions;
 	self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData, statusPermission);
+    self.roleArray = um.getRoleArray(userData, statusPermission);
     self.school = um.getSchool(userData, statusPermission);
+	self.schoolArray = um.getSchoolArray(userData, statusPermission);
     self.status = userData.status;
 };
 UserModel.getFullName = function(user){
@@ -41,15 +43,22 @@ UserModel.getStatus = function(user) {
 };
 //Lets return block HTML element containing the list of roles
 UserModel.getRoles = function(user, statusPermission){
-    var res = [];
+	return (
+		<ul>
+			{
+				this.getRoleArray(user, statusPermission).map( (role, i) => <li key={i}>{role}</li> )
+			}
+		</ul>
+	);
+};
+
+UserModel.getRoleArray = function (user, statusPermission) {
+	let res = [];
 	if(user && user.permissions) {
-		res = UserModel.filterPermission(user.permissions, statusPermission).map(function (item, i) {
-			return (
-                <li key={i}>{item.preset}</li>
-			);
-		});
+		res = UserModel.filterPermission(user.permissions, statusPermission).map(item => item.preset);
 	}
-    return (<ul>{res}</ul>);
+
+	return res;
 };
 /**
  * Response data has filtred on frontend. We check the date interval, than know  outdated this role or not.
@@ -80,17 +89,25 @@ UserModel.filterPermission = function(permissions, statusPermission) {
 };
 //Lets return block HTML element containing the list of schools
 UserModel.getSchool = function(user, statusPermission){
-    var res = [];
+	return (
+		<ul>
+			{ this.getSchoolArray(user, statusPermission).map((school, i) => <li key={i}>{school}</li>) }
+		</ul>
+	);
+};
+
+UserModel.getSchoolArray = function(user, statusPermission){
+	let res = [];
+
 	if(user && user.permissions) {
-		res = UserModel.filterPermission(user.permissions, statusPermission).map(function (item, i) {
-			if (item.school) {
-				return (
-                    <li key={i}>{item.school.name}</li>
-				);
+		res = UserModel.filterPermission(user.permissions, statusPermission).map(item => {
+			if (typeof item.school !== 'undefined') {
+				return item.school.name;
 			}
 		});
 	}
-    return (<ul>{res}</ul>);
+
+	return res;
 };
 UserModel.getAccess = function(user){
     return user && user.blocked ? 'Blocked' : 'Active';

@@ -5,9 +5,12 @@ const   React 	= require('react'),
 		SVG		= require('module/ui/svg'),
 		If 		= require('module/ui/if/if');
 
+const CSVexportButtonWrapper = require('module/ui/grid/action-panel/buttons/csv_export_button_wrapper');
+
 const ActionPanel = React.createClass({
 	propTypes: {
-		model: React.PropTypes.object.isRequired
+		model:						React.PropTypes.object.isRequired,
+		handleClickCSVExportButton:	React.PropTypes.func.isRequired
 	},
 	toggleFilters: function(e) {
 		const model = this.props.model;
@@ -19,6 +22,9 @@ const ActionPanel = React.createClass({
 		this.setState({isFilterActive: model.isFilterActive});
 
 		e.stopPropagation();
+	},
+	isShowCSVButtonExport: function () {
+		return typeof this.props.model.btnCSVExport !== 'undefined';
 	},
 	render: function() {
 		const model = this.props.model;
@@ -38,6 +44,12 @@ const ActionPanel = React.createClass({
 				</If>
 				<If condition={!!model.btnAdd}>
 					{model.btnAdd}
+				</If>
+				<If condition={ this.isShowCSVButtonExport() }>
+					<CSVexportButtonWrapper
+						model		= { model }
+						handleClick	= { this.props.handleClickCSVExportButton }
+					/>
 				</If>
 			</div>
 		);

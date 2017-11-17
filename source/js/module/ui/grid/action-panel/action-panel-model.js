@@ -12,6 +12,7 @@
 const ActionPanelModel = function(options){
 	this.title = options.title;
 	this.btnAdd = options.btnAdd;
+	this.btnCSVExport = options.btnCSVExport;
 	this.showStrip = !!options.showStrip;
 	//TODO Where was "showStrip" used?
 	this.showSearch = !!options.showSearch;

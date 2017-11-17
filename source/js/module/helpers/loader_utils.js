@@ -129,7 +129,6 @@ function sendGetRequestToHttpUrl(url) {
 		
 		xhr.send();
 	});
-	
 }
 
 

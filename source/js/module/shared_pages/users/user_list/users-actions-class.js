@@ -406,7 +406,8 @@ class UsersActionsClass {
 			actionPanel:{
 				title:'Users & Permissions',
 				showStrip:true,
-				btnAdd:this.props.addButton
+				btnAdd:this.props.addButton,
+				btnCSVExport:this.props.csvExportButton
 			},
 			columns:this.columns,
 			handleClick: this.props.handleClick,
@@ -429,7 +430,8 @@ class UsersActionsClass {
 			actionPanel:{
 				title:'Users & Permissions',
 				showStrip:true,
-				btnAdd:this.props.addButton
+				btnAdd:this.props.addButton,
+				btnCSVExport:this.props.csvExportButton
 			},
 			columns:this.columns,
 			handleClick: this.props.handleClick,

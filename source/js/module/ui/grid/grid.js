@@ -7,6 +7,8 @@ const 	ActionPanel = require('./action-panel/action-panel'),
 		Pagination 	= require('./filter/pagination'),
 		React 		= require('react');
 
+const CSVExportController = require('module/ui/grid/csv_export/csv_export_controller');
+
 const Grid = React.createClass({
 	propTypes: {
 		model: 	React.PropTypes.object.isRequired,
@@ -22,17 +24,23 @@ const Grid = React.createClass({
 	onRender:function(){
 		this.setState({renderStart: new Date()});
 	},
+	handleClickCSVExportButton: function (e, gridType) {
+		CSVExportController.getCSVByGridModel(this.props.model, gridType);
+	},
 	render: function() {
-		const 	model 				= this.props.model,
-				id					= this.props.id,
-				classStyleAdmin 	= model.classStyleAdmin ? ' bGrid-wide' : '',
+		const	model			= this.props.model,
+				id				= this.props.id,
+				classStyleAdmin	= model.classStyleAdmin ? ' bGrid-wide' : '',
 				//The function, which will call when user click on <Row> in Grid otherwise we display in console log warning
-				handleClick 		= model.handleClick ? model.handleClick : () => {console.warn('Warning: There is no function in grid for click on row')},
-				mHidden 			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
+				handleClick		= model.handleClick ? model.handleClick : () => {console.warn('Warning: There is no function in grid for click on row')},
+				mHidden			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
 			<div className={"bGrid" + classStyleAdmin} id={id}>
-				<ActionPanel model={model.actionPanel} />
+				<ActionPanel
+					model						= { model.actionPanel }
+					handleClickCSVExportButton	= { this.handleClickCSVExportButton }
+				/>
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />
 				</div>

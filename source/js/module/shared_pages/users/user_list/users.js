@@ -9,13 +9,14 @@ const	React			= require('react'),
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		grantRole: 				React.PropTypes.func,
-		permissionServiceName: 	React.PropTypes.string,
-		blockService: 			React.PropTypes.object,
-		addButton:				React.PropTypes.func,
-		customActionList:		React.PropTypes.array,
+		grantRole: 					React.PropTypes.func,
+		permissionServiceName: 		React.PropTypes.string,
+		blockService: 				React.PropTypes.object,
+		addButton:					React.PropTypes.func,
+		csvExportButton:			React.PropTypes.func,
+		customActionList:			React.PropTypes.array,
 		//The function, which will call when user click on <Row> in Grid
-		handleClick:			React.PropTypes.func
+		handleClick:				React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		return {
@@ -63,9 +64,10 @@ const Users = React.createClass({
 		}
 	},
 	render: function () {
-		const 	binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('grid', Immutable.fromJS(this.model.grid));
+
 		return this.model.grid ? (
 			<div className="eTable_view">
 				<Grid model={this.model.grid}/>

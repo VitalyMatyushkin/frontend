@@ -6,7 +6,7 @@ const	React									= require('react'),
 		SubMenu									= require('module/ui/menu/sub_menu'),
 		SVG										= require('module/ui/svg');
 
-const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
+const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_user_list/admin_users_list'),
 		UserViewComponent						= require('module/shared_pages/users/user_view'),
 		AdminListComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin_schools_list'),
 		SchoolUnionListWrapper					= require('./school_union_list/school_union_list_wrapper'),
