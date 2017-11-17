@@ -17,9 +17,10 @@ const slides = [
 
 const TrainingSlider = React.createClass({
 	propTypes: {
-		onCancel: React.PropTypes.func.isRequired
+		webIntroEnabled:			React.PropTypes.bool,
+		handleClickDontshowAgain:	React.PropTypes.function,
+		handleClickCloseButton:		React.PropTypes.function
 	},
-
 	getInitialState: function () {
 		return {images: slides, pointer: 0};
 	},
@@ -96,6 +97,21 @@ const TrainingSlider = React.createClass({
 		const imageStyle = {backgroundImage: `url(${currentImage})`};
 		return(
 			<div className="bTraining_slider" style={imageStyle}>
+				{ this.props.handleClickCloseButton ?
+					<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }></div>
+					: null
+				}
+				{ this.props.handleClickDontshowAgain ?
+					<span className="eShow_again">
+						<span>Don't show again</span>
+						<input
+							name="isGoing"
+							type="checkbox"
+							checked={ !this.props.webIntroEnabled }
+							onChange={ this.props.handleClickDontshowAgain }
+						/>
+					</span>
+				: null }
 				{this.renderPreviousButton()}
 				{this.renderNextButton()}
 				<div className="bNavigation_panel">

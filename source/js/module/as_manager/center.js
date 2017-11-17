@@ -12,6 +12,8 @@ const	React				= require('react'),
 		NobodyRouter		= require('./routes/nobody_router'),
 
 		NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
+		SimpleAlertFactory	= require('../helpers/simple_alert_factory'),
+		SliderAlert		    = require('module/ui/training_slider/slider_alert'),
 		ConfirmAlert		= require('./../ui/confirm_alert/confirm_alert');
 
 const Center = React.createClass({
@@ -64,6 +66,7 @@ const Center = React.createClass({
 				<div className="bPageWrap">
 					{self.getRouter()}
 				</div>
+				<SliderAlert binding={binding.sub('sliderHelpAlert')} />
 				<NotificationAlert binding={binding.sub('notificationAlertData')} />
 				<ConfirmAlert binding={binding.sub('confirmAlertData')} />
 			</div>

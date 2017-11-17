@@ -1,26 +1,29 @@
 .bTrainingSlider {
-  width: 1280px;
-  height: 940px;
-  margin: 0;
-  padding: 0;
-  left: -55px;
-  top: -170px;
+  background-color: rgba(0, 0, 0, 0.25);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 100;
 
-  .ePopup_Close {
+
+  .eSlider_Close {
     width: 38px;
     height: 38px;
     top: 2px;
     right: 2px;
-
-    &:after {
-      display: none;
-    }
+    position: absolute;
+    cursor: pointer;
   }
 
   .bTraining_slider {
-    width: 100%;
-    height: 100%;
-    display: block;
+    width: 1280px;
+    height: 940px;
+    margin: 10px auto;
+    background: center no-repeat;
+    position: relative;
   }
 
   .eSlider_next {
@@ -43,6 +46,14 @@
     bottom: 35px;
     border-radius: 50px;
     cursor: pointer;
+  }
+
+  .eShow_again {
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    color: #333132;
+    font-size: 18px;
   }
 
   .bNavigation_panel {
@@ -70,4 +81,12 @@
     }
   }
 
+}
+
+.bDemo_slider {
+  width: 1280px;
+  height: 940px;
+  margin: auto;
+  background: center no-repeat;
+  position: relative;
 }

@@ -18,6 +18,7 @@ const	React							= require('react'),
 		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
 		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
 		UserViewComponent				= require('module/shared_pages/users/user_view'),
+		DemoViewComponent				= require('module/shared_pages/demo_slider/demo_slider'),
 		MessagesComponent				= require('module/as_manager/pages/messages/messages');
 
 /**
@@ -31,7 +32,7 @@ const SchoolWorkerRouter = React.createClass({
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
-
+		
 		return (
 			<RouterView	routes	= {binding.sub('routing')}
 						binding	= {binding}
@@ -91,6 +92,11 @@ const SchoolWorkerRouter = React.createClass({
 						userPermissionsService	= {window.Server.schoolUserPermissions}
 						isEditable				= {false}
 						component				= {UserViewComponent}
+				/>
+				
+				<Route	path					= "/demo"
+						binding					= {binding.sub('demo')}
+						component				= {DemoViewComponent}
 				/>
 			</RouterView>
 		);

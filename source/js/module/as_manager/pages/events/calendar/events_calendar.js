@@ -11,8 +11,6 @@ const 	React				= require('react'),
 		EventHeaderActions 	= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		RoleHelper 			= require('module/helpers/role_helper'),
-		Popup               = require('module/ui/popup'),
-		TrainingSlider      = require('module/ui/training_slider/training_slider'),
 		EventsStyles		= require('./../../../../../../styles/pages/events/b_events.scss');
 
 /** Show calendar section: month calendar and events for selected date */
@@ -23,17 +21,28 @@ const EventsCalendar = React.createClass({
 		const	binding					= this.getDefaultBinding(),
 				activeSchoolId			= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 		
-		const	role		= RoleHelper.getLoggedInUserRole(this),
-				schoolKind	= RoleHelper.getActiveSchoolKind(this);
-		if (typeof role !== "undefined" && schoolKind === "School") {
-			binding.set('trainingSlider',true);
-		}
+		binding.set('isSyncSlider', false);
 		/** Loading initial data for this month */
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
+		
+		if (this.isSchoolWorker()) {
+			window.Server.profile.get().then(p => {
+				binding.set('isSyncSlider', true);
+				binding.set('webIntroEnabled', p.webIntroEnabled);
+				binding.set('webIntroShowTimes', p.webIntroShowTimes);
+			});
+		}
 	},
+	
+	componentWillUnmount:function(){
+		const binding = this.getDefaultBinding();
+		binding.clear();
+	},
+	
 	onEventClick: function(eventId){
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
+	
 	onDeleteEvent: function(eventId){
 		const binding = this.getDefaultBinding();
 
@@ -60,33 +69,6 @@ const EventsCalendar = React.createClass({
 		} else {
 			return null;
 		}
-	},
-	
-	renderTrainingSlider: function() {
-		const binding	= this.getDefaultBinding();
-		
-		if(binding.get("trainingSlider")) {
-			return (
-				<Popup
-					binding         = {binding}
-					stateProperty   = {'trainingSlider'}
-					onRequestClose  = {this._closeTrainingSliderPopup}
-					otherClass      = "bTrainingSlider"
-				>
-					<TrainingSlider
-						binding     = {binding}
-						onCancel    = {this._closeTrainingSliderPopup}
-					/>
-				</Popup>
-			)
-		} else {
-			return null;
-		}
-	},
-	
-	_closeTrainingSliderPopup:function(){
-		const binding = this.getDefaultBinding();
-		binding.set('trainingSlider',false);
 	},
 	
 	handleClickDeleteButton: function(){
@@ -116,14 +98,28 @@ const EventsCalendar = React.createClass({
 	handleClickAddEventButton: function() {
 		document.location.hash = 'events/manager';
 	},
+	
+	isSchoolWorker: function () {
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
+		
+		return typeof role !== "undefined" && schoolKind === "School";
+	},
 
 	render: function(){
 		const	binding						= this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
+				showSlider	 				= binding.get('isSyncSlider') && binding.get('webIntroEnabled'),
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
-
+		
+		if (showSlider) {
+			window.sliderAlert(
+				binding.get('webIntroEnabled'),
+				binding.get('webIntroShowTimes')
+			);
+		}
 		return (
 			<div className="bEvents">
 				<div className="eEvents_container">
@@ -144,7 +140,6 @@ const EventsCalendar = React.createClass({
 					</div>
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
-				{ this.renderTrainingSlider() }
 			</div>
 		);
 	}

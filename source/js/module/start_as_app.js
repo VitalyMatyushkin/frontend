@@ -3,6 +3,7 @@
 const	ApplicationView 	= require('module/as_manager/application'),
 		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
 		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
+		SliderAlertFactory	= require('./helpers/slider_alert_factory'),
 		userDataInstance 	= require('module/data/user_data'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
@@ -28,6 +29,11 @@ function runManagerMode() {
 				okButtonText:			'',
 
 				handleClickOkButton:	undefined
+			},
+			sliderHelpAlert: {
+				isOpen:						false,
+				
+				webIntroEnabled:			true
 			},
 			confirmAlertData: {
 				isOpen:						false,
@@ -132,7 +138,8 @@ function runManagerMode() {
 
 			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
-
+			window.sliderAlert = SliderAlertFactory.create(binding.sub('sliderHelpAlert'));
+			
 			authController
 				.initialize({binding: binding})
 				.then(() => {
