@@ -234,7 +234,12 @@ const ManagerWrapper = React.createClass({
 	getValidationData: function() {
 		const binding = this.getDefaultBinding();
 
-		return binding.toJS('teamManagerWrapper.default.error');
+		const selectedRivalIndex = binding.toJS('selectedRivalIndex');
+		const selectedRivalId = binding.toJS(`teamManagerWrapper.default.rivals.${selectedRivalIndex}`).id;
+
+		return [
+			binding.toJS('teamManagerWrapper.default.error').find(data => data.rivalId === selectedRivalId)
+		];
 	},
 	getTeamWrappers: function() {
 		return this.getDefaultBinding().toJS('teamManagerWrapper.default.teamModeView.teamWrapper');
