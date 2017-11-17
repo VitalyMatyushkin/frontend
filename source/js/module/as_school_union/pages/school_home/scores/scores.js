@@ -35,11 +35,11 @@ const Scores = React.createClass({
 				//}
 
 				// TODO It's temporary.
-				const resultSports = sports.filter(s => s.isFavorite || s.name === ScoreTableHelper.OVERALL_RESULTS);
+				const resultSports = sports.filter(s => s.isFavorite || s.name.toLowerCase() === ScoreTableHelper.OVERALL_RESULTS);
 
 				// TODO It's temporary
 				// up 'Overall Results' sport to first place
-				const index = resultSports.findIndex(s => s.name === ScoreTableHelper.OVERALL_RESULTS);
+				const index = resultSports.findIndex(s => s.name.toLowerCase() === ScoreTableHelper.OVERALL_RESULTS);
 				if(index !== -1) {
 					resultSports.unshift(
 						resultSports.splice(index, 1)[0]

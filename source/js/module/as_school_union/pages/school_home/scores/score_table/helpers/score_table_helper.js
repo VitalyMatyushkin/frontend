@@ -1,5 +1,5 @@
 const ScoreTableHelper = {
-	OVERALL_RESULTS:	'Overall results',
+	OVERALL_RESULTS:	'overall results',
 	NETBALL:			'Netball',
 	useDefaultScoreTable: function(sport) {
 		//return sport.name === this.NETBALL;
