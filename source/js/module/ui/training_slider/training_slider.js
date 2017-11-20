@@ -94,10 +94,9 @@ const TrainingSlider = React.createClass({
 	
 	render: function() {
 		const currentSlide = this.state.slides[this.state.pointer].src;
-		const imageStyle = {backgroundImage: `url(${currentSlide})`};
 		return(
 			<div className="bTraining_slider_wrapper">
-				<div className="bTraining_slider" style={imageStyle}>
+					<img className="bTraining_slide" src={currentSlide} />
 					{ this.props.handleClickCloseButton ?
 						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }/>
 						: null
@@ -118,7 +117,6 @@ const TrainingSlider = React.createClass({
 					<div className="bNavigation_panel">
 						{this.renderNavigationPanel()}
 					</div>
-				</div>
 			</div>
 		);
 	}
