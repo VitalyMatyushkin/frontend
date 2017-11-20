@@ -34,11 +34,6 @@ const EventsCalendar = React.createClass({
 		}
 	},
 	
-	componentWillUnmount:function(){
-		const binding = this.getDefaultBinding();
-		binding.clear();
-	},
-	
 	onEventClick: function(eventId){
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
@@ -109,12 +104,13 @@ const EventsCalendar = React.createClass({
 	render: function(){
 		const	binding						= this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				sliderWasOpened				= this.getMoreartyContext().getBinding().get('sliderHelpAlert.wasOpened'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
-				showSlider	 				= binding.get('isSyncSlider') && binding.get('webIntroEnabled'),
-				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
-		
-		if (showSlider) {
+				selectedDateEvents			= binding.toJS('selectedDateEventsData.events'),
+				showSlider	 				= binding.get('isSyncSlider') && binding.get('webIntroEnabled');
+
+		if (showSlider && !sliderWasOpened) {
 			window.sliderAlert(
 				binding.get('webIntroEnabled'),
 				binding.get('webIntroShowTimes')

@@ -18,69 +18,74 @@
     cursor: pointer;
   }
 
-  .bTraining_slider {
-    width: 1280px;
-    height: 940px;
-    margin: 10px auto;
-    background: center no-repeat;
+  .bTraining_slider_wrapper {
+    padding-bottom: 71.25%;
+    padding-top: 25px;
+    height: 0;
     position: relative;
-  }
 
-  .eSlider_next {
-    position: absolute;
-    right: 53px;
-    display: block;
-    width: 111px;
-    height: 111px;
-    bottom: 35px;
-    border-radius: 50px;
-    cursor: pointer;
-  }
+    .bTraining_slider {
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      right: 5%;
+      width: 90%;
+      height: 90%;
+      background: center no-repeat;
+      background-size: 100%;
+    }
 
-  .eSlider_previous {
-    position: absolute;
-    left: 50px;
-    display: block;
-    width: 111px;
-    height: 111px;
-    bottom: 35px;
-    border-radius: 50px;
-    cursor: pointer;
-  }
-
-  .eShow_again {
-    position: absolute;
-    top: 5px;
-    left: 15px;
-    color: #333132;
-    font-size: 18px;
-  }
-
-  .bNavigation_panel {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-
-    .eSlide_buttons {
-      margin: 0 5px;
-      display: inline-block;
-      width: 20px;
-      background-color: #b2d7ec;
-      height: 20px;
+    .eSlider_button {
+      position: absolute;
+      display: block;
+      width: 10%;
+      height: 13%;
+      bottom: 3%;
       border-radius: 50px;
       cursor: pointer;
+      z-index: 1000;
+    }
+    .eSlider_next {
+      right: 4%;
+    }
 
-      &:hover {
-        background-color: #008ed3;
+    .eSlider_previous {
+      left: 4%;
+    }
+
+    .eShow_again {
+      position: absolute;
+      top: 5px;
+      left: 15px;
+      color: #333132;
+      font-size: 18px;
+    }
+
+    .bNavigation_panel {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+
+      .eSlide_buttons {
+        margin: 0 5px;
+        display: inline-block;
+        width: 20px;
+        background-color: #b2d7ec;
+        height: 20px;
+        border-radius: 50px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #008ed3;
+        }
+      }
+
+      .eSlide_buttons_active {
+        background-color: #007abf;
       }
     }
-
-    .eSlide_buttons_active {
-      background-color: #007abf;
-    }
   }
-
 }
 
 .bDemo_slider {
@@ -89,4 +94,20 @@
   margin: auto;
   background: center no-repeat;
   position: relative;
+}
+
+@media only screen and (min-width: 1300px) {
+  .bTrainingSlider {
+
+    .bTraining_slider_wrapper {
+      height: 940px;
+      width: 1280px;
+      margin: 0 auto;
+      padding: 0;
+
+      .bTraining_slider {
+        position: relative;
+      }
+    }
+  }
 }

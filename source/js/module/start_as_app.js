@@ -33,6 +33,8 @@ function runManagerMode() {
 			sliderHelpAlert: {
 				isOpen:						false,
 				
+				wasOpened:					false,
+				
 				webIntroEnabled:			true
 			},
 			confirmAlertData: {

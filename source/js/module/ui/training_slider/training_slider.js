@@ -1,7 +1,7 @@
 /**
  * Created by vitaly on 15.11.17.
  */
-const   React           = require('react');
+const React = require('react');
 
 const slides = [
 	{src: '/images/slides/01.gif', time: 7000},
@@ -22,47 +22,47 @@ const TrainingSlider = React.createClass({
 		handleClickCloseButton:		React.PropTypes.function
 	},
 	getInitialState: function () {
-		return {images: slides, pointer: 0};
+		return {slides: slides, pointer: 0};
 	},
 	
 	componentDidMount: function () {
-		this.changeStateTimerId = setInterval(this.handleNextSlide, slides[0].time);
+		this.changeStateTimerId = setInterval(() => this.handleNextSlide(), slides[0].time);
 	},
 	
 	componentWillUnmount: function () {
-		clearInterval(this.changeStateTimerId);
+		this.changeStateTimerId && clearInterval(this.changeStateTimerId);
 	},
 
 	handleNextSlide: function () {
-		let pointer = this.state.pointer;
+		const {pointer, slides} = this.state;
+		let nextPointer = 0;
 		if (pointer !== slides.length-1) {
-			pointer++;
-		} else {
-			pointer = 0;
+			nextPointer = pointer + 1;
 		}
-		this.setState({pointer});
-		this.resetTimeInterval(pointer);
+		this.setState({pointer: nextPointer});
+		this.resetTimeInterval(nextPointer);
 	},
 	
 	handlePreviousSlide: function () {
-		let pointer = this.state.pointer;
+		const {pointer,slides} = this.state;
+		let previousPointer;
 		if (pointer !== 0) {
-			pointer--;
+			previousPointer = pointer -1;
 		} else {
-			pointer = slides.length-1;
+			previousPointer = slides.length-1;
 		}
-		this.setState({pointer});
-		this.resetTimeInterval(pointer);
+		this.setState({pointer: previousPointer});
+		this.resetTimeInterval(previousPointer);
 	},
 	
 	resetTimeInterval: function (pointer) {
-		clearInterval(this.changeStateTimerId);
-		this.changeStateTimerId = setInterval(this.handleNextSlide, slides[pointer].time);
+		this.changeStateTimerId && clearInterval(this.changeStateTimerId);
+		this.changeStateTimerId = setInterval(() => this.handleNextSlide(), slides[pointer].time);
 	},
 	
 	renderNextButton: function () {
 		if (this.state.pointer < slides.length-1) {
-			return <div className="eSlider_next" onClick={this.handleNextSlide}></div>;
+			return <div className="eSlider_button eSlider_next" onClick={() => this.handleNextSlide()}/>;
 		} else {
 			return null;
 		}
@@ -70,7 +70,7 @@ const TrainingSlider = React.createClass({
 	
 	renderPreviousButton: function () {
 		if (this.state.pointer > 0) {
-			return <div className="eSlider_previous" onClick={this.handlePreviousSlide}></div>;
+			return <div className="eSlider_button eSlider_previous" onClick={() => this.handlePreviousSlide()}/>;
 		} else {
 			return null;
 		}
@@ -80,7 +80,7 @@ const TrainingSlider = React.createClass({
 		const pointer = this.state.pointer;
 		const buttons = slides.map((slide, index) => {
 			const activeClass = index === pointer ? "eSlide_buttons_active" : "";
-			return <div id={"slide_"+index} className={"eSlide_buttons "+activeClass} onClick={this.handleNavigationSlide.bind(null,index)}></div>;
+			return <div id={"slide_"+index} className={"eSlide_buttons "+activeClass} onClick={this.handleNavigationSlide.bind(null,index)}/>;
 		});
 		return buttons;
 	},
@@ -93,29 +93,31 @@ const TrainingSlider = React.createClass({
 	},
 	
 	render: function() {
-		const currentImage = this.state.images[this.state.pointer].src;
-		const imageStyle = {backgroundImage: `url(${currentImage})`};
+		const currentSlide = this.state.slides[this.state.pointer].src;
+		const imageStyle = {backgroundImage: `url(${currentSlide})`};
 		return(
-			<div className="bTraining_slider" style={imageStyle}>
-				{ this.props.handleClickCloseButton ?
-					<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }></div>
-					: null
-				}
-				{ this.props.handleClickDontshowAgain ?
-					<span className="eShow_again">
-						<span>Don't show again</span>
-						<input
-							name="isGoing"
-							type="checkbox"
-							checked={ !this.props.webIntroEnabled }
-							onChange={ this.props.handleClickDontshowAgain }
-						/>
-					</span>
-				: null }
-				{this.renderPreviousButton()}
-				{this.renderNextButton()}
-				<div className="bNavigation_panel">
-					{this.renderNavigationPanel()}
+			<div className="bTraining_slider_wrapper">
+				<div className="bTraining_slider" style={imageStyle}>
+					{ this.props.handleClickCloseButton ?
+						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }/>
+						: null
+					}
+					{ this.props.handleClickDontshowAgain ?
+						<span className="eShow_again">
+							<span>Don't show again</span>
+							<input
+								name="isGoing"
+								type="checkbox"
+								checked={ !this.props.webIntroEnabled }
+								onChange={ this.props.handleClickDontshowAgain }
+							/>
+						</span>
+					: null }
+					{this.renderPreviousButton()}
+					{this.renderNextButton()}
+					<div className="bNavigation_panel">
+						{this.renderNavigationPanel()}
+					</div>
 				</div>
 			</div>
 		);

@@ -7,11 +7,17 @@ const 	React           = require('react'),
 
 const DemoSlider= React.createClass({
 	
+	handleClickCloseButton: function () {
+		window.history.back();
+	},
+	
 	render: function() {
 		return 	(
-					<div className="bTrainingSlider bDemo_slider">
-						<TrainingSlider/>
-					</div>
+			<div className="bTrainingSlider">
+				<TrainingSlider
+					handleClickCloseButton 	= {this.handleClickCloseButton}
+				/>
+			</div>
 				)
 	}
 });
