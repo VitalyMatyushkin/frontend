@@ -3,11 +3,20 @@ const	React			= require('react'),
 
 		BigScreenConsts	= require('./consts/consts'),
 		FixtureList		= require('./fixture_list/fixture_list'),
-		Footer			= require('./footer');
+		Footer			= require('./footer'),
+		classNames		= require('classnames');
 
 const RecentEvent = React.createClass({
 	mixins: [Morearty.Mixin],
-
+	propTypes: {
+		isShow: React.PropTypes.bool.isRequired
+	},
+	getClassName: function () {
+		return classNames({
+			bUpcomingEvents:	true,
+			mDisable:		!this.props.isShow
+		});
+	},
 	getCurrentFooterEvent: function() {
 		const binding = this.getDefaultBinding().sub('events.footerEvents');
 
@@ -28,7 +37,7 @@ const RecentEvent = React.createClass({
 					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
-				<div className="bUpcomingEvents">
+				<div className = { this.getClassName() }>
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.UPCOMING }
 									title			= "Upcoming Events"
 									activeSchoolId	= { activeSchoolId }

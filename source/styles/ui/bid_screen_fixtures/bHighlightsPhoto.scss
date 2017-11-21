@@ -1,9 +1,14 @@
 @import "../../!variables";
 
 .bHighlightsPhoto {
+  display: flex;
+
   height: 100%;
-  margin: 0 auto;
   width: 100%;
+
+  justify-content: space-around;
+
+  margin: 0 auto;
 
 }
 
@@ -34,15 +39,16 @@
   }
 }
 
-.eHighlightsPhoto_Photo {
+.eHighlightsPhoto_photo {
   background-size: cover;
   background-repeat: no-repeat;
 
   width: 50%;
   height: 100%;
 
-  display: inline-block;
-  vertical-align: top;
+  &.mSmall {
+    width: 25%;
+  }
 }
 
 .eHighlightsPhoto_smallPhoto {

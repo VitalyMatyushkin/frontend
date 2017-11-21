@@ -1,6 +1,10 @@
 .bEventHighlight {
   height: 100%;
   width: 100%;
+
+  &.mDisable {
+    display: none;
+  }
 }
 
 .eEventHighlight_header {
