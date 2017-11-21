@@ -34,6 +34,8 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 					inviterSchoolId: { $ne: activeSchoolId },
 					invitedSchoolIds: activeSchoolId,
 					status: { $in: [
+						'INVITES_SENT',
+						'COLLECTING_INVITE_RESPONSE',
 						'ACCEPTED',
 						'REJECTED',
 						'FINISHED',
@@ -87,6 +89,8 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 					inviterSchoolId: { $ne: activeSchoolId },
 					invitedSchoolIds: activeSchoolId,
 					status: { $in: [
+						'INVITES_SENT',
+						'COLLECTING_INVITE_RESPONSE',
 						'ACCEPTED',
 						'REJECTED',
 						'FINISHED',

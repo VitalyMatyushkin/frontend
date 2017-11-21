@@ -4,6 +4,14 @@
 
 const Immutable = require('immutable');
 
+const EVENT_STATUS_ARRAY = [
+	'INVITES_SENT',
+	'COLLECTING_INVITE_RESPONSE',
+	'ACCEPTED',
+	'FINISHED',
+	'CANCELED'
+];
+
 /** Load in binding data for all dates which have events */
 function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBinding){
 	const	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
@@ -20,7 +28,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBind
 				$lt: 	monthEndDate
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED', 'CANCELED']
+				$in: EVENT_STATUS_ARRAY
 			},
 			childIdList: childIdList
 		}
@@ -58,7 +66,7 @@ function loadDailyEvents(date, childIdList, eventsBinding) {
 				$lt: dayEnd
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED', 'CANCELED']
+				$in: EVENT_STATUS_ARRAY
 			},
 			childIdList: childIdList
 		}

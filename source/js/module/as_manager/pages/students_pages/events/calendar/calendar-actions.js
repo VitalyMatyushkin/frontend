@@ -4,6 +4,13 @@
 
 const Immutable = require('immutable');
 
+const EVENT_STATUS_ARRAY = [
+	'INVITES_SENT',
+	'COLLECTING_INVITE_RESPONSE',
+	'ACCEPTED',
+	'FINISHED'
+];
+
 /** Load in binding data for all dates which have events */
 function loadMonthDistinctEventDatesToBinding(monthDate, schoolIdList, eventsBinding){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
@@ -21,7 +28,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, schoolIdList, eventsBin
 					$lt: 	monthEndDate
 				},
 				status: {
-					$in: ['ACCEPTED', 'FINISHED']
+					$in: EVENT_STATUS_ARRAY
 				}
 			}
 		};
@@ -34,7 +41,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, schoolIdList, eventsBin
 					$lt: 	monthEndDate
 				},
 				status: {
-					$in: ['ACCEPTED', 'FINISHED']
+					$in: EVENT_STATUS_ARRAY
 				},
 				schoolId: {
 					$in: schoolIdList
@@ -83,7 +90,7 @@ function loadDailyEvents(date, schoolIdList, eventsBinding) {
 					$lt: dayEnd
 				},
 				status: {
-					$in: ['ACCEPTED', 'FINISHED']
+					$in: EVENT_STATUS_ARRAY
 				}
 			}
 		};
@@ -96,7 +103,7 @@ function loadDailyEvents(date, schoolIdList, eventsBinding) {
 					$lt: dayEnd
 				},
 				status: {
-					$in: ['ACCEPTED', 'FINISHED']
+					$in: EVENT_STATUS_ARRAY
 				},
 				schoolId: {
 					$in: schoolIdList
