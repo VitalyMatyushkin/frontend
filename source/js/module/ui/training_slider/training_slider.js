@@ -1,7 +1,8 @@
 /**
  * Created by vitaly on 15.11.17.
  */
-const React = require('react');
+const	React	= require('react'),
+		SVG 	= require('module/ui/svg');
 
 const slides = [
 	{src: '/images/slides/01.gif', time: 7000},
@@ -62,7 +63,9 @@ const TrainingSlider = React.createClass({
 	
 	renderNextButton: function () {
 		if (this.state.pointer < slides.length-1) {
-			return <div className="eSlider_button eSlider_next" onClick={() => this.handleNextSlide()}/>;
+			return 	<div className="eSlider_button eSlider_next" onClick={() => this.handleNextSlide()}>
+						<SVG icon="icon_chevron_right" />
+					</div>;
 		} else {
 			return null;
 		}
@@ -70,7 +73,9 @@ const TrainingSlider = React.createClass({
 	
 	renderPreviousButton: function () {
 		if (this.state.pointer > 0) {
-			return <div className="eSlider_button eSlider_previous" onClick={() => this.handlePreviousSlide()}/>;
+			return 	<div className="eSlider_button eSlider_previous" onClick={() => this.handlePreviousSlide()}>
+						<SVG icon="icon_chevron_left" />
+					</div>;
 		} else {
 			return null;
 		}
@@ -98,19 +103,21 @@ const TrainingSlider = React.createClass({
 			<div className="bTraining_slider_wrapper">
 					<img className="bTraining_slide" src={currentSlide} />
 					{ this.props.handleClickCloseButton ?
-						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }/>
+						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }>
+							<SVG icon="icon_cross" />
+						</div>
 						: null
 					}
 					{ this.props.handleClickDontshowAgain ?
-						<span className="eShow_again">
-							<span>Don't show again</span>
+						<div className="eShow_again">
+							<label>Don't show again</label>
 							<input
 								name="isGoing"
 								type="checkbox"
 								checked={ !this.props.webIntroEnabled }
 								onChange={ this.props.handleClickDontshowAgain }
 							/>
-						</span>
+						</div>
 					: null }
 					{this.renderPreviousButton()}
 					{this.renderNextButton()}

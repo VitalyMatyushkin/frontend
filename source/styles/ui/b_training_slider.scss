@@ -10,12 +10,22 @@
 
 
   .eSlider_Close {
-    width: 38px;
-    height: 38px;
-    top: 2px;
+    width: 25px;
+    height: 25px;
+    bottom: 2px;
     right: 2px;
     position: absolute;
     cursor: pointer;
+
+    SVG {
+      color: #007abf;
+      width: 100%;
+      height: 100%;
+
+      &:hover {
+        color: #b2d7ec;
+      }
+    }
   }
 
   .bTraining_slider_wrapper {
@@ -45,32 +55,47 @@
     .eSlider_button {
       position: absolute;
       display: block;
-      width: 10%;
-      height: 13%;
-      bottom: 3%;
+      width: 80px;
+      height: 80px;
+      bottom: 50px;
       border-radius: 50px;
-      cursor: pointer;
       z-index: 1000;
+
+      SVG {
+        color: #b2d7ec;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+
+        &:hover {
+          color: #007abf;
+        }
+      }
+
     }
     .eSlider_next {
-      right: 4%;
+      right: 2%;
     }
 
     .eSlider_previous {
-      left: 4%;
+      left: 2%;
     }
 
     .eShow_again {
       position: absolute;
-      top: 5px;
-      left: 15px;
-      color: #333132;
-      font-size: 14px;
+      bottom: 2px;
+      right: 50px;
+      color: #007abf;
+      font-size: 18px
+    }
+    input[type='checkbox'] {
+      position: absolute;
+      top: -3px;
     }
 
     .bNavigation_panel {
       position: absolute;
-      bottom: 5px;
+      bottom: 20px;
       width: 100%;
       text-align: center;
 
@@ -78,8 +103,8 @@
         margin: 0 5px;
         display: inline-block;
         width: 20px;
-        background-color: #b2d7ec;
         height: 20px;
+        background-color: #b2d7ec;
         border-radius: 50px;
         cursor: pointer;
 
@@ -95,12 +120,17 @@
   }
 }
 
-@media all and (min-width: 650px) {
+@media all and (max-width: 650px) {
   .bTrainingSlider {
 
     .bTraining_slider_wrapper {
-      .eShow_again span {
-        font-size: 18px;
+      .eShow_again {
+        font-size: 14px;
+        right: 40px;
+      }
+
+      input[type='checkbox'] {
+        top: -5px;
       }
 
       .bNavigation_panel {
@@ -108,6 +138,49 @@
       }
     }
 
+    .eSlider_next {
+      right: 1%;
+    }
+
+    .eSlider_previous {
+      left: 1%;
+    }
+
+  }
+}
+
+@media all and (max-width: 800px) {
+  .bTrainingSlider {
+    .bTraining_slider_wrapper {
+      .eSlider_button {
+        width: 50px;
+        height: 50px;
+        bottom: 40px;
+      }
+      .eSlider_Close {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+@media all and (max-width: 450px) {
+  .bTrainingSlider {
+    .bTraining_slider_wrapper {
+      .eSlider_button {
+        width: 30px;
+        height: 30px;
+        bottom: 35px;
+      }
+      .bNavigation_panel {
+        bottom: 15px;
+        .eSlide_buttons {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
   }
 }
 
