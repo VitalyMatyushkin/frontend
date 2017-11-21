@@ -21,16 +21,16 @@
       cursor: pointer;
       display: inline-block;
       vertical-align: middle;
+    }
 
-      SVG {
-        color: #007abf;
-        width: 100%;
-        height: 100%;
+    .eSlider_Close .bIcon{
+      color: #007abf;
+      width: 100%;
+      height: 100%;
+    }
 
-        &:hover {
-          color: #b2d7ec;
-        }
-      }
+    .eSlider_Close:hover .bIcon {
+      color: #b2d7ec;
     }
 
     .eShow_again {
@@ -70,7 +70,7 @@
 
     .bNavigation_panel {
       position: absolute;
-      bottom: 2px;
+      bottom: 30px;
       width: 100%;
       text-align: center;
       z-index: 10000;
@@ -100,19 +100,19 @@
         height: 30px;
         border-radius: 50px;
         vertical-align: middle;
-
-        SVG {
-          color: #b2d7ec;
-          width: 100%;
-          height: 100%;
-          cursor: pointer;
-
-          &:hover {
-            color: #007abf;
-          }
-        }
-
       }
+
+      .eSlider_button .bIcon {
+        color: #b2d7ec;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .eSlider_button:hover .bIcon {
+         color: #007abf;
+      }
+
       .eSlider_next {
         margin-left: 30px;
       }
@@ -172,12 +172,19 @@
           width: 15px;
           height: 15px;
         }
+        .eSlider_next {
+          margin-left: 5px;
+        }
+
+        .eSlider_previous {
+          margin-right: 5px;
+        }
       }
     }
   }
 }
 
-@media all and (min-device-aspect-ratio: 9/7) {
+@media all and (min-device-aspect-ratio: 90/73) {
   .bTrainingSlider {
     .bTraining_slider_wrapper {
       height: 90%;
