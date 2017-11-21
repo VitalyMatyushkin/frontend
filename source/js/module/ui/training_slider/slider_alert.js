@@ -31,6 +31,11 @@ const SliderAlert = React.createClass({
 	sendWebIntroEnabled: function (webIntroEnabled) {
 		window.Server.profile.put({webIntroEnabled});
 	},
+	handleClickTrainingSlider: function (e) {
+		if (e.target.className === 'bTrainingSlider') {
+			this.handleClickCloseButton();
+		}
+	},
 	
 	render: function() {
 		const binding = this.getDefaultBinding();
@@ -40,7 +45,7 @@ const SliderAlert = React.createClass({
 
 		if(isOpen) {
 			return (
-				<div className="bTrainingSlider">
+				<div className="bTrainingSlider" onClick={this.handleClickTrainingSlider}>
 					<TrainingSlider
 						webIntroEnabled				= {webIntroEnabled}
 						handleClickDontshowAgain 	= {this.handleClickDontshowAgain}

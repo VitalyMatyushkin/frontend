@@ -9,22 +9,38 @@
   z-index: 100;
 
 
-  .eSlider_Close {
-    width: 25px;
-    height: 25px;
-    bottom: 2px;
-    right: 2px;
+  .bControl_button {
+    line-height: 25px;
     position: absolute;
-    cursor: pointer;
+    bottom: 0px;
+    right: 5px;
 
-    SVG {
-      color: #007abf;
-      width: 100%;
-      height: 100%;
+    .eSlider_Close {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
 
-      &:hover {
-        color: #b2d7ec;
+      SVG {
+        color: #007abf;
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+          color: #b2d7ec;
+        }
       }
+    }
+
+    .eShow_again {
+      display: inline-block;
+      color: #007abf;
+      font-size: 18px
+    }
+
+    input[type='checkbox'] {
+      vertical-align: middle;
     }
   }
 
@@ -52,52 +68,12 @@
       margin: 0 auto;
     }
 
-    .eSlider_button {
-      position: absolute;
-      display: block;
-      width: 80px;
-      height: 80px;
-      bottom: 50px;
-      border-radius: 50px;
-      z-index: 1000;
-
-      SVG {
-        color: #b2d7ec;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-
-        &:hover {
-          color: #007abf;
-        }
-      }
-
-    }
-    .eSlider_next {
-      right: 2%;
-    }
-
-    .eSlider_previous {
-      left: 2%;
-    }
-
-    .eShow_again {
-      position: absolute;
-      bottom: 2px;
-      right: 50px;
-      color: #007abf;
-      font-size: 18px
-    }
-    input[type='checkbox'] {
-      position: absolute;
-      top: -3px;
-    }
-
     .bNavigation_panel {
       position: absolute;
-      bottom: 20px;
+      bottom: 2px;
       width: 100%;
       text-align: center;
+      z-index: 10000;
 
       .eSlide_buttons {
         margin: 0 5px;
@@ -107,6 +83,7 @@
         background-color: #b2d7ec;
         border-radius: 50px;
         cursor: pointer;
+        vertical-align: middle;
 
         &:hover {
           background-color: #008ed3;
@@ -115,6 +92,33 @@
 
       .eSlide_buttons_active {
         background-color: #007abf;
+      }
+
+      .eSlider_button {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50px;
+        vertical-align: middle;
+
+        SVG {
+          color: #b2d7ec;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+
+          &:hover {
+            color: #007abf;
+          }
+        }
+
+      }
+      .eSlider_next {
+        margin-left: 30px;
+      }
+
+      .eSlider_previous {
+        margin-right: 30px;
       }
     }
   }
@@ -126,40 +130,35 @@
     .bTraining_slider_wrapper {
       .eShow_again {
         font-size: 14px;
-        right: 40px;
-      }
-
-      input[type='checkbox'] {
-        top: -5px;
       }
 
       .bNavigation_panel {
-        bottom: 20px;
+        .eSlider_next {
+          right: 20px;
+        }
+
+        .eSlider_previous {
+          left: 20px;
+        }
       }
     }
-
-    .eSlider_next {
-      right: 1%;
-    }
-
-    .eSlider_previous {
-      left: 1%;
-    }
-
   }
 }
 
 @media all and (max-width: 800px) {
   .bTrainingSlider {
     .bTraining_slider_wrapper {
-      .eSlider_button {
-        width: 50px;
-        height: 50px;
-        bottom: 40px;
-      }
-      .eSlider_Close {
-        width: 18px;
-        height: 18px;
+      .bNavigation_panel {
+        bottom: 25px;
+        .eSlider_button {
+          width: 50px;
+          height: 50px;
+          bottom: 40px;
+        }
+        .eSlider_Close {
+          width: 18px;
+          height: 18px;
+        }
       }
     }
   }
@@ -168,13 +167,7 @@
 @media all and (max-width: 450px) {
   .bTrainingSlider {
     .bTraining_slider_wrapper {
-      .eSlider_button {
-        width: 30px;
-        height: 30px;
-        bottom: 35px;
-      }
       .bNavigation_panel {
-        bottom: 15px;
         .eSlide_buttons {
           width: 15px;
           height: 15px;
@@ -186,7 +179,6 @@
 
 @media all and (min-device-aspect-ratio: 9/7) {
   .bTrainingSlider {
-
     .bTraining_slider_wrapper {
       height: 90%;
     }

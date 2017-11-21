@@ -11,9 +11,15 @@ const DemoSlider= React.createClass({
 		window.history.back();
 	},
 	
+	handleClickTrainingSlider: function (e) {
+		if (e.target.className === 'bTrainingSlider') {
+			this.handleClickCloseButton();
+		}
+	},
+	
 	render: function() {
 		return 	(
-			<div className="bTrainingSlider">
+			<div className="bTrainingSlider" onClick={this.handleClickTrainingSlider}>
 				<TrainingSlider
 					handleClickCloseButton 	= {this.handleClickCloseButton}
 				/>

@@ -67,7 +67,7 @@ const TrainingSlider = React.createClass({
 						<SVG icon="icon_chevron_right" />
 					</div>;
 		} else {
-			return null;
+			return <div className="eSlider_button eSlider_next"/>;
 		}
 	},
 	
@@ -77,7 +77,7 @@ const TrainingSlider = React.createClass({
 						<SVG icon="icon_chevron_left" />
 					</div>;
 		} else {
-			return null;
+			return <div className="eSlider_button eSlider_previous"/>;
 		}
 	},
 	
@@ -101,13 +101,13 @@ const TrainingSlider = React.createClass({
 		const currentSlide = this.state.slides[this.state.pointer].src;
 		return(
 			<div className="bTraining_slider_wrapper">
-					<img className="bTraining_slide" src={currentSlide} />
-					{ this.props.handleClickCloseButton ?
-						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }>
-							<SVG icon="icon_cross" />
-						</div>
-						: null
-					}
+				<img className="bTraining_slide" src={currentSlide} />
+				<div className="bNavigation_panel">
+					{this.renderPreviousButton()}
+					{this.renderNavigationPanel()}
+					{this.renderNextButton()}
+				</div>
+				<div className="bControl_button">
 					{ this.props.handleClickDontshowAgain ?
 						<div className="eShow_again">
 							<label>Don't show again</label>
@@ -118,12 +118,14 @@ const TrainingSlider = React.createClass({
 								onChange={ this.props.handleClickDontshowAgain }
 							/>
 						</div>
-					: null }
-					{this.renderPreviousButton()}
-					{this.renderNextButton()}
-					<div className="bNavigation_panel">
-						{this.renderNavigationPanel()}
-					</div>
+						: null }
+					{ this.props.handleClickCloseButton ?
+						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }>
+							<SVG icon="icon_cross" />
+						</div>
+						: null
+					}
+				</div>
 			</div>
 		);
 	}
