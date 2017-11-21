@@ -19,8 +19,8 @@ const slides = [
 const TrainingSlider = React.createClass({
 	propTypes: {
 		webIntroEnabled:			React.PropTypes.bool,
-		handleClickDontshowAgain:	React.PropTypes.function,
-		handleClickCloseButton:		React.PropTypes.function
+		handleClickDontshowAgain:	React.PropTypes.func,
+		handleClickCloseButton:		React.PropTypes.func
 	},
 	getInitialState: function () {
 		return {slides: slides, pointer: 0};
