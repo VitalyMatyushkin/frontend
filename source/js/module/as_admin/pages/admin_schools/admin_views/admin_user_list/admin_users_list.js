@@ -39,4 +39,5 @@ const AdminUsersList = React.createClass({
 
 	}
 });
+
 module.exports = AdminUsersList;

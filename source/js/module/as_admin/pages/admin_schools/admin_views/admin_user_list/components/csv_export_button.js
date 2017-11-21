@@ -1,7 +1,6 @@
-const	React	= require('react'),
-		SVG		= require('module/ui/svg');
-
-const CSVExportConsts = require('module/ui/grid/csv_export/consts');
+const	React			= require('react'),
+		Style			= require('styles/ui/admin_buttons.scss'),
+		CSVExportConsts	= require('module/ui/grid/csv_export/consts');
 
 const CSVExportButton = React.createClass({
 	propTypes: {
@@ -13,10 +12,9 @@ const CSVExportButton = React.createClass({
 	render: function() {
 		return (
 			<div
-				className	= "bButtonAdd"
+				className	= "bCSVDownloadButton"
 				onClick		= { this.handleClick }
 			>
-				<SVG icon="icon_pencil" />
 			</div>
 		);
 	}

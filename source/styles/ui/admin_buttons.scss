@@ -9,3 +9,17 @@
 .bButtonAdd:hover .bIcon{
   color: $blueColor;
 }
+
+.bCSVDownloadButton {
+  height: 30px;
+  width: 48px;
+  color: $COLOR;
+  cursor: pointer;
+
+  background: url(/images/csv_download.png) no-repeat;
+  background-size: contain;
+
+  &:hover {
+    color: $blueColor;
+  }
+}
