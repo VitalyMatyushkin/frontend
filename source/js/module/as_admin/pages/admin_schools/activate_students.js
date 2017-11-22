@@ -7,14 +7,20 @@ const 	React 			= require('react'),
 
 const 	Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		If 				= require('module/ui/if/if'),
-		Popup 			= require('module/ui/new_popup'),
-		Button 			= require('module/ui/button/button');
+		Button 			= require('module/ui/button/button'),
+		SVG 	    	= require('module/ui/svg');
 
 const StudentImporter = require('module/utils/student_importer');
 
+const CSVExportController = require('module/ui/grid/csv_export/csv_export_controller');
+
 const ActivateStudentsComponent = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillUnmount:function(){
+	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+		binding.set('showSpinner', false);
+	},
+	componentWillUnmount: function(){
 		const binding = this.getDefaultBinding();
 		
 		binding.clear();
@@ -58,14 +64,22 @@ const ActivateStudentsComponent = React.createClass({
 		
 		const studentsIdsAndEmails = studentData.data;
 		
+		binding.set('showSpinner', true);
 		window.Server.activateStudents.post({schoolId: schoolId}, {students: studentsIdsAndEmails}).then(
 			response => {
-				binding
-					.atomically()
-					.set('activateStudentsData', Immutable.fromJS(response))
-					.set('isPopupOpen', true)
-					.commit();
-				
+				response.map(s => {
+					const studData = studentsIdsAndEmails.filter(student => student.studentId === s.id)[0];
+					s.firstName = typeof studData.firstName !== 'undefined' ? studData.firstName : '';
+					s.lastName = typeof studData.lastName !== 'undefined' ? studData.lastName : '';
+					return s;
+				});
+				binding.set('showSpinner', false);
+				CSVExportController.convertToCSV(response);
+				window.simpleAlert(
+					`Students has been activated. File upload started.`,
+					'Ok',
+					() => {}
+				);
 			},
 			err => {
 				window.simpleAlert(
@@ -129,11 +143,6 @@ const ActivateStudentsComponent = React.createClass({
 			return <p>No data to upload</p>
 		}
 	},
-	onClickOkPopup: function(){
-		const binding = this.getDefaultBinding();
-		
-		binding.set('isPopupOpen', false);
-	},
 	renderStudentData: function(){
 		const 	binding 				= this.getDefaultBinding(),
 				activateStudentsData 	= binding.toJS('activateStudentsData');
@@ -159,7 +168,7 @@ const ActivateStudentsComponent = React.createClass({
 	render: function(){
 		const 	binding 				= this.getDefaultBinding(),
 				isSchoolId 				= Boolean(binding.toJS('schoolId')),
-				isPopupOpen 			= Boolean(binding.toJS('isPopupOpen'));
+				showSpinner 			= Boolean(binding.toJS('showSpinner'));
 
 		return (
 			<div className = 'bForm mNarrow'>
@@ -183,15 +192,9 @@ const ActivateStudentsComponent = React.createClass({
 							/>
 						</div>
 						<div>{this.validationEverything()}</div>
+						{ showSpinner ?	<div className="eLoader_activate"><SVG icon="icon_spin-loader-black"/></div> : null }
 					</div>
 				</If>
-				<Popup
-					isOpened 				= { isPopupOpen }
-					handleClickCloseButton 	= { this.onClickOkPopup }
-					isShowCloseButton 		= { true }
-				>
-					<span className="eInviteLinkPopup">{this.renderStudentData()}</span>
-				</Popup>
 			</div>
 		)
 	}
