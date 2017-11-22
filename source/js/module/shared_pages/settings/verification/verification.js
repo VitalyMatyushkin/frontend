@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
+		propz 				= require('propz'),
 		SessionHelper		= require('module/helpers/session_helper'),
 		VerificationStep	= require('./../../../ui/register/user/verification_step');
 
@@ -128,10 +129,16 @@ const Verification = React.createClass({
 		this.forceUpdate();
 	},
 	isEmailVerified: function() {
-		return !!SessionHelper.getActiveSession( this.getUserDataBinding() ).verified.email;
+		const 	activeSession 	= SessionHelper.getActiveSession( this.getUserDataBinding() ),
+				isEmailVerified = propz.get(activeSession, ['verified', 'email'], false);
+
+		return isEmailVerified;
 	},
 	isPhoneVerified: function() {
-		return !!SessionHelper.getActiveSession( this.getUserDataBinding() ).verified.sms;
+		const 	activeSession 	= SessionHelper.getActiveSession( this.getUserDataBinding() ),
+				isPhoneVerified = propz.get(activeSession, ['verified', 'sms'], false);
+		
+		return isPhoneVerified;
 	},
 
 	render: function() {
