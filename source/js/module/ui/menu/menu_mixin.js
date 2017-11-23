@@ -16,7 +16,7 @@ const MenuMixin = {
 			items: []
 		};
 	},
-	__getMenuNode: function(item: any, globalBinding: any, authorization: any, currentPath: any, itemClassName: string) {
+	__getMenuNode: function(item, globalBinding, authorization, currentPath, itemClassName) {
 		const 	itemPath 	= item.href && item.href.replace('#', ''),
 				itemRoutes 	= item.routes || [];
 

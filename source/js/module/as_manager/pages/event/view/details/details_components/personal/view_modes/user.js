@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		If				= require('../../../../../../../../ui/if/if'),
+	{If}			= require('../../../../../../../../ui/if/if'),
 		Consts			= require('../../consts'),
 		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 

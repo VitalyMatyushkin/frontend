@@ -18,7 +18,7 @@ const SportIcon = React.createClass({
 	 * @param sport {string} sport name
 	 * @returns {string} style name to apply on SVG
 	 */
-	getSportIcon:function(sport: string): string {
+	getSportIcon:function(sport) {
 		let icon;
 		sport = sport ? sport.trim().toLowerCase() : '';
 		switch (true){

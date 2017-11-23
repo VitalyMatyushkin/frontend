@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		DateHelper		= require('../../helpers/date_helper'),
+		{DateHelper}		= require('../../helpers/date_helper'),
 		CommentAvatar	= require('./comment_avatar'),
 		CommentStyle	= require('../../../../styles/ui/comments/b_comment.scss');
 

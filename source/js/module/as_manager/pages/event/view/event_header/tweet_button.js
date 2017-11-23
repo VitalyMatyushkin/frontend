@@ -3,7 +3,7 @@
  */
 const	React 				= require('react'),
 		Button				= require('module/ui/button/button'),
-		If					= require('module/ui/if/if'),
+		{If}				= require('module/ui/if/if'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 
@@ -77,13 +77,13 @@ const TweetButton = React.createClass({
 		});
 	},
 	
-	onPopupTextareaChange: function(event : any){
+	onPopupTextareaChange: function(event){
 		this.setState({
 			textForTweet: event.target.value
 		});
 	},
 	
-	onSelectChange: function(event : any){
+	onSelectChange: function(event){
 		this.setState({
 			twitterId: event.target.value
 		});

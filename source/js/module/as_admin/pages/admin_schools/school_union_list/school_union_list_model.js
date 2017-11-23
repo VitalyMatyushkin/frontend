@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		SVG			= require('module/ui/svg'),
 		DataLoader	= require('module/ui/grid/data-loader'),
-		GridModel	= require('module/ui/grid/grid-model');
+		{GridModel}	= require('module/ui/grid/grid-model');
 
 const SchoolUnionListModel = function(page, handleClickAddButton){
 	this.getDefaultBinding = page.getDefaultBinding;
@@ -41,7 +41,7 @@ SchoolUnionListModel.prototype.setAddButton = function(handleClickAddButton) {
 			<SVG icon="icon_add_school"/>
 		</div>
 	);
-},
+};
 
 SchoolUnionListModel.prototype.getActions = function(){
 	return ['Edit', 'Delete'];

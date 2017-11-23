@@ -1,6 +1,6 @@
 const	React			= require('react'),
 
-		If				= require('../../../../../ui/if/if'),
+	{If}			= require('../../../../../ui/if/if'),
 
 		DisciplineView	= require('./discipline_view'),
 		DisciplineEdit	= require('./discipline_edit');

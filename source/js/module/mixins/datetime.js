@@ -1,4 +1,4 @@
-const   DateHelper = require('module/helpers/date_helper');
+const   {DateHelper} = require('module/helpers/date_helper');
 
 
 /** Will mix in some useful date methods into React object */

@@ -3,7 +3,7 @@
  */
 
 const 	React 		= require('react'),
-		DateHelper 	= require('module/helpers/date_helper'),
+		{DateHelper} 	= require('module/helpers/date_helper'),
 		Lazy 		= require('lazy.js'),
 		FixtureItem = require('./fixture_item');
 

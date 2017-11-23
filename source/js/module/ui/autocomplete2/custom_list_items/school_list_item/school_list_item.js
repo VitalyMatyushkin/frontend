@@ -1,5 +1,5 @@
 const	React				= require ('react'),
-		If					= require ('../../../../ui/if/if'),
+	{If}				= require ('../../../if/if'),
 		propz				= require ('propz'),
 		SchoolListItemStyle	= require('../../../../../../styles/ui/b_school_list_item.scss');
 

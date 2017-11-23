@@ -1,4 +1,3 @@
-// @flow
 
 /**
  * Created by Anatoly on 12.12.2016.
@@ -16,7 +15,7 @@ const SchoolHelper = {
 	 * Return active school id
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	getActiveSchoolId: function(self: any) {
+	getActiveSchoolId: function(self) {
 		return self.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 	},
 
@@ -24,7 +23,7 @@ const SchoolHelper = {
 	 * Return active school data
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	getActiveSchoolInfo: function (self: any) {
+	getActiveSchoolInfo: function (self) {
 		const	rootBinding			= self.getMoreartyContext().getBinding(),
 				activeSchoolInfo	= rootBinding.toJS('activeSchool.schoolInfo');
 
@@ -35,7 +34,7 @@ const SchoolHelper = {
 	 * Return active school data
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	loadActiveSchoolInfo: function (self: any) {
+	loadActiveSchoolInfo: function (self) {
 		const
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.toJS('userRules.activeSchoolId');
@@ -51,7 +50,7 @@ const SchoolHelper = {
 	 * Return active school data (public)
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
-	loadActiveSchoolInfoPublic: function (self: any) {
+	loadActiveSchoolInfoPublic: function (self) {
 		const	rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.toJS('userRules.activeSchoolId');
 
@@ -63,7 +62,7 @@ const SchoolHelper = {
 
 	},
 
-	setSchoolSubscriptionPlanPromise: function (self: any) {
+	setSchoolSubscriptionPlanPromise: function (self) {
 		const binding = self.getDefaultBinding();
 
 		return this.loadActiveSchoolInfo(self).then(data => {
@@ -74,7 +73,7 @@ const SchoolHelper = {
 
 	},
 
-	schoolSubscriptionPlanIsFull: function (self: any) {
+	schoolSubscriptionPlanIsFull: function (self) {
 		const 	binding				= self.getDefaultBinding(),
 				subscriptionPlan	= binding.get('schoolSubscriptionPlan');
 
@@ -94,7 +93,7 @@ const SchoolHelper = {
 	 * Method replace client publicSite.password field value by server value
 	 * @param data
 	 */
-	setServerPublicSiteAndBigscreenAccessPasswordValue: function(data: any) {
+	setServerPublicSiteAndBigscreenAccessPasswordValue: function(data) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected && data.publicSite.password === defaultPassValue){
@@ -109,7 +108,7 @@ const SchoolHelper = {
 	 * Method replace server publicSite.password field value by client value
 	 * @param data
 	 */
-	setClientPublicSiteAndBigscreenAccessPasswordValue: function(data: any) {
+	setClientPublicSiteAndBigscreenAccessPasswordValue: function(data) {
 		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
 
 		if(data.publicSite.status === c.Protected){

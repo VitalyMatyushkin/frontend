@@ -5,7 +5,6 @@ const 	webpack				= require("webpack"),
 		autoprefixer		= require('autoprefixer');
 
 const babelPluginsList = [
-	"transform-flow-strip-types",
 	"transform-es2015-arrow-functions",     // allowing arrow functions
 	"check-es2015-constants",               // checking const expressions to be really const
 	"transform-es2015-block-scoping",       // allowing block scope features
@@ -41,6 +40,7 @@ module.exports = {
 			path.resolve(__dirname, 'source/js'),	// do we need both?
 			path.resolve(__dirname, 'source')
 		],
+		extensions: ['.ts', '.tsx', '.js', '.json'],
 		alias: {
 			director: path.resolve(__dirname, 'node_modules/director/build/director')
 		}
@@ -51,7 +51,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: /\.(ts|tsx)$/,
 				exclude: value => {
 					/* exclude if not whitelisted and in node_modules */
 					if(nodeModulesBabelWhiteList.isWhiteListed(value)) {
@@ -61,11 +61,30 @@ module.exports = {
 					}
 				},
 				use: [
-					{ loader: 'eslint-loader' },
 					{ loader: 'babel-loader', options: {
 							"presets": ["react"],
 							"plugins": babelPluginsList
-					}}
+					}},
+					{ loader: 'ts-loader', options: { transpileOnly: false } }
+				]
+			},
+			{	// js -> eslint -> tsc(to check whats going on) -> babel
+				test: /\.(js)$/,
+				exclude: value => {
+					/* exclude if not whitelisted and in node_modules */
+					if(nodeModulesBabelWhiteList.isWhiteListed(value)) {
+						return false;
+					} else {
+						return /(node_modules)/.test(value);
+					}
+				},
+				use: [
+					{ loader: 'babel-loader', options: {
+						"presets": ["react"],
+						"plugins": babelPluginsList
+					}},
+					{ loader: 'ts-loader', options: { transpileOnly: false } },
+					{ loader: 'eslint-loader' }
 				]
 			},
 			{

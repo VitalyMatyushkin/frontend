@@ -4,7 +4,7 @@ const	React					= require('react'),
 		propz					= require('propz');
 
 const	EventFormActions		= require('../../event_form_actions'),
-		If						= require('../../../../../../../ui/if/if'),
+	{If}					= require('../../../../../../../ui/if/if'),
 		GenderHelper			= require('module/helpers/gender_helper'),
 		Autocomplete			= require('../../../../../../../ui/autocomplete2/OldAutocompleteWrapper');
 

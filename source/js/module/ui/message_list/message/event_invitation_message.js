@@ -13,7 +13,7 @@ const	React								= require('react'),
 		MessageConsts						= require('module/ui/message_list/message/const/message_consts'),
 		EventMessageComments 				= require('module/ui/message_list/message/components/comments/event_message_comments'),
 		ConsentRequestTemplate 				= require('module/ui/message_list/message/components/template/template'),
-		If 									= require('module/ui/if/if'),
+		{If}								= require('module/ui/if/if'),
 
 		CONSENT_REQUEST_TEMPLATE_FIELD_TYPE = require('module/helpers/consts/schools').CONSENT_REQUEST_TEMPLATE_FIELD_TYPE,
 	

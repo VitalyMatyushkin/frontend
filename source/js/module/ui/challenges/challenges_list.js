@@ -3,7 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		DateHelper		= require('./../../helpers/date_helper'),
+		{DateHelper}		= require('../../helpers/date_helper'),
 		Challenges		= require('./challenges');
 
 const ChallengesList = React.createClass({

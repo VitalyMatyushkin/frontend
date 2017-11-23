@@ -2,8 +2,6 @@
  * Created by wert on 19.11.15.
  */
 
-// @flow
-
 const	Promise		= require('bluebird'),
 		$			= require('jquery'),
 		log			= require('loglevel'),

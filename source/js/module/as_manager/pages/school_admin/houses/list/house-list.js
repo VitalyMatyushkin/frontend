@@ -4,7 +4,7 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		HouseListModel  	= require('./house-list-model'),
-		Grid 				= require('module/ui/grid/grid'),
+	{Grid}				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
 const HouseList = React.createClass({

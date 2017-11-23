@@ -7,7 +7,7 @@ const PlayerInfo = React.createClass({
 	propTypes: {
 		playerIndex	: React.PropTypes.number.isRequired,
 		player		: React.PropTypes.object.isRequired,
-		playerPlace : React.PropTypes.number,
+		playerPlace : React.PropTypes.number
 	},
 	render: function() {
 		const	playerIndex	= this.props.playerIndex,

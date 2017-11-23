@@ -3,7 +3,7 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 		propz							= require('propz'),
-		If								= require('../../../../../ui/if/if');
+	{If}							= require('../../../../../ui/if/if');
 
 // EventForm React components
 const	DateSelectorWrapper				= require('./components/date_selector/date_selector_wrapper'),

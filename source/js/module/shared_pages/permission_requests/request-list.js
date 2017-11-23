@@ -6,7 +6,7 @@ const 	React 		= require('react'),
 		Morearty 	= require('morearty'),
 		Immutable 	= require('immutable'),
 		Actions 	= require('./request-actions'),
-		Grid 		= require('module/ui/grid/grid');
+	{Grid}		= require('module/ui/grid/grid');
 
 const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],

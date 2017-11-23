@@ -2,7 +2,7 @@
  * Created by bridark on 15/10/15.
  */
 const   AutoComplete            = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        If                      = require('module/ui/if/if'),
+       {If}                     = require('module/ui/if/if'),
 		Morearty            	= require('morearty'),
         React                   = require('react');
 /*

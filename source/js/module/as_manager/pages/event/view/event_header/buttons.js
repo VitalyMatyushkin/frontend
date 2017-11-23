@@ -1,5 +1,3 @@
-// @flow
-
 const	React			= require('react');
 
 const	ActionList		= require('../../../../../ui/action_list/action_list');
@@ -223,7 +221,7 @@ const Buttons = React.createClass({
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
-	handleClickActionItem: function(id: string) {
+	handleClickActionItem: function(id) {
 		switch (id) {
 			// create event like this
 			case 'create':

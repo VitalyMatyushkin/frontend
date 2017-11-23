@@ -6,7 +6,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
-		GridModel 		= require('module/ui/grid/grid-model'),
+		{GridModel}		= require('module/ui/grid/grid-model'),
 		SessionHelper	= require('module/helpers/session_helper'),
 		RoleHelper 		= require('module/helpers/role_helper');
 

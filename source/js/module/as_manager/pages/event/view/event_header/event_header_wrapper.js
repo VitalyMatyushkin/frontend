@@ -1,4 +1,3 @@
-// @flow
 /**
  * Created by Woland on 10.01.2017.
  */
@@ -204,10 +203,10 @@ const EventHeaderWrapper = React.createClass({
 		
 		binding.set('isDeleteEventPopupOpen', true);
 	},
-	isTweetButtonRender: function(role: string, twitterData: any, mode: string){
+	isTweetButtonRender: function(role, twitterData, mode){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
-	onClickViewMode: function(mode: string){
+	onClickViewMode: function(mode){
 		const binding = this.getDefaultBinding();
 		
 		binding.set('viewMode', mode);

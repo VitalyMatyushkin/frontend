@@ -272,7 +272,7 @@ const ApplicationView = React.createClass({
         return AJAX({
             url: url,
             type: 'POST',
-            headers: {usid},
+            headers: {usid}
         })
         .then((res) => {
             this.addLog(`${text}: ${res.textStatus}`, MESSAGE);
@@ -291,7 +291,7 @@ const ApplicationView = React.createClass({
         return AJAX({
             url: url,
             type: typeRequest,
-            headers: {usid},
+            headers: {usid}
         })
         .then((res) => {
             this.addLog(`${text} ${typeRequest}: ${res.textStatus}`, MESSAGE);

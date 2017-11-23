@@ -1,5 +1,5 @@
 const	React				= require ('react'),
-		If					= require ('../../../../ui/if/if'),
+	{If}				= require ('../../../if/if'),
 		PlaceListItemStyle	= require('../../../../../../styles/ui/b_place_list_item.scss');
 
 const PlaceListItem = React.createClass({

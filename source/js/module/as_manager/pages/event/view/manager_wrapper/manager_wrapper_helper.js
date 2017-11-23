@@ -10,7 +10,7 @@ const ManagerWrapperHelper = {
 		switch (true) {
 			case TeamHelper.isInternalEventForIndividualSport(event): {
 				rivals = [
-					this.getRivalByOrder(activeSchoolId, event, 0, isFakeTeams),
+					this.getRivalByOrder(activeSchoolId, event, 0, isFakeTeams)
 				];
 				break;
 			}

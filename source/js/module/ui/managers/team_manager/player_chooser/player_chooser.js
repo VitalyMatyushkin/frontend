@@ -4,7 +4,7 @@ const	PlayersList			= require('./players_list'),
 		PlayerSearchBox		= require('./player_search_box'),
 		AddPlayerTeamButton	= require('./add_player_team_button');
 
-const	If					= require('./../../../if/if'),
+const{If}				= require('../../../if/if'),
 		Loader				= require('./../../../loader');
 
 const PlayerChooser = React.createClass({

@@ -2,7 +2,7 @@ const 	React 		= require('react'),
 		ReactDOM 	= require('react-dom'),
 		Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
-		If 			= require('module/ui/if/if');
+	{If}			= require('module/ui/if/if');
 
 const RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],

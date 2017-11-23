@@ -7,7 +7,7 @@ const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		Sport 			= require('module/ui/icons/sport_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		{GridModel}		= require('module/ui/grid/grid-model');
 
 /**
  * SportListModel

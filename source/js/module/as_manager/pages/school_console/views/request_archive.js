@@ -5,7 +5,7 @@
 const 	React 				= require('react'),
 		Morearty			= require('morearty'),
 		RequestArchive 		= require('module/shared_pages/permission_requests/request-archive-class'),
-		Grid 				= require('module/ui/grid/grid'),
+	{Grid}				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
 const SchoolRequestArchive = React.createClass({

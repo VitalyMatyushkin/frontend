@@ -1,7 +1,7 @@
 const	React 						= require('react'),
 		Morearty					= require('morearty'),
 		MoreartyHelper				= require('../../../../../../helpers/morearty_helper'),
-		Grid 						= require('module/ui/grid/grid'),
+	{Grid}						= require('module/ui/grid/grid'),
 		SchoolUnionSchoolListModel	= require('./school_union_school_list_model'),
 		AddSchoolPopup				= require('./add_school_popup'),
 		SchoolUnionSchoolListStyle	= require('../../../../../../../../styles/ui/b_school_union_school_list.scss');

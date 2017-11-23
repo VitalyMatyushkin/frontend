@@ -4,7 +4,7 @@
 const 	React 		= require('react'),
 		Morearty	= require('morearty'),
 		Model 		= require('module/as_admin/pages/admin_user/admin_user_notifications/admin_user_notifications_class'),
-		Grid 		= require('module/ui/grid/grid');
+	{Grid}		= require('module/ui/grid/grid');
 
 const AdminUserNotifications = React.createClass({
 	mixins: [Morearty.Mixin],

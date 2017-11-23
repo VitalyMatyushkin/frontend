@@ -1,11 +1,9 @@
-// @flow
-
 const	React				= require('react');
 
 const	Lazy				= require('lazy.js'),
 		Morearty			= require('morearty'),
-		If					= require('../../../../../ui/if/if'),
-		DateHelper			= require('module/helpers/date_helper'),
+		{If}				= require('../../../../../ui/if/if'),
+		{DateHelper}		= require('module/helpers/date_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		RoleHelper 			= require('module/helpers/role_helper'),
 		TeamHelper			= require('../../../../../ui/managers/helpers/team_helper'),

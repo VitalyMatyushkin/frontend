@@ -4,7 +4,7 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 
-		If							= require('module/ui/if/if'),
+	{If}						= require('module/ui/if/if'),
 
 		AchievementsAllChildren		= require('./achievement/achievements_all_children'),
 		AchievementOneChild			= require('./achievement/achievement_one_child');

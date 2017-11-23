@@ -1,4 +1,4 @@
-const 	If 				= require('module/ui/if/if'),
+const {If}				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('../photo/photo_list'),
 		FullScreenList 	= require('../photo/fullscreen_list'),

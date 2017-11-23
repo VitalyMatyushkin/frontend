@@ -4,7 +4,7 @@
 const 	React 		= require('react'),
 		Morearty 	= require('morearty'),
 		Immutable 	= require('immutable'),
-		If			= require('module/ui/if/if'),
+		{If}		= require('module/ui/if/if'),
 		Loader 		= require('module/ui/loader');
 
 const AccountRoles = React.createClass({

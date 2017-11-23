@@ -4,7 +4,7 @@
 const	React 		= require('react'),
 		Morearty	= require('morearty'),
 		Model 		= require('module/as_admin/pages/admin_schools/school_sandbox/students/students-list-model'),
-		Grid 		= require('module/ui/grid/grid');
+	{Grid}		= require('module/ui/grid/grid');
 
 
 const StudentsList = React.createClass({

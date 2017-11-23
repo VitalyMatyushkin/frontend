@@ -2,7 +2,7 @@ const   React                           = require('react'),
         classNames                      = require('classnames'),
         SVG                             = require('module/ui/svg'),
         Popup                           = require('./../../../ui/new_popup'),
-        If                              = require('./../../../ui/if/if'),
+       {If}                             = require('../../if/if'),
         ChangeUserProfileFieldModule    = require('./changeUserProfileFieldModule');
 
 const VerificationStep = React.createClass({

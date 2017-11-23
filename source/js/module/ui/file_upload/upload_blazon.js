@@ -4,7 +4,7 @@
     //[Refactored use fileType instead]]
 // TODO: Do we still need it ?
 const   classNames  = require('classnames'),
-        If          = require('module/ui/if/if'),
+       {If}         = require('module/ui/if/if'),
         React       = require('react'),
         ReactDOM    = require('react-dom'),
         Morearty    = require('morearty'),

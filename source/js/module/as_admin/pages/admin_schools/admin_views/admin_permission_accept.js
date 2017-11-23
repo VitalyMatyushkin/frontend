@@ -1,7 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		If 					= require('module/ui/if/if'),
+	{If}					= require('module/ui/if/if'),
 		Autocomplete 		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		Loader				= require('module/ui/loader'),
 		SquareCrossButton	= require('module/ui/square_cross_button');

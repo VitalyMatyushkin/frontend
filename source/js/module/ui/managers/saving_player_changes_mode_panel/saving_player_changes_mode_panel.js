@@ -4,7 +4,7 @@ const	React			= require('react'),
 		OldTeamMode		= require('./view_modes/old_team_mode'),
 		ManagerConsts	= require('./../helpers/manager_consts'),
 
-		If				= require('./../../if/if');
+	{If}			= require('../../if/if');
 
 const TeamSaveModePanel = React.createClass({
 	propTypes: {

@@ -49,7 +49,7 @@ const EventFormActions = {
 					.set('sports.models',	Immutable.fromJS(sports))
 					.commit()
 			);
-	},
+	}
 };
 
 module.exports = EventFormActions;

@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Sport		= require('module/ui/icons/sport_icon'),
 		DataLoader	= require('module/ui/grid/data-loader'),
-		GridModel	= require('module/ui/grid/grid-model');
+		{GridModel}	= require('module/ui/grid/grid-model');
 
 class SportListModel{
 	constructor(page, schoolId, onReload){

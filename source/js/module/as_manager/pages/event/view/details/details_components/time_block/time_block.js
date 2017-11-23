@@ -1,6 +1,6 @@
 const	React				= require('react'),
 
-		DateHelper			= require('../../../../../../../helpers/date_helper'),
+		{DateHelper}			= require('../../../../../../../helpers/date_helper'),
 
 		ViewMode			= require('./view_modes/view_mode'),
 		EditMode			= require('./view_modes/edit_mode'),

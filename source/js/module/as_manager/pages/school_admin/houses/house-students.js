@@ -4,7 +4,7 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		StudentListClass  	= require('module/as_manager/pages/school_admin/students/list/student-list-class'),
-		Grid 				= require('module/ui/grid/grid');
+	{Grid}				= require('module/ui/grid/grid');
 
 const HouseStudents = React.createClass({
 	mixins: [Morearty.Mixin],

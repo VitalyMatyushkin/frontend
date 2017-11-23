@@ -1,7 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		UserActions		= require('./users-actions-class'),
-		Grid			= require('module/ui/grid/grid'),
+	{Grid}		= require('module/ui/grid/grid'),
 		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
 		ConfirmPopup	= require('../../../ui/confirm_popup'),
 		Immutable		= require('immutable');

@@ -1,5 +1,5 @@
 const 	React	= require('react'),
-		If		= require('module/ui/if/if');
+	{If}	= require('module/ui/if/if');
 
 const ChangeUserProfileFieldModule = React.createClass({
 

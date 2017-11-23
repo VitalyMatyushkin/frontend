@@ -1,6 +1,6 @@
 const	React			= require('react'),
 
-		DateHelper		= require('../../../../../../../../helpers/date_helper'),
+		{DateHelper}		= require('../../../../../../../../helpers/date_helper'),
 
 		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 

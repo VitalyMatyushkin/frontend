@@ -1,4 +1,4 @@
-const   If          = require('module/ui/if/if'),
+const  {If}         = require('module/ui/if/if'),
         Filter      = require('module/ui/list/filter'),
         GroupAction = require('module/ui/list/group_action'),
         SVG 		= require('module/ui/svg'),

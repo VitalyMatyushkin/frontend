@@ -2,7 +2,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty');
 
-const	Grid			= require('module/ui/grid/grid'),
+const{Grid}		= require('module/ui/grid/grid'),
 		AppListClass	= require('module/as_admin/pages/apps/app_list_model');
 
 const AppList = React.createClass({

@@ -3,7 +3,7 @@
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
 const 	$ 			= require('jquery'),
-		DateHelper 	= require('module/helpers/date_helper');
+		{DateHelper} 	= require('module/helpers/date_helper');
 
 let serverValidationTimer = null;
 

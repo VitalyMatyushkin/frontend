@@ -1,6 +1,6 @@
 const	React		= require('react'),
 
-		If			= require('../if/if'),
+	{If}		= require('../if/if'),
 		classNames	= require('classnames');
 
 const StarRatingBar = React.createClass({

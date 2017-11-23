@@ -29,7 +29,7 @@ const HomeCalender = React.createClass({
 		return typeof binding.get('monthDate') !== 'undefined' ? binding.get('monthDate') : new Date();
 	},
 
-	handleClickEvent: function(eventId: string) {
+	handleClickEvent: function(eventId) {
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 

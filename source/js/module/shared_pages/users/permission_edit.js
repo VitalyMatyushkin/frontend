@@ -7,7 +7,7 @@ const   React           = require('react'),
         Form 		    = require('module/ui/form/form'),
         FormField 	    = require('module/ui/form/form_field'),
         SVG 	        = require('module/ui/svg'),
-        DateHelper 	    = require('module/helpers/date_helper');
+        {DateHelper} 	    = require('module/helpers/date_helper');
 
 const STATUS = {
     ACTIVE:     'ACTIVE',

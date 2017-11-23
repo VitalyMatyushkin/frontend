@@ -6,7 +6,7 @@ const	DomainHelper			= require('module/helpers/domain_helper'),
 		Promise 				= require('bluebird'),
 		propz					= require('propz');
 
-const authСontroller = {
+const authController = {
 	requestedPage:	undefined,
 	publicPages:	['register', 'login', 'reset-request', 'reset'],
 	asPublicSchool:	false,
@@ -18,7 +18,7 @@ const authСontroller = {
 		if(options.asPublicSchool) {
 			this.asPublicSchool = options.asPublicSchool;
 		}
-		
+
 		if(options.asBigscreen) {
 			this.asBigscreen = options.asBigscreen;
 		}
@@ -75,10 +75,7 @@ const authСontroller = {
 	saveRequestedPage: function() {
 		const isEmptyCurrentHash = document.location.hash === '';
 
-		if(
-			!this.isPublicPage() &&
-			!isEmptyCurrentHash
-		) {
+		if(!this.isPublicPage() && !isEmptyCurrentHash) {
 			this.requestedPage = document.location.hash;
 		}
 	},
@@ -86,20 +83,19 @@ const authСontroller = {
 		this.binding = options.binding;
 	},
 	redirectUserByUserAuthData: function() {
-		const	binding					= this.binding;
-
-		const	isRegistrationProcess	= binding.get('form.register.formFields'), //user not in registration process now
+		const	binding					= this.binding,
+				isRegistrationProcess	= binding.get('form.register.formFields'), //user not in registration process now
 				isUserAuth				= this.isUserAuth(),
 				isUserOnRole			= this.isUserOnRole(),
 				isSuperAdmin			= this.isSuperAdmin();
 
 		if(!isRegistrationProcess) {								// When user isn't in registration process
 			switch (true) {
-				case (isSuperAdmin): {
+				case isSuperAdmin === true: {
 					this.redirectToDefaultPageForSuperAdmin();
 					break;
 				}
-				case (this.asPublicSchool): {
+				case this.asPublicSchool === true: {
 					// redirect to loginPublicSchool
 					window.location.hash = 'loginPublicSchool';
 
@@ -107,26 +103,23 @@ const authСontroller = {
 					this.requestedPage = undefined;
 					break;
 				}
-				case (this.asBigscreen): {
+				case this.asBigscreen === true: {
 					// redirect to loginPublicBigscreen
 					window.location.hash = 'loginPublicBigscreen';
-					
+
 					binding.set('loginPublicBigscreen.hashOfRedirectPageAfterLogin', this.requestedPage);
 					this.requestedPage = undefined;
 					break;
 				}
 				// When user is log in but doesn't have role
-				case (
-					isUserAuth &&
-					!isUserOnRole
-				): {
+				case (isUserAuth && !isUserOnRole): {
 					window.location.href = DomainHelper.getLoginUrl();
 					// Remove old requested page for case when user change role
 					// i don't know why but it must be here
 					this.requestedPage = undefined;
 					break;
 				}
-				case (isUserOnRole): {
+				case (isUserOnRole === true): {
 					if (typeof this.requestedPage === 'undefined') {
 						this.redirectToDefaultPage();
 					} else {
@@ -317,4 +310,4 @@ const authСontroller = {
 	}
 };
 
-module.exports = authСontroller;
+module.exports = authController;

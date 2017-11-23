@@ -4,7 +4,7 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		SportListModel  	= require('./sport-list-model'),
-		Grid 				= require('module/ui/grid/grid');
+	{Grid}				= require('module/ui/grid/grid');
 
 const SportList = React.createClass({
 	mixins: [Morearty.Mixin],

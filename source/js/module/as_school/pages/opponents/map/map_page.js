@@ -1,4 +1,4 @@
-const 	If 			= require('module/ui/if/if'),
+const {If}			= require('module/ui/if/if'),
 		Map 		= require('module/ui/map/map2'),
 		React 		= require('react'),
 		Morearty    = require('morearty'),

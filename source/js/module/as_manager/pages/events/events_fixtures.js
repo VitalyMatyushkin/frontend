@@ -5,7 +5,7 @@
 const   React		= require('react'),
         Morearty	= require('morearty'),
 		Immutable	= require('immutable'),
-		DateHelper 	= require('module/helpers/date_helper'),
+		{DateHelper} 	= require('module/helpers/date_helper'),
 		EventHelper	= require('module/helpers/eventHelper'),
 		MonthNavBar	= require('module/ui/calendar/month_year_selector'),
 		Fixtures 	= require('module/ui/fixtures/fixtures'),

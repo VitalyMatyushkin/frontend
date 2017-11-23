@@ -1,5 +1,3 @@
-// @flow
-
 const	SchoolForm		= require('module/as_manager/pages/schools/schools_form'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
@@ -9,7 +7,7 @@ const	SchoolForm		= require('module/as_manager/pages/schools/schools_form'),
 
 const AddSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
-	submitAdd: function(schoolData: any) {
+	submitAdd: function(schoolData) {
 		const globalBinding = this.getMoreartyContext().getBinding();
 
 		// !!! Method modify schoolData !!!

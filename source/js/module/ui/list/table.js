@@ -1,4 +1,4 @@
-const   If              = require('module/ui/if/if'),
+const  {If}             = require('module/ui/if/if'),
         Pagination      = require('module/ui/list/pagination'),
         Filter          = require('module/ui/list/filter'),
         React           = require('react'),

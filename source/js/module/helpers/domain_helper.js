@@ -15,7 +15,7 @@ const DomainHelper = {
 	 * @param {string} domainName - domain name, for ex. 'greatwalstead'
 	 * @return {string} new subdomain name, for ex. 'greatwalstead.squard.com:8080'
 	 * */
-	getSubDomain:function(domainName: string): string {
+	getSubDomain:function(domainName) {
 		const subdomains = document.location.host.split('.');
 		subdomains[0] = domainName;
 		return subdomains.join(".");
@@ -24,7 +24,7 @@ const DomainHelper = {
 	/**
 	 * Get login Url for redirect after logout
 	 * */
-	getLoginUrl:function(): string {
+	getLoginUrl:function() {
 		let subdomains = document.location.host.split('.');
 		subdomains[0] = subdomains[0] !=='admin' ? 'app': subdomains[0];
 		const domain = subdomains.join(".");
@@ -34,7 +34,7 @@ const DomainHelper = {
 	/**
 	 * Redirect to start page after login
 	 * */
-	redirectToStartPage: function(role: string, schoolKind: string): void {
+	redirectToStartPage: function(role, schoolKind) {
 		const	domainName	= this.getDomainNameByRole(role),
 				defaultPage	= this.getDefaultPageByRoleNameAndSchoolKind(role, schoolKind);
 
@@ -42,7 +42,7 @@ const DomainHelper = {
 		window.location.reload();
 	},
 
-	getDefaultPageByRoleNameAndSchoolKind: function(roleName: string, schoolKind: string): string {
+	getDefaultPageByRoleNameAndSchoolKind: function(roleName, schoolKind) {
 		const _roleName = roleName.toLowerCase();
 
 		switch (true) {
@@ -68,10 +68,10 @@ const DomainHelper = {
 				throw Error(`No role mapping for ${roleName}`);
 		}
 	},
-	getThirdLevelDomainByRole: function(role: string): string {
+	getThirdLevelDomainByRole: function(role) {
 		return RoleHelper.roleMapper[role.toLowerCase()];
 	},
-	getDomainNameByRole: function(role: string): string {
+	getDomainNameByRole: function(role) {
 		// parse domains from domain name to array
 		// app.squard.com => ['app', 'squard', 'com']
 		const domains = document.location.host.split('.');
@@ -80,7 +80,7 @@ const DomainHelper = {
 
 		return domains.join(".");
 	},
-	redirectToSettingsPage: function(): void {
+	redirectToSettingsPage: function() {
 		this.redirectToStartPage('no_body', undefined);
 	}
 };

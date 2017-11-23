@@ -1,7 +1,7 @@
 /**
  * Created by Anatoly on 28.03.2016.
  */
-const   DateHelper				= require('module/helpers/date_helper'),
+const   {DateHelper}				= require('module/helpers/date_helper'),
         EventHelper				= require('module/helpers/eventHelper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),

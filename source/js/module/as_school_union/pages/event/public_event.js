@@ -147,7 +147,7 @@ const PublicEvent = React.createClass({
 			);
 		}
 	},
-	onClickViewMode: function(mode: string){
+	onClickViewMode: function(mode){
 		const binding = this.getDefaultBinding();
 		
 		binding.set('viewMode', mode);

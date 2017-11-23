@@ -3,7 +3,7 @@
  */
 const 	React 			= require('react'),
 		Button 			= require('module/ui/button/button'),
-		If 				= require('module/ui/if/if'),
+	{If}				= require('module/ui/if/if'),
 		ReactCrop 		= require('react-image-crop'),
 		CropImageHelper = require('module/helpers/crop_image_helper');
 

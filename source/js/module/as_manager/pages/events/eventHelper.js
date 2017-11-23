@@ -158,11 +158,11 @@ const EventHelper = {
 				return EventConsts.EVENT_GENDERS.MALE_ONLY;
 			case EventConsts.EVENT_GENDERS_SERVER.MIXED:
 				return EventConsts.EVENT_GENDERS.MIXED;
-		};
+		}
 	},
 	convertServerEventTypeConstToClient: function(event) {
 		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
-	},
+	}
 };
 
 module.exports = EventHelper;

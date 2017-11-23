@@ -1,7 +1,7 @@
 const	React 		= require('react'),
 		Morearty	= require('morearty'),
 		Model 		= require('module/as_admin/pages/admin_schools/school_sandbox/events/events-school-model'),
-		Grid 		= require('module/ui/grid/grid');
+		{Grid} 		= require('module/ui/grid/grid');
 
 
 const EventsPage = React.createClass({

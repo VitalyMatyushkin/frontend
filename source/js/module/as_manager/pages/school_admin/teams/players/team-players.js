@@ -4,7 +4,7 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		TeamPlayersModel  	= require('./team-players-model'),
-		Grid 				= require('module/ui/grid/grid'),
+		{Grid}				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
 const TeamPlayers = React.createClass({

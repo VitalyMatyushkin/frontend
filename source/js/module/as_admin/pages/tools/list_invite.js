@@ -2,7 +2,7 @@ const	React 				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
 		ListInviteClass 	= require('module/as_admin/pages/tools/list_invite_class'),
-		Grid 				= require('module/ui/grid/grid');
+	{Grid}				= require('module/ui/grid/grid');
 
 
 const ListInvite = React.createClass({

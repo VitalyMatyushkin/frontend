@@ -1,4 +1,4 @@
-const	If				= require('module/ui/if/if'),
+const{If}			= require('module/ui/if/if'),
 		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		SportHelper 	= require('module/helpers/sport_helper'),

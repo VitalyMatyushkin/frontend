@@ -4,7 +4,7 @@ const	React				= require('react'),
 
 const	propz				= require('propz'),
 		Promise				= require('bluebird'),
-		If					= require('../../../../ui/if/if'),
+	{If}				= require('../../../../ui/if/if'),
 		Map					= require('../../../../ui/map/map2'),
 		Autocomplete		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		PlaceListItem		= require('../../../../ui/autocomplete2/custom_list_items/place_list_item/place_list_item'),

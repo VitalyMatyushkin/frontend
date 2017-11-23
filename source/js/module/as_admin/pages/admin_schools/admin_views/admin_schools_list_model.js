@@ -6,7 +6,7 @@ const 	React 			= require('react'),
 		propz 			= require('propz'),
 		Morearty 		= require('morearty'),
 	
-		GridModel 		= require('module/ui/grid/grid-model'),
+		{GridModel}		= require('module/ui/grid/grid-model'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 	
 		STATUS 			= require('module/helpers/consts/schools').STATUS;
@@ -86,7 +86,7 @@ class AdminSchoolsListClass{
 		document.location.hash = 'schools/admin_views/edit?id=' + itemId;
 	}
 	
-	getViewFunction(itemId){
+	getViewFunction(itemId, itemName) {
 		document.location.hash = `school_sandbox/${itemId}/forms`;
 	}
 	

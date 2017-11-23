@@ -4,7 +4,7 @@ const	ComboboxOption	= require('./option'),
 		Morearty		= require('morearty'),
 		Lazy			= require('lazy.js'),
 		classNames		= require('classnames'),
-		If				= require('./../if/if');
+	{If}			= require('../if/if');
 
 /** Component which acts like selects and display array of data passed as sourceArray property */
 const Select = React.createClass({

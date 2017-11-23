@@ -2,7 +2,7 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 		Lazy							= require('lazy.js'),
-		If								= require('module/ui/if/if'),
+		{If}							= require('module/ui/if/if'),
 		classNames						= require('classnames'),
 		Promise 						= require('bluebird');
 

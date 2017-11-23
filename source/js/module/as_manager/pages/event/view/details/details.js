@@ -1,7 +1,7 @@
 const	React			= require('react');
 
 const	PencilButton	= require('../../../../../ui/pencil_button'),
-		If				= require('../../../../../ui/if/if');
+	{If}			= require('../../../../../ui/if/if');
 
 const	TextBlock		= require('./details_components/text_block/text_block'),
 		TimeBlock		= require('./details_components/time_block/time_block'),

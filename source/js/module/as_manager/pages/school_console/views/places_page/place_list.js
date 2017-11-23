@@ -1,6 +1,6 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-		Grid			= require('module/ui/grid/grid'),
+	{Grid}		= require('module/ui/grid/grid'),
 		PlaceListModel	= require('./place_list_class'),
 		Immutable		= require('immutable');
 

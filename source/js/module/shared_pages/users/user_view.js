@@ -19,10 +19,10 @@ const   EditUser            = require('./user_edit'),
         Morearty            = require('morearty'),
         UserViewSummary     = require('module/shared_pages/users/user_view_summary'),
 	    AddRole		        = require('./add_role'),
-        If                  = require('module/ui/if/if'),
+       {If}                 = require('module/ui/if/if'),
 		propz				= require('propz'),
         SVG 	            = require('module/ui/svg'),
-	    DateHelper 	        = require('module/helpers/date_helper'),
+	    {DateHelper} 	        = require('module/helpers/date_helper'),
 	    loaderUtils	        = require('module/helpers/loader_utils');
 
 const UserDetail= React.createClass({

@@ -6,7 +6,7 @@ const	React						= require('react'),
 		GeoSearchHelper				= require('../../../../../helpers/geo_search_helper'),
 		SchoolListItem				= require('./../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		EventHelper					= require('../../../events/eventHelper'),
-		If							= require('../../../../../ui/if/if'),
+	{If}						= require('../../../../../ui/if/if'),
 		propz						= require('propz'),
 		ChangeOpponentSchoolStyle	= require('../../../../../../../styles/ui/b_change_opponent_school_popup.scss');
 

@@ -1,6 +1,6 @@
 const	React 					= require('react'),
 		schoolSummaryStyles		= require('styles/pages/schools/b_school_summary.scss'),
-		If						= require('module/ui/if/if');
+	{If}					= require('module/ui/if/if');
 
 const SummaryComponent = React.createClass({
 

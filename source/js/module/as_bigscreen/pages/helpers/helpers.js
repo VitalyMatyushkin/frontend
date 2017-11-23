@@ -12,7 +12,7 @@ const BigScreenHelper = {
 		const event = events[index];
 
 		return event;
-	},
+	}
 };
 
 module.exports = BigScreenHelper;

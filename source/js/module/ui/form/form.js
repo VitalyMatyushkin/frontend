@@ -13,7 +13,7 @@
 const   React       = require('react'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
-		If			= require('module/ui/if/if'),
+		{If}		= require('module/ui/if/if'),
 		Morearty	= require('morearty'),
 		SessionHelper	= require('module/helpers/session_helper'),
         $           = require('jquery');

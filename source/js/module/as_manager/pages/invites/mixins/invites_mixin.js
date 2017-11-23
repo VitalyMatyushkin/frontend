@@ -1,5 +1,5 @@
 'use strict';
-const   DateHelper = require('module/helpers/date_helper'),
+const   {DateHelper} = require('module/helpers/date_helper'),
 
 InvitesMixin = {
 	getActiveSchoolId: function () {

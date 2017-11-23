@@ -1,6 +1,6 @@
 const	React			= require('react'),
 		Score			= require('./../../../../../ui/score/score'),
-		If				= require('../../../../../ui/if/if'),
+	{If}			= require('../../../../../ui/if/if'),
 		TabHelper		= require('../tab_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),

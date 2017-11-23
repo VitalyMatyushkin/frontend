@@ -4,7 +4,7 @@
 const	React 		= require('react'),
 		Morearty	= require('morearty'),
 		Model 		= require('module/as_admin/pages/admin_schools/postcodes/postcodes-list-model'),
-		Grid 		= require('module/ui/grid/grid');
+		{Grid} 		= require('module/ui/grid/grid');
 
 
 const PostcodesList = React.createClass({

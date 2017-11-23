@@ -1,7 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Grid			= require('module/ui/grid/grid'),
+	{Grid}		= require('module/ui/grid/grid'),
 		SportListModel	= require('module/shared_pages/sport_pages/sport_list_model'),
 		Immutable		= require('immutable');
 

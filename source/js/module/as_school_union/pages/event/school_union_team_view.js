@@ -2,7 +2,7 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
 
-const	If				= require('module/ui/if/if'),
+const{If}			= require('module/ui/if/if'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		classNames		= require('classnames');
 

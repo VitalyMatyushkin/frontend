@@ -5,7 +5,7 @@
 const   DataLoader      = require('module/ui/grid/data-loader'),
         React           = require('react'),
         Morearty        = require('morearty'),
-        GridModel       = require('module/ui/grid/grid-model');
+		{GridModel}     = require('module/ui/grid/grid-model');
 
 /**
  * ClassesListModel

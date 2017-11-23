@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		If				= require('../../../../../ui/if/if'),
+	{If}			= require('../../../../../ui/if/if'),
 		TabHelper		= require('../tab_helper'),
 		PencilButton	= require('../../../../../ui/pencil_button'),
 		EventHelper		= require('module/helpers/eventHelper'),

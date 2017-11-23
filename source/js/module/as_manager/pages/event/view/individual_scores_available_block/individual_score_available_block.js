@@ -1,5 +1,5 @@
 const	React 								= require('react'),
-		If									= require('module/ui/if/if'),
+	{If}								= require('module/ui/if/if'),
 		IndividualScoreAvailable			= require('./individual_score_available'),
 		IndividualScoreAvailableBlockHelper	= require('./helpers/individual_score_available_block_helper');
 

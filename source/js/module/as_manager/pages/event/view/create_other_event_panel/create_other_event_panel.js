@@ -1,6 +1,6 @@
 const	React						= require('react');
 
-const	If							= require('../../../../../ui/if/if');
+const{If}						= require('../../../../../ui/if/if');
 
 const	EventHelper					= require('../../../../../helpers/eventHelper');
 

@@ -5,10 +5,10 @@
 const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
-		DateHelper 		= require('module/helpers/date_helper'),
+		{DateHelper} 		= require('module/helpers/date_helper'),
 		EventHelper 	= require('module/helpers/eventHelper'),
 		EventsConst		= require('module/helpers/consts/events'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		{GridModel}		= require('module/ui/grid/grid-model');
 
 /**
  * EventsSchoolModel

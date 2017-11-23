@@ -1,4 +1,3 @@
-// @flow
 /**
  * Created by wert on 26.02.16.
  */
@@ -7,16 +6,13 @@ const Ajax = require('module/core/AJAX');
 
 
 class ImageService {
-	endpoint: string;
-	__uploadUrl: string;
-
-	constructor(endpoint: string) {
+	constructor(endpoint) {
 		this.endpoint   = endpoint;
 		this.__uploadUrl  = endpoint + '/images';
 	}
 
 	/** Will upload file to storage and return it's url*/
-	upload(file: any){		// TODO: file type ???
+	upload(file){		// TODO: file type ???
 		const fd = new FormData();
 		fd.append('image', file);
 		return Ajax({
@@ -29,19 +25,19 @@ class ImageService {
 			.then( success => this.__getOriginalUrlByKey(success.data.key));
 	}
 
-	__getOriginalUrlByKey(key: string): string {
+	__getOriginalUrlByKey(key) {
 		return this.endpoint + '/images/' + key;
 	}
 
-	getResizedToHeightUrl(origUrl: string, height: number): string {
+	getResizedToHeightUrl(origUrl, height) {
 		return `${origUrl}?sizing=height&height=${height}`;
 	}
 
-	getResizedToBoxUrl(origUrl: string, height: number, width: number): string {
+	getResizedToBoxUrl(origUrl, height, width) {
 		return `${origUrl}?sizing=box&height=${height}&width=${width}`;
 	}
 
-	getResizedToMinValueUrl(origUrl: string, minValue: number): string {
+	getResizedToMinValueUrl(origUrl, minValue){
 		return `${origUrl}?sizing=minvalue&value=${minValue}`;
 	}
 

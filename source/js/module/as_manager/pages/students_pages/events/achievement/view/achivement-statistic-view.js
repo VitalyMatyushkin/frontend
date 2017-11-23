@@ -8,7 +8,7 @@ const	AboutMe				= require('./about_me'),
 		UserFixtures		= require('./user_fixtures'),
 		TeamStats			= require('./team_stats'),
 		Loader				= require('module/ui/loader'),
-		If 					= require('module/ui/if/if'),
+	{If}					= require('module/ui/if/if'),
 		React				= require('react'),
 		Morearty			= require('morearty');
 

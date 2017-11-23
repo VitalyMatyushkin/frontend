@@ -1,5 +1,5 @@
 const 	DateTimeMixin 	= require('module/mixins/datetime'),
-		If 				= require('module/ui/if/if'),
+	{If}				= require('module/ui/if/if'),
 		Morearty        = require('morearty'),
 		React 			= require('react');
 

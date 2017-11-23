@@ -4,7 +4,7 @@
 const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		ClassListModel  	= require('./class-list-class'),
-		Grid 				= require('module/ui/grid/grid'),
+	{Grid}				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
 const ClassList = React.createClass({

@@ -2,7 +2,7 @@
  * Created by Woland on 12.01.2017.
  */
 const	React 					= require('react'),
-		If						= require('../../../../ui/if/if'),
+	{If}					= require('../../../if/if'),
 		AutoComplete			= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		SchoolListItem			= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		PostcodeSelector		= require('../../../postcode_selector/postcode_selector'),

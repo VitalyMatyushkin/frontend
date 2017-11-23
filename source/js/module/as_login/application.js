@@ -10,8 +10,7 @@ const ApplicationView = React.createClass({
     mixins: [Morearty.Mixin],
 
     render: function() {
-        const 	self 	= this,
-            	binding = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
 
         return (
             <div>

@@ -38,7 +38,7 @@ const HighlightPhotosHelper = {
 		return {
 			backgroundImage: `url(${url})`
 		};
-	},
+	}
 };
 
 module.exports = HighlightPhotosHelper;

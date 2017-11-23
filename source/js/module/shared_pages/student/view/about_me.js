@@ -1,5 +1,5 @@
 const 	SVG 		= require('module/ui/svg'),
-		DateHelper 	= require('module/helpers/date_helper'),
+		{DateHelper} 	= require('module/helpers/date_helper'),
 		Morearty	= require('morearty'),
 		React 		= require('react');
 

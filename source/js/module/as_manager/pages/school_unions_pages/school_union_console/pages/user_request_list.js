@@ -1,7 +1,7 @@
 const	React 					= require('react'),
 		Morearty 				= require('morearty'),
 		RequestActionsClass 	= require('../../../school_console/views/request-actions-class'),
-		Grid 					= require('../../../../../ui/grid/grid'),
+	{Grid}					= require('../../../../../ui/grid/grid'),
 		Immutable 				= require('immutable');
 
 const UserRequestList = React.createClass({

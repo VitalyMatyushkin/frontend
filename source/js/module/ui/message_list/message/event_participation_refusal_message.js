@@ -9,7 +9,7 @@ const	React									= require('react'),
 		MessageText								= require('module/ui/message_list/message/components/message_text'),
 		MessageConsts							= require('module/ui/message_list/message/const/message_consts'),
 		EventMessageComments					= require('module/ui/message_list/message/components/comments/event_message_comments'),
-		If 										= require('module/ui/if/if'),
+	{If}										= require('module/ui/if/if'),
 		Bootstrap								= require('styles/bootstrap-custom.scss'),
 		InviteStyles							= require('styles/pages/events/b_invite.scss');
 

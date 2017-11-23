@@ -5,7 +5,7 @@ const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		{GridModel}		= require('module/ui/grid/grid-model');
 
 class IntegrationPageClass{
 	constructor(page){

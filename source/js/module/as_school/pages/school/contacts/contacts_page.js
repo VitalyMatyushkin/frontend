@@ -1,7 +1,7 @@
 const 	SVG 		= require('module/ui/svg'),
 		Map 		= require('module/ui/map/map2'),
 		React 		= require('react'),
-		If 			= require('module/ui/if/if'),
+	{If}			= require('module/ui/if/if'),
 		Morearty    = require('morearty'),
 		Immutable 	= require('immutable');
 

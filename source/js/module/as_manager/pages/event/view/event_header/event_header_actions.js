@@ -1,4 +1,3 @@
-// @flow
 /**
  * Created by Woland on 11.01.2017.
  */
@@ -10,7 +9,7 @@ const 	Immutable 			= require('immutable'),
 
 const converter = require('json-2-csv');
 
-function downloadPdf(schoolId: string, eventId: string, event: any) {
+function downloadPdf(schoolId, eventId, event) {
 	/*
 	 * Currently there is no one good way (or even just a way) to download file with JS.
 	 * So, I disable server-side authorization for this method and just opening new window
@@ -25,7 +24,7 @@ function downloadPdf(schoolId: string, eventId: string, event: any) {
 		window.simpleAlert('Sorry, there is no pdf template for this kind of event');
 	}
 }
-function downloadCSV(schoolId: string, event: any) {
+function downloadCSV(schoolId, event) {
 	let players = getPlayers(schoolId, event);
 
 	const filteredPlayers = players.map(p => {
@@ -64,7 +63,7 @@ function downloadCSV(schoolId: string, event: any) {
 	});
 }
 
-function getPlayers(schoolId: string, event: any) {
+function getPlayers(schoolId, event) {
 	let players = [];
 
 	if(TeamHelper.isTeamSport(event)) {
@@ -80,7 +79,7 @@ function getPlayers(schoolId: string, event: any) {
 	return players.filter(p => p.schoolId === schoolId);
 }
 
-function getCSVPlayer(firstName: string, lastName: string, form: string, ageGroup: string, event: string) {
+function getCSVPlayer(firstName, lastName, form, ageGroup, event) {
 	return {
 		firstName,
 		lastName,
@@ -90,7 +89,7 @@ function getCSVPlayer(firstName: string, lastName: string, form: string, ageGrou
 	};
 }
 
-function cancelEvent(schoolId: string, eventId: string){
+function cancelEvent(schoolId, eventId){
 	window.confirmAlert(
 		"You are going to cancel the fixture. Are you sure?",
 		"Ok",
@@ -100,7 +99,7 @@ function cancelEvent(schoolId: string, eventId: string){
 	);
 }
 
-function cancelEventOnServer(schoolId: string, eventId: string){
+function cancelEventOnServer(schoolId, eventId){
 	window.Server.eventCancel.post({
 		schoolId: schoolId,
 		eventId: eventId
@@ -110,18 +109,18 @@ function cancelEventOnServer(schoolId: string, eventId: string){
 		});
 }
 
-function setModeClosing(binding: any) {
+function setModeClosing(binding) {
 	binding.set('mode', 'closing');
 }
 
-function setModeGeneral(binding: any){
+function setModeGeneral(binding){
 	binding.set('mode', 'general');
 }
 
 /**
  * Set init state of score. See to component will mount function of Event React Component.
  */
-function revertScore(binding: any) {
+function revertScore(binding) {
 	const updEvent = binding.toJS('model');
 
 	updEvent.results = updEvent.initResults;
@@ -129,7 +128,7 @@ function revertScore(binding: any) {
 	binding.set('model', Immutable.fromJS(updEvent));
 }
 
-function submitScore(activeSchoolId: string, event: any, binding: any) {
+function submitScore(activeSchoolId, event, binding) {
 	if(TeamHelper.isNonTeamSport(event)) {
 		return submitResultsForIndividualSport(activeSchoolId, event)
 			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
@@ -139,13 +138,13 @@ function submitScore(activeSchoolId: string, event: any, binding: any) {
 	}
 }
 
-function submitResultsForIndividualSport(activeSchoolId: string, event: any) {
+function submitResultsForIndividualSport(activeSchoolId, event) {
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitIndividualResults(activeSchoolId, event));
 }
 
-function submitResultsForTeamsSport(activeSchoolId: string, event: any){
+function submitResultsForTeamsSport(activeSchoolId, event){
 	return submitSchoolResults(activeSchoolId, event)
 		.then(() => submitHouseResults(activeSchoolId, event))
 		.then(() => submitTeamResults(activeSchoolId, event))
@@ -153,7 +152,7 @@ function submitResultsForTeamsSport(activeSchoolId: string, event: any){
 		.then(() => submitCricketResults(activeSchoolId, event));
 }
 
-function submitSchoolResults(activeSchoolId: string, event: any){
+function submitSchoolResults(activeSchoolId, event){
 	const body = event.results.schoolScore;
 
 	switch (true) {
@@ -210,7 +209,7 @@ function submitSchoolResults(activeSchoolId: string, event: any){
 	}
 }
 
-function submitHouseResults(activeSchoolId: string, event: any) {
+function submitHouseResults(activeSchoolId, event) {
 	const score = event.results.houseScore;
 
 	switch (true) {
@@ -267,7 +266,7 @@ function submitHouseResults(activeSchoolId: string, event: any) {
 	}
 }
 
-function submitTeamResults(activeSchoolId: string, event: any) {
+function submitTeamResults(activeSchoolId, event) {
 	const score = event.results.teamScore;
 
 	switch (true) {
@@ -323,7 +322,7 @@ function submitTeamResults(activeSchoolId: string, event: any) {
 	}
 }
 
-function submitIndividualResults(activeSchoolId: string, event: any) {
+function submitIndividualResults(activeSchoolId, event) {
 	const score = event.results.individualScore;
 
 	let promises = [];
@@ -383,10 +382,10 @@ function submitIndividualResults(activeSchoolId: string, event: any) {
 	return Promise.all(promises);
 }
 
-function submitCricketResults(activeSchoolId: string, event: any) {
+function submitCricketResults(activeSchoolId, event) {
 	if (SportHelper.isCricket(event.sport.name)) {
 		const cricketTextResult = typeof event.results.cricketResult !== 'undefined' ? event.results.cricketResult.result.toUpperCase() : 'TBD';
-		const cricketResult: { result?: string, who?: string } = {
+		const cricketResult = {
 			result: cricketTextResult
 		};
 		
@@ -422,7 +421,7 @@ function isResultItemChanged(resultItem) {
  * And update result and status
  * Also got event editing page to GENERAL mode
  */
-function doActionsAfterCloseEvent(activeSchoolId: string, event: any, binding: any){
+function doActionsAfterCloseEvent(activeSchoolId, event, binding){
 
 	// Get updated event from server, and update some data in binding.
 	// 1) Set new results, it's important, because server results contain id's of each result point and event component
@@ -445,7 +444,7 @@ function doActionsAfterCloseEvent(activeSchoolId: string, event: any, binding: a
 /**
  * Event closing process started after click save button
  */
-function closeMatch(activeSchoolId: string, event: any, binding: any){
+function closeMatch(activeSchoolId, event, binding){
 	let promises = [];
 	if(TeamHelper.isNonTeamSport(event)) {
 		promises = promises.concat(

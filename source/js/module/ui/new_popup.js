@@ -1,5 +1,5 @@
 const	React	= require('react'),
-		If		= require('./if/if');
+	{If}	= require('./if/if');
 
 function Popup(props) {
 	//TODO rename css classes

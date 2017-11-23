@@ -5,7 +5,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 
-		If					= require('module/ui/if/if'),
+	{If}				= require('module/ui/if/if'),
 		Actions 			= require('./report-actions'),
 		Loader				= require('module/ui/loader'),
 		RoleHelper			= require('module/helpers/role_helper'),

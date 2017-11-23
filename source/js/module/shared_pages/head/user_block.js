@@ -1,5 +1,3 @@
-// @flow
-
 const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		Immutable 		= require('immutable'),
@@ -43,16 +41,16 @@ const UserBlock = React.createClass({
 		}
 	},
 	render: function() {
-		let		self		= this,
-				binding		= self.getDefaultBinding(),
+		const 	binding		= this.getDefaultBinding(),
 				authData	= SessionHelper.getActiveSession(binding),
-				UserButton	= null,
 				userClasses	= classNames({
-					eTopMenu_photo:true,
-					mDisabled:self.props.asAdmin
-				}),
-				LoginButton	= null,
-				RolesList	= null;
+					eTopMenu_photo:	true,
+					mDisabled:		this.props.asAdmin
+				});
+
+		let UserButton	= null,
+			LoginButton	= null,
+			RolesList	= null;
 
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {
@@ -63,7 +61,7 @@ const UserBlock = React.createClass({
 				</a>
 			);
 
-            RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={self.props.asAdmin} />;
+            RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={this.props.asAdmin} />;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;

@@ -5,7 +5,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 
-		DateHelper	= require('../../../../../../helpers/date_helper'),
+		{DateHelper}	= require('../../../../../../helpers/date_helper'),
 		Sport		= require('../../../../../../ui/icons/sport_icon');
 
 const ChallengeItem = function(props){
