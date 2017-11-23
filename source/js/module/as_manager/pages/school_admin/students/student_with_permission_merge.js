@@ -112,7 +112,7 @@ const StudentWithPermissionMergeComponent = React.createClass({
 			},
 			err => {
 				window.simpleAlert(
-					'Error (see in console)',
+					'Unable to merge this student.\nCheck that following preconditions are passed: student not take part in any event, student not take part in any team, student have the only permission or contact support.',
 					'Ok',
 					() => {}
 				);
