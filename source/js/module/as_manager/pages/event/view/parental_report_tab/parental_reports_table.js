@@ -1,74 +1,40 @@
-const	React			= require('react'),
-		MessageConsts	= require('module/ui/message_list/message/const/message_consts'),
-		ScoreTableStyle	= require('../../../../../../../styles/ui/b_score_table/b_score_table.scss'),
-		Bootstrap		= require('../../../../../../../styles/bootstrap-custom.scss');
+const	React						= require('react'),
+	
+		MessageConsts				= require('module/ui/message_list/message/const/message_consts'),
+	
+		ParentalReportsTableHead 	= require('./parental_reports_table_head'),
+		ParentalReportsTableBody 	= require('./parental_reports_table_body'),
+	
+		ScoreTableStyle				= require('../../../../../../../styles/ui/b_score_table/b_score_table.scss'),
+		Bootstrap					= require('../../../../../../../styles/bootstrap-custom.scss');
 
 const ParentalReportsTable = React.createClass({
 	propTypes: {
-		messages:	React.PropTypes.array.isRequired,
-		onGotIt:	React.PropTypes.func.isRequired
+		messages:				React.PropTypes.array.isRequired,
+		onGotIt:				React.PropTypes.func.isRequired,
+		onClickShowComments:	React.PropTypes.func.isRequired,
+		onClickSubmitComment:	React.PropTypes.func.isRequired,
+		checkComments:			React.PropTypes.func.isRequired,
+		setComments:			React.PropTypes.func.isRequired,
+		role: 					React.PropTypes.string.isRequired,
+		user: 					React.PropTypes.object.isRequired
 	},
-	onGotIt: function(message) {
-		this.props.onGotIt(message.id);
-	},
-	getStatus: function(message) {
-		if(message.isActionPerformed) {
-			return 'Received';
-		} else {
-			return (
-				<a onClick={this.onGotIt.bind(this, message)}>
-					Got It
-				</a>
-			);
-		}
-	},
-	renderRows: function() {
-		const messages = this.props.messages;
-
-		if(typeof messages !== 'undefined') {
-			return messages.map(message => {
-				const 	name = `${message.playerDetailsData.firstName} ${message.playerDetailsData.lastName}`,
-						isTakePart = message.isTakePart ? 'Yes' : 'No',
-						details = message.details,
-						sender = (	message.playerDetails.permissionId 	=== message.sender.permissionId &&
-									message.playerDetails.userId 		=== message.sender.userId) ?
-							`${message.sender.fullName} (student)` :
-							`${message.sender.fullName} (${message.playerDetailsData.firstName}'s parent)`;
-
-				return (
-					<tr
-						key={message.id}
-					>
-						<td>{name}</td>
-						<td>{isTakePart}</td>
-						<td>{details}</td>
-						<td>{sender}</td>
-						<td>
-							{this.getStatus(message)}
-						</td>
-					</tr>
-				);
-			});
-		} else {
-			return null;
-		}
-	},
+	
 	render: function(){
 		return (
 			<div className="bScoreTable">
 				<table className="table table-striped">
-					<thead>
-					<tr>
-						<th>Name</th>
-						<th>Available</th>
-						<th>Details</th>
-						<th>Sender</th>
-						<th>Status</th>
-					</tr>
-					</thead>
-					<tbody>
-						{this.renderRows()}
-					</tbody>
+					<ParentalReportsTableHead />
+					<ParentalReportsTableBody
+						messages 				= { this.props.messages }
+						onGotIt 				= { this.props.onGotIt }
+						onClickShowComments 	= { this.props.onClickShowComments }
+						onClickSubmitComment 	= { this.props.onClickSubmitComment }
+						checkComments 			= { this.props.checkComments }
+						setComments 			= { this.props.setComments }
+						role 					= { this.props.role }
+						user 					= { this.props.user }
+					/>
 				</table>
 			</div>
 		);

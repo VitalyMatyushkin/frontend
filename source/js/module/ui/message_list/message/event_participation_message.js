@@ -20,7 +20,8 @@ const EventParticipationMessage = React.createClass({
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
-		checkComments: 			React.PropTypes.func.isRequired
+		checkComments: 			React.PropTypes.func.isRequired,
+		user: 					React.PropTypes.object.isRequired
 	},
 	componentWillUnmount: function(){
 		clearInterval(this.timerID);

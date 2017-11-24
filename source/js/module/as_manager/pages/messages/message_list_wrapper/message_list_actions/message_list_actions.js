@@ -157,6 +157,23 @@ const MessageListActions = {
 			}
 		);
 	},
+	loadParentRoleParentalReportsMessagesByEventId: function(eventId) {
+		return window.Server.childEventMessages.get(
+			{ eventId: eventId },
+			{
+				filter:		{
+					where:		{
+						eventId:	eventId,
+						$or: [
+							{ kind:		MessageConsts.MESSAGE_KIND.AVAILABILITY },
+							{ kind:		MessageConsts.MESSAGE_KIND.REFUSAL }
+						]
+					},
+					limit:		1000
+				}
+			}
+		);
+	},
 	gotItRefusalMessage: function(activeSchoolId, messageId) {
 		return window.Server.doGotItActionForEventMessage.post(
 			{

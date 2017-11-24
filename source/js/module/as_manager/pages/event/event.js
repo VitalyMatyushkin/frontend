@@ -336,13 +336,18 @@ const Event = React.createClass({
 		}
 	},
 	loadParentalReportsMessages: function() {
-		if(this.role !== 'PARENT' && this.role !== 'STUDENT') {
-			return MessageListActions.loadParentalReportsMessagesByEventId(
-				this.props.activeSchoolId,
-				this.eventId
-			);
-		} else {
-			return Promise.resolve([]);
+		switch(true){
+			case this.role === 'PARENT':
+				return MessageListActions.loadParentRoleParentalReportsMessagesByEventId(
+					this.eventId
+				);
+			case this.role !== 'STUDENT':
+				return MessageListActions.loadParentalReportsMessagesByEventId(
+					this.props.activeSchoolId,
+					this.eventId
+				);
+			default:
+				return Promise.resolve([]);
 		}
 	},
 	isShowParentalConsentTab: function() {
