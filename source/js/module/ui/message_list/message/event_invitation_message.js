@@ -24,6 +24,7 @@ const EventInvitationMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
 		type:					React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
@@ -183,10 +184,28 @@ const EventInvitationMessage = React.createClass({
 	getLinkText: function(isShowComments){
 		return isShowComments ? 'Hide chat' : 'Chat';
 	},
+	renderShowCommentButton: function () {
+		if(this.props.userType === MessageConsts.USER_TYPE.STUDENT) {
+			const isShowComments = Boolean(this.props.message.isShowComments);
+
+			let linkText;
+			if (isShowComments) {
+				linkText = 'Hide chat';
+			} else {
+				linkText = 'Chat';
+			}
+
+			return (
+				<div className="eInviteDiscussionLink">
+					<a onClick = {this.onClickShowComments}>{ linkText }</a>
+				</div>
+			);
+		}
+	},
 	render: function() {
-		const 	isShowComments = Boolean(this.props.message.isShowComments),
-				isSyncComments = Boolean(this.props.message.isSyncComments),
-				comments = typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
+		const	isShowComments	= Boolean(this.props.message.isShowComments),
+				isSyncComments	= Boolean(this.props.message.isSyncComments),
+				comments		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
 		
 		const messageLeftBlockStyle = classNames({
 			'eInvite_left': true,
@@ -222,11 +241,7 @@ const EventInvitationMessage = React.createClass({
 								/>
 								{ this.renderButtons() }
 								{ this.renderStatus() }
-								<div className="eInviteDiscussionLink">
-									<a onClick = {this.onClickShowComments}>
-										{ this.getLinkText(isShowComments) }
-									</a>
-								</div>
+								{ this.renderShowCommentButton() }
 							</div>
 						</div>
 					</div>

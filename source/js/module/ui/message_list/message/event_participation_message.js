@@ -17,6 +17,7 @@ const EventParticipationMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
 		type:					React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
@@ -64,6 +65,24 @@ const EventParticipationMessage = React.createClass({
 				return null;
 		}
 	},
+	renderShowCommentButton: function () {
+		if(this.props.userType === MessageConsts.USER_TYPE.STUDENT) {
+			const isShowComments = Boolean(this.props.message.isShowComments);
+
+			let linkText;
+			if (isShowComments) {
+				linkText = 'Hide chat';
+			} else {
+				linkText = 'Chat';
+			}
+
+			return (
+				<div className="eInviteDiscussionLink">
+					<a onClick = {this.onClickShowComments}>{ linkText }</a>
+				</div>
+			);
+		}
+	},
 	onClickShowComments: function(){
 		this.props.onClickShowComments(this.props.message.id);
 	},
@@ -71,16 +90,9 @@ const EventParticipationMessage = React.createClass({
 		this.props.onClickSubmitComment(newCommentText, replyComment, this.props.message.id);
 	},
 	render: function() {
-		const 	isShowComments 	= Boolean(this.props.message.isShowComments),
-				isSyncComments 	= Boolean(this.props.message.isSyncComments),
-				comments 		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
-		
-		let linkText;
-		if (isShowComments) {
-			linkText = 'Hide chat';
-		} else {
-			linkText = 'Chat';
-		}
+		const	isShowComments	= Boolean(this.props.message.isShowComments),
+				isSyncComments	= Boolean(this.props.message.isSyncComments),
+				comments		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
 		
 		return (
 			<div className='bInvite'>
@@ -104,9 +116,7 @@ const EventParticipationMessage = React.createClass({
 									message={this.props.message}
 								/>
 								{this.renderButtons()}
-								<div className="eInviteDiscussionLink">
-									<a onClick = {this.onClickShowComments}>{ linkText }</a>
-								</div>
+								{ this.renderShowCommentButton() }
 							</div>
 						</div>
 					</div>

@@ -11,7 +11,8 @@ const	React					= require('react'),
 		VerifyRoute				= require('module/core/routes/verify_route'),
 
 		EventComponent			= require('../pages/students_pages/event/event_page'),
-		StudentEventsComponent	= require("./../pages/students_pages/events/events");
+		StudentEventsComponent	= require("./../pages/students_pages/events/events"),
+		MessagesComponent		= require('module/as_manager/pages/students_pages/messages/messages');
 
 /**
  * It's a router for user with student role.
@@ -48,6 +49,12 @@ const StudentRouter = React.createClass({
 					path		= "/event /event/:eventId"
 					binding		= {binding.sub('events')}
 					component	= {EventComponent}
+				/>
+
+				<Route
+					path		= '/messages /messages/:subPage'
+				 	binding		= { binding.sub('messages') }
+					component	= { MessagesComponent }
 				/>
 			</RouterView>
 		);

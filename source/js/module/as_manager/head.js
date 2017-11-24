@@ -269,6 +269,12 @@ const Head = React.createClass({
 				authorization: true,
 				routes: ['/events/achievement/:schoolId']
 			}, {
+				href:			'/#messages/inbox',
+				name:			'Messages',
+				key:			'Messages',
+				authorization:	true,
+				routes:			['/messages/:subPage']
+			}, {
 				href: '/#help',
 				name: 'Help',
 				key: 'Help'

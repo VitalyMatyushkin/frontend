@@ -67,12 +67,12 @@ const Messages = React.createClass({
 
 		binding.sub('inbox.messages').addListener(descriptor => {
 			const	currentModels	= descriptor.getCurrentValue().toJS(),
-					prevModels		= descriptor.getPreviousValue().toJS();
+				prevModels		= descriptor.getPreviousValue().toJS();
 
 			if(currentModels.length !== prevModels.length) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems'),
-						inviteItemIndex	= topMenuItems.findIndex(i => i.key === 'Messages');
+					topMenuItems	= rootBinding.toJS('topMenuItems'),
+					inviteItemIndex	= topMenuItems.findIndex(i => i.key === 'Messages');
 
 				let		name			= '';
 				if(currentModels.length > 0) {
@@ -88,13 +88,13 @@ const Messages = React.createClass({
 	},
 	render: function () {
 		const	binding		= this.getDefaultBinding(),
-				rootBinging	= this.getMoreartyContext().getBinding();
+			rootBinging	= this.getMoreartyContext().getBinding();
 
 		return (
 			<div className="bParentsPage">
 				<SubMenu
-					items	= {this.menuItems}
-					binding	= {binding.sub('messagesRouting')}
+					items	= { this.menuItems }
+					binding	= { binding.sub('messagesRouting') }
 				/>
 				<div className='bSchoolMaster'>
 					<div className="bInvites">
@@ -105,19 +105,19 @@ const Messages = React.createClass({
 							<Route
 								path		= '/messages/inbox'
 								binding		= { binding.sub('inbox') }
-								userType	= { MessageConsts.USER_TYPE.PARENT }
+								userType	= { MessageConsts.USER_TYPE.STUDENT }
 								component	= { Inbox }
 							/>
 							<Route
 								path		= '/messages/outbox'
 								binding		= { binding.sub('outbox') }
-								userType	= { MessageConsts.USER_TYPE.PARENT }
+								userType	= { MessageConsts.USER_TYPE.STUDENT }
 								component	= { Outbox }
 							/>
 							<Route
 								path		= '/messages/archive'
 								binding		= { binding.sub('archive') }
-								userType	= { MessageConsts.USER_TYPE.PARENT }
+								userType	= { MessageConsts.USER_TYPE.STUDENT }
 								component	= { Archive }
 							/>
 						</RouterView>

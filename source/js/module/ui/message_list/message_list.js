@@ -8,6 +8,7 @@ const MessageList = React.createClass({
 	propTypes: {
 		messages:				React.PropTypes.array.isRequired,
 		messageType:			React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		user: 					React.PropTypes.object.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
@@ -38,6 +39,7 @@ const MessageList = React.createClass({
 							<EventInvitationMessage
 								key						= {message.id}
 								message					= {message}
+								userType				= {this.props.userType}
 								type					= {this.props.messageType}
 								onAction				= {this.props.onAction}
 								user 					= {this.props.user}
@@ -52,6 +54,7 @@ const MessageList = React.createClass({
 							<EventParticipationRefusalMessage
 								key						= {message.id}
 								message					= {message}
+								userType				= {this.props.userType}
 								type					= {this.props.messageType}
 								onAction				= {this.props.onAction}
 								user 					= {this.props.user}
@@ -65,6 +68,7 @@ const MessageList = React.createClass({
 							<EventParticipationMessage
 								key						= {message.id}
 								message					= {message}
+								userType				= {this.props.userType}
 								type					= {this.props.messageType}
 								onAction				= {this.props.onAction}
 								user 					= {this.props.user}

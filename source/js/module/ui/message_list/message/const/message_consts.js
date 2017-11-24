@@ -1,3 +1,8 @@
+const USER_TYPE = {
+	'PARENT':	'PARENT',
+	'STUDENT':	'STUDENT'
+};
+
 const MESSAGE_KIND = {
 	'INVITATION':	'EventInvitationMessage',
 	'REFUSAL':		'EventParticipationRefusalMessage',
@@ -35,6 +40,7 @@ const MESSAGE_INVITATION_ACTION_TYPE = {
 	'GOT_IT':	'GOT_IT'
 };
 
+module.exports.USER_TYPE						= USER_TYPE;
 module.exports.MESSAGE_KIND						= MESSAGE_KIND;
 module.exports.MESSAGE_TYPE						= MESSAGE_TYPE;
 module.exports.MESSAGE_READ_STATUS				= MESSAGE_READ_STATUS;

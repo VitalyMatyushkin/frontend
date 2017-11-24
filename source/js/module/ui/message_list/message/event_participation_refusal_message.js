@@ -16,6 +16,7 @@ const	React									= require('react'),
 const EventParticipationRefusalMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
+		userType:				React.PropTypes.string.isRequired,
 		type:					React.PropTypes.string.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
@@ -69,10 +70,28 @@ const EventParticipationRefusalMessage = React.createClass({
 	onClickSubmitComment:function(newCommentText, replyComment){
 		this.props.onClickSubmitComment(newCommentText, replyComment, this.props.message.id);
 	},
+	renderShowCommentButton: function () {
+		if(this.props.userType === MessageConsts.USER_TYPE.STUDENT) {
+			const isShowComments = Boolean(this.props.message.isShowComments);
+
+			let linkText;
+			if (isShowComments) {
+				linkText = 'Hide chat';
+			} else {
+				linkText = 'Chat';
+			}
+
+			return (
+				<div className="eInviteDiscussionLink">
+					<a onClick = {this.onClickShowComments}>{ linkText }</a>
+				</div>
+			);
+		}
+	},
 	render: function() {
-		const 	isShowComments = Boolean(this.props.message.isShowComments),
-				isSyncComments = Boolean(this.props.message.isSyncComments),
-				comments = typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
+		const	isShowComments	= Boolean(this.props.message.isShowComments),
+				isSyncComments	= Boolean(this.props.message.isSyncComments),
+				comments		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
 		
 		let linkText;
 		if (isShowComments) {
@@ -102,10 +121,8 @@ const EventParticipationRefusalMessage = React.createClass({
 								<MessageText
 									message={this.props.message}
 								/>
-								{this.renderButtons()}
-								<div className="eInviteDiscussionLink">
-									<a onClick = {this.onClickShowComments}>{ linkText }</a>
-								</div>
+								{ this.renderButtons() }
+								{ this.renderShowCommentButton() }
 							</div>
 						</div>
 					</div>

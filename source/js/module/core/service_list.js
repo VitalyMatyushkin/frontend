@@ -243,13 +243,21 @@ const serviceList = {
 		//children event message comments
 		serviceList.childrenEventMessageComments = new Service('/i/children/events/messages/{messageId}/comments', binding);
 		serviceList.childrenEventMessageCommentsCount = new Service('/i/children/events/messages/{messageId}/comments/count', binding);
-		// new role student
+
+		serviceList.parentEventReportAvailability = new Service('/i/children/events/{eventId}/messages/report', binding);
+
+		// Student
 		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
 		serviceList.studentSchoolEvents = new Service('/i/events', binding);
 		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
 		serviceList.studentEventReportAvailability = new Service('/i/events/{eventId}/messages/report', binding);
-		serviceList.parentEventReportAvailability = new Service('/i/children/events/{eventId}/messages/report', binding);
+
+		// Students -> Messages
+		serviceList.studentMessages			= new Service('/i/events/messages', binding);
+		serviceList.studentInboxMessages	= new Service('/i/events/messages/inbox', binding);
+		serviceList.studentOutboxMessages	= new Service('/i/events/messages/outbox', binding);
+		serviceList.studentArchiveMessages	= new Service('/i/events/messages/archive', binding);
 
 		// Integrations
 		serviceList.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
