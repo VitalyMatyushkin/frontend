@@ -17,14 +17,14 @@ const Head = React.createClass({
 
 		const menuItems = [
 			{
-				href: '/#users',
+				href: '/#users/users',
 				name: 'Users',
 				key: 'Users',
 				routes:['/users/:subPage', '/users/:filter', '/users/:inviteId/:mode'],
 				authorization:true
 			},
 			{
-				href: '/#schools',
+				href: '/#schools/admin_views/list',
 				name: 'Schools',
 				key: 'Schools',
 				routes:['/schools/:subPage', '/schools/:filter', '/schools/:inviteId/:mode'],
@@ -38,7 +38,7 @@ const Head = React.createClass({
 				authorization:true
 			},
 			{
-				href: '/#tools',
+				href: '/#tools/import_students',
 				name: 'Tools',
 				key: 'Tools',
 				routes:['/tools/:subPage', '/tools/:filter', '/tools/:inviteId/:mode'],

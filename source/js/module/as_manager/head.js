@@ -114,6 +114,7 @@ const Head = React.createClass({
 			case role === RoleHelper.USER_ROLES.COACH && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
+				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.PARENT && kindSchool === 'School':
 				return this.getMainMenuItemsForParent();

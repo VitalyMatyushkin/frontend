@@ -116,7 +116,8 @@ const VerificationStep = React.createClass({
                     <input className    = 'eRegistration_input'
                            ref          = 'emailCodeField'
                            value        = { this.state.emailCode }
-                           placeholder  = "Email code"
+                           placeholder  = { this.props.isEmailVerified ? 'Email was verified' : 'Email code' }
+                           disabled		= { this.props.isEmailVerified }
                            onChange     = { this.handleChangeEmailCode }
                     />
                     <button     className   = { this.getEmailCodeCheckButtonClassName() }
@@ -148,7 +149,8 @@ const VerificationStep = React.createClass({
                     <span className="eRegistration_labelField">Phone Verification Code</span>
                     <input  className   = 'eRegistration_input'
                             value       = { this.state.phoneCode }
-                            placeholder = "Phone code"
+                            placeholder = { this.props.isPhoneVerified ? 'Phone was verified' : 'Phone code' }
+							disabled	= { this.props.isPhoneVerified }
                             onChange    = { this.handleChangePhoneCode }
                     />
                     <button     className   = { this.getPhoneCodeCheckButtonClassName() }

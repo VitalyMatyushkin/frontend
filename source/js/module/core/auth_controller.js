@@ -231,7 +231,7 @@ const authController = {
 	 * Function redirects to page default for superadmin.
 	 */
 	redirectToDefaultPageForSuperAdmin: function() {
-		window.location.hash = 'users';
+		window.location.hash = 'users/users';
 
 		// just in case
 		this.requestedPage = undefined;
