@@ -64,20 +64,20 @@ const TrainingSlider = React.createClass({
 	renderNextButton: function () {
 		if (this.state.pointer < slides.length-1) {
 			return 	<div className="eSlider_button eSlider_next" onClick={() => this.handleNextSlide()}>
-						<SVG icon="icon_chevron_right" />
+						<SVG icon="icon_next" />
 					</div>;
 		} else {
-			return <div className="eSlider_button eSlider_next"/>;
+			return null;
 		}
 	},
 	
 	renderPreviousButton: function () {
 		if (this.state.pointer > 0) {
 			return 	<div className="eSlider_button eSlider_previous" onClick={() => this.handlePreviousSlide()}>
-						<SVG icon="icon_chevron_left" />
+						<SVG icon="icon_back" />
 					</div>;
 		} else {
-			return <div className="eSlider_button eSlider_previous"/>;
+			return null;
 		}
 	},
 	
@@ -101,16 +101,10 @@ const TrainingSlider = React.createClass({
 		const currentSlide = this.state.slides[this.state.pointer].src;
 		return(
 			<div className="bTraining_slider_wrapper">
-				<img className="bTraining_slide" src={currentSlide} />
-				<div className="bNavigation_panel">
-					{this.renderPreviousButton()}
-					{this.renderNavigationPanel()}
-					{this.renderNextButton()}
-				</div>
-				<div className="bControl_button">
+				<div className="bTraining_slider_header">
 					{ this.props.handleClickDontshowAgain ?
 						<div className="eShow_again">
-							<label>Don't show again</label>
+							<label>Don't show this again</label>
 							<input
 								name="isGoing"
 								type="checkbox"
@@ -118,13 +112,18 @@ const TrainingSlider = React.createClass({
 								onChange={ this.props.handleClickDontshowAgain }
 							/>
 						</div>
-						: null }
+					: <div className="eShow_again" /> }
 					{ this.props.handleClickCloseButton ?
 						<div className="eSlider_Close" onClick={ this.props.handleClickCloseButton }>
-							<SVG icon="icon_cross" />
 						</div>
-						: null
+					: <div className="eSlider_Close" />
 					}
+				</div>
+				<img className="bTraining_slide" src={currentSlide} />
+				{this.renderPreviousButton()}
+				{this.renderNextButton()}
+				<div className="bNavigation_panel">
+					{this.renderNavigationPanel()}
 				</div>
 			</div>
 		);
