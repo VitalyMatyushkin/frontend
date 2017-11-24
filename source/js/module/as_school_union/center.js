@@ -23,7 +23,7 @@ const Center = React.createClass({
 			<div className={mainClass}>
 				<div className="bPageWrap">
 					<RouterView routes={binding.sub('routing')} binding={binding}>
-						<Route	path		= "/ /home /fixtures /calendar /news /results /scores /schools"
+						<Route	path		= "/ /home /fixtures /calendar /news /results /scores /schools /league"
 								binding		= {binding.sub('schoolHomePage')}
 								component	= {PublicSchoolUnionPage}
 						/>

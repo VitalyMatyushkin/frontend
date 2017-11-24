@@ -5,6 +5,7 @@ const   HomeHeader 			= require('./home_header'),
 		HomeNews 			= require('./home_news'),
 		HomeCalender 		= require('./home_calendar'),
 		SchoolList 			= require('./school_list/school_list'),
+		LeagueTables 		= require('./league/league'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
 		Morearty 			= require('morearty'),
@@ -61,6 +62,12 @@ const SchoolHomePage = React.createClass({
 					window.scrollBy(0, -70);
 				}
 				break;
+			case '#league':
+				if (ReactDOM.findDOMNode(this.refs.league) !== null) {
+					ReactDOM.findDOMNode(this.refs.league).scrollIntoView();
+					window.scrollBy(0, -70);
+				}
+				break;
 			case '#schools':
 				if (ReactDOM.findDOMNode(this.refs.schools) !== null) {
 					ReactDOM.findDOMNode(this.refs.schools).scrollIntoView();
@@ -90,6 +97,10 @@ const SchoolHomePage = React.createClass({
 					<HomeResults
 						binding = { binding }
 						ref 	= { 'results' }
+					/>
+					<LeagueTables
+						binding = { binding }
+						ref 	= { 'league' }
 					/>
 					<HomeNews
 						binding = { binding }
