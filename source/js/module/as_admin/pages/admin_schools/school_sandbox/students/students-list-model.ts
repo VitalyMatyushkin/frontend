@@ -1,10 +1,11 @@
 /**
  * Created by vitaly on 23.08.17.
  */
-const 	DataLoader 		= require('module/ui/grid/data-loader'),
-		React 			= require('react'),
-		Morearty 		= require('morearty'),
-		{GridModel}		= require('module/ui/grid/grid-model');
+
+
+import {DataLoader} from 'module/ui/grid/data-loader';
+import * as	React from 'react';
+import {GridModel} from 'module/ui/grid/grid-model';
 
 /**
  * StudentsListClass
@@ -12,7 +13,16 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
  * @param {object} page
  *
  * */
-class StudentListClass{
+export class StudentListModel {
+
+    getDefaultBinding: any;
+    getMoreartyContext: any;
+    props: any;
+    state: any;
+    grid: GridModel;
+    columns: any[];
+    dataLoader: DataLoader;
+
 	constructor(page){
 		this.getDefaultBinding = page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
@@ -22,12 +32,12 @@ class StudentListClass{
 		this.setColumns();
 		this.grid = new GridModel({
 			actionPanel:{
-				title:'Students',
-				showStrip:true,
-				btnAdd:this.props.addButton
+				title:      'Students',
+				showStrip:  true,
+				btnAdd:     this.props.addButton
 			},
-			columns:this.columns,
-			filters:{limit: 100}
+			columns:    this.columns,
+			filters:    { limit: 100 }
 		});
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
@@ -41,8 +51,7 @@ class StudentListClass{
 	}
 	
 	getActions(){
-		const actionList = ['Merge'];
-		return actionList;
+		return ['Merge'];
 	}
 	
 	getQuickEditAction(itemId, action){
@@ -80,13 +89,13 @@ class StudentListClass{
 	getForms(){
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
-		return window.Server.schoolForms.get({schoolId:schoolId},{filter:{limit:100}});
+		return (window as any).Server.schoolForms.get({schoolId:schoolId},{filter:{limit:100}});
 	}
 	
 	getHouses(){
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
-		return window.Server.schoolHouses.get({schoolId:schoolId},{filter:{limit:100}});
+		return (window as any).Server.schoolHouses.get({schoolId:schoolId},{filter:{limit:100}});
 	}
 	
 	setColumns(){
@@ -206,5 +215,3 @@ class StudentListClass{
 		};
 	}
 }
-
-module.exports = StudentListClass;

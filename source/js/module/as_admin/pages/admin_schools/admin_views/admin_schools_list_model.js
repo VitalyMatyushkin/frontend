@@ -7,7 +7,7 @@ const 	React 			= require('react'),
 		Morearty 		= require('morearty'),
 	
 		{GridModel}		= require('module/ui/grid/grid-model'),
-		DataLoader 		= require('module/ui/grid/data-loader'),
+		{DataLoader}	= require('module/ui/grid/data-loader'),
 	
 		STATUS 			= require('module/helpers/consts/schools').STATUS;
 

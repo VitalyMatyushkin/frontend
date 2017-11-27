@@ -6,7 +6,7 @@ const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
 		Sport 			= require('module/ui/icons/sport_icon'),
-		DataLoader 		= require('module/ui/grid/data-loader'),
+		{DataLoader} 		= require('module/ui/grid/data-loader'),
 		{GridModel}		= require('module/ui/grid/grid-model');
 
 /**

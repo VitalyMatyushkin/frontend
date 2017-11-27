@@ -2,7 +2,7 @@
  * Created by Anatoly on 30.11.2016.
  */
 
-const 	DataLoader 		= require('module/ui/grid/data-loader'),
+const 	{DataLoader} 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
 		{DateHelper} 		= require('module/helpers/date_helper'),

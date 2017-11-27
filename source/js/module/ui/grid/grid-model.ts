@@ -9,6 +9,7 @@ import {PaginationModel} from './filter/model/pagination-model';
 import {ActionPanelModel, ActionPanelModelOptions} from './action-panel/action-panel-model';
 import {TableModel} from './table/model/table-model';
 import * as Lazy from 'lazy.js';
+import {ColumnModelOptions} from "module/ui/grid/table/model/column-model";
 
 /**
  * GridModel - model for Grid class
@@ -79,7 +80,7 @@ import * as Lazy from 'lazy.js';
 
 export interface GridModelOptions {
     filters: FilterModelOptions
-    columns: any
+    columns: ColumnModelOptions[]
     badges?: any
     actionPanel: ActionPanelModelOptions
     classStyleAdmin?: any

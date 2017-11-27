@@ -2,7 +2,7 @@
  * Created by vitaly on 12.09.17.
  */
 
-const   DataLoader      = require('module/ui/grid/data-loader'),
+const   {DataLoader}      = require('module/ui/grid/data-loader'),
 		React           = require('react'),
 		Morearty        = require('morearty'),
 		{GridModel}     = require('module/ui/grid/grid-model');

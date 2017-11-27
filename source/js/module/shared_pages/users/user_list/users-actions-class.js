@@ -2,7 +2,7 @@
  * Created by Anatoly on 25.07.2016.
  */
 
-const	DataLoader		= require('module/ui/grid/data-loader'),
+const	{DataLoader}		= require('module/ui/grid/data-loader'),
 		UserModel		= require('module/data/UserModel'),
 		{GridModel}		= require('module/ui/grid/grid-model'),
 		RoleHelper		= require('module/helpers/role_helper');

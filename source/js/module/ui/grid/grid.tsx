@@ -26,7 +26,7 @@ export interface GridProps {
         }
         pagination: PaginationModel
     },
-    id:     string
+    id?:     string
 }
 
 export interface GridState {

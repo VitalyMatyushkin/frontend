@@ -2,7 +2,7 @@
  * Created by Anatoly on 21.11.2016.
  */
 
-import * as DataLoader from 'module/ui/grid/data-loader';
+import {DataLoader} from 'module/ui/grid/data-loader';
 import {GridModel} from 'module/ui/grid/grid-model';
 import * as Timezone from 'moment-timezone';
 
@@ -28,7 +28,7 @@ export class UserActivityModel{
     rootBinding: any;
     columns: any[];
     grid: GridModel;
-    dataLoader: any;
+    dataLoader: DataLoader;
 
     constructor(page: any){
         this.getDefaultBinding = page.getDefaultBinding;

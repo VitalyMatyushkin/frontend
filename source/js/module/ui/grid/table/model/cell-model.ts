@@ -5,18 +5,18 @@
 import * as propz from 'propz';
 
 export interface CellModelOptions {
-    type: string
-    typeOptions: any
-    dataField: any
-    onEmpty: any
+    type:           string
+    typeOptions:    any
+    dataField:      string
+    onEmpty:        any
 }
 
 export class CellModel implements CellModelOptions {
 
-    type: string;
-    typeOptions: any;
-    dataField: string;
-    onEmpty: any;
+    type:           string;
+    typeOptions:    any;
+    dataField:      string;
+    onEmpty:        any;
 
     constructor(options: CellModelOptions) {
         this.type = options.type || 'general';

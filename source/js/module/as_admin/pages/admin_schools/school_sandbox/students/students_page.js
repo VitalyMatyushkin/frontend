@@ -5,7 +5,7 @@ const	React 					= require('react'),
 		Morearty				= require('morearty'),
 		RouterView 				= require('module/core/router'),
 		Route 					= require('module/core/route'),
-		StudentsListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/students-list'),
+		{StudentsList}			= require('module/as_admin/pages/admin_schools/school_sandbox/students/students-list'),
 		StudentAddComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_add'),
 		StudentMergeComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_merge'),
 		SVG						= require('module/ui/svg');
@@ -26,7 +26,7 @@ const StudentsPage = React.createClass({
 				<Route
 					path 		= "/school_sandbox/:schoolId/students"
 					binding 	= { subBinding.sub('studentList') }
-					component 	= { StudentsListComponent }
+					component 	= { StudentsList }
 				/>
 				<Route
 					path 		= "/school_sandbox/:schoolId/students/add"
