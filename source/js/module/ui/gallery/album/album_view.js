@@ -1,11 +1,12 @@
 const {If}				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('../photo/photo_list'),
-		FullScreenList 	= require('../photo/fullscreen_list'),
 		React			= require('react'),
 		Morearty        = require('morearty'),
 		SessionHelper	= require('module/helpers/session_helper'),
 		Immutable		= require('immutable');
+
+import {FullScreenList} from '../photo/fullscreen_list';
 
 const AlbumView = React.createClass({
 	mixins: [Morearty.Mixin],
