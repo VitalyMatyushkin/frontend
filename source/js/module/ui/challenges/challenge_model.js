@@ -97,21 +97,42 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getScore = function(event, activeSchoolId) {
-	if(!this.isFinished) {
-		return '- : -';
-	} else if(event.inviterSchool.id === activeSchoolId && event.inviterSchool.kind === 'SchoolUnion') {
-		return '';
-	} else if (
-		this.isFinished &&
-		TeamHelper.isTeamSport(event) &&
-		event.sport.multiparty &&
-		event.teamsData.length !== 2
-	) {
-		return '';
-	} else if(this.isFinished && this.isIndividualSport) {
-		return '';
-	} else if(this.isFinished && !this.isIndividualSport) {
-		return this.scoreAr.join(' : ');
+	switch (true) {
+		// Always empty for SchoolUnion and multiparty
+		case (
+			event.inviterSchool.id === activeSchoolId &&
+			event.inviterSchool.kind === 'SchoolUnion' &&
+			event.sport.multiparty
+		): {
+			return '';
+		}
+		// For not finished and NOT multiparty
+		case (
+			!this.isFinished &&
+			!event.sport.multiparty
+		): {
+			return '- : -';
+		}
+		case (
+			this.isFinished &&
+			TeamHelper.isTeamSport(event) &&
+			event.sport.multiparty &&
+			event.teamsData.length !== 2
+		): {
+			return '';
+		}
+		case (
+			this.isFinished &&
+			this.isIndividualSport
+		): {
+			return '';
+		}
+		case (
+			this.isFinished &&
+			!this.isIndividualSport
+		): {
+			return this.scoreAr.join(' : ');
+		}
 	}
 };
 
@@ -239,19 +260,19 @@ ChallengeModel.prototype.getScoreForCricket = function(eventType, teamScore, hou
 
 ChallengeModel.prototype._getTextResult = function(event, activeSchoolId, activeSchoolKind) {
 	if(
+		!this.isFinished &&
+		event.sport.multiparty
+	) {
+		return 'No result yet';
+	}
+
+	if(
 		this.isFinished &&
+		event.sport.multiparty &&
 		event.inviterSchool.id === activeSchoolId &&
 		event.inviterSchool.kind === 'SchoolUnion'
 	) {
 		return 'View results';
-	}
-
-	if(
-		!this.isFinished &&
-		event.inviterSchool.id === activeSchoolId &&
-		event.inviterSchool.kind === 'SchoolUnion'
-	) {
-		return `No result yet`;
 	}
 
 	// Cricket
@@ -353,7 +374,13 @@ ChallengeModel.prototype._getTextResult = function(event, activeSchoolId, active
 		return 'Multiple result'
 	}
 
-	if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS" && !SportHelper.isCricket(event.sport.name)) {
+	if(
+		this.isFinished &&
+		!this.isIndividualSport &&
+		event.eventType === "EXTERNAL_SCHOOLS" &&
+		!event.inviterSchool.kind === 'SchoolUnion' &&
+		!SportHelper.isCricket(event.sport.name)
+	) {
 		const scoreArray = this.scoreAr;
 
 		switch (event.sport.scoring) {
