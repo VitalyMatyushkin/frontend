@@ -10,9 +10,13 @@ const LeagueTable = React.createClass({
 		scores: 	React.PropTypes.array.isRequired
 	},
 	
-	renderHead: function(titles) {
+	renderHead: function(titles, description) {
 		const columns = titles.map( (title, i) => {
-			return <th key={title+i}>{title}</th>;
+			if (description[i] === '') {
+				return <th key={title + i}>{title}</th>;
+			} else {
+				return <th key={title + i} className="bTooltip" data-description={description[i]}>{title}</th>;
+			}
 		});
 		return (
 			<thead>
@@ -42,14 +46,15 @@ const LeagueTable = React.createClass({
 	},
 	
 	render: function(){
-		const	scores			= this.props.scores,
-				titles			= ['schoolName', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Points'],
-				displayTitles	= titles.map( key => key === 'schoolName' ? '' : key);
+		const	scores				= this.props.scores,
+				titles				= ['schoolName', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Points'],
+				titlesDescription 	= ['', 'Play', 'Win', 'Draw', 'Lose', 'Goal For', 'Goal Against', 'Goal Difference', ''],
+				displayTitles		= titles.map( key => key === 'schoolName' ? '' : key);
 		return (
 			<div className="eSchoolUnionSeasonScores_scoreTableWrapper">
 				<div className="table-responsive">
 					<table className="table table-striped">
-						{this.renderHead(displayTitles)}
+						{this.renderHead(displayTitles, titlesDescription)}
 						{this.renderBody(titles, scores)}
 					</table>
 				</div>

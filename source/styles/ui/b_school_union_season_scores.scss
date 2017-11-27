@@ -21,4 +21,17 @@
 
 .eSchoolUnionSeasonScores_scoreTableWrapper {
   margin-top: 40px;
+
+  .bTooltip:before {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    top: 60%;
+    left: 40%;
+    padding: 2px 20px;
+  }
+
+  .bTooltip:after {
+    left: 40%;
+  }
 }
