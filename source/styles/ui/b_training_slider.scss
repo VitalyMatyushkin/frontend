@@ -227,3 +227,23 @@
     }
   }
 }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .bTrainingSlider {
+    .bTraining_slider_wrapper {
+      .bTraining_slider_header {
+        .eShow_again {
+          width:94%;
+
+          label {
+            display: inline-block;
+          }
+
+          input[type='checkbox'] {
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
