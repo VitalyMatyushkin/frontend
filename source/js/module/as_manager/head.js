@@ -3,7 +3,7 @@
 const	Logo			= require('module/as_manager/head/logo'),
 		TopMenu			= require('module/ui/menu/top_menu'),
 		UserBlock		= require('module/shared_pages/head/user_block'),
-	{If}			= require('module/ui/if/if'),
+		{If}			= require('module/ui/if/if'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		React			= require('react'),
@@ -106,6 +106,7 @@ const Head = React.createClass({
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
+				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.TEACHER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
