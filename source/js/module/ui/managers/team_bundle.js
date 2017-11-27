@@ -108,6 +108,30 @@ const TeamBundle = React.createClass({
 		this.listeners.push(listener);
 	},
 	/** HELPER FUNCTIONS **/
+	isSelectedTeamWrapper: function (teamWrapper, selectedRivalId) {
+		return teamWrapper.rivalId === selectedRivalId
+	},
+	isValidClassNames: function (type, classNames) {
+		let isValid;
+
+		switch (type) {
+			case 'TEAM_WRAPPER': {
+				let disableWrappersCount = 0;
+				classNames.forEach(className => {
+					if(className.search('mDisable') !== -1) {
+						disableWrappersCount++;
+					}
+				});
+
+				isValid = classNames.length - disableWrappersCount === 1;
+			}
+			default: {
+				isValid = true;
+			}
+		}
+
+		return isValid;
+	},
 	getTeamChooserBindings: function() {
 		const	binding			= this.getDefaultBinding();
 
@@ -160,13 +184,12 @@ const TeamBundle = React.createClass({
 
 		const teamWrappers = binding.toJS(`teamWrapper`);
 
-		return teamWrappers.map(tw => {
-			return classNames({
-					bWrapperTeamWrapper:	true,
-					mDisable:				tw.rivalId !== selectedRival.id
-				}
-			);
-		});
+		return teamWrappers.map(tw =>
+			classNames({
+				bWrapperTeamWrapper:	true,
+				mDisable:				!this.isSelectedTeamWrapper(tw, selectedRival.id)
+			})
+		);
 	},
 	getAllPlayers: function() {
 		const	binding		= this.getDefaultBinding(),
@@ -351,9 +374,20 @@ const TeamBundle = React.createClass({
 
 		const tw = this.getTeamWrapperBindings();
 
-		return tw.map((binding, index) => {
-			const rivalId = binding.default.toJS('rivalId');
+		if( !this.isValidClassNames('TEAM_WRAPPER', _classNames) ) {
+			const rivals = this.getBinding().rivals.toJS();
+			console.log('RIVALS:');
+			rivals.forEach(rival => {
+				console.log(rival);
+			});
 
+			console.log('TEAM WRAPPERS:');
+			tw.forEach(teamWrapper => {
+				console.log(teamWrapper.default.toJS());
+			});
+		}
+
+		return tw.map((binding, index) => {
 			return (
 				<div className = { _classNames[index] }>
 					<TeamWrapper
@@ -367,7 +401,7 @@ const TeamBundle = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="bTeamBundle">
+			<div className='bTeamBundle'>
 				{ this.renderTeamChoosers() }
 				{ this.renderTeamWrapper() }
 			</div>
