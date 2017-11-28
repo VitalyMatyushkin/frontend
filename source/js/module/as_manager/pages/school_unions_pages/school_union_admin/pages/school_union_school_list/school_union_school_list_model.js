@@ -1,8 +1,8 @@
 const	React			= require('react'),
 		MoreartyHelper	= require('../../../../../../helpers/morearty_helper'),
 		SVG				= require('module/ui/svg'),
-		{DataLoader}		= require('module/ui/grid/data-loader'),
-		GridModel		= require('module/ui/grid/grid-model');
+		{DataLoader}	= require('module/ui/grid/data-loader'),
+		{GridModel}		= require('module/ui/grid/grid-model');
 
 const SchoolUnionSchoolListModel = function(page, handleClickAddButton){
 	this.page = page;
@@ -45,7 +45,7 @@ SchoolUnionSchoolListModel.prototype.setAddButton = function(handleClickAddButto
 			<SVG icon="icon_add_school"/>
 		</div>
 	);
-},
+};
 
 SchoolUnionSchoolListModel.prototype.getActions = function(){
 	return ['View', 'Delete'];
