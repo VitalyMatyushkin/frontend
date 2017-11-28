@@ -217,10 +217,14 @@ const TeamBundle = React.createClass({
 	},
 	getAnotherRivalIdArray: function(rivalIndex) {
 		const rivals = this.getBinding().rivals.toJS();
-
-		return rivals
+		if (typeof rivals !== 'undefined') { //I don't know, why rivals may be equal undefined, if you know, then fix it
+			return rivals
 			.filter((_, _rivalIndex) => _rivalIndex !== rivalIndex)
 			.map(rival => rival.id);
+		} else {
+			return [];
+		}
+
 	},
 	/**
 	 * Function adds teamId to black list of other rivals.

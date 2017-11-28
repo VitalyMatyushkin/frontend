@@ -384,74 +384,77 @@ const Manager = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				errorBinding	= self.getBinding('error');
-
-		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`),
-				teamWrapper			= teamWrappers.find(tw => tw.rivalId === rivalId);
-
-		if(typeof teamWrapper !== 'undefined') {
-			const	errorArray			= errorBinding.toJS(),
-					errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
-					isSetTeamLater		= teamWrapper.isSetTeamLater,
-					subscriptionPlan	= this.getActiveSchool().subscriptionPlan;
-
-			let result = {
-				isError:	false,
-				text:		''
-			};
-			// process data if setTeamLater is FALSE and team wrapper is active
-			// in any other case just set def validation result data
-			if(!isSetTeamLater && teamWrapper.isActive) {
-				const event = binding.toJS('model');
-
-				if(
-					typeof event !== 'undefined' &&
-					typeof event.sportModel !== 'undefined'
-				) {
-					const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
-						maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
-						minPlayers:	event.sportModel.defaultLimits.minPlayers,
-						minSubs:	event.sportModel.defaultLimits.minSubs,
-						maxSubs:	event.sportModel.defaultLimits.maxSubs
-					} : {minPlayers: 1};
-
-					switch (true) {
-						case TeamHelper.isNonTeamSport(event): {
-							result = TeamPlayersValidator.validate(
-								teamWrapper.___teamManagerBinding.teamStudents,
-								limits,
-								subscriptionPlan
-							);
-						}
-							break;
-						case TeamHelper.isTeamSport(event): {
-							if (
-								teamWrapper.teamName.name === undefined ||
-								teamWrapper.teamName.name === ''
-							) {
-								result = {
-									isError:	true,
-									text:		'Please enter team name'
-								};
-							} else {
+		
+		const	teamWrappers		= binding.toJS(`teamModeView.teamWrapper`);
+		
+		if(typeof teamWrappers !== 'undefined'){ //I don't know, why teamWrappers may be equal undefined, if you know, then fix it
+			const teamWrapper = teamWrappers.find(tw => tw.rivalId === rivalId);
+			
+			if(typeof teamWrapper !== 'undefined') {
+				const	errorArray			= errorBinding.toJS(),
+						errorIndex			= errorArray.findIndex(e => e.rivalId === rivalId),
+						isSetTeamLater		= teamWrapper.isSetTeamLater,
+						subscriptionPlan	= this.getActiveSchool().subscriptionPlan;
+				
+				let result = {
+					isError:	false,
+					text:		''
+				};
+				// process data if setTeamLater is FALSE and team wrapper is active
+				// in any other case just set def validation result data
+				if(!isSetTeamLater && teamWrapper.isActive) {
+					const event = binding.toJS('model');
+					
+					if(
+						typeof event !== 'undefined' &&
+						typeof event.sportModel !== 'undefined'
+					) {
+						const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
+								maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+								minPlayers:	event.sportModel.defaultLimits.minPlayers,
+								minSubs:	event.sportModel.defaultLimits.minSubs,
+								maxSubs:	event.sportModel.defaultLimits.maxSubs
+							} : {minPlayers: 1};
+						
+						switch (true) {
+							case TeamHelper.isNonTeamSport(event): {
 								result = TeamPlayersValidator.validate(
 									teamWrapper.___teamManagerBinding.teamStudents,
 									limits,
-									subscriptionPlan,
-									true
+									subscriptionPlan
 								);
 							}
+								break;
+							case TeamHelper.isTeamSport(event): {
+								if (
+									teamWrapper.teamName.name === undefined ||
+									teamWrapper.teamName.name === ''
+								) {
+									result = {
+										isError:	true,
+										text:		'Please enter team name'
+									};
+								} else {
+									result = TeamPlayersValidator.validate(
+										teamWrapper.___teamManagerBinding.teamStudents,
+										limits,
+										subscriptionPlan,
+										true
+									);
+								}
+							}
+								break;
 						}
-							break;
 					}
 				}
+				
+				// set result
+				errorArray[errorIndex].isError = result.isError;
+				errorArray[errorIndex].text = result.text;
+				errorBinding.set(
+					Immutable.fromJS(errorArray)
+				);
 			}
-
-			// set result
-			errorArray[errorIndex].isError = result.isError;
-			errorArray[errorIndex].text = result.text;
-			errorBinding.set(
-				Immutable.fromJS(errorArray)
-			);
 		}
 	},
 	initRivalIndex: function() {
