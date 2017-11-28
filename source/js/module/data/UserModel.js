@@ -82,6 +82,9 @@ UserModel.filterPermission = function(permissions, statusPermission) {
 			case statusPermission.length === 1:
 				result = statusRole === statusPermission[0];
 				break;
+			case permission.status === 'REMOVED':
+				result = false;
+				break;
 			default: result = true;
 		}
 		return result;
