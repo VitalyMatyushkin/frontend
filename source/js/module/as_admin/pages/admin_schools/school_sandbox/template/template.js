@@ -152,7 +152,12 @@ const ConsentRequestTemplateComponent = React.createClass({
 	 * Function return array of enum options from sting (use comma as separator)
 	 */
 	getEnumOptions: function(enumString){
-		return enumString.split(',').map(elem => elem.trim())
+		if (typeof enumString !== 'undefined') {
+			return enumString.split(',').map(elem => elem.trim())
+		} else {
+			return [];
+		}
+		
 	},
 	onClickFormSubmit: function(){
 		const 	binding 		= this.getDefaultBinding(),
