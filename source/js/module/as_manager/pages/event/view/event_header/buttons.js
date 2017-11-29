@@ -217,6 +217,7 @@ const Buttons = React.createClass({
 	},
 	isSendConsentRequestAvailable: function() {
 		return (
+			typeof this.props.event.clubId === 'undefined' &&
 			this.props.isUserSchoolWorker &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
