@@ -1,8 +1,9 @@
 const	React					= require('react'),
 		Morearty				= require('morearty'),
-
-		Gallery					= require('./../../../ui/new_gallery/galley'),
+	
 		GalleryAccessPresets	= require('./../../../helpers/consts/gallery');
+
+import {Gallery} from './../../../ui/new_gallery/gallery';
 
 const PublicEventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
