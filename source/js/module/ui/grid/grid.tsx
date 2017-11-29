@@ -14,7 +14,7 @@ import {ActionPanelModel} from "module/ui/grid/action-panel/action-panel-model";
 import {PaginationModel} from "module/ui/grid/filter/model/pagination-model";
 
 export interface GridProps {
-    model: 	{
+    model: {
         onRender: () => void,
         classStyleAdmin: any
         handleClick?: (itemId: string, itemName: string) => void
@@ -64,10 +64,12 @@ export class Grid extends React.Component<GridProps, GridState> {
 				mHidden			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
-			<div className={"bGrid" + classStyleAdmin} id={id}>
+			<div
+				id			= { id }
+				className	= { "bGrid" + classStyleAdmin }
+			>
 				<ActionPanel
-					model						= { model.actionPanel }
-					handleClickCSVExportButton	= { this.handleClickCSVExportButton }
+					model = { model.actionPanel }
 				/>
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />

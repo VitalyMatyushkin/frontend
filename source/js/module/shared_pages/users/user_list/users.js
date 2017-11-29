@@ -1,10 +1,12 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		UserActions		= require('./users-actions-class'),
-	{Grid}		= require('module/ui/grid/grid'),
+		{Grid}			= require('module/ui/grid/grid'),
 		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
 		ConfirmPopup	= require('../../../ui/confirm_popup'),
 		Immutable		= require('immutable');
+
+const	CSVExportPopupStyle	= require('styles/ui/b_csv_export_popup/b_csv_export_popup.scss');
 
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,7 +15,6 @@ const Users = React.createClass({
 		permissionServiceName: 		React.PropTypes.string,
 		blockService: 				React.PropTypes.object,
 		addButton:					React.PropTypes.func,
-		csvExportButton:			React.PropTypes.func,
 		customActionList:			React.PropTypes.array,
 		//The function, which will call when user click on <Row> in Grid
 		handleClick:				React.PropTypes.func
@@ -25,8 +26,10 @@ const Users = React.createClass({
 		};
 	},
 	componentWillMount: function () {
-		const 	binding 	= this.getDefaultBinding(),
-				grid 		= binding.toJS('grid');
+		const	binding	= this.getDefaultBinding(),
+				grid	= binding.toJS('grid');
+
+		binding.set('isShowCSVExportPopup', false);
 
 		if (grid) {
 			this.model = new UserActions(this).createGridFromExistingData(grid);
@@ -63,6 +66,25 @@ const Users = React.createClass({
 			return null;
 		}
 	},
+	renderCSVExportPopup: function () {
+		const binding = this.getDefaultBinding();
+
+		if(binding.get('isShowCSVExportPopup')) {
+			return (
+				<ConfirmPopup
+					isShowButtons = { false }
+				>
+					<div
+						className = 'bCSVExportPopup'
+					>
+						Loading data. It will take some time.
+					</div>
+				</ConfirmPopup>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function () {
 		const binding = this.getDefaultBinding();
 
@@ -71,7 +93,8 @@ const Users = React.createClass({
 		return this.model.grid ? (
 			<div className="eTable_view">
 				<Grid model={this.model.grid}/>
-				{this.renderPopup()}
+				{ this.renderPopup() }
+				{ this.renderCSVExportPopup() }
 			</div>
 		) : null;
 	}

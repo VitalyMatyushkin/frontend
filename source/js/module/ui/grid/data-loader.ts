@@ -4,6 +4,7 @@
 
 
 import {GridModel} from "module/ui/grid/grid-model";
+import {PromiseHelper} from "module/helpers/promise_helper";
 
 /**
  * DataLoader
@@ -63,7 +64,57 @@ export class DataLoader {
         return service;
     }
 
-    loadData(){
+    doRequest(filters: any) {
+        const service = this.getService(this.serviceName);
+
+        return this.params ? service.get(this.params, filters): service.get(filters);
+    }
+
+	doRequestWithCurrentFilterAndNoLimit() {
+    	const INCREMENT_VALUE = 200;
+		const filters = Object.assign({}, this.filter.getFilters());
+		if(
+			typeof filters.filter.where !== 'undefined' &&
+			typeof filters.filter.where.filterPermissionStatus !== 'undefined'
+		) {
+			delete filters.filter.where.filterPermissionStatus;
+		}
+		filters.filter.skip = 0;
+		filters.filter.limit = 200;
+
+		const p = new PromiseHelper();
+
+		let allData = [];
+		return p.promiseFor(
+			length => {
+				return length !== 0;
+			},
+			() => {
+				const copyFilters = Object.assign({}, filters);
+
+				return this.doRequest(copyFilters).then(
+					data => {
+						allData = allData.concat(data);
+
+						filters.filter.skip += INCREMENT_VALUE;
+						filters.filter.limit += INCREMENT_VALUE;
+
+						return data.length;
+					},
+					error => {
+						console.error(error);
+
+						return 0;
+					}
+				)
+			},
+			1000
+		).then(() => {
+			return allData;
+		});
+	}
+
+    loadData() {
         const   filters = this.filter.getFilters(),
                 service = this.getService(this.serviceName);
 
@@ -78,7 +129,7 @@ export class DataLoader {
                 modelParams = filters.filter.where.filterPermissionStatus.$in;
                 delete filters.filter.where.filterPermissionStatus;
             }
-            const promise = this.params ? service.get(this.params, filters): service.get(filters);
+            const promise = this.doRequest(filters);
             return promise.then(data => {
                 /*
                  Added this filter back, that this filter worked, when added new filter after this

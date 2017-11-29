@@ -2,10 +2,17 @@
  * Created by Anatoly on 25.07.2016.
  */
 
+const	React				= require('react');
+
 const	{DataLoader}		= require('module/ui/grid/data-loader'),
-		UserModel		= require('module/data/UserModel'),
-		{GridModel}		= require('module/ui/grid/grid-model'),
-		RoleHelper		= require('module/helpers/role_helper');
+		UserModel			= require('module/data/UserModel'),
+		{GridModel}			= require('module/ui/grid/grid-model');
+
+const	{CSVExportButton}	= require('module/shared_pages/users/user_list/buttons/csv_export_button'),
+		CSVExportConsts		= require('module/ui/grid/csv_export/consts'),
+		CSVExportController	= require('module/ui/grid/csv_export/csv_export_controller');
+
+const	RoleHelper			= require('module/helpers/role_helper');
 
 /**
  * UsersActionsClass
@@ -407,7 +414,7 @@ class UsersActionsClass {
 				title:'Users & Permissions',
 				showStrip:true,
 				btnAdd:this.props.addButton,
-				btnCSVExport:this.props.csvExportButton
+				btnCSVExport: this.getCSVExportButton()
 			},
 			columns:this.columns,
 			handleClick: this.props.handleClick,
@@ -431,7 +438,7 @@ class UsersActionsClass {
 				title:'Users & Permissions',
 				showStrip:true,
 				btnAdd:this.props.addButton,
-				btnCSVExport:this.props.csvExportButton
+				btnCSVExport: this.getCSVExportButton()
 			},
 			columns:this.columns,
 			handleClick: this.props.handleClick,
@@ -452,16 +459,40 @@ class UsersActionsClass {
 		
 		return this;
 	}
+
+	getCSVExportButton() {
+		return (
+			<CSVExportButton
+				handleClick = { () => {
+						this.handleCSVExportClick();
+					}
+				}
+			/>
+		)
+	}
+
+	handleCSVExportClick() {
+		// TODO dirty hack
+		this.binding.set('isShowCSVExportPopup', true);
+
+		this.dataLoader.doRequestWithCurrentFilterAndNoLimit().then(data => {
+			this.binding.set('isShowCSVExportPopup', false);
+			CSVExportController.getCSVByGridModel(
+				CSVExportConsts.gridTypes.SUPERADMIN_USERS,
+				data,
+				this.grid
+			);
+		});
+	}
 	
-	getDataLoadedHandle(data) {
-		const self = this,
-			binding = self.page.getDefaultBinding();
+	getDataLoadedHandle() {
+		const	self	= this,
+				binding	= self.page.getDefaultBinding();
 		
-		return function(data){
+		return () => {
 			binding.set('data', self.grid.table.data);
 		};
 	}
-	
 };
 
 module.exports = UsersActionsClass;

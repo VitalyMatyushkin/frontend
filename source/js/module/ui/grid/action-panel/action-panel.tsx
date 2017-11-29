@@ -4,12 +4,10 @@
 
 import * as React from 'react';
 import * as SVG from 'module/ui/svg';
-import {CSVExportButtonWrapper} from 'module/ui/grid/action-panel/buttons/csv_export_button_wrapper';
 import {ActionPanelModel} from "module/ui/grid/action-panel/action-panel-model";
 
 export interface ActionPanelProps {
-    model: ActionPanelModel,
-    handleClickCSVExportButton: () => any   // probably it should take argument.. but I'm not sure if it really does. Fix if required
+    model: ActionPanelModel
 }
 
 export interface ActionPanelState {
@@ -39,8 +37,7 @@ export class ActionPanel extends React.Component<ActionPanelProps, ActionPanelSt
         const optTitle = !!model.title ? <h1 className="eTitle">{model.title}</h1> : null;
         const optStrip = !!model.showStrip ? <div className="eStrip"></div> : null;
         const optAddButton = !!model.btnAdd ? model.btnAdd : null;
-        const optCsvButton = this.isShowCSVButtonExport() ? <CSVExportButtonWrapper
-            model={model} handleClick={() => this.props.handleClickCSVExportButton()}/> : null;
+        const optCsvButton = this.isShowCSVButtonExport() ? model.btnCSVExport : null;
 
         let optFilter = null;
         if(!model.hideBtnFilter) {

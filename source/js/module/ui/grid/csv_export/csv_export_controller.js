@@ -1,15 +1,17 @@
 const CSVExportConsts = require('module/ui/grid/csv_export/consts');
+const UserModel = require('module/data/UserModel');
 
 const converter = require('json-2-csv');
 
 const CSVExportController = {
-	getCSVByGridModel: function (model, gridType) {
-		const csvData = model.table.data.map(item => {
+	getCSVByGridModel: function (gridType, data, model) {
+		const csvData = data.map(item => {
 			let data = {};
 
 			switch (gridType) {
 				case CSVExportConsts.gridTypes.SUPERADMIN_USERS: {
-					data = this.getCSVItemForSuperadminUsers(model, item);
+					const userModel = new UserModel(item);
+					data = this.getCSVItemForSuperadminUsers(userModel, model);
 					break;
 				}
 			}
@@ -25,7 +27,7 @@ const CSVExportController = {
 	 * @param item
 	 * @returns {{}}
 	 */
-	getCSVItemForSuperadminUsers: function (model, item) {
+	getCSVItemForSuperadminUsers: function (userModel, model) {
 		const csvItem = {};
 
 		model.table.columns.forEach(column => {
@@ -33,16 +35,16 @@ const CSVExportController = {
 
 			switch (dataField) {
 				case 'roles': {
-					csvItem.roles = item.roleArray.join(';');
+					csvItem.roles = userModel.roleArray.join(';');
 					break;
 				}
 				case 'school': {
-					csvItem.schools = item.schoolArray.join(';');
+					csvItem.schools = userModel.schoolArray.join(';');
 					break;
 				}
 				default: {
 					if(typeof column.cell.dataField !== 'undefined') {
-						const value = item[column.cell.dataField];
+						const value = userModel[column.cell.dataField];
 
 						csvItem[column.cell.dataField] = typeof value !== 'undefined' && value !== null ? value : '';
 					}
