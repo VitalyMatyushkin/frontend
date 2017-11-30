@@ -6,9 +6,10 @@ const	RouterView	= require('module/core/router'),
 		Route		= require('module/core/route'),
 		SubMenu		= require('module/ui/menu/sub_menu');
 
-const	ClubMainInfoEdit	= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
-		ClubChildrenEdit	= require('module/as_manager/pages/clubs/clubs_children_edit/clubs_children_edit'),
-		ActivateClub		= require('module/as_manager/pages/clubs/activate_club/activate_club');
+const	ClubMainInfoEdit				= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
+		ClubChildrenEdit				= require('module/as_manager/pages/clubs/clubs_children_edit/clubs_children_edit'),
+		{ ClubsChildrenBookingWrapper }	= require("module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_wrapper"),
+		ActivateClub					= require('module/as_manager/pages/clubs/activate_club/activate_club');
 
 const	LoaderStyle			= require('styles/ui/loader.scss');
 
@@ -27,27 +28,33 @@ const ClubEditPage = React.createClass({
 
 		const menuItems = [
 			{
-				href: 	'/#clubs/clubList',
-				name: 	'← club list',
-				key: 	'back'
+				href:	'/#clubs/clubList',
+				name:	'← club list',
+				key:	'back'
 			},
 			{
-				href: 		`/#clubs/editMainInfo?id=${clubId}`,
-				name: 		'Main info',
-				key: 		'Main_info',
-				routes: 	[`/#clubs/editMainInfo?id=${clubId}`]
+				href:	`/#clubs/editMainInfo?id=${clubId}`,
+				name:	'Main info',
+				key:	'Main_info',
+				routes:	[`/#clubs/editMainInfo?id=${clubId}`]
 			},
 			{
-				href: 		`/#clubs/editChildren?id=${clubId}`,
-				name: 		'Students',
-				key: 		'Students',
-				routes: 	[`/#clubs/editChildren?id=${clubId}`]
+				href:	`/#clubs/editChildren?id=${clubId}`,
+				name:	'Students',
+				key:	'Students',
+				routes:	[`/#clubs/editChildren?id=${clubId}`]
 			},
 			{
-				href: 		`/#clubs/activateClub?id=${clubId}`,
-				name: 		'Activate club',
-				key: 		'Activate_club',
-				routes: 	[`/#clubs/activateClub?id=${clubId}`]
+				href:	`/#clubs/booking?id=${clubId}`,
+				name:	'Children Booking',
+				key:	'Children_booking',
+				routes:	[`/#clubs/booking?id=${clubId}`]
+			},
+			{
+				href:	`/#clubs/activateClub?id=${clubId}`,
+				name:	'Activate club',
+				key:	'Activate_club',
+				routes:	[`/#clubs/activateClub?id=${clubId}`]
 			}
 		];
 
@@ -97,6 +104,12 @@ const ClubEditPage = React.createClass({
 							component		= { ActivateClub }
 							activeSchoolId	= { activeSchoolId }
 							clubId			= { clubId }
+						/>
+						<Route
+							path			= "/clubs/booking"
+							binding			= { binding.sub('clubsBooking') }
+							activeSchoolId	= { this.props.activeSchoolId }
+							component		= { ClubsChildrenBookingWrapper }
 						/>
 					</RouterView>
 				</div>

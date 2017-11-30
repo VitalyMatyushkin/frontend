@@ -5,7 +5,7 @@ const	React 			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty');
 
-const{If}			= require('module/ui/if/if'),
+const	{ If }			= require('module/ui/if/if'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		PencilButton	= require('../../../../ui/pencil_button');

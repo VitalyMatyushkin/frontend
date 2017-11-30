@@ -29,6 +29,7 @@ const ClubsPage = React.createClass({
 				clubsChildrenEdit: {},
 				activateClub: {}
 			},
+			clubsBooking: {},
 			clubsRouting: {}
 		});
 	},

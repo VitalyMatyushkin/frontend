@@ -190,3 +190,6 @@ const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 // font awesome styles
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');
 const	customFont	= require('../styles/custom-font.scss');
+
+const clubsChildrenBookingWrapper = require('../styles/ui/b_clubs_children_booking_wrapper/b_clubs_children_booking_wrapper.scss');
+const BootstrapcustomStyle = require('../styles/bootstrap-custom.scss');
