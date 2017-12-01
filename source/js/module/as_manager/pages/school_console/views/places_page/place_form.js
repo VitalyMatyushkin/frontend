@@ -3,7 +3,7 @@ const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Form		= require('../../../../../ui/form/form'),
 		FormField	= require('../../../../../ui/form/form_field'),
-		Map			= require('../../../../../ui/map/map2');
+		{Map}		= require('../../../../../ui/map/map2');
 
 const PlaceForm = React.createClass({
 	mixins: [Morearty.Mixin],
