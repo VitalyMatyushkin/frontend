@@ -1,5 +1,5 @@
 const	React				= require('react'),
-		Avatar				= require('../avatar/avatar'),
+		{Avatar} 			= require('module/ui/avatar/avatar'),
 		CommentAvatarStyle	= require('../../../../styles/ui/comments/b_comment_avatar.scss');
 
 const CommentAvatar = React.createClass({

@@ -1,6 +1,6 @@
 const	React			= require('react'),
 		propz			= require('propz'),
-		Map				= require('module/ui/map/map2'),
+		{Map}			= require('module/ui/map/map2'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 

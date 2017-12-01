@@ -1,7 +1,7 @@
-const {If}			= require('module/ui/if/if'),
-		Map 		= require('module/ui/map/map2'),
+const 	{If}		= require('module/ui/if/if'),
+		{Map} 		= require('module/ui/map/map2'),
 		React 		= require('react'),
-		Morearty    = require('morearty'),
+		Morearty 	= require('morearty'),
 		Immutable 	= require('immutable');
 
 const OpponentsMapPage = React.createClass({

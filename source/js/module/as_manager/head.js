@@ -11,8 +11,8 @@ const	Logo			= require('module/as_manager/head/logo'),
 		RoleHelper		= require('module/helpers/role_helper'),
 		SessionHelper	= require('module/helpers/session_helper'),
 		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
-		Avatar 			= require('module/ui/avatar/avatar'),
-		Bootstrap  		= require('styles/bootstrap-custom.scss');
+		{Avatar} 		= require('module/ui/avatar/avatar'),
+		Bootstrap 		= require('styles/bootstrap-custom.scss');
 
 const Head = React.createClass({
 	role: undefined,

@@ -4,7 +4,7 @@
 
 const Immutable = require('immutable');
 
-function create(binding: any) {
+function create(binding) {
 	
 	return (webIntroEnabled, webIntroShowTimes) => {
 		binding.atomically()
