@@ -461,3 +461,12 @@ select::-ms-expand {
 .eForm_info{
   margin-top: 10px;
 }
+
+.eForm_field {
+  .eCombobox_input  {
+    &.mMembersOfStaff {
+      max-width: none;
+    }
+  }
+}
+

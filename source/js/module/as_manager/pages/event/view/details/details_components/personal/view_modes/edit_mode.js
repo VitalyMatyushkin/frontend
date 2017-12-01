@@ -67,15 +67,18 @@ const EditMode = React.createClass({
 					_id: {
 						$nin: this.getNinUserId()
 					},
-					"permissions.preset"	: {
-						"$in"	: roles
+					permissions: {
+						$elemMatch: {
+							preset: { $in: roles },
+							status: 'ACTIVE'
+						}
 					},
 					$or: [
 						{firstName: {like: searchText, options: 'i'}},
 						{lastName: {like: searchText, options: 'i'}}
 					]
 				},
-				limit	: 20
+				limit: 20
 			}
 		}).then(users => {
 			return users.filter(u => {

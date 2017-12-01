@@ -57,8 +57,10 @@ const ClubMainInfoEdit = React.createClass({
 				binding.set('clubsForm.ages', Immutable.fromJS(club.ages));
 				binding.set('clubsForm.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS[club.gender]));
 				binding.set('clubsForm.sport', Immutable.fromJS(sport));
-
+				
+				club.duration = club.schedule.duration;
 				binding.set('clubsForm.form', Immutable.fromJS(club));
+				binding.set('clubsForm.staff', Immutable.fromJS(club.staff));
 				binding.set('clubsForm.form.price', Immutable.fromJS(club.price.price));
 				binding.set(
 					'clubsForm.form.priceType',
@@ -74,7 +76,6 @@ const ClubMainInfoEdit = React.createClass({
 			data,
 			this.getDefaultBinding().toJS('clubsForm')
 		);
-
 		window.Server.schoolClub.put(
 			{
 				schoolId:	this.props.activeSchoolId,

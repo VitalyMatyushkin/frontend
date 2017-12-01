@@ -19,9 +19,12 @@ const ClubsHeper = {
 			startDate:		clubsFormPageData.startDate,
 			finishDate:		clubsFormPageData.finishDate,
 			time:			clubsFormPageData.time,
-			days:			this.convertWeekDaysFromClientToServer(clubsFormPageData.days)
+			days:			this.convertWeekDaysFromClientToServer(clubsFormPageData.days),
+			duration:		Number(data.duration)
 		};
+		delete data.duration;
 		data.gender = EventConsts.MAP_CLIENT_TO_SERVER_EVENT_GENDERS[clubsFormPageData.gender];
+		data.staff 	= clubsFormPageData.staff;
 	},
 	getWeekDays: function () {
 		return [

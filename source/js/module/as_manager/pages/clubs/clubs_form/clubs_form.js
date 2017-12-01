@@ -11,12 +11,14 @@ const	Form					= require('module/ui/form/form'),
 		FullTimeInput			= require('module/ui/full_time_input/full_time_input'),
 		GenderSelectorWrapper	= require('module/as_manager/pages/events/manager/event_form/components/gender_selector/gender_selector_wrapper'),
 		MultiselectDropdown		= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		Personal				= require('module/as_manager/pages/event/view/details/details_components/personal/personal'),
 		Loader					= require('module/ui/loader');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		GenderHelper	= require('module/helpers/gender_helper'),
 		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper'),
 		CurrencySymbol	= require('module/data/currancy_symbol'),
+		Consts			= require('module/as_manager/pages/event/view/details/details_components/consts'),
 		ClubsConst		= require('module/helpers/consts/clubs');
 
 const ClubsActions = require('module/as_manager/pages/clubs/clubs_actions');
@@ -60,7 +62,12 @@ const ClubsForm = React.createClass({
 		if(typeof days === 'undefined') {
 			binding.set('days', Immutable.fromJS([]));
 		}
-
+		
+		let staff =  binding.toJS('staff');
+		if(typeof staff === 'undefined') {
+			binding.set('staff', Immutable.fromJS([]));
+		}
+		
 		let school;
 		window.Server.school.get(this.props.activeSchoolId).then(_school => {
 			school = _school;
@@ -177,9 +184,93 @@ const ClubsForm = React.createClass({
 			)
 		);
 	},
+	handleChangeVenue: function (venueId, venue) {
+		this.getDefaultBinding().set(
+			'venue',
+			Immutable.fromJS(venue)
+		);
+	},
+	getCoaches: function() {
+		const staff = this.getDefaultBinding().toJS('staff');
+		return staff.filter(s => s.staffRole === Consts.STAFF_ROLES.COACH);
+	},
+	getMembersOfStaff: function() {
+		const staff = this.getDefaultBinding().toJS('staff');
+		return staff.filter(s => s.staffRole === Consts.STAFF_ROLES.MEMBER_OF_STAFF);
+	},
+	getCoachPermissionFromUser: function(user) {
+		const permissions =  user.permissions.filter(p =>
+			(p.preset === 'COACH' || p.preset === 'TEACHER') &&
+			p.schoolId === this.props.activeSchoolId &&
+			p.status === 'ACTIVE'
+		);
+		
+		return permissions.length !== 0 ? permissions[0] : {};
+	},
+	getMembersOfStaffPermissionFromUser: function(user) {
+		const permissions =  user.permissions.filter(p =>
+			p.schoolId === this.props.activeSchoolId &&
+			p.status === 'ACTIVE'
+		);
+		
+		//TODO What if user has more then one active roles for current school?
+		return permissions[0];
+	},
+	handleChangeCoaches: function(user) {
+		const updStaff = this.getDefaultBinding().toJS('staff');
+		
+		const permission = this.getCoachPermissionFromUser(user);
+		
+		if(typeof permission !== "undefined") {
+			updStaff.push({
+				userId			: user.id,
+				permissionId	: permission.id,
+				staffRole		: Consts.STAFF_ROLES.COACH,
+				firstName		: user.firstName,
+				lastName		: user.lastName
+			});
+			
+			this.getDefaultBinding().set(
+				'staff',
+				Immutable.fromJS(updStaff)
+			);
+		}
+	},
+	handleChangeMembersOfStaff: function(user) {
+		const updStaff = this.getDefaultBinding().toJS('staff');
+		
+		const permission = this.getMembersOfStaffPermissionFromUser(user);
+		
+		updStaff.push({
+			userId			: user.id,
+			permissionId	: permission.id,
+			staffRole		: Consts.STAFF_ROLES.MEMBER_OF_STAFF,
+			firstName		: user.firstName,
+			lastName		: user.lastName
+		});
+		
+		this.getDefaultBinding().set(
+			'staff',
+			Immutable.fromJS(updStaff)
+		);
+	},
+	handleDeletePersonal: function(user) {
+		let updStaff = this.getDefaultBinding().toJS('staff');
+		
+		const foundStaffIndex = updStaff.findIndex(staff => staff.userId === user.userId && staff.permissionId === user.permissionId);
+		updStaff.splice(foundStaffIndex, 1);
+		
+		this.getDefaultBinding().set(
+			'staff',
+			Immutable.fromJS(updStaff)
+		);
+	},
+	
 	render: function() {
-		const binding = this.getDefaultBinding();
-
+		const 	binding = this.getDefaultBinding(),
+				venue = binding.toJS('form.venue'),
+				defaultVenue =  typeof venue !== 'undefined' ? 	{id: venue.placeId, name:venue.placeName} : undefined;
+		
 		let form = null;
 
 		if(binding.toJS('isSync')) {
@@ -259,11 +350,6 @@ const ClubsForm = React.createClass({
 							>
 								Price Type
 							</FormField>
-						</FormColumn>
-						<FormColumn
-							key			= 'column_2'
-							customStyle	= 'col-md-5 col-md-offset-1'
-						>
 							<FormField
 								field			= 'price'
 								type			= 'currency'
@@ -272,6 +358,11 @@ const ClubsForm = React.createClass({
 							>
 								Price
 							</FormField>
+						</FormColumn>
+						<FormColumn
+							key			= 'column_2'
+							customStyle	= 'col-md-5 col-md-offset-1'
+						>
 							<div className="eForm_field">
 								<div className="eForm_fieldName">
 									Start date
@@ -318,6 +409,48 @@ const ClubsForm = React.createClass({
 									handleClickItem	= { this.handleSelectWeekDay }
 									extraStyle		= { 'mSmallWide' }
 								/>
+							</div>
+							<FormField
+								field			= 'venue.placeId'
+								type			= 'autocomplete'
+								defaultItem		= { defaultVenue }
+								serviceFullData	= {
+									ClubsActions.getVenueService(this.props.activeSchoolId)
+								}
+								onSelect		= { this.handleChangeVenue }
+								validation		= "required"
+							>
+								Venue
+							</FormField>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Coach
+								</div>
+								<div className="eForm_fieldSet">
+									<Personal
+										mode			= {Consts.REPORT_FILED_VIEW_MODE.EDIT}
+										activeSchoolId	= {this.props.activeSchoolId}
+										personalList	= {this.getCoaches()}
+										personalType	= {Consts.STAFF_ROLES.COACH}
+										handleChange	= {this.handleChangeCoaches}
+										handleDelete	= {this.handleDeletePersonal}
+									/>
+								</div>
+							</div>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Members of staff
+								</div>
+								<div className="eForm_fieldSet">
+									<Personal
+										mode			= {Consts.REPORT_FILED_VIEW_MODE.EDIT}
+										activeSchoolId	= {this.props.activeSchoolId}
+										personalList	= {this.getMembersOfStaff()}
+										personalType	= {Consts.STAFF_ROLES.MEMBER_OF_STAFF}
+										handleChange	= {this.handleChangeMembersOfStaff}
+										handleDelete	= {this.handleDeletePersonal}
+									/>
+								</div>
 							</div>
 						</FormColumn>
 					</Form>

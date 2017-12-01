@@ -53,6 +53,23 @@ const ClubsActions = {
 			},
 			participant
 		);
+	},
+	getVenueService: function(schoolId) {
+		return (venue) => {
+			const filter = {
+				filter: {
+					where: {
+						name: {
+							like: venue,
+							options: 'i'
+						}
+					},
+					limit: 50,
+					order:'name ASC'
+				}
+			};
+			return window.Server.schoolPlaces.get(schoolId, filter);
+		};
 	}
 };
 
