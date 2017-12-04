@@ -8,8 +8,9 @@ export class CSVExportButton extends React.Component<CSVExportButtonProps, {}> {
 	render() {
 		return (
 			<div
-				className	= "bCSVDownloadButton"
-				onClick		= { (e) => { this.props.handleClick(e) } }
+				className			= "bCSVDownloadButton bTooltip"
+				onClick				= { (e) => { this.props.handleClick(e) } }
+				data-description	= "Download CSV"
 			>
 			</div>
 		);
