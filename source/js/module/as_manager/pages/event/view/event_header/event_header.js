@@ -17,7 +17,8 @@ const	Lazy				= require('lazy.js'),
 		SchoolConst 		= require('module/helpers/consts/schools'),
 		SchoolHelper 		= require('module/helpers/school_helper'),
 		ViewSelector		= require('module/ui/view_selector/view_selector'),
-		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
+		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper'),
+		ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
 
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
@@ -105,8 +106,11 @@ const EventHeader = React.createClass({
 		if(
 			TeamHelper.isNewEvent(this.props.event) &&
 			TeamHelper.isMultiparty(this.props.event) &&
-			typeof this.props.countRivals !== 'undefined' &&
-			this.props.countRivals > 2
+			(
+				this.props.viewMode === (ViewModeConsts.VIEW_MODE.BLOCK_VIEW || ViewModeConsts.VIEW_MODE.TABLE_VIEW) ?
+					typeof this.props.countRivals !== 'undefined' && this.props.countRivals > 2 :
+					true
+			)
 		) {
 			return (
 				<ViewSelector
