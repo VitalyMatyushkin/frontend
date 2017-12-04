@@ -38,6 +38,11 @@ const SavingPlayerChangesPopup = React.createClass({
 		}
 	},
 
+	handleClickOkButton: function () {
+		this.getDefaultBinding().set('isSubmitProcessing', true);
+		this.props.submit();
+	},
+
 	closeSavingChangesModePopup: function() {
 		const teamWrappers = this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 		teamWrappers.forEach(tw => {
@@ -161,13 +166,8 @@ const SavingPlayerChangesPopup = React.createClass({
 					okButtonText			= "Create event"
 					cancelButtonText		= "Back"
 					isOkButtonDisabled		= { binding.toJS('isSubmitProcessing') }
-					handleClickOkButton		= {
-						() => {
-							binding.set('isSubmitProcessing', true);
-							this.props.submit();
-						}
-					}
-					handleClickCancelButton	= { this.closeSavingChangesModePopup }
+					handleClickOkButton		= { () => this.handleClickOkButton() }
+					handleClickCancelButton	= { () => this.closeSavingChangesModePopup() }
 				>
 					{ this.renderSavingPlayerChangesPopupBody(event) }
 				</ConfirmPopup>

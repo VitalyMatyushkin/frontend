@@ -427,11 +427,11 @@ const EventManager = React.createClass({
 						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					binding.set('isSubmitProcessing', true);
-					this.submit(event);
+					this.submit();
 					break;
 				case TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isNonTeamSport(event):
 					binding.set('isSubmitProcessing', true);
-					this.submit(event);
+					this.submit();
 					break;
 				// If teams data isn't correct
 				case !TeamHelper.isTeamDataCorrect(validationData):
@@ -444,10 +444,11 @@ const EventManager = React.createClass({
 	getTeamWrappers: function() {
 		return this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 	},
-	//TODO WTF!!?? Why event in args?
-	submit: function(eventModel) {
+	submit: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		const eventModel = binding.toJS('model');
 
 		let savedEvent;
 
@@ -766,7 +767,7 @@ const EventManager = React.createClass({
 				<SavingPlayerChangesPopup
 					binding			= { binding }
 					activeSchoolId	= { this.props.activeSchoolId }
-					submit			= { this.submit.bind(this, binding.toJS('model')) }
+					submit			= { () => this.submit() }
 				/>
 			</div>
 		);

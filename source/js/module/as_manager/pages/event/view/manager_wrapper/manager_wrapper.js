@@ -310,12 +310,6 @@ const ManagerWrapper = React.createClass({
 			/>
 		)
 	},
-	submitChaneModeManager: function () {
-		const binding = this.getDefaultBinding();
-
-		binding.set('isSubmitProcessing', true);
-		this.submit();
-	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 

@@ -7,7 +7,7 @@ const	ManagerConsts					= require('./../ui/managers/helpers/manager_consts'),
 function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 	switch (true) {
 		case EventHelper.isInterSchoolsEvent(event) && teamWrappers[0].isTeamChanged:
-			return processTeam(schoolId, event, rivals[0], teamWrappers[0], teamWrappers[0].savingChangesMode);
+			return [ processTeam(schoolId, event, rivals[0], teamWrappers[0], teamWrappers[0].savingChangesMode) ];
 		default:
 			let promises = [];
 
