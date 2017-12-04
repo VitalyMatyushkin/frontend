@@ -12,7 +12,7 @@ const AccountRoles = React.createClass({
 	componentWillMount:function(){
 		const 	binding = this.getDefaultBinding();
 			binding.set('sync', false);
-		window.Server.profilePermissions.get({filter:{limit:20}}).then( userPermissions => {
+		window.Server.profilePermissions.get({filter:{limit:40}}).then( userPermissions => {
 				binding.set('userAccountRoles',Immutable.fromJS(userPermissions));
 				binding.set('sync', true);
 			});
