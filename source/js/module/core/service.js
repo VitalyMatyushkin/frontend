@@ -100,6 +100,7 @@ const ServiceConstructor = (function() {
                         const headerName = activeSession.adminId ? "asid" : "usid";
                         xhr.setRequestHeader(headerName, activeSession.id);
                     }
+					xhr.setRequestHeader('App-Signature', 'SquadInTouch-Web, 1.0.0');
 				}
 			}, true); // TODO: sanitize me
 		},

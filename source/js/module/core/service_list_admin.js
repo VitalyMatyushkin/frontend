@@ -66,6 +66,10 @@ const serviceList = {
 		serviceList.useractivity = new Service('/superadmin/useractivity', binding);
 		serviceList.useractivityCount = new Service('/superadmin/useractivity/count', binding);
 
+		//user sessions
+		serviceList.userSessions = new Service('/superadmin/users/{userId}/sessions', binding);
+		serviceList.userSession = new Service('/superadmin/users/:userId/sessions{sessionId}', binding);
+		
 		//events
 		serviceList.events = new Service('/superadmin/schools/{schoolId}/events', binding);
 		serviceList.event = new Service('/superadmin/schools/{schoolId}/events/{eventId}', binding);

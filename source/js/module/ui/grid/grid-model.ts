@@ -85,9 +85,12 @@ export interface GridModelOptions {
     actionPanel: ActionPanelModelOptions
     classStyleAdmin?: any
     handleClick?: (dataItemId: string, dataItemName: string) => void;
+    uniqueField?: string;
 }
 
 export class GridModel {
+    readonly DEFAULT_UNIQ_FIELD = 'id';
+
     filter: FilterModel;    // not, there is no s at the ending
     table: any;
     pagination: PaginationModel;
@@ -96,6 +99,7 @@ export class GridModel {
     classStyleAdmin: any;
     handleClick?: (dataItemId: string, dataItemName: string) => void;
     onRender?: any;
+    uniqueField?: string;
 
     constructor(options: GridModelOptions) {
         this.filter = new FilterModel(options.filters);
@@ -121,11 +125,12 @@ export class GridModel {
         this.handleClick = options.handleClick;
         this.actionPanel.onChange = this.render.bind(this);
         this.onRender = null;
+        this.uniqueField = options.uniqueField ? options.uniqueField : this.DEFAULT_UNIQ_FIELD;
     }
 
     setData(data) {
         if(this.filter.isChangePage){
-            this.table.data = (Lazy(this.table.data.concat(data)) as any).uniq('id').toArray();
+            this.table.data = (Lazy(this.table.data.concat(data)) as any).uniq(this.uniqueField).toArray();
         } else {
             this.table.data = data;
         }
