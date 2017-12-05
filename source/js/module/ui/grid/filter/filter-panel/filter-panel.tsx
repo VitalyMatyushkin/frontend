@@ -12,7 +12,7 @@ export interface FilterPanelProps {
 
 export class FilterPanel extends React.Component<FilterPanelProps, {}> {
 	componentWillMount() {
-		this.props.model.badgeArea.onChange = this.onChange;
+		this.props.model.badgeArea.onChange = this.onChange.bind(this);
 	}
 
 	componentWillUnmount() {
