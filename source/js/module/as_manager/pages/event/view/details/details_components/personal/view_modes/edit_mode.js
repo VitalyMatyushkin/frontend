@@ -70,7 +70,8 @@ const EditMode = React.createClass({
 					permissions: {
 						$elemMatch: {
 							preset: { $in: roles },
-							status: 'ACTIVE'
+							status: 'ACTIVE',
+							schoolId: this.props.activeSchoolId
 						}
 					},
 					$or: [

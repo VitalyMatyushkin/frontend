@@ -396,6 +396,7 @@ const ClubsForm = React.createClass({
 							<FormField
 								field		= 'duration'
 								type		= 'number'
+								validation	= 'required'
 							>
 								Duration(min)
 							</FormField>
