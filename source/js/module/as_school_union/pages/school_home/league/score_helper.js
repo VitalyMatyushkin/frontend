@@ -15,7 +15,7 @@ const ScoreHelper = {
 	
 	getWinGame: function(schoolId, event){
 		const teamsData = propz.get(event, ['teamsData']);
-		if (Array.isArray(teamsData)) {
+		if (Array.isArray(teamsData) && teamsData.length !== 0) {
 			const 	team 	= teamsData.find(team => team.schoolId === schoolId),
 					teamId 	= propz.get(team, ['id']);
 			
@@ -26,14 +26,18 @@ const ScoreHelper = {
 				return isWinner ? 1 : 0;
 			}
 		} else {
-			console.log('teamsData is not array!');
-			return 0;
+			const schoolsScore = propz.get(event, ['results', 'schoolScore']);
+			if (Array.isArray(schoolsScore)) {
+				const 	schoolScore 	= schoolsScore.find(school => school.schoolId === schoolId),
+						isWinner 		= propz.get(schoolScore, ['isWinner']);
+				return isWinner ? 1 : 0;
+			}
 		}
 	},
 	
 	getLoseGame: function(schoolId, event){
 		const teamsData = propz.get(event, ['teamsData']);
-		if (Array.isArray(teamsData)) {
+		if (Array.isArray(teamsData)  && teamsData.length !== 0) {
 			const 	team 	= teamsData.find(team => team.schoolId === schoolId),
 					teamId 	= propz.get(team, ['id']);
 			
@@ -44,17 +48,30 @@ const ScoreHelper = {
 				return isWinnerOpponent ? 1 : 0;
 			}
 		} else {
-			console.log('teamsData is not array!');
-			return 0;
+			const schoolsScore = propz.get(event, ['results', 'schoolScore']);
+			if (Array.isArray(schoolsScore)) {
+				const 	schoolScore 		= schoolsScore.find(school => school.schoolId !== schoolId),
+						isWinnerOpponent 	= propz.get(schoolScore, ['isWinner']);
+				return isWinnerOpponent ? 1 : 0;
+			}
 		}
 	},
 	
 	getDrawGame: function(schoolId, event){
-		const 	teamsScore 	= propz.get(event, ['results', 'teamScore']),
-				isWinner1 	= propz.get(teamsScore, ['0', 'isWinner'], true),
-				isWinner2 	= propz.get(teamsScore, ['1', 'isWinner'], true);
-		
-		return !isWinner1 && !isWinner2 ? 1 : 0;
+		const teamsData = propz.get(event, ['teamsData']);
+		if (Array.isArray(teamsData)  && teamsData.length !== 0) {
+			const 	teamsScore = propz.get(event, ['results', 'teamScore']),
+					isWinner1 = propz.get(teamsScore, ['0', 'isWinner'], true),
+					isWinner2 = propz.get(teamsScore, ['1', 'isWinner'], true);
+			
+			return !isWinner1 && !isWinner2 ? 1 : 0;
+		} else {
+			const 	schoolScore = propz.get(event, ['results', 'schoolScore']),
+					isWinner1 = propz.get(schoolScore, ['0', 'isWinner'], true),
+					isWinner2 = propz.get(schoolScore, ['1', 'isWinner'], true);
+			
+			return !isWinner1 && !isWinner2 ? 1 : 0;
+		}
 	},
 	
 	getPlayGame: function(event){
@@ -70,7 +87,7 @@ const ScoreHelper = {
 		const teamsData = propz.get(event, ['teamsData']);
 		if (Array.isArray(teamsData)) {
 			const 	team 	= teamsData.find(team => team.schoolId === schoolId),
-				teamId 	= propz.get(team, ['id']);
+					teamId 	= propz.get(team, ['id']);
 			
 			const teamsScore = propz.get(event, ['results', 'teamScore']);
 			if (Array.isArray(teamsScore)) {

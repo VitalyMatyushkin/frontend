@@ -18,7 +18,7 @@ const Head = React.createClass({
 						</div>
 						<div className="eTopPanel_col_small_8 eTopPanel_right">
 							<TopMenu
-								menuItems={['Scores','Calendar','Fixtures','Results','News','Schools']}
+								menuItems={['League','Calendar','Fixtures','Results','News','Schools']}
 							/>
 						</div>
 					</div>

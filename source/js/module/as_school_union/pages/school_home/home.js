@@ -1,5 +1,4 @@
 const   HomeHeader 			= require('./home_header'),
-		Scores 				= require('./scores/scores'),
 		HomeFixture 		= require('./home_fixtures'),
 		HomeResults 		= require('./home_results'),
 		HomeNews 			= require('./home_news'),
@@ -32,9 +31,9 @@ const SchoolHomePage = React.createClass({
 		
 		switch (hash) {
 			//we scroll page on 70px to top, because top menu has width 70px
-			case '#scores':
-				if (ReactDOM.findDOMNode(this.refs.scores) !== null) {
-					ReactDOM.findDOMNode(this.refs.scores).scrollIntoView();
+			case '#league':
+				if (ReactDOM.findDOMNode(this.refs.league) !== null) {
+					ReactDOM.findDOMNode(this.refs.league).scrollIntoView();
 					window.scrollBy(0, -70);
 				}
 				break;
@@ -62,12 +61,6 @@ const SchoolHomePage = React.createClass({
 					window.scrollBy(0, -70);
 				}
 				break;
-			case '#league':
-				if (ReactDOM.findDOMNode(this.refs.league) !== null) {
-					ReactDOM.findDOMNode(this.refs.league).scrollIntoView();
-					window.scrollBy(0, -70);
-				}
-				break;
 			case '#schools':
 				if (ReactDOM.findDOMNode(this.refs.schools) !== null) {
 					ReactDOM.findDOMNode(this.refs.schools).scrollIntoView();
@@ -82,9 +75,9 @@ const SchoolHomePage = React.createClass({
 			<div className="eSchoolHomePage">
 				<HomeHeader binding={binding}/>
 				<div className="eSchoolBodyWrapper">
-					<Scores
+					<LeagueTables
 						binding = { binding }
-						ref 	= { 'scores' }
+						ref 	= { 'league' }
 					/>
 					<HomeCalender
 						binding = { binding }
@@ -97,10 +90,6 @@ const SchoolHomePage = React.createClass({
 					<HomeResults
 						binding = { binding }
 						ref 	= { 'results' }
-					/>
-					<LeagueTables
-						binding = { binding }
-						ref 	= { 'league' }
 					/>
 					<HomeNews
 						binding = { binding }

@@ -176,25 +176,21 @@ const League = React.createClass({
 	},
 	
 	render: function(){
-		if (!(this.getDefaultBinding().get('emptyLeague'))) {
-			return (
-				<div className="bSchoolUnionLeague">
-					<h1 className="eSchoolUnionLeague_title">League Tables</h1>
-					<div className="container">
-						<div className="row">
-							<div className="col-md-12">
-								<div className="eSchoolUnionLeague_body">
-									{this.renderSportSelector()}
-									{this.renderScoreTable()}
-								</div>
+		return (
+			<div className="bSchoolUnionLeague">
+				<h1 className="eSchoolUnionLeague_title">League Tables</h1>
+				<div className="container">
+					<div className="row">
+						<div className="col-md-12">
+							<div className="eSchoolUnionLeague_body">
+								{this.renderSportSelector()}
+								{this.renderScoreTable()}
 							</div>
 						</div>
 					</div>
 				</div>
-			);
-		} else {
-			return null;
-		}
+			</div>
+		);
 	}
 });
 
