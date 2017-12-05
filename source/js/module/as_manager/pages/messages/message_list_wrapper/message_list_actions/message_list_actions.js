@@ -1,6 +1,4 @@
-const	Promise			= require('bluebird'),
-		Immutable		= require('immutable'),
-		MessageConsts	= require('module/ui/message_list/message/const/message_consts');
+const MessageConsts = require('module/ui/message_list/message/const/message_consts');
 
 const MessageListActions = {
 	loadMessages: function(messageType, activeSchoolId) {
@@ -25,8 +23,8 @@ const MessageListActions = {
 	},
 	loadInboxMessages: function(activeSchoolId) {
 		return window.Server.schoolEventsMessagesInbox.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000,
 					order: 'updatedAt DESC',
@@ -37,8 +35,8 @@ const MessageListActions = {
 	},
 	loadOutboxMessages: function(activeSchoolId) {
 		return window.Server.schoolEventsMessagesOutbox.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000,
 					order: 'updatedAt DESC'
@@ -48,8 +46,8 @@ const MessageListActions = {
 	},
 	loadArchiveMessages: function(activeSchoolId) {
 		return window.Server.schoolEventsMessagesArchive.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					limit: 1000,
 					order: 'updatedAt DESC',
@@ -60,8 +58,8 @@ const MessageListActions = {
 	},
 	loadInboxMessagesByEventId: function(activeSchoolId, eventId) {
 		return window.Server.schoolEventsMessagesInbox.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					where: {
 						eventId: 			eventId,
@@ -74,8 +72,8 @@ const MessageListActions = {
 	},
 	loadOutboxMessagesByEventId: function(activeSchoolId, eventId) {
 		return window.Server.schoolEventsMessagesOutbox.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					where: {
 						eventId: eventId
@@ -87,8 +85,8 @@ const MessageListActions = {
 	},
 	loadArchiveMessagesByEventId: function(activeSchoolId, eventId) {
 		return window.Server.schoolEventsMessagesArchive.get(
+			{ schoolId: activeSchoolId },
 			{
-				schoolId: activeSchoolId,
 				filter: {
 					where: {
 						eventId: 			eventId,
@@ -101,8 +99,8 @@ const MessageListActions = {
 	},
 	loadParentalConsentMessagesByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessages.get(
+			{ schoolId: schoolId },
 			{
-				schoolId:	schoolId,
 				filter:		{
 					where:		{
 									eventId:	eventId,
@@ -115,8 +113,8 @@ const MessageListActions = {
 	},
 	loadParentRoleParentalConsentMessagesByEventId: function(eventId) {
 		return window.Server.childEventMessages.get(
+			{ eventId: eventId },
 			{
-				eventId:	eventId,
 				filter:		{
 					where:		{
 						kind:		MessageConsts.MESSAGE_KIND.INVITATION
@@ -128,8 +126,8 @@ const MessageListActions = {
 	},
 	loadParentalConsentMessagesCountByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessagesCount.get(
+			{ schoolId: schoolId },
 			{
-				schoolId:	schoolId,
 				filter:		{
 					where:		{
 						eventId:	eventId,
@@ -142,8 +140,8 @@ const MessageListActions = {
 	},
 	loadParentalReportsMessagesByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessages.get(
+			{ schoolId: schoolId },
 			{
-				schoolId:	schoolId,
 				filter:		{
 					where:		{
 						eventId:	eventId,
