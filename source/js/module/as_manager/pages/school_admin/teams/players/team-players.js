@@ -14,14 +14,7 @@ const TeamPlayers = React.createClass({
 		handleClick: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		const 	binding 	= this.getDefaultBinding(),
-				grid 		= binding.toJS('grid');
-
-		if (grid) {
-			this.model = new TeamPlayersModel(this).createGridFromExistingData(grid);
-		} else {
-			this.model = new TeamPlayersModel(this).createGrid();
-		}
+		this.model = new TeamPlayersModel(this).createGrid();
 	},
 	render: function () {
 		const binding = this.getDefaultBinding();
