@@ -1,5 +1,5 @@
 const	React				= require('react'),
-		Button				= require('../button/button'),
+		{Button}			= require('../button/button'),
 		{Avatar} 			= require('module/ui/avatar/avatar'),
 		CommentAvatar		= require('./comment_avatar'),
 		NewCommentFormStyle	= require('../../../../styles/ui/comments/b_new_comment_form.scss');

@@ -8,7 +8,7 @@ const 	React 					= require('react'),
 		{Grid}					= require('module/ui/grid/grid'),
 		{If}					= require('module/ui/if/if'),
 		ConfirmPopup			= require('module/ui/confirm_popup'),
-		Button					= require('module/ui/button/button'),
+		{Button}				= require('module/ui/button/button'),
 		SchoolHelper			= require('module/helpers/school_helper'),
 		SVG						= require('module/ui/svg');
 

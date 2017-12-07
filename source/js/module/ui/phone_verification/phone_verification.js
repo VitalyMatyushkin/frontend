@@ -5,9 +5,9 @@ const 	React 							= require('react'),
 		classNames 						= require('classnames'),
 		SVG 							= require('module/ui/svg'),
 		Popup 							= require('module/ui/new_popup'),
-	{If}								= require('module/ui/if/if'),
+		{If}							= require('module/ui/if/if'),
 		ChangeUserProfileFieldModule 	= require('module/ui/register/user/changeUserProfileFieldModule'),
-		Button 							= require('module/ui/button/button');
+		{Button}						= require('module/ui/button/button');
 
 const PhoneVerification = React.createClass({
 	propTypes: {

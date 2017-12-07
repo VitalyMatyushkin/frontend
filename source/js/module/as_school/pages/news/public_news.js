@@ -6,7 +6,7 @@ const 	React 				= require('react'),
 		Morearty			= require('morearty');
 
 const 	NewsItem 			= require('module/shared_pages/news/view-news-item'),
-		Button 				= require('module/ui/button/button');
+		{Button}			= require('module/ui/button/button');
 
 const 	SchoolNewsItemStyle 	= require('styles/pages/public_news/b_public_school_news.scss');
 

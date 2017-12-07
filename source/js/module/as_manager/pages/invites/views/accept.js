@@ -5,7 +5,7 @@ const	React							= require('react'),
 
 const	Promise							= require('bluebird'),
 		classNames						= require('classnames'),
-		Button							= require('../../../../ui/button/button');
+		{Button}						= require('../../../../ui/button/button');
 
 const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		Manager							= require('../../../../ui/managers/manager');

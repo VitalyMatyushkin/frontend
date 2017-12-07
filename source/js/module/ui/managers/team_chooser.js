@@ -7,7 +7,7 @@ const	React			= require('react'),
 		SchoolHelper	= require('module/helpers/school_helper'),
 		SchoolConst 	= require('module/helpers/consts/schools'),
 		propz 			= require('propz'),
-		Button			= require('module/ui/button/button'),
+		{Button}		= require('module/ui/button/button'),
 		Immutable		= require('immutable');
 
 const TeamChooser = React.createClass({

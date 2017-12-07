@@ -3,7 +3,7 @@
  */
 const 	React 			= require('react'),
 		ReactCrop 		= require('react-image-crop'),
-		Button 			= require('module/ui/button/button'),
+		{Button} 		= require('module/ui/button/button'),
 		CropImageHelper = require('module/helpers/crop_image_helper');
 
 const 	ReactCropStylesCustom 	= require('styles/ui/gallery/b_photo_edit.scss'),

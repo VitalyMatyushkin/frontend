@@ -1,7 +1,7 @@
 const	React		= require('react'),
 
 		classNames	= require('classnames'),
-		Button		= require('./button/button');
+		{Button}	= require('./button/button');
 
 const ConfirmPopup = React.createClass({
 	propTypes: {

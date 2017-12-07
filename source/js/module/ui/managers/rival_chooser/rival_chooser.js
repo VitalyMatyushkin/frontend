@@ -2,7 +2,7 @@
 const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
-		Button							= require('module/ui/button/button');
+		{Button}						= require('module/ui/button/button');
 
 const	InterSchoolsMultipartyRivals	= require('module/ui/managers/rival_chooser/inter_schools_multiparty_rivals'),
 		DefaultRivals					= require('module/ui/managers/rival_chooser/default_rivals');

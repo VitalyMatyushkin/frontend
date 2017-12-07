@@ -3,7 +3,7 @@ const	React		= require('react'),
 		Immutable	= require('immutable'),
 		propz		= require('propz');
 
-const	Button		= require('module/ui/button/button'),
+const	{Button}	= require('module/ui/button/button'),
 		Loader		= require('module/ui/loader');
 
 const	ActiveClubHelper	= require('module/as_manager/pages/clubs/activate_club/active_club_helper'),

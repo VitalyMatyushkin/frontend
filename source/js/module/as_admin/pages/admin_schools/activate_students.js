@@ -6,8 +6,8 @@ const 	React 			= require('react'),
 		Immutable		= require('immutable');
 
 const 	Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-	{If}				= require('module/ui/if/if'),
-		Button 			= require('module/ui/button/button'),
+		{If}			= require('module/ui/if/if'),
+		{Button} 		= require('module/ui/button/button'),
 		SVG 	    	= require('module/ui/svg');
 
 const StudentImporter = require('module/utils/student_importer');

@@ -1,6 +1,6 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
-		Button		= require('./../../ui/button/button');
+		{Button}	= require('../button/button');
 
 const NotificationAlert = React.createClass({
 	mixins: [Morearty.Mixin],

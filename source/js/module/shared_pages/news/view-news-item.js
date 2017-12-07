@@ -5,8 +5,8 @@ const	React 				= require('react'),
 		Immutable 			= require('immutable'),
 		Morearty 			= require('morearty'),
 		DateTimeMixin		= require('module/mixins/datetime'),
-		Button				= require('module/ui/button/button'),
-	{If}				= require('module/ui/if/if'),
+		{Button}			= require('module/ui/button/button'),
+		{If}				= require('module/ui/if/if'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 

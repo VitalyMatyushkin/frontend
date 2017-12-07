@@ -1,5 +1,5 @@
 const	React		= require('react'),
-		Button		= require('./../../ui/button/button');
+		{Button}	= require('../button/button');
 
 const PopupMessage = React.createClass({
 	propTypes: {

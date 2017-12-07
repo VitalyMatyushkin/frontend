@@ -2,7 +2,7 @@
  * Created by Woland on 21.03.2017.
  */
 const	React 				= require('react'),
-		Button				= require('module/ui/button/button'),
+		{Button}			= require('module/ui/button/button'),
 		{If}				= require('module/ui/if/if'),
 		ConfirmPopup 		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');

@@ -5,9 +5,9 @@ const 	React 		= require('react'),
 
 const 	PhoneVerification 	= require('module/ui/phone_verification/phone_verification'),
 		Loader 				= require('module/ui/loader'),
-	{If}					= require('module/ui/if/if'),
+		{If}				= require('module/ui/if/if'),
 		Page404 			= require('module/ui/404_page'),
-		Button 				= require('module/ui/button/button'),
+		{Button} 			= require('module/ui/button/button'),
 		NotificationAlert 	= require('module/ui/notification_alert/notification_alert'),
 		SessionHelper		= require('module/helpers/session_helper'),
 		ConfirmAlert 		= require('module/ui/confirm_alert/confirm_alert');

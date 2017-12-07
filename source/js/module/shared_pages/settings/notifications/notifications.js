@@ -5,7 +5,7 @@ const 	React 		= require('react'),
 		Morearty 	= require('morearty'),
 		Immutable 	= require('immutable'),
 		Checkbox 	= require('module/ui/checkbox/checkbox'),
-		Button 		= require('module/ui/button/button');
+		{Button} 	= require('module/ui/button/button');
 
 const UserNotificationsSettingPageStyles = require('styles/pages/user/b_user_notifications.scss');
 

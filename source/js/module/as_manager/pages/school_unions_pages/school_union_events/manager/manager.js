@@ -5,7 +5,7 @@ const	React			= require('react'),
 const	classNames			= require('classnames');
 
 const	EventForm			= require('module/as_manager/pages/events/manager/event_form/event_form'),
-		Button				= require('module/ui/button/button');
+		{Button}			= require('module/ui/button/button');
 
 const	EventFormActions	= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
 

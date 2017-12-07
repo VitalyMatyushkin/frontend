@@ -7,9 +7,9 @@ const	React							= require('react'),
 const	classNames						= require('classnames'),
 		Promise							= require('bluebird'),
 		propz							= require('propz'),
-	{If}							= require('../../../ui/if/if'),
+		{If}							= require('../../../ui/if/if'),
 		Loader							= require('../../../ui/loader'),
-		Button							= require('module/ui/button/button');
+		{Button}						= require('module/ui/button/button');
 
 // Special components
 const	Manager							= require('../../../ui/managers/manager'),

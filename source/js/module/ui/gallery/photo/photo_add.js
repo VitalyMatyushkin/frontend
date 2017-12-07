@@ -2,8 +2,8 @@
  * Created by Woland on 11.04.2017.
  */
 const 	React 			= require('react'),
-		Button 			= require('module/ui/button/button'),
-	{If}				= require('module/ui/if/if'),
+		{Button} 		= require('module/ui/button/button'),
+		{If}			= require('module/ui/if/if'),
 		ReactCrop 		= require('react-image-crop'),
 		CropImageHelper = require('module/helpers/crop_image_helper');
 

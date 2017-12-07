@@ -1,7 +1,7 @@
 const 	React 					= require('react'),
 		DateTimeMixin			= require('module/mixins/datetime'),
 		ChallengeModel			= require('module/ui/challenges/challenge_model'),
-		Button 					= require('module/ui/button/button'),
+		{Button} 				= require('module/ui/button/button'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		CricketResultBlock 		= require('module/as_manager/pages/event/view/cricket_result_block/cricket_result_block');

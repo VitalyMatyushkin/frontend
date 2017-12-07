@@ -7,7 +7,7 @@ const	Manager							= require('./../../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../../helpers/eventHelper'),
 		ManagerWrapperHelper			= require('./manager_wrapper_helper'),
 		NewManagerWrapperHelper			= require('./new_manager_wrapper_helper'),
-		Button							= require('../../../../../ui/button/button'),
+		{Button}						= require('../../../../../ui/button/button'),
 		classNames						= require('classnames'),
 		TeamHelper						= require('./../../../../../ui/managers/helpers/team_helper');
 

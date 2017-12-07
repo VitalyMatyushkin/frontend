@@ -1,6 +1,6 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
-		Button		= require('./../../ui/button/button');
+		{Button}	= require('../button/button');
 
 /**
  * Alert window used for confirmation dialogue.

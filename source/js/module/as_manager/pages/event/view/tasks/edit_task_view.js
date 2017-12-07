@@ -1,8 +1,8 @@
 const	React					= require('react'),
 
-	{If}					= require('../../../../../ui/if/if'),
+		{If}					= require('../../../../../ui/if/if'),
 		MultiselectDropdown		= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
-		Button					= require('../../../../../ui/button/button'),
+		{Button}				= require('../../../../../ui/button/button'),
 		EditTaskViewCssStyle	= require('../../../../../../../styles/ui/b_edit_task_view.scss');
 
 const EditTaskView = React.createClass({

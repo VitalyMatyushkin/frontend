@@ -1,5 +1,5 @@
-const 	React 	= require('react'),
-		Button 	= require('module/ui/button/button');
+const 	React 		= require('react'),
+		{Button}	= require('module/ui/button/button');
 
 const ExportStudentsStyles = require('styles/pages/export_students/b_export_students.scss');
 

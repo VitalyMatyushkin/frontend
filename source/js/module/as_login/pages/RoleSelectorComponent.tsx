@@ -2,9 +2,9 @@
  * Created by wert on 13.09.16.
  */
 
-import * as React from 'react';
-import * as Button from 'module/ui/button/button';
-import * as RoleHelper from 'module/helpers/role_helper';
+import * as React 		from 'react';
+import {Button} 		from 'module/ui/button/button';
+import * as RoleHelper 	from 'module/helpers/role_helper';
 
 
 export interface RoleSelectorComponentProps {

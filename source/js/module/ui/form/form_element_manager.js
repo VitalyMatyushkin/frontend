@@ -1,5 +1,5 @@
 const	React					= require('react'),
-		Button					= require('../button/button'),
+		{Button}				= require('../button/button'),
 		classNames				= require('classnames');
 
 const	FormElementManagerStyle	= require('../../../../styles/ui/forms/b_form_element_manager.scss');

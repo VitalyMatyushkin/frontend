@@ -7,7 +7,7 @@ const	React				= require('react'),
 		classNames			= require('classnames'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		Button				= require('module/ui/button/button');
+		{Button}			= require('module/ui/button/button');
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
