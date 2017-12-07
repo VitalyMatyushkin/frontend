@@ -292,6 +292,11 @@ const serviceList = {
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)
 		serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;		//(schoolId, filter)
+		
+		//Tournaments
+		serviceList.schoolTournaments = new Service('/i/schools/{schoolUnionId}/schools/tournaments', binding);
+		serviceList.publicTournaments = new Service('/public/schools/{schoolUnionId}/schools/tournaments', binding);
+		serviceList.schoolTournament  = new Service('/i/schools/{schoolUnionId}/schools/tournaments/{tournamentId}', binding);
 
 	},
 	// Services which not require authorization

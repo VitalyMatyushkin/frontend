@@ -10,6 +10,7 @@ const	SubMenu						= require('module/ui/menu/sub_menu'),
 		UserRequestListArchive		= require('./pages/user_request_list_archive'),
 		UserViewComponent			= require('../../../../shared_pages/users/user_view'),
 		PlacesPage					= require('./pages/places_page/places_page'),
+		TournamentsPage				= require('./pages/tournaments/tournaments_page'),
 		FavouriteSportPageWrapper	= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
 		MoreartyHelper				= require('module/helpers/morearty_helper');
 
@@ -69,6 +70,10 @@ const SchoolUnionConsole = React.createClass({
 			href	: '/#school_union_console/venues',
 			name	: 'Venues',
 			key		: 'venues'
+		},{
+			href	: '/#school_union_console/tournaments',
+			name	: 'Tournaments',
+			key		: 'Tournaments'
 		}];
 
 		if (this.activeSchoolInfo.canEditFavoriteSports) {
@@ -144,6 +149,11 @@ const SchoolUnionConsole = React.createClass({
 							<Route	path		= '/school_union_console/sports'
 									binding		= {binding.sub('favoriteSports')}
 									component	= {FavouriteSportPageWrapper}
+							/>
+							
+							<Route	path		= '/school_union_console/tournaments /school_union_console/tournaments/:subPage'
+									binding		= {binding.sub('tournaments')}
+									component	= {TournamentsPage}
 							/>
 
 							<Route	path					= "/user/view"

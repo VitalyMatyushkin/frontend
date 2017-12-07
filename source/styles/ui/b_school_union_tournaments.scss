@@ -1,0 +1,92 @@
+@import '../!variables';
+
+.bSchoolUnionTournaments {
+  box-sizing: border-box;
+  position: relative;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.eSchoolUnionTournaments_btnWrapper {
+  position: relative;
+}
+
+.eSchoolUnionTournaments_bodyWrapper {
+  overflow: hidden;
+}
+
+.eSchoolUnionTournaments_title {
+  width: 100%;
+  padding: 35px 0;
+
+  text-align: center;
+
+  color: $darkGrey;
+  font-size: 30px;
+  font-weight: normal;
+}
+
+.eSchoolUnionTournaments_body {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.bPublicSchoolUnionTournamentItem {
+  width: 260px;
+  border: 1px solid #E6E6E6;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  padding-top: 20px;
+
+  &:hover {
+    border-color: #007abf;
+  }
+}
+
+.ePublicSchoolUnionTournamentItem_tournamentPictureWrapper {
+  height: 180px;
+  width: 180px;
+  margin: 0 auto;
+}
+
+.ePublicSchoolUnionTournamenItem_tournamenPicture {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 100%;
+}
+
+.ePublicSchoolUnionTournamenItem_tournamenName {
+  padding: 20px 5px 10px 5px;
+  font-family: Glober;
+  font-size: 18px;
+  color: #000;
+  text-align: center;
+}
+.ePublicSchoolUnionTournamenItem_tournamenDate {
+  font-size: 16px;
+  color: #333132;
+  padding: 10px 5px 10px 5px;
+  text-align: center;
+}
+
+.eArrow{
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top:110px;
+  cursor: pointer;
+  border-radius: 50%;
+
+  &.mLeft{
+    background: url('/images/arrow-left-circle.png');
+    left:-55px;
+  }
+
+  &.mRight{
+    background: url('/images/arrow-right-circle.png');
+    right:-55px;
+  }
+}

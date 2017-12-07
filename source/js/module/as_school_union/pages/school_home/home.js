@@ -4,6 +4,7 @@ const   HomeHeader 			= require('./home_header'),
 		HomeNews 			= require('./home_news'),
 		HomeCalender 		= require('./home_calendar'),
 		SchoolList 			= require('./school_list/school_list'),
+		{Tournaments} 		= require('./tournaments/tournaments'),
 		LeagueTables 		= require('./league/league'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
@@ -43,6 +44,12 @@ const SchoolHomePage = React.createClass({
 					window.scrollBy(0, -70);
 				}
 				break;
+			case '#tournaments':
+				if (ReactDOM.findDOMNode(this.refs.tournaments) !== null) {
+					ReactDOM.findDOMNode(this.refs.tournaments).scrollIntoView();
+					window.scrollBy(0, -70);
+				}
+				break;
 			case '#fixtures':
 				if (ReactDOM.findDOMNode(this.refs.fixtures) !== null) {
 					ReactDOM.findDOMNode(this.refs.fixtures).scrollIntoView();
@@ -69,8 +76,9 @@ const SchoolHomePage = React.createClass({
 		}
 	},
 	render: function(){
-		const binding = this.getDefaultBinding();
-
+		const 	binding 		= this.getDefaultBinding(),
+				schoolUnionId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
+		
 		return (
 			<div className="eSchoolHomePage">
 				<HomeHeader binding={binding}/>
@@ -82,6 +90,11 @@ const SchoolHomePage = React.createClass({
 					<HomeCalender
 						binding = { binding }
 						ref 	= { 'calendar' }
+					/>
+					<Tournaments
+						binding 		= { binding }
+						ref 			= { 'tournaments' }
+						schoolUnionId	= { schoolUnionId }
 					/>
 					<HomeFixture
 						binding = { binding }
