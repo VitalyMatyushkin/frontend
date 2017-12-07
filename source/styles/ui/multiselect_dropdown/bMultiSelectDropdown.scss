@@ -5,15 +5,19 @@
 }
 
 .bMultiSelectDropdown {
-  position: relative;
-  vertical-align: bottom;
-  font-size: 15px;
-  line-height: 15px;
-  cursor: pointer;
+	position: relative;
+	vertical-align: bottom;
+	font-size: 15px;
+	line-height: 15px;
+	cursor: pointer;
 
-  &.mSmallWide {
-    width: 360px;
-  }
+	&.mSmallWide {
+		width: 360px;
+	}
+	&.mError {
+		border: 1px solid red;
+		border-radius: $borderRadius;
+	}
 }
 
 .eMultiSelectDropdown_input {

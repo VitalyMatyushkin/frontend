@@ -14,15 +14,22 @@ const ClubAddPage = React.createClass({
 		this.getDefaultBinding().sub('clubsForm').clear();
 	},
 	submitAdd: function(data) {
-		ClubsHelper.convertClientToServerFormData(
-			data,
-			this.getDefaultBinding().toJS('clubsForm')
-		);
-
-		window.Server.schoolClubs.post(
-			this.props.activeSchoolId,
-			data
-		).then(() => ClubsHelper.redirectToClubListPage());
+		const 	binding 		= this.getDefaultBinding(),
+				formDataDays 	= typeof this.getDefaultBinding().toJS('clubsForm.days') !== 'undefined' ? this.getDefaultBinding().toJS('clubsForm.days') : [];
+		//week days is required
+		if (formDataDays.length === 0) {
+			binding.set('clubsForm.isRequiredErrorDays', true);
+		} else {
+			ClubsHelper.convertClientToServerFormData(
+				data,
+				this.getDefaultBinding().toJS('clubsForm')
+			);
+			
+			window.Server.schoolClubs.post(
+				this.props.activeSchoolId,
+				data
+			).then(() => ClubsHelper.redirectToClubListPage());
+		}
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();

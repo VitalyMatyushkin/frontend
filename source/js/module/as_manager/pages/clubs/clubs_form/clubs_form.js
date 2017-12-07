@@ -272,6 +272,8 @@ const ClubsForm = React.createClass({
 				defaultVenue =  typeof venue !== 'undefined' ? 	{id: venue.placeId, name:venue.placeName} : undefined;
 		
 		let form = null;
+		
+		const isRequiredError = Boolean(binding.toJS('isRequiredErrorDays'));
 
 		if(binding.toJS('isSync')) {
 			form = (
@@ -408,7 +410,7 @@ const ClubsForm = React.createClass({
 									items			= { this.getWeekDays() }
 									selectedItems	= { this.getSelectedWeekDays() }
 									handleClickItem	= { this.handleSelectWeekDay }
-									extraStyle		= { 'mSmallWide' }
+									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
 								/>
 							</div>
 							<FormField

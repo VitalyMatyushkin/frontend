@@ -72,17 +72,25 @@ const ClubMainInfoEdit = React.createClass({
 		}
 	},
 	submitEdit: function(data) {
-		ClubsHelper.convertClientToServerFormData(
-			data,
-			this.getDefaultBinding().toJS('clubsForm')
-		);
-		window.Server.schoolClub.put(
-			{
-				schoolId:	this.props.activeSchoolId,
-				clubId:		this.props.clubId
-			},
-			data
-		).then(() => ClubsHelper.redirectToClubListPage());
+		const 	binding 		= this.getDefaultBinding(),
+				formDataDays 	= typeof this.getDefaultBinding().toJS('clubsForm.days') !== 'undefined' ? this.getDefaultBinding().toJS('clubsForm.days') : [];
+		//week days is required
+		if (formDataDays.length === 0) {
+			binding.set('clubsForm.isRequiredErrorDays', true);
+		} else {
+			binding.set('clubsForm.isRequiredErrorDays', false);
+			ClubsHelper.convertClientToServerFormData(
+				data,
+				this.getDefaultBinding().toJS('clubsForm')
+			);
+			window.Server.schoolClub.put(
+				{
+					schoolId:	this.props.activeSchoolId,
+					clubId:		this.props.clubId
+				},
+				data
+			).then(() => ClubsHelper.redirectToClubListPage());
+		}
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
