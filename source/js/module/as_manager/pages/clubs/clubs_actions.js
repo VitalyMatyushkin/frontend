@@ -59,7 +59,7 @@ const ClubsActions = {
 			const filter = {
 				filter: {
 					where: {
-						name: {
+						text: {
 							like: venue,
 							options: 'i'
 						}
