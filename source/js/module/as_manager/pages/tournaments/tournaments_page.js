@@ -7,9 +7,9 @@ const	React		= require('react'),
 		RouterView	= require('module/core/router'),
 		Route		= require('module/core/route');
 
-const	{TournamentsList}	= require('module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournaments'),
-		TournamentAdd		= require('module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournament_add'),
-		TournamentEdit		= require('module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournament_edit');
+const	{TournamentsList}	= require('module/as_manager/pages/tournaments/tournaments'),
+		TournamentAdd		= require('module/as_manager/pages/tournaments/tournament_add'),
+		TournamentEdit		= require('module/as_manager/pages/tournaments/tournament_edit');
 
 const TournamentsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -24,23 +24,23 @@ const TournamentsPage = React.createClass({
 		
 		
 		return (
-			<RouterView	routes	= { binding.sub('placesRouting') }
+			<RouterView	routes	= { binding.sub('tournamentsRouting') }
 						binding	= { globalBinding }
 			>
 				<Route
-					path		= "/school_union_console/tournaments"
+					path		= "/tournaments"
 					binding		= { binding.sub('tournamentsList') }
 					component	= { TournamentsList }
 					handleClick	= { this.handleClick }
 					addButton	= { addButton }
 				/>
 				<Route
-					path		= "/school_union_console/tournaments/add"
+					path		= "/tournaments/add"
 					binding		= { binding.sub('tournamentFormWrapper') }
 					component	= { TournamentAdd }
 				/>
 				<Route
-					path		= "/school_union_console/tournaments/edit"
+					path		= "/tournaments/edit"
 					binding		= { binding.sub('tournamentFormWrapper') }
 					component	= { TournamentEdit }
 				/>

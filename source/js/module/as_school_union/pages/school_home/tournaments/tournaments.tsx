@@ -6,7 +6,7 @@ const SchoolUnionTournamentsStyle = require('../../../../../../styles/ui/b_schoo
 import * as React    	from 'react';
 import * as classNames	from 'classnames';
 import {TournamentItem} from './tournament_item';
-import {Tournament} 	from 'module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournament.ts';
+import {Tournament} 	from 'module/as_manager/pages/tournaments/tournament';
 
 interface TournamentItemProps {
 	schoolUnionId: string

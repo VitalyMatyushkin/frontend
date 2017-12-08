@@ -5,6 +5,7 @@ const	React								= require('react'),
 		LogoutRoute							= require('module/core/routes/logout_route'),
 		SettingsRoute						= require('module/core/routes/settings_route'),
 		EventComponent						= require('module/as_manager/pages/event/event_page'),
+		Tournaments							= require('module/as_manager/pages/tournaments/tournaments_page'),
 		SchoolUnionAdminComponent			= require('../pages/school_unions_pages/school_union_admin/school_union_admin'),
 		SchoolUnionEventsComponent			= require('module/as_manager/pages/school_unions_pages/school_union_events/school_union_events'),
 		SchoolUnionConsoleComponent			= require('../pages/school_unions_pages/school_union_console/school_union_console'),
@@ -49,7 +50,13 @@ const SchoolUnionsRouter = React.createClass({
 						mode					= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
 						isShowControlButtons	= { false }
 				/>
-
+				
+				<Route	path					= "/tournaments tournaments/:subPage"
+						binding					= { binding.sub('schoolUnionTournamentsPage') }
+						component				= { Tournaments }
+						isShowControlButtons	= { false }
+				/>
+				
 				<Route	path		= "/invites /invites/:filter /invites/:inviteId/:mode"
 						binding		= { binding.sub('invites') }
 						component	= { InvitesComponent }

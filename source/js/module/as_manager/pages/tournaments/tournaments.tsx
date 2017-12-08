@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import * as Morearty from 'morearty';
-import {TournamentsModel} from 'module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournaments-model';
+import {TournamentsModel} from 'module/as_manager/pages/tournaments/tournaments-model';
 import {Grid} from 'module/ui/grid/grid';
 
 export const TournamentsList = (React as any).createClass({
@@ -21,7 +21,9 @@ export const TournamentsList = (React as any).createClass({
 	},
 	render: function () {
 		return (
-			<Grid model={this.model.grid}/>
+			<div className="bSchoolMaster">
+				<Grid model={this.model.grid}/>
+			</div>
 		);
 	}
 });

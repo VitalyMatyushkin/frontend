@@ -4,7 +4,6 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		React 		= require('react'),
-		Immutable	= require('immutable'),
 		Morearty	= require('morearty');
 
 const TournamentForm = React.createClass({

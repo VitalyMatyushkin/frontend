@@ -42,7 +42,7 @@ const TournamentEditPage = React.createClass({
 		this.activeSchoolId && window.Server.schoolTournament
 			.put({schoolUnionId: this.activeSchoolId, tournamentId: this.tournamentId}, data)
 			.then(function() {
-			document.location.hash = 'school_union_console/tournaments';
+			document.location.hash = 'tournaments';
 		});
 	},
 	render: function() {

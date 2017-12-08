@@ -152,6 +152,15 @@ const Head = React.createClass({
 				routes			: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
 				authorization	: true,
 				verified		: true
+			},
+			{
+				href			: '/#tournaments',
+				icon			: '',
+				name			: 'Tournaments',
+				key				: 'Tournaments',
+				routes			: ['/tournaments/:subPage'],
+				authorization	: true,
+				verified		: true
 			}
 		];
 	},

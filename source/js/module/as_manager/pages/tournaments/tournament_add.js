@@ -26,7 +26,7 @@ const TournamentAddPage = React.createClass({
 		}
 		delete data.picUrl;
 		this.activeSchoolId && window.Server.schoolTournaments.post(this.activeSchoolId, data).then(function() {
-			document.location.hash = 'school_union_console/tournaments';
+			document.location.hash = 'tournaments';
 		});
 	},
 	render: function() {

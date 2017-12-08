@@ -4,7 +4,7 @@
 
 import * as Timezone from 'moment-timezone';
 import * as React    from 'react';
-import {Tournament}	 from 'module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournament.ts';
+import {Tournament}	 from 'module/as_manager/pages/tournaments/tournament';
 
 interface TournamentItemProps {
 	tournament: Tournament;
@@ -24,8 +24,6 @@ export class TournamentItem extends React.Component<TournamentItemProps> {
 				<div className="ePublicSchoolUnionTournamentItem_tournamentPictureWrapper">
 					<div className="ePublicSchoolUnionTournamenItem_tournamenPicture">
 						<img
-							height	= "180px"
-							width	= "180px"
 							src		= {picUrl}
 						/>
 					</div>

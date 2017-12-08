@@ -5,7 +5,7 @@
 import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
 import * as Timezone    from 'moment-timezone';
-import {Tournament}     from 'module/as_manager/pages/school_unions_pages/school_union_console/pages/tournaments/tournament.ts';
+import {Tournament}     from 'module/as_manager/pages/tournaments/tournament';
 
 /**
  * TournamentsModel

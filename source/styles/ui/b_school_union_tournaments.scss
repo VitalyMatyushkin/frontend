@@ -55,7 +55,13 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
-  min-height: 100%;
+  line-height: 180px;
+
+  img {
+    height: auto;
+    width: 180px;
+    vertical-align: middle;
+  }
 }
 
 .ePublicSchoolUnionTournamenItem_tournamenName {
