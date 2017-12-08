@@ -3,7 +3,7 @@
  */
 
 const 	React			= require('react'),
-		MonthCalendar	= require('../../../../ui/calendar/month_calendar'),
+		{MonthCalendar}	= require('../../../../ui/calendar/month_calendar'),
 		CalendarActions	= require('./calendar-actions'),
 		Morearty        = require('morearty');
 

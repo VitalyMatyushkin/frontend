@@ -1,7 +1,7 @@
 const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		Challenges		= require('module/ui/challenges/challenges'),
-		MonthCalendar	= require('module/ui/calendar/month_calendar'),
+		{MonthCalendar}	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions'),
 		Morearty		= require('morearty'),
         CalendarStyle	= require('./../../../../../styles/ui/b_home_calender.scss');

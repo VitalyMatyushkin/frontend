@@ -1,9 +1,9 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		DateTimeMixin	= require('module/mixins/datetime'),
-	{If}			= require('module/ui/if/if');
+import * as React 			from 'react';
+import * as Morearty 		from 'morearty';
+import * as DateTimeMixin 	from 'module/mixins/datetime';
+import {If} 				from 'module/ui/if/if';
 
-const BigCalendar = React.createClass({
+export const BigCalendar = (React as any).createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
@@ -36,7 +36,7 @@ const BigCalendar = React.createClass({
 		);
 	},
 	getWeeks: function() {
-		const	data		= {},
+		const	data: any	= {},
 				binding		= this.getDefaultBinding(),
 				date		= new Date(binding.get('currentDate')),
 				todayDate	= new Date(),
@@ -184,6 +184,3 @@ const BigCalendar = React.createClass({
 		);
 	}
 });
-
-
-module.exports = BigCalendar;

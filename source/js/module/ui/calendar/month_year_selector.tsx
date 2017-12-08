@@ -1,37 +1,46 @@
-const	React				= require('react'),
-		{DateHelper}			= require('module/helpers/date_helper'),
-		Dropdown			= require('../date_selector/dropdown/dropdown'),
-		DateSelectorStyle	= require('styles/ui/b_month_year_selector.scss');
+import * as React		from 'react';
+import * as Dropdown	from '../date_selector/dropdown/dropdown';
+import {DateHelper}		from 'module/helpers/date_helper';
+import 'styles/ui/b_month_year_selector.scss';
 
-const MonthYearSelector = React.createClass({
+interface MonthYearSelectorProps {
+	isSync?:		boolean
+	date:			any,
+	onMonthClick?:	(object: any) => void
+}
 
-	DROPDOWN_CSS_STYLE: 'mDateSelector',
+interface MonthYearSelectorState {
+	dateState: string
+}
 
-	propTypes: {
-		isSync:			React.PropTypes.bool,
-		date:			React.PropTypes.object.isRequired,
-		onMonthClick:	React.PropTypes.func
-	},
-	componentWillMount: function(){
-		this.setState({dateState: this.props.date});
-	},
-	getDefaultProps: function(){
-		return {
-			isSync: true
+export class MonthYearSelector extends React.Component<MonthYearSelectorProps, MonthYearSelectorState> {
+	readonly DROPDOWN_CSS_STYLE = 'mDateSelector';
+	static defaultProps: Partial<MonthYearSelectorProps> = {isSync: true};
+	
+	constructor(props) {
+		super(props);
+		this.state = {
+			dateState: ''
 		};
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+	
+	componentWillMount(){
+		this.setState({dateState: this.props.date});
+	}
+	
+	componentWillReceiveProps(nextProps) {
 		this.setState({dateState: nextProps.date});
-	},
-
-	getCurrentMonth: function() {
+	}
+	
+	getCurrentMonth(): number {
 		return new Date(this.state.dateState).getMonth();
-	},
-	getCurrentYear: function() {
+	}
+	
+	getCurrentYear(): number {
 		return new Date(this.state.dateState).getFullYear();
-	},
-
-	getOptionsForMonthDropdown: function() {
+	}
+	
+	getOptionsForMonthDropdown(): any {
 		return DateHelper.monthNames.map((monthName, index) => {
 				return {
 					id:		String(index),
@@ -40,8 +49,9 @@ const MonthYearSelector = React.createClass({
 				};
 			}
 		);
-	},
-	getOptionsForYearDropdown: function() {
+	}
+	
+	getOptionsForYearDropdown(): any {
 		return DateHelper.getYearRangeArray().map((year, index) => {
 				return {
 					id:		String(index),
@@ -50,33 +60,36 @@ const MonthYearSelector = React.createClass({
 				};
 			}
 		);
-	},
-
-	handleChangeMonth: function(newMonth) {
+	}
+	
+	handleChangeMonth(newMonth: number): void {
 		const dateObject = new Date(this.state.dateState);
-
+		
 		dateObject.setMonth(newMonth);
 		this.setState({dateState: dateObject.toISOString()});
 		this.props.onMonthClick(dateObject);
-	},
-	handleChangeYear: function(newYear) {
+	}
+	
+	handleChangeYear(newYear: number): void {
 		const dateObject = new Date(this.state.dateState);
-
+		
 		dateObject.setFullYear(newYear);
 		this.setState({dateState: dateObject.toISOString()});
 		this.props.onMonthClick(dateObject);
-	},
-	changeMonthAndYear: function(month, year) {
+	}
+	
+	changeMonthAndYear(month: number, year: number): void {
 		const dateObject = new Date(this.state.dateState);
-
+		
 		dateObject.setMonth(month);
 		dateObject.setFullYear(year);
 		this.setState({dateState: dateObject.toISOString()});
 		this.props.onMonthClick(dateObject);
-	},
-	handleClickPrevMonth: function() {
+	}
+	
+	handleClickPrevMonth(): void {
 		const currentMonth = this.getCurrentMonth();
-
+		
 		if(currentMonth === 0) {
 			this.changeMonthAndYear(
 				11,
@@ -85,10 +98,11 @@ const MonthYearSelector = React.createClass({
 		} else {
 			this.handleChangeMonth(currentMonth - 1);
 		}
-	},
-	handleClickNextMonth: function() {
+	}
+	
+	handleClickNextMonth(): void {
 		const currentMonth = this.getCurrentMonth();
-
+		
 		if(currentMonth === 11) {
 			this.changeMonthAndYear(
 				0,
@@ -97,8 +111,9 @@ const MonthYearSelector = React.createClass({
 		} else {
 			this.handleChangeMonth(currentMonth + 1);
 		}
-	},
-	renderPlaceHolder: function() {
+	}
+	
+	renderPlaceHolder() {
 		if(!this.props.isSync) {
 			return (
 				<div className="eMonthYearSelector_placeHolder">
@@ -107,35 +122,36 @@ const MonthYearSelector = React.createClass({
 		} else {
 			return null;
 		}
-	},
-	render: function() {
+	}
+	
+	render() {
 		return (
 			<div className="bMonthYearSelector">
 				{ this.renderPlaceHolder() }
 				<div className="eMonthYearSelector_smallSizeColumn mLeft">
 					<div	className	= "eMonthYearSelector_arrow mLeft"
-							onClick		= {this.handleClickPrevMonth}
+							onClick		= {this.handleClickPrevMonth.bind(this)}
 					>
 						<i className="fa fa-arrow-left" aria-hidden="true"></i>
 					</div>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForMonthDropdown() }
-								currentOptionId		= { String(this.getCurrentMonth()) }
-								handleChange		= { this.handleChangeMonth }
-								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+								 currentOptionId		= { String(this.getCurrentMonth()) }
+								 handleChange		= { this.handleChangeMonth.bind(this) }
+								 extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForYearDropdown() }
-								currentOptionId		= { String(this.getCurrentYear()) }
-								handleChange		= { this.handleChangeYear }
-								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+								 currentOptionId		= { String(this.getCurrentYear()) }
+								 handleChange		= { this.handleChangeYear.bind(this) }
+								 extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
 				<div className="eMonthYearSelector_smallSizeColumn mWithoutBorder mRight">
 					<div	className	= "eMonthYearSelector_arrow mRight"
-							onClick		= {this.handleClickNextMonth}
+							onClick		= {this.handleClickNextMonth.bind(this)}
 					>
 						<i className="fa fa-arrow-right" aria-hidden="true"></i>
 					</div>
@@ -143,6 +159,4 @@ const MonthYearSelector = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = MonthYearSelector;
+}

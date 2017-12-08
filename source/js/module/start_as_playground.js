@@ -8,7 +8,7 @@ const	ReactDom        = require('react-dom'),
         Promise         = require('bluebird'),
 		Immutable		= require('immutable'),
 		MonthDays		= require('module/ui/calendar/month_days_panel'),
-		Calendar		= require('module/ui/calendar/month_calendar');
+		{MonthCalendar}	= require('module/ui/calendar/month_calendar');
 
 function runPlaygroundMode() {
 
@@ -18,7 +18,7 @@ function runPlaygroundMode() {
 	};
 
 
-	const calendar = <Calendar
+	const calendar = <MonthCalendar
 		monthDate={new Date(2016, 8)}
 		todayDate={new Date(2016, 8, 12)}
 		selectedDate={new Date(2016, 8, 1)}

@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Morearty	= require('morearty');
 
-const MonthCalendar = require('module/ui/calendar/month_calendar');
+const {MonthCalendar} = require('module/ui/calendar/month_calendar');
 
 const CalendarActions = require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/actions');
 

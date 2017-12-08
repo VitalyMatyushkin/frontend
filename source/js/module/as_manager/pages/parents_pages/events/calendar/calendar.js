@@ -4,8 +4,8 @@
 
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-
-		MonthCalendar	= require('../../../../../ui/calendar/month_calendar'),
+	
+		{MonthCalendar}	= require('../../../../../ui/calendar/month_calendar'),
 		CalendarActions	= require('./calendar-actions');
 
 /** Show calendar section: month calendar and events for selected date */

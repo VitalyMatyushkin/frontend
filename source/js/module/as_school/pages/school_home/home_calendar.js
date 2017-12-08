@@ -3,7 +3,7 @@ const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
 		Challenges		= require('module/ui/challenges/challenges'),
-		MonthCalendar	= require('module/ui/calendar/month_calendar'),
+		{MonthCalendar}	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions');
 
 const 	CalendarStyle	= require('./../../../../../styles/ui/b_home_calender.scss');
