@@ -1,5 +1,5 @@
 const	EventHelper					= require('module/helpers/eventHelper'),
-	{If}						= require('../../../../ui/if/if'),
+		{If}						= require('../../../../ui/if/if'),
 		TeamHelper					= require('./../../../../ui/managers/helpers/team_helper'),
 		PencilButton				= require('./../../../../ui/pencil_button'),
 		Sport						= require('module/ui/icons/sport_icon'),

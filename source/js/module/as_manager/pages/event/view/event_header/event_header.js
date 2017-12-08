@@ -70,9 +70,10 @@ const EventHeader = React.createClass({
 	 * @returns {string}
 	 */
 	getEventAges: function(){
-		const 	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
+		const	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
 				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']),
 				data = this.props.eventAges;
+
 		return data.length > 0 ? data
 			.sort()
 			.map(elem => propz.get(SchoolConst.AGE_GROUPS, [ageGroupsNaming, elem]))

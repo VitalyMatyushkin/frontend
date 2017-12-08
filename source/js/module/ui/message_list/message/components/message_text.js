@@ -19,23 +19,23 @@ const MessageText = React.createClass({
 			case MessageConsts.MESSAGE_KIND.AVAILABILITY:
 				const isTakePart = message.isTakePart ? 'yes' : 'no';
 				return `${playerName} is take part: ${isTakePart}`;
+			case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
+				return `You can book a place for your child now. To send a request for a place click the “Book” button.`;
 		}
 	},
 	getDetails: function(){
-		if (this.props.message.kind === MessageConsts.MESSAGE_KIND.AVAILABILITY) {
-			return <p>{this.props.message.details}</p>
-		} else {
-			return null;
+		switch (this.props.message.kind) {
+			case MessageConsts.MESSAGE_KIND.AVAILABILITY:
+				return <p> { this.props.message.details } </p>;
+			default:
+				return null;
 		}
 	},
 	render: function() {
-		const 	text 		= this.getText(),
-				details 	= this.getDetails();
-
 		return (
 			<div className="eInvite_text">
-				<h4>{text}</h4>
-				{details}
+				<h4> { this.getText() } </h4>
+				{ this.getDetails() }
 			</div>
 		);
 	}

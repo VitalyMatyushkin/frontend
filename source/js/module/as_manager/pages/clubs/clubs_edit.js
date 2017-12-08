@@ -110,6 +110,7 @@ const ClubEditPage = React.createClass({
 							binding			= { binding.sub('clubsBooking') }
 							activeSchoolId	= { this.props.activeSchoolId }
 							component		= { ClubsChildrenBookingWrapper }
+							clubId			= { clubId }
 						/>
 					</RouterView>
 				</div>

@@ -26,7 +26,18 @@ const PRICING = {
 	'TERM'			:'Term'
 };
 
+const WEEK_DAYS_MAP = {
+	'MONDAY':		'Monday',
+	'TUESDAY':		'Tuesday',
+	'WEDNESDAY':	'Wednesday',
+	'THURSDAY':		'Thursday',
+	'FRIDAY':		'Friday',
+	'SATURDAY':		'Saturday',
+	'SUNDAY':		'Sunday'
+};
+
 module.exports.CLIENT_TO_SERVER_PRICING_MAPPING = CLIENT_TO_SERVER_PRICING_MAPPING;
 module.exports.SERVER_TO_CLIENT_PRICING_MAPPING = SERVER_TO_CLIENT_PRICING_MAPPING;
 module.exports.PRICING_ARRAY = PRICING_ARRAY;
 module.exports.PRICING = PRICING;
+module.exports.WEEK_DAYS_MAP = WEEK_DAYS_MAP;

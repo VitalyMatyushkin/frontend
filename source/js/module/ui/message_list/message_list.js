@@ -2,6 +2,7 @@ const	React								= require('react'),
 		EventInvitationMessage				= require('module/ui/message_list/message/event_invitation_message'),
 		EventParticipationRefusalMessage	= require('module/ui/message_list/message/event_participation_refusal_message'),
 		EventParticipationMessage			= require('module/ui/message_list/message/event_participation_message'),
+		ClubParticipationMessage			= require('module/ui/message_list/message/club_participation_message'),
 		MessageConsts						= require('module/ui/message_list/message/const/message_consts');
 
 const MessageList = React.createClass({
@@ -66,6 +67,20 @@ const MessageList = React.createClass({
 					case MessageConsts.MESSAGE_KIND.AVAILABILITY:
 						return (
 							<EventParticipationMessage
+								key						= {message.id}
+								message					= {message}
+								userType				= {this.props.userType}
+								type					= {this.props.messageType}
+								onAction				= {this.props.onAction}
+								user 					= {this.props.user}
+								onClickShowComments 	= {this.props.onClickShowComments}
+								onClickSubmitComment 	= {this.props.onClickSubmitComment}
+								checkComments 			= {this.props.checkComments}
+							/>
+						);
+					case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
+						return (
+							<ClubParticipationMessage
 								key						= {message.id}
 								message					= {message}
 								userType				= {this.props.userType}

@@ -3,53 +3,58 @@ import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
 
 import { ClubsChildrenBooking } from 'module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking';
-import { ClubBookingChildModel } from "module/as_manager/pages/clubs/clubs_children_booking/club_booking_child/club_booking_child_model";
 import { ClubsChildrenBookingHeader } from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_header";
+import { ClubsChildrenBookingActions } from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_actions/clubs_children_booking_actions";
 
+import * as Loader from 'module/ui/loader';
+
+const ClubsChildrenBookingWrapperStyle = require('styles/ui/b_clubs_children_booking_wrapper/b_clubs_children_booking_wrapper.scss');
 
 export const ClubsChildrenBookingWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+
+	ClubsChildrenBookingActions: new ClubsChildrenBookingActions(),
+
 	componentWillMount() {
-		const children = this.convertServerDataToClientModels();
 
-		this.getDefaultBinding().set('children', Immutable.fromJS(children));
-	},
+		this.getDefaultBinding().set('isSync', false);
 
-	convertServerDataToClientModels() {
-		const children = [];
-		for(let i = 0; i < 5; i++) {
-			children.push(
-				new ClubBookingChildModel(
-					this.getChildModelData(
-						`childName${i}`,
-						`form${i}`,
-						`parentName${i}`,
-						'status'
-					)
-				)
-			);
-		}
-
-		return children;
-	},
-
-	getChildModelData(childName, formName, parentName, status) {
-		return {
-			childName,
-			formName,
-			parentName,
-			status
-		};
+		this.ClubsChildrenBookingActions.getClubBookingChildren(
+			this.props.activeSchoolId,
+			this.props.clubId
+		).then(children => {
+			this.getDefaultBinding().set('isSync', true);
+			this.getDefaultBinding().set('children', Immutable.fromJS(children));
+		});
 	},
 
 	render() {
-		return (
-			<div className='bClubsChildrenBookingWrapper'>
-				<ClubsChildrenBookingHeader/>
-				<ClubsChildrenBooking
-					children    = { this.getDefaultBinding().toJS('children') }
-				/>
-			</div>
-		);
+		let content = null;
+
+		if(this.getDefaultBinding().toJS('isSync')) {
+			content = (
+				<div className='bClubsChildrenBookingWrapper'>
+					<ClubsChildrenBookingHeader/>
+					<ClubsChildrenBooking
+						children            = { this.getDefaultBinding().toJS('children') }
+						handleSendMessages  = {
+							() => this.ClubsChildrenBookingActions.handleSendMessages(
+								this.props.activeSchoolId,
+								this.props.clubId,
+								this.getDefaultBinding()
+							)
+						}
+					/>
+				</div>
+			);
+		} else {
+			content = (
+				<div className='bClubsChildrenBookingWrapper'>
+					<Loader condition={true}/>
+				</div>
+			);
+		}
+
+		return content;
 	}
 });

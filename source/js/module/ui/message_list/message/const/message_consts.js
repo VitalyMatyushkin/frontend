@@ -4,9 +4,10 @@ const USER_TYPE = {
 };
 
 const MESSAGE_KIND = {
-	'INVITATION':	'EventInvitationMessage',
-	'REFUSAL':		'EventParticipationRefusalMessage',
-	'AVAILABILITY':	'EventParticipationMessage'
+	'CLUB_PARTICIPANT_INVITE':	'ClubParticipantInviteMessage',
+	'INVITATION':				'EventInvitationMessage',
+	'REFUSAL':					'EventParticipationRefusalMessage',
+	'AVAILABILITY':				'EventParticipationMessage'
 };
 
 const MESSAGE_TYPE = {

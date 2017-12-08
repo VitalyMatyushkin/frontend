@@ -75,13 +75,17 @@
   &.mMessage {
     min-height: inherit;
   }
+
+  &.mMarginBottom {
+    margin-bottom: 15px;
+  }
 }
 
 .eInvite_message {
   color: darken(#ddd, 40);
   width: 100%;
 
-  .mAccepted, .mDeclined {
+  .mAccepted, .mBooked, .mDeclined {
     background: #f5f5f5 url("/images/invite_icons.png") no-repeat;
     border-radius: 3px;
     display: inline-block;
@@ -89,6 +93,10 @@
     width: 100%;
   }
   .mAccepted{
+    background-position: left 15px;
+    color:#66952e;
+  }
+  .mBooked{
     background-position: left 15px;
     color:#66952e;
   }

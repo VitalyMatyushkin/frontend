@@ -44,7 +44,8 @@ const MessagesServerRequests = {
 			case MessageConsts.USER_TYPE.PARENT:
 				return window.Server.childMessageArchive.get({
 					filter: {
-						limit: 1000
+						limit: 1000,
+						where: { allMessageTypes: true }
 					},
 					order: 'updatedAt DESC'
 				});
@@ -75,10 +76,30 @@ const MessagesServerRequests = {
 				});
 		}
 	},
+	acceptClubParticipantInvitationMessage: function(userType, messageId) {
+		switch (userType) {
+			case MessageConsts.USER_TYPE.PARENT:
+				return window.Server.childClubMessageAccept.post(
+					{
+						messageId: messageId
+					}
+				);
+		}
+	},
 	declineInvitationMessage: function(userType, messageId) {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
 				return window.Server.childMessageReject.post(
+					{
+						messageId: messageId
+					}
+				);
+		}
+	},
+	declineClubParticipantInvitationMessage: function(userType, messageId) {
+		switch (userType) {
+			case MessageConsts.USER_TYPE.PARENT:
+				return window.Server.childClubMessageReject.post(
 					{
 						messageId: messageId
 					}

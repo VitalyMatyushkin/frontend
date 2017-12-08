@@ -19,6 +19,9 @@ const MessageStatus = React.createClass({
 				case MessageConsts.MESSAGE_KIND.INVITATION:
 					status = this.getStatusForInvitationMessage(message);
 					break;
+				case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
+					status = this.getStatusForInvitationMessage(message);
+					break;
 			}
 		}
 
@@ -26,11 +29,21 @@ const MessageStatus = React.createClass({
 	},
 	getStatusForInvitationMessage: function(message) {
 		let status = '';
-
-		if(message.invitationStatus === MessageConsts.MESSAGE_INVITATION_STATUS.ACCEPTED) {
-			status = 'Accepted';
-		} else {
-			status = 'Declined';
+		switch (message.kind) {
+			case MessageConsts.MESSAGE_KIND.INVITATION:
+				if(message.invitationStatus === MessageConsts.MESSAGE_INVITATION_STATUS.ACCEPTED) {
+					status = 'Accepted';
+				} else {
+					status = 'Declined';
+				}
+				break;
+			case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
+				if(message.invitationStatus === MessageConsts.MESSAGE_INVITATION_STATUS.ACCEPTED) {
+					status = 'Booked';
+				} else {
+					status = 'Declined';
+				}
+				break;
 		}
 
 		return status;

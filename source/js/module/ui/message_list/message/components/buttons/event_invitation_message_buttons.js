@@ -5,15 +5,21 @@ const	React			= require('react'),
 
 const EventInvitationMessageButtons = React.createClass({
 	propTypes: {
-		onAccept:	React.PropTypes.func.isRequired,
-		onDecline:	React.PropTypes.func.isRequired
+		acceptButtonText:	React.PropTypes.func.isRequired,
+		onAccept:			React.PropTypes.func.isRequired,
+		onDecline:			React.PropTypes.func.isRequired
+	},
+	getDefaultProps: function() {
+		return {
+			acceptButtonText: 'Accept'
+		};
 	},
 	render: function() {
 		return (
 			<div className="eInvite_buttons mMessage">
 				<Button
 					onClick				= {this.props.onAccept}
-					text				= {'Accept'}
+					text				= {this.props.acceptButtonText}
 					extraStyleClasses	= {'mHalfWidth mMarginRight'}/>
 				<Button
 					onClick				= {this.props.onDecline}

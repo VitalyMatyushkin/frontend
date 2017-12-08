@@ -1,19 +1,21 @@
-const	React									= require('react'),
-		SchoolLogo								= require('module/ui/message_list/message/components/school_logo'),
-		ChildName								= require('module/ui/message_list/message/components/child_name'),
-		TeamInfo								= require('module/ui/message_list/message/components/team_info'),
-		EventInfo								= require('module/ui/message_list/message/components/event_info'),
-		EventParticipationRefusalMessageButtons	= require('module/ui/message_list/message/components/buttons/event_participation_refusal_message_buttons'),
-		Venue									= require('module/ui/message_list/message/components/venue'),
-		MessageStatus							= require('module/ui/message_list/message/components/message_status'),
-		MessageText								= require('module/ui/message_list/message/components/message_text'),
-		MessageConsts							= require('module/ui/message_list/message/const/message_consts'),
-		EventMessageComments					= require('module/ui/message_list/message/components/comments/event_message_comments'),
-		{If}									= require('module/ui/if/if'),
-		Bootstrap								= require('styles/bootstrap-custom.scss'),
-		InviteStyles							= require('styles/pages/events/b_invite.scss');
+const	React							= require('react');
 
-const EventParticipationMessage = React.createClass({
+const	SchoolLogo						= require('module/ui/message_list/message/components/school_logo'),
+		TeamInfo						= require('module/ui/message_list/message/components/team_info'),
+		ChildName						= require('module/ui/message_list/message/components/child_name'),
+		EventInvitationMessageButtons	= require('module/ui/message_list/message/components/buttons/event_invitation_message_buttons'),
+		ClubInfo						= require('module/ui/message_list/message/components/club_info'),
+		MessageText						= require('module/ui/message_list/message/components/message_text'),
+		MessageStatus					= require('module/ui/message_list/message/components/message_status'),
+		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
+		EventMessageComments			= require('module/ui/message_list/message/components/comments/event_message_comments');
+
+const	{ If }							= require('module/ui/if/if');
+
+const	Bootstrap						= require('styles/bootstrap-custom.scss'),
+		InviteStyles					= require('styles/pages/events/b_invite.scss');
+
+const ClubParticipationMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
 		type:					React.PropTypes.string.isRequired,
@@ -42,11 +44,22 @@ const EventParticipationMessage = React.createClass({
 			clearInterval(this.timerID);
 		}
 	},
-	onGotIt: function() {
+	onAccept: function() {
 		const	messageId	= this.props.message.id,
 				messageKind	= this.props.message.kind,
-				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT;
-		
+				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT;
+
+		this.props.onAction(
+			messageId,
+			messageKind,
+			actionType
+		);
+	},
+	onDecline: function() {
+		const	messageId	= this.props.message.id,
+				messageKind	= this.props.message.kind,
+				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE;
+
 		this.props.onAction(
 			messageId,
 			messageKind,
@@ -57,8 +70,23 @@ const EventParticipationMessage = React.createClass({
 		switch (this.props.type) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
 				return (
-					<EventParticipationRefusalMessageButtons
-						onGotIt = {this.onGotIt}
+					<EventInvitationMessageButtons
+						acceptButtonText	= {'Book'}
+						onAccept			= {this.onAccept}
+						onDecline			= {this.onDecline}
+					/>
+				);
+			default:
+				return null;
+		}
+	},
+	renderStatus: function() {
+		switch (this.props.type) {
+			case MessageConsts.MESSAGE_TYPE.ARCHIVE:
+				return (
+					<MessageStatus
+						message	= {this.props.message}
+						type	= {this.props.type}
 					/>
 				);
 			default:
@@ -93,44 +121,32 @@ const EventParticipationMessage = React.createClass({
 		const	isShowComments	= Boolean(this.props.message.isShowComments),
 				isSyncComments	= Boolean(this.props.message.isSyncComments),
 				comments		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
-		
+
 		return (
 			<div className='bInvite'>
 				<div className="row">
 					<div className="col-md-6 eInvite_left">
 						<div className="row">
-							<SchoolLogo
-								message={this.props.message}
-							/>
+							<SchoolLogo message = { this.props.message } />
 							<div className="eInvite_info col-md-7 col-sm-7">
-								<ChildName
-									message={this.props.message}
-								/>
-								<TeamInfo
-									message={this.props.message}
-								/>
-								<EventInfo
-									message={this.props.message}
-								/>
-								<MessageText
-									message={this.props.message}
-								/>
-								{this.renderButtons()}
+								<ChildName message = { this.props.message } />
+								<TeamInfo message = { this.props.message } />
+								<ClubInfo message = { this.props.message } />
+								<MessageText message = { this.props.message } />
+								{ this.renderButtons() }
+								{ this.renderStatus() }
 								{ this.renderShowCommentButton() }
 							</div>
 						</div>
-					</div>
-					<div className="col-md-6">
-						<Venue message={this.props.message}/>
 					</div>
 				</div>
 				<If condition = { isShowComments }>
 					<div className="eInvite_comments">
 						<EventMessageComments
-							user			= {this.props.user}
-							comments		= {comments}
-							onSubmitComment	= {this.onClickSubmitComment}
-							isSyncComments 	= {isSyncComments}
+							user			= { this.props.user }
+							comments		= { comments }
+							onSubmitComment	= { this.onClickSubmitComment }
+							isSyncComments	= { isSyncComments }
 						/>
 					</div>
 				</If>
@@ -139,4 +155,4 @@ const EventParticipationMessage = React.createClass({
 	}
 });
 
-module.exports = EventParticipationMessage;
+module.exports = ClubParticipationMessage;

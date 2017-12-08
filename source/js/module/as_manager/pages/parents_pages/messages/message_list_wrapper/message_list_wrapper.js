@@ -4,8 +4,8 @@ const	React		= require('react'),
 
 const	Lazy		= require('lazy.js');
 
-const	MessageList	= require('module/ui/message_list/message_list'),
-		Loader		= require('module/ui/loader');
+const	MessageList		= require('module/ui/message_list/message_list'),
+		Loader			= require('module/ui/loader');
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],

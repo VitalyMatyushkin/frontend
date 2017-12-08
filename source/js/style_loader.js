@@ -184,12 +184,13 @@ const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
 		userPhoto				= require('../styles/pages/user/b_user_photo.scss'),
 		testApi					= require('../styles/pages/test-api.scss');
 
-const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
+const	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
+
+const	clubsChildrenBookingActionsAreaStyle = require('styles/ui/b_clubs_children_booking_actions_area/b_clubs_children_booking_actions_area.scss');
 
 // font awesome styles
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');
 const	customFont	= require('../styles/custom-font.scss');
 
-const clubsChildrenBookingWrapper = require('../styles/ui/b_clubs_children_booking_wrapper/b_clubs_children_booking_wrapper.scss');
 const BootstrapcustomStyle = require('../styles/bootstrap-custom.scss');

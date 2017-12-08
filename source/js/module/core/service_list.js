@@ -54,9 +54,11 @@ const serviceList = {
 		// clubs
 		serviceList.schoolClubs = new Service('/i/schools/{schoolId}/clubs', binding);
 		serviceList.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
+		serviceList.schoolClubAcceptableUsers = new Service('/i/schools/{schoolId}/clubs/{clubId}/acceptableUsers', binding);
 		serviceList.schoolClubParticipats = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants', binding);
 		serviceList.schoolClubParticipat = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants/{participantId}', binding);
 		serviceList.schoolClubActivate = new Service('/i/schools/{schoolId}/clubs/{clubId}/activate', binding);
+		serviceList.schoolClubSendMessages = new Service('/i/schools/{schoolId}/clubs/{clubId}/messages/invite', binding);
 
 		// places
 		serviceList.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
@@ -239,6 +241,9 @@ const serviceList = {
 		serviceList.childMessageArchive = new Service('/i/children/events/messages/archive', binding);
 		serviceList.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
 		serviceList.childMessageReject = new Service('/i/children/events/messages/{messageId}/reject', binding);
+
+		serviceList.childClubMessageAccept = new Service('/i/children/clubs/messages/{messageId}/accept', binding);
+		serviceList.childClubMessageReject = new Service('/i/children/clubs/messages/{messageId}/reject', binding);
 
 		//children event message comments
 		serviceList.childrenEventMessageComments = new Service('/i/children/events/messages/{messageId}/comments', binding);

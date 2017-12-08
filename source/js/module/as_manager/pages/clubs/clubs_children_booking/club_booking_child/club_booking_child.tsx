@@ -21,10 +21,13 @@ export class ClubBookingChild extends React.Component<ClubBookingChildProps, {}>
 					{ this.props.child.formName }
 				</td>
 				<td>
+					{ this.props.child.houseName }
+				</td>
+				<td>
 					{ this.props.child.parentName }
 				</td>
 				<td>
-					{ this.props.child.status }
+					{ this.props.child.messageStatus }
 				</td>
 			</tr>
 		);

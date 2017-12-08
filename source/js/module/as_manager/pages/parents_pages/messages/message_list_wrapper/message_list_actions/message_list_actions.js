@@ -12,14 +12,17 @@ const MessageListActions = {
 			case MessageConsts.MESSAGE_KIND.INVITATION:
 				this.onActionForRefusalMessage(binding, userType, boxType, messageId, actionType, templateData);
 				break;
+			case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
+				this.onActionForClubParticipantInvitationMessage(binding, userType, boxType, messageId, actionType);
+				break;
 		}
 	},
-	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType, templateData) {
+	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
 					.then(() => {
-						return this.updateConsentRequestTemplate(userType, messageId, templateData);
+						return this.updateConsentRequestTemplate(userType, messageId);
 					})
 					.then(() => {
 						this.setSync(binding, false);
@@ -29,6 +32,25 @@ const MessageListActions = {
 				break;
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
 				MessagesServerRequests.declineInvitationMessage(userType, messageId).then(() => {
+					this.setSync(binding, false);
+
+					this.loadAndSetMessages(binding, userType, boxType);
+				});
+				break;
+		}
+	},
+	onActionForClubParticipantInvitationMessage: function(binding, userType, boxType, messageId, actionType) {
+		switch (actionType) {
+			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
+				MessagesServerRequests.acceptClubParticipantInvitationMessage(userType, messageId)
+					.then(() => {
+						this.setSync(binding, false);
+
+						this.loadAndSetMessages(binding, userType, boxType);
+					});
+				break;
+			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
+				MessagesServerRequests.declineClubParticipantInvitationMessage(userType, messageId).then(() => {
 					this.setSync(binding, false);
 
 					this.loadAndSetMessages(binding, userType, boxType);
