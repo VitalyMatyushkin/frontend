@@ -5,7 +5,7 @@ const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
 
-const 	Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+const 	{Autocomplete} 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		{If}			= require('module/ui/if/if'),
 		{Button} 		= require('module/ui/button/button'),
 		{SVG} 	    	= require('module/ui/svg');

@@ -5,8 +5,8 @@ const	React					= require('react'),
 		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		GeoSearchHelper			= require('module/helpers/geo_search_helper'),
-		Autocomplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		SchoolItemList			= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{Autocomplete}			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{SchoolListItem}		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		SquareCrossButton		= require('module/ui/square_cross_button');
 
 const SchoolUnionSchoolsManager = React.createClass({
@@ -133,7 +133,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 							placeholder		= "Enter invited school name"
 							onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivalIndex) }
 							extraCssStyle	= "mBigSize mWidth350 mInline mRightMargin mWhiteBG"
-							customListItem	= { SchoolItemList }
+							customListItem	= { SchoolListItem }
 						/>
 						<SquareCrossButton
 							handleClick={this.onClickRemoveRivalSchool.bind(this, rivalIndex)}
@@ -175,7 +175,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 					placeholder		= "Enter invited school name"
 					onSelect		= { this.onSelectInterSchoolsRival.bind(null, rivals.length) }
 					extraCssStyle	= "mBigSize mWhiteBG"
-					customListItem	= { SchoolItemList }
+					customListItem	= { SchoolListItem }
 				/>
 			);
 		}

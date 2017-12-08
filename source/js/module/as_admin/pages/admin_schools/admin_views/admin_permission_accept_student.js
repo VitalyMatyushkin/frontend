@@ -4,7 +4,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
+		{Autocomplete} 	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AdminPermissionAcceptStudentComponent = React.createClass({
 	mixins: [Morearty.Mixin],

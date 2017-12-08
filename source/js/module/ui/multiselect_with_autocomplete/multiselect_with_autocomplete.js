@@ -1,6 +1,6 @@
 const	React			= require('react');
 
-const	Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+const	{Autocomplete}	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		InputItem		= require('module/ui/multiselect-dropdown/input_item');
 
 const MultiselectWithAutocomplete = React.createClass({

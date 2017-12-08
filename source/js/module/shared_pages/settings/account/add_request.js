@@ -8,7 +8,7 @@ const	React				= require('react'),
 
 const	Form				= require('module/ui/form/form'),
 		FormField 			= require('module/ui/form/form_field'),
-		SchoolListItem		= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{SchoolListItem}	= require('../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		roleList			= require('module/data/roles_data'),
 		PostcodeSelector	= require('../../../ui/postcode_selector/postcode_selector'),
 		GeoSearchHelper		= require('../../../helpers/geo_search_helper'),

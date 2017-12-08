@@ -1,31 +1,45 @@
-const	React				= require ('react'),
-		propz				= require ('propz'),
-		HouseListItemStyle	= require('../../../../../../styles/ui/b_house_list_item.scss');
+import * as React    	from 'react';
+import * as propz    	from 'propz';
+import '../../../../../../styles/ui/b_house_list_item.scss';
 
-const HouseListItem = React.createClass({
-	propTypes: {
-		isSelected	: React.PropTypes.bool.isRequired,
-		onMouseDown	: React.PropTypes.func.isRequired,
-		data		: React.PropTypes.object.isRequired
-	},
-	getHouseColor: function() {
+interface HouseListItemProps {
+	isSelected: 	boolean,
+	onMouseDown: 	() => void,
+	data: 			House
+}
+
+interface House {
+	colors:			string[]
+	createdAt:		string
+	description:	string
+	id:				string
+	name:			string
+	pic:			string
+	status: 		string
+	statusUpdateBy:	any
+}
+export class HouseListItem extends React.Component<HouseListItemProps> {
+	getHouseColor(): string {
 		if(this.hasHouseColor()) {
 			return this.props.data.colors[0];
 		} else {
 			return '';
 		}
-	},
-	hasHouseColor: function() {
-		const colors = propz.get(this.props.data, ['colors']);
-
+	}
+	
+	hasHouseColor(): boolean {
+		const colors = propz.get(this.props.data, ['colors'], undefined);
+		
 		return colors.length > 0;
-	},
-	hasHouseLogo: function() {
-		const pic = propz.get(this.props.data, ['pic']);
-
+	}
+	
+	hasHouseLogo():boolean {
+		const pic = propz.get(this.props.data, ['pic'], undefined);
+		
 		return typeof pic !== 'undefined';
-	},
-	renderColor: function() {
+	}
+	
+	renderColor() {
 		if(this.hasHouseColor()) {
 			return (
 				<div className="eHouseListItem_picWrapper">
@@ -39,8 +53,9 @@ const HouseListItem = React.createClass({
 		} else {
 			return null;
 		}
-	},
-	renderHouseImage: function() {
+	}
+	
+	renderHouseImage() {
 		switch (true) {
 			case this.hasHouseLogo():
 				return this.renderHouseLogo();
@@ -49,8 +64,9 @@ const HouseListItem = React.createClass({
 			default:
 				return null;
 		}
-	},
-	renderHouseLogo: function() {
+	}
+	
+	renderHouseLogo() {
 		return (
 			<div className = "eHouseListItem_picWrapper">
 				<img	className	= "eHouseListItem_pic"
@@ -58,12 +74,13 @@ const HouseListItem = React.createClass({
 				/>
 			</div>
 		);
-	},
-	render: function() {
+	}
+	
+	render() {
 		return (
 			<div
 				className	= "bHouseListItem"
-				onMouseDown	= { this.props.onMouseDown }
+				onMouseDown	= { () => this.props.onMouseDown() }
 			>
 				<div className="eHouseListItem_wrapper">
 					{ this.renderHouseImage() }
@@ -74,6 +91,4 @@ const HouseListItem = React.createClass({
 			</div>
 		)
 	}
-});
-
-module.exports = HouseListItem;
+}

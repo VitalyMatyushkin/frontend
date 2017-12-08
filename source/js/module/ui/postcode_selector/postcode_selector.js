@@ -1,6 +1,6 @@
 const	React 			= require ('react'),
 		CrossButton		= require('../cross_button/cross_button'),
-		AutoComplete	= require('../autocomplete2/OldAutocompleteWrapper');
+		{Autocomplete}	= require('../autocomplete2/OldAutocompleteWrapper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {

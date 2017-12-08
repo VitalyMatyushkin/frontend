@@ -1,5 +1,5 @@
 const	Immutable					= require('immutable'),
-		Autocomplete				= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{Autocomplete}				= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamManager					= require('module/ui/managers/team_manager/team_manager'),
 		React						= require('react'),

@@ -7,8 +7,8 @@ const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
 		propz 			= require('propz'),
 	
-		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		{Button}		= require('module/ui/button/button'),
+		{Autocomplete} 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{Button} 		= require('module/ui/button/button'),
 		{If}			= require('module/ui/if/if'),
 		ConfirmPopup 	= require('module/ui/confirm_popup');
 

@@ -2,8 +2,8 @@ const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		HouseListItem		= require('module/ui/autocomplete2/custom_list_items/house_list_item/house_list_item'),
+		{Autocomplete}		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{HouseListItem}		= require('module/ui/autocomplete2/custom_list_items/house_list_item/house_list_item'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
 
 const HousesManager = React.createClass({

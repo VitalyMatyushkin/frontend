@@ -1,5 +1,5 @@
 const	React 			= require('react'),
-		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{Autocomplete}	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		Loader 			= require('module/ui/loader'),
 		Promise			= require('bluebird'),
 		Morearty		= require('morearty'),

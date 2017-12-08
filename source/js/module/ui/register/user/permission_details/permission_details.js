@@ -2,9 +2,9 @@
  * Created by Woland on 12.01.2017.
  */
 const	React 					= require('react'),
-	{If}					= require('../../../if/if'),
-		AutoComplete			= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		SchoolListItem			= require('../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{If}					= require('../../../if/if'),
+		{Autocomplete}			= require('../../../autocomplete2/OldAutocompleteWrapper'),
+		{SchoolListItem}		= require('../../../autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		PostcodeSelector		= require('../../../postcode_selector/postcode_selector'),
 		GeoSearchHelper			= require('../../../../helpers/geo_search_helper'),
 		PermissionDetailsHelper	= require('module/ui/register/user/permission_details/permission_detail_helper');

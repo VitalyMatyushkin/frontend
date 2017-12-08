@@ -1,7 +1,7 @@
 const	React					= require('react'),
 		PostcodeSelector		= require('module/ui/postcode_selector/postcode_selector'),
 		ComboBox				= require('module/ui/autocomplete2/ComboBox2'),
-		SchoolListItem			= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{SchoolListItem}		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		ConfirmPopup			= require('module/ui/confirm_popup'),
 		GeoSearchHelper			= require('module/helpers/geo_search_helper'),
 		PermissionDetailsHelper	= require('module/ui/register/user/permission_details/permission_detail_helper');

@@ -1,5 +1,5 @@
 const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
-		Autocomplete2	= require('../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		{Autocomplete}	= require('../../autocomplete2/OldAutocompleteWrapper'),
 		Morearty		= require('morearty'),
 		React 			= require('react');
 
@@ -34,7 +34,7 @@ const TypeAutocomplete = React.createClass({
 		const self = this;
 
 		return (
-			<Autocomplete2
+			<Autocomplete
 				serviceFilter	= {self.props.serviceFilter}
 				serviceFullData	= {self.props.serviceFullData}
 				serverField		= {self.props.serverField || 'name'}

@@ -5,7 +5,7 @@
 const	React				= require('react'),
         Morearty			= require('morearty'),
         Immutable			= require('immutable'),
-        Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+	    {Autocomplete}		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         CrossButton	        = require('module/ui/cross_button/cross_button');
 
 const   SportsManager = React.createClass({

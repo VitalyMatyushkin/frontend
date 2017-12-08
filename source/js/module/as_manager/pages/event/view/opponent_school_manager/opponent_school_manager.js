@@ -1,12 +1,12 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
-		Autocomplete				= require('./../../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		{Autocomplete}				= require('../../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		ConfirmPopup				= require('./../../../../../ui/confirm_popup'),
 		GeoSearchHelper				= require('../../../../../helpers/geo_search_helper'),
-		SchoolListItem				= require('./../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{SchoolListItem}			= require('../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		EventHelper					= require('../../../events/eventHelper'),
-	{If}						= require('../../../../../ui/if/if'),
+		{If}						= require('../../../../../ui/if/if'),
 		propz						= require('propz'),
 		ChangeOpponentSchoolStyle	= require('../../../../../../../styles/ui/b_change_opponent_school_popup.scss');
 

@@ -10,7 +10,7 @@ const 	roleList 			= require('module/data/roles_data'),
 		Form				= require('module/ui/form/form'),
 		FormField 			= require('module/ui/form/form_field'),
 		Popup 				= require('module/ui/new_popup'),
-		SchoolListItem		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
+		{SchoolListItem}	= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
     	RoleHelper			= require('module/helpers/role_helper'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
