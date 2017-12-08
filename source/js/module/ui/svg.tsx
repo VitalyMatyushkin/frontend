@@ -22,7 +22,7 @@ export class SVG extends React.Component<SVGProps> {
 		
 		return (
 			<svg
-				onClick		= {() => this.props.onClick()}
+				onClick		= {this.props.onClick}
 				className	= {classes}
 			>
 				<use xlinkHref={iconHref}>
