@@ -5,7 +5,7 @@ const	React 					= require('react'),
 		ClassesListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes-list'),
 		ClassAddComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_add'),
 		ClassEditComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit'),
-		SVG						= require('module/ui/svg');
+		{SVG}					= require('module/ui/svg');
 
 const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -4,9 +4,9 @@
 const   React       = require('react'),
         AJAX        = require('module/core/AJAX'),
         LoggingList = require('module/as_api_test/logging-list'),
-        SVG 	    = require('module/ui/svg'),
+	    {SVG} 	    = require('module/ui/svg'),
         loaderUtils = require('module/helpers/loader_utils'),
-         CropImageHelper = require('module/helpers/crop_image_helper');
+        CropImageHelper = require('module/helpers/crop_image_helper');
 
 const   domain      = document.location.hostname,
         apiMain		= loaderUtils.apiSelector(domain).main,

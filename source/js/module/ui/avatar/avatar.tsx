@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as SVG from 'module/ui/svg';
+import * as React 	from 'react';
+import {SVG} 		from 'module/ui/svg';
 
 const DEFAULT_PIC_SIZE: number = 50;	// very default value
 

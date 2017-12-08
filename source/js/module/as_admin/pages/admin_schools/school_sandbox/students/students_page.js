@@ -8,7 +8,7 @@ const	React 					= require('react'),
 		{StudentsList}			= require('module/as_admin/pages/admin_schools/school_sandbox/students/students-list'),
 		StudentAddComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_add'),
 		StudentMergeComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_merge'),
-		SVG						= require('module/ui/svg');
+		{SVG}					= require('module/ui/svg');
 
 const StudentsPage = React.createClass({
 	mixins: [Morearty.Mixin],

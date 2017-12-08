@@ -7,7 +7,7 @@ const	React									= require('react'),
 		RouterView								= require('module/core/router'),
 		Route									= require('module/core/route'),
 		SubMenu									= require('module/ui/menu/sub_menu'),
-		SVG										= require('module/ui/svg');
+		{SVG}									= require('module/ui/svg');
 
 const 	AdminListComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin_schools_list'),
 		SchoolUnionListWrapper					= require('./school_union_list/school_union_list_wrapper'),

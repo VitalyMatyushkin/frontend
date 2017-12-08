@@ -9,7 +9,7 @@ const	React 					= require('react'),
 		PostcodesListComponent	= require('module/as_admin/pages/admin_schools/postcodes/postcodes-list'),
 		PostcodesAddComponent	= require('module/as_admin/pages/admin_schools/postcodes/postcode_add'),
 		PostcodesEditComponent	= require('module/as_admin/pages/admin_schools/postcodes/postcode_edit'),
-		SVG						= require('module/ui/svg');
+		{SVG}					= require('module/ui/svg');
 
 const PostcodesPage = React.createClass({
 	mixins: [Morearty.Mixin],

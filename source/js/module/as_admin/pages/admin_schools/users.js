@@ -7,7 +7,7 @@ const 	React 									= require('react'),
 		RouterView 								= require('module/core/router'),
 		Route 									= require('module/core/route'),
 		SubMenu 								= require('module/ui/menu/sub_menu'),
-		SVG 									= require('module/ui/svg');
+		{SVG} 									= require('module/ui/svg');
 
 const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_user_list/admin_users_list'),
 		AdminRequestsComponent 					= require('module/shared_pages/permission_requests/request-list'),

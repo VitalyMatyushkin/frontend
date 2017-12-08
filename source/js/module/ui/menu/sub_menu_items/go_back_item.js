@@ -3,7 +3,7 @@
  */
 
 const 	React 	= require('react'),
-		SVG		= require('module/ui/svg');
+		{SVG}	= require('module/ui/svg');
 
 /** Menu Item which moves does `window.history.back()` when clicked */
 function GoBackItem(props){

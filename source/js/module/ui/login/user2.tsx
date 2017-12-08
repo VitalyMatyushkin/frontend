@@ -13,7 +13,7 @@ import * as	ApplicationLinks from '../../ui/application_links/application_links'
 import * as	ApplicationConst from 'module/helpers/consts/application_links';
 import * as	SessionHelper from 'module/helpers/session_helper';
 import * as	P from 'bluebird';
-import * as	SVG from '../../ui/svg';
+import {SVG} from '../../ui/svg';
 
 const LoginUserPage2 = (React as any).createClass({
 	mixins: [Morearty.Mixin],

@@ -1,7 +1,7 @@
-const 	SVG 		= require('module/ui/svg'),
+const 	{SVG} 		= require('module/ui/svg'),
 		React 		= require('react'),
 		Morearty    = require('morearty'),
-	{If}			= require('module/ui/if/if');
+		{If}		= require('module/ui/if/if');
 
 const RegiseterUserDone = React.createClass({
 	mixins: [Morearty.Mixin],

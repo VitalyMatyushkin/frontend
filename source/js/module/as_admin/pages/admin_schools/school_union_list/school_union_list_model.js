@@ -1,6 +1,6 @@
 const	React		= require('react'),
-		SVG			= require('module/ui/svg'),
-		{DataLoader}	= require('module/ui/grid/data-loader'),
+		{SVG}		= require('module/ui/svg'),
+		{DataLoader}= require('module/ui/grid/data-loader'),
 		{GridModel}	= require('module/ui/grid/grid-model');
 
 const SchoolUnionListModel = function(page, handleClickAddButton){

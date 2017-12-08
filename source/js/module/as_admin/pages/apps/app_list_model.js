@@ -1,6 +1,6 @@
 const 	React 			= require('react'),
-		{DataLoader} 		= require('module/ui/grid/data-loader'),
-		SVG				= require('module/ui/svg'),
+		{DataLoader} 	= require('module/ui/grid/data-loader'),
+		{SVG}			= require('module/ui/svg'),
 		{GridModel}		= require('module/ui/grid/grid-model');
 
 const APPS_ROOT_URL = 'apps';

@@ -4,7 +4,7 @@
  */
 
 const 	React			= require('react'),
-		SVG				= require('module/ui/svg'),
+		{SVG}			= require('module/ui/svg'),
 		sportConst		= require('module/helpers/consts/sport'),
 		userConst		= require('module/helpers/consts/user'),
 		ALLOWED_GENDERS	= sportConst.ALLOWED_GENDERS,	// Allowed sport genders, like: male only, female only, mixed..

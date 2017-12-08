@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import * as SVG from 'module/ui/svg';
+import {SVG} from 'module/ui/svg';
 import {ActionPanelModel} from "module/ui/grid/action-panel/action-panel-model";
 
 export interface ActionPanelProps {

@@ -4,7 +4,7 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Immutable	= require('immutable'),
-		SVG			= require('module/ui/svg'),
+		{SVG}		= require('module/ui/svg'),
 		Form		= require('module/ui/form/form'),
 		FormField	= require('module/ui/form/form_field');
 

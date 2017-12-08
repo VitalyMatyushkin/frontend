@@ -1,6 +1,6 @@
 const   React			= require('react'),
-
-		SVG				= require('module/ui/svg'),
+	
+		{SVG}			= require('module/ui/svg'),
 		TimeInput		= require('./../time_input/time_input'),
 		TimeInputConsts	= require('./../time_input/const');
 

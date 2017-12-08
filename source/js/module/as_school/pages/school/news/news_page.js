@@ -1,4 +1,4 @@
-const 	SVG 			= require('module/ui/svg'),
+const 	{SVG} 			= require('module/ui/svg'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty        = require('morearty'),

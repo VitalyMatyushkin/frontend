@@ -4,7 +4,7 @@
  */
 
 const 	React 	= require('react'),
-		SVG 	= require('module/ui/svg');
+		{SVG} 	= require('module/ui/svg');
 
 /** Renders sport icon as SVG: ball, bat, and so on */
 const SportIcon = React.createClass({

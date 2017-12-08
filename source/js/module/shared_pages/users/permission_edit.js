@@ -6,7 +6,7 @@ const   React           = require('react'),
         Morearty        = require('morearty'),
         Form 		    = require('module/ui/form/form'),
         FormField 	    = require('module/ui/form/form_field'),
-        SVG 	        = require('module/ui/svg'),
+	    {SVG} 	        = require('module/ui/svg'),
         {DateHelper} 	    = require('module/helpers/date_helper');
 
 const STATUS = {

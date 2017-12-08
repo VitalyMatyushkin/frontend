@@ -4,8 +4,8 @@
 
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
-		SVG 			= require('module/ui/svg'),
-		{DataLoader} 		= require('module/ui/grid/data-loader'),
+		{SVG} 			= require('module/ui/svg'),
+		{DataLoader} 	= require('module/ui/grid/data-loader'),
 		{GridModel}		= require('module/ui/grid/grid-model'),
 		{BadgeModel}	= require('module/ui/grid/filter/model/badge-model');
 

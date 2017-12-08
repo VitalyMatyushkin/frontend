@@ -4,7 +4,7 @@
 
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
-		SVG 			= require('module/ui/svg'),
+		{SVG} 			= require('module/ui/svg'),
 		GenderIcon		= require('module/ui/icons/gender_icon'),
 		Sport           = require('module/ui/icons/sport_icon'),
 		{DataLoader} 		= require('module/ui/grid/data-loader'),

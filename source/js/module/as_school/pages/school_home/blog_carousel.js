@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 03/08/15.
  */
-const   SVG         = require('module/ui/svg'),
+const   {SVG}       = require('module/ui/svg'),
         Immutable 	= require('immutable'),
         Morearty    = require('morearty'),
         React       = require('react');

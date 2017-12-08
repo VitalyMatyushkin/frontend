@@ -1,5 +1,5 @@
 const 	React 			= require('react'),
-		SVG 			= require('module/ui/svg'),
+		{SVG} 			= require('module/ui/svg'),
 		Immutable 		= require('immutable'),
 		Morearty 		= require('morearty'),
 		RoleList		= require('./role_list'),

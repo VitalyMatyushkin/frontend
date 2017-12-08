@@ -4,7 +4,7 @@
 const 	Morearty 			= require('morearty'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
-		SVG 				= require('module/ui/svg'),
+		{SVG} 				= require('module/ui/svg'),
 		PublicLogin 		= require('module/ui/menu/public_login'),
 		PublicMenuStyles 	= require('./../../../../styles/main/b_public_menu.scss'),
 		Bootstrap 			= require('./../../../../styles/bootstrap-custom.scss');

@@ -5,7 +5,7 @@
 
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         className   = require('classnames'),
-        SVG         = require('module/ui/svg'),
+		{SVG}        = require('module/ui/svg'),
 		{If}		= require('module/ui/if/if'),
         Immutable   = require('immutable'),
 		Morearty    = require('morearty'),

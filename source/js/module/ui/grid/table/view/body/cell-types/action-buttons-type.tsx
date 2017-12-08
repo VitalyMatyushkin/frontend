@@ -2,8 +2,8 @@
  * Created by Anatoly on 26.07.2016.
  */
 
-import * as React from 'react';
-import * as SVG from 'module/ui/svg';
+import * as React 	from 'react';
+import {SVG} 		from 'module/ui/svg';
 
 export interface _DataItem {
     id: any

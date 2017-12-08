@@ -1,6 +1,6 @@
 const	React			= require('react'),
 		MoreartyHelper	= require('../../../../../../helpers/morearty_helper'),
-		SVG				= require('module/ui/svg'),
+		{SVG}			= require('module/ui/svg'),
 		{DataLoader}	= require('module/ui/grid/data-loader'),
 		{GridModel}		= require('module/ui/grid/grid-model');
 

@@ -3,7 +3,7 @@
  */
 const   React       = require('react'),
         Morearty	= require('morearty'),
-        SVG         = require('module/ui/svg');
+	    {SVG}         = require('module/ui/svg');
 
 // TODO: WTF binding is here ????
 

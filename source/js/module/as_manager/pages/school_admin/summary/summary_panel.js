@@ -4,7 +4,7 @@
 
 const 	React	= require('react'),
 		{Map}	= require('module/ui/map/map2'),
-		SVG		= require('module/ui/svg'),
+		{SVG}	= require('module/ui/svg'),
 		{If}	= require('module/ui/if/if');
 
 const SummaryPanel = React.createClass({

@@ -4,9 +4,9 @@
 
 const 	React 			= require('react'),
 		SessionHelper	= require('module/helpers/session_helper'),
-		SVG 			= require('module/ui/svg'),
+		{SVG} 			= require('module/ui/svg'),
 		GenderIcon		= require('module/ui/icons/gender_icon'),
-		{DataLoader} 		= require('module/ui/grid/data-loader'),
+		{DataLoader} 	= require('module/ui/grid/data-loader'),
 		{GridModel}		= require('module/ui/grid/grid-model'),
 		schoolHelper 	= require('module/helpers/school_helper');
 

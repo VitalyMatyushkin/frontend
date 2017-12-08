@@ -1,5 +1,5 @@
-const 	SVG 		= require('module/ui/svg'),
-	{If}			= require('module/ui/if/if'),
+const 	{SVG} 		= require('module/ui/svg'),
+		{If}		= require('module/ui/if/if'),
 		Morearty    = require('morearty'),
 		React 		= require('react');
 

@@ -1,6 +1,6 @@
 const	React					= require('react'),
-		SVG						= require('module/ui/svg'),
-	{If}					= require('module/ui/if/if'),
+		{SVG}					= require('module/ui/svg'),
+		{If}					= require('module/ui/if/if'),
 		SchoolUnionSummaryStyle	= require('../../../../../../../../styles/ui/b_school_union_summary.scss');
 
 const SchoolUnionSummaryPanel = React.createClass({

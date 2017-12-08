@@ -1,4 +1,4 @@
-const 	SVG 			= require('module/ui/svg'),
+const 	{SVG} 			= require('module/ui/svg'),
 		React 			= require('react'),
 		FixturesList 	= require('../../fixtures/fixtures_list'),
 		Morearty        = require('morearty'),

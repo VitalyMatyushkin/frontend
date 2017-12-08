@@ -1,7 +1,7 @@
 const 	React 			= require('react'),
 		Morearty        = require('morearty'),
 		noImage			= '/images/no-image.jpg',
-		SVG 			= require('module/ui/svg');
+		{SVG} 			= require('module/ui/svg');
 
 const AlbumItem = React.createClass({
 	mixins: [Morearty.Mixin],

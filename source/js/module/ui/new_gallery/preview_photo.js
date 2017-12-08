@@ -1,6 +1,6 @@
 const	React					= require('react'),
-
-		SVG						= require('module/ui/svg'),
+	
+		{SVG}					= require('module/ui/svg'),
 		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const PreviewPhoto = React.createClass({

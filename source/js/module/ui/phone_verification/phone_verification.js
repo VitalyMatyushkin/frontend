@@ -3,7 +3,7 @@
  */
 const 	React 							= require('react'),
 		classNames 						= require('classnames'),
-		SVG 							= require('module/ui/svg'),
+		{SVG} 							= require('module/ui/svg'),
 		Popup 							= require('module/ui/new_popup'),
 		{If}							= require('module/ui/if/if'),
 		ChangeUserProfileFieldModule 	= require('module/ui/register/user/changeUserProfileFieldModule'),

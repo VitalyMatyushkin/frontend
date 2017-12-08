@@ -3,7 +3,7 @@
  */
 
 const 	React 	= require('react'),
-		SVG		= require('module/ui/svg');
+		{SVG}	= require('module/ui/svg');
 
 function DefaultItem(props) {
 	const icon = props.icon ? <SVG classes={props.className} icon={props.icon} /> : null;

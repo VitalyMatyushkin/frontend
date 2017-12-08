@@ -10,7 +10,7 @@ const 	React 					= require('react'),
 		ConfirmPopup			= require('module/ui/confirm_popup'),
 		{Button}				= require('module/ui/button/button'),
 		SchoolHelper			= require('module/helpers/school_helper'),
-		SVG						= require('module/ui/svg');
+		{SVG}					= require('module/ui/svg');
 
 const 	Styles					= require('styles/pages/integrations/b_integrations.scss');
 

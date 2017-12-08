@@ -5,7 +5,7 @@ const	RouterView 			= require('module/core/router'),
 		HouseListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house-list'),
 		HouseAddComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_add'),
 		HouseEditComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_edit'),
-		SVG										= require('module/ui/svg');
+		{SVG}				= require('module/ui/svg');
 
 
 const HousesPage = React.createClass({

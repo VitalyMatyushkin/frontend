@@ -7,7 +7,7 @@ const	React									= require('react'),
         RouterView								= require('module/core/router'),
         Route									= require('module/core/route'),
         SubMenu									= require('module/ui/menu/sub_menu'),
-        SVG										= require('module/ui/svg');
+	    {SVG}									= require('module/ui/svg');
 
 const 	SportsPageComponent						= require('module/as_admin/pages/admin_schools/sports/sports_page');
 

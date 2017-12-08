@@ -5,8 +5,8 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SessionHelper	= require('module/helpers/session_helper'),
-		{DataLoader} 		= require('module/ui/grid/data-loader'),
-		SVG				= require('module/ui/svg'),
+		{DataLoader} 	= require('module/ui/grid/data-loader'),
+		{SVG}			= require('module/ui/svg'),
 		{GridModel} 	= require('module/ui/grid/grid-model');
 
 /**

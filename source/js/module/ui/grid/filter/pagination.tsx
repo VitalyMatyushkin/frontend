@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import * as SVG from 'module/ui/svg';
+import {SVG} from 'module/ui/svg';
 import {PaginationModel} from "./model/pagination-model";
 import * as classNames from 'classnames';
 

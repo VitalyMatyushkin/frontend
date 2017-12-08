@@ -2,7 +2,7 @@
  * Created by vitaly on 15.11.17.
  */
 const	React	= require('react'),
-		SVG 	= require('module/ui/svg');
+		{SVG} 	= require('module/ui/svg');
 
 const slides = [
 	{src: '/images/slides/01.gif', time: 7000},

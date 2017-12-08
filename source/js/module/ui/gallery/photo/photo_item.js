@@ -4,7 +4,7 @@ const	Immutable 			= require('immutable'),
 		rotateImage 		= require('../rotateModel').rotateImage,
 		isCanvasSupported 	= require('../rotateModel').isCanvasSupported,
 		CropImageHelper 	= require('module/helpers/crop_image_helper'),
-		SVG 				= require('module/ui/svg');
+		{SVG} 				= require('module/ui/svg');
 
 const ANGLE = {
 	LEFT: -Math.PI/2,

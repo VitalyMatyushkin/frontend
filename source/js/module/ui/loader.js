@@ -3,7 +3,7 @@
  */
 
 const 	React 	= require('react'),
-		SVG 	= require('module/ui/svg');
+		{SVG} 	= require('module/ui/svg');
 
 /** animation loading. */
 function Loader(props) {

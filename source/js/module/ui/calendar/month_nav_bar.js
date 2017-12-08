@@ -3,7 +3,7 @@
  */
 
 const 	React	= require('react'),
-		SVG		= require('module/ui/svg');
+		{SVG}	= require('module/ui/svg');
 
 /**
  * This is bar with current month and year and two switcher: one to previous month, one to next month.

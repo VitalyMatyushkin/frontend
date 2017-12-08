@@ -2,7 +2,7 @@ const	React			= require('react'),
 
 		classNames		= require('classnames'),
 
-		SVG				= require('../../../module/ui/svg'),
+		SVG				= require('../svg'),
 		InputItemStyles	= require('../../../../styles/ui/multiselect_dropdown/b_input_item.scss');
 
 const InputItem = React.createClass({
