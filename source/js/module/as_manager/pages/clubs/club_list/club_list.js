@@ -2,7 +2,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty');
 
-const{Grid}		= require('module/ui/grid/grid'),
+const	{Grid}			= require('module/ui/grid/grid'),
 		ClubListClass	= require('module/as_manager/pages/clubs/club_list/club_list_model');
 
 const ClubList = React.createClass({

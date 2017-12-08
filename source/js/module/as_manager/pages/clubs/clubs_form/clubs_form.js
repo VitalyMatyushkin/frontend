@@ -285,6 +285,7 @@ const ClubsForm = React.createClass({
 						submitButtonId	= 'club_submit'
 						cancelButtonId	= 'club_cancel'
 						submitOnEnter 	= { false }
+						id 				= 'club_form'
 					>
 						<FormColumn
 							key			= 'column_1'
@@ -412,6 +413,9 @@ const ClubsForm = React.createClass({
 									handleClickItem	= { this.handleSelectWeekDay }
 									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
 								/>
+								{isRequiredError ?
+									<div className="eForm_fieldValidIconCustom" title="Please enter Week days">⚠</div> : <div/>
+								}
 							</div>
 							<FormField
 								field			= 'venue.placeId'

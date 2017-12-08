@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		ComboBox		= require('../../../../../../../../ui/autocomplete2/ComboBox2'),
+		{ComboBox2}		= require('../../../../../../../../ui/autocomplete2/ComboBox2'),
 		User			= require('./user'),
 		Consts			= require('./../../consts'),
 		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
@@ -120,7 +120,7 @@ const EditMode = React.createClass({
 	renderAddPersonalContainer: function() {
 		return (
 			<div className="eDetails_comboboxWrapper">
-				<ComboBox	placeholder			= {this.getPlaceholder()}
+				<ComboBox2	placeholder			= {this.getPlaceholder()}
 							searchFunction		= {this.searchUsersWrapper}
 							onSelect			= {this.handleSelectPersonal}
 							getElementTitle		= {this.getElementTitle}

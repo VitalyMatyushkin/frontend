@@ -13,6 +13,7 @@
 
 	&.mSmallWide {
 		width: 360px;
+        display: inline-block;
 	}
 	&.mError {
 		border: 1px solid red;
