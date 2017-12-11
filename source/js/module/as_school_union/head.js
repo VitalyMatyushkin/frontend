@@ -10,14 +10,19 @@ const	Bootstrap	= require('styles/bootstrap-custom.scss');
 const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const schoolUnionId = this.getMoreartyContext().getBinding().get('activeSchoolId');
-		SchoolUnionActions.getTournaments(this, schoolUnionId);
+		const 	binding 		= this.getDefaultBinding(),
+				schoolUnionId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
+		SchoolUnionActions.getTournaments(binding, schoolUnionId);
+		SchoolUnionActions.getLeagueEvents(binding, schoolUnionId);
 	},
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
-				menuSchoolUnion = ['League','Calendar','Fixtures','Results','News','Schools'];
+				menuSchoolUnion = ['Calendar','Fixtures','Results','News','Schools'];
 		if (binding.toJS('schoolHomePage.tournamentsShow')) {
 			menuSchoolUnion.splice(2, 0, 'Tournaments');
+		}
+		if (binding.toJS('schoolHomePage.leagueShow')) {
+			menuSchoolUnion.unshift('League');
 		}
 		return (
 			<div className="bTopPanel mSchoolPanel mFixed">

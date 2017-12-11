@@ -95,6 +95,24 @@ const SchoolHomePage = React.createClass({
 			return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
 		}
 	},
+	renderLeague: function () {
+		const 	binding 		= this.getDefaultBinding(),
+				isSyncLeague 	= binding.toJS('isSyncLeagueSports'),
+				showLeague 		= binding.toJS('leagueShow');
+		
+		if (isSyncLeague) {
+			if (showLeague) {
+				return (
+					<LeagueTables
+						binding = { binding }
+						ref 	= { 'league' }
+					/>
+				);
+			} else return null;
+		} else {
+			return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
+		}
+	},
 	render: function(){
 		const 	binding 		= this.getDefaultBinding();
 		
@@ -102,10 +120,7 @@ const SchoolHomePage = React.createClass({
 			<div className="eSchoolHomePage">
 				<HomeHeader binding={binding}/>
 				<div className="eSchoolBodyWrapper">
-					<LeagueTables
-						binding = { binding }
-						ref 	= { 'league' }
-					/>
+					{ this.renderLeague() }
 					<HomeCalender
 						binding = { binding }
 						ref 	= { 'calendar' }

@@ -25,7 +25,7 @@ const LeagueSportSelec = React.createClass({
 	},
 	handleChangeSport: function(eventDescriptor) {
 		const	sportId	= eventDescriptor.target.value,
-			sports	= this.getDefaultBinding().toJS('leagueSports');
+				sports	= this.getDefaultBinding().toJS('leagueSports');
 		
 		const	foundSport	= sports.find(sport => sport.id === sportId);
 		
@@ -33,10 +33,11 @@ const LeagueSportSelec = React.createClass({
 	},
 	render: function(){
 		return (
-			<select		className	= "bDropdown"
-					   defaultValue	= "not-selected-sport"
-					   value		= {this.getCurrentSport().id}
-					   onChange		= {this.handleChangeSport}
+			<select
+				className		= "bDropdown"
+				defaultValue	= "not-selected-sport"
+				value			= {this.getCurrentSport().id}
+				onChange		= {this.handleChangeSport}
 			>
 				{this.getSports()}
 			</select>
