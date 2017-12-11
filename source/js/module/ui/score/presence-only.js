@@ -43,7 +43,7 @@ const PlainPoints = React.createClass({
 	render:function(){
 		return (
 			<div className="bScore">
-				<span>Presence</span>
+				<span>Present</span>
 				<input
 					className	= "eCheckbox_switch"
 					type		= "checkbox"
