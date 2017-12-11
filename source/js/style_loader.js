@@ -188,6 +188,8 @@ const	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
 
 const	clubsChildrenBookingActionsAreaStyle = require('styles/ui/b_clubs_children_booking_actions_area/b_clubs_children_booking_actions_area.scss');
+const	supportedBrowsersStyle = require('styles/ui/b_supported_browsers.scss');
+const	ieAlertContentStyle = require('styles/ui/b_ie_alert_content.scss');
 
 // font awesome styles
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');

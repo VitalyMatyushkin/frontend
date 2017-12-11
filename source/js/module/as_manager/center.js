@@ -9,6 +9,9 @@ const	React				= require('react'),
 		SchoolUnionsRouter	= require('./routes/school_unions_router'),
 		NobodyRouter		= require('./routes/nobody_router'),
 
+		Bowser				= require('bowser'),
+		{ IeAlertContent }	= require('module/ui/ie_alert_content/ie_alert_content'),
+
 		NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
 		SliderAlert			= require('module/ui/training_slider/slider_alert'),
 		ConfirmAlert		= require('./../ui/confirm_alert/confirm_alert');
@@ -17,6 +20,20 @@ const Center = React.createClass({
 	mixins: [Morearty.Mixin],
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
+	},
+	componentDidMount: function () {
+		if (Bowser.msie && Bowser.version <= 11) {
+			window.simpleAlert(
+				<IeAlertContent
+					handleLinkClick = { this.handleLinkClick }
+				/>
+			);
+		}
+	},
+	handleLinkClick: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('notificationAlertData.isOpen', false);
 	},
 	getRouter: function() {
 		const binding = this.getDefaultBinding();

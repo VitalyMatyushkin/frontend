@@ -12,7 +12,9 @@ const	React					= require('react'),
 
 		EventComponent			= require('../pages/students_pages/event/event_page'),
 		StudentEventsComponent	= require("./../pages/students_pages/events/events"),
-		MessagesComponent		= require('module/as_manager/pages/students_pages/messages/messages');
+		MessagesComponent		= require('module/as_manager/pages/students_pages/messages/messages'),
+
+		{ SupportedBrowsers }	= require('module/shared_pages/supported_browsers/supported_browsers');;
 
 /**
  * It's a router for user with student role.
@@ -55,6 +57,12 @@ const StudentRouter = React.createClass({
 					path		= '/messages /messages/:subPage'
 				 	binding		= { binding.sub('messages') }
 					component	= { MessagesComponent }
+				/>
+
+				<Route
+					path		= "/supported_browsers"
+					binding		= {binding.sub('supported_browsers')}
+					component	= {SupportedBrowsers}
 				/>
 			</RouterView>
 		);
