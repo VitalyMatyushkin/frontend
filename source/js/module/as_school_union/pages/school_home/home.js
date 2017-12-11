@@ -9,6 +9,7 @@ const   HomeHeader 			= require('./home_header'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
 		Morearty 			= require('morearty'),
+		{SVG} 	    		= require('module/ui/svg'),
 		CookiePopupMessage 	= require('./../../../ui/cookie_popup_message/cookie_popup_message');
 
 const SchoolHomePage = React.createClass({
@@ -75,9 +76,27 @@ const SchoolHomePage = React.createClass({
 				break;
 		}
 	},
+	renderTournament: function () {
+		const 	binding 			= this.getDefaultBinding(),
+				isSyncTournament 	= binding.toJS('tournamentsIsSync'),
+				showTournament 		= binding.toJS('tournamentsShow');
+		
+		if (isSyncTournament) {
+			if (showTournament) {
+				return (
+					<Tournaments
+						binding={ binding }
+						ref={ 'tournaments' }
+						tournaments={ binding.toJS('tournaments') }
+					/>
+				);
+			} else return null;
+		} else {
+			return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
+		}
+	},
 	render: function(){
-		const 	binding 		= this.getDefaultBinding(),
-				schoolUnionId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
+		const 	binding 		= this.getDefaultBinding();
 		
 		return (
 			<div className="eSchoolHomePage">
@@ -91,11 +110,7 @@ const SchoolHomePage = React.createClass({
 						binding = { binding }
 						ref 	= { 'calendar' }
 					/>
-					<Tournaments
-						binding 		= { binding }
-						ref 			= { 'tournaments' }
-						schoolUnionId	= { schoolUnionId }
-					/>
+					{ this.renderTournament() }
 					<HomeFixture
 						binding = { binding }
 						ref 	= { 'fixtures' }

@@ -9,15 +9,12 @@ import {TournamentItem} from './tournament_item';
 import {Tournament} 	from 'module/as_manager/pages/tournaments/tournament';
 
 interface TournamentItemProps {
-	schoolUnionId: string
+	tournaments: Tournament[]
 }
 
 interface TournamentItemState {
 	currentPhoto: 	number,
-	inputText: 		string,
-	tournaments: 	Tournament[],
-	isSync:			boolean
-
+	inputText: 		string
 }
 
 export class Tournaments extends React.Component<TournamentItemProps, TournamentItemState> {
@@ -29,39 +26,20 @@ export class Tournaments extends React.Component<TournamentItemProps, Tournament
 		super(props);
 		this.state = {
 			currentPhoto: 	0,
-			inputText: 		'',
-			tournaments: 	[],
-			isSync:			false
+			inputText: 		''
 		};
 	}
 
-	componentWillMount() {
-		(window as any).Server.publicTournaments.get({schoolUnionId: this.props.schoolUnionId})
-			.then(tournaments => {
-				const tournamentsWithLink = tournaments.filter(tournament => typeof tournament.link !== 'undefined');
-				this.setState({
-					tournaments: 	tournamentsWithLink,
-					isSync:			true
-				});
-			});
-	}
-
 	renderTournamentList() {
-		const isSync = this.state.isSync;
-
-		if (isSync) {
-			const tournaments = this.state.tournaments;
-			return tournaments.map((tournament, index) => {
-				return (
-					<TournamentItem
-						key			= { index }
-						tournament	= { tournament }
-					/>
-				);
-			});
-		} else {
-			<div/>
-		}
+		const tournaments = this.props.tournaments;
+		return tournaments.map((tournament, index) => {
+			return (
+				<TournamentItem
+					key			= { index }
+					tournament	= { tournament }
+				/>
+			);
+		});
 	}
 
 	onLeft(): void {
@@ -71,7 +49,7 @@ export class Tournaments extends React.Component<TournamentItemProps, Tournament
 		this.setState({currentPhoto: index});
 	}
 	onRight(): void {
-		const countPhotos = this.state.tournaments.length;
+		const countPhotos = this.props.tournaments.length;
 
 		let index = this.state.currentPhoto;
 		index = index >= countPhotos - Math.floor(this.LAYOUT_WIDTH/this.TOURNAMENT_BANNER_WIDTH) ? index
@@ -81,7 +59,7 @@ export class Tournaments extends React.Component<TournamentItemProps, Tournament
 	}
 
 	render() {
-		const 	countPhotos 	= this.state.tournaments.length,
+		const 	countPhotos 	= this.props.tournaments.length,
 				widthStrip 		= countPhotos *  this.TOURNAMENT_BANNER_WIDTH,
 				offset 			= this.state.currentPhoto * this.TOURNAMENT_BANNER_WIDTH,
 				margin 			= offset +  this.LAYOUT_WIDTH <= widthStrip || offset === 0 ? -offset
