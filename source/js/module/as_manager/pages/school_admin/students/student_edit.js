@@ -82,7 +82,7 @@ const StudentEditPage = React.createClass({
 						)
 					)
 					.set(
-						'formData',
+						'studentForm',
 						Immutable.fromJS(student)
 					)
 					.commit();
@@ -109,18 +109,18 @@ const StudentEditPage = React.createClass({
 	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
-				initialForm		= binding.toJS('formData.form'),
-				initialHouse	= binding.toJS('formData.house');
+				initialForm		= binding.toJS('studentForm.form'),
+				initialHouse	= binding.toJS('studentForm.house');
 
 		if(binding.toJS('isSync')) {
 			return (
 				<StudentForm
-					title				= "Student"
-					initialForm			= {initialForm}
-					initialHouse		= {initialHouse}
-					onFormSubmit		= {this.submitEdit}
-					schoolId			= {this.activeSchoolId}
-					binding				= {binding}
+					title			= "Student"
+					initialForm		= { initialForm }
+					initialHouse	= { initialHouse }
+					onFormSubmit	= { this.submitEdit }
+					schoolId		= { this.activeSchoolId }
+					binding			= { binding }
 				/>
 			)
 		} else {

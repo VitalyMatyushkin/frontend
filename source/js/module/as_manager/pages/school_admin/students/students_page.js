@@ -34,7 +34,7 @@ const StudentPage = React.createClass({
 				/>
 				<Route
 					path		="/school_admin/students/edit"
-					binding		={ binding.sub('studentForm') }
+					binding		={ binding.sub('studentEdit') }
 					component	={ StudentsEditComponent }
 				/>
 				<Route

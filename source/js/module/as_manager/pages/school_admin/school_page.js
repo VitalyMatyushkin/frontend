@@ -63,17 +63,32 @@ const OneSchoolPage = React.createClass({
 			classes: {
 				classesList: {},
 				classesRouting: {},
-				classesForm: {}
+				classAdd: {
+					classForm: {}
+				},
+				classEdit: {
+					classForm: {}
+				}
 			},
 			houses: {
 				housesList: {},
 				housesRouting: {},
-				housesForm: {}
+				houseAdd: {
+					housesForm: {}
+				},
+				houseEdit: {
+					housesForm: {}
+				}
 			},
 			students: {
 				studentsList: {},
 				studentsRouting: {},
-				studentForm: {}
+				studentAdd: {
+					studentForm: {}
+				},
+				studentEdit: {
+					studentForm: {}
+				}
 			},
 			news: {
 				newsList: {},

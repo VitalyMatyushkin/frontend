@@ -7,11 +7,10 @@ const	React				= require('react'),
 const StudentAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const	self			= this,
-				globalBinding	= self.getMoreartyContext().getBinding(),
+		const	globalBinding	= this.getMoreartyContext().getBinding(),
 				activeSchoolId	= globalBinding.get('userRules.activeSchoolId');
 
-		self.activeSchoolId = activeSchoolId;
+		this.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data){
 		const	binding					= this.getDefaultBinding(),
@@ -26,11 +25,15 @@ const StudentAddPage = React.createClass({
 			});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
-			<StudentForm title="Add new student..." onFormSubmit={self.submitAdd} schoolId={self.activeSchoolId} binding={binding} />
+			<StudentForm
+				title			= "Add new student..."
+				onFormSubmit	= { this.submitAdd }
+				schoolId		= { this.activeSchoolId }
+				binding			= { binding }
+			/>
 		)
 	}
 });
