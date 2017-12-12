@@ -32,8 +32,12 @@ const AuthorizationServices ={
 					).set(
 						Immutable.fromJS(authInfo)
 					);
+					
 					if(authData.userId) {
-						return window.Server.roles.get().then(roles => {
+						return window.Server.profile.get().then(profile => {
+							userDataBinding.set('userInfo',	Immutable.fromJS(profile));
+							return window.Server.roles.get();
+						}).then(roles => {
 							if(roles && roles.length == 1) {
 								return AuthorizationServices.become(roles[0].name);
 							}
