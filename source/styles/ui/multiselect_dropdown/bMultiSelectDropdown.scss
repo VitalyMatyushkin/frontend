@@ -16,8 +16,9 @@
         display: inline-block;
 	}
 	&.mError {
-		border: 1px solid red;
-		border-radius: $borderRadius;
+      .eMultiSelectDropdown_input {
+        border-color: red;
+      }
 	}
 }
 
