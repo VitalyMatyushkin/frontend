@@ -52,8 +52,8 @@ export function SupportedBrowsers() {
 							<td className='eSupportedBrowsers_tableItem mGreen'>
 								Supported
 							</td>
-							<td className='eSupportedBrowsers_tableItem mGreen'>
-								Supported, IE12+
+							<td className='eSupportedBrowsers_tableItem mRed'>
+								Not supported
 							</td>
 							<td className='eSupportedBrowsers_tableItem mGreen'>
 								Supported
