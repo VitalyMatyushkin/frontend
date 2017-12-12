@@ -51,10 +51,9 @@ export class ClubsChildrenBookingActions {
 	}
 
 	getStringParentsNameByStudent(student) {
-		return student.parents.reduce(
-			(accumulator, currentValue) => `${accumulator}, ${currentValue}`,
-			''
-		);
+		return typeof student.parents !== 'undefined' ?
+			student.parents.join(','):
+			'';
 	}
 
 	getChildModelData(childName, formName, houseName, parentName, messageStatus) {
