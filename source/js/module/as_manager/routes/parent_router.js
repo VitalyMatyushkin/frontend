@@ -7,6 +7,8 @@ const	React					= require('react'),
 		SettingsRoute			= require('module/core/routes/settings_route'),
 		VerifyRoute				= require('module/core/routes/verify_route'),
 
+		{ SupportedBrowsers }	= require('module/shared_pages/supported_browsers/supported_browsers'),
+
 		EventComponent			= require('../pages/parents_pages/event/event_page'),
 		ParentEventsComponent	= require('./../pages/parents_pages/events/events'),
 		MessagesComponent		= require('module/as_manager/pages/parents_pages/messages/messages');
@@ -38,6 +40,11 @@ const ParentRouter = React.createClass({
 				<Route	path		= '/messages /messages/:subPage'
 						binding		= {binding.sub('messages')}
 						component	= {MessagesComponent}
+				/>
+				<Route
+					path		= "/supported_browsers"
+					binding		= {binding.sub('supported_browsers')}
+					component	= {SupportedBrowsers}
 				/>
 			</RouterView>
 		);
