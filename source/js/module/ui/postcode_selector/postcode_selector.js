@@ -45,13 +45,14 @@ const PermissionDetails = React.createClass({
 	render: function() {
 		return (
 				<div>
-					<AutoComplete	key				= {this.state.postcodeInputKey}
-									placeholder		= "Please enter your postcode"
-									serviceFilter	= {this.service}
-									serverField		= "postcode"
-									onSelect		= {this.props.handleSelectPostcode}
-									defaultItem		= {this.props.currentPostcode}
-									extraCssStyle	= {this.getExtraCssStyle()}
+					<Autocomplete
+						key				= {this.state.postcodeInputKey}
+						placeholder		= "Please enter your postcode"
+						serviceFilter	= {this.service}
+						serverField		= "postcode"
+						onSelect		= {this.props.handleSelectPostcode}
+						defaultItem		= {this.props.currentPostcode}
+						extraCssStyle	= {this.getExtraCssStyle()}
 					/>
 					<CrossButton	onClick={this.handleEscapePostcode}/>
 				</div>
