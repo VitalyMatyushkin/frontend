@@ -25,7 +25,7 @@ const MessageListActions = {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
-					.then(() => this.updateConsentRequestTemplate(userType, messageId))
+					.then(() => this.updateConsentRequestTemplate(userType, messageId, templateData))
 					.then(() => this.reloadMessageList());
 				break;
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
