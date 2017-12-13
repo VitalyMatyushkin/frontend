@@ -108,7 +108,8 @@ const EventVenue = React.createClass({
 				.map(school => {
 					const postcode = school.postcode;
 					postcode.tooltip = ` (${school.name})`;
-
+					postcode.point.lng = school.postcode.point.coordinates[0];
+					postcode.point.lat = school.postcode.point.coordinates[1];
 					return postcode;
 				});
 		} else {
