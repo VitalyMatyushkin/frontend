@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 15/10/15.
  */
-const   {Autocomplete}          = require('module/ui/Autocomplete2/OldAutocompleteWrapper'),
+const   {Autocomplete}          = require('module/ui/autocomplete2/OldautocompleteWrapper'),
        	{If}                    = require('module/ui/if/if'),
 		Morearty            	= require('morearty'),
         React                   = require('react');
