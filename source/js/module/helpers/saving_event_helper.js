@@ -7,7 +7,7 @@ const	ManagerConsts					= require('./../ui/managers/helpers/manager_consts'),
 function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 	switch (true) {
 		case EventHelper.isInterSchoolsEvent(event) && teamWrappers[0].isTeamChanged:
-			return [ processTeam(schoolId, event, rivals[0], teamWrappers[0], teamWrappers[0].savingChangesMode) ];
+			return processTeam(schoolId, event, rivals[0], teamWrappers[0], teamWrappers[0].savingChangesMode);
 		default:
 			let promises = [];
 
@@ -30,7 +30,7 @@ function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 				}
 			});
 
-			return promises;
+			return Promise.all(promises);
 	}
 };
 
@@ -58,7 +58,8 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 					event.id
 				)
 			);
-			return promises;
+
+			return Promise.all(promises);
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM && SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrapper):
 			return TeamHelper.createPrototypeTeam(schoolId, event, rival, teamWrapper);
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM:
@@ -92,7 +93,7 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 					));
 				});
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES:
-			return [Promise.resolve(true)];
+			return Promise.resolve(true);
 	}
 };
 

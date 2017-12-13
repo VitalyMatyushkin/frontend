@@ -455,48 +455,33 @@ const EventManager = React.createClass({
 		switch (true) {
 			case TeamHelper.isNonTeamSport(eventModel):
 				return self.submitEvent()
-					.then(_event => {
+					.then( _event => {
 						savedEvent = _event;
 
-						return TeamHelper.addIndividualPlayersToEvent(
-							this.props.activeSchoolId,
-							savedEvent,
-							binding.toJS(`teamModeView.teamWrapper`)
-						);
+						const	activeSchoolId	= this.props.activeSchoolId,
+								teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
+
+						return TeamHelper.addIndividualPlayersToEvent(activeSchoolId, savedEvent, teamWrapper);
 					})
-					.then(() => self.activateEvent(savedEvent))
-					.then(() => self._afterEventCreation(savedEvent));
+					.then( () => self.activateEvent(savedEvent) )
+					.then( () => self._afterEventCreation(savedEvent) );
 			case TeamHelper.isTeamSport(eventModel):
-				return Promise
-					.all(
-						SavingEventHelper.processSavingChangesMode(
-							this.props.activeSchoolId,
-							binding.toJS(`rivals`),
-							binding.toJS('model'),
-							binding.toJS(`teamModeView.teamWrapper`)
-						)
-					)
-					.then(() => self.submitEvent())
-					.then(_event => {
+				const	activeSchoolId	= this.props.activeSchoolId,
+						rivals			= binding.toJS(`rivals`),
+						model			= binding.toJS('model'),
+						teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
+
+				return SavingEventHelper.processSavingChangesMode(activeSchoolId, rivals, model, teamWrapper)
+					.then( () => self.submitEvent() )
+					.then( _event => {
 						savedEvent = _event;
 
-						const teams = TeamHelper.createTeams(
-								this.props.activeSchoolId,
-								binding.toJS('model'),
-								binding.toJS(`rivals`),
-								binding.toJS(`teamModeView.teamWrapper`)
-							);
+						const teams = TeamHelper.createTeams(activeSchoolId, model, rivals, teamWrapper);
 
-						return Promise.all(
-							TeamHelper.addTeamsToEvent(
-								this.props.activeSchoolId,
-								savedEvent.id,
-								teams
-							)
-						);
+						return Promise.all( TeamHelper.addTeamsToEvent(activeSchoolId, savedEvent.id, teams) );
 					})
-					.then(() => self.activateEvent(savedEvent))
-					.then(() => self._afterEventCreation(savedEvent));
+					.then( () => self.activateEvent(savedEvent) )
+					.then( () => self._afterEventCreation(savedEvent) );
 		}
 	},
 	activateEvent: function(event) {

@@ -201,22 +201,14 @@ const InviteAcceptView = React.createClass({
                     return true;
                 });
         } else {
-			return Promise
-				.all(
-					SavingEventHelper.processSavingChangesMode(
-						this.props.activeSchoolId,
-						binding.toJS(`rivals`),
-						binding.toJS('model'),
-						binding.toJS(`teamModeView.teamWrapper`)
-					)
-				).then(() => {
+			const	activeSchoolId	= this.props.activeSchoolId,
+					rivals			= binding.toJS(`rivals`),
+					model			= binding.toJS('model'),
+					teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
 
-					const teams = TeamHelper.createTeams(
-						this.props.activeSchoolId,
-						binding.toJS('model'),
-						binding.toJS(`rivals`),
-						binding.toJS(`teamModeView.teamWrapper`)
-					);
+			return SavingEventHelper.processSavingChangesMode(activeSchoolId, rivals, model, teamWrapper)
+				.then(() => {
+					const teams = TeamHelper.createTeams(activeSchoolId, model, rivals, teamWrapper);
 
 					return Promise.all(
 						TeamHelper.addTeamsToEvent(
@@ -228,7 +220,7 @@ const InviteAcceptView = React.createClass({
 				})
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
-                        schoolId: this.props.activeSchoolId,
+                        schoolId: activeSchoolId,
                         inviteId: binding.get('invite.id')
                     })
                 )
