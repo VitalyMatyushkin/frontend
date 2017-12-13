@@ -137,7 +137,7 @@ const SportSelector = React.createClass({
 				</div>
 				<Autocomplete
 					key				= { eventFormSportSelectorKey }
-					serviceFilter	= { EventFormActions.getSportService(this.props.activeSchoolId, this.isOnlyFavoriteSports()) }
+					serviceFilter	= { EventFormActions.getSportService(this.props.activeSchoolId, this.isOnlyFavoriteSports(), this.props.mode) }
 					defaultItem		= { sport }
 					serverField		= "name"
 					placeholder		= "Enter sport name"

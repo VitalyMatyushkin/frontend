@@ -1,7 +1,8 @@
-const Immutable = require('immutable');
+const 	Immutable 		= require('immutable'),
+		EventFormConsts	= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 const EventFormActions = {
-	getSportService: function(schoolId, isOnlyFavoriteSports) {
+	getSportService: function(schoolId, isOnlyFavoriteSports, mode) {
 		return (sportName) => {
 			const filter = {
 				filter: {
@@ -18,6 +19,10 @@ const EventFormActions = {
 
 			if(isOnlyFavoriteSports) {
 				filter.filter.where.isFavorite = isOnlyFavoriteSports;
+			}
+			
+			if(mode && mode === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION) {
+				filter.filter.where['points.display'] = {$nin: 'PRESENCE_ONLY'};
 			}
 
 			return window.Server.schoolSports.get(schoolId, filter);
