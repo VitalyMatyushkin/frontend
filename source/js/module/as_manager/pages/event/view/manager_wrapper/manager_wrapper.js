@@ -5,6 +5,7 @@ const	React 							= require('react'),
 
 const	Manager							= require('./../../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../../helpers/eventHelper'),
+		ManagerGroupChanges 			= require('module/ui/manager_group_changes/managerGroupChanges'),
 		ManagerWrapperHelper			= require('./manager_wrapper_helper'),
 		NewManagerWrapperHelper			= require('./new_manager_wrapper_helper'),
 		{Button}						= require('../../../../../ui/button/button'),
@@ -269,11 +270,18 @@ const ManagerWrapper = React.createClass({
 		window.location.reload();
 	},
 	submit: function() {
-		const binding = this.getDefaultBinding();
-
-		return Actions
+		const 	binding 			= this.getDefaultBinding(),
+				managerGroupChanges = binding.toJS('individuals.managerGroupChanges');
+		
+		if (managerGroupChanges === EventConsts.CHANGE_MODE.GROUP) {
+			return Actions
+			.submitGroupChanges(this.props.activeSchoolId, binding)
+			.then(() => this.doAfterCommitActions());
+		} else {
+			return Actions
 			.submitAllChanges(this.props.activeSchoolId, binding)
 			.then(() => this.doAfterCommitActions());
+		}
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
@@ -310,6 +318,22 @@ const ManagerWrapper = React.createClass({
 			/>
 		)
 	},
+	handleClickRadioButton: function(mode){
+		this.getDefaultBinding().set('individuals.managerGroupChanges', mode);
+	},
+	renderSavePlayerChangesManager: function(){
+		if (this.isGroupEvent()) {
+			return (
+				<ManagerGroupChanges
+					onClickRadioButton 	= { this.handleClickRadioButton }
+					customStyles 		= { 'eSavePlayerChangesManager' }
+				/>
+			);
+		} else {
+			return null;
+		}
+
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -320,6 +344,7 @@ const ManagerWrapper = React.createClass({
 		return (
 			<div className="bTeamManagerWrapper">
 				{ this.renderManager() }
+				{ this.renderSavePlayerChangesManager() }
 				<div className="eTeamManagerWrapper_footer">
 					<Button
 						text				= "Cancel"

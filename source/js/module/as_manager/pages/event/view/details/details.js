@@ -1,34 +1,35 @@
 const	React			= require('react');
 
 const	PencilButton	= require('../../../../../ui/pencil_button'),
-	{If}			= require('../../../../../ui/if/if');
+		{If}			= require('../../../../../ui/if/if');
 
-const	TextBlock		= require('./details_components/text_block/text_block'),
-		TimeBlock		= require('./details_components/time_block/time_block'),
-		Personal		= require('./details_components/personal/personal'),
-		Consts			= require('./details_components/consts');
+const	TextBlock					= require('./details_components/text_block/text_block'),
+		TimeBlock					= require('./details_components/time_block/time_block'),
+		Personal					= require('./details_components/personal/personal'),
+		ManagerGroupChanges 		= require('module/ui/manager_group_changes/managerGroupChanges'),
+		Consts						= require('./details_components/consts');
 
 const	DetailsStyle	= require('../../../../../../../styles/ui/b_details.scss');
 
 const Details = React.createClass({
 	propTypes:{
-		name:				React.PropTypes.string.isRequired,
-		officialName:		React.PropTypes.string.isRequired,
-		venue:				React.PropTypes.string.isRequired,
-		description:		React.PropTypes.string,
-		kitNotes:			React.PropTypes.string,
-		comments:			React.PropTypes.string,
-		teamDeparts:		React.PropTypes.string,
-		teamReturns:		React.PropTypes.string,
-		meetTime:			React.PropTypes.string,
-		teaTime:			React.PropTypes.string,
-		lunchTime:			React.PropTypes.string,
-		staff:				React.PropTypes.array.isRequired,
-		handleChange:		React.PropTypes.func.isRequired,
-		onSave:				React.PropTypes.func.isRequired,
-		onCancel:			React.PropTypes.func.isRequired,
-		role:				React.PropTypes.string.isRequired,
-		activeSchoolId:		React.PropTypes.string.isRequired
+		name:						React.PropTypes.string.isRequired,
+		officialName:				React.PropTypes.string.isRequired,
+		venue:						React.PropTypes.string.isRequired,
+		description:				React.PropTypes.string,
+		kitNotes:					React.PropTypes.string,
+		comments:					React.PropTypes.string,
+		teamDeparts:				React.PropTypes.string,
+		teamReturns:				React.PropTypes.string,
+		meetTime:					React.PropTypes.string,
+		teaTime:					React.PropTypes.string,
+		lunchTime:					React.PropTypes.string,
+		staff:						React.PropTypes.array.isRequired,
+		handleChange:				React.PropTypes.func.isRequired,
+		onSave:						React.PropTypes.func.isRequired,
+		onCancel:					React.PropTypes.func.isRequired,
+		role:						React.PropTypes.string.isRequired,
+		activeSchoolId:				React.PropTypes.string.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -40,7 +41,11 @@ const Details = React.createClass({
 	 * @returns {*}
 	 */
 	getCoaches: function() {
-		return this.props.staff.filter(s => s.staffRole === Consts.STAFF_ROLES.COACH);
+		if (Array.isArray(this.props.staff)) {
+			return this.props.staff.filter(s => s.staffRole === Consts.STAFF_ROLES.COACH);
+		} else {
+			return [];
+		}
 	},
 	/**
 	 * Return active coach permission for active school from user object.
@@ -72,7 +77,11 @@ const Details = React.createClass({
 	 * @returns {*}
 	 */
 	getMembersOfStaff: function() {
-		return this.props.staff.filter(s => s.staffRole === Consts.STAFF_ROLES.MEMBER_OF_STAFF);
+		if (Array.isArray(this.props.staff)) {
+			return this.props.staff.filter(s => s.staffRole === Consts.STAFF_ROLES.MEMBER_OF_STAFF);
+		} else {
+			return [];
+		}
 	},
 	/**
 	 * Click handler for edit button.
