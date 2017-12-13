@@ -9,6 +9,7 @@ const   HomeHeader 			= require('./home_header'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
 		Morearty 			= require('morearty'),
+		{SVG} 	    		= require('module/ui/svg'),
 		CookiePopupMessage 	= require('./../../../ui/cookie_popup_message/cookie_popup_message');
 
 const SchoolHomePage = React.createClass({
@@ -75,27 +76,56 @@ const SchoolHomePage = React.createClass({
 				break;
 		}
 	},
-	render: function(){
+	renderTournament: function () {
+		const 	binding 			= this.getDefaultBinding(),
+				isSyncTournament 	= binding.toJS('tournamentsIsSync'),
+				showTournament 		= binding.toJS('tournamentsShow');
+		
+		if (isSyncTournament) {
+			if (showTournament) {
+				return (
+					<Tournaments
+						binding={ binding }
+						ref={ 'tournaments' }
+						tournaments={ binding.toJS('tournaments') }
+					/>
+				);
+			} else return null;
+		} else {
+			return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
+		}
+	},
+	renderLeague: function () {
 		const 	binding 		= this.getDefaultBinding(),
-				schoolUnionId 	= this.getMoreartyContext().getBinding().get('activeSchoolId');
+				isSyncLeague 	= binding.toJS('isSyncLeagueSports'),
+				showLeague 		= binding.toJS('leagueShow');
+		
+		if (isSyncLeague) {
+			if (showLeague) {
+				return (
+					<LeagueTables
+						binding = { binding }
+						ref 	= { 'league' }
+					/>
+				);
+			} else return null;
+		} else {
+			return(<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>);
+		}
+	},
+	render: function(){
+		const 	binding 		= this.getDefaultBinding();
 		
 		return (
 			<div className="eSchoolHomePage">
 				<HomeHeader binding={binding}/>
 				<div className="eSchoolBodyWrapper">
-					<LeagueTables
-						binding = { binding }
-						ref 	= { 'league' }
-					/>
+					{ this.renderLeague() }
 					<HomeCalender
 						binding = { binding }
 						ref 	= { 'calendar' }
 					/>
-					<Tournaments
-						binding 		= { binding }
-						ref 			= { 'tournaments' }
-						schoolUnionId	= { schoolUnionId }
-					/>
+					{ this.renderTournament() }
 					<HomeFixture
 						binding = { binding }
 						ref 	= { 'fixtures' }

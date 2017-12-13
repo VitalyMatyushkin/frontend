@@ -1,12 +1,10 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		Promise 			= require('bluebird'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		MessageListActions	= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageList			= require('module/ui/message_list/message_list'),
-		MessageConsts		= require('module/ui/message_list/message/const/message_consts'),
-		Loader				= require('module/ui/loader');
+		RandomHelper		= require('module/helpers/random_helper'),
+		MessageConsts		= require('module/ui/message_list/message/const/message_consts');
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -15,29 +13,16 @@ const MessageListWrapper = React.createClass({
 		messageType:	React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		Promise.all([
-			MessageListActions.loadMessages(this.props.messageType, this.props.activeSchoolId),
-			window.Server.profile.get()
-		]).then(result => {
-			const 	messages 	= result[0],
-					user 		= result[1];
-			
-			this.getDefaultBinding().atomically()
-				.set('messages', 	Immutable.fromJS(messages))
-				.set('loggedUser', 	Immutable.fromJS(user))
-				.commit();
+		this.setSync(false);
+		window.Server.profile.get().then(user => {
+			this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
+			this.getDefaultBinding().set('loggedUser',		Immutable.fromJS(user));
 			
 			this.setSync(true);
 		});
 	},
-	loadAndSetMessages: function() {
-		MessageListActions.loadMessages(
-			this.props.messageType,
-			this.props.activeSchoolId
-		).then(messages => {
-			this.getDefaultBinding().set('messages', Immutable.fromJS(messages));
-			this.setSync(true);
-		});
+	reloadMessageList: function() {
+		this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
 	},
 	setSync: function(value) {
 		this.getDefaultBinding().set('isSync', value);
@@ -62,9 +47,7 @@ const MessageListWrapper = React.createClass({
 					this.props.activeSchoolId,
 					messageId
 				).then(() => {
-					this.setSync(false);
-
-					this.loadAndSetMessages();
+					this.reloadMessageList();
 				});
 				break;
 		}
@@ -76,9 +59,7 @@ const MessageListWrapper = React.createClass({
 					this.props.activeSchoolId,
 					messageId
 				).then(() => {
-					this.setSync(false);
-					
-					this.loadAndSetMessages();
+					this.reloadMessageList();
 				});
 				break;
 		}
@@ -133,8 +114,8 @@ const MessageListWrapper = React.createClass({
 			comments.push(comment);
 			
 			binding.atomically()
-				.set(`messages.${messageIndex}.commentsCount`, 	Immutable.fromJS(commentsCount + 1))
-				.set(`messages.${messageIndex}.comments`, 		Immutable.fromJS(comments))
+				.set(`messages.${messageIndex}.commentsCount`,	Immutable.fromJS(commentsCount + 1))
+				.set(`messages.${messageIndex}.comments`,		Immutable.fromJS(comments))
 				.commit();
 		});
 	},
@@ -170,7 +151,7 @@ const MessageListWrapper = React.createClass({
 		.then(comments => {
 			binding
 				.atomically()
-				.set(`messages.${messageIndex}.commentsCount`, 	comments.length)
+				.set(`messages.${messageIndex}.commentsCount`,	comments.length)
 				.set(`messages.${messageIndex}.comments`, 		Immutable.fromJS(comments))
 				.commit();
 			
@@ -178,38 +159,28 @@ const MessageListWrapper = React.createClass({
 		});
 	},
 	render: function() {
-		const	binding		= this.getDefaultBinding();
+		let content = null;
 
-		const	messages	= binding.toJS('messages'),
-				isSync		= Boolean(binding.toJS('isSync'));
-		
-		const user = binding.toJS('loggedUser');
+		const binding = this.getDefaultBinding();
 
-		if(!isSync) {
-			return (
-				<div className="eInvites_processing">
-					<Loader/>
-				</div>
-			);
-		} else if(isSync && messages.length > 0) {
-			return (
+		if( Boolean(binding.toJS('isSync')) ) {
+			content = (
 				<MessageList
-					messages				= {messages}
-					messageType				= {this.props.messageType}
-					onAction				= {this.onAction}
-					user 					= {user}
-					onClickShowComments 	= {this.onClickShowComments}
-					onClickSubmitComment 	= {this.onClickSubmitComment}
-					checkComments 			= {this.checkComments}
+					key						= { binding.toJS('messagesListKey') }
+					loadMessages			= { page =>
+						MessageListActions.loadMessagesByPage(page, this.props.messageType, this.props.activeSchoolId)
+					}
+					messageType				= { this.props.messageType }
+					onAction				= { this.onAction }
+					user					= { binding.toJS('loggedUser') }
+					onClickShowComments		= { this.onClickShowComments }
+					onClickSubmitComment	= { this.onClickSubmitComment }
+					checkComments			= { this.checkComments }
 				/>
 			);
-		} else if(isSync && messages.length === 0) {
-			return (
-				<div className="eInvites_processing">
-					<span>There are no messages to display.</span>
-				</div>
-			);
 		}
+
+		return content;
 	}
 });
 

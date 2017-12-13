@@ -8,11 +8,12 @@ const	React			= require('react'),
 
 const Personal = React.createClass({
 	propTypes:{
-		activeSchoolId	: React.PropTypes.string.isRequired,
-		handleChange	: React.PropTypes.func.isRequired,
-		handleDelete	: React.PropTypes.func.isRequired,
-		personalType	: React.PropTypes.string.isRequired,
-		personalList	: React.PropTypes.array.isRequired
+		activeSchoolId: 	React.PropTypes.string.isRequired,
+		handleChange: 		React.PropTypes.func.isRequired,
+		handleDelete: 		React.PropTypes.func.isRequired,
+		personalType: 		React.PropTypes.string.isRequired,
+		personalList: 		React.PropTypes.array.isRequired,
+		mode: 				React.PropTypes.oneOf([Consts.REPORT_FILED_VIEW_MODE.VIEW, Consts.REPORT_FILED_VIEW_MODE.EDIT]).isRequired
 	},
 	getDefaultProps: function () {
 		return {

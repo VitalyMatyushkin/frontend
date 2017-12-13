@@ -563,6 +563,15 @@ function deleteEvent(schoolId, eventId){
 	);
 }
 
+function deleteGroupEvents(schoolId, eventId){
+	return window.Server.schoolEventGroup.delete(
+		{
+			schoolId:	schoolId,
+			eventId:	eventId
+		}
+	);
+}
+
 module.exports.downloadPdf 				= downloadPdf;
 module.exports.cancelEvent 				= cancelEvent;
 module.exports.setModeClosing 			= setModeClosing;
@@ -574,3 +583,4 @@ module.exports.reportNotParticipate 	= reportNotParticipate;
 module.exports.downloadCSV 				= downloadCSV;
 module.exports.sendConsentRequest 		= sendConsentRequest;
 module.exports.deleteEvent 				= deleteEvent;
+module.exports.deleteGroupEvents 		= deleteGroupEvents;

@@ -1,8 +1,8 @@
-const	React			= require('react'),
-		{ComboBox2}		= require('../../../../../../../../ui/autocomplete2/ComboBox2'),
-		User			= require('./user'),
-		Consts			= require('./../../consts'),
-		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
+const	React						= require('react'),
+		User						= require('./user'),
+		{ComboBox2}					= require('../../../../../../../../ui/autocomplete2/ComboBox2'),
+		Consts						= require('./../../consts'),
+		DetailsStyle				= require('../../../../../../../../../../styles/ui/b_details.scss');
 
 const EditMode = React.createClass({
 	propTypes: {

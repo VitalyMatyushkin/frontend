@@ -1,26 +1,29 @@
-const 	React 			= require('react'),
-		Lazy			= require('lazy.js'),
-		Form 			= require('module/ui/form/form'),
-		Morearty		= require('morearty'),
-		SchoolHelper 	= require('module/helpers/school_helper'),
-		FormField 		= require('module/ui/form/form_field');
+const	React			= require('react'),
+		Morearty		= require('morearty');
 
+const	Form			= require('module/ui/form/form'),
+		FormField		= require('module/ui/form/form_field'),
+		SchoolHelper	= require('module/helpers/school_helper');
 
 const ClassForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: 			React.PropTypes.string.isRequired,
-		onFormSubmit: 	React.PropTypes.func
+		title:			React.PropTypes.string.isRequired,
+		onFormSubmit:	React.PropTypes.func
 	},
 
 	componentWillMount: function(){
 		this.getAllAges();
 	},
 
+	componentWillUnmount: function () {
+		this.getDefaultBinding().sub('classForm').clear();
+	},
+
 	getAllAges: function() {
-		const 	schoolId 	= SchoolHelper.getActiveSchoolId(this),
-				binding 	= this.getDefaultBinding();
-		
+		const	schoolId	= SchoolHelper.getActiveSchoolId(this),
+				binding		= this.getDefaultBinding();
+
 		window.Server.ageGroups.get({schoolId}).then(
 			ages => {
 				const agesObject = ages.map( (age, index) => {
@@ -29,9 +32,10 @@ const ClassForm = React.createClass({
 						text: age
 					}
 				});
+
 				binding.atomically()
-					.set('ages', 			agesObject)
-					.set('isSyncAges', 		true)
+					.set('ages',		agesObject)
+					.set('isSyncAges',	true)
 					.commit();
 			},
 			//if server return 404
@@ -41,36 +45,37 @@ const ClassForm = React.createClass({
 	},
 
 	render: function() {
-		const 	binding = this.getDefaultBinding(),
-				isSync 	= Boolean(binding.toJS('isSyncAges')),
-				ages 	= binding.toJS('ages');
+		const	binding	= this.getDefaultBinding(),
+				isSync	= Boolean(binding.toJS('isSyncAges')),
+				ages	= binding.toJS('ages');
 
 		if (isSync) {
-			const 	selectedAge = binding.sub('formData').get('age'),
-					defaultValue = selectedAge ? selectedAge :  ages[0].value;
+			const	selectedAge		= binding.sub('classForm').get('age'),
+					defaultValue	= selectedAge ? selectedAge :  ages[0].value;
+
 			return (
 				<Form
+					binding			= { binding.sub('classForm') }
+					name			= { this.props.title }
 					formStyleClass 	= "mNarrow"
-					name 			= { this.props.title }
-					onSubmit 		= { this.props.onFormSubmit }
-					binding 		= { binding.sub('formData') }
 					submitButtonId	= 'school_form_submit'
 					cancelButtonId	= 'school_form_cancel'
+					onSubmit		= { this.props.onFormSubmit }
 				>
 					<FormField
-						type 		= "text"
-						field 		= "name"
-						id 			= "school_form_name"
-						validation 	= "required"
+						id			= "school_form_name"
+						type		= "text"
+						field		= "name"
+						validation	= "required"
 					>
 						Form name
 					</FormField>
 					<FormField
-						type 			= "dropdown"
-						id 				= "school_age_group_checkbox"
-						field 			= "age"
-						options 		= { ages }
-						defaultValue 	= { defaultValue }
+						id				= "school_age_group_checkbox"
+						type			= "dropdown"
+						field			= "age"
+						options			= { ages }
+						defaultValue	= { defaultValue }
 					>
 						Age group
 					</FormField>

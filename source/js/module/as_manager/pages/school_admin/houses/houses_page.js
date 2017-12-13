@@ -33,13 +33,13 @@ const HousesPage = React.createClass({
 
 				<Route
 					path			= "/school_admin/houses/add"
-					binding			= { binding.sub('housesAdd') }
+					binding			= { binding.sub('houseAdd') }
 					component		= { HouseAddComponent }
 				/>
 
 				<Route
 					path			= "/school_admin/houses/edit"
-					binding			= { binding.sub('housesForm') }
+					binding			= { binding.sub('houseEdit') }
 					component		= { HouseEditComponent }
 				/>
 

@@ -1,15 +1,19 @@
-const	React								= require('react'),
-		EventInvitationMessage				= require('module/ui/message_list/message/event_invitation_message'),
+const	React								= require('react');
+
+const	EventInvitationMessage				= require('module/ui/message_list/message/event_invitation_message'),
 		EventParticipationRefusalMessage	= require('module/ui/message_list/message/event_participation_refusal_message'),
 		EventParticipationMessage			= require('module/ui/message_list/message/event_participation_message'),
-		ClubParticipationMessage			= require('module/ui/message_list/message/club_participation_message'),
+		ClubParticipationMessage			= require('module/ui/message_list/message/club_participation_message');
+
+const	InfiniteScroll						= require('react-infinite-scroller'),
+		{ MessagesLoader }					= require('module/ui/message_list/messages_loader'),
 		MessageConsts						= require('module/ui/message_list/message/const/message_consts');
 
 const MessageList = React.createClass({
 	propTypes: {
-		messages:				React.PropTypes.array.isRequired,
 		messageType:			React.PropTypes.string.isRequired,
 		userType:				React.PropTypes.string.isRequired,
+		loadMessages:			React.PropTypes.func.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		user: 					React.PropTypes.object.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
@@ -23,14 +27,32 @@ const MessageList = React.createClass({
 			templates: []
 		}
 	},
+	componentWillMount: function () {
+		this.setState({
+			messages:	[],
+			hasMore:	true
+		});
+	},
+	loadMessages: function (page) {
+		return this.props.loadMessages(page).then(_messages => {
+			let messages = this.state.messages;
+			messages = messages.concat(_messages);
+			this.setState({
+				messages:	messages,
+				hasMore:	_messages.length !== 0
+			});
+
+			return true;
+		});
+	},
 	renderMessages: function() {
-		let messages = null;
+		let messages = [];
 
 		if(
-			typeof this.props.messages !== 'undefined' &&
-			this.props.messages.length > 0
+			typeof this.state.messages !== 'undefined' &&
+			this.state.messages.length > 0
 		) {
-			messages = this.props.messages.map(message => {
+			messages = this.state.messages.map(message => {
 				switch (message.kind) {
 					case MessageConsts.MESSAGE_KIND.INVITATION:
 						//For each school, we show a separate consent request template,
@@ -99,11 +121,33 @@ const MessageList = React.createClass({
 		return messages;
 	},
 	render: function() {
-		return (
-			<div className="eInvites_list container" >
-				{this.renderMessages()}
-			</div>
-		);
+		let content = null;
+
+		if(
+			this.state.messages.length === 0 &&
+			!this.state.hasMore
+		) {
+			content = (
+				<div className="eInvites_processing">
+					<span>There are no messages to display.</span>
+				</div>
+			);
+		} else {
+			content = (
+				<InfiniteScroll
+					pageStart	= { 0 }
+					loadMore	= { page => this.loadMessages(page) }
+					hasMore		= { this.state.hasMore }
+					loader		= { <MessagesLoader/> }
+				>
+					<div className="eInvites_list container">
+						{ this.renderMessages() }
+					</div>
+				</InfiniteScroll>
+			);
+		}
+
+		return content;
 	}
 });
 

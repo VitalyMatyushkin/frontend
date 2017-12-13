@@ -1,6 +1,8 @@
 const MessageConsts = require('module/ui/message_list/message/const/message_consts');
 
 const MessageListActions = {
+	messagesCountOnPage: 5,
+	messageCountLimit: 5,
 	loadMessages: function(messageType, activeSchoolId) {
 		switch (messageType) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
@@ -11,15 +13,53 @@ const MessageListActions = {
 				return this.loadArchiveMessages(activeSchoolId);
 		}
 	},
-	loadMessagesByEventId: function(messagesType, activeSchoolId, eventId) {
-		switch (messagesType) {
+	loadMessagesByPage: function (page, messageType, activeSchoolId) {
+		switch (messageType) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
-				return this.loadInboxMessagesByEventId(activeSchoolId, eventId);
+				return this.loadInboxMessagesByPage(page, activeSchoolId);
 			case MessageConsts.MESSAGE_TYPE.OUTBOX:
-				return this.loadOutboxMessagesByEventId(activeSchoolId, eventId);
+				return this.loadOutboxMessagesByPage(page, activeSchoolId);
 			case MessageConsts.MESSAGE_TYPE.ARCHIVE:
-				return this.loadArchiveMessagesByEventId(activeSchoolId, eventId);
+				return this.loadArchiveMessagesByPage(page, activeSchoolId);
 		}
+	},
+	loadInboxMessagesByPage: function(page, activeSchoolId) {
+		return window.Server.schoolEventsMessagesInbox.get(
+			{ schoolId: activeSchoolId },
+			{
+				filter: {
+					skip: this.messagesCountOnPage * (page - 1),
+					limit: this.messageCountLimit,
+					order: 'updatedAt DESC',
+					where: { allMessageTypes: true }
+				}
+			}
+		);
+	},
+	loadOutboxMessagesByPage: function(page, activeSchoolId) {
+		return window.Server.schoolEventsMessagesOutbox.get(
+			{ schoolId: activeSchoolId },
+			{
+				filter: {
+					skip: this.messagesCountOnPage * (page - 1),
+					limit: this.messageCountLimit,
+					order: 'updatedAt DESC'
+				}
+			}
+		);
+	},
+	loadArchiveMessagesByPage: function(page, activeSchoolId) {
+		return window.Server.schoolEventsMessagesArchive.get(
+			{ schoolId: activeSchoolId },
+			{
+				filter: {
+					skip: this.messagesCountOnPage * (page - 1),
+					limit: this.messageCountLimit,
+					order: 'updatedAt DESC',
+					where: { allMessageTypes: true }
+				}
+			}
+		);
 	},
 	loadInboxMessages: function(activeSchoolId) {
 		return window.Server.schoolEventsMessagesInbox.get(
@@ -55,47 +95,6 @@ const MessageListActions = {
 				}
 			}
 		);
-	},
-	loadInboxMessagesByEventId: function(activeSchoolId, eventId) {
-		return window.Server.schoolEventsMessagesInbox.get(
-			{ schoolId: activeSchoolId },
-			{
-				filter: {
-					where: {
-						eventId: 			eventId,
-						allMessageTypes: 	true
-					},
-					limit: 1000
-				}
-			}
-		).then(messages => messages.filter(m => m.eventId === eventId));
-	},
-	loadOutboxMessagesByEventId: function(activeSchoolId, eventId) {
-		return window.Server.schoolEventsMessagesOutbox.get(
-			{ schoolId: activeSchoolId },
-			{
-				filter: {
-					where: {
-						eventId: eventId
-					},
-					limit: 1000
-				}
-			}
-		).then(messages => messages.filter(m => m.eventId === eventId));
-	},
-	loadArchiveMessagesByEventId: function(activeSchoolId, eventId) {
-		return window.Server.schoolEventsMessagesArchive.get(
-			{ schoolId: activeSchoolId },
-			{
-				filter: {
-					where: {
-						eventId: 			eventId,
-						allMessageTypes: 	true
-					},
-					limit: 1000
-				}
-			}
-		).then(messages => messages.filter(m => m.eventId === eventId));
 	},
 	loadParentalConsentMessagesByEventId: function(schoolId, eventId) {
 		return window.Server.schoolEventsMessages.get(

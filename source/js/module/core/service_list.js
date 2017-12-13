@@ -126,6 +126,7 @@ const serviceList = {
 		serviceList.schoolEventGroup = new Service('/i/schools/{schoolId}/events/{eventId}/rgroup', binding);
 		serviceList.schoolEventInvites = new Service('/i/schools/{schoolId}/events/{eventId}/invites', binding);
 		serviceList.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);
+		serviceList.schoolEventGroupDetails = new Service('/i/schools/{schoolId}/events/{eventId}/groupDetails', binding);
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
 		serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
 		serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
@@ -140,6 +141,7 @@ const serviceList = {
 		serviceList.schoolEventIndividuals = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/', binding);
 		serviceList.schoolEventIndividuals = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/', binding);
 		serviceList.schoolEventIndividualsBatch = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/batch', binding);
+		serviceList.schoolEventIndividualsGroupBatch = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/groupBatch', binding);
 
 		// event individual performance
 		serviceList.schoolEventIndividualPerformance = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance', binding);

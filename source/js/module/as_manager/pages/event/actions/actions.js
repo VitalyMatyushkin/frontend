@@ -42,7 +42,7 @@ function changeTeamNames(activeSchoolId, binding) {
 	}
 
 	return Promise.all(promises);
-};
+}
 
 /**
  * Submit team player changes
@@ -59,7 +59,7 @@ function commitPlayersChanges(activeSchoolId, binding) {
 	}
 
 	return Promise.all(promises);
-};
+}
 
 /**
  * Submit players changes for individual game
@@ -83,7 +83,7 @@ function commitIndividualPlayerChanges(activeSchoolId, binding) {
 	return Promise.all(
 		TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players)
 	);
-};
+}
 
 /** Submit team players changes for team game.
  */
@@ -104,7 +104,7 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 	}
 
 	return promises;
-};
+}
 
 function removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding) {
 	const prevSelectedTeamId =
@@ -115,7 +115,7 @@ function removePrevSelectedTeamFromEventByOrder(order, activeSchoolId, binding) 
 		binding.toJS('model').id,
 		prevSelectedTeamId
 	);
-};
+}
 
 function changeTeamByOrder(order, activeSchoolId, binding) {
 	const team = TeamHelper.createTeam(
@@ -149,7 +149,7 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 				Immutable.fromJS(teams[0].id)
 			);
 		});
-};
+}
 
 function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 	const tw = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`);
@@ -163,7 +163,7 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 			binding.toJS('model').id
 		)
 	);
-};
+}
 
 /**
  * This function only for created event.
@@ -207,8 +207,35 @@ function submitAllChanges(activeSchoolId, binding) {
 				});
 		}
 	}
-};
+}
+
+function submitGroupChanges(activeSchoolId, binding) {
+	const 	event 	= binding.toJS('model'),
+			eventId = event.id;
+	
+	switch ( binding.toJS('teamManagerMode') ) {
+		case 'CHANGE_TEAM': {
+			const players = AfterRivalsChangesHelper.getTeamPlayersByOrder(0, binding);
+
+			const playersCommit = players.map(player => {
+				return {
+					userId: 		typeof player.userId !== 'undefined' ? player.userId : player.id ,
+					permissionId: 	player.permissionId
+				}
+			});
+			
+
+			return window.Server.schoolEventIndividualsGroupBatch.post({schoolId: activeSchoolId, eventId: eventId}, {participants: playersCommit});
+		}
+		default:
+			console.error('teamManagerMode is not valid');
+			break;
+	}
+}
+
+
 
 module.exports.changeTeamNames		= changeTeamNames;
 module.exports.commitPlayersChanges	= commitPlayersChanges;
 module.exports.submitAllChanges		= submitAllChanges;
+module.exports.submitGroupChanges	= submitGroupChanges;

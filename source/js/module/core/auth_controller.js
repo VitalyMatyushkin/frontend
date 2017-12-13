@@ -2,6 +2,7 @@ const	DomainHelper			= require('module/helpers/domain_helper'),
 		SessionHelper			= require('module/helpers/session_helper'),
 		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
 		RoleListHelper			= require('module/shared_pages/head/role_list_helper'),
+		UserInfoHelper			= require('module/shared_pages/head/user_info_helper'),
 		Immutable 				= require('immutable'),
 		Promise 				= require('bluebird'),
 		propz					= require('propz');
@@ -24,7 +25,9 @@ const authController = {
 		}
 
 		let initPromises = [];
+		
 		if(this.isUserAuth()) {
+			initPromises.push(this.setUserInfo());
 			initPromises.push(this.setRoleList());
 		}
 		if(this.hasUserOnlyOneLoginRole()) {
@@ -44,6 +47,18 @@ const authController = {
 			typeof SessionHelper.getLoginSession(this.binding.sub('userData')) !== 'undefined' &&
 			typeof SessionHelper.getRoleSession(this.binding.sub('userData')) === 'undefined'
 		);
+	},
+	setUserInfo: function () {
+		return UserInfoHelper
+			.getUserInfo()
+			.then(profile => {
+				this.binding.set(
+					'userData.userInfo',
+					Immutable.fromJS(profile)
+				);
+				
+				return true;
+			});
 	},
 	setRoleList: function () {
 		return RoleListHelper

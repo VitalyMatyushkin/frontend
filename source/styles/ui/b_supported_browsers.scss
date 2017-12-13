@@ -1,0 +1,21 @@
+.bSupportedBrowsers {
+  padding-top: 25px;
+
+  margin: 0 auto;
+
+  width: 800px;
+}
+
+.eSupportedBrowsers_tableItem {
+  &.mGreen {
+    color: #5cb85c!important;
+  }
+
+  &.mRed {
+    color: #d9534f!important;
+  }
+
+  &.mGrey {
+    color: #636c72!important;
+  }
+}

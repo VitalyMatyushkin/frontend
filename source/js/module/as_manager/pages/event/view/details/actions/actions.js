@@ -19,6 +19,15 @@ const Actions = {
 			},
 			changes
 		)
+	},
+	submitEventGroupDetailsChangesById: function(schoolId, eventId, changes) {
+		return window.Server.schoolEventGroupDetails.put(
+			{
+				schoolId	: schoolId,
+				eventId		: eventId
+			},
+			changes
+		)
 	}
 };
 

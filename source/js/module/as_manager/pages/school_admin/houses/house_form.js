@@ -1,37 +1,59 @@
-const 	Form 		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		React 		= require('react'),
+const	React		= require('react'),
 		Morearty	= require('morearty');
+
+const	Form 		= require('module/ui/form/form'),
+		FormField	= require('module/ui/form/form_field');
 
 const ClassForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onFormSubmit: React.PropTypes.func
+		title:			React.PropTypes.string.isRequired,
+		onFormSubmit:	React.PropTypes.func
+	},
+	componentWillUnmount: function () {
+		this.getDefaultBinding().sub('housesForm').clear();
 	},
 	render: function() {
-		var self = this;
-
 		return (
 			<div className ="eHouseForm">
 				<Form
-					formStyleClass="mNarrow"
-					name={self.props.title}
-					onSubmit={self.props.onFormSubmit}
-					binding={self.getDefaultBinding()}
+					formStyleClass	= "mNarrow"
+					name			= { this.props.title }
+					onSubmit		= { this.props.onFormSubmit }
+					binding			= { this.getDefaultBinding().sub('housesForm') }
 					submitButtonId	= 'house_submit'
 					cancelButtonId	= 'house_cancel'
 				>
 					<FormField
-						type 		= "imageFile"
-						field 		= "pic"
-						labelText 	= "+"
-						typeOfFile 	= "image"
+						type		= "imageFile"
+						field		= "pic"
+						labelText	= "+"
+						typeOfFile	= "image"
 					/>
-					<FormField type="text" id="house_name" field="name" validation="required" >House name</FormField>
-					<FormField type="text" id="house_description" field="description">Description</FormField>
-					<FormField classNames="mSingleLine" id="house_color_select" type="colors" maxColors={2} field="colors">Colours</FormField>
+					<FormField
+						id			= "house_name"
+						type		= "text"
+						field		= "name"
+						validation	= "required"
+					>
+						House name
+					</FormField>
+					<FormField
+						id		= "house_description"
+						type	= "text"
+						field	= "description"
+					>
+						Description
+					</FormField>
+					<FormField
+						id			= "house_color_select"
+						classNames	= "mSingleLine"
+						type		= "colors"
+						maxColors	= { 2 }
+						field		= "colors"
+					>
+						Colours
+					</FormField>
 				</Form>
 			</div>
 		)

@@ -71,6 +71,16 @@
   position:relative;
   height: auto;
   margin: auto;
+
+  .eLoader {
+    text-align: center;
+    padding: 25px;
+
+    .bIcon {
+      height: 50px;
+      width: 50px;
+    }
+  }
 }
 
 .eSchoolBlog{

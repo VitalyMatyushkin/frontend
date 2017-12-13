@@ -5,27 +5,25 @@ const 	HouseForm 	= require('module/as_manager/pages/school_admin/houses/house_f
 const HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		const	globalBinding	= this.getMoreartyContext().getBinding(),
+				activeSchoolId	= globalBinding.get('userRules.activeSchoolId');
 
-		self.activeSchoolId = activeSchoolId;
+		this.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data) {
-		var self = this;
+		data.schoolId = this.activeSchoolId;
 
-		data.schoolId = self.activeSchoolId;
-
-		self.activeSchoolId && window.Server.schoolHouses.post(self.activeSchoolId, data).then(function() {
+		this.activeSchoolId && window.Server.schoolHouses.post(this.activeSchoolId, data).then(() => {
 			document.location.hash = 'school_admin/houses';
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
-
 		return (
-			<HouseForm title="Add new house..." onFormSubmit={self.submitAdd} binding={binding} />
+			<HouseForm
+				title			= "Add new house..."
+				onFormSubmit	= { this.submitAdd }
+				binding			= { this.getDefaultBinding() }
+			/>
 		)
 	}
 });

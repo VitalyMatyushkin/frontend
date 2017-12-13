@@ -24,7 +24,7 @@ const StudentForm = React.createClass({
 		this.initCountNextOfKinBlocks();
 	},
 	componentWillUnmount: function() {
-		this.getDefaultBinding().sub('formData').clear();
+		this.getDefaultBinding().sub('studentForm').clear();
 	},
 	initCountNextOfKinBlocks: function() {
 		const binding = this.getDefaultBinding();
@@ -84,7 +84,7 @@ const StudentForm = React.createClass({
 		return Promise.resolve(gendersArray);
 	},
 	clearNextOfKinByIndex: function(index) {
-		const binding = this.getDefaultBinding().sub('formData');
+		const binding = this.getDefaultBinding().sub('studentForm');
 
 		const fieldData = {
 			active:	true,
@@ -105,7 +105,7 @@ const StudentForm = React.createClass({
 	},
 	isShowFormElementManager: function() {
 		const	binding					= this.getDefaultBinding(),
-				formDataBinding			= this.getDefaultBinding().sub('formData'),
+				formDataBinding			= this.getDefaultBinding().sub('studentForm'),
 				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks'),
 				index					= countNextOfKinBlocks - 1;
 
@@ -231,7 +231,7 @@ const StudentForm = React.createClass({
 				<Form
 					formStyleClass	= 'row'
 					onSubmit		= { this.props.onFormSubmit }
-					binding			= { binding.sub('formData') }
+					binding			= { binding.sub('studentForm') }
 					submitOnEnter	= { false }
 					submitButtonId	= 'student_submit'
 					cancelButtonId	= 'student_cancel'

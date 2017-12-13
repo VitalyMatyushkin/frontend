@@ -10,7 +10,8 @@ const	React								= require('react'),
 		SchoolUnionEventsComponent			= require('module/as_manager/pages/school_unions_pages/school_union_events/school_union_events'),
 		SchoolUnionConsoleComponent			= require('../pages/school_unions_pages/school_union_console/school_union_console'),
 		SchoolUnionGalleryRoutesComponent	= require('../pages/school_unions_pages/school_union_admin/pages/school_union_gallery/schoolUnionGalleryRoutes'),
-		InvitesComponent					= require('module/as_manager/pages/invites/invites');
+		InvitesComponent					= require('module/as_manager/pages/invites/invites'),
+		{ SupportedBrowsers }				= require('module/shared_pages/supported_browsers/supported_browsers');;
 
 const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
@@ -71,6 +72,12 @@ const SchoolUnionsRouter = React.createClass({
 				<Route	path		= "/school-union-albums /school-union-albums/:mode/:albumId /school-union-albums/:albumId/:mode/:photoId"
 						binding		= {binding.sub('school-union-albums')}
 						component	= {SchoolUnionGalleryRoutesComponent}
+				/>
+
+				<Route
+					path		= "/supported_browsers"
+					binding		= {binding.sub('supported_browsers')}
+					component	= {SupportedBrowsers}
 				/>
 			</RouterView>
 		);

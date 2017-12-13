@@ -19,7 +19,8 @@ const	React							= require('react'),
 		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
 		UserViewComponent				= require('module/shared_pages/users/user_view'),
 		DemoViewComponent				= require('module/shared_pages/demo_slider/demo_slider'),
-		MessagesComponent				= require('module/as_manager/pages/messages/messages');
+		MessagesComponent				= require('module/as_manager/pages/messages/messages'),
+		{ SupportedBrowsers }			= require('module/shared_pages/supported_browsers/supported_browsers');
 
 /**
  * It's a router for all school workers:
@@ -97,6 +98,11 @@ const SchoolWorkerRouter = React.createClass({
 				<Route	path					= "/demo"
 						binding					= {binding.sub('demo')}
 						component				= {DemoViewComponent}
+				/>
+
+				<Route	path					= "/supported_browsers"
+						binding					= {binding.sub('supported_browsers')}
+						component				= {SupportedBrowsers}
 				/>
 			</RouterView>
 		);

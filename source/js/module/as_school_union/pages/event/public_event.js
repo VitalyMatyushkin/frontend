@@ -2,18 +2,19 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 
-		ViewModeConsts 					= require('module/ui/view_selector/consts/view_mode_consts'),
+		ViewModeConsts					= require('module/ui/view_selector/consts/view_mode_consts'),
 	
 		PublicEventTeams				= require('./public_event_teams'),
 		PublicMatchReport				= require('./public_match_report'),
 		PublicEventGallery				= require('./public_event_gallery'),
-		PublicEventHeaderSchoolUnion 	= require('./event_header/public_event_header'),
+		PublicEventHeaderSchoolUnion	= require('./event_header/public_event_header'),
 		FixtureListItem					= require('./../school_home/fixture_list_item'),
 
 		Rivals							= require('module/as_manager/pages/event/view/rivals/rivals'),
-	
+
 		TeamHelper						= require('./../../../ui/managers/helpers/team_helper'),
-		EventResultHelper				= require('./../../../helpers/event_result_helper');
+		EventResultHelper				= require('./../../../helpers/event_result_helper'),
+		EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -66,6 +67,8 @@ const PublicEvent = React.createClass({
 			eventId:	rootBinding.get('routing.pathParameters.0')
 		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
+			event.schoolsData = event.schoolsData.filter(s => s.kind !== 'SchoolUnion');
+
 			event.teamsData = event.teamsData.sort((t1, t2) => {
 				if(t1.name < t2.name) {
 					return -1;
@@ -131,12 +134,14 @@ const PublicEvent = React.createClass({
 		//TODO it's temp. only for event refactoring period.
 		if(TeamHelper.isNewEvent(event)) {
 			return (
-				<Rivals	binding									= { binding }
-						activeSchoolId							= { inviterSchoolId }
-						handleClickOpponentSchoolManagerButton	= { () => {} }
-						isShowControlButtons					= { false }
-						viewMode 								= { viewMode }
-						isSchoolUnion 							= {	true }
+				<Rivals
+					binding									= { binding }
+					activeSchoolId							= { inviterSchoolId }
+					handleClickOpponentSchoolManagerButton	= { () => {} }
+					isShowControlButtons					= { false }
+					viewMode 								= { viewMode }
+					schoolType								= { EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION }
+					isSchoolUnion							= { true }
 				/>
 			);
 		} else {

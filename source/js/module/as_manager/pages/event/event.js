@@ -46,9 +46,11 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		RandomHelper					= require('module/helpers/random_helper'),
 		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
 		SchoolHelper 					= require('module/helpers/school_helper'),
+		ManagerGroupChanges 			= require('module/ui/manager_group_changes/managerGroupChanges'),
 		propz							= require('propz');
 
-const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+const 	EventFormConsts 	= require('module/as_manager/pages/events/manager/event_form/consts/consts'),
+		EventConsts			= require('module/helpers/consts/events');
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -1139,21 +1141,35 @@ const Event = React.createClass({
 		this.props.onReload();
 	},
 	handleClickDeleteButton: function(){
-		const 	activeSchoolId 	= this.props.activeSchoolId,
-				rootBinding 	= this.getMoreartyContext().getBinding(),
-				eventId 		= rootBinding.get('routing.pathParameters.0'),
-				binding 		= this.getDefaultBinding();
+		const 	activeSchoolId 		= this.props.activeSchoolId,
+				rootBinding 		= this.getMoreartyContext().getBinding(),
+				eventId 			= rootBinding.get('routing.pathParameters.0'),
+				binding 			= this.getDefaultBinding(),
+				managerGroupChanges = binding.toJS('deleteEvent.managerGroupChanges');
 		
-		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
-			binding.set("isDeleteEventPopupOpen", false);
-			window.simpleAlert(
-				'Event has been successfully deleted',
-				'Ok',
-				() => {
-					document.location.hash = 'events/calendar';
-				}
-			);
-		});
+		if (managerGroupChanges === EventConsts.CHANGE_MODE.GROUP) {
+			EventHeaderActions.deleteGroupEvents(activeSchoolId, eventId).then( () => {
+				binding.set("isDeleteEventPopupOpen", false);
+				window.simpleAlert(
+					'Events has been successfully deleted',
+					'Ok',
+					() => {
+						document.location.hash = 'events/calendar';
+					}
+				);
+			});
+		} else {
+			EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
+				binding.set("isDeleteEventPopupOpen", false);
+				window.simpleAlert(
+					'Event has been successfully deleted',
+					'Ok',
+					() => {
+						document.location.hash = 'events/calendar';
+					}
+				);
+			});
+		}
 	},
 	handleCloseEditEventPopup: function() {
 		const binding = this.getDefaultBinding();
@@ -1252,6 +1268,32 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	isGroupEvent: function () {
+		const	binding	= this.getDefaultBinding(),
+				event	= binding.toJS('model');
+		
+		return typeof event.groupId !== 'undefined';
+	},
+	renderDeleteEventPopupBody: function(){
+		if (this.isGroupEvent()) {
+			return (
+				<div>
+				<div>Are you sure you want to delete the selected event?</div>
+					<ManagerGroupChanges
+						onClickRadioButton 	= { this.handleClickRadioButton }
+						customStyles 		= { 'eSavePlayerChangesManager' }
+					/>
+				</div>
+			);
+		} else {
+			return (
+				<div>Are you sure you want to delete the selected event?</div>
+			);
+		}
+	},
+	handleClickRadioButton: function(mode){
+		this.getDefaultBinding().set('deleteEvent.managerGroupChanges', mode);
+	},
 	renderDeleteEventPopupOpen: function() {
 		const binding	= this.getDefaultBinding();
 		
@@ -1263,7 +1305,7 @@ const Event = React.createClass({
 								handleClickOkButton		= { this.handleClickDeleteButton }
 								handleClickCancelButton	= { this.handleDeleteEventPopup }
 				>
-					<div>Are you sure you want to delete the selected event?</div>
+					{ this.renderDeleteEventPopupBody() }
 				</ConfirmPopup>
 			)
 		} else {
@@ -1518,6 +1560,7 @@ const Event = React.createClass({
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {this.props.activeSchoolId}
 													role		= {role}
+													event 		= {event}
 									/>
 									<div className="eDetails_border" />
 								</div>

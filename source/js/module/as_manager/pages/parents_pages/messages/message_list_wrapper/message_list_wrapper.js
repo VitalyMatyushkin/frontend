@@ -4,8 +4,7 @@ const	React		= require('react'),
 
 const	Lazy		= require('lazy.js');
 
-const	MessageList		= require('module/ui/message_list/message_list'),
-		Loader			= require('module/ui/loader');
+const	MessageList		= require('module/ui/message_list/message_list');
 
 const MessageListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -23,20 +22,9 @@ const MessageListWrapper = React.createClass({
 			.then(user => {
 				binding.set('loggedUser', Immutable.fromJS(user));
 
-				return this.props.actions.loadMessages(
-					this.props.userType,
-					this.props.messageType
-				)
-			})
-			.then(messages => {
-				const schoolIds = Lazy(messages).map(message => message.schoolId).uniq().toArray();
-
-				binding.set('messages', Immutable.fromJS(messages));
-
 				return this.props.actions.setConsentRequestTemplates(
 					binding,
-					this.props.userType,
-					schoolIds
+					this.props.userType
 				);
 			})
 			.then(() => this.props.actions.setSync(binding, true));
@@ -79,41 +67,31 @@ const MessageListWrapper = React.createClass({
 		);
 	},
 	render: function() {
-		const binding = this.getDefaultBinding();
-		const messages = binding.toJS('messages');
-		const isSync = binding.toJS('isSync');
-		const user = binding.toJS('loggedUser');
+		let content = null;
 
-		if(!isSync) {
-			return (
-				<div className="eInvites_processing">
-					<Loader/>
-				</div>
-			);
-		} else if(isSync && messages.length > 0) {
+		const binding = this.getDefaultBinding();
+
+		if( Boolean(binding.toJS('isSync')) ) {
 			const templates = this.getTemplatesFromBinding(binding);
 
-			return (
+			content = (
 				<MessageList
-					messages				= { messages }
+					key						= { binding.toJS('messagesListKey') }
+					loadMessages			= { page =>
+						this.props.actions.loadMessagesByPage(page, this.props.userType, this.props.messageType)
+					}
 					messageType				= { this.props.messageType }
 					onAction				= { this.onAction }
-					user					= { user }
+					user					= { binding.toJS('loggedUser') }
 					onClickShowComments		= { this.onClickShowComments }
 					onClickSubmitComment	= { this.onClickSubmitComment }
 					checkComments			= { this.checkComments }
 					templates				= { templates }
 				/>
 			);
-		} else if(isSync && messages.length === 0) {
-			return (
-				<div className="eInvites_processing">
-					<span>
-						There are no messages to display.
-					</span>
-				</div>
-			);
 		}
+
+		return content;
 	}
 });
 
