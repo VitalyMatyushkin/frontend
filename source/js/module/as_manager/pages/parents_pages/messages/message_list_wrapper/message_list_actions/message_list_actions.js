@@ -17,12 +17,12 @@ const MessageListActions = {
 				break;
 		}
 	},
-	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType) {
+	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType, templateData) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
 					.then(() => {
-						return this.updateConsentRequestTemplate(userType, messageId);
+						return this.updateConsentRequestTemplate(userType, messageId, templateData);
 					})
 					.then(() => {
 						this.setSync(binding, false);
