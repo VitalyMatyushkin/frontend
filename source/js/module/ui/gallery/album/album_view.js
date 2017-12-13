@@ -1,5 +1,5 @@
-const {If}				= require('module/ui/if/if'),
-		SubMenu 		= require('module/ui/menu/sub_menu'),
+const 	{If}			= require('module/ui/if/if'),
+		{SubMenu} 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('../photo/photo_list'),
 		React			= require('react'),
 		Morearty        = require('morearty'),

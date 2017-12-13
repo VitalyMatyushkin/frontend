@@ -7,7 +7,7 @@ const	React									= require('react'),
 
 		RouterView								= require('module/core/router'),
 		Route									= require('module/core/route'),
-		SubMenu									= require('module/ui/menu/sub_menu'),
+		{SubMenu}								= require('module/ui/menu/sub_menu'),
 
 		UsersComponent							= require('module/as_manager/pages/school_console/views/users'),
 		AdminRequestsComponent 					= require('./views/requests'),

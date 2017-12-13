@@ -1,6 +1,6 @@
 const 	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
-		SubMenu 	= require('module/ui/menu/sub_menu'),
+		{SubMenu} 	= require('module/ui/menu/sub_menu'),
 		SchoolInfo 	= require('module/as_school/pages/school/view/school_info'),
 		React 		= require('react'),
 		Immutable 	= require('immutable'),
