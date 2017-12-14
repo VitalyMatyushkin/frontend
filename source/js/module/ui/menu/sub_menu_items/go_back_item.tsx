@@ -6,11 +6,11 @@ import * as React 	from 'react';
 import {SVG} 		from 'module/ui/svg';
 
 interface GoBackItemProps {
-	name?:	 	string,
-	icon?:		any,
-	className?: string,
-	num?:		any, 	// what is that ?
-	className2?:string  // it takes two classnames. Right now I don't know where is difference
+	name?:	 	string
+	icon?:		string
+	className?: string
+	num?:		string			// what is that ?
+	className2?:string  		// it takes two classnames. Right now I don't know where is difference
 }
 
 export class GoBackItem extends React.Component<GoBackItemProps> {

@@ -14,7 +14,7 @@ export class PublicLogin extends React.Component {
     render() {
         return(
             <div className="bPublicMenu_login">
-                <div onClick={this.handleSignInUpClick.bind(null,this)}>
+                <div onClick={() => this.handleSignInUpClick()}>
                     Log In
                 </div>
             </div>

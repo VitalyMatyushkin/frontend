@@ -11,6 +11,7 @@ interface ChooseFileItemProps {
 }
 /** Menu item which when clicked show file chooser dialog */
 export class ChooseFileItem extends React.Component<ChooseFileItemProps> {
+	static defaultProps: Partial<ChooseFileItemProps> = {name: ''};
 	render() {
 		return (
 			<span className={this.props.className}>

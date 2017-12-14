@@ -7,6 +7,21 @@ import {DefaultItem}    	from './sub_menu_items/default_item';
 import * as SessionHelper   from 'module/helpers/session_helper';
 import {HelpItem }   		from './sub_menu_items/help_item';
 
+interface Item {
+	authorization:	boolean
+	href:			string
+	icon:			string
+	key:			string
+	name:			string
+	routes:			string[]
+	verified:		boolean
+	className:		string
+	num:			string
+	onChange:		() => void
+	requiredData:	string
+	disabled:		boolean
+}
+
 export const MenuMixin = {
 	getDefaultProps: function () {
 		return {
@@ -14,10 +29,9 @@ export const MenuMixin = {
 		};
 	},
 	
-	__getMenuNode(item: any, globalBinding: any, authorization: boolean, currentPath: string, itemClassName: string): any {
+	__getMenuNode(item: Item, globalBinding: any, authorization: boolean, currentPath: string, itemClassName: string): any {
 		const itemPath = item.href && item.href.replace('#', ''),
 			itemRoutes = item.routes || [];
-		
 		let className = item.disabled ? itemClassName + 'mDisabled' : itemClassName;
 
 		// check permission
@@ -48,7 +62,7 @@ export const MenuMixin = {
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
-				if (userId !== undefined)
+				if (typeof userId !== 'undefined')
 					return <DefaultItem key={'console'} name={item.name} href={item.href} className={item.className}
 										className2={className} num={item.num} icon={item.icon}/>;
 				return null;
@@ -58,26 +72,26 @@ export const MenuMixin = {
 		}
 	},
 
-	getMenuNodes(): any {
-		const globalBinding = this.getMoreartyContext().getBinding(),
-			binding = this.getDefaultBinding(),
-			itemsBinding = this.getBinding('itemsBinding'),
-			authorization = SessionHelper.getSessionId(
-				globalBinding.sub('userData')
-			),
-			currentPath = binding.get('currentPath') || '/';
+	getMenuNodes(): any[] {
+		const 	globalBinding = this.getMoreartyContext().getBinding(),
+				binding = this.getDefaultBinding(),
+				itemsBinding = this.getBinding('itemsBinding'),
+				authorization = SessionHelper.getSessionId(
+					globalBinding.sub('userData')
+				),
+				currentPath = binding.get('currentPath') || '/';
 
-		let menuItems;
+		let menuItemArray;
 
 		if (itemsBinding && itemsBinding.toJS()) {
-			menuItems = itemsBinding.toJS();
+			menuItemArray = itemsBinding.toJS();
 		} else {
-			menuItems = this.props.items;
+			menuItemArray = this.props.items;
 		}
 
-		if (typeof menuItems.map === 'function') {
+		if (typeof menuItemArray.map === 'function') {
 			//rendering menu
-			const MenuItemsViews = menuItems.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
+			const MenuItemsViews = menuItemArray.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
 			return MenuItemsViews;
 		} else {
 			return null;

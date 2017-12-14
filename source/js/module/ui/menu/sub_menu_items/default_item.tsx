@@ -7,11 +7,11 @@ import {SVG} 		from 'module/ui/svg';
 
 interface DefaultItemProps {
 	name?:			string
-	num?:			any
+	num?:			string
 	href?:			string
 	className?:		string
 	className2?:	string
-	icon?:			any
+	icon?:			string
 }
 
 export class DefaultItem extends React.Component<DefaultItemProps> {
