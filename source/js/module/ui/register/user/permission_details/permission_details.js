@@ -234,7 +234,7 @@ const PermissionDetails = React.createClass({
 				 * If select school, house and role equal parent, show this block
 				 * Block "Select form", availible only for parent
 				 */}
-				<If condition={typeof this.props.houseId !== 'undefined' && currentType === 'parent'}>
+				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'parent'}>
 					<Autocomplete
 						serviceFilter	= { this.serviceFormFilter }
 						serverField		= "name"
