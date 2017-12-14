@@ -130,9 +130,8 @@ const PermissionsStep = React.createClass({
 		
 		for (let i=0; i<=currentFieldArray; i++) {
 			results.push(Boolean(
-				binding.get('fields.' + i + '.schoolId') && binding.get('fields.' + i + '.houseId') &&
-				binding.get('fields.' + i + '.formId') && binding.get('fields.' + i + '.firstName') &&
-				binding.get('fields.' + i + '.lastName')
+				binding.get('fields.' + i + '.schoolId') && binding.get('fields.' + i + '.formId') &&
+				binding.get('fields.' + i + '.firstName') && binding.get('fields.' + i + '.lastName')
 				)
 			);
 		}
