@@ -3,7 +3,7 @@ const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable');
 
-const	ConfirmPopup		= require('./../../../../../ui/confirm_popup'),
+const	{ConfirmPopup}		= require('module/ui/confirm_popup'),
 		EventConsts			= require('module/helpers/consts/events'),
 		EventEditForm		= require('./edit_event_form');
 

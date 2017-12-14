@@ -1,5 +1,5 @@
 const 	Logo 			= require('module/as_school/head/logo'),
-		TopMenu 		= require('module/ui/menu/public_menu'),
+		{PublicMenu} 	= require('module/ui/menu/public_menu'),
 		Morearty 		= require('morearty'),
 		React 			= require('react');
 

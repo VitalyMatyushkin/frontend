@@ -2,7 +2,7 @@ const	Morearty	= require('morearty'),
 		React		= require('react');
 
 const	Logo				= require('module/as_school/head/logo'),
-		TopMenu				= require('module/ui/menu/public_menu'),
+		{PublicMenu}		= require('module/ui/menu/public_menu'),
 		{SchoolUnionActions}= require('./school_union_actions');
 
 const	Bootstrap	= require('styles/bootstrap-custom.scss');

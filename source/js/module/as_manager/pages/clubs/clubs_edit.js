@@ -4,7 +4,7 @@ const	React		= require('react'),
 
 const	RouterView	= require('module/core/router'),
 		Route		= require('module/core/route'),
-		SubMenu		= require('module/ui/menu/sub_menu');
+		{SubMenu}	= require('module/ui/menu/sub_menu');
 
 const	ClubMainInfoEdit				= require('module/as_manager/pages/clubs/clubs_main_info_edit'),
 		ClubChildrenEdit				= require('module/as_manager/pages/clubs/clubs_children_edit/clubs_children_edit'),

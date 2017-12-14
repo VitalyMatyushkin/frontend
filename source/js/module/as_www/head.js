@@ -1,6 +1,6 @@
 const 	Logo 		= require('module/as_www/head/logo'),
 		React 		= require('react'),
-		TopMenu 	= require('module/ui/menu/top_menu'),
+		{TopMenu} 	= require('module/ui/menu/top_menu'),
 		Morearty    = require('morearty');
 
 const Head = React.createClass({

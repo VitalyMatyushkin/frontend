@@ -8,7 +8,7 @@ const 	React 		= require('react'),
 
 const 	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
-		SubMenu 	= require('module/ui/menu/sub_menu');
+		{SubMenu} 	= require('module/ui/menu/sub_menu');
 
 const 	ImportStudentsComponent 	= require('module/as_admin/pages/admin_schools/import_students_module'),
 		PostcodesComponent 			= require('module/as_admin/pages/admin_schools/postcodes/postcodes_page'),

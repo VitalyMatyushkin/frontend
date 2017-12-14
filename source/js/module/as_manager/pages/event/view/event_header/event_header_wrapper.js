@@ -149,11 +149,9 @@ const EventHeaderWrapper = React.createClass({
 	 * The event handler when clicking the button "Report Availability"
 	 */
 	onReportAvailabilityEvent: function () {
-		const 	binding		= this.getDefaultBinding(),
-				schoolId 	= this.props.activeSchoolId,
-				eventId 	= binding.toJS('model.id');
+		const binding = this.getDefaultBinding();
 
-		binding.set('editReportAvailability', true);
+		binding.set('isOpenEditReportAvailabilityPopup', true);
 	},
 	onSendConsentRequest: function() {
 		const	binding			= this.getDefaultBinding(),

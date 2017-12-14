@@ -6,7 +6,7 @@ const	React					= require('react'),
 		Details					= require('./details'),
 		Consts					= require('./details_components/consts'),
 		ManagerGroupChanges 	= require('module/ui/manager_group_changes/managerGroupChanges'),
-		ConfirmPopup 			= require('module/ui/confirm_popup'),
+		{ConfirmPopup}			= require('module/ui/confirm_popup'),
 		EventConsts				= require('module/helpers/consts/events'),
 		DetailsStyleCss			= require('../../../../../../../styles/ui/b_details.scss');
 

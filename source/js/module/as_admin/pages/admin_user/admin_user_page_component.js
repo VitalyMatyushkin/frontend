@@ -4,7 +4,7 @@
 const	RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		React							= require('react'),
-		SubMenu							= require('module/ui/menu/sub_menu'),
+		{SubMenu}						= require('module/ui/menu/sub_menu'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 		AdminUserNotificationChannel 	= require('module/as_admin/pages/admin_user/admin_user_notification_channel/admin_user_notification_channel'),

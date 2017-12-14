@@ -1,4 +1,4 @@
-const 	SubMenu 		= require('module/ui/menu/sub_menu'),
+const 	{SubMenu} 		= require('module/ui/menu/sub_menu'),
 		DateTimeMixin 	= require('module/mixins/datetime'),
 		Calendar 		= require('module/ui/calendar/big_calendar'),
 		Immutable		= require('immutable'),

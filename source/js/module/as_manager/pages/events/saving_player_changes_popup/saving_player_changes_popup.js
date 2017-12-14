@@ -2,7 +2,7 @@ const	React							= require('react'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
 
-		ConfirmPopup					= require('../../../../ui/confirm_popup'),
+		{ConfirmPopup}					= require('module/ui/confirm_popup'),
 		TeamSaveModePanel				= require('../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
 		ManagerConsts					= require('../../../../ui/managers/helpers/manager_consts'),
 		EventHelper						= require('module/helpers/eventHelper'),

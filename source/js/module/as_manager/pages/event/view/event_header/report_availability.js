@@ -72,7 +72,7 @@ const ReportAvailability = React.createClass({
 						};
 
 				window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
+					.then(() => this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false));
 			} else {
 				userId = rootBinding.get('userData.sessions.roleSession.userId'),
 				permissionId = this.getPermissionIdFromPlayers(userId);
@@ -84,7 +84,7 @@ const ReportAvailability = React.createClass({
 						};
 
 				window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-					.then(() => this.getDefaultBinding().set('editReportAvailability', false));
+					.then(() => this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false));
 			}
 		}
 

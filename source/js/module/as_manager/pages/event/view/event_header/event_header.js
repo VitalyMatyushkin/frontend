@@ -1,25 +1,31 @@
-const	React				= require('react');
-
-const	Lazy				= require('lazy.js'),
+// Main
+const	React				= require('react'),
 		Morearty			= require('morearty'),
-		{If}				= require('../../../../../ui/if/if'),
-		{DateHelper}		= require('module/helpers/date_helper'),
-		DomainHelper 		= require('module/helpers/domain_helper'),
-		RoleHelper 			= require('module/helpers/role_helper'),
-		TeamHelper			= require('../../../../../ui/managers/helpers/team_helper'),
-		Buttons				= require('./buttons'),
-		PencilButton		= require('../../../../../ui/pencil_button'),
-		TweetButton 		= require('./tweet_button'),
-		Popup               = require('module/ui/popup'),
-		ReportAvailability	= require('./report_availability'),
-		propz				= require('propz'),
-		EventConsts			= require('module/helpers/consts/events'),
-		SchoolConst 		= require('module/helpers/consts/schools'),
-		SchoolHelper 		= require('module/helpers/school_helper'),
+		propz				= require('propz');
+
+// React components
+const	PencilButton		= require('module/ui/pencil_button'),
+		TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
+		{ConfirmPopup}		= require('module/ui/confirm_popup'),
+		ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
 		ViewSelector		= require('module/ui/view_selector/view_selector'),
-		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper'),
+		{ If }				= require('module/ui/if/if'),
+		Buttons				= require('module/as_manager/pages/event/view/event_header/buttons');
+
+// Helpers
+const	{ DateHelper }		= require('module/helpers/date_helper'),
+		DomainHelper		= require('module/helpers/domain_helper'),
+		RoleHelper			= require('module/helpers/role_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		SchoolHelper		= require('module/helpers/school_helper'),
+		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
+
+// Consts
+const	EventConsts			= require('module/helpers/consts/events'),
+		SchoolConst			= require('module/helpers/consts/schools'),
 		ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
 
+// Styles
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
@@ -62,6 +68,9 @@ const EventHeader = React.createClass({
 		//prop for view mode
 		onClickViewMode: 				React.PropTypes.func
 	},
+	componentWillMount: function () {
+		this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false);
+	},
 	/**
 	 * Function return string with all Age Groups
 	 * @example <caption>Example usage of getEventAges</caption>
@@ -101,7 +110,7 @@ const EventHeader = React.createClass({
 	closeReportAvailabilityPopup: function () {
 		const 	binding		= this.getDefaultBinding();
 
-		binding.set('editReportAvailability', false);
+		binding.set('isOpenEditReportAvailabilityPopup', false);
 	},
 	renderViewModeLinks: function() {
 		if(
@@ -135,9 +144,32 @@ const EventHeader = React.createClass({
 			return null;
 		}
 	},
+	renderReportAvailabilityPopup: function () {
+		let reactElement = null;
+
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isOpenEditReportAvailabilityPopup')) {
+			reactElement = (
+				<ConfirmPopup
+					isShowButtons			= { false }
+					handleClickCancelButton	= { () => this.closeReportAvailabilityPopup() }
+					customStyle				= { 'mSmallWidth' }
+				>
+					<ReportAvailability
+						binding		= { binding }
+						isParent	= { this.props.isParent }
+						eventId		= { this.props.challengeModel.id }
+						onCancel	= { this.closeReportAvailabilityPopup }
+					/>
+				</ConfirmPopup>
+			);
+		}
+
+		return reactElement;
+	},
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
-				binding         	= this.getDefaultBinding(),
 				eventAges			= this.getEventAges(),
 				eventLocation		= this.getEventLocation(),
 				name				= challengeModel.name,
@@ -207,19 +239,7 @@ const EventHeader = React.createClass({
 						/>
 					</div>
 				</div>
-				<Popup
-					binding         = {binding}
-					stateProperty   = {'editReportAvailability'}
-					onRequestClose  = {this.closeReportAvailabilityPopup}
-					otherClass      = "bPopupPermission"
-				>
-					<ReportAvailability
-						binding     = {binding}
-						isParent	= { this.props.isParent }
-						eventId		= { eventId }
-						onCancel    = {this.closeReportAvailabilityPopup}
-					/>
-				</Popup>
+				{ this.renderReportAvailabilityPopup() }
 			</div>
 		);
 	}
