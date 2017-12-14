@@ -8,8 +8,8 @@ const	MessageConsts	= require('module/ui/message_list/message/const/message_cons
 		RandomHelper	= require('module/helpers/random_helper');
 
 const MessageListActions = {
-	reloadMessageList: function() {
-		this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
+	reloadMessageList: function(binding) {
+		binding.set('messagesListKey', RandomHelper.getRandomString());
 	},
 	onAction: function(binding, userType, boxType, messageId, messageKind, actionType, templateData) {
 		switch (messageKind) {
@@ -26,11 +26,11 @@ const MessageListActions = {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
 					.then(() => this.updateConsentRequestTemplate(userType, messageId))
-					.then(() => this.reloadMessageList());
+					.then(() => this.reloadMessageList(binding));
 				break;
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
 				MessagesServerRequests.declineInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList());
+					.then(() => this.reloadMessageList(binding));
 				break;
 		}
 	},
@@ -38,11 +38,11 @@ const MessageListActions = {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptClubParticipantInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList());
+					.then(() => this.reloadMessageList(binding));
 				break;
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
 				MessagesServerRequests.declineClubParticipantInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList());
+					.then(() => this.reloadMessageList(binding));
 				break;
 		}
 	},
