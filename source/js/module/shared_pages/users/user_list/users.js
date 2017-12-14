@@ -3,7 +3,7 @@ const	React			= require('react'),
 		UserActions		= require('./users-actions-class'),
 		{Grid}			= require('module/ui/grid/grid'),
 		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
-		ConfirmPopup	= require('../../../ui/confirm_popup'),
+		{ConfirmPopup}	= require('module/ui/confirm_popup'),
 		Immutable		= require('immutable');
 
 const	CSVExportPopupStyle	= require('styles/ui/b_csv_export_popup/b_csv_export_popup.scss');

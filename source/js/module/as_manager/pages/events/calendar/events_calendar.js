@@ -9,7 +9,7 @@ const 	React				= require('react'),
 		Morearty			= require('morearty'),
 		AddEventButton		= require('./add_event_button'),
 		EventHeaderActions 	= require('module/as_manager/pages/event/view/event_header/event_header_actions'),
-		ConfirmPopup 		= require('module/ui/confirm_popup'),
+		{ConfirmPopup}		= require('module/ui/confirm_popup'),
 		RoleHelper 			= require('module/helpers/role_helper'),
 		EventsStyles		= require('./../../../../../../styles/pages/events/b_events.scss');
 

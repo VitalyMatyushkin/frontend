@@ -2,7 +2,7 @@
  * Created by vitaly on 07.12.17.
  */
 
-import * as React	from 'react';
+import * as React from 'react';
 import '../../../../styles/ui/b_button.scss';
 
 interface ButtonProps {
@@ -11,7 +11,7 @@ interface ButtonProps {
 	text:				string | string[]	// text to display in button
 	onClick:			() => void			// function to be called on click
 	extraStyleClasses?:	string				// if one need to add extra styles to button.
-	isDisabled?:			boolean
+	isDisabled?:		boolean
 }
 
 export class Button extends React.Component<ButtonProps> {
@@ -26,12 +26,12 @@ export class Button extends React.Component<ButtonProps> {
 		
 		return (
 			<button
-				id			= {this.props.id}
-				className	= {className}
-				disabled	= {isDisabled}
-				onClick		= {() => this.props.onClick()}
+				id			= { this.props.id }
+				className	= { className }
+				disabled	= { isDisabled }
+				onClick		= { () => this.props.onClick() }
 			>
-				{this.props.text}
+				{ this.props.text }
 			</button>
 		);
 	}

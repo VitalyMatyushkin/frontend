@@ -1,5 +1,5 @@
 const	React				= require('react'),
-		ConfirmPopup		= require('module/ui/confirm_popup'),
+		{ConfirmPopup}		= require('module/ui/confirm_popup'),
 		InvitePopupStyleCss	= require('../../../../../../styles/ui/b_invite_popup.scss');
 
 const ConfirmDeclinePopup = React.createClass({

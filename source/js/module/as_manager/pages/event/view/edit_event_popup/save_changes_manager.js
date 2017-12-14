@@ -6,7 +6,7 @@ const	RadioButton		= require('module/ui/radio_button/radio_button');
 
 const	EventConsts		= require('module/helpers/consts/events');
 
-const	ConfirmPopup	= require('module/ui/confirm_popup'),
+const	{ConfirmPopup}	= require('module/ui/confirm_popup'),
 		ManagerStyles	= require('styles/pages/events/b_events_manager.scss');
 
 const SaveChangesManager 	= React.createClass({

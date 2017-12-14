@@ -1,7 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		ConfirmPopup	= require('../../../../ui/confirm_popup'),
+		{ConfirmPopup}	= require('module/ui/confirm_popup'),
 		PlaceForm		= require('../../school_console/views/places_page/place_form');
 
 const PlacePopup = React.createClass({

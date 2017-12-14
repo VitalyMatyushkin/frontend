@@ -129,31 +129,35 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 			<div className="bMonthYearSelector">
 				{ this.renderPlaceHolder() }
 				<div className="eMonthYearSelector_smallSizeColumn mLeft">
-					<div	className	= "eMonthYearSelector_arrow mLeft"
-							onClick		= {this.handleClickPrevMonth.bind(this)}
+					<div
+						className	= "eMonthYearSelector_arrow mLeft"
+						onClick		= {this.handleClickPrevMonth.bind(this)}
 					>
-						<i className="fa fa-arrow-left" aria-hidden="true"></i>
+						<i className="fa fa-arrow-left" aria-hidden="true"/>
 					</div>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
-					<Dropdown	optionsArray		= { this.getOptionsForMonthDropdown() }
-								 currentOptionId		= { String(this.getCurrentMonth()) }
-								 handleChange		= { this.handleChangeMonth.bind(this) }
-								 extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+					<Dropdown
+						optionsArray		= { this.getOptionsForMonthDropdown() }
+						currentOptionId		= { String(this.getCurrentMonth()) }
+						handleChange		= { this.handleChangeMonth.bind(this) }
+						extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
-					<Dropdown	optionsArray		= { this.getOptionsForYearDropdown() }
-								 currentOptionId		= { String(this.getCurrentYear()) }
-								 handleChange		= { this.handleChangeYear.bind(this) }
-								 extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+					<Dropdown
+						optionsArray		= { this.getOptionsForYearDropdown() }
+						currentOptionId		= { String(this.getCurrentYear()) }
+						handleChange		= { this.handleChangeYear.bind(this) }
+						extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
 				<div className="eMonthYearSelector_smallSizeColumn mWithoutBorder mRight">
-					<div	className	= "eMonthYearSelector_arrow mRight"
-							onClick		= {this.handleClickNextMonth.bind(this)}
+					<div
+						className	= "eMonthYearSelector_arrow mRight"
+						onClick		= {this.handleClickNextMonth.bind(this)}
 					>
-						<i className="fa fa-arrow-right" aria-hidden="true"></i>
+						<i className="fa fa-arrow-right" aria-hidden="true"/>
 					</div>
 				</div>
 			</div>

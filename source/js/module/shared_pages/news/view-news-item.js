@@ -7,7 +7,7 @@ const	React 				= require('react'),
 		DateTimeMixin		= require('module/mixins/datetime'),
 		{Button}			= require('module/ui/button/button'),
 		{If}				= require('module/ui/if/if'),
-		ConfirmPopup 		= require('module/ui/confirm_popup'),
+		{ConfirmPopup}		= require('module/ui/confirm_popup'),
 		classNames 			= require('classnames');
 
 const 	SchoolHelper 		= require('module/helpers/school_helper'),
