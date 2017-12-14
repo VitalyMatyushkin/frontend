@@ -7,11 +7,11 @@ const  	RouterView 	= require('module/core/router'),
 		Morearty    = require('morearty'),
 		React		= require('react');
 
-const 	AlbumEditComponent 		= require("module/ui/gallery/album/album_edit"),
-		AlbumCreateComponent 	= require("module/ui/gallery/album/album_create"),
+const 	{AlbumEditComponent} 		= require("module/ui/gallery/album/album_edit"),
+		{AlbumCreateComponent} 	= require("module/ui/gallery/album/album_create"),
 		AlbumViewComponent 		= require("module/ui/gallery/album/album_view"),
-		PhotoEditComponent 		= require("module/ui/gallery/photo/photo_edit"),
-		PhotoAddComponent 		= require("module/ui/gallery/photo/photo_add");
+		{PhotoEditComponent} 	= require("module/ui/gallery/photo/photo_edit"),
+		{PhotoAddComponent} 	= require("module/ui/gallery/photo/photo_add");
 
 /**
  * The base component for routing the functions of the gallery.

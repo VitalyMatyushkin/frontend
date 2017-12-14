@@ -1,17 +1,18 @@
-const 	Form 			= require('module/ui/form/form'),
-		FormColumn 		= require('module/ui/form/form_column'),
-		FormField 		= require('module/ui/form/form_field'),
-		React 			= require('react'),
-		Immutable 		= require('immutable'),
-		Morearty 		= require('morearty'),
-		PhotoEditCrop 	= require('./photo_edit_crop');
+import * as React from 'react';
+import * as Immutable from 'immutable';
+import * as Morearty from 'morearty';
+import * as Form from 'module/ui/form/form';
+import * as FormColumn from 'module/ui/form/form_column';
+import * as FormField from 'module/ui/form/form_field';
+import * as PhotoEditCrop from './photo_edit_crop';
 
-const PhotoEdit = React.createClass({
+interface PhotoData {
+	description: 	string
+	ownerId:		string
+}
+
+export const PhotoEditComponent = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		service:React.PropTypes.object
-	},
-
 	componentWillMount: function() {
 		const 	binding		= this.getDefaultBinding(),
 				rootBinding = this.getMoreartyContext().getBinding(),
@@ -29,13 +30,14 @@ const PhotoEdit = React.createClass({
 		});
 	},
 	
-	onFormSubmit: function(data) {
+	onFormSubmit: function(data): void {
+		console.log(data);
 		this.service.photo.put(this.albumId, this.photoId, data).then( () => {
 			//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 			window.history.back();
 		});
 	},
-
+	
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
 				picUrl = typeof binding.toJS('picUrl') !== 'undefined' ? binding.toJS('picUrl') : '';
@@ -44,7 +46,7 @@ const PhotoEdit = React.createClass({
 		{/**return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;*/}
 		
 		return (
-			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={this.onFormSubmit} binding={binding} >
+			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={this.onFormSubmit.bind(this)} binding={binding} >
 				<FormColumn>
 					<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
 				</FormColumn>
@@ -52,5 +54,3 @@ const PhotoEdit = React.createClass({
 		);
 	}
 });
-
-module.exports = PhotoEdit;

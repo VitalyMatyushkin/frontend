@@ -1,13 +1,14 @@
 /**
  * Created by vitaly on 15.09.17.
  */
-const Promise = require('bluebird');
 
-function isCanvasSupported() {
+import * as Promise from 'bluebird';
+
+export function isCanvasSupported() {
 	return !!document.createElement('canvas').getContext;
 }
 
-function rotateImage(picUrl, angle) {
+export function rotateImage(picUrl: any, angle: number) {
 	const 	canvas = _addCanvasToPage(),
 			image = document.createElement('img');
 	return _loadImage(picUrl, image, canvas)
@@ -15,7 +16,7 @@ function rotateImage(picUrl, angle) {
 			.finally(_deleteCanvasFromPage(canvas));
 }
 
-function _loadImage(picUrl, image, canvas){
+function _loadImage(picUrl: string, image: any, canvas: any): any{
 	return new Promise((resolve, reject) => {
 		image.crossOrigin = 'anonymous';
 		image.onload = () => {
@@ -28,28 +29,24 @@ function _loadImage(picUrl, image, canvas){
 	});
 }
 
-function _addCanvasToPage(){
+function _addCanvasToPage(): any{
 	const 	canvas = document.createElement('canvas'),
 			body = document.getElementsByTagName("body")[0];
 
-	canvas.class = "mDisplayNone";
+	(canvas as any).class = "mDisplayNone";
 	body.appendChild(canvas);
 	return canvas;
 }
 
-function _deleteCanvasFromPage(canvas){
+function _deleteCanvasFromPage(canvas: any): void{
 	const body = document.getElementsByTagName("body")[0];
 	body.removeChild(canvas);
 }
 
-function _drawRotateCanvas(angle, image, canvas){
+function _drawRotateCanvas(angle: number, image: any, canvas: any): any{
 	const ctx = canvas.getContext("2d");
 	ctx.translate( image.height/2, image.width/2);
 	ctx.rotate(angle);
 	ctx.drawImage( image,-(image.width/2), -(image.height/2));
 	return canvas.toDataURL("image/jpeg");
 }
-
-
-module.exports.rotateImage = rotateImage;
-module.exports.isCanvasSupported = isCanvasSupported;
