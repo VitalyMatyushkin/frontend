@@ -43,7 +43,8 @@ const MessageListActions = {
 				filter: {
 					skip: this.messagesCountOnPage * (page - 1),
 					limit: this.messageCountLimit,
-					order: 'updatedAt DESC'
+					order: 'updatedAt DESC',
+					where: { allMessageTypes: true }
 				}
 			}
 		);
