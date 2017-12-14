@@ -206,7 +206,7 @@ const PermissionDetails = React.createClass({
 											handleEscapePostcode	= {this.handleEscapePostcode}
 											extraCssStyle			= {'mRegistrationPostcode'}
 						/>
-						<AutoComplete
+						<Autocomplete
 							serviceFilter	= { this.serviceSchoolFilter }
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
@@ -222,7 +222,7 @@ const PermissionDetails = React.createClass({
 				  * Block "Select house", availible only for parent
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'parent'}>
-					<AutoComplete
+					<Autocomplete
 						serviceFilter	= { this.serviceHouseFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectHouse }
@@ -235,7 +235,7 @@ const PermissionDetails = React.createClass({
 				 * Block "Select form", availible only for parent
 				 */}
 				<If condition={typeof this.props.houseId !== 'undefined' && currentType === 'parent'}>
-					<AutoComplete
+					<Autocomplete
 						serviceFilter	= { this.serviceFormFilter }
 						serverField		= "name"
 						onSelect		= { this.onSelectForm }

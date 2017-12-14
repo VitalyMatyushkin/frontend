@@ -148,7 +148,7 @@ const PermissionFields = React.createClass({
             <div>
 				<If condition={!!currentType}>
 					<div>
-					<AutoComplete
+					<Autocomplete
 						serviceFilter={self.serviceSchoolFilter}
 						serverField="name"
 						onSelect={self.onSelectSchool}
@@ -158,7 +158,7 @@ const PermissionFields = React.createClass({
 					</div>
 				</If>
 				<If condition={!!binding.get('schoolId') && currentType === 'parent'}>
-					<AutoComplete
+					<Autocomplete
 						serviceFilter={self.serviceHouseFilter}
 						serverField="name"
 						onSelect={self.onSelectHouse}
@@ -166,7 +166,7 @@ const PermissionFields = React.createClass({
 					/>
 				</If>
 				<If condition={!!binding.get('houseId') && currentType === 'parent'}>
-					<AutoComplete
+					<Autocomplete
 						serviceFilter={self.serviceFormFilter}
 						serverField="name"
 						onSelect={self.onSelectForm}
