@@ -122,8 +122,8 @@ export const Photo = (React as any).createClass({
 					<span onClick={() => this.onClickPinPhoto()} className="bTooltip" id="albumCover_button" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
 					{isCanvasSupported() &&
 					<span>
-						<span onClick={() => this.onRotatePhoto(ANGLE.LEFT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to left"><SVG icon="icon_rotate_left"/></span>
-						<span onClick={() => this.onRotatePhoto(ANGLE.RIGHT)} className="bTooltip" id="albumRightRotate_button" data-description="Rotate photo to right"><SVG icon="icon_rotate_right"/></span>
+						<span onClick={this.onRotatePhoto.bind(this, ANGLE.LEFT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to left"><SVG icon="icon_rotate_left"/></span>
+						<span onClick={this.onRotatePhoto.bind(this, ANGLE.RIGHT)} className="bTooltip" id="albumRightRotate_button" data-description="Rotate photo to right"><SVG icon="icon_rotate_right"/></span>
 					</span>
 					}
 					<span onClick={() => this.onClickEditPhoto()} className="bTooltip" id="editPhoto_button" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
