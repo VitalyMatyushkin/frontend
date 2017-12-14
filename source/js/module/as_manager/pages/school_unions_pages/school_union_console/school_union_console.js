@@ -4,7 +4,7 @@ const	React						= require('react'),
 		RouterView					= require('module/core/router'),
 		Route						= require('module/core/route');
 
-const	SubMenu						= require('module/ui/menu/sub_menu'),
+const	{SubMenu}					= require('module/ui/menu/sub_menu'),
 		UserListWrapper				= require('./pages/user_list_wrapper'),
 		UserRequestList				= require('./pages/user_request_list'),
 		UserRequestListArchive		= require('./pages/user_request_list_archive'),

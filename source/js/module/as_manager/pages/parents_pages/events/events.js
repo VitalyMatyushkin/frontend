@@ -5,7 +5,7 @@ const	React						= require('react'),
 
 		RouterView					= require('module/core/router'),
 		Route						= require('module/core/route'),
-		SubMenu						= require('module/ui/menu/sub_menu'),
+		{SubMenu}					= require('module/ui/menu/sub_menu'),
 
 		EventsFixturesComponent		= require('./events_fixtures'),
 		EventsCalendarComponent		= require('./events_calendar'),

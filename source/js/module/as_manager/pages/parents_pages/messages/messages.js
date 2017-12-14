@@ -4,7 +4,7 @@ const	React		= require('react'),
 
 const	RouterView	= require('module/core/router'),
 		Route		= require('module/core/route'),
-		SubMenu		= require('module/ui/menu/sub_menu');
+		{SubMenu}	= require('module/ui/menu/sub_menu');
 
 const	Inbox	= require('module/as_manager/pages/parents_pages/messages/inbox/inbox'),
 		Outbox	= require('module/as_manager/pages/parents_pages/messages/outbox/outbox'),

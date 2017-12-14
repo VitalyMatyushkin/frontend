@@ -7,7 +7,7 @@ const 	React 		= require('react'),
 
 const 	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
-		SubMenu 	= require('module/ui/menu/sub_menu');
+		{SubMenu} 	= require('module/ui/menu/sub_menu');
 
 const 	AddInviteComponent 		= require('./add_invite'),
 		ListInviteComponent 	= require('./list_invite');

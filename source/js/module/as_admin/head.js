@@ -5,7 +5,7 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Logo		= require('module/as_admin/head/logo'),
-		TopMenu		= require('module/ui/menu/top_menu'),
+		{TopMenu}	= require('module/ui/menu/top_menu'),
 		UserBlock	= require('module/shared_pages/head/user_block'),
 		TopNavStyle	= require('styles/main/b_top_nav.scss'),
 		Bootstrap	= require('styles/bootstrap-custom.scss');
