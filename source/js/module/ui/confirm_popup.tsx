@@ -60,12 +60,12 @@ export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
 						<div className = { footerStyle } >
 							<Button
 								text				= { this.props.cancelButtonText }
-								onClick				= { this.props.handleClickCancelButton }
+								onClick				= { () => this.props.handleClickCancelButton() }
 								extraStyleClasses	= "mCancel"
 							/>
 							<Button
 								text				= { this.props.okButtonText }
-								onClick				= { this.handleClickOkButton }
+								onClick				= { () => this.handleClickOkButton() }
 								extraStyleClasses	= { okButtonClassName }
 								isDisabled			= { this.props.isOkButtonDisabled }
 							/>
