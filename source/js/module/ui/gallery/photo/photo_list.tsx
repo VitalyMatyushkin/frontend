@@ -12,10 +12,6 @@ interface PhotoListProps {
 export const PhotoList = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	
-    // componentWillMount: function() {
-    //    this.service = this.props.service;
-    // },
-	
     renderPhoto: function(photo: any, index: number): any {
         const binding = this.getDefaultBinding(),
         photosBinding = binding.sub('photos'),
@@ -34,15 +30,12 @@ export const PhotoList = (React as any).createClass({
         );
     },
 
-    // onPhotoClick: function(photo): void {
-    //     this.props.onPhotoClick(photo);
-    // },
-
     onPhotoPin: function(photo: any) : void{
         const 	binding = this.getDefaultBinding(),
-            	albumId = binding.get('id');
-	
-		this.props.service.photo.pin(albumId, photo.picUrl).then(() => {
+            	albumId = binding.get('id'),
+				service = this.props.service;
+    
+		service.photo.pin(albumId, photo.picUrl).then(() => {
 			(window as any).simpleAlert(
                 'Album cover is changed!',
                 'Ok',

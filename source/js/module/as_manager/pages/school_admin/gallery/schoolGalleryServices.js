@@ -2,7 +2,7 @@
  * Created by Anatoly on 14.05.2016.
  */
 
-const {galleryServices} = require('module/ui/gallery/galleryServices');
+const galleryServices = require('module/ui/gallery/galleryServices');
 
 /**
  * General methods for the gallery.

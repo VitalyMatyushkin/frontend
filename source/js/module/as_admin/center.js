@@ -16,7 +16,7 @@ const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page
 		CalendarPageComponent 	= require('module/as_school/pages/calendar/calendar_page'),
 		OpponentsPageComponent 	= require('module/as_school/pages/opponents/opponents_page'),
 		SchoolAddComponent		= require('module/as_manager/pages/schools/schools_add'),
-		AlbumsComponent			= require('module/ui/gallery/albums'),
+		{AlbumRoutes}			= require('module/ui/gallery/albums'),
 		AdminDashboardComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard'),
 		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox'),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
@@ -72,7 +72,7 @@ const Center = React.createClass({
 						<Route
 							path 		= "/albums /albums/:albumId"
 							binding 	= { binding.sub('albums') }
-							component 	= { AlbumsComponent }
+							component 	= { AlbumRoutes }
 						/>
 						<Route
 							path		= "/users /users/:subPage /users/:subFolder/:subPage"

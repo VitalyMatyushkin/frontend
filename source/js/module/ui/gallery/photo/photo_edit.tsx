@@ -30,8 +30,7 @@ export const PhotoEditComponent = (React as any).createClass({
 		});
 	},
 	
-	onFormSubmit: function(data): void {
-		console.log(data);
+	onFormSubmit: function(data: PhotoData): void {
 		this.service.photo.put(this.albumId, this.photoId, data).then( () => {
 			//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 			window.history.back();
@@ -46,7 +45,7 @@ export const PhotoEditComponent = (React as any).createClass({
 		{/**return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;*/}
 		
 		return (
-			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={this.onFormSubmit.bind(this)} binding={binding} >
+			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={() => this.onFormSubmit()} binding={binding} >
 				<FormColumn>
 					<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
 				</FormColumn>

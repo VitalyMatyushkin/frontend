@@ -57,19 +57,21 @@ export const Photo = (React as any).createClass({
 		
 		this.props.onPhotoClick && this.props.onPhotoClick(binding.toJS());
 	},
-	onClickPinPhoto: function(): void {
+	onClickPinPhoto: function(e): void {
 		const photo = this.getDefaultBinding().toJS();
 		
 		this.props.onPhotoPin(photo);
+		e.stopPropagation();
 	},
-	onClickEditPhoto: function(): void {
+	onClickEditPhoto: function(e): void {
 		const path: string[] = window.location.hash.replace('#', '').split('/');
 		path.splice(path.length-2, 2);
 		const mainPath: string = path.join('/');
 		
 		document.location.hash = `${mainPath}/${this.albumId}/photo-edit/${this.photoId}`;
+		e.stopPropagation();
 	},
-	onClickDeletePhoto: function(): void {
+	onClickDeletePhoto: function(e): void {
 		(window as any).confirmAlert(
 			"The photo will be deleted.",
 			"Ok",
@@ -77,8 +79,9 @@ export const Photo = (React as any).createClass({
 			() => this.props.service.photo.delete(this.albumId, this.photoId).then( () => this.props.reloadPhotoList() ),
 			() => {}
 		);
+		e.stopPropagation();
 	},
-	onRotatePhoto: function(angle: number): void {
+	onRotatePhoto: function(e, angle: number): void {
 		(window as any).confirmAlert(
 			"The photo will be rotated.",
 			"Ok",
@@ -86,6 +89,7 @@ export const Photo = (React as any).createClass({
 			() =>
 				this.rotatePhoto(angle)
 		);
+		e.stopPropagation();
 	},
 	rotatePhoto: function (angle: number): any {
 		return rotateImage(this.picUrl, angle)
@@ -101,7 +105,7 @@ export const Photo = (React as any).createClass({
 						this.props.service.photo.put(this.albumId, this.photoId, model)
 							.then(() => {this.props.reloadPhotoList()});
 					});
-			})
+			});
 	},
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
@@ -117,15 +121,15 @@ export const Photo = (React as any).createClass({
 		return (
 			<div onClick={() => this.onImageClick()} className={imgClasses}>
 				<div className='ePhotoActions'>
-					<span onClick={() => this.onClickPinPhoto()} className="bTooltip" id="albumCover_button" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
+					<span onClick={e => this.onClickPinPhoto(e)} className="bTooltip" id="albumCover_button" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
 					{isCanvasSupported() &&
 					<span>
-						<span onClick={this.onRotatePhoto.bind(this, ANGLE.LEFT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to left"><SVG icon="icon_rotate_left"/></span>
-						<span onClick={this.onRotatePhoto.bind(this, ANGLE.RIGHT)} className="bTooltip" id="albumRightRotate_button" data-description="Rotate photo to right"><SVG icon="icon_rotate_right"/></span>
+						<span onClick={e => this.onRotatePhoto(e, ANGLE.LEFT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to left"><SVG icon="icon_rotate_left"/></span>
+						<span onClick={e => this.onRotatePhoto(e, ANGLE.RIGHT)} className="bTooltip" id="albumRightRotate_button" data-description="Rotate photo to right"><SVG icon="icon_rotate_right"/></span>
 					</span>
 					}
-					<span onClick={() => this.onClickEditPhoto()} className="bTooltip" id="editPhoto_button" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
-					<span onClick={() => this.onClickDeletePhoto()} className="bTooltip" id="deletePhoto_button" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
+					<span onClick={e => this.onClickEditPhoto(e)} className="bTooltip" id="editPhoto_button" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
+					<span onClick={e => this.onClickDeletePhoto(e)} className="bTooltip" id="deletePhoto_button" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 				</div>
 				<span className='eAlbumPhoto_photoTitle' id="photo_title">{binding.get('description')}</span>
 				<div className="img" style={background} onLoad={() => this.onImageLoad()}></div>
