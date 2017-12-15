@@ -2,7 +2,7 @@ const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
 		SessionHelper	= require('module/helpers/session_helper'),
-		Album			= require('module/ui/gallery/album/album_item');
+		{Album}			= require('module/ui/gallery/album/album_item');
 
 const SchoolUnionGallery = React.createClass({
 	mixins:[Morearty.Mixin],

@@ -21,12 +21,12 @@ const ANGLE = {
 
 export const Photo = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	getDefaultState: function() {
+	getDefaultState: () => {
 		return Immutable.fromJS({
 			loaded: false
 		});
 	},
-	componentWillMount:function(){
+	componentWillMount:function() {
 		const 	photo 		= this.getDefaultBinding(),
 				photoId 	= photo.get('id'),
 				rootBinding = this.getMoreartyContext().getBinding(),
@@ -39,7 +39,7 @@ export const Photo = (React as any).createClass({
 		this.name = photo.get('name');
 		this.description = photo.get('description');
 	},
-	componentWillUpdate:function(){
+	componentWillUpdate:function() {
 		const 	photo 		= this.getDefaultBinding(),
 				photoId 	= photo.get('id');
 		
@@ -57,11 +57,10 @@ export const Photo = (React as any).createClass({
 		
 		this.props.onPhotoClick && this.props.onPhotoClick(binding.toJS());
 	},
-	onClickPinPhoto: function(e): void {
+	onClickPinPhoto: function(): void {
 		const photo = this.getDefaultBinding().toJS();
 		
 		this.props.onPhotoPin(photo);
-		e.stopPropagation();
 	},
 	onClickEditPhoto: function(): void {
 		const path: string[] = window.location.hash.replace('#', '').split('/');
@@ -79,7 +78,7 @@ export const Photo = (React as any).createClass({
 			() => {}
 		);
 	},
-	onRotatePhoto: function(angle: number, e): void {
+	onRotatePhoto: function(angle: number): void {
 		(window as any).confirmAlert(
 			"The photo will be rotated.",
 			"Ok",
@@ -87,7 +86,6 @@ export const Photo = (React as any).createClass({
 			() =>
 				this.rotatePhoto(angle)
 		);
-		e.stopPropagation();
 	},
 	rotatePhoto: function (angle: number): any {
 		return rotateImage(this.picUrl, angle)
@@ -130,7 +128,7 @@ export const Photo = (React as any).createClass({
 					<span onClick={() => this.onClickDeletePhoto()} className="bTooltip" id="deletePhoto_button" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 				</div>
 				<span className='eAlbumPhoto_photoTitle' id="photo_title">{binding.get('description')}</span>
-				<div className="img" style={background} onLoad={this.onImageLoad.bind(this)}></div>
+				<div className="img" style={background} onLoad={() => this.onImageLoad()}></div>
 			</div>
 		);
 	}
