@@ -17,19 +17,21 @@ export const Album = (React as any).createClass({
         };
     },
 	
-	onClickAlbum: function(): void {
+	onClickAlbum: function(e): void {
 		const 	binding 	= this.getDefaultBinding(),
                 album 		= binding.toJS();
 
         document.location.hash = this.props.basePath + '/view/' + album.id;
+		e.stopPropagation();
 	},
-	onClickEditAlbum: function(): void {
+	onClickEditAlbum: function(e): void {
 		const 	binding 	= this.getDefaultBinding(),
 				album 		= binding.toJS();
 
         document.location.hash = this.props.basePath + '/edit/' + album.id;
+		e.stopPropagation();
 	},
-	onClickDeleteAlbum: function() {
+	onClickDeleteAlbum: function(e): void {
 		const 	binding 	= this.getDefaultBinding(),
 				album 		= binding.toJS();
 
@@ -40,6 +42,7 @@ export const Album = (React as any).createClass({
 			() => this.props.onDelete && this.props.onDelete(album),
 			() => {}
 		);
+		e.stopPropagation();
 	},
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
@@ -49,14 +52,14 @@ export const Album = (React as any).createClass({
 				styles 	= { backgroundImage: 'url(' + cover + ')'};
 
 		return (
-				<div onClick={() => this.onClickAlbum()} className='eAlbum' style={styles}>
+				<div onClick={e => this.onClickAlbum(e)} className='eAlbum' style={styles}>
 					<div className="eAlbumActions">
 						<span>{/*<SVG icon="icon_photo"/>*/}</span>
 						<span>{/*<SVG icon="icon_comments"/>*/}</span>
 						<span ></span>
-						<span onClick={() => this.onClickEditAlbum()} id="editAlbum_button" className="bTooltip" data-description="Edit Album"><SVG
+						<span onClick={e => this.onClickEditAlbum(e)} id="editAlbum_button" className="bTooltip" data-description="Edit Album"><SVG
 							icon="icon_edit"/></span>
-						<span onClick={() => this.onClickDeleteAlbum()} id="deleteAlbum_button" className="bTooltip" data-description="Delete Album"><SVG
+						<span onClick={e => this.onClickDeleteAlbum(e)} id="deleteAlbum_button" className="bTooltip" data-description="Delete Album"><SVG
 							classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
 					<div className="eAlbumInfo">

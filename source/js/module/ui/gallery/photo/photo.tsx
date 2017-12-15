@@ -48,6 +48,7 @@ export const Photo = (React as any).createClass({
 		this.name = photo.get('name');
 		this.description = photo.get('description');
 	},
+	
 	onImageLoad: function(): void {
 		this.getDefaultBinding().set('loaded', true);
 	},
@@ -57,12 +58,14 @@ export const Photo = (React as any).createClass({
 		
 		this.props.onPhotoClick && this.props.onPhotoClick(binding.toJS());
 	},
+	
 	onClickPinPhoto: function(e): void {
 		const photo = this.getDefaultBinding().toJS();
 		
 		this.props.onPhotoPin(photo);
 		e.stopPropagation();
 	},
+	
 	onClickEditPhoto: function(e): void {
 		const path: string[] = window.location.hash.replace('#', '').split('/');
 		path.splice(path.length-2, 2);
@@ -71,6 +74,7 @@ export const Photo = (React as any).createClass({
 		document.location.hash = `${mainPath}/${this.albumId}/photo-edit/${this.photoId}`;
 		e.stopPropagation();
 	},
+	
 	onClickDeletePhoto: function(e): void {
 		(window as any).confirmAlert(
 			"The photo will be deleted.",
@@ -81,6 +85,7 @@ export const Photo = (React as any).createClass({
 		);
 		e.stopPropagation();
 	},
+	
 	onRotatePhoto: function(e, angle: number): void {
 		(window as any).confirmAlert(
 			"The photo will be rotated.",
@@ -91,13 +96,14 @@ export const Photo = (React as any).createClass({
 		);
 		e.stopPropagation();
 	},
+	
 	rotatePhoto: function (angle: number): any {
 		return rotateImage(this.picUrl, angle)
 			.then((data) => {
 				const file = CropImageHelper.dataURLtoFile(data, 'image-squadintouch.jpeg');
 				(window as any).Server.images.upload(file)
 					.then( picUrl => {
-						const 	model 	= {
+						const model = {
 							name:           this.name,
 							description:    this.description,
 							picUrl:         picUrl
@@ -107,6 +113,7 @@ export const Photo = (React as any).createClass({
 					});
 			});
 	},
+	
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
 				origSrc 		= binding.get('picUrl'),

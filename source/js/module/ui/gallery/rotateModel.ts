@@ -8,7 +8,7 @@ export function isCanvasSupported() {
 	return !!document.createElement('canvas').getContext;
 }
 
-export function rotateImage(picUrl: any, angle: number) {
+export function rotateImage(picUrl: any, angle: number): Promise<any> {
 	const 	canvas = _addCanvasToPage(),
 			image = document.createElement('img');
 	return _loadImage(picUrl, image, canvas)

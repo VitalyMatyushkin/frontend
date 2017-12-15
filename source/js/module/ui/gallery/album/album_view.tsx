@@ -7,6 +7,8 @@ import {FullScreenList} from '../photo/fullscreen_list';
 import {PhotoList} from '../photo/photo_list';
 import {SubMenu} from 'module/ui/menu/sub_menu';
 import {If} from 'module/ui/if/if';
+import {PhotoItem} from '../photo/photo_item';
+
 
 export const AlbumViewComponent = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -26,6 +28,12 @@ export const AlbumViewComponent = (React as any).createClass({
 		});
 	},
 	
+	getInitialState: function() {
+		return {
+			lastClickedId: 0
+		};
+	},
+	
 	componentWillMount: function() {
 		const 	rootBinding = this.getMoreartyContext().getBinding(),
 				binding 	= this.getDefaultBinding(),
@@ -35,7 +43,6 @@ export const AlbumViewComponent = (React as any).createClass({
 					rootBinding.sub('userData')
 				);
 		
-		// this.service = this.props.service;
 		this.props.service.album.get(albumId)
 		.then((res) => {
 			const isOwner = (userId == res.ownerId);
@@ -66,21 +73,15 @@ export const AlbumViewComponent = (React as any).createClass({
 		});
 	},
 
-	onPhotoClick: function(photo): void {
+	onPhotoClick: function(photo: PhotoItem): void {
 		const 	binding 	= this.getDefaultBinding(),
 				fullScreen 	= binding.get('fullScreen'),
 				id 			= photo.id;
-		
+
 		this.setState({lastClickedId: id});
 		if (!fullScreen) {
 			binding.set('fullScreen', true);
 		}
-	},
-
-	getInitialState: function() {
-		return {
-			lastClickedId: 0
-		};
 	},
 
 	onCloseFullScreen: function(): void {
@@ -105,7 +106,7 @@ export const AlbumViewComponent = (React as any).createClass({
 							<PhotoList
 								binding		={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
 								onPhotoClick={this.onPhotoClick}
-								service		={this.service}
+								service		={this.props.service}
 							/>
 						</div>
 						</div>

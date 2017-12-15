@@ -3,6 +3,11 @@ import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
 import {AlbumEditForm} from './album_edit_form';
 
+interface AlbumData {
+	name: 		string
+	ownerId: 	string
+}
+
 export const AlbumEditComponent = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	getInitialState: function() {
@@ -25,8 +30,7 @@ export const AlbumEditComponent = (React as any).createClass({
 		
 	},
 	
-	onFormSubmit: function(data): void {
-		console.log(data);
+	onFormSubmit: function(data: AlbumData): void {
 		this.service.album.put(this.albumId, data).then(res => window.history.back());
 	},
 	
@@ -36,7 +40,7 @@ export const AlbumEditComponent = (React as any).createClass({
 		return (
 			<AlbumEditForm
 				title		= 'Edit album'
-				onFormSubmit= {this.onFormSubmit.bind(this)}
+				onFormSubmit= {this.onFormSubmit}
 				albumId		= {this.albumId}
 				binding		= {binding}
 			/>

@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
 import {If} from 'module/ui/if/if';
-import {Photo} from './photo_item';
+import {Photo} from './photo';
+import {PhotoItem} from './photo_item';
 
 interface PhotoListProps {
 	onPhotoClick: 	() => void
@@ -30,12 +31,11 @@ export const PhotoList = (React as any).createClass({
         );
     },
 
-    onPhotoPin: function(photo: any) : void{
+    onPhotoPin: function(photo: PhotoItem) : void{
         const 	binding = this.getDefaultBinding(),
-            	albumId = binding.get('id'),
-				service = this.props.service;
-    
-		service.photo.pin(albumId, photo.picUrl).then(() => {
+            	albumId = binding.get('id');
+	
+		this.props.service.photo.pin(albumId, photo.picUrl).then(() => {
 			(window as any).simpleAlert(
                 'Album cover is changed!',
                 'Ok',

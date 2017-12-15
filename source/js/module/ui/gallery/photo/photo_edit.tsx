@@ -4,7 +4,7 @@ import * as Morearty from 'morearty';
 import * as Form from 'module/ui/form/form';
 import * as FormColumn from 'module/ui/form/form_column';
 import * as FormField from 'module/ui/form/form_field';
-import * as PhotoEditCrop from './photo_edit_crop';
+import {PhotoEditCrop} from './photo_edit_crop';
 
 interface PhotoData {
 	description: 	string
