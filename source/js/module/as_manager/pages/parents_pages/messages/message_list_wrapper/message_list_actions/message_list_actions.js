@@ -21,11 +21,11 @@ const MessageListActions = {
 				break;
 		}
 	},
-	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType) {
+	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType, templateData) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
 				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
-					.then(() => this.updateConsentRequestTemplate(userType, messageId))
+					.then(() => this.updateConsentRequestTemplate(userType, messageId, templateData))
 					.then(() => this.reloadMessageList(binding));
 				break;
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:

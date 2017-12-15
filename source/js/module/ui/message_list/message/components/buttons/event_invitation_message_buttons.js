@@ -5,7 +5,7 @@ const	React			= require('react'),
 
 const EventInvitationMessageButtons = React.createClass({
 	propTypes: {
-		acceptButtonText:	React.PropTypes.func.isRequired,
+		acceptButtonText:	React.PropTypes.string.isRequired,
 		onAccept:			React.PropTypes.func.isRequired,
 		onDecline:			React.PropTypes.func.isRequired
 	},
