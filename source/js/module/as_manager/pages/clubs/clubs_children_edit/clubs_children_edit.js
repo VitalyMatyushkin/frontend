@@ -140,14 +140,7 @@ const ClubChildrenEdit = React.createClass({
 		const clubStudentsCount = this.getDefaultBinding().toJS('teamManager.teamStudents').length;
 		const maxParticipants = this.getMaxParticipants();
 
-		return (
-			clubStudentsCount > 0 &&
-			(
-				typeof maxParticipants !== 'undefined' ?
-					clubStudentsCount <= maxParticipants :
-					true
-			)
-		);
+		return typeof maxParticipants !== 'undefined' ? clubStudentsCount <= maxParticipants : true;
 	},
 	getMaxParticipants: function () {
 		return this.getDefaultBinding().toJS('club.maxParticipants');
