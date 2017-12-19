@@ -11,7 +11,6 @@ const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
 		Loader		= require('module/ui/loader');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		EventConsts		= require('module/helpers/consts/events'),
 		ClubsActions	= require('module/as_manager/pages/clubs/clubs_actions');
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
@@ -221,7 +220,7 @@ const ClubChildrenEdit = React.createClass({
 	},
 	doAfterSaveActions: function () {
 		this.getDefaultBinding().set('isSync', true);
-		window.simpleAlert('The pupils have been added successfully.');
+		window.simpleAlert('Changes have been applied successfully.');
 	},
 	handleClickSubmitButton: function () {
 		if(this.isSaveButtonEnable()) {
