@@ -2,7 +2,7 @@
  * Created by Anatoly on 14.05.2016.
  */
 
-const 	AlbumRoutes 		= require('module/ui/gallery/albums'),
+const 	{AlbumRoutes} 		= require('module/ui/gallery/albums'),
 		galleryServices 	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryServices'),
 		Morearty 			= require('morearty'),
 		React 				= require('react');

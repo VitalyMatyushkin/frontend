@@ -32,7 +32,7 @@ export class FullScreenList extends React.Component<FullScreenProps, FullScreenS
     }
 
     componentDidMount() {
-        this.getStartIndex();
+        this.setState({currentIndex: this.getStartIndex()});
         window.addEventListener('resize', this.handleResize.bind(this));
     }
 
@@ -40,13 +40,13 @@ export class FullScreenList extends React.Component<FullScreenProps, FullScreenS
         window.removeEventListener('resize', this.handleResize.bind(this));
     }
 
-    onPhotoClick() {
+    onPhotoClick(): void {
         const   length = this.props.photos.length,
                 currentIndex = (this.state.currentIndex + 1) % length;
         this.setState({currentIndex});
     }
 
-    handleResize() {
+    handleResize(): void {
         this.setState({
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight

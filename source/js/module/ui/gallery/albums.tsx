@@ -2,16 +2,16 @@
  * Created by Anatoly on 09.02.2016.
  */
 
-const  	RouterView 	= require('module/core/router'),
-		Route 		= require('module/core/route'),
-		Morearty    = require('morearty'),
-		React		= require('react');
+import * as RouterView from 'module/core/router';
+import * as Route from 'module/core/route';
+import * as Morearty from 'morearty';
+import * as React from 'react';
 
-const 	AlbumEditComponent 		= require("module/ui/gallery/album/album_edit"),
-		AlbumCreateComponent 	= require("module/ui/gallery/album/album_create"),
-		AlbumViewComponent 		= require("module/ui/gallery/album/album_view"),
-		PhotoEditComponent 		= require("module/ui/gallery/photo/photo_edit"),
-		PhotoAddComponent 		= require("module/ui/gallery/photo/photo_add");
+import {AlbumEditComponent} from "module/ui/gallery/album/album_edit";
+import {AlbumCreateComponent} from "module/ui/gallery/album/album_create";
+import {AlbumViewComponent} from "module/ui/gallery/album/album_view";
+import {PhotoEditComponent} from "module/ui/gallery/photo/photo_edit";
+import {PhotoAddComponent} from "module/ui/gallery/photo/photo_add";
 
 /**
  * The base component for routing the functions of the gallery.
@@ -21,18 +21,20 @@ const 	AlbumEditComponent 		= require("module/ui/gallery/album/album_edit"),
  *
  * @param service {galleryServices} - service for the work gallery with the server-API.
  * */
-const AlbumRoutes = React.createClass({
-	mixins: [Morearty.Mixin],
-    propTypes:{
-        basePath: React.PropTypes.string,
-        service: React.PropTypes.object
-    },
-    getDefaultProps: function() {
-        return {
-            basePath: 'gallery-not-found'
-        };
-    },
+interface AlbumRoutesProps {
+	basePath: 	string,
+	service: 	any
+}
 
+export const AlbumRoutes = (React as any).createClass({
+	mixins: [Morearty.Mixin],
+	
+	getDefaultProps: function() {
+		return {
+			basePath: 'gallery-not-found'
+		};
+	},
+	
 	render: function() {
 		const 	binding = this.getDefaultBinding();
 		
@@ -77,5 +79,3 @@ const AlbumRoutes = React.createClass({
 		);
 	}
 });
-
-module.exports = AlbumRoutes;
