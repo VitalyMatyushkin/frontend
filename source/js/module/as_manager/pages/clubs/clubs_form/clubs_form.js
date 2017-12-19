@@ -12,7 +12,8 @@ const	Form					= require('module/ui/form/form'),
 		GenderSelectorWrapper	= require('module/as_manager/pages/events/manager/event_form/components/gender_selector/gender_selector_wrapper'),
 		MultiselectDropdown		= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
 		Personal				= require('module/as_manager/pages/event/view/details/details_components/personal/personal'),
-		Loader					= require('module/ui/loader');
+		Loader					= require('module/ui/loader'),
+		{MonthCalendar}			= require('module/ui/calendar/month_calendar');
 
 const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		GenderHelper	= require('module/helpers/gender_helper'),
@@ -271,6 +272,12 @@ const ClubsForm = React.createClass({
 				venue = binding.toJS('form.venue'),
 				defaultVenue =  typeof venue !== 'undefined' ? 	{id: venue.placeId, name:venue.placeName} : undefined;
 		
+		const	todayDate			= new Date(),
+				monthStartDate		= binding.get('monthStartDate') ? binding.get('monthStartDate') : binding.get('startDate') ? binding.get('startDate') : new Date(),
+				selectedStartDate	= binding.get('startDate'),
+				monthEndDate		= binding.get('monthEndDate') ? binding.get('monthEndDate') : binding.get('finishDate') ? binding.get('finishDate') : new Date(),
+				selectedEndDate		= binding.get('finishDate');
+
 		let form = null;
 		
 		const isRequiredError = Boolean(binding.toJS('isRequiredErrorDays'));
@@ -361,62 +368,6 @@ const ClubsForm = React.createClass({
 							>
 								Price
 							</FormField>
-						</FormColumn>
-						<FormColumn
-							key			= 'column_2'
-							customStyle	= 'col-md-5 col-md-offset-1'
-						>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									Start date
-								</div>
-								<DateSelector	date				= { binding.toJS('startDate') }
-												handleChangeDate	= { this.handleChangeStartDate }
-												isSmallView			= { true }
-												extraStyle			= { 'mWithoutMargin' }
-								/>
-							</div>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									End date
-								</div>
-								<DateSelector	date				= { binding.toJS('finishDate') }
-												handleChangeDate	= { this.handleChangeFinishDate }
-												isSmallView			= { true }
-												extraStyle			= { 'mWithoutMargin' }
-								/>
-							</div>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									Time
-								</div>
-								<FullTimeInput	hourValue			= { this.getDateObjectFromTime().getHours() }
-												minutesValue		= { this.getDateObjectFromTime().getMinutes() }
-												handleChangeHour	= { this.handleChangeHour }
-												handleChangeMinutes	= { this.handleChangeMinutes }
-								/>
-							</div>
-							<FormField
-								field		= 'duration'
-								type		= 'number'
-								validation	= 'required'
-							>
-								Duration(min)
-							</FormField>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									Week days
-								</div>
-								<MultiselectDropdown
-									items			= { this.getWeekDays() }
-									selectedItems	= { this.getSelectedWeekDays() }
-									handleClickItem	= { this.handleSelectWeekDay }
-									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
-								/>
-								{isRequiredError ?
-									<div className="eForm_fieldValidIconCustom" title="Please enter Week days">⚠</div> : <div/>
-								}
-							</div>
 							<FormField
 								field			= 'venue.placeId'
 								type			= 'autocomplete'
@@ -458,6 +409,66 @@ const ClubsForm = React.createClass({
 										handleDelete	= {this.handleDeletePersonal}
 									/>
 								</div>
+							</div>
+						</FormColumn>
+						<FormColumn
+							key			= 'column_2'
+							customStyle	= 'col-md-5 col-md-offset-1'
+						>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Start date
+								</div>
+								<MonthCalendar
+									todayDate		= {todayDate}
+									monthDate		= {monthStartDate}
+									selectedDate	= {selectedStartDate}
+									onMonthClick	= { (date) => 	binding.set('monthStartDate', date) }
+									onDateClick		= { (date) =>	binding.set('startDate', date) }
+								/>
+							</div>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									End date
+								</div>
+								<MonthCalendar
+									todayDate		= {todayDate}
+									monthDate		= {monthEndDate}
+									selectedDate	= {selectedEndDate}
+									onMonthClick	= { (date) => 	binding.set('monthEndDate', date) }
+									onDateClick		= { (date) =>	binding.set('finishDate', date) }
+								/>
+							</div>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Time
+								</div>
+								<FullTimeInput	hourValue			= { this.getDateObjectFromTime().getHours() }
+												minutesValue		= { this.getDateObjectFromTime().getMinutes() }
+												handleChangeHour	= { this.handleChangeHour }
+												handleChangeMinutes	= { this.handleChangeMinutes }
+								/>
+							</div>
+							<FormField
+								field		= 'duration'
+								type		= 'number'
+								validation	= 'required'
+							>
+								Duration(min)
+							</FormField>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Week days
+								</div>
+								<MultiselectDropdown
+									items			= { this.getWeekDays() }
+									selectedItems	= { this.getSelectedWeekDays() }
+									handleClickItem	= { this.handleSelectWeekDay }
+									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
+								/>
+								{isRequiredError ?
+									<div className="eForm_fieldValidIconCustom" title="Please enter Week days">⚠</div> : <div/>
+								}
 							</div>
 						</FormColumn>
 					</Form>

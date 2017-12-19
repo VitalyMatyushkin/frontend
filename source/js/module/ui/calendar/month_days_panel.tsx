@@ -95,34 +95,34 @@ export const MonthDaysPanel = (React as any).createClass({
 	},
 	render: function(){
 		const 	year			= this.props.monthDate.getFullYear(),
-			month			= this.props.monthDate.getMonth(),
-			todayDate		= this.props.todayDate,
-			selectedDate	= this.props.selectedDate,
-			onClick			= this.props.onClick || this.noOp,
-			datesToDraw		= this.visibleDays(year, month),
-			datesCount		= datesToDraw.length,
-			rows			= [];
+				month			= this.props.monthDate.getMonth(),
+				todayDate		= this.props.todayDate,
+				selectedDate	= this.props.selectedDate,
+				onClick			= this.props.onClick || this.noOp,
+				datesToDraw		= this.visibleDays(year, month),
+				datesCount		= datesToDraw.length,
+				rows			= [];
 		
 		for(let i = 0; i < datesCount; i++){
 			const 	rowNumber 	= Math.floor(i/7),
-				date		= datesToDraw[i],
-				dateMonth	= date.getMonth(),
-				dataAtDate	= this.getEventDataAtDate(date),
-				isNextMonth	= dateMonth != month,
-				isPrevMonth	= dateMonth != month,
-				isToday		= this.areDatesInSameDay(date, todayDate),
-				isSelected	= this.areDatesInSameDay(date, selectedDate),
-				row			= rows[rowNumber] || [];
+					date		= datesToDraw[i],
+					dateMonth	= date.getMonth(),
+					dataAtDate	= this.getEventDataAtDate(date),
+					isNextMonth	= dateMonth != month,
+					isPrevMonth	= dateMonth != month,
+					isToday		= this.areDatesInSameDay(date, todayDate),
+					isSelected	= this.areDatesInSameDay(date, selectedDate),
+					row			= rows[rowNumber] || [];
 			
-			const dayPanel = <DayPanel
-				key={`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`}
-				isActive={dataAtDate}
-				isSelected={isSelected}
-				isToday={isToday}
-				isNextMonth={isNextMonth}
-				isPrevMonth={isPrevMonth}
-				onClick={ () => onClick(date) }
-				dayName={date.getDate()}
+			const 	dayPanel = <DayPanel
+					key={`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`}
+					isActive={dataAtDate}
+					isSelected={isSelected}
+					isToday={isToday}
+					isNextMonth={isNextMonth}
+					isPrevMonth={isPrevMonth}
+					onClick={ () => onClick(date) }
+					dayName={date.getDate()}
 			/>;
 			row.push(dayPanel);
 			rows[rowNumber] = row;

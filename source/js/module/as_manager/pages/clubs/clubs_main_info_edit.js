@@ -39,8 +39,8 @@ const ClubMainInfoEdit = React.createClass({
 			.then(sport => {
 				binding.set('isSync', true);
 
-				binding.set('clubsForm.startDate', Immutable.fromJS(club.schedule.startDate));
-				binding.set('clubsForm.finishDate', Immutable.fromJS(club.schedule.finishDate));
+				binding.set('clubsForm.startDate', new Date(Immutable.fromJS(club.schedule.startDate)));
+				binding.set('clubsForm.finishDate', new Date(Immutable.fromJS(club.schedule.finishDate)));
 				binding.set('clubsForm.time', Immutable.fromJS(club.schedule.time));
 
 				let days = club.schedule.days;
