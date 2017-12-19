@@ -8,9 +8,16 @@ const ErrorItem = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="bTeamErrorItem">
-				{this.props.errorText}
-			</div>
+			<tr>
+				<th scope="row">
+					{ this.props.number }
+				</th>
+				<td className="bTeamErrorItem col-md-8">
+					{this.props.errorText}
+				</td>
+				<td className="col-md-4">
+				</td>
+			</tr>
 		);
 	}
 });

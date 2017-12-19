@@ -2,7 +2,6 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-
 import {ActionPanel} from './action-panel/action-panel';
 import {FilterPanel} from './filter/filter-panel/filter-panel';
 import {Table} from './table/view/table';

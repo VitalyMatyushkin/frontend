@@ -187,9 +187,14 @@ const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
 const	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
 
-const	clubsChildrenBookingActionsAreaStyle = require('styles/ui/b_clubs_children_booking_actions_area/b_clubs_children_booking_actions_area.scss');
-const	supportedBrowsersStyle = require('styles/ui/b_supported_browsers.scss');
-const	ieAlertContentStyle = require('styles/ui/b_ie_alert_content.scss');
+const	clubsChildrenBookingActionsAreaStyle	= require('styles/ui/b_clubs_children_booking_actions_area/b_clubs_children_booking_actions_area.scss');
+const	supportedBrowsersStyle					= require('styles/ui/b_supported_browsers.scss');
+const	ieAlertContentStyle						= require('styles/ui/b_ie_alert_content.scss');
+const	playerChooserTabsStyle					= require('styles/ui/b_player_chooser_tabs.scss');
+const	playerChooserTabStyle					= require('styles/ui/b_player_chooser_tab.scss');
+const	bookedChildrenPlayer					= require('styles/ui/b_booked_children_player.scss');
+
+const	playerChooserStyle	= require('styles/ui/b_player_choosers/b_player_choosers.scss');
 
 // font awesome styles
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');

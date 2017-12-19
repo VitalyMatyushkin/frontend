@@ -17,13 +17,16 @@ const	Manager							= require('../../../ui/managers/manager'),
 		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
 
 // Helpers
-const	SavingEventHelper				= require('../../../helpers/saving_event_helper'),
-		EventConsts						= require('../../../helpers/consts/events'),
-		EventHelper						= require('../../../helpers/eventHelper'),
-		LocalEventHelper				= require('module/as_manager/pages/events/eventHelper'),
-		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
-		RivalsHelper					= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
-		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper');
+const	SavingEventHelper					= require('../../../helpers/saving_event_helper'),
+		EventConsts							= require('../../../helpers/consts/events'),
+		EventHelper							= require('../../../helpers/eventHelper'),
+		LocalEventHelper					= require('module/as_manager/pages/events/eventHelper'),
+		TeamHelper							= require('../../../ui/managers/helpers/team_helper'),
+		RivalsHelper						= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
+		SavingPlayerChangesPopupHelper		= require('./saving_player_changes_popup/helper'),
+		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
+		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
+		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
 
 const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
@@ -34,11 +37,15 @@ const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_m
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
-	listeners: [],
-	onDebounceChangeSaveButtonState: undefined,
+
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+
+	listeners: [],
+	onDebounceChangeSaveButtonState: undefined,
+	playerChoosersTabsModel: undefined,
+	teamManagerActions: undefined,
 	/**
 	 * Function check manager data and set corresponding value to isControlButtonActive
 	 */
@@ -93,6 +100,8 @@ const EventManager = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		LocalEventHelper.setParamsFromUrl(this);
+		this.initPlayerChoosersTabsModel();
+		this.initTeamManagerActions();
 
 		this.setSchoolInfo()
 			.then(() => {
@@ -120,6 +129,14 @@ const EventManager = React.createClass({
 
 		// create debounce decorator for changeControlButtonState func
 		this.onDebounceChangeSaveButtonState = debounce(this.changeSaveButtonState, 200);
+	},
+	initPlayerChoosersTabsModel: function () {
+		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
+			ManagerTypes.Default
+		);
+	},
+	initTeamManagerActions: function () {
+		this.teamManagerActions = new TeamManagerActions( {} );
 	},
 	isShowAddTeamButton: function() {
 		const	binding	= this.getDefaultBinding();
@@ -712,11 +729,13 @@ const EventManager = React.createClass({
 
 		return (
 			<Manager
-				activeSchoolId		= { this.props.activeSchoolId }
-				isShowRivals		= { !TeamHelper.isInternalEventForIndividualSport(event) }
-				isShowAddTeamButton	= { this.isShowAddTeamButton() }
-				isCopyMode			= { this.mode === EventHelper.EVENT_CREATION_MODE.COPY }
-				binding				= { managerBinding }
+				activeSchoolId			= { this.props.activeSchoolId }
+				isShowRivals			= { !TeamHelper.isInternalEventForIndividualSport(event) }
+				isShowAddTeamButton		= { this.isShowAddTeamButton() }
+				isCopyMode				= { this.mode === EventHelper.EVENT_CREATION_MODE.COPY }
+				binding					= { managerBinding }
+				playerChoosersTabsModel	= { this.playerChoosersTabsModel }
+				actions					= { this.teamManagerActions }
 			/>
 		);
 	},

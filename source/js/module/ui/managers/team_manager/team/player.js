@@ -93,33 +93,32 @@ const Player = React.createClass({
 					mSelected:		self.state.isSelected
 				}),
 				playerNameClass = classNames({
-					eTeam_playerItem:	true,
-					mName:				true,
-					mLong:				self.props.isNonTeamSport
+					'col-md-3': !self.props.isNonTeamSport,
+					'col-md-8': self.props.isNonTeamSport
 				}),
 				playerFormClass = classNames({
-					eTeam_playerItem:	true,
-					mForm:				true,
-					mLong:				self.props.isNonTeamSport
+					'col-md-1': !self.props.isNonTeamSport,
+					'col-md-4': self.props.isNonTeamSport
 				});
 
 		return (
-			<div	className	= {playerClass}
-					onClick		= {self.handlePlayerClick}
+			<tr
+				className	= { playerClass }
+				onClick		= { self.handlePlayerClick }
 			>
-				<div className="eTeam_playerItem mNumber">
-					{this.props.number}
-				</div>
-				<div className={playerNameClass} title={`${player.firstName} ${player.lastName}`}>
+				<th scope="row">
+					{ this.props.number }
+				</th>
+				<td className = { playerNameClass } >
 					{`${player.firstName} ${player.lastName}`}
-				</div>
-				<div className={playerFormClass}>
-					{player.form ? player.form.name : ""}
-				</div>
-				{self.renderPositions()}
-				{self.renderIsCaptain()}
-				{self.renderSub()}
-			</div>
+				</td>
+				<td className = { playerFormClass } >
+					{ player.form ? player.form.name : ""}
+				</td>
+				{ self.renderPositions() }
+				{ self.renderIsCaptain() }
+				{ self.renderSub() }
+			</tr>
 		);
 	}
 });

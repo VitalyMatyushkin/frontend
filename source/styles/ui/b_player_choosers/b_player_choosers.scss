@@ -1,0 +1,10 @@
+.bPlayerChoosers {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.ePlayerChoosers_playerChooserWrapper {
+  &.mDisable {
+    display: none;
+  }
+}

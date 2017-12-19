@@ -2,107 +2,23 @@
 @import "../../!mixins";
 
 .bTeam {
-  width: 392px;
-  height: 320px;
+  width:        456px;
+  height:       322px;
+
+  border-top:   solid 1px #c2c2c2;
+  border-left:  solid 1px #c2c2c2;
+
+  box-sizing:   border-box;
 
   background: #fff;
-
   color: #2a2a2a;
-
-  &.mDefaultView {
-    width:        456px;
-    height:       322px;
-    border-left:  solid 1px #c2c2c2;
-    box-sizing: border-box;
-  }
-
-  &.mSkypeStyleView {
-    border: $BORDER;
-    border-right: none;
-  }
-}
-
-.eTeam_playerList {
-  height: 285px;
 
   overflow-y: auto;
 }
 
 .eTeam_player {
-  cursor: pointer;
-
-  padding: 10px 5px 5px;
-
-  &.mHead {
-    color: #939393;
-    border-top: solid 1px #c2c2c2;
-    border-bottom: solid 1px #c2c2c2;
-
-    &:hover {
-      background-color: #fff;
-      cursor: auto;
-    }
-  }
-
   &.mSelected {
     background-color: #d7d7d7;
-  }
-
-  &:hover {
-    background-color: #d7d7d7;
-  }
-}
-
-.eTeam_playerItem {
-  display: inline-block;
-  vertical-align: top;
-
-  height: 20px;
-
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-
-  &.mNumber {
-    width: 5%;
-  }
-
-  &.mName {
-    @include text-overflow;
-    white-space: nowrap;
-
-    width: 32%;
-
-    &.mDefaultView {
-      width: 30%;
-    }
-    &.mLong {
-      width: 45%;
-    }
-  }
-
-  &.mForm {
-    width: 8%;
-    &.mLong {
-      width: 50%;
-    }
-  }
-
-  &.mPosition {
-    width: 33%;
-  }
-
-  &.mSub {
-    width: 7%;
-  }
-
-  &.mCaptain {
-    width: 15%;
-  }
-
-  &.mRemove {
-    width: 5%;
   }
 }
 

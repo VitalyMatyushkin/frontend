@@ -10,8 +10,13 @@ const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
 		Error		= require('module/ui/managers/models/error'),
 		Loader		= require('module/ui/loader');
 
-const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		ClubsActions	= require('module/as_manager/pages/clubs/clubs_actions');
+const	TeamHelper							= require('module/ui/managers/helpers/team_helper'),
+		RandomHelper						= require('module/helpers/random_helper'),
+		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
+		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions'),
+		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
+		{ ClubsChildrenBookingActionArea }	= require('module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_action_area/clubs_children_booking_action_area'),
+		ClubsActions						= require('module/as_manager/pages/clubs/clubs_actions');
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
 const	ClubcChildrenWrapperStyle	= require('styles/pages/b_club_children_manager_wrapper.scss');
@@ -23,8 +28,14 @@ const ClubChildrenEdit = React.createClass({
 		clubId:			React.PropTypes.string.isRequired
 	},
 	listeners: [],
+	playerChoosersTabsModel: undefined,
+	teamManagerActions: undefined,
 	componentWillMount: function () {
 		const binding = this.getDefaultBinding();
+
+		this.initPlayerChoosersTabsModel();
+		this.initTeamManagerActions();
+		this.setNewManagerComponentKey();
 
 		const clubId = this.props.clubId;
 
@@ -102,6 +113,14 @@ const ClubChildrenEdit = React.createClass({
 			})
 		);
 	},
+	initPlayerChoosersTabsModel: function () {
+		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
+			ManagerTypes.ChildrenBooking
+		);
+	},
+	initTeamManagerActions: function () {
+		this.teamManagerActions = new TeamManagerActions( {clubId: this.props.clubId} );
+	},
 	validate: function () {
 		const binding = this.getDefaultBinding();
 		const error = binding.toJS('error');
@@ -119,6 +138,9 @@ const ClubChildrenEdit = React.createClass({
 		}
 
 		binding.set('error', Immutable.fromJS(error));
+	},
+	setNewManagerComponentKey: function() {
+		this.getDefaultBinding().set('managerComponentKey', RandomHelper.getRandomString());
 	},
 	getTeamManagerDefaultState: function (school, club, sport, participants) {
 		const genders = TeamHelper.getFilterGender(club.gender);
@@ -139,7 +161,14 @@ const ClubChildrenEdit = React.createClass({
 		const clubStudentsCount = this.getDefaultBinding().toJS('teamManager.teamStudents').length;
 		const maxParticipants = this.getMaxParticipants();
 
-		return typeof maxParticipants !== 'undefined' ? clubStudentsCount <= maxParticipants : true;
+		return (
+			clubStudentsCount > 0 &&
+			(
+				typeof maxParticipants !== 'undefined' ?
+					clubStudentsCount <= maxParticipants :
+					true
+			)
+		);
 	},
 	getMaxParticipants: function () {
 		return this.getDefaultBinding().toJS('club.maxParticipants');
@@ -220,7 +249,23 @@ const ClubChildrenEdit = React.createClass({
 	},
 	doAfterSaveActions: function () {
 		this.getDefaultBinding().set('isSync', true);
-		window.simpleAlert('Changes have been applied successfully.');
+		window.simpleAlert('The pupils have been added successfully.');
+	},
+	handleSendMessages: function () {
+		this.getDefaultBinding().set('isSync', false);
+		return window.Server.schoolClubSendMessages.post(
+			{
+				schoolId:	this.props.activeSchoolId,
+				clubId:		this.props.clubId
+			},
+			{}
+		).then(() => {
+			window.simpleAlert('Messages has been send successfully.');
+
+			this.setNewManagerComponentKey();
+
+			this.getDefaultBinding().set('isSync', true);
+		});
 	},
 	handleClickSubmitButton: function () {
 		if(this.isSaveButtonEnable()) {
@@ -239,7 +284,11 @@ const ClubChildrenEdit = React.createClass({
 			return (
 				<div className='bClubChildrenManagerWrapper'>
 					<Header/>
+					<ClubsChildrenBookingActionArea
+						handleSendMessages = { () => this.handleSendMessages() }
+					/>
 					<TeamManager
+						key				= { this.getDefaultBinding().toJS('managerComponentKey') }
 						isNonTeamSport	= { true }
 						binding			= {
 							{
@@ -247,6 +296,8 @@ const ClubChildrenEdit = React.createClass({
 								error:		binding.sub('error')
 							}
 						}
+						playerChoosersTabsModel = { this.playerChoosersTabsModel }
+						actions					= { this.teamManagerActions }
 					/>
 					<div className="eClubChildrenManagerWrapper_footer">
 						<Button

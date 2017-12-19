@@ -19,13 +19,16 @@ const PlayerSubColumn = React.createClass({
 
 	render: function() {
 		return (
-			<div className="eTeam_playerItem mSub" onClick={this.handleClick}>
+			<td
+				className	= "col-md-1"
+				onClick		= { this.handleClick }
+			>
 				<input	onChange	= { this.handleCheckBoxClick }
 						id  		= "sub_checkbox"
 						type		= "checkbox"
 						checked		= { this.isChecked() }
 				/>
-			</div>
+			</td>
 		);
 	}
 });

@@ -10,11 +10,13 @@ const	Promise							= require('bluebird'),
 const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		Manager							= require('../../../../ui/managers/manager');
 
-const	EventHelper						= require('module/helpers/eventHelper'),
-		TeamHelper						= require('../../../../ui/managers/helpers/team_helper'),
-		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
-		MoreartyHelper					= require('../../../../helpers/morearty_helper'),
-		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper');
+const	EventHelper							= require('module/helpers/eventHelper'),
+		TeamHelper							= require('../../../../ui/managers/helpers/team_helper'),
+		SavingEventHelper					= require('../../../../helpers/saving_event_helper'),
+		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
+		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
+		SavingPlayerChangesPopupHelper		= require('../../events/saving_player_changes_popup/helper'),
+		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
 
 const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');
 
@@ -23,6 +25,8 @@ const InviteAcceptView = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	playerChoosersTabsModel: undefined,
+	teamManagerActions: undefined,
     display: 'InviteAccept',
 	// debounce decorator for changeControlButtonState func
 	onDebounceChangeControlButtonState: undefined,
@@ -40,6 +44,9 @@ const InviteAcceptView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
             inviteId = rootBinding.get('routing.pathParameters.0');
+
+		this.initPlayerChoosersTabsModel();
+		this.initTeamManagerActions();
 
         binding.clear();
 		binding.set('isSavingChangesModePopupOpen', false);
@@ -82,6 +89,14 @@ const InviteAcceptView = React.createClass({
 				self.addListeners();
 			});
     },
+	initPlayerChoosersTabsModel: function () {
+		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
+			ManagerTypes.Default
+		);
+	},
+	initTeamManagerActions: function () {
+		this.teamManagerActions = new TeamManagerActions( {} );
+	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
 	},
@@ -283,12 +298,14 @@ const InviteAcceptView = React.createClass({
 
 		return (
 			<Manager
-				activeSchoolId		= { this.props.activeSchoolId }
-				isShowRivals		= { isShowRivals }
-				isInviteMode		= { true }
-				isShowAddTeamButton	= { false }
-				selectedRivalIndex	= { 0 }
-				binding				= { managerBinding }
+				activeSchoolId			= { this.props.activeSchoolId }
+				isShowRivals			= { isShowRivals }
+				isInviteMode			= { true }
+				isShowAddTeamButton		= { false }
+				selectedRivalIndex		= { 0 }
+				binding					= { managerBinding }
+				playerChoosersTabsModel = { this.playerChoosersTabsModel }
+				actions					= { this.teamManagerActions }
 			/>
 		);
 	},

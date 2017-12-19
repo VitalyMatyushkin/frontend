@@ -24,22 +24,26 @@ const DefaultTeam = React.createClass({
 
 		if(self.props.isNonTeamSport) {
 			return (
-				<div className="eTeam_player mHead">
-					<div className="eTeam_playerItem mNumber">№</div>
-					<div className="eTeam_playerItem mName mLong">Name</div>
-					<div className="eTeam_playerItem mForm mLong">Form</div>
-				</div>
-				);
+				<thead>
+					<tr>
+						<th>#</th>
+						<th className='col-md-8'>Name</th>
+						<th className='col-md-4'>Form</th>
+					</tr>
+				</thead>
+			);
 		} else {
 			return (
-				<div className="eTeam_player mHead">
-					<div className="eTeam_playerItem mNumber">№</div>
-					<div className="eTeam_playerItem mName">Name</div>
-					<div className="eTeam_playerItem mForm">Form</div>
-					<div className="eTeam_playerItem mPosition">Position</div>
-					<div className="eTeam_playerItem mCaptain">Captain</div>
-					<div className="eTeam_playerItem mSub">Sub</div>
-				</div>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>Form</th>
+						<th>Position</th>
+						<th>Captain</th>
+						<th>Sub</th>
+					</tr>
+				</thead>
 			);
 		}
 	},
@@ -79,10 +83,12 @@ const DefaultTeam = React.createClass({
 		return (
 			<div className="eTeamWrapper_teamManagerWrapper">
 				<div className="bTeam mDefaultView">
-					{self.renderTableHead()}
-					<div className="eTeam_playerList">
-						{self._renderPlayers()}
-					</div>
+					<table className="table table-hover">
+						{ self.renderTableHead() }
+						<tbody>
+							{ self._renderPlayers() }
+						</tbody>
+					</table>
 				</div>
 				<RemovePlayersButton	isRemovePlayerButtonBlock		= { this.props.isRemovePlayerButtonBlock }
 										handleClickRemovePlayerButton	= { this.props.handleClickRemovePlayerButton }

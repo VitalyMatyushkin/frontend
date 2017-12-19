@@ -19,31 +19,26 @@ const Player = React.createClass({
 		});
 		self.props.handleClickStudent(self.props.player.id);
 	},
-	handleDoubleClickPlayer: function() {
-		//TODO implement me
-	},
 	render: function() {
-		const self = this;
-
-		const	player = self.props.player,
-				playerClass = classNames({
-					eTeam_player:	true,
-					mSelected:		self.state.isSelected
+		const	player		= this.props.player,
+				playerClass	= classNames({
+					ePlayerChooser_player:	true,
+					mSelected:				this.state.isSelected
 				}),
-				formName = typeof player.form !== 'undefined' ? player.form.name : '';
+				formName	= typeof player.form !== 'undefined' ? player.form.name : '';
 
 		return (
-			<div
-				className={playerClass}
-				onClick={self.handleClickPlayer}
+			<tr
+				className	= { playerClass }
+				onClick		= { this.handleClickPlayer }
 			>
-				<div className="ePlayerChooser_playerName">
+				<td className="col-md-4">
 					{`${player.firstName} ${player.lastName}`}
-				</div>
-				<div className="ePlayerChooser_playerForm">
+				</td>
+				<td className="col-md-3">
 					{formName}
-				</div>
-			</div>
+				</td>
+			</tr>
 		);
 	}
 });

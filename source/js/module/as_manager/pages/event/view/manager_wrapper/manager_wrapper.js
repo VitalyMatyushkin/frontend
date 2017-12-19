@@ -12,10 +12,13 @@ const	Manager							= require('./../../../../../ui/managers/manager'),
 		classNames						= require('classnames'),
 		TeamHelper						= require('./../../../../../ui/managers/helpers/team_helper');
 
-const	Actions							= require('../../actions/actions'),
-		SavingPlayerChangesPopup		= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
-		EventConsts						= require('module/helpers/consts/events'),
-		SavingEventHelper				= require('../../../../../helpers/saving_event_helper');
+const	Actions								= require('../../actions/actions'),
+		SavingPlayerChangesPopup			= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		EventConsts							= require('module/helpers/consts/events'),
+		SavingEventHelper					= require('../../../../../helpers/saving_event_helper'),
+		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
+		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
+		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
 
 const	TeamManagerWrapperStyle			= require('../../../../../../../styles/ui/b_team_manager_wrapper.scss');
 
@@ -24,8 +27,10 @@ const ManagerWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
+	playerChoosersTabsModel: undefined,
 	// debounce decorator for changeControlButtonState func
 	onDebounceChangeControlButtonState: undefined,
+	teamManagerActions: undefined,
 	/**
 	 * Function check manager data and set corresponding value to isControlButtonActive
 	 */
@@ -38,6 +43,9 @@ const ManagerWrapper = React.createClass({
 	componentWillMount: function() {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
+
+		this.initPlayerChoosersTabsModel();
+		this.initTeamManagerActions();
 
 		const	managerWrapperRivals	= this.getRivals(event, binding.toJS('rivals')),
 				selectedRivalIndex		= this.initSelectedRivalIndex(managerWrapperRivals),
@@ -75,6 +83,14 @@ const ManagerWrapper = React.createClass({
 
 		// create debounce decorator for changeControlButtonState func
 		this.onDebounceChangeControlButtonState = debounce(this.changeControlButtonState, 200, true);
+	},
+	initPlayerChoosersTabsModel: function () {
+		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
+			ManagerTypes.Default
+		);
+	},
+	initTeamManagerActions: function () {
+		this.teamManagerActions = new TeamManagerActions( {} );
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();
@@ -315,6 +331,8 @@ const ManagerWrapper = React.createClass({
 				isShowRivals			= { this.isShowRivals() }
 				isShowAddTeamButton		= { false }
 				indexOfDisplayingRival	= { binding.toJS('selectedRivalIndex') }
+				playerChoosersTabsModel = { this.playerChoosersTabsModel }
+				actions					= { this.teamManagerActions }
 			/>
 		)
 	},

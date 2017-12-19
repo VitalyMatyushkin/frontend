@@ -24,7 +24,7 @@ const PlayerPositionColumn = React.createClass({
 		const selectedPositionId = self.props.selectedPositionId;
 
 		return (
-			<div className="eTeam_playerItem mSelector mPosition">
+			<td className="col-md-5">
 				<select	className	= "eTeam_positionSelector"
 						id  		= "teamPosition_select"
 						value		= {selectedPositionId}
@@ -37,7 +37,7 @@ const PlayerPositionColumn = React.createClass({
 					</option>
 					{ self.renderPositions() }
 				</select>
-			</div>
+			</td>
 		);
 	}
 });

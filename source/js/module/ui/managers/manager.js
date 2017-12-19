@@ -35,7 +35,9 @@ const Manager = React.createClass({
 		isCopyMode				: React.PropTypes.bool,
 		isShowAddTeamButton		: React.PropTypes.bool,
 		indexOfDisplayingRival	: React.PropTypes.number,
-		selectedRivalIndex		: React.PropTypes.number
+		selectedRivalIndex		: React.PropTypes.number,
+		playerChoosersTabsModel	: React.PropTypes.object.isRequired,
+		actions					: React.PropTypes.object.isRequired
 	},
 	listeners: [],
 	teamWrapperListeners: [],
@@ -715,7 +717,11 @@ const Manager = React.createClass({
 			<div className="bTeamsManager">
 				{ this.renderRivals() }
 				<div className="eTeamsManager_body">
-					<TeamBundle binding={teamBundleBinding}/>
+					<TeamBundle
+						binding					= { teamBundleBinding }
+						playerChoosersTabsModel	= { this.props.playerChoosersTabsModel }
+						actions					= { this.props.actions }
+					/>
 					{ this.renderGameField() }
 				</div>
 			</div>

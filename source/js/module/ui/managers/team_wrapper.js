@@ -14,7 +14,9 @@ const TeamWrapper = React.createClass({
 	listeners: [],
 	propTypes: {
 		handleIsSelectTeamLater:	React.PropTypes.func,
-		otherTeamPlayers:			React.PropTypes.array.isRequired
+		otherTeamPlayers:			React.PropTypes.array.isRequired,
+		playerChoosersTabsModel:	React.PropTypes.object.isRequired,
+		actions:					React.PropTypes.object.isRequired
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -383,8 +385,11 @@ const TeamWrapper = React.createClass({
 				<div className={plugClass}>
 				</div>
 				{ this.renderTeamNameComponent() }
-				<TeamManager	isNonTeamSport	= {TeamHelper.isNonTeamSport(event)}
-								binding			= {this.getTeamManagerBinding()}
+				<TeamManager
+					isNonTeamSport			= { TeamHelper.isNonTeamSport(event) }
+					binding					= { this.getTeamManagerBinding() }
+					actions					= { this.props.actions }
+					playerChoosersTabsModel	= { this.props.playerChoosersTabsModel }
 				/>
 				<div className="eTeamWrapper_footer">
 					<Button

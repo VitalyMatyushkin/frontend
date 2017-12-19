@@ -18,6 +18,10 @@ const	TeamBundleStyle	= require('../../../../styles/ui/teams_manager/b_team_bund
 
 const TeamBundle = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		playerChoosersTabsModel:	React.PropTypes.object.isRequired,
+		actions:					React.PropTypes.object.isRequired
+	},
 	listeners: [],
 	componentWillMount: function() {
 		this.initBinding();
@@ -396,6 +400,8 @@ const TeamBundle = React.createClass({
 				<div className = { _classNames[index] }>
 					<TeamWrapper
 						binding					= { binding }
+						actions					= { this.props.actions }
+						playerChoosersTabsModel	= { this.props.playerChoosersTabsModel }
 						otherTeamPlayers		= { this.getOtherTeamPlayersByRivalIndex(index) }
 						handleIsSelectTeamLater	= { this.handleIsSelectTeamLater.bind(this, index) }
 					/>

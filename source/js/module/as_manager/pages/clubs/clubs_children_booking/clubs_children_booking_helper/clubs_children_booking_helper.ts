@@ -1,4 +1,4 @@
-export class ClubsChildrenBookingHelper {
+export const ClubsChildrenBookingHelper = {
 	getClientMessageStatusValueByServerValue(serverValue) {
 		const map = {
 			"NOT_SENT": 'Not sent',
@@ -9,4 +9,4 @@ export class ClubsChildrenBookingHelper {
 
 		return map[serverValue];
 	}
-}
+};
