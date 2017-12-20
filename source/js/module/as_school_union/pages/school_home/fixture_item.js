@@ -7,6 +7,7 @@ const 	React				= require('react'),
 		DateTimeMixin		= require('module/mixins/datetime'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		SportHelper 		= require('module/helpers/sport_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		SportIcon			= require('module/ui/icons/sport_icon'),
 		ChallengeModel		= require('module/ui/challenges/challenge_model'),
 		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
@@ -41,31 +42,38 @@ const FixtureItem = React.createClass({
 		}
 		return name;
 	},
-	renderLeftOpponentSide: function (event, model) {
-		const imgStyle = {
-			backgroundImage: 'url(' + model.rivals[0].schoolPic + ')'
-		};
+	renderOpponentByOrder: function (order, event, model) {
+		let imgStyle = {backgroundImage:''};
+		let name = '';
+
+		const currentRival = model.rivals[order];
+		switch ( true ) {
+			case typeof currentRival !== 'undefined' && TeamHelper.isNewEvent(event): {
+				imgStyle = {
+					backgroundImage: 'url(' + currentRival.school.pic + ')'
+				};
+				name = typeof currentRival.team !== 'undefined' ?
+					`${currentRival.team.name} [${currentRival.school.name}]` :
+					currentRival.school.name;
+				break;
+			}
+			case typeof currentRival !== 'undefined' && !TeamHelper.isNewEvent(event): {
+				imgStyle = {
+					backgroundImage: 'url(' + currentRival.schoolPic + ')'
+				};
+				name = currentRival.value;
+				break;
+			}
+		}
 
 		return (
 			<div className="eFixture_item mOpponent">
 				<div className="eFixture_item_imgContainer">
-					<div className="eFixture_item_img" style={imgStyle}/>
+					<div className = "eFixture_item_img" style = { imgStyle } />
 				</div>
-				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[0].value)}</div>
-			</div>
-		);
-	},
-
-	renderRightOpponentSide: function (event, model) {
-		const imgStyle = {
-			backgroundImage: 'url(' + model.rivals[1].schoolPic + ')'
-		};
-		return (
-			<div className="eFixture_item mOpponent">
-				<div className="eFixture_item_imgContainer">
-					<div className="eFixture_item_img" style={imgStyle}/>
+				<div className="eFixture_item mSchoolName">
+					{ this.cropOpponentName(name) }
 				</div>
-				<div className="eFixture_item mSchoolName">{this.cropOpponentName(model.rivals[1].value)}</div>
 			</div>
 		);
 	},
@@ -81,8 +89,8 @@ const FixtureItem = React.createClass({
 				  */
 				activeSchoolId				= event.inviterSchoolId,
 				isAwaitingOpponent			= event.status === 'INVITES_SENT',
-				challengeModel				= new ChallengeModel(event, activeSchoolId),
-				challengeModelForCricket	= new ChallengeModel(event, ''), //for school union public site we don't use activeSchoolId
+				challengeModel				= new ChallengeModel(event, activeSchoolId, 'SchoolUnion'),
+				challengeModelForCricket	= new ChallengeModel(event, '', 'SchoolUnion'), //for school union public site we don't use activeSchoolId
 				score 						= SportHelper.isCricket(challengeModel.sport) ? challengeModelForCricket.textResult : challengeModel.score,
 				scoreText 					= SportHelper.isCricket(challengeModel.sport) ? '' : 'Score';
 
@@ -95,18 +103,18 @@ const FixtureItem = React.createClass({
 								<SportIcon name={sportName || ''} className="bIcon_mSport"/>
 							</div>
 							<div className="eFixture_item mInfo">
-								{this.getFixtureInfo(event)}
+								{ this.getFixtureInfo(event) }
 							</div>
 						</div>
 						<div className="eFixture_rightSide">
-							{this.renderLeftOpponentSide(event, challengeModel)}
+							{ this.renderOpponentByOrder(0, event, challengeModel) }
 							<div className="eFixture_item mResult">
 								<div>
 									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : scoreText}</div>
 									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${score}`}</div>
 								</div>
 							</div>
-							{this.renderRightOpponentSide(event, challengeModel)}
+							{ this.renderOpponentByOrder(1, event, challengeModel) }
 						</div>
 					</div>
 				</div>

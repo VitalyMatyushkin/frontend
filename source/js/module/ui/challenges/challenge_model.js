@@ -1,11 +1,13 @@
 /**
  * Created by Anatoly on 28.03.2016.
  */
-const   {DateHelper}				= require('module/helpers/date_helper'),
+const   {DateHelper}			= require('module/helpers/date_helper'),
         EventHelper				= require('module/helpers/eventHelper'),
 		SportHelper 			= require('module/helpers/sport_helper'),
 		ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
-        TeamHelper				= require('module/ui/managers/helpers/team_helper');
+        TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		ViewModeConsts			= require('module/ui/view_selector/consts/view_mode_consts'),
+		RivalManager			= require('module/as_manager/pages/event/view/rivals/helpers/rival_manager');
 
 /**
  * This component contains the necessary information to render header or the event list.
@@ -35,7 +37,7 @@ const   {DateHelper}				= require('module/helpers/date_helper'),
 
 const CRICKET_WICKETS = 10;
 
-const ChallengeModel = function(event, activeSchoolId, activeSchoolKind){
+const ChallengeModel = function(event, activeSchoolId, activeSchoolKind) {
 	this.id 		= event.id;
     this.name 		= this._getName(event, activeSchoolId);
 	this.dateUTC	= event.startTime;
@@ -52,7 +54,7 @@ const ChallengeModel = function(event, activeSchoolId, activeSchoolKind){
 	this.isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
 
-    this.rivals 	= this._getRivals(event, activeSchoolId);
+    this.rivals 	= this._getRivals(event, activeSchoolId, activeSchoolKind);
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
 		this.scoreAr = this._getScoreAr(event, activeSchoolId);
 		this.score = this._getScore(event, activeSchoolId);
@@ -66,11 +68,23 @@ ChallengeModel.prototype._getName = function(event, activeSchoolId){
 		event.generatedNames.official;
 };
 
-ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
-    const rivals = [];
+ChallengeModel.prototype._getRivals = function(event, activeSchoolId, activeSchoolKind){
+    let rivals = [];
 
-    rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId));
-    rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId));
+    // TODO it's temporary plug.
+	// Problem: for fixtures list on public school union page we need different rivals data then by default
+	// RivalManager can provide data that similar to data we need but strictly speaking rival manager
+	// is not intended for this purpose
+	// Also SU fixture list view support this data type
+	// But in global perspective we need refactoring for rivals data
+	// Because rivals data doesn't support multiparty events
+	if( TeamHelper.isNewEvent(event) && activeSchoolKind === 'SchoolUnion') {
+		event.schoolsData = event.invitedSchools;
+		rivals = rivals.concat(RivalManager.getRivalsByEvent(activeSchoolId, event, ViewModeConsts.VIEW_MODE.BLOCK_VIEW));
+	} else {
+		rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId));
+		rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId));
+	}
 
     return rivals;
 };
