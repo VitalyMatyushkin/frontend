@@ -119,7 +119,12 @@ const ClubChildrenEdit = React.createClass({
 		);
 	},
 	initTeamManagerActions: function () {
-		this.teamManagerActions = new TeamManagerActions( {clubId: this.props.clubId} );
+		this.teamManagerActions = new TeamManagerActions(
+			{
+				schoolId:	this.props.activeSchoolId,
+				clubId:		this.props.clubId
+			}
+		);
 	},
 	validate: function () {
 		const binding = this.getDefaultBinding();

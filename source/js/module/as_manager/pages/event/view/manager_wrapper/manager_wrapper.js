@@ -90,7 +90,7 @@ const ManagerWrapper = React.createClass({
 		);
 	},
 	initTeamManagerActions: function () {
-		this.teamManagerActions = new TeamManagerActions( {} );
+		this.teamManagerActions = new TeamManagerActions( {schoolId: this.props.activeSchoolId} );
 	},
 	addListeners: function() {
 		this.addListenerForTeamManager();

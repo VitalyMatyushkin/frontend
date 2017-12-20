@@ -2,14 +2,17 @@ import { TabTypes } from 'module/ui/managers/models/player_choosers_tabs_model/t
 import { PlayerChoosersTabModel } from "module/ui/managers/models/player_choosers_tabs_model/player_choosers_tab_model";
 
 interface TeamManagerActionsOptions {
+	schoolId: string
 	clubId?: string
 }
 
 export class TeamManagerActions implements TeamManagerActionsOptions {
 
+	schoolId: string;
 	clubId?: string;
 
 	constructor(options: TeamManagerActionsOptions) {
+		this.schoolId = options.schoolId;
 		this.clubId = options.clubId
 	}
 
@@ -43,7 +46,7 @@ export class TeamManagerActions implements TeamManagerActionsOptions {
 		return service;
 	}
 
-	search(selectedTabId: string, tabs: PlayerChoosersTabModel[], schoolId: string, requestFilter: any) {
+	search(selectedTabId: string, tabs: PlayerChoosersTabModel[], requestFilter: any) {
 		// TODO refactoring
 		if(this.getCurrentTabType(selectedTabId, tabs) === TabTypes.ChildrenBookingBookedChildrenTab) {
 			delete requestFilter.filter.where.formId;
@@ -53,7 +56,7 @@ export class TeamManagerActions implements TeamManagerActionsOptions {
 
 		return this.getSearchService(selectedTabId, tabs).get(
 			{
-				schoolId:	schoolId,
+				schoolId:	this.schoolId,
 				clubId:		this.clubId
 			},
 			requestFilter
