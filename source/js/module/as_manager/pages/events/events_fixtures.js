@@ -4,13 +4,15 @@
 
 const   React		= require('react'),
         Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
-		{DateHelper} 	= require('module/helpers/date_helper'),
-		EventHelper	= require('module/helpers/eventHelper'),
-		MonthNavBar	= require('module/ui/calendar/month_year_selector'),
-		Fixtures 	= require('module/ui/fixtures/fixtures'),
+		Immutable	= require('immutable');
 
-		FixturesStyles	= require('./../../../../../styles/ui/bFixtures.scss');
+const	{ MonthYearSelector }	= require('module/ui/calendar/month_year_selector'),
+		Fixtures				= require('module/ui/fixtures/fixtures');
+
+const	{ DateHelper}	= require('module/helpers/date_helper'),
+		EventHelper		= require('module/helpers/eventHelper');
+
+const	FixturesStyles	= require('./../../../../../styles/ui/bFixtures.scss');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -71,8 +73,9 @@ const EventFixtures = React.createClass({
 
 		return (
 			<div className="bFixtures">
-				<MonthNavBar date = {binding.get('dateCalendar')}
-							 onMonthClick = {date => this.onMonthClick(date)}
+				<MonthYearSelector
+					date			= { binding.get('dateCalendar') }
+					onMonthClick	= { date => this.onMonthClick(date) }
 				/>
 				<Fixtures	events			= {binding.toJS('models')}
 							activeSchoolId	= {activeSchoolId}
