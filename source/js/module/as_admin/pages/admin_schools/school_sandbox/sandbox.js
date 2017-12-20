@@ -15,7 +15,9 @@ const 	RouterView 							= require('module/core/router'),
 		NotificationsComponent 				= require('module/as_admin/pages/admin_schools/school_sandbox/notifications/notifications_page'),
 		ExportComponent 					= require('module/as_admin/pages/admin_schools/school_sandbox/export_students/export_students'),
 		ConsentRequestTemplateComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/template/template'),
-		SportsComponent						= require('./favorite_sports/sports_page');
+		SportsComponent						= require('./favorite_sports/sports_page'),
+		{UserStats}							= require('module/as_admin/pages/admin_schools/school_sandbox/user_stats/user-stats'),
+		{CSVExportButton}					= require('module/shared_pages/users/user_list/buttons/csv_export_button');
 
 const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
 
@@ -105,6 +107,12 @@ const SchoolSandbox = React.createClass({
 				name:'Template',
 				key:'template',
 				routes:[`/school_sandbox/${schoolId}/template`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/user_stats`,
+				name:'User stats',
+				key:'user_stats',
+				routes:[`/school_sandbox/${schoolId}/user_stats`]
 			}
 		];
 		//Set sub menu items in default binding
@@ -123,11 +131,19 @@ const SchoolSandbox = React.createClass({
 			})
 			.catch(error=>console.log(error.errorThrown));
 	},
+	getCSVExportButton(handleCSVExportClick) {
+		return (
+			<CSVExportButton
+				handleClick = {handleCSVExportClick}
+			/>
+		)
+	},
 	render:function(){
 		const 	binding 	= this.getDefaultBinding(),
 				subBinding 	= binding.sub('schoolSandboxRouting'),
 				global 		= this.getMoreartyContext().getBinding(),
-				schoolId 	= global.get('routing.pathParameters.0');
+				schoolId 	= global.get('routing.pathParameters.0'),
+				btnCSVExport= this.getCSVExportButton;
 
 		return (
 			<div>
@@ -184,6 +200,13 @@ const SchoolSandbox = React.createClass({
 							binding 	= { binding }
 							schoolId 	= { schoolId }
 							component 	= { ConsentRequestTemplateComponent }
+						/>
+						<Route
+							path 		= "/school_sandbox/:schoolId/user_stats"
+							binding 	= { binding }
+							schoolId 	= { schoolId }
+							component 	= { UserStats }
+							btnCSVExport= { btnCSVExport }
 						/>
 					</RouterView>
 				</div>

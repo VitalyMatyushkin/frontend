@@ -101,6 +101,9 @@ const serviceList = {
 		//Filtering services
 		serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;				//(filter)
 		serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;		//(schoolId, filter)
+		
+		//user statistic
+		serviceList.userStats = new Service('/superadmin/stats/userpresence', binding);
 	},
 	// Services which not require authorization
 	initializeOpenServices: function() {
