@@ -1,7 +1,6 @@
 const React = require('react');
 
 const FixtureShowAllItemButton = React.createClass({
-
 	propTypes: {
 		text:			React.PropTypes.string.isRequired,
 		handleClick:	React.PropTypes.func.isRequired,
@@ -9,14 +8,18 @@ const FixtureShowAllItemButton = React.createClass({
 	},
 
 	render: function() {
-		var classes = this.props.isShowAllItems ? "fa fa-angle-up" : "fa fa-angle-down";
+		const arrowStyle = this.props.isShowAllItems ? "fa fa-angle-up" : "fa fa-angle-down";
+		const text = this.props.isShowAllItems ? "Hide" : this.props.text;
 
 		return (
-			<div	onClick		={ this.props.handleClick }
-					className	="bBigButton"
+			<div
+				className	= "eSchoolUnionSchoolList_show_items_button"
+				onClick		= { this.props.handleClick }
 			>
-				<i className={ classes } aria-hidden="true"></i>
-				<span>{ this.props.isShowAllItems ? "Hide" : this.props.text }</span>
+				<i className = { arrowStyle } aria-hidden = "true" />
+				<span>
+					{ text }
+				</span>
 			</div>
 		)
 	}

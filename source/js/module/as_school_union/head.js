@@ -1,9 +1,9 @@
 const	Morearty	= require('morearty'),
 		React		= require('react');
 
-const	Logo				= require('module/as_school/head/logo'),
-		{PublicMenu}		= require('module/ui/menu/public_menu'),
-		{SchoolUnionActions}= require('./school_union_actions');
+const	Logo					= require('module/as_school/head/logo'),
+		{ PublicMenu }			= require('module/ui/menu/public_menu'),
+		{ SchoolUnionActions }	= require('./school_union_actions');
 
 const	Bootstrap	= require('styles/bootstrap-custom.scss');
 
@@ -32,9 +32,7 @@ const Head = React.createClass({
 							<Logo />
 						</div>
 						<div className="eTopPanel_col_small_8 eTopPanel_right">
-							<TopMenu
-								menuItems={menuSchoolUnion}
-							/>
+							<PublicMenu menuItems = { menuSchoolUnion } />
 						</div>
 					</div>
 				</div>

@@ -60,9 +60,10 @@ const SchoolList = React.createClass({
 		// show when events counts more then five
 		if(isSync && schoolList.length > this.SCHOOLS_COUNT) {
 			return (
-				<FixtureShowAllItemsButton	isShowAllItems	= {isShowAllItems}
-											handleClick		= {this.handleClickShowAllItemsButton}
-											text			= {"Show All School Members"}
+				<FixtureShowAllItemsButton
+					isShowAllItems	= {isShowAllItems}
+					handleClick		= {this.handleClickShowAllItemsButton}
+					text			= {"Show All School Members"}
 				/>
 			);
 		} else {

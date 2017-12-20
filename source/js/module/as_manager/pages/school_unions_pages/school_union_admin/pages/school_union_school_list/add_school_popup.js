@@ -1,6 +1,6 @@
 const	React					= require('react'),
 		PostcodeSelector		= require('module/ui/postcode_selector/postcode_selector'),
-		ComboBox				= require('module/ui/autocomplete2/ComboBox2'),
+		{ ComboBox2 }			= require('module/ui/autocomplete2/ComboBox2'),
 		{SchoolListItem}		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
 		{ConfirmPopup}			= require('module/ui/confirm_popup'),
 		GeoSearchHelper			= require('module/helpers/geo_search_helper'),
@@ -140,7 +140,7 @@ const AddSchoolPopup = React.createClass({
 							School
 						</div>
 						<div className="eForm_fieldSet">
-							<ComboBox	placeholder			= {'Please, select a school'}
+							<ComboBox2	placeholder			= {'Please, select a school'}
 										customListItem		= { SchoolListItem }
 										searchFunction		= {this.searchSchoolWrapper}
 										onSelect			= {this.handleSelectSchool}
