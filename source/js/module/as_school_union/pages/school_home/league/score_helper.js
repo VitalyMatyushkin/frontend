@@ -84,54 +84,80 @@ const ScoreHelper = {
 	},
 	
 	getGF: function(schoolId, event){
+		let gf = 0;
+
 		const teamsData = propz.get(event, ['teamsData']);
 		if (Array.isArray(teamsData)) {
-			const 	team 	= teamsData.find(team => team.schoolId === schoolId),
-					teamId 	= propz.get(team, ['id']);
-			
-			const teamsScore = propz.get(event, ['results', 'teamScore']);
-			if (Array.isArray(teamsScore)) {
-				const 	teamScore 	= teamsScore.find(team => team.teamId === teamId);
-				
-				let gf;
-				
-				if (typeof teamScore === 'undefined') {
-					gf = propz.get(event, ['results','schoolScore', '0', 'score'], 0);
-				} else {
-					gf 			= propz.get(teamScore, ['score'], 0);
-				}
-				
-				return Number(gf);
+			const team = teamsData.find(team => team.schoolId === schoolId);
+			const teamId = propz.get(team, ['id']);
+
+			// Find team score
+			const teamsScoreArray = propz.get(event, ['results', 'teamScore']);
+			const teamScore = Array.isArray(teamsScoreArray) ?
+				teamsScoreArray.find(teamScore => teamScore.teamId === teamId):
+				undefined;
+
+			// Find school score
+			const schoolScoreArray = propz.get(event, ['results', 'schoolScore']);
+			const schoolScore = Array.isArray(schoolScoreArray) ?
+				schoolScoreArray.find(schoolScore => schoolScore.schoolId === schoolId):
+				undefined;
+
+			// Set score by priority
+			switch (true) {
+				case typeof teamScore !== 'undefined':
+					gf = Number(teamScore.score);
+					break;
+				case typeof schoolScore !== 'undefined':
+					gf = Number(schoolScore.score);
+					break;
+				default:
+					gf = 0;
+					break;
 			}
-		} else {
-			console.log('teamsData is not array!');
-			return 0;
 		}
+
+		return gf;
 	},
-	
-	getGA: function(schoolId, event){
+
+	// Against getGF method we find opponents score
+	// So use team.schoolId !== schoolId
+	// and schoolScore.schoolId !== schoolId
+	getGA: function(schoolId, event) {
+		let ga = 0;
+
 		const teamsData = propz.get(event, ['teamsData']);
 		if (Array.isArray(teamsData)) {
-			const 	team 	= teamsData.find(team => team.schoolId === schoolId),
-				teamId 	= propz.get(team, ['id']);
-			
-			const teamsScore = propz.get(event, ['results', 'teamScore']);
-			if (Array.isArray(teamsScore)) {
-				const 	teamScore 	= teamsScore.find(team => team.teamId !== teamId);
-				
-				let ga;
-				
-				if (typeof teamScore === 'undefined') {
-					ga = propz.get(event, ['results','schoolScore', '0', 'score'], 0);
-				} else {
-					ga 			= propz.get(teamScore, ['score'], 0);
-				}
-				return Number(ga);
+			const team = teamsData.find(team => team.schoolId !== schoolId);
+			const teamId = propz.get(team, ['id']);
+
+			// Find team score
+			const teamsScoreArray = propz.get(event, ['results', 'teamScore']);
+			const teamScore = Array.isArray(teamsScoreArray) ?
+				teamsScoreArray.find(teamScore => teamScore.teamId === teamId):
+				undefined;
+
+			// Find school score
+			const schoolScoreArray = propz.get(event, ['results', 'schoolScore']);
+			const schoolScore = Array.isArray(schoolScoreArray) ?
+				schoolScoreArray.find(schoolScore => schoolScore.schoolId !== schoolId):
+				undefined;
+
+			// Set score by priority
+			switch (true) {
+				case typeof teamScore !== 'undefined':
+					ga = Number(teamScore.score);
+					break;
+				case typeof schoolScore !== 'undefined':
+					ga = Number(schoolScore.score);
+					break;
+				default:
+					ga = 0;
+					break;
 			}
-		} else {
-			console.log('teamsData is not array!');
-			return 0;
 		}
+
+		return ga;
 	},
 	
 	getGD: function(gf, ga){
