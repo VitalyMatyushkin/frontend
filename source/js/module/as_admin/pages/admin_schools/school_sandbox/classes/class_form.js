@@ -44,6 +44,8 @@ const ClassForm = React.createClass({
 				ages 	= binding.toJS('ages');
 		
 		if (isSync) {
+			const 	selectedAge		= binding.sub('formData').get('age'),
+					defaultValue	= selectedAge ? selectedAge :  ages[0].value;
 			return (
 				<Form
 					formStyleClass 	= "mNarrow"
@@ -66,6 +68,7 @@ const ClassForm = React.createClass({
 						id 			= "school_age_group_checkbox"
 						field 		= "age"
 						options 	= { ages }
+						defaultValue= { defaultValue }
 					>
 						Age group
 					</FormField>
