@@ -1,12 +1,14 @@
 /**
  * Created by vitaly on 22.11.17.
  */
-const	React							= require('react'),
-		Morearty						= require('morearty'),
-		LeagueSportSelect				= require('./league_sport_select'),
-		LeagueTable						= require('./score_table/league_table'),
-		{SchoolUnionActions}			= require('module/as_school_union/school_union_actions'),
-		SchoolUnionSeasonScoresStyles	= require('../../../../../../styles/ui/b_school_union_league.scss');
+const	React		= require('react'),
+		Morearty	= require('morearty');
+
+const	LeagueSportSelect		= require('./league_sport_select'),
+		LeagueTable				= require('./league_table/league_table'),
+		{SchoolUnionActions}	= require('module/as_school_union/school_union_actions');
+
+const	SchoolUnionSeasonScoresStyles	= require('../../../../../../styles/ui/b_school_union_league.scss');
 
 const League = React.createClass({
 	mixins: [Morearty.Mixin],

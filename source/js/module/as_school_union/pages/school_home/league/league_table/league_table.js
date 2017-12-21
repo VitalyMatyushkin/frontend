@@ -1,13 +1,12 @@
-const	React							= require('react'),
-		TableHead						= require('./table_head/table_head'),
-		TableBody						= require('./table_body/table_body'),
-		SchoolUnionSeasonScoresStyles	= require('../../../../../../../styles/ui/b_school_union_season_scores.scss'),
+const	React = require('react');
+
+const	SchoolUnionSeasonScoresStyles	= require('../../../../../../../styles/ui/b_school_union_season_scores.scss'),
 		Bootstrap						= require('../../../../../../../styles/bootstrap-custom.scss');
 
 
 const LeagueTable = React.createClass({
 	propTypes: {
-		scores: 	React.PropTypes.array.isRequired
+		scores: React.PropTypes.array.isRequired
 	},
 	
 	renderHead: function(titles, description) {
@@ -18,6 +17,7 @@ const LeagueTable = React.createClass({
 				return <th key={title + i} className="bTooltip" data-description={description[i]}>{title}</th>;
 			}
 		});
+
 		return (
 			<thead>
 			<tr>
@@ -29,12 +29,19 @@ const LeagueTable = React.createClass({
 	},
 	
 	renderBody: function(titles, scoresData) {
-		const sortedScoresData = scoresData.sort( (rowA, rowB) => rowA.Points < rowB.Points);
-		
-		const rows = sortedScoresData.map( (rowObj, i) => {
+		const rows = scoresData.sort( (rowA, rowB) => {
+			if(rowA.Points < rowB.Points) {
+				return -1;
+			} else if(rowA.Points > rowB.Points) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}).map( (rowObj, i) => {
 			const cells = titles.map( title => {
 				return <td key={title+i}>{rowObj[title]}</td>;
 			});
+
 			return (
 				<tr key={i}>
 					<th scope="row">{i + 1}</th>
@@ -42,14 +49,16 @@ const LeagueTable = React.createClass({
 				</tr>
 			);
 		});
+
 		return (<tbody>{rows}</tbody>);
 	},
 	
 	render: function(){
 		const	scores				= this.props.scores,
 				titles				= ['schoolName', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Points'],
-				titlesDescription 	= ['', 'Play', 'Win', 'Draw', 'Lose', 'Goal For', 'Goal Against', 'Goal Difference', ''],
+				titlesDescription	= ['', 'Play', 'Win', 'Draw', 'Lose', 'Goal For', 'Goal Against', 'Goal Difference', ''],
 				displayTitles		= titles.map( key => key === 'schoolName' ? '' : key);
+
 		return (
 			<div className="eSchoolUnionSeasonScores_scoreTableWrapper">
 				<div className="table-responsive">
