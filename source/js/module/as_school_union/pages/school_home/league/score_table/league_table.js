@@ -29,12 +29,19 @@ const LeagueTable = React.createClass({
 	},
 	
 	renderBody: function(titles, scoresData) {
-		const sortedScoresData = scoresData.sort( (rowA, rowB) => rowA.Points < rowB.Points);
-		
-		const rows = sortedScoresData.map( (rowObj, i) => {
+		const rows = scoresData.sort( (rowA, rowB) => {
+			if(rowA.Points < rowB.Points) {
+				return -1;
+			} else if(rowA.Points > rowB.Points) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}).map( (rowObj, i) => {
 			const cells = titles.map( title => {
 				return <td key={title+i}>{rowObj[title]}</td>;
 			});
+
 			return (
 				<tr key={i}>
 					<th scope="row">{i + 1}</th>
@@ -42,6 +49,7 @@ const LeagueTable = React.createClass({
 				</tr>
 			);
 		});
+		
 		return (<tbody>{rows}</tbody>);
 	},
 	

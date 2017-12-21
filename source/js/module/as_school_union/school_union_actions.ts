@@ -108,7 +108,7 @@ export class SchoolUnionActions {
 					
 					//Transform array:
 					//[schoolName] => [{schoolName: schoolName, P: 0}]
-					const schoolsNameUniq = schoolsNameUniqArray.map(schoolName => {
+					let schoolsNameUniq = schoolsNameUniqArray.map(schoolName => {
 						return {
 							schoolName: schoolName,
 							'P': 		0,
