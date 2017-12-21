@@ -202,7 +202,6 @@ const TeamManager = React.createClass({
 			self.currentSearchRequest = this.props.actions.search(
 					selectedTabId,
 					tabs,
-					filter.schoolId,
 					requestFilter
 				)
 				.then(players => {
