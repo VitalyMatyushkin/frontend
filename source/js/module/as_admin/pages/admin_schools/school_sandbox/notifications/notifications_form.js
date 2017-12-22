@@ -91,6 +91,27 @@ const NotificationsForm = React.createClass({
 					>
 						Event has been cancelled
 					</FormField>
+					<FormField
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "EVENT_DETAILS_UPDATED"
+					>
+						Event details has been updated
+					</FormField>
+					<FormField
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "EVENT_TEAM_PLAYER_ADDED"
+					>
+						Event team player has been added
+					</FormField>
+					<FormField
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "EVENT_TEAM_PLAYER_REMOVED"
+					>
+						Event team player has been removed
+					</FormField>
 					<h3>Invites management</h3>
 					<FormField
 						classNames 		= "mWideSingleLine"
@@ -112,6 +133,13 @@ const NotificationsForm = React.createClass({
 						field 			= "INVITE_REJECTED_BY_OPPONENT"
 					>
 						An opposing school has rejected your event invite
+					</FormField>
+					<FormField
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "MESSAGE_INBOX_CONSENT_REQUEST"
+					>
+						New message with consent request
 					</FormField>
 				</FormColumn>
 			</Form>
