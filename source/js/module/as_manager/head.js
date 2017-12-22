@@ -52,10 +52,10 @@ const Head = React.createClass({
 	 * frameworks.
 	 */
 	setInvitesCountToMenu: function() {
-		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
+		window.Server.schoolInboxInvites.get(MoreartyHelper.getActiveSchoolId(this), {filter: {limit:100}}).then(data => {
 			if(data.length > 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
-					topMenuItems	= rootBinding.toJS('topMenuItems');
+						topMenuItems	= rootBinding.toJS('topMenuItems');
 
 				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Invites');
 				if(inviteItemIndex !== -1) {

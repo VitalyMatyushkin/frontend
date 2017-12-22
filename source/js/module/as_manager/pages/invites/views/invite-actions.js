@@ -10,24 +10,34 @@ const InviteActions = {
 		outbox:		'schoolOutboxInvites',
 		archive:	'schoolArchiveInvites'
 	},
+	invitesCountOnPage: 5,
+	invitesCountLimit: 5,
 	/**
 	 * Load all invites of provided type and return as array
 	 * @param {string} schoolId
 	 * @param {string} inviteType one of inbox|outbox|archive
 	 * @returns {Promise.<Array.<Invite>>}
 	 */
-	loadData: function (schoolId, inviteType) {
+	loadData: function (page, schoolId, inviteType) {
 		const 	serviceName	= this.inviteServicesByType[inviteType],
 				service		= window.Server[serviceName];
 
-		return service.get(schoolId, {filter: {limit: 100}}).then(invites => {
+		return service.get(schoolId,
+			{
+				filter: {
+					skip: this.invitesCountOnPage * (page - 1),
+					limit: this.invitesCountLimit,
+					order: 'event.startTime DESC'
+				}
+			}
+			).then(invites => {
 			return invites.map( invite => {
 				invite.sport			= invite.event.sport;
 				invite.inviterSchool	= invite.event.inviterSchool;
 				invite.invitedSchool	= invite.event.invitedSchools.find(s => s.id === invite.invitedSchoolId);
 
 				return invite;
-			});
+			}).filter(invite => typeof invite.invitedSchool !== 'undefined');
 		}).then(_invites => {
 			let invites;
 			if(inviteType === 'outbox') {
@@ -36,19 +46,7 @@ const InviteActions = {
 				invites = _invites;
 			}
 
-			// sorting invites by time of event start not event emission
-			return invites.sort((a, b) => {
-				const 	_a	= a.event.startTime,
-						_b	= b.event.startTime;
-
-				if (_a > _b) {
-					return -1;
-				}
-				if (_a < _b) {
-					return 1;
-				}
-				return 0;
-			});
+			return invites;
 		});
 	},
 	declineInvite: function (schoolId, inviteId, binding, commentText) {

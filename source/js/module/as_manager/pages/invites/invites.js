@@ -72,41 +72,6 @@ const InvitesView = React.createClass({
 		);
 
 		SchoolHelper.loadActiveSchoolInfo(this);
-		this.addListeners();
-	},
-	addListeners: function() {
-		this.addListenerToInboxInviteCount();
-	},
-	/**
-	 * Function adds listener to count of inbox invites.
-	 * So, invites component listens count of inbox invites and update this value too.
-	 * Yes, it's shitty way because child component should not update data from his parent.
-	 * But there is no any other way to solve this problem while we don't have redux or something else from flux camp
-	 * frameworks.
-	 */
-	addListenerToInboxInviteCount: function() {
-		const binding = this.getDefaultBinding();
-
-		binding.sub('inbox.models').addListener(descriptor => {
-			const	currentModels	= descriptor.getCurrentValue().toJS(),
-					prevModels		= descriptor.getPreviousValue().toJS();
-
-			if(currentModels.length !== prevModels.length) {
-				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems'),
-						inviteItemIndex	= topMenuItems.findIndex(i => i.key === 'Invites');
-
-				let		name			= '';
-				if(currentModels.length > 0) {
-					name =`Invites(${currentModels.length})`;
-				} else {
-					name ='Invites';
-				}
-				topMenuItems[inviteItemIndex].name = name;
-
-				rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
-			}
-		});
 	},
 	getAcceptBinding: function() {
 		const binding = this.getDefaultBinding();

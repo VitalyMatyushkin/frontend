@@ -10,6 +10,9 @@ const   Invite          = require('./invite'),
 		Immutable       = require('immutable'),
 		Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
+const 	{ MessagesLoader }	= require('module/ui/message_list/messages_loader'),
+		InfiniteScroll		= require('react-infinite-scroller');
+
 /** Component to show all box invites */
 const InviteList = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,49 +20,63 @@ const InviteList = React.createClass({
 		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
 	},
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				rootBinding 	= self.getMoreartyContext().getBinding(),
+		const 	binding 		= this.getDefaultBinding(),
+				rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
 
 		binding
 			.atomically()
-			.set('sync', false)
+			.set('hasMore', true)
 			.set('models', Immutable.fromJS([]))
 			.commit();
-
-		inviteActions.loadData(activeSchoolId, this.props.type).then(invites => {
+	},
+	loadInvites: function (page) {
+		const 	binding 		= this.getDefaultBinding(),
+				rootBinding 	= this.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
+		
+		return inviteActions.loadData(page, activeSchoolId, this.props.type).then(_invites => {
+			let invites = binding.toJS('models');
+			invites = invites.concat(_invites);
+			const hasMore = _invites.length !== 0;
 			binding
 				.atomically()
-				.set('sync', true)
+				.set('hasMore', hasMore)
 				.set('models', Immutable.fromJS(invites))
 				.commit();
-
-			return invites;
+			
+			return true;
 		});
 	},
-	getInvites: function () {
-		const 	self 	= this,
-				binding = self.getDefaultBinding(),
-				invites = binding.get('models');
+	renderInvites: function () {
+		const 	binding = this.getDefaultBinding(),
+				invites = binding.toJS('models');
+		let invitesList = [];
 
-		return invites.map((invite, index) => {
-			const inviteBinding = {
-				default: 		binding.sub(['models', index]),
-				inviterSchool: 	binding.sub(['models', index, 'inviterSchool']),
-				invitedSchool: 	binding.sub(['models', index, 'invitedSchool'])
-			};
+		if(
+			invites !== 'undefined' &&
+			invites.length > 0
+		) {
+			invitesList = invites.map((invite, index) => {
+				const inviteBinding = {
+					default: binding.sub(['models', index]),
+					inviterSchool: binding.sub(['models', index, 'inviterSchool']),
+					invitedSchool: binding.sub(['models', index, 'invitedSchool'])
+				};
 
-			const reactKey = inviteBinding.default.toJS().id;
+				const reactKey = inviteBinding.default.toJS().id;
 
-			return (
-				<Invite	key			={reactKey}
-						type		= {self.props.type}
-						binding		= {inviteBinding}
-						onDecline	= {this.onDecline}
-				/>
-			);
-		}).toArray();
+				return (
+					<Invite
+						key={reactKey}
+						type={this.props.type}
+						binding={inviteBinding}
+						onDecline={this.onDecline}
+					/>
+				);
+			})
+		}
+		return invitesList;
 	},
 	onDecline:function (inviteId, commentText) {
 		const
@@ -70,17 +87,37 @@ const InviteList = React.createClass({
 		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText);
 	},
 	render: function() {
-		const	self 	= this,
-				binding = self.getDefaultBinding(),
-				invites = self.getInvites();
-
-		return (
-			<div>
-				<div className="eInvites_filterPanel"></div>
-				<div className="eInvites_list container" >{invites && invites.length ? invites : null}</div>
-				<ProcessingView binding={binding} />
-			</div>
-		);
+		const	binding = this.getDefaultBinding(),
+				hasMore = binding.toJS('hasMore'),
+				invites = binding.toJS('models');
+		
+		let content = null;
+		
+		if(
+			invites.length === 0 &&
+			!hasMore
+		) {
+			content = (
+				<div className="eInvites_processing">
+					<span>There are no messages to display.</span>
+				</div>
+			);
+		} else {
+			content = (
+				<InfiniteScroll
+					pageStart	= { 0 }
+					loadMore	= { page => this.loadInvites(page) }
+					hasMore		= { hasMore }
+					loader		= { <MessagesLoader/> }
+				>
+					<div className="eInvites_list container" >
+						{this.renderInvites()}
+					</div>
+				</InfiniteScroll>
+			);
+		}
+		
+		return content;
 	}
 });
 
