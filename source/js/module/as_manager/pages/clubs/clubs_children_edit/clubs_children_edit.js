@@ -167,12 +167,9 @@ const ClubChildrenEdit = React.createClass({
 		const maxParticipants = this.getMaxParticipants();
 
 		return (
-			clubStudentsCount > 0 &&
-			(
-				typeof maxParticipants !== 'undefined' ?
-					clubStudentsCount <= maxParticipants :
-					true
-			)
+			typeof maxParticipants !== 'undefined' ?
+				clubStudentsCount <= maxParticipants :
+				true
 		);
 	},
 	getMaxParticipants: function () {
