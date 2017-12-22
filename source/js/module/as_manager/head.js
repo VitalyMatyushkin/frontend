@@ -67,10 +67,19 @@ const Head = React.createClass({
 		});
 	},
 	setMessagesCountToMenu: function() {
-		const	role	= RoleHelper.getLoggedInUserRole(this),
-				service	= role === 'PARENT' ? window.Server.childMessageInbox : window.Server.schoolEventsMessagesInbox;
-
-		service.get(MoreartyHelper.getActiveSchoolId(this),{filter:{limit:1000}}).then(data => {
+		const	role	= RoleHelper.getLoggedInUserRole(this);
+		let service, params, filter;
+		if (role === 'PARENT') {
+			service	= window.Server.childMessageInbox;
+			params = {};
+			filter = {filter:{limit:1000}};
+		} else {
+			service = window.Server.schoolEventsMessagesInbox;
+			params = MoreartyHelper.getActiveSchoolId(this);
+			filter = {filter:{where: { allMessageTypes: true }, limit:1000}};
+		}
+		
+		service.get(params ,filter).then(data => {
 			if(data.length > 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
 						topMenuItems	= rootBinding.toJS('topMenuItems');
