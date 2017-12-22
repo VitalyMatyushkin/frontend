@@ -2,13 +2,13 @@
  * Created by Anatoly on 10.10.2016.
  */
 
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React		= require('react'),
+		Morearty	= require('morearty'),
+		Immutable	= require('immutable');
 
-		{DateHelper}		= require('../../../../helpers/date_helper'),
-		MonthNavBar		= require('module/ui/calendar/month_year_selector'),
-		Fixtures		= require('../../../../ui/fixtures/fixtures');
+const	{ DateHelper }			= require('../../../../helpers/date_helper'),
+		{ MonthYearSelector }	= require('module/ui/calendar/month_year_selector'),
+		Fixtures				= require('../../../../ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -114,15 +114,15 @@ const EventFixtures = React.createClass({
 
 		return (
 				<div className="bFixtures">
-					<MonthNavBar
-						date 			= {binding.get('monthDate')}
-						onMonthClick 	= {date => this.onMonthClick(date)}
+					<MonthYearSelector
+						date			= { binding.get('monthDate') }
+						onMonthClick	= { date => this.onMonthClick(date) }
 					/>
 					<Fixtures
 						events			= { binding.toJS('models') }
 						sync			= { binding.toJS('sync') }
 						onClick			= { this.onClickChallenge }
-						activeSchoolId 	= { activeSchoolId }
+						activeSchoolId	= { activeSchoolId }
 					/>
 				</div>
 		);
