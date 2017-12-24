@@ -623,6 +623,14 @@ const SportIcon = React.createClass({
 					sport === 'racewalking 50km':
 				icon="racewalking";
 				break;
+
+			case sport.indexOf('fencing') !== -1 && sport.indexOf('epee') !== -1:
+				icon = 'fencing_epee';
+				break;
+
+			case sport.indexOf('fencing') !== -1 && sport.indexOf('foil') !== -1:
+				icon = 'fencing_foil';
+				break;
 			default:
 				icon = sport;
 				break;
