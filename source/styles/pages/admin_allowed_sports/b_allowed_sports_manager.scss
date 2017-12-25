@@ -1,0 +1,35 @@
+@import "../../!variables";
+@import "../../!mixins";
+
+.bSportsListManager{
+	margin-bottom: 20px;
+	display: inline-block;
+	width: 100%;
+}
+
+.bSportsListManagerWrapper{
+	width: 50%;
+	display: inline-block;
+}
+
+.bSportsListManagerTitle{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+	font-size: 18px;
+}
+.bSportsListManagerTable{
+	margin-bottom: 0;
+	td:nth-child(1), th:nth-child(1) { min-width: 100px; }
+	td:nth-child(2), th:nth-child(2) { min-width: 480px; }
+}
+.bSportsListManagerTableHead,
+.bSportsListManagerTableBody{
+	display: block;
+}
+.bSportsListManagerTableBody{
+	height: 350px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+

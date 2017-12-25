@@ -17,7 +17,8 @@ const 	RouterView 							= require('module/core/router'),
 		ConsentRequestTemplateComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/template/template'),
 		SportsComponent						= require('./favorite_sports/sports_page'),
 		{UserStats}							= require('module/as_admin/pages/admin_schools/school_sandbox/user_stats/user-stats'),
-		{CSVExportButton}					= require('module/shared_pages/users/user_list/buttons/csv_export_button');
+		{CSVExportButton}					= require('module/shared_pages/users/user_list/buttons/csv_export_button'),
+		{AllowedSportsManager} 				= require('module/as_admin/pages/admin_schools/school_sandbox/allowed_sports/allowed_sports_manager');
 
 const	SandboxHeaderStyle		= require('../../../../../../styles/ui/b_sandbox_header.scss');
 
@@ -113,6 +114,12 @@ const SchoolSandbox = React.createClass({
 				name:'User stats',
 				key:'user_stats',
 				routes:[`/school_sandbox/${schoolId}/user_stats`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/allowed_sports`,
+				name:'Allowed sports',
+				key:'allowed_sports',
+				routes:[`/school_sandbox/${schoolId}/allowed_sports`]
 			}
 		];
 		//Set sub menu items in default binding
@@ -155,58 +162,64 @@ const SchoolSandbox = React.createClass({
 					</div>
 					<RouterView routes={subBinding.sub('routing')} binding={global}>
 						<Route
-							path 		= "/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
-							binding 	= { subBinding }
-							component 	= { ClassesPageComponent }
+							path 			= "/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
+							binding 		= { subBinding }
+							component 		= { ClassesPageComponent }
 						/>
 						<Route
-							path		= "/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
-							binding		= {subBinding}
-							component	= {StudentsPageComponent}
+							path			= "/school_sandbox/:schoolId/students /school_sandbox/:schoolId/students/:mode /school_sandbox/:schoolId/students/:mode/:id"
+							binding			= {subBinding}
+							component		= {StudentsPageComponent}
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
-							binding 	= { subBinding }
-							component 	= { HousePageComponent }
+							path 			= "/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
+							binding 		= { subBinding }
+							component 		= { HousePageComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/events"
-							binding 	= { subBinding }
-							component 	= { EventsPageComponent }
+							path 			= "/school_sandbox/:schoolId/events"
+							binding 		= { subBinding }
+							component 		= { EventsPageComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/summary"
-							binding 	= { binding }
-							component 	= { SummaryPageComponent }
+							path 			= "/school_sandbox/:schoolId/summary"
+							binding 		= { binding }
+							component 		= { SummaryPageComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/sports"
-							binding 	= { binding }
-							component 	= { SportsComponent }
+							path 			= "/school_sandbox/:schoolId/sports"
+							binding 		= { binding }
+							component 		= { SportsComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/notifications"
-							binding 	= { binding }
-							component 	= { NotificationsComponent }
+							path 			= "/school_sandbox/:schoolId/notifications"
+							binding 		= { binding }
+							component 		= { NotificationsComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/export"
-							binding 	= { binding }
-							schoolId 	= { schoolId }
-							component 	= { ExportComponent }
+							path 			= "/school_sandbox/:schoolId/export"
+							binding 		= { binding }
+							schoolId 		= { schoolId }
+							component 		= { ExportComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/template"
-							binding 	= { binding }
-							schoolId 	= { schoolId }
-							component 	= { ConsentRequestTemplateComponent }
+							path 			= "/school_sandbox/:schoolId/template"
+							binding 		= { binding }
+							schoolId 		= { schoolId }
+							component 		= { ConsentRequestTemplateComponent }
 						/>
 						<Route
-							path 		= "/school_sandbox/:schoolId/user_stats"
-							binding 	= { binding }
-							schoolId 	= { schoolId }
-							component 	= { UserStats }
-							btnCSVExport= { btnCSVExport }
+							path 			= "/school_sandbox/:schoolId/user_stats"
+							binding 		= { binding }
+							schoolId 		= { schoolId }
+							component 		= { UserStats }
+							btnCSVExport 	= { btnCSVExport }
+						/>
+						<Route
+							path 			= "/school_sandbox/:schoolId/allowed_sports"
+							binding 		= { binding }
+							schoolId 		= { schoolId }
+							component 		= { AllowedSportsManager }
 						/>
 					</RouterView>
 				</div>

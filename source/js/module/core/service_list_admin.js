@@ -39,6 +39,7 @@ const serviceList = {
 
 		serviceList.schoolSports = new Service('/superadmin/schools/{schoolId}/sports', binding);
 		serviceList.schoolSport = new Service('/superadmin/schools/{schoolId}/sports/{sportId}', binding);
+		serviceList.schoolAllowedSports = new Service('/superadmin/schools/{schoolId}/allowedSports', binding);
 
 		// sports
 		serviceList.sports = new Service('/superadmin/sports', binding);
