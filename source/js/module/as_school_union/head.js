@@ -19,7 +19,7 @@ const Head = React.createClass({
 		const 	binding 		= this.getDefaultBinding(),
 				menuSchoolUnion = ['Calendar','Fixtures','Results','News','Schools'];
 		if (binding.toJS('schoolHomePage.tournamentsShow')) {
-			menuSchoolUnion.splice(2, 0, 'Tournaments');
+			menuSchoolUnion.splice(1, 0, 'Tournaments');
 		}
 		if (binding.toJS('schoolHomePage.leagueShow')) {
 			menuSchoolUnion.unshift('League');
