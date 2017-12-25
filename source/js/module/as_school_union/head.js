@@ -1,9 +1,9 @@
 const	Morearty	= require('morearty'),
 		React		= require('react');
 
-const	Logo					= require('module/as_school/head/logo'),
-		{ PublicMenu }			= require('module/ui/menu/public_menu'),
-		{ SchoolUnionActions }	= require('./school_union_actions');
+const	Logo				= require('module/as_school/head/logo'),
+		{PublicMenu}		= require('module/ui/menu/public_menu'),
+		{SchoolUnionActions}= require('./school_union_actions');
 
 const	Bootstrap	= require('styles/bootstrap-custom.scss');
 

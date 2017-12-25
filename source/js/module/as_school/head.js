@@ -15,7 +15,7 @@ const Head = React.createClass({
 							<Logo />
 						</div>
 						<div className="eTopPanel_col_small_8 eTopPanel_right">
-							<TopMenu menuItems={['Calendar','Fixtures','Results','News']}/>
+							<PublicMenu menuItems={['Calendar','Fixtures','Results','News']}/>
 						</div>
 					</div>
 				</div>
