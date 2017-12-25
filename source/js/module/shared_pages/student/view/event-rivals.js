@@ -14,7 +14,7 @@ function EventRivals(props){
 			secondName 		= model.rivals[1].value,
 			firstPic 		= model.rivals[0].schoolPic,
 			secondPic 		= model.rivals[1].schoolPic;
-
+	
 	if(firstName === 'individual'){
 		return (
 			<div className="eAchievement_in">
@@ -42,6 +42,9 @@ function EventRivals(props){
 					</div>
 					<div className="eAchievement_info">
 						{model.eventType}
+					</div>
+					<div className="eAchievement_date">
+						{model.date}
 					</div>
 				</div>
 				<div className="eAchievement_rivalName">

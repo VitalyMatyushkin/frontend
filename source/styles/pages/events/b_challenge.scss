@@ -233,8 +233,26 @@ $border: solid 1px #c2c2c2;
 .eAchievement_info{
   text-align: center;
 }
+.eAchievement_date{
+  padding-top: 10px;
+  text-align: center;
+}
 .eAchievement_in {
   display: flex;
+}
+.bAchievement_event{
+  width: 46%;
+  height: 155px;
+  display: inline-block;
+  margin: 1%;
+  padding: 1%;
+  border: solid 1px #d2d2d2;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #0c70b0;
+  }
 }
 .eAchievement_rivalInfo {
   font-size: 16px;
@@ -258,6 +276,7 @@ $border: solid 1px #c2c2c2;
   text-align: center;
   display: flex;
   flex-direction: column;
+  width: 110px;
 }
 .eAchievement_rival{
   max-width: 110px;

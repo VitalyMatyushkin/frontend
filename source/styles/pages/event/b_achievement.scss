@@ -1,0 +1,27 @@
+.eAchievementTable_body {
+  margin: 40px auto;
+
+  .eClickable_cell {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #88adc9;
+    }
+  }
+}
+
+.eAchievement_scoreTableWrapper {
+  margin-top: 40px;
+}
+
+.eAchievementMessage {
+  margin: 40px auto;
+  text-align: center;
+
+  .eLoader{
+    .bIcon{
+      width: 60px;
+      height: 60px;
+    }
+  }
+}

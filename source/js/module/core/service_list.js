@@ -305,6 +305,12 @@ const serviceList = {
 		serviceList.publicTournaments = new Service('/public/schools/{schoolUnionId}/schools/tournaments', binding);
 		serviceList.schoolTournament  = new Service('/i/schools/{schoolUnionId}/schools/tournaments/{tournamentId}', binding);
 
+		//Achievements
+		serviceList.childrenSports = new Service('/i/children/sports', binding);
+		serviceList.childSports = new Service('/i/children/{childId}/sports', binding);
+		serviceList.childrenAchievements = new Service('/i/children/achievements', binding);
+		serviceList.childAchievements = new Service('/i/children/{childId}/achievements', binding);
+		serviceList.childTeamEvents = new Service('/i/children/{childId}/teamSports/{sportId}/teamEvents', binding);
 	},
 	// Services which not require authorization
 	initializeOpenServices: function() {
