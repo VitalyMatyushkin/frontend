@@ -30,9 +30,9 @@ const LeagueTable = React.createClass({
 	
 	renderBody: function(titles, scoresData) {
 		const rows = scoresData.sort( (rowA, rowB) => {
-			if(rowA.Points < rowB.Points) {
+			if(rowA.Points > rowB.Points) {
 				return -1;
-			} else if(rowA.Points > rowB.Points) {
+			} else if(rowA.Points < rowB.Points) {
 				return 1;
 			} else {
 				return 0;
