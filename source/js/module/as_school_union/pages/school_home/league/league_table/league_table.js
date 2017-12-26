@@ -56,7 +56,7 @@ const LeagueTable = React.createClass({
 	render: function(){
 		const	scores				= this.props.scores,
 				titles				= ['schoolName', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Points'],
-				titlesDescription	= ['', 'Play', 'Win', 'Draw', 'Lose', 'Goal For', 'Goal Against', 'Goal Difference', ''],
+				titlesDescription	= ['', 'Played', 'Won', 'Drawn	', 'Lost', 'Goals for', 'Goals against', 'Goals difference', ''],
 				displayTitles		= titles.map( key => key === 'schoolName' ? '' : key);
 
 		return (

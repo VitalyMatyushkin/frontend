@@ -18,7 +18,7 @@ const MessageText = React.createClass({
 				return `${playerName} is not available to take part.`;
 			case MessageConsts.MESSAGE_KIND.AVAILABILITY:
 				const isTakePart = message.isTakePart ? 'yes' : 'no';
-				return `${playerName} is take part: ${isTakePart}`;
+				return `${playerName} can take part: ${isTakePart}`;
 			case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
 				return `You can book a place for your child now. To send a request for a place click the “Book” button.`;
 		}

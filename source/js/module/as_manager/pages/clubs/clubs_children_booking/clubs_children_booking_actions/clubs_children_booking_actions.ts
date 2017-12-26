@@ -10,7 +10,7 @@ export class ClubsChildrenBookingActions {
 				return this.getClubBookingChildren(schoolId, clubId)
 			})
 			.then(children => {
-				(window as any).simpleAlert('Messages has been send successfully.');
+				(window as any).simpleAlert('Messages to the parents have been sent successfully.');
 				binding.set('isSync', true);
 				binding.set('children', Immutable.fromJS(children));
 			});
