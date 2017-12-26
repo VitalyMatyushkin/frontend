@@ -41,7 +41,7 @@ interface Achievement {
 const clickableColumn = ['playedCount', 'wonCount', 'drewCount', 'lostCount'];
 
 export const AchievementTable = (React as any).createClass({
-	renderHead: function(titles: string[]): any {
+	renderHead: function(titles: string[]): React.ReactNode {
 		const columns = titles.map( (title, i) => {
 			return <th key={title + i}>{title}</th>;
 		});
@@ -56,7 +56,7 @@ export const AchievementTable = (React as any).createClass({
 		);
 	},
 	
-	renderBody: function(titles: string[], achievementData: Achievement[]): any {
+	renderBody: function(titles: string[], achievementData: Achievement[]): React.ReactNode {
 		const rows = achievementData.filter(rowObj => rowObj.playedCount !== 0).map( (rowObj, i) => {
 			const child = this.props.children.find(c => c.id === rowObj.userId);
 			rowObj.name = `${child.firstName} ${child.lastName}`;

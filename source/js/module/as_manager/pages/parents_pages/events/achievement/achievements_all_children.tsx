@@ -35,14 +35,14 @@ export const AchievementAllChildren = (React as any).createClass({
 		binding.clear();
 	},
 
-	renderSportSelector: function(): any {
+	renderSportSelector: function(): React.ReactNode {
 		const binding = this.getDefaultBinding();
 		return (
 			<AchievementSportSelect binding={binding}/>
 		);
 	},
 
-	renderAchievementTable: function(): any {
+	renderAchievementTable: function(): React.ReactNode | null {
 		const binding = this.getDefaultBinding();
 		if (typeof binding.toJS('childrenAchievement') !== 'undefined') {
 			return (
@@ -64,7 +64,7 @@ export const AchievementAllChildren = (React as any).createClass({
 		binding.set('childIdForEvents', Immutable.fromJS(childId));
 	},
 	
-	renderEvents: function(): any {
+	renderEvents: function(): React.ReactNode | null {
 		const 	binding 		= this.getDefaultBinding(),
 				rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),

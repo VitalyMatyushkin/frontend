@@ -40,7 +40,7 @@ export const ChildrenEvents = (React as any).createClass({
 		});
 	},
 	
-	renderEvents: function (): any {
+	renderEvents: function (): React.ReactNode {
 		let events = [];
 		
 		if(typeof this.state.events !== 'undefined' && this.state.events.length > 0) {

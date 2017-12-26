@@ -5,14 +5,15 @@
 import * as	React from 'react';
 import * as	Morearty from 'morearty';
 import * as	Immutable from 'immutable';
+import {Sport} from 'module/as_admin/pages/admin_schools/school_sandbox/allowed_sports/sport';
 
 export const AchievementSportSelect = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	getCurrentSport: function(): any {
+	getCurrentSport: function(): Sport {
 		return this.getDefaultBinding().toJS('currentAchievementSport');
 	},
 	
-	getSports: function(): any {
+	getSports: function(): React.ReactNode {
 		const sports = this.getDefaultBinding().toJS('achievementSports');
 		
 		return sports.map(sport => {
