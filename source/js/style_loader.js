@@ -194,6 +194,8 @@ const	playerChooserTabsStyle					= require('styles/ui/b_player_chooser_tabs.scss
 const	playerChooserTabStyle					= require('styles/ui/b_player_chooser_tab.scss');
 const	bookedChildrenPlayer					= require('styles/ui/b_booked_children_player.scss');
 
+const	cancelEvent								= require('styles/ui/b_cancel_event.scss');
+
 const	playerChooserStyle	= require('styles/ui/b_player_choosers/b_player_choosers.scss');
 
 // font awesome styles

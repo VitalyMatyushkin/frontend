@@ -89,23 +89,64 @@ function getCSVPlayer(firstName, lastName, form, ageGroup, event) {
 	};
 }
 
-function cancelEvent(schoolId, eventId){
-	window.confirmAlert(
-		"You are going to cancel the fixture. Are you sure?",
-		"Ok",
-		"Cancel",
-		() => { cancelEventOnServer(schoolId, eventId); },
-		() => {}
-	);
+function cancelEvent(schoolId, eventId, notificationMode, binding) {
+	cancelEventOnServer(schoolId, eventId, notificationMode, binding);
 }
 
-function cancelEventOnServer(schoolId, eventId){
-	window.Server.eventCancel.post({
-		schoolId: schoolId,
-		eventId: eventId
-	})
+function cancelEventOnServer(schoolId, eventId, notificationMode, binding) {
+	return window.Server.eventCancel.post(
+		{
+			schoolId:	schoolId,
+			eventId:	eventId
+		},
+		{
+			options: {
+				headers:	{ 'notification-mode': notificationMode },
+				isDataOnly:	false
+			}
+		}
+	)
+	.then(response => {
+		if(notificationMode === 'MANUAL') {
+			const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
+
+			return window.Server.actionDescriptor.get({actionDescriptorId: actionDescriptorId}).then(actionDescriptor => {
+				actionDescriptor.affectedUserList = convertAffectedUsersToClient(actionDescriptor.affectedUserList);
+
+				binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
+				binding.set('isOpenCancelEventPopupPopup', false);
+				binding.set('isOpenCancelEventManualNotificationPopup', true);
+
+				return true;
+			})
+		} else {
+			document.location.hash = 'events/calendar';
+
+			return true;
+		}
+	});
+}
+
+function convertAffectedUsersToClient(affectedUsers) {
+	return affectedUsers.map(_affectedUser => {
+		const affectedUser = Object.assign({checked: true}, _affectedUser);
+
+		return affectedUser;
+	});
+}
+
+function commitUsersToActionDescriptorChanges(actionDescriptorId, users) {
+	return window.Server.actionDescriptor.put(
+			{
+				actionDescriptorId: actionDescriptorId
+			}, {
+				usersToNotifyList: users.filter(user => user.checked)
+			}
+		)
 		.then(() => {
 			document.location.hash = 'events/calendar';
+
+			return true;
 		});
 }
 
@@ -572,15 +613,16 @@ function deleteGroupEvents(schoolId, eventId){
 	);
 }
 
-module.exports.downloadPdf 				= downloadPdf;
-module.exports.cancelEvent 				= cancelEvent;
-module.exports.setModeClosing 			= setModeClosing;
-module.exports.setModeGeneral 			= setModeGeneral;
-module.exports.revertScore 				= revertScore;
-module.exports.submitScore 				= submitScore;
-module.exports.closeMatch 				= closeMatch;
-module.exports.reportNotParticipate 	= reportNotParticipate;
-module.exports.downloadCSV 				= downloadCSV;
-module.exports.sendConsentRequest 		= sendConsentRequest;
-module.exports.deleteEvent 				= deleteEvent;
-module.exports.deleteGroupEvents 		= deleteGroupEvents;
+module.exports.downloadPdf 							= downloadPdf;
+module.exports.cancelEvent 							= cancelEvent;
+module.exports.commitUsersToActionDescriptorChanges	= commitUsersToActionDescriptorChanges;
+module.exports.setModeClosing 						= setModeClosing;
+module.exports.setModeGeneral 						= setModeGeneral;
+module.exports.revertScore 							= revertScore;
+module.exports.submitScore 							= submitScore;
+module.exports.closeMatch 							= closeMatch;
+module.exports.reportNotParticipate 				= reportNotParticipate;
+module.exports.downloadCSV 							= downloadCSV;
+module.exports.sendConsentRequest 					= sendConsentRequest;
+module.exports.deleteEvent 							= deleteEvent;
+module.exports.deleteGroupEvents 					= deleteGroupEvents;

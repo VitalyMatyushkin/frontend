@@ -9,13 +9,21 @@ interface ConfirmPopupProps {
 	handleClickOkButton?:	    () => void
 	handleClickCancelButton?:   () => void
 	isShowButtons?:			    boolean
+	isShowOkButton?:			boolean
+	isShowCancelButton?:		boolean
 	isOkButtonDisabled?:	    boolean
 	customStyle?:		    	string
 	customFooterStyle?: 		string
 }
 
 export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
-	static defaultProps: Partial<ConfirmPopupProps> = {isShowButtons: true};
+	static defaultProps: Partial<ConfirmPopupProps> = {
+		isShowButtons: true,
+		isShowOkButton: true,
+		isShowCancelButton: true,
+		okButtonText: 'Ok',
+		cancelButtonText: 'Cancel'
+	};
 
 	handleClickOkButton() {
 		this.props.handleClickOkButton();
@@ -34,7 +42,13 @@ export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
 	render() {
 		const okButtonClassName: string = classNames({
 			mMarginLeft:	true,
-			mDisable:		this.props.isOkButtonDisabled
+			mCancel:		this.props.isOkButtonDisabled,
+			mDisplayNone:   !this.props.isShowOkButton
+		});
+
+		const cancelButtonClassName: string = classNames({
+			mCancel:	    true,
+			mDisplayNone:   !this.props.isShowCancelButton
 		});
 
 		const bodyStyle: string = classNames({
@@ -61,7 +75,7 @@ export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
 							<Button
 								text				= { this.props.cancelButtonText }
 								onClick				= { () => this.props.handleClickCancelButton() }
-								extraStyleClasses	= "mCancel"
+								extraStyleClasses	= { cancelButtonClassName }
 							/>
 							<Button
 								text				= { this.props.okButtonText }

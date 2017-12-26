@@ -31,17 +31,18 @@ function ajax(configDetails, dataOnly) {
             reject(errorToReturn);
         };
         configDetails.success = function(data, textStatus, jqXHR){
-            if(dataOnly){       // todo: fix me. dataOnly required for back compatability
+           if(dataOnly){       // todo: fix me. dataOnly required for back compatability
                 resolve(data);
-            } else {
+           } else {
                 resolve({
                     data:       data,
                     textStatus: textStatus,
                     xhr:        jqXHR
                 });
-            }
+           }
         };
-        var request = $.ajax(configDetails);
+
+        const request = $.ajax(configDetails);
 
         onCancel(function () {
             request.abort();

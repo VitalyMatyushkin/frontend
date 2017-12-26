@@ -305,6 +305,8 @@ const serviceList = {
 		serviceList.publicTournaments = new Service('/public/schools/{schoolUnionId}/schools/tournaments', binding);
 		serviceList.schoolTournament  = new Service('/i/schools/{schoolUnionId}/schools/tournaments/{tournamentId}', binding);
 
+		serviceList.actionDescriptor  = new Service('/i/actiondescriptors/{actionDescriptorId}', binding);
+
 		//Achievements
 		serviceList.childrenSports = new Service('/i/children/sports', binding);
 		serviceList.childSports = new Service('/i/children/{childId}/sports', binding);

@@ -1,4 +1,6 @@
 // Main
+import {CancelEventManualNotification} from "./cancel_event_manual_notification/cancel_event_manual_notification";
+
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		propz				= require('propz');
@@ -6,7 +8,8 @@ const	React				= require('react'),
 // React components
 const	PencilButton		= require('module/ui/pencil_button'),
 		TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
-		{ConfirmPopup}		= require('module/ui/confirm_popup'),
+		{ ConfirmPopup }	= require('module/ui/confirm_popup'),
+		{ CancelEvent }		= require('module/as_manager/pages/event/view/event_header/cancel_event'),
 		ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
 		ViewSelector		= require('module/ui/view_selector/view_selector'),
 		{ If }				= require('module/ui/if/if'),
@@ -31,45 +34,53 @@ const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		event:							React.PropTypes.object.isRequired,
-		countRivals:					React.PropTypes.number,
-		challengeModel:					React.PropTypes.object.isRequired,
-		mode:							React.PropTypes.string.isRequired,
-		schoolType:						React.PropTypes.string.isRequired,
-		viewMode:						React.PropTypes.string,
-		eventAges:						React.PropTypes.array,
-		isInviterSchool:				React.PropTypes.bool.isRequired,
-		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
-		isParent:						React.PropTypes.bool.isRequired,
-		isStudent:						React.PropTypes.bool.isRequired,
-		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
-		handleClickCancelEvent:			React.PropTypes.func.isRequired,
-		handleClickCloseEvent:			React.PropTypes.func.isRequired,
-		onClickAddTeam:					React.PropTypes.func.isRequired,
-		handleClickDownloadPdf:			React.PropTypes.func.isRequired,
-		onReportAvailabilityEvent:		React.PropTypes.func.isRequired,
-		handleClickDownloadCSV:			React.PropTypes.func.isRequired,
-		onClickCloseCancel:				React.PropTypes.func.isRequired,
-		onClickOk:						React.PropTypes.func.isRequired,
-		onClickEditEventButton:			React.PropTypes.func.isRequired,
-		onSendConsentRequest:			React.PropTypes.func.isRequired,
-		onReportNotParticipate:			React.PropTypes.func.isRequired,
-		role: 							React.PropTypes.string.isRequired,
-		onClickDeleteEvent:				React.PropTypes.func.isRequired,
-		onClickAddSchool:				React.PropTypes.func.isRequired,
+		event:										React.PropTypes.object.isRequired,
+		countRivals:								React.PropTypes.number,
+		challengeModel:								React.PropTypes.object.isRequired,
+		mode:										React.PropTypes.string.isRequired,
+		schoolType:									React.PropTypes.string.isRequired,
+		viewMode:									React.PropTypes.string,
+		eventAges:									React.PropTypes.array,
+		isInviterSchool:							React.PropTypes.bool.isRequired,
+		isUserSchoolWorker:							React.PropTypes.bool.isRequired,
+		isParent:									React.PropTypes.bool.isRequired,
+		isStudent:									React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock:				React.PropTypes.bool.isRequired,
+		handleClickOpenCancelEventPopup:			React.PropTypes.func.isRequired,
+		handleClickOkButtonOnCancelEventPopup:		React.PropTypes.func.isRequired,
+		handleClickCancelButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
+		handleClickCommitButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
+		handleClickCheckboxMode:					React.PropTypes.func.isRequired,
+		handleClickUserActivityCheckbox:			React.PropTypes.func.isRequired,
+		onClickAddTeam:								React.PropTypes.func.isRequired,
+		handleClickDownloadPdf:						React.PropTypes.func.isRequired,
+		onReportAvailabilityEvent:					React.PropTypes.func.isRequired,
+		handleClickDownloadCSV:						React.PropTypes.func.isRequired,
+		onClickCloseCancel:							React.PropTypes.func.isRequired,
+		onClickOk:									React.PropTypes.func.isRequired,
+		onClickEditEventButton:						React.PropTypes.func.isRequired,
+		onSendConsentRequest:						React.PropTypes.func.isRequired,
+		onReportNotParticipate:						React.PropTypes.func.isRequired,
+		role: 										React.PropTypes.string.isRequired,
+		onClickDeleteEvent:							React.PropTypes.func.isRequired,
+		onClickAddSchool:							React.PropTypes.func.isRequired,
 
 		//prop for tweet button
-		isTweetButtonRender: 			React.PropTypes.bool.isRequired,
-		twitterData: 					React.PropTypes.array.isRequired,
-		schoolDomain: 					React.PropTypes.string.isRequired,
-		activeSchoolId: 				React.PropTypes.string.isRequired,
-		twitterIdDefault: 				React.PropTypes.string.isRequired,
+		isTweetButtonRender: 						React.PropTypes.bool.isRequired,
+		twitterData: 								React.PropTypes.array.isRequired,
+		schoolDomain: 								React.PropTypes.string.isRequired,
+		activeSchoolId: 							React.PropTypes.string.isRequired,
+		twitterIdDefault: 							React.PropTypes.string.isRequired,
 		
 		//prop for view mode
-		onClickViewMode: 				React.PropTypes.func
+		onClickViewMode: 							React.PropTypes.func
 	},
 	componentWillMount: function () {
 		this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false);
+		this.getDefaultBinding().set('isOpenCancelEventPopupPopup', false);
+		this.getDefaultBinding().set('isOpenCancelEventManualNotificationPopup', false);
+
+		this.getDefaultBinding().set( 'isManualMode', false);
 	},
 	/**
 	 * Function return string with all Age Groups
@@ -168,6 +179,48 @@ const EventHeader = React.createClass({
 
 		return reactElement;
 	},
+	renderCancelEventPopup: function () {
+		let reactElement = null;
+
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isOpenCancelEventPopupPopup')) {
+			reactElement = (
+				<ConfirmPopup
+					handleClickOkButton		= { () => this.props.handleClickOkButtonOnCancelEventPopup() }
+					handleClickCancelButton	= { () => this.props.handleClickCancelButtonOnCancelEventPopup() }
+					customStyle				= { 'mSmallWidth' }
+				>
+					<CancelEvent handleClickCheckboxMode = { () => this.props.handleClickCheckboxMode() } />
+				</ConfirmPopup>
+			);
+		}
+
+		return reactElement;
+	},
+	renderCancelEventManualNotificationPopup: function () {
+		let reactElement = null;
+
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isOpenCancelEventManualNotificationPopup')) {
+			reactElement = (
+				<ConfirmPopup
+					okButtomText		= { 'Commit' }
+					isShowCancelButton	= { false }
+					handleClickOkButton	= { () => this.props.handleClickCommitButtonOnCancelEventPopup() }
+					customStyle			= { 'mSmallWidth' }
+				>
+					<CancelEventManualNotification
+						users = { binding.toJS('actionDescriptor.affectedUserList') }
+						handleClickUserActivityCheckbox = { (userId, permissionId) => this.props.handleClickUserActivityCheckbox(userId, permissionId) }
+					/>
+				</ConfirmPopup>
+			);
+		}
+
+		return reactElement;
+	},
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
 				eventAges			= this.getEventAges(),
@@ -224,7 +277,7 @@ const EventHeader = React.createClass({
 							isParent		 				= { this.props.isParent }
 							isStudent		 				= { this.props.isStudent }
 							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+							handleClickCancelEvent			= { this.props.handleClickOpenCancelEventPopup }
 							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
 							handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
 							handleClickDownloadCSV			= { this.props.handleClickDownloadCSV }
@@ -240,6 +293,8 @@ const EventHeader = React.createClass({
 					</div>
 				</div>
 				{ this.renderReportAvailabilityPopup() }
+				{ this.renderCancelEventPopup() }
+				{ this.renderCancelEventManualNotificationPopup() }
 			</div>
 		);
 	}

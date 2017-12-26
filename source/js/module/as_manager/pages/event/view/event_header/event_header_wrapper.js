@@ -50,16 +50,6 @@ const EventHeaderWrapper = React.createClass({
 
 		EventHeaderActions.downloadCSV(schoolId, event);
 	},
-	/**
-	 * The event handler when clicking the button "Cancel"
-	 */
-	handleClickCancelEvent: function () {
-		const 	binding		= this.getDefaultBinding(),
-				schoolId 	= this.props.activeSchoolId,
-				eventId 	= binding.toJS('model.id');
-
-		EventHeaderActions.cancelEvent(schoolId, eventId);
-	},
 
 	/**
 	 * The event handler when clicking the button "Change score" or "Close event"
@@ -198,15 +188,45 @@ const EventHeaderWrapper = React.createClass({
 	},
 	onClickDeleteEvent: function(){
 		const binding = this.getDefaultBinding();
-		
+
 		binding.set('isDeleteEventPopupOpen', true);
+	},
+	handleClickOkButtonOnCancelEventPopup: function () {
+		const binding = this.getDefaultBinding();
+		const schoolId = this.props.activeSchoolId;
+		const eventId = binding.toJS('model.id');
+		const isManualMode = binding.toJS('isManualMode');
+
+		EventHeaderActions.cancelEvent(schoolId, eventId, isManualMode ? 'MANUAL' : 'AUTO', binding);
+	},
+	handleClickOpenCancelEventPopup: function () {
+		this.getDefaultBinding().set('isOpenCancelEventPopupPopup', true);
+	},
+	handleClickUserActivityCheckbox: function (userId, permissionId) {
+		let affectedUserList = this.getDefaultBinding().toJS('actionDescriptor.affectedUserList');
+
+		const userIndex = affectedUserList.findIndex(user => user.userId === userId && user.permissionId === permissionId);
+		affectedUserList[userIndex].checked = !affectedUserList[userIndex].checked;
+
+		this.getDefaultBinding().set('actionDescriptor.affectedUserList', Immutable.fromJS(affectedUserList))
+	},
+	handleClickCommitButtonOnCancelEventPopup: function () {
+		const actionDescriptor = this.getDefaultBinding().toJS('actionDescriptor');
+
+		EventHeaderActions.commitUsersToActionDescriptorChanges(actionDescriptor.id, actionDescriptor.affectedUserList);
+	},
+	handleClickCancelButtonOnCancelEventPopup: function () {
+		this.getDefaultBinding().set('isOpenCancelEventPopupPopup', false);
+	},
+	handleClickCheckboxMode: function () {
+		this.getDefaultBinding().set( 'isManualMode', !this.getDefaultBinding().toJS('isManualMode') );
 	},
 	isTweetButtonRender: function(role, twitterData, mode){
 		return role === RoleHelper.USER_ROLES.ADMIN && twitterData.length > 0 && mode !== 'closing';
 	},
 	onClickViewMode: function(mode){
 		const binding = this.getDefaultBinding();
-		
+
 		binding.set('viewMode', mode);
 	},
 	/**
@@ -233,41 +253,46 @@ const EventHeaderWrapper = React.createClass({
 
 		return (
 			<EventHeader
-				binding							= { binding }
-				countRivals						= { this.getRivalsCount() }
-				event							= { event }
-				challengeModel					= { challengeModel }
-				isInviterSchool					= { this.isInviterSchool() }
-				schoolType						= { this.props.mode }
-				mode 							= { mode }
-				viewMode						= { viewMode }
-				eventAges						= { eventAges }
-				isUserSchoolWorker 				= { isUserSchoolWorker }
-				isParent						= { isParent }
-				isStudent						= { isStudent }
-				isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
-				handleClickCancelEvent			= { this.handleClickCancelEvent }
-				handleClickCloseEvent			= { this.handleClickCloseEvent }
-				handleClickDownloadPdf			= { this.handleClickDownloadPdf }
-				handleClickDownloadCSV			= { this.handleClickDownloadCSV }
-				onReportAvailabilityEvent		= { this.onReportAvailabilityEvent }
-				onClickCloseCancel				= { this.onClickCloseCancel }
-				onClickOk						= { this.onClickOk }
-				onClickEditEventButton			= { this.onClickEditEventButton }
-				onSendConsentRequest			= { this.onSendConsentRequest }
-				onReportNotParticipate			= { this.onReportNotParticipate }
-				onClickAddSchool				= { this.onClickAddSchool }
-				onClickAddTeam					= { this.onClickAddTeam }
-				role 							= { role }
-				onClickDeleteEvent 				= { this.onClickDeleteEvent }
+				binding										= { binding }
+				countRivals									= { this.getRivalsCount() }
+				event										= { event }
+				challengeModel								= { challengeModel }
+				isInviterSchool								= { this.isInviterSchool() }
+				schoolType									= { this.props.mode }
+				mode 										= { mode }
+				viewMode									= { viewMode }
+				eventAges									= { eventAges }
+				isUserSchoolWorker 							= { isUserSchoolWorker }
+				isParent									= { isParent }
+				isStudent									= { isStudent }
+				isShowScoreEventButtonsBlock 				= { isShowScoreEventButtonsBlock }
+				handleClickOkButtonOnCancelEventPopup		= { this.handleClickOkButtonOnCancelEventPopup }
+				handleClickCancelButtonOnCancelEventPopup	= { this.handleClickCancelButtonOnCancelEventPopup }
+				handleClickOpenCancelEventPopup				= { this.handleClickOpenCancelEventPopup }
+				handleClickCommitButtonOnCancelEventPopup	= { this.handleClickCommitButtonOnCancelEventPopup }
+				handleClickUserActivityCheckbox				= { this.handleClickUserActivityCheckbox }
+				handleClickCheckboxMode						= { this.handleClickCheckboxMode }
+				handleClickCloseEvent						= { this.handleClickCloseEvent }
+				handleClickDownloadPdf						= { this.handleClickDownloadPdf }
+				handleClickDownloadCSV						= { this.handleClickDownloadCSV }
+				onReportAvailabilityEvent					= { this.onReportAvailabilityEvent }
+				onClickCloseCancel							= { this.onClickCloseCancel }
+				onClickOk									= { this.onClickOk }
+				onClickEditEventButton						= { this.onClickEditEventButton }
+				onSendConsentRequest						= { this.onSendConsentRequest }
+				onReportNotParticipate						= { this.onReportNotParticipate }
+				onClickAddSchool							= { this.onClickAddSchool }
+				onClickAddTeam								= { this.onClickAddTeam }
+				role 										= { role }
+				onClickDeleteEvent 							= { this.onClickDeleteEvent }
 				//props for tweet button
-				twitterData 					= { twitterData }
-				isTweetButtonRender 			= { this.isTweetButtonRender(role, twitterData, mode) }
-				schoolDomain 					= { schoolDomain }
-				activeSchoolId 					= { this.props.activeSchoolId }
-				twitterIdDefault 				= { twitterIdDefault }
+				twitterData 								= { twitterData }
+				isTweetButtonRender 						= { this.isTweetButtonRender(role, twitterData, mode) }
+				schoolDomain 								= { schoolDomain }
+				activeSchoolId 								= { this.props.activeSchoolId }
+				twitterIdDefault 							= { twitterIdDefault }
 				//props for view mode
-				onClickViewMode 				= { this.onClickViewMode }
+				onClickViewMode 							= { this.onClickViewMode }
 			/>
 		);
 	}
