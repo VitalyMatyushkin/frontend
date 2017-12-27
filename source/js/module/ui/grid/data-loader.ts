@@ -97,7 +97,6 @@ export class DataLoader {
 						allData = allData.concat(data);
 
 						filters.filter.skip += INCREMENT_VALUE;
-						filters.filter.limit += INCREMENT_VALUE;
 
 						return data.length;
 					},
