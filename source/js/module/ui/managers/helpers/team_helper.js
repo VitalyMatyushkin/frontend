@@ -1065,11 +1065,28 @@ function convertPointsCricket(countPoints){
 	};
 }
 
+
+function getPlayers(schoolId, event) {
+	let players = [];
+
+	if(isTeamSport(event)) {
+		event.teamsData.forEach(t => {
+			if(typeof t.players !== 'undefined') {
+				players = players.concat(t.players);
+			}
+		});
+	} else {
+		players = event.individualPlayers;
+	}
+
+	return players.filter(p => p.schoolId === schoolId);
+}
+
 /** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
 function getSchoolsData(event) {
 	let schools = [];
 
-	schools.push(event.inviterSchool);
+	typeof event.inviterSchool !== 'undefined' && schools.push(event.inviterSchool);
 	return schools.concat(event.invitedSchools.filter(school => school.id !== event.inviterSchoolId));
 }
 
@@ -1549,7 +1566,8 @@ const TeamHelper = {
 	mustUseNewManagerWraperHelper:								mustUseNewManagerWraperHelper,
 	isNewTabs:													isNewTabs,
 	isMultiparty:												isMultiparty,
-	getUserIdFromPlayer:										getUserIdFromPlayer
+	getUserIdFromPlayer:										getUserIdFromPlayer,
+	getPlayers:										            getPlayers
 };
 
 module.exports = TeamHelper;

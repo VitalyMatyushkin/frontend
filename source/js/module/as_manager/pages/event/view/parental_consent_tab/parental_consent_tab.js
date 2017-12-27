@@ -2,6 +2,7 @@ const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
 		RoleHelper 					= require('module/helpers/role_helper'),
+		TeamHelper                  = require('module/ui/managers/helpers/team_helper'),
 		MessageConsts				= require('module/ui/message_list/message/const/message_consts'),
 		MessageListActions			= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		MessageListActionsParents	= require('module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
@@ -18,6 +19,7 @@ const ParentalConsentTab = React.createClass({
 	},
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
+		const eventBinding = this.getBinding().event;
 		
 		binding.set('isSync', false);
 		
@@ -47,14 +49,38 @@ const ParentalConsentTab = React.createClass({
 		} else {
 			promises = promises.concat(MessageListActions.loadParentalConsentMessagesByEventId(this.props.schoolId, this.props.eventId));
 			Promise.all(promises).then(result => {
-				const 	user 		= result[0],
-						messages 	= result[1];
-				
-				binding.atomically()
-					.set('messages', 	Immutable.fromJS(messages))
-					.set('loggedUser', 	Immutable.fromJS(user))
-					.set('isSync',		true)
-					.commit();
+				const user = result[0];
+				let messages = result[1];
+
+				const teamPlayers = TeamHelper.getPlayers(this.props.schoolId, eventBinding.toJS());
+				const msgPlayers = this.getPlayersFromMessages(messages);
+
+				const notNotifiedPlayers = [];
+				teamPlayers.forEach(teamPlayer => {
+					const index = msgPlayers.findIndex(msgPlayer =>
+						teamPlayer.userId === msgPlayer.userId && teamPlayer.permissionId === msgPlayer.permissionId
+					);
+
+					if(index === -1) {
+						notNotifiedPlayers.push(teamPlayer);
+					}
+				});
+				const notSendMessages = notNotifiedPlayers.map(player => {
+					return {
+						playerDetails: {
+							userId: player.userId,
+							permissionId: player.permissionId
+						},
+						playerDetailsData: player,
+						schoolId: this.props.schoolId,
+						invitationStatus: 'NOT_SEND'
+					};
+				});
+				messages = messages.concat(notSendMessages);
+
+				binding.set('messages', Immutable.fromJS(messages));
+				binding.set('loggedUser', Immutable.fromJS(user));
+				binding.set('isSync', true);
 			});
 		}
 
@@ -62,6 +88,9 @@ const ParentalConsentTab = React.createClass({
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
+	getPlayersFromMessages: function (messages) {
+		return messages.map(msg => msg.playerDetails);
 	},
 	loadAndSetMessages: function() {
 		const role = RoleHelper.getLoggedInUserRole(this);

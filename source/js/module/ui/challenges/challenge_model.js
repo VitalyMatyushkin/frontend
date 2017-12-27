@@ -56,8 +56,8 @@ const ChallengeModel = function(event, activeSchoolId, activeSchoolKind) {
 
     this.rivals 	= this._getRivals(event, activeSchoolId, activeSchoolKind);
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
-		this.scoreAr = this._getScoreAr(event, activeSchoolId);
-		this.score = this._getScore(event, activeSchoolId);
+		this.scoreAr = this._getScoreAr(event, activeSchoolId, activeSchoolKind);
+		this.score = this._getScore(event, activeSchoolId, activeSchoolKind);
 		this.textResult = this._getTextResult(event, activeSchoolId, activeSchoolKind);
 	}
 };
@@ -82,19 +82,33 @@ ChallengeModel.prototype._getRivals = function(event, activeSchoolId, activeScho
 		event.schoolsData = event.invitedSchools;
 		rivals = rivals.concat(RivalManager.getRivalsByEvent(activeSchoolId, event, ViewModeConsts.VIEW_MODE.BLOCK_VIEW));
 	} else {
-		rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId));
-		rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId));
+		rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId, activeSchoolKind));
+		rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId, activeSchoolKind));
 	}
 
     return rivals;
 };
 
-ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
+ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSchoolKind) {
 	if(this.isFinished) {
-		const points1 = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
-			TeamHelper.getCountPoints.bind(TeamHelper, event)),
-			points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
-				TeamHelper.getCountPoints.bind(TeamHelper, event));
+		const event = Object.assign({}, _event);
+
+		// hack for school union
+		if(activeSchoolKind === 'SchoolUnion') {
+			event.inviterSchoolId = undefined;
+			event.inviterSchool = undefined;
+		}
+		const   points1 = TeamHelper.callFunctionForLeftContext(
+					activeSchoolId,
+					event,
+					TeamHelper.getCountPoints.bind(TeamHelper, event)
+				),
+				points2 = TeamHelper.callFunctionForRightContext(
+					activeSchoolId,
+					event,
+					TeamHelper.getCountPoints.bind(TeamHelper, event)
+				);
+
 		let result1, result2;
 		if (SportHelper.isCricket(event.sport.name)) {
 			result1 = TeamHelper.convertPointsCricket(points1).runs + '/' + TeamHelper.convertPointsCricket(points1).wickets;

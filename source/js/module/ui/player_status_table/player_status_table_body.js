@@ -103,10 +103,22 @@ const PlayerStatusTableBody = React.createClass({
 					<td>{player.name}</td>
 					<td>{MessageConsts.MESSAGE_INVITATION_STATUS_MAP[player.status]}</td>
 					<td>{this.renderParents(index)}</td>
-					<td>{this.state.expandedElementArray[index] ? <i className="fa fa-sort-asc" aria-hidden="true"></i> : <i className="fa fa-sort-desc" aria-hidden="true"></i>}</td>
+					<td>
+						{
+							player.status !== 'NOT_SEND' ?
+								(
+									this.state.expandedElementArray[index] ?
+										<i className="fa fa-sort-asc" aria-hidden="true"></i> :
+										<i className="fa fa-sort-desc" aria-hidden="true"></i>
+								) :
+								null
+						}
+					</td>
 				</tr>
 			);
-			rows.push(this.renderMessage(index));
+			if(player.status !== 'NOT_SEND') {
+				rows.push(this.renderMessage(index));
+			}
 		});
 		
 		return (

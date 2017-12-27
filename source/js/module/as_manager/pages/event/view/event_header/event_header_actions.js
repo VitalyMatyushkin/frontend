@@ -25,7 +25,7 @@ function downloadPdf(schoolId, eventId, event) {
 	}
 }
 function downloadCSV(schoolId, event) {
-	let players = getPlayers(schoolId, event);
+	let players = TeamHelper.getPlayers(schoolId, event);
 
 	const filteredPlayers = players.map(p => {
 		return getCSVPlayer(
@@ -61,22 +61,6 @@ function downloadCSV(schoolId, event) {
 			}
 		}
 	});
-}
-
-function getPlayers(schoolId, event) {
-	let players = [];
-
-	if(TeamHelper.isTeamSport(event)) {
-		event.teamsData.forEach(t => {
-			if(typeof t.players !== 'undefined') {
-				players = players.concat(t.players);
-			}
-		});
-	} else {
-		players = event.individualPlayers;
-	}
-
-	return players.filter(p => p.schoolId === schoolId);
 }
 
 function getCSVPlayer(firstName, lastName, form, ageGroup, event) {

@@ -49,7 +49,8 @@ const CalendarWrapper = React.createClass({
 						</div>
 						<div className="eEvents_rightSideContainer">
 							<Challenges
-								activeSchoolId 		= { this.props.activeSchoolId }
+								activeSchoolId  	= { this.props.activeSchoolId }
+								activeSchoolKind	= { "SchoolUnion" }
 								isSync				= { isSelectedDateEventsInSync }
 								events				= { selectedDateEvents }
 								onClick				= { this.handleEventClick }

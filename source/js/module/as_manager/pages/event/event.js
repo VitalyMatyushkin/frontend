@@ -1576,9 +1576,10 @@ const Event = React.createClass({
 							<If condition={activeTab === 'parentalConsent'} >
 								<div className="bEventBottomContainer">
 									<ParentalConsentTab
-										eventId		= {self.eventId}
-										schoolId	= {this.props.activeSchoolId}
-										binding		= {binding.sub('parentalConsentTab')}
+										eventId = {self.eventId}
+										schoolId = {this.props.activeSchoolId}
+										binding = {
+											{default: binding.sub('parentalConsentTab'), event: binding.sub('model')}}
 									/>
 								</div>
 							</If>

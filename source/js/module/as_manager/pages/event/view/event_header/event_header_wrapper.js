@@ -151,6 +151,7 @@ const EventHeaderWrapper = React.createClass({
 		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
 			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
 
+			this.props.onReload();
 			window.simpleAlert(
 				"Consent requests have been successfully sent",
 				'Ok',
