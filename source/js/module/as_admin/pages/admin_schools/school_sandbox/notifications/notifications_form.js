@@ -103,14 +103,21 @@ const NotificationsForm = React.createClass({
 						type 			= "checkbox"
 						field 			= "EVENT_TEAM_PLAYER_ADDED"
 					>
-						Event team player has been added
+						Game team member has been added
 					</FormField>
 					<FormField
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_TEAM_PLAYER_REMOVED"
 					>
-						Event team player has been removed
+						Game team member has been removed
+					</FormField>
+					<FormField
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "MESSAGE_INBOX_CONSENT_REQUEST"
+					>
+						Consent request has been sent
 					</FormField>
 					<h3>Invites management</h3>
 					<FormField
@@ -133,13 +140,6 @@ const NotificationsForm = React.createClass({
 						field 			= "INVITE_REJECTED_BY_OPPONENT"
 					>
 						An opposing school has rejected your event invite
-					</FormField>
-					<FormField
-						classNames 		= "mWideSingleLine"
-						type 			= "checkbox"
-						field 			= "MESSAGE_INBOX_CONSENT_REQUEST"
-					>
-						New message with consent request
 					</FormField>
 				</FormColumn>
 			</Form>
