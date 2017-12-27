@@ -5,6 +5,7 @@
 	margin-bottom: 20px;
 	display: inline-block;
 	width: 100%;
+	border: 1px solid #ccc;
 }
 
 .bSportsListManagerWrapper{
@@ -18,8 +19,10 @@
 	text-align: center;
 	font-size: 18px;
 }
+table.bSportsListManagerTable{
+	margin-bottom: 0px;
+}
 .bSportsListManagerTable{
-	margin-bottom: 0;
 	td:nth-child(1), th:nth-child(1) { min-width: 100px; }
 	td:nth-child(2), th:nth-child(2) { min-width: 480px; }
 }
@@ -29,7 +32,7 @@
 }
 .bSportsListManagerTableBody{
 	height: 350px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 
