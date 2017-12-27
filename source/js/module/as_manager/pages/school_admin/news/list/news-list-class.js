@@ -7,8 +7,8 @@ const 	React 			= require('react'),
 		SessionHelper	= require('module/helpers/session_helper'),
 		{SVG} 			= require('module/ui/svg'),
 		{DataLoader} 	= require('module/ui/grid/data-loader'),
-		{GridModel}		= require('module/ui/grid/grid-model');
-
+		{GridModel}		= require('module/ui/grid/grid-model'),
+		Timezone    	= require('moment-timezone');
 /**
  * NewsListClass
  *
@@ -69,6 +69,10 @@ class NewsListModel {
 		event.stopPropagation();
 	}
 	
+	getNewsTime(item){
+		return Timezone.tz(item.date, window.timezone).format('DD.MM.YYYY/HH:mm');
+	}
+	
 	getColumns() {
 		const 	role 			= SessionHelper.getRoleFromSession(this.rootBinding.sub('userData')),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -97,11 +101,14 @@ class NewsListModel {
 				isSorted:true,
 				cell:{
 					dataField:'date',
-					type:'date'
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getNewsTime.bind(this)
+					}
 				},
 				filter:{
-					type:'between-date',
-                    id:'find_news_date'
+					type:'between-date-time',
+					id:'find_news_date'
 				}
 			},
 			{

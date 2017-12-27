@@ -1,6 +1,7 @@
 const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
 		Morearty	= require('morearty'),
 		React 		= require('react'),
+		{DateHelper}= require('module/helpers/date_helper'),
 		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
@@ -27,7 +28,11 @@ const NewsAddPage = React.createClass({
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		data.schoolId = this.activeSchoolId;
-
+		
+		if (data.date){
+			data.date = DateHelper.getFormatDateTimeUTCString(data.date);
+		}
+		
 		this.activeSchoolId && window.Server.schoolNews.post(this.activeSchoolId, data).then( () => {
 			//It's so bad, if you see it, fix it, please
 			if (role !== "undefined" && schoolKind === "SchoolUnion"){

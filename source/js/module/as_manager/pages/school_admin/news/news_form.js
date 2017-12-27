@@ -23,7 +23,7 @@ const NewsForm = React.createClass({
 				cancelButtonId	= 'news_cancel'
 			>
 				<FormField type="text" field="title" id="news_title" validation="required">Title</FormField>
-				<FormField type="date" field="date" id="news_date" validation="date required">Date</FormField>
+				<FormField type="datetime" field="date" id="news_date" validation="datetime required">Date</FormField>
 				<FormField type="textarea" field="body" id="news_text" validation="required">Text</FormField>
 				<FormColumn>
 					<FormField type="imageFile" labelText="+" typeOfFile="image" field="picUrl"/>

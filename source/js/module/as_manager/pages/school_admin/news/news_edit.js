@@ -2,6 +2,7 @@ const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'
 		React 		= require('react'),
 		Morearty	= require('morearty'),
 		Immutable 	= require('immutable'),
+		{DateHelper}= require('module/helpers/date_helper'),
 		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
@@ -39,7 +40,11 @@ const NewsEditPage = React.createClass({
 	submitEdit: function(data) {
 		const	role		= RoleHelper.getLoggedInUserRole(this),
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
-
+		
+		if (data.date){
+			data.date = DateHelper.getFormatDateTimeUTCString(data.date);
+		}
+		
 		window.Server.schoolNewsItem.put({schoolId:this.schoolId, newsId:this.newsId}, data).then(() => {
 			//It's so bad, if you see it, fix it, please
 			if (role !== "undefined" && schoolKind === "SchoolUnion"){
