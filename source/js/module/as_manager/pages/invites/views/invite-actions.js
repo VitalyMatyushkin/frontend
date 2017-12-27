@@ -27,7 +27,7 @@ const InviteActions = {
 				filter: {
 					skip: this.invitesCountOnPage * (page - 1),
 					limit: this.invitesCountLimit,
-					order: 'event.startTime DESC'
+					order: 'startTime DESC'
 				}
 			}
 			).then(invites => {
