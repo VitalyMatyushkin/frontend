@@ -5,8 +5,6 @@ export class PlayerListHeader extends React.Component<{}, {}> {
 		return (
 			<thead>
 			<tr>
-				<th scope="col">Name</th>
-				<th scope="col">Form</th>
 			</tr>
 			</thead>
 		)
