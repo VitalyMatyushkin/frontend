@@ -8,7 +8,8 @@ import * as EventRivals from 'module/shared_pages/student/view/event-rivals.js';
 
 interface ChildrenEventsProps {
 	activeSchoolId:	string
-	loadEvents: (page: number) => Promise<any>
+	loadEvents: 	(page: number) => Promise<any>
+	childId:		string
 }
 
 interface ChildrenEventsState {
@@ -17,8 +18,9 @@ interface ChildrenEventsState {
 }
 
 export const ChildrenEvents = (React as any).createClass({
-	onClickChallenge: function (eventId: string): void {
-		document.location.hash = 'event/' + eventId  + '?schoolId=' + this.props.activeSchoolId;
+	onClickChallenge: function (event: any): void {
+		const schoolIdByChildId = event.players.find(p => p.userId === this.props.childId).schoolId;
+		document.location.hash = 'event/' + event.id  + '?schoolId=' + schoolIdByChildId;
 	},
 	
 	componentWillMount: function () {
@@ -46,7 +48,7 @@ export const ChildrenEvents = (React as any).createClass({
 		if(typeof this.state.events !== 'undefined' && this.state.events.length > 0) {
 			events = this.state.events.map(event => {
 				return (
-					<div className="bAchievement_event" key={event.id} onClick={() => this.onClickChallenge(event.id)}>
+					<div className="bAchievement_event" key={event.id} onClick={() => this.onClickChallenge(event)}>
 						<EventRivals event={event} activeSchoolId={this.props.activeSchoolId}/>
 					</div>
 				);

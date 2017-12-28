@@ -86,6 +86,7 @@ export const AchievementOneChild = (React as any).createClass({
 				<ChildrenEvents
 					key				= { `${childId}_${sportId}_${result}` }
 					activeSchoolId 	= { activeSchoolId }
+					childId			= { childId }
 					loadEvents		= { page =>
 						AchievementActions.getChildTeamEvents(page,  childId, sportId, result)
 					}
