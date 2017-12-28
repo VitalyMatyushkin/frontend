@@ -9,9 +9,13 @@
   text-align: center;
 
   border-right: solid 1px #c2c2c2;
+  border-bottom: solid 1px #c2c2c2;
+
+  background-color: $secondBackgroundColor;
 
   &.mSelected {
-    background-color: $secondBackgroundColor;
+    background-color: #fff!important;
+    border-bottom: none;
   }
 
   &:hover {
