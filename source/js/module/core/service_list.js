@@ -130,6 +130,7 @@ const serviceList = {
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
 		serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
 		serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
+		serviceList.schoolEventTeamPlayersBatch = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players/batch', binding);
 		serviceList.schoolEventTeam = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 		serviceList.schoolEventPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/photos/{photoId}', binding);
 		serviceList.schoolEventPhotos = new Service('/i/schools/{schoolId}/events/{eventId}/photos', binding);

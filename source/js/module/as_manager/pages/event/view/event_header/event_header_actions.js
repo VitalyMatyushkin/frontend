@@ -102,7 +102,7 @@ function cancelEventOnServer(schoolId, eventId, notificationMode, binding) {
 				binding.set('isOpenCancelEventManualNotificationPopup', true);
 
 				return true;
-			})
+			});
 		} else {
 			document.location.hash = 'events/calendar';
 
@@ -610,3 +610,4 @@ module.exports.downloadCSV 							= downloadCSV;
 module.exports.sendConsentRequest 					= sendConsentRequest;
 module.exports.deleteEvent 							= deleteEvent;
 module.exports.deleteGroupEvents 					= deleteGroupEvents;
+module.exports.convertAffectedUsersToClient 	    = convertAffectedUsersToClient;

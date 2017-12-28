@@ -49,7 +49,7 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 
 			const	players			= teamWrapper.___teamManagerBinding.teamStudents,
 					initialPlayers	= teamWrapper.prevPlayers;
-			promises = promises.concat(
+			promises = promises.push(
 				TeamHelper.commitPlayers(
 					initialPlayers,
 					players,
@@ -84,13 +84,13 @@ function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
 					const	players			= teamWrapper.___teamManagerBinding.teamStudents,
 							initialPlayers	= teamWrapper.prevPlayers;
 
-					return Promise.all(TeamHelper.commitPlayers(
+					return TeamHelper.commitPlayers(
 						initialPlayers,
 						players,
 						team.id,
 						schoolId,
 						event.id
-					));
+					);
 				});
 		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES:
 			return Promise.resolve(true);

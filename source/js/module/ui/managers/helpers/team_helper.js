@@ -141,8 +141,6 @@ function deleteIndividualPlayer(schoolId, eventId, individualId) {
  * @return {Array}
  */
 function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId) {
-	let promises = [];
-
 	// normalize user array
 	const finalPlayers = _finalPlayers.map(p => {
 		// for users, not for players
@@ -153,7 +151,9 @@ function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId)
 		return p;
 	});
 
-	promises = promises.concat(initialPlayers.map((initialPlayer) => {
+	const playersToRemove = []; // [playerId1, playerId2, ...,  playerIdN]
+	const playerChanges = []; // [ { player id and changes }, ..., { ... }]
+	initialPlayers.forEach(initialPlayer => {
 		let foundPlayer = finalPlayers.find(p =>
 			p.userId === initialPlayer.userId &&
 			p.permissionId === initialPlayer.permissionId
@@ -172,46 +172,51 @@ function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId)
 				changes.isCaptain = foundPlayer.isCaptain;
 			}
 
-			if(typeof changes.positionId !== 'undefined' || typeof changes.sub !== 'undefined' || typeof changes.isCaptain !== 'undefined') {
-				return changePlayer(
-					schoolId,
-					teamId,
-					initialPlayer.id,
-					changes,
-					eventId
+			if(
+				typeof changes.positionId !== 'undefined' ||
+				typeof changes.sub !== 'undefined' ||
+				typeof changes.isCaptain !== 'undefined'
+			) {
+				playerChanges.push(
+					Object.assign({id: initialPlayer.id}, changes)
 				);
 			}
 		} else {
-			//So, user delete player, let's delete player from server
-			return deletePlayer(
-				schoolId,
-				teamId,
-				initialPlayer.id,
-				eventId
-			);
+			playersToRemove.push(initialPlayer.id);
 		}
-	})).filter(p => typeof p !== 'undefined');
+	});
 
-	const newPlayers = [];
+	let newPlayers = []; // [player1, player2, ..., playerN]
 	finalPlayers.forEach(player => {
 		const isNewPlayer = initialPlayers.findIndex(_p =>
-			player.userId === _p.userId &&
-			player.permissionId === _p.permissionId
-		) === -1;
+			player.userId === _p.userId && player.permissionId === _p.permissionId) === -1;
 
 		if(isNewPlayer) {
 			newPlayers.push(player);
 		}
 	});
 
-	// Add new player promises to promise array.
-	promises = promises.concat(
-		newPlayers
-			.map(player => addPlayer(schoolId, teamId, player, eventId))
-			.filter(p => typeof p !== 'undefined')
-	);
+	return changeTeamPlayers(schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove);
+}
 
-	return promises;
+function changeTeamPlayers (schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove) {
+	return window.Server.schoolEventTeamPlayersBatch.post(
+		{
+			schoolId: schoolId,
+			eventId: eventId,
+			teamId: teamId
+		}, {
+			options: {
+				headers:	{ 'notification-mode': 'MANUAL' },
+				isDataOnly:	false
+			},
+			add: newPlayers,
+			update: playerChanges,
+			remove: playersToRemove
+		}
+	).then(response => {
+		return response.xhr.getResponseHeader('action-descriptor-id');
+	});
 }
 
 /**

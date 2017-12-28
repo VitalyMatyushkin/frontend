@@ -1,18 +1,21 @@
-const	React 							= require('react'),
-		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
-		debounce						= require('debounce');
+const	React 					= require('react'),
+		Morearty				= require('morearty'),
+		Immutable				= require('immutable'),
+		debounce				= require('debounce');
 
-const	Manager							= require('./../../../../../ui/managers/manager'),
-		EventHelper						= require('./../../../../../helpers/eventHelper'),
-		ManagerGroupChanges 			= require('module/ui/manager_group_changes/managerGroupChanges'),
-		ManagerWrapperHelper			= require('./manager_wrapper_helper'),
-		NewManagerWrapperHelper			= require('./new_manager_wrapper_helper'),
-		{Button}						= require('../../../../../ui/button/button'),
-		classNames						= require('classnames'),
-		TeamHelper						= require('./../../../../../ui/managers/helpers/team_helper');
+const	Manager					            = require('./../../../../../ui/managers/manager'),
+		EventHelper				            = require('./../../../../../helpers/eventHelper'),
+		ManagerGroupChanges                 = require('module/ui/manager_group_changes/managerGroupChanges'),
+		ManagerWrapperHelper	            = require('./manager_wrapper_helper'),
+		NewManagerWrapperHelper	            = require('./new_manager_wrapper_helper'),
+		{Button}				            = require('../../../../../ui/button/button'),
+		classNames				            = require('classnames'),
+		TeamHelper				            = require('./../../../../../ui/managers/helpers/team_helper'),
+		{ ConfirmPopup }                    = require('module/ui/confirm_popup'),
+		{ CancelEventManualNotification }   = require("module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification");
 
 const	Actions								= require('../../actions/actions'),
+		EventHeaderActions                  = require('module/as_manager/pages/event/view/event_header/event_header_actions'),
 		SavingPlayerChangesPopup			= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		EventConsts							= require('module/helpers/consts/events'),
 		SavingEventHelper					= require('../../../../../helpers/saving_event_helper'),
@@ -73,10 +76,12 @@ const ManagerWrapper = React.createClass({
 
 		binding
 			.atomically()
-			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
-			.set('isTeamManagerSync',				false)
-			.set('isControlButtonActive',			false)
-			.set('isShowChangeModeManagerPopup',	false)
+			.set('selectedRivalIndex', Immutable.fromJS(selectedRivalIndex))
+			.set('isTeamManagerSync', false)
+			.set('isControlButtonActive', false)
+			.set('isShowChangeModeManagerPopup', false)
+			.set('isChangeTeamManualNotificationPopupOpen', false)
+			.set('actionDescriptorId', undefined)
 			.commit();
 
 		this.addListeners();
@@ -291,13 +296,53 @@ const ManagerWrapper = React.createClass({
 		
 		if (managerGroupChanges === EventConsts.CHANGE_MODE.GROUP) {
 			return Actions
-			.submitGroupChanges(this.props.activeSchoolId, binding)
-			.then(() => this.doAfterCommitActions());
+				.submitGroupChanges(this.props.activeSchoolId, binding)
+				.then(() => this.doAfterCommitActions());
 		} else {
 			return Actions
-			.submitAllChanges(this.props.activeSchoolId, binding)
-			.then(() => this.doAfterCommitActions());
+				.submitAllChanges(this.props.activeSchoolId, binding)
+				.then(() => {
+					const binding = this.getDefaultBinding();
+
+					const actionDescriptorId = binding.toJS('actionDescriptorId');
+					if(typeof actionDescriptorId !== 'undefined') {
+						return window.Server.actionDescriptor.get( { actionDescriptorId: actionDescriptorId } ).then(actionDescriptor => {
+							actionDescriptor.affectedUserList = EventHeaderActions.convertAffectedUsersToClient(actionDescriptor.affectedUserList);
+
+							binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
+							binding.set('isChangeTeamManualNotificationPopupOpen', true);
+
+							return true;
+						});
+					} else {
+						this.doAfterCommitActions();
+					}
+				});
 		}
+	},
+	handleClickUserActivityCheckbox: function (userId, permissionId) {
+		let affectedUserList = this.getDefaultBinding().toJS('actionDescriptor.affectedUserList');
+
+		const userIndex = affectedUserList.findIndex(user => user.userId === userId && user.permissionId === permissionId);
+		affectedUserList[userIndex].checked = !affectedUserList[userIndex].checked;
+
+		this.getDefaultBinding().set('actionDescriptor.affectedUserList', Immutable.fromJS(affectedUserList))
+	},
+	handleClickCommitButtonOnPopup: function () {
+		const actionDescriptorId = this.getDefaultBinding().toJS('actionDescriptorId');
+
+		return window.Server.actionDescriptor.put(
+			{
+				actionDescriptorId: actionDescriptorId
+			}, {
+				usersToNotifyList: this.getDefaultBinding().toJS('actionDescriptor.affectedUserList').filter(user => user.checked)
+			}
+			)
+			.then(() => {
+				this.doAfterCommitActions();
+
+				return true;
+			});
 	},
 	getSaveButtonStyleClass: function() {
 		return classNames({
@@ -352,6 +397,29 @@ const ManagerWrapper = React.createClass({
 		}
 
 	},
+	renderChangeTeamManualNotificationPopup: function () {
+		const binding = this.getDefaultBinding();
+
+		if(
+			binding.toJS('isChangeTeamManualNotificationPopupOpen')
+		) {
+			return (
+				<ConfirmPopup
+					okButtomText		= { 'Commit' }
+					isShowCancelButton	= { false }
+					handleClickOkButton	= { () => this.handleClickCommitButtonOnPopup() }
+					customStyle			= { 'mSmallWidth' }
+				>
+					<CancelEventManualNotification
+						users = { binding.toJS('actionDescriptor.affectedUserList') }
+						handleClickUserActivityCheckbox = { (userId, permissionId) => this.handleClickUserActivityCheckbox(userId, permissionId) }
+					/>
+				</ConfirmPopup>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -379,6 +447,7 @@ const ManagerWrapper = React.createClass({
 					binding	= { binding.sub('teamManagerWrapper.default') }
 					submit	= { this.handleClickPopupSubmit }
 				/>
+				{ this.renderChangeTeamManualNotificationPopup() }
 			</div>
 		);
 	}

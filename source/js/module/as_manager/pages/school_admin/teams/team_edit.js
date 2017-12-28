@@ -199,9 +199,7 @@ const TeamEditPage = React.createClass({
                 const   players         = binding.get('teamForm.___teamManagerBinding.teamStudents').toJS(),
                         initialPlayers  = binding.get('initialPlayers').toJS();
 
-                Promise.all(
-                    TeamHelper.commitPlayers(initialPlayers, players, teamId, self.activeSchoolId)
-                ).then(() => {
+	            TeamHelper.commitPlayers(initialPlayers, players, teamId, self.activeSchoolId).then(() => {
                     document.location.hash = '/#school_admin/teams';
                     binding.clear();
                     binding.meta().clear();

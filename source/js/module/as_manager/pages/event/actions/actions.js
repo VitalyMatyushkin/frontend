@@ -98,7 +98,13 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 			if(AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)) {
 				promises = promises.concat(changeTeamByOrder(order, activeSchoolId, binding));
 			} else {
-				promises = promises.concat(commitTeamPlayerChangesByOrder(order, activeSchoolId, binding));
+				promises = promises.concat(
+					commitTeamPlayerChangesByOrder(order, activeSchoolId, binding).then(actionDescriptorId => {
+						binding.set('actionDescriptorId', actionDescriptorId);
+
+						return true;
+					})
+				);
 			}
 			break;
 	}
@@ -154,15 +160,13 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 	const tw = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`);
 
-	return Promise.all(
-		TeamHelper.commitPlayers(
+	return TeamHelper.commitPlayers(
 			tw.prevPlayers,
 			tw.___teamManagerBinding.teamStudents,
 			tw.selectedTeamId,
 			activeSchoolId,
 			binding.toJS('model').id
-		)
-	);
+		);
 }
 
 /**
