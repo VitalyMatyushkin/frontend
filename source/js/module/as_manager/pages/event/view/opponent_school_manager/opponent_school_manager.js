@@ -8,6 +8,7 @@ const	React						= require('react'),
 		EventHelper					= require('../../../events/eventHelper'),
 		{If}						= require('../../../../../ui/if/if'),
 		propz						= require('propz'),
+		EventFormConsts 			= require('module/as_manager/pages/events/manager/event_form/consts/consts'),
 		ChangeOpponentSchoolStyle	= require('../../../../../../../styles/ui/b_change_opponent_school_popup.scss');
 
 const OpponentSchoolManager = React.createClass({
@@ -16,6 +17,7 @@ const OpponentSchoolManager = React.createClass({
 		activeSchoolId:		React.PropTypes.string.isRequired,
 		opponentSchoolId:	React.PropTypes.string,
 		mode:				React.PropTypes.string.isRequired,
+		schoolType:			React.PropTypes.string.isRequired,
 		onReload:			React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
@@ -190,7 +192,11 @@ const OpponentSchoolManager = React.createClass({
 			filter.filter.order = "name ASC";
 		}
 
-		return window.Server.publicSchools.get(filter);
+		if (this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION) {
+			return window.Server.schoolUnionSchools.get({schoolUnionId: activeSchoolInfo.id}, filter);
+		} else {
+			return window.Server.publicSchools.get(filter);
+		}
 	},
 	isShowDistanceSelector: function() {
 		const	binding				= this.getDefaultBinding(),

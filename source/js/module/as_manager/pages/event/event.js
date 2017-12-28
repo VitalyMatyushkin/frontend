@@ -1387,6 +1387,7 @@ const Event = React.createClass({
 					activeSchoolId		= { this.props.activeSchoolId }
 					opponentSchoolId	= { opponentSchoolId }
 					mode				= { mode }
+					schoolType			= { this.props.mode }
 					onReload			= { this.props.onReload }
 					binding				= { binding }
 				/>
