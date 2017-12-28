@@ -26,7 +26,7 @@ const AuthorizationServices ={
 					} else {
 						authInfo.userId = authData.userId;
 					}
-
+					
 					SessionHelper.getLoginSessionBinding(
 						userDataBinding
 					).set(
@@ -36,6 +36,15 @@ const AuthorizationServices ={
 					if(authData.userId) {
 						return window.Server.profile.get().then(profile => {
 							userDataBinding.set('userInfo',	Immutable.fromJS(profile));
+							SessionHelper.getLoginSessionBinding(userDataBinding).sub('email').set(profile.email);
+							SessionHelper.getLoginSessionBinding(userDataBinding).sub('phone').set(profile.phone);
+							SessionHelper.getLoginSessionBinding(userDataBinding).sub('verified').set(Immutable.fromJS(
+								{
+								"email":	profile.verification.status.email,
+								"sms":		profile.verification.status.sms,
+								"personal":	profile.verification.status.personal
+								}
+							));
 							return window.Server.roles.get();
 						}).then(roles => {
 							if(roles && roles.length == 1) {
