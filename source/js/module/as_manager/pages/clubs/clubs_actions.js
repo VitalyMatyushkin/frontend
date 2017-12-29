@@ -9,7 +9,8 @@ const ClubsActions = {
 							options: 'i'
 						},
 						players: 'INDIVIDUAL',
-						'points.display': 'PRESENCE_ONLY'
+						'points.display': 'PRESENCE_ONLY',
+						isAllSports: true
 					},
 					limit: 50,
 					order:'name ASC'

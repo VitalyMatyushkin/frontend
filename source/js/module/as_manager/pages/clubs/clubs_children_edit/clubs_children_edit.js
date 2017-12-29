@@ -80,12 +80,15 @@ const ClubChildrenEdit = React.createClass({
 				participants = _participants;
 
 				binding.set('prevParticipants', Immutable.fromJS(participants));
+				
+				const filter = { filter: { where: { isAllSports: true } } };
 
 				return window.Server.schoolSport.get(
 					{
 						schoolId:	this.props.activeSchoolId,
 						sportId:	club.sportId
-					}
+					},
+					filter
 				)
 			})
 			.then(sport => {
