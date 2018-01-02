@@ -2,7 +2,7 @@ const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
 		Promise				= require('bluebird'),
-		Team				= require('./team/team'),
+		{Team}				= require('./team/team'),
 		{PlayerChoosers}	= require('module/ui/managers/team_manager/player_choosers/player_choosers'),
 		{TabTypes}			= require('module/ui/managers/models/player_choosers_tabs_model/tab_types');
 
