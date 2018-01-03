@@ -3,8 +3,16 @@
 // TODO: it to separate file
 
 export interface UserData {
+    id?: string
+    _id: string
     extra?: {
         type: string
+        parentOf?: {
+            userId: string
+            permissionId: string
+            firstName: string
+            lastName: string
+        }
     },
     firstName: string
     lastName: string

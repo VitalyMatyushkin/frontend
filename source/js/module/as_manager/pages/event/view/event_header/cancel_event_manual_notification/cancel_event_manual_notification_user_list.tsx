@@ -6,7 +6,7 @@ import 'styles/ui/b_cancel_event_manual_notification.scss';
 
 export interface CancelEventManualNotificationUserListProps {
 	users: UserData[]
-	handleClickUserActivityCheckbox: (userId: string, permissionId: string) => any
+	handleClickUserActivityCheckbox: (userId: string, permissionId: string) => void
 }
 
 export class CancelEventManualNotificationUserList extends React.Component<
@@ -17,11 +17,12 @@ export class CancelEventManualNotificationUserList extends React.Component<
 			<div className='eCancelEventManualNotification_userList'>
 				{
 					this.props.users.map(user => {
+					    const key = user.id ? user.id : user._id;
 						return (
 							<CancelEventManualNotificationUser
+                                key = {key}
 								user = {user}
-								handleClickUserActivityCheckbox = {
-									() => this.props.handleClickUserActivityCheckbox(user.userId, user.permissionId)}
+								handleClickUserActivityCheckbox = { this.props.handleClickUserActivityCheckbox }
 							/>
 						);
 					})

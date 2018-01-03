@@ -216,7 +216,7 @@ const EventHeader = React.createClass({
 				>
 					<CancelEventManualNotification
 						users = { binding.toJS('actionDescriptor.affectedUserList') }
-						handleClickUserActivityCheckbox = { (userId, permissionId) => this.props.handleClickUserActivityCheckbox(userId, permissionId) }
+						handleClickUserActivityCheckbox = { this.props.handleClickUserActivityCheckbox }
 					/>
 				</ConfirmPopup>
 			);

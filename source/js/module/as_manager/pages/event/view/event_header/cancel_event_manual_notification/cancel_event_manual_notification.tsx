@@ -17,7 +17,7 @@ export class CancelEventManualNotification extends React.Component<CancelEventMa
 				<CancelEventManualNotificationHeader/>
 				<CancelEventManualNotificationUserList
 					users = {this.props.users}
-					handleClickUserActivityCheckbox = {(userId, permissionId) => this.props.handleClickUserActivityCheckbox(userId, permissionId)}
+					handleClickUserActivityCheckbox = { this.props.handleClickUserActivityCheckbox }
 				/>
 			</div>
 		);

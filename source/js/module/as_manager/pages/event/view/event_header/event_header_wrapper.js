@@ -206,6 +206,9 @@ const EventHeaderWrapper = React.createClass({
 	handleClickUserActivityCheckbox: function (userId, permissionId) {
 		let affectedUserList = this.getDefaultBinding().toJS('actionDescriptor.affectedUserList');
 
+		console.log('hey!');
+		// console.log('affectedUserList: ' + JSON.stringify(affectedUserList));
+
 		const userIndex = affectedUserList.findIndex(user => user.userId === userId && user.permissionId === permissionId);
 		affectedUserList[userIndex].checked = !affectedUserList[userIndex].checked;
 
@@ -232,7 +235,7 @@ const EventHeaderWrapper = React.createClass({
 	},
 	/**
 	 * The function render's component EventHeaderWrapper
-	 * @returns {XML}
+	 * @returns
 	 */
 	render: function() {
 		const	binding 						= this.getDefaultBinding(),
