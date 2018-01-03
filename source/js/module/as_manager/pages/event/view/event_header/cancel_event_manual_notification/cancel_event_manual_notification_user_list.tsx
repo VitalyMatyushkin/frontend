@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {CancelEventManualNotificationUser} from "module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification_user";
+import {CancelEventManualNotificationUser} from "./cancel_event_manual_notification_user";
+import {UserData} from "./user_data";
 
-const Style = require('styles/ui/b_cancel_event_manual_notification.scss');
+import 'styles/ui/b_cancel_event_manual_notification.scss';
 
 export interface CancelEventManualNotificationUserListProps {
-	users: any[]
+	users: UserData[]
 	handleClickUserActivityCheckbox: (userId: string, permissionId: string) => any
 }
 
