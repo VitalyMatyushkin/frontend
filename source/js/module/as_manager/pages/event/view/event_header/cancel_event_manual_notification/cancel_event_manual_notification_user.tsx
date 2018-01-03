@@ -1,11 +1,21 @@
 import * as React from 'react';
 import * as Checkbox from 'module/ui/checkbox/checkbox';
+import * as propz from 'propz';
 
 const Style = require('styles/ui/b_cancel_event_manual_notification.scss');
 
 export interface CancelEventManualNotificationUserProps {
-	user: any
-	handleClickUserActivityCheckbox: (userId: string, permissionId: string) => any
+	user: {
+	    extra: {
+	        type: string
+        },
+        firstName: string
+        lastName: string
+        checked: boolean
+        userId: string
+        permissionId: string
+    }
+	handleClickUserActivityCheckbox: (userId: string, permissionId: string) => void
 }
 
 const USER_ROLE_SERVER_TO_CLIENT = {
@@ -14,13 +24,13 @@ const USER_ROLE_SERVER_TO_CLIENT = {
 	'STAFF': 'staff'
 };
 
-export class CancelEventManualNotificationUser extends React.Component<
-	CancelEventManualNotificationUserProps, {}> {
+export class CancelEventManualNotificationUser extends React.Component<CancelEventManualNotificationUserProps, {}> {
 
-	getUserRole() {
-		return typeof USER_ROLE_SERVER_TO_CLIENT[this.props.user.extra.type] !== 'undefined' ?
-			USER_ROLE_SERVER_TO_CLIENT[this.props.user.extra.type] :
-			'';
+	getUserRole(): string {
+	    const   type    = propz.get(this.props.user, ['extra', 'type']) as string|undefined,
+                result  = propz.get(USER_ROLE_SERVER_TO_CLIENT, [type], '') as string;
+
+	    return result;
 	}
 
 	render() {
