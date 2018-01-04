@@ -128,9 +128,12 @@ const TeamBundle = React.createClass({
 				});
 
 				isValid = classNames.length - disableWrappersCount === 1;
+
+				break;
 			}
 			default: {
 				isValid = true;
+				break;
 			}
 		}
 
@@ -384,6 +387,7 @@ const TeamBundle = React.createClass({
 
 		if( !this.isValidClassNames('TEAM_WRAPPER', _classNames) ) {
 			const rivals = this.getBinding().rivals.toJS();
+			console.log('!!!PLS EXPAND ALL THIS STUFF BEFORE TAKE SCREEN SHOT FOR DEVELOPER!!!');
 			console.log('RIVALS:');
 			rivals.forEach(rival => {
 				console.log(rival);
