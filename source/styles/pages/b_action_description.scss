@@ -1,0 +1,63 @@
+@import "../!variables";
+
+.bActionDescription_container {
+  max-width: 900px;
+  margin: auto;
+
+  .eActionDescription_main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 30px auto;
+
+    .eText{
+      flex-basis: 650px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .eTextKey{
+        flex-basis: 200px;
+        margin-bottom: 25px;
+        font-size: 1em;
+        font-weight: bold;
+        color: #aaaaaa;
+      }
+
+      .eTextValue{
+        flex-basis: 450px;
+        margin-bottom: 25px;
+
+        .eDescription_link{
+          color: $lightBlue;
+
+          &:hover{
+            color: #000;
+          }
+        }
+      }
+    }
+  }
+
+  .eActionDescription_table {
+    margin: 0 1%;
+    display: inline-block;
+
+    h3 {
+      line-height: 20px;
+    }
+  }
+
+  .eActionDescriptionAffectedUser_table {
+    width: 55%;
+  }
+
+  .eActionDescriptionUsersToNotify_table {
+    width: 40%;
+  }
+
+  .eActionDescription_button {
+    margin: auto;
+    display: block;
+  }
+
+}
