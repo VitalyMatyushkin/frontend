@@ -162,7 +162,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 		if (isSync) {
 			return 	this.renderActionDescriptorData();
 		} else {
-			return <div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>;
+			return <div className="eLoader eActionDescriptor_loader"><SVG icon="icon_spin-loader-black" /></div>;
 		}
 	}
 });
