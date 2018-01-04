@@ -7,7 +7,7 @@ import * as Morearty from 'morearty';
 import * as	Immutable from 'immutable';
 import {SVG} from 'module/ui/svg';
 
-import 'styles/pages/b_action_description.scss';
+import 'styles/pages/b_action_descriptor.scss';
 
 interface AffectedUser {
 	userId:				string,
@@ -69,7 +69,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 			);
 		});
 		return (
-			<div className="eActionDescription_table eActionDescriptionAffectedUser_table table-responsive">
+			<div className="eActionDescriptor_table eActionDescriptorAffectedUser_table table-responsive">
 				<h3>Affected User List</h3>
 				<table className="table table-striped">
 					<thead>
@@ -104,7 +104,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 			);
 		});
 		return (
-			<div className="eActionDescription_table eActionDescriptionUsersToNotify_table table-responsive">
+			<div className="eActionDescriptor_table eActionDescriptorUsersToNotify_table table-responsive">
 				<h3>Users To Notify List</h3>
 				<table className="table table-striped">
 					<thead>
@@ -133,8 +133,8 @@ export const ActionDescriptorItem = (React as any).createClass({
 		}
 				
 		return (
-			<div className = "bActionDescription_container">
-				<div className = "eActionDescription_main">
+			<div className = "bActionDescriptor_container">
+				<div className = "eActionDescriptor_main">
 					<div className = "eText">
 						<div className = "eTextKey">Name</div>
 						<div className = "eTextValue">{name}</div>
@@ -148,8 +148,8 @@ export const ActionDescriptorItem = (React as any).createClass({
 				</div>
 				{this.renderAffectedUserList()}
 				{this.renderUsersToNotifyList()}
-				<button className="bButton mCancel eActionDescription_button" onClick={() => document.location.hash = 'users/action_descriptors'}>
-					Back to Action Descriptions list
+				<button className="bButton mCancel eActionDescriptor_button" onClick={() => document.location.hash = 'users/action_descriptors'}>
+					Back to Action Descriptors list
 				</button>
 			</div>
 		);

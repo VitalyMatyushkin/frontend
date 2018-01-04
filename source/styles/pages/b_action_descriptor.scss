@@ -1,10 +1,10 @@
 @import "../!variables";
 
-.bActionDescription_container {
+.bActionDescriptor_container {
   max-width: 900px;
   margin: auto;
 
-  .eActionDescription_main {
+  .eActionDescriptor_main {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -27,7 +27,7 @@
         flex-basis: 450px;
         margin-bottom: 25px;
 
-        .eDescription_link{
+        .eDescriptor_link{
           color: $lightBlue;
 
           &:hover{
@@ -38,7 +38,7 @@
     }
   }
 
-  .eActionDescription_table {
+  .eActionDescriptor_table {
     margin: 0 1%;
     display: inline-block;
 
@@ -47,15 +47,15 @@
     }
   }
 
-  .eActionDescriptionAffectedUser_table {
+  .eActionDescriptorAffectedUser_table {
     width: 55%;
   }
 
-  .eActionDescriptionUsersToNotify_table {
+  .eActionDescriptorUsersToNotify_table {
     width: 40%;
   }
 
-  .eActionDescription_button {
+  .eActionDescriptor_button {
     margin: auto;
     display: block;
   }
