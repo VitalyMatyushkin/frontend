@@ -20,6 +20,15 @@ interface UsersToNotify {
 	permissionId:		string
 }
 
+interface TriggeredBy {
+	userId:				string
+	permissionIdList:	string[]
+	schoolId:			string
+	isSuperadmin:		boolean
+	firstName:			string
+	lastName:			string
+}
+
 export interface ActionDescriptor {
 	affectedUserList: AffectedUser[]
 	affectedUserListStatus: string
@@ -30,7 +39,7 @@ export interface ActionDescriptor {
 	notificationEmissionStatus: string
 	notificationMode: string
 	performerType: string
-	triggeredBy: any
+	triggeredBy: TriggeredBy
 	updatedAt: string
 	usersToNotifyList: UsersToNotify[]
 }

@@ -137,7 +137,7 @@ export class ActionDescriptorsModel{
 		return this;
 	}
 	
-	createGridFromExistingData(grid: any): any {
+	createGridFromExistingData(grid: GridModel): any {
 		this.grid = new GridModel({
 			actionPanel:{
 				title:      'Action Descriptors',
