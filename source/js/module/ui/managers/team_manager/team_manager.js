@@ -13,7 +13,7 @@ const TeamManager = React.createClass({
 		isNonTeamSport:				React.PropTypes.bool,
 		playerChoosersTabsModel:	React.PropTypes.object,
 		clubId:						React.PropTypes.string,
-		actions:					React.PropTypes.string.isRequired
+		actions:					React.PropTypes.object.isRequired
 	},
 	currentSearchRequest: undefined,
 	currentSearchText: '',
