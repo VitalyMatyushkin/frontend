@@ -1,11 +1,13 @@
-const	React					= require('react'),
-		Immutable				= require('immutable'),
-		Morearty				= require('morearty'),
-		DomainHelper			= require('../../../../../../helpers/domain_helper'),
-		MoreartyHelper			= require('../../../../../../helpers/morearty_helper'),
-		SchoolUnionSummaryPanel	= require('./school_union_summary_panel');
 
-const SchoolSummary = React.createClass({
+
+import * as	React from 'react';
+import * as Immutable from 'immutable';
+import * as Morearty from 'morearty';
+import * as DomainHelper from '../../../../../../helpers/domain_helper';
+import * as MoreartyHelper from '../../../../../../helpers/morearty_helper';
+import {SchoolUnionSummaryPanel} from './school_union_summary_panel';
+
+const SchoolSummary = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	NO_IMAGE_LINK: 'images/no-image.jpg',
 	componentWillMount: function() {
@@ -25,17 +27,13 @@ const SchoolSummary = React.createClass({
 
 		binding.set('isSchoolDataLoading', true);	// setting flag, that we are loading data...
 
-		window.Server.school.get(
-			activeSchoolId,
-			{
-				filter: {include: 'postcode'}
-			}
-		).then(schoolData => {
-			binding.atomically()
-				.set('schoolData',			Immutable.fromJS(schoolData))
-				.set('isSchoolDataLoading',	false)
-				.commit();
-		});
+        (window as any).Server.school.get(activeSchoolId)
+            .then(schoolData => {
+                binding.atomically()
+                    .set('schoolData',			Immutable.fromJS(schoolData))
+                    .set('isSchoolDataLoading',	false)
+                    .commit();
+            });
 	},
 	getSchoolUnionPicture: function() {
 		const schoolUnionPicture = this.getDefaultBinding().toJS('schoolData.pic')

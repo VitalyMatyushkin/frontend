@@ -21,6 +21,6 @@ function getLoggedInUserId(self) {
 const MoreartyHelper = {
 	getActiveSchoolId:  getActiveSchoolId,
 	getLoggedInUserId:  getLoggedInUserId
-}
+};
 
 module.exports = MoreartyHelper;

@@ -1,38 +1,59 @@
-const	React					= require('react'),
-		{SVG}					= require('module/ui/svg'),
-		{If}					= require('module/ui/if/if'),
-		SchoolUnionSummaryStyle	= require('../../../../../../../../styles/ui/b_school_union_summary.scss');
+import * as React from 'react';
+import {SVG} from 'module/ui/svg';
+import {If} from 'module/ui/if/if';
 
-const SchoolUnionSummaryPanel = React.createClass({
-	SCHOOL_UNION_SUMMARY_EDIT_LINK: '/#school_union_admin/summary/edit',
-	MAX_DESCRIPTION_SIZE: 900,
-	propTypes: {
-		activeSchoolUnionId			: React.PropTypes.string.isRequired,
-		publicSchoolUnionSiteLink	: React.PropTypes.string.isRequired,
-		schoolUnionPicture			: React.PropTypes.string,
-		schoolName					: React.PropTypes.string.isRequired,
-		postcode					: React.PropTypes.string,
-		address						: React.PropTypes.string.isRequired,
-		description					: React.PropTypes.string,
-		isShowEditButton			: React.PropTypes.bool.isRequired
-	},
-	getInitialState: function() {
-		return {
-			expanded: false
-		};
-	},
-	expandedText: function() {
+import '../../../../../../../../styles/ui/b_school_union_summary.scss';
+
+
+
+export interface SchoolUnionSummaryPanelProps {
+	activeSchoolUnionId: string
+	publicSchoolUnionSiteLink: string
+	schoolUnionPicture?: string
+	schoolName: string
+	postcode?: string
+	address: string
+	description?: string
+	isShowEditButton: boolean
+}
+
+interface SchoolUnionSummaryPanelState {
+    expanded: boolean
+}
+
+
+const SCHOOL_UNION_SUMMARY_EDIT_LINK = '/#school_union_admin/summary/edit';
+const MAX_DESCRIPTION_SIZE = 900;
+
+export class SchoolUnionSummaryPanel extends React.Component<SchoolUnionSummaryPanelProps, SchoolUnionSummaryPanelState>{
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            expanded: false
+        };
+    }
+
+	expandedText() {
 		this.setState({
 			expanded: !this.state.expanded
 		});
-	},
-	getSchoolUnionEditPageLink: function() {
-		return `${this.SCHOOL_UNION_SUMMARY_EDIT_LINK}?id=${this.props.activeSchoolUnionId}`;
-	},
-	getCutDescriptionText: function(descriptionText) {
-		return descriptionText.slice(0, this.MAX_DESCRIPTION_SIZE)  + '...' ;
-	},
-	renderEditButton: function() {
+	}
+
+	getSchoolUnionEditPageLink() {
+		return `${SCHOOL_UNION_SUMMARY_EDIT_LINK}?id=${this.props.activeSchoolUnionId}`;
+	}
+
+	getCutDescriptionText(descriptionText: string): string {
+        if(descriptionText.length > MAX_DESCRIPTION_SIZE) {
+            return descriptionText.slice(0, MAX_DESCRIPTION_SIZE)  + '...' ;
+        } else {
+            return descriptionText;
+        }
+
+	}
+
+	renderEditButton() {
 		if(this.props.isShowEditButton === true) {
 			return (
 				<div className="eSchoolUnionSummary_editButton">
@@ -48,9 +69,10 @@ const SchoolUnionSummaryPanel = React.createClass({
 		} else {
 			return null;
 		}
-	},
-	renderSchoolUnionPicture: function() {
-		const schoolUnionPicture = this.props.schoolUnionPicture;
+	}
+
+	renderSchoolUnionPicture() {
+		const {schoolUnionPicture} = this.props;
 
 		if(typeof schoolUnionPicture !== "undefined") {
 			return (
@@ -61,9 +83,10 @@ const SchoolUnionSummaryPanel = React.createClass({
 		} else {
 			return null;
 		}
-	},
-	renderDescription: function () {
-		const description = this.props.description;
+	}
+
+	renderDescription() {
+		const {description} = this.props;
 		let linkText, text;
 
 		if (this.state.expanded) {
@@ -76,14 +99,15 @@ const SchoolUnionSummaryPanel = React.createClass({
 		return (
 			<div className="eSchoolUnionSummary_description">
 				{text}
-				<If condition={description && description.length > this.MAX_DESCRIPTION_SIZE}>
+				<If condition={description && description.length > MAX_DESCRIPTION_SIZE}>
 					<a className="eDescription_link" onClick={this.expandedText}> { linkText } </a>
 				</If>
 			</div>
 		);
-	},
-	renderSiteLink: function () {
-		const publicSchoolUnionSiteLink = this.props.publicSchoolUnionSiteLink;
+	}
+
+	renderSiteLink() {
+		const {publicSchoolUnionSiteLink} = this.props;
 		if(publicSchoolUnionSiteLink !== '') {
 			return (
 				<p className="eSchoolUnionSummary_footer">
@@ -105,8 +129,9 @@ const SchoolUnionSummaryPanel = React.createClass({
 				</p>
 			);
 		}
-	},
-	render: function () {
+	}
+
+	render() {
 		return (
 			<div className="bSchoolUnionSummary">
 				<div className="eSchoolUnionSummary_header">
@@ -131,6 +156,4 @@ const SchoolUnionSummaryPanel = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = SchoolUnionSummaryPanel;
+}
