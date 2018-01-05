@@ -190,7 +190,10 @@ const serviceList = {
 		serviceList.declineSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
 		serviceList.schoolInviteComments		= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments', binding);
 		serviceList.schoolInviteCommentsCount	= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments/count', binding);
-
+		serviceList.inviteInboxCount			= new Service('/i/schools/{schoolId}/invites/inbox/count', binding);
+		serviceList.inviteOutboxCount			= new Service('/i/schools/{schoolId}/invites/outbox/count', binding);
+		serviceList.inviteArchiveCount			= new Service('/i/schools/{schoolId}/invites/archive/count', binding);
+		
 		// messages
 		// it's some invitation message
 		serviceList.schoolEventsInvitationMessages	= new Service('/i/schools/{schoolId}/events/messages/invite', binding);

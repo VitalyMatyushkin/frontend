@@ -151,11 +151,13 @@ const EventHeaderWrapper = React.createClass({
 		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
 			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
 
-			this.props.onReload();
+			const text = messages.length > 0 ?
+				"Consent requests have been successfully sent" :
+				"No parental accounts for these team members can be detected to send messages to.";
 			window.simpleAlert(
-				"Consent requests have been successfully sent",
+				text,
 				'Ok',
-				() => {}
+				() => this.props.onReload()
 			);
 		});
 	},
