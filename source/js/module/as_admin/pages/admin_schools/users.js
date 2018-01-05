@@ -16,6 +16,7 @@ const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_school
 		AdminPermissionAcceptStudentComponent	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
 		UserComponent 							= require('module/as_admin/pages/admin_add/user'),
 		UserActivityComponent 					= require('module/as_admin/pages/admin_schools/user_activity/user-activity'),
+		{ActionDescriptorsComponent} 			= require('module/as_admin/pages/admin_schools/action_descriptors/action-descriptors-page'),
 		AdminMergeStudentComponent 				= require('module/as_admin/pages/admin_schools/admin_views/student_without_permission_merge');
 
 const OneSchoolPage = React.createClass({
@@ -65,6 +66,10 @@ const OneSchoolPage = React.createClass({
 					href:'/#users/user_activity',
 					name:'User Activity',
 					key:'user-activity'
+				},{
+					href:'/#users/action_descriptors',
+					name:'Action descriptors',
+					key:'action-descriptors'
 				}
 			];
 			binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
@@ -118,6 +123,11 @@ const OneSchoolPage = React.createClass({
 							path 				= "/users/user_activity"
 							binding 			= { binding.sub('userActivity') }
 							component 			= { UserActivityComponent }
+						/>
+						<Route
+							path				= "/users/action_descriptors /users/action_descriptors/:subPage"
+							binding				= { binding.sub('actionDescriptorsPage') }
+							component			= { ActionDescriptorsComponent }
 						/>
 						<Route
 							path 				= "/users/admin_views/create_user"

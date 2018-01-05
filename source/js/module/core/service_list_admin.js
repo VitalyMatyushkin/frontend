@@ -66,6 +66,10 @@ const serviceList = {
 		// activity logs
 		serviceList.useractivity = new Service('/superadmin/useractivity', binding);
 		serviceList.useractivityCount = new Service('/superadmin/useractivity/count', binding);
+		
+		// action descriptors
+		serviceList.actionDescriptors = new Service('/superadmin/actiondescriptors', binding);
+		serviceList.actionDescriptor = new Service('/superadmin/actiondescriptors/{adId}', binding);
 
 		//user sessions
 		serviceList.userSessions = new Service('/superadmin/users/{userId}/sessions', binding);
