@@ -17,6 +17,7 @@ const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page
 		OpponentsPageComponent 	= require('module/as_school/pages/opponents/opponents_page'),
 		SchoolAddComponent		= require('module/as_manager/pages/schools/schools_add'),
 		{AlbumRoutes}			= require('module/ui/gallery/albums'),
+		{ActionDescriptorRouter}= require('module/as_admin/pages/admin_schools/action_descriptors/action-descriptor-router'),
 		AdminDashboardComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard'),
 		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox'),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
@@ -78,6 +79,11 @@ const Center = React.createClass({
 							path		= "/users /users/:subPage /users/:subFolder/:subPage"
 							binding		= { binding.sub('users') }
 							component	= { UsersComponent }
+						/>
+						<Route
+							path		= "/users/action_descriptor/:adId /users/action_descriptor/:adId/:subPage"
+							binding		= { binding.sub('actionDescriptorRouter') }
+							component	= { ActionDescriptorRouter }
 						/>
 						<Route
 							path		= "/schools /schools/:subPage /schools/:subFolder/:subPage /schools/:subFolder/:subPage/:mode"

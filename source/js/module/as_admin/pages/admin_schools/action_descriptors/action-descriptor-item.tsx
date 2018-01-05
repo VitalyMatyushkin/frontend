@@ -28,6 +28,9 @@ interface AffectedUser {
 interface UsersToNotify {
 	userId:				string
 	permissionId:		string
+	firstName?:			string
+	lastName?:			string
+	_id?:				string
 }
 
 interface TriggeredBy {
@@ -75,13 +78,13 @@ export interface ActionDescriptor {
 export const ActionDescriptorItem = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount() {
-		const 	binding = this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding(),
-				routingData 	= globalBinding.sub('routing.parameters').toJS();
+		const 	binding 			= this.getDefaultBinding(),
+				globalBinding 		= this.getMoreartyContext().getBinding(),
+				actionDescriptorId 	= globalBinding.get('routing.pathParameters.0');
 		
 		binding.set('isSync', false);
 		
-		(window as any).Server.actionDescriptor.get({adId: routingData.id})
+		(window as any).Server.actionDescriptor.get({adId: actionDescriptorId,})
 			.then((actionDescriptor: ActionDescriptor[]) => {
 				binding.set('isSync', true);
 				binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
@@ -91,7 +94,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 	renderAffectedUserList(): React.ReactNode {
 		const 	binding = this.getDefaultBinding(),
 				actionDescriptor = binding.toJS('actionDescriptor'),
-				titles = ['userId', 'permissionId', 'extra'];
+				titles = ['userId', 'firstName', 'lastName', 'permissionId', 'extra'];
 		
 		const rows = actionDescriptor.affectedUserList.map((rowObj, i) => {
 			const cells = titles.map( title => {
@@ -120,6 +123,8 @@ export const ActionDescriptorItem = (React as any).createClass({
 						<th >#</th>
 						<th>User Id</th>
 						<th>Permission Id</th>
+						<th>First Name</th>
+						<th>Last Name</th>
 						<th>Extra</th>
 					</tr>
 					</thead>
@@ -132,7 +137,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 	renderUsersToNotifyList(): React.ReactNode {
 		const 	binding = this.getDefaultBinding(),
 				actionDescriptor = binding.toJS('actionDescriptor'),
-				titles = ['userId', 'permissionId'];
+				titles = ['userId', 'firstName', 'lastName', 'permissionId'];
 		
 		const rows = actionDescriptor.usersToNotifyList.map((rowObj, i) => {
 			const cells = titles.map( title => {
@@ -154,6 +159,8 @@ export const ActionDescriptorItem = (React as any).createClass({
 					<tr>
 						<th >#</th>
 						<th>User Id</th>
+						<th>First Name</th>
+						<th>Last Name</th>
 						<th>Permission Id</th>
 					</tr>
 					</thead>

@@ -56,8 +56,7 @@ export class ActionDescriptorsModel{
 	}
 	
 	handleClickActionDescriptor(id: string): void {
-		
-		document.location.hash += `/item?id=${id}`;
+		window.location.hash = `users/action_descriptor/${id}/item`;
 		event.stopPropagation();
 	}
 	
@@ -171,7 +170,7 @@ export class ActionDescriptorsModel{
 		return this;
 	}
 	
-	getDataLoadedHandle(){
+	getDataLoadedHandle() {
 		const binding = this.getDefaultBinding();
 		
 		return data => {
