@@ -89,7 +89,8 @@
     "dev": "webpack-dev-server",
     "deploy": "gulp deploy",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
-    "clean-deploy": "rm -rf ./node_modules && npm install && npm run deploy"
+    "clean-deploy": "rm -rf ./node_modules && npm install && npm run deploy",
+    "file-stats": "find ./source -type f | sed 's/.*\\.//' | sort | uniq -c"
   },
   "repository": {
     "type": "git",
