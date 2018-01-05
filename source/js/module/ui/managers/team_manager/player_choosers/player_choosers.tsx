@@ -119,8 +119,8 @@ export class PlayerChoosers extends React.Component<PlayerChoosersProps, {}> {
 
 	renderPlayerChoosers() {
 		return this.props.playerChoosersTabsModel.tabs.map(
-			tab =>
-				<div className = { this.getPlayerChooserWrapperStyleByTabId(tab.id) } >
+			(tab, index) =>
+				<div key = {`player_chooser_${index}`} className = { this.getPlayerChooserWrapperStyleByTabId(tab.id) } >
 					{ this.renderPlayerChooserByType(tab.type) }
 				</div>
 		);
