@@ -397,7 +397,7 @@ const TeamBundle = React.createClass({
 
 		return tw.map((binding, index) => {
 			return (
-				<div className = { _classNames[index] }>
+				<div key = {`team_wrapper_${index}`} className = { _classNames[index] }>
 					<TeamWrapper
 						binding					= { binding }
 						actions					= { this.props.actions }
