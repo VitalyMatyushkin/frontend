@@ -113,6 +113,16 @@ export class ActionDescriptorsModel{
 				cell:{
 					dataField:'notificationEmissionStatus'
 				}
+			},
+			{
+				text:'Kind',
+				isSorted:false,
+				cell:{
+					dataField:'kind'
+				},
+				filter:{
+					type:'string'
+				}
 			}
 		];
 	}
@@ -148,7 +158,8 @@ export class ActionDescriptorsModel{
 			filters: {
 				where: grid.filter.where,
 				order: grid.filter.order
-			}
+			},
+			badges: grid.filterPanel.badgeArea
 		});
 		
 		this.dataLoader =   new DataLoader({

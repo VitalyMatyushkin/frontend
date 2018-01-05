@@ -9,10 +9,20 @@ import {SVG} from 'module/ui/svg';
 
 import 'styles/pages/b_action_descriptor.scss';
 
+interface ExtraDataAffectedUser {
+	type: string
+	list: string
+}
+
 interface AffectedUser {
-	userId:				string,
-	permissionId:		string,
-	extra?:				any
+	userId:				string
+	permissionId:		string
+	extra?:				ExtraDataAffectedUser
+	firstName?:			string
+	gender?:			string
+	id?:				string
+	lastName?:			string
+	_id?:				string
 }
 
 interface UsersToNotify {
@@ -29,6 +39,17 @@ interface TriggeredBy {
 	lastName:			string
 }
 
+interface Player {
+	isCaptain: 				boolean
+	isTeamPlayer: 			boolean
+	participationStatus: 	string
+	permissionId: 			string
+	schoolId: 				string
+	teamId: 				string
+	userId: 				string
+	_id: 					string
+}
+
 export interface ActionDescriptor {
 	affectedUserList: AffectedUser[]
 	affectedUserListStatus: string
@@ -42,6 +63,13 @@ export interface ActionDescriptor {
 	triggeredBy: TriggeredBy
 	updatedAt: string
 	usersToNotifyList: UsersToNotify[]
+	eventId?: string
+	schoolId?: string
+	teamId?: string
+	playersAdded?: Player[]
+	playersBefore?: Player[]
+	playersRemoved?: Player[]
+	playersUpdated?: Player[]
 }
 
 export const ActionDescriptorItem = (React as any).createClass({
@@ -67,7 +95,13 @@ export const ActionDescriptorItem = (React as any).createClass({
 		
 		const rows = actionDescriptor.affectedUserList.map((rowObj, i) => {
 			const cells = titles.map( title => {
-				return <td key={title+i}>{rowObj[title]}</td>;
+				if (title === 'extra') {
+					const 	extraType = typeof rowObj[title]['type'] !== 'undefined' ? `Type: ${rowObj[title]['type']}` : '',
+							extraList = typeof rowObj[title]['list'] !== 'undefined' ? `List: ${rowObj[title]['list']}` : '';
+					return (<td key={title+i}>{extraType} {extraList}</td>);
+				} else {
+					return <td key={title+i}>{rowObj[title]}</td>;
+				}
 			});
 			
 			return (
@@ -78,7 +112,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 			);
 		});
 		return (
-			<div className="eActionDescriptor_table eActionDescriptorAffectedUser_table table-responsive">
+			<div className="eActionDescriptor_table table-responsive">
 				<h3>Affected User List</h3>
 				<table className="table table-striped">
 					<thead>
@@ -113,7 +147,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 			);
 		});
 		return (
-			<div className="eActionDescriptor_table eActionDescriptorUsersToNotify_table table-responsive">
+			<div className="eActionDescriptor_table table-responsive">
 				<h3>Users To Notify List</h3>
 				<table className="table table-striped">
 					<thead>

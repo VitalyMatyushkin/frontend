@@ -39,7 +39,8 @@
   }
 
   .eActionDescriptor_table {
-    margin: 0 1%;
+    width: 90%;
+    margin: auto;
     display: inline-block;
     vertical-align: top;
 
@@ -48,16 +49,8 @@
     }
   }
 
-  .eActionDescriptorAffectedUser_table {
-    width: 55%;
-  }
-
-  .eActionDescriptorUsersToNotify_table {
-    width: 40%;
-  }
-
   .eActionDescriptor_button {
-    margin: auto;
+    margin: 20px auto;
     display: block;
   }
 }
