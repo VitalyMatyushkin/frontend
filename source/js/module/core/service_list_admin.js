@@ -86,6 +86,7 @@ const serviceList = {
 		serviceList.userNotificationChannelMessage = new Service('/superadmin/users/{userId}/notifications/channels/{channelId}/message', binding);
 		serviceList.notifications = new Service('/superadmin/users/{userId}/notifications', binding);
 		serviceList.schoolNotifications = new Service('/superadmin/schools/{schoolId}/notifications', binding);
+		serviceList.allNotifications = new Service('/superadmin/notifications', binding);
 		
 		//Invites
 		serviceList.invites = new Service('/superadmin/users/invites', binding);
