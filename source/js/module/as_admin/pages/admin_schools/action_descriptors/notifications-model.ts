@@ -77,8 +77,7 @@ export class NotificationsModel{
 				showStrip:  true
 			},
 			columns:this.columns,
-			filters:{limit:20, order:'startedAt DESC'
-				// , where: {actionDescriptorId: this.actionDescriptionId}
+			filters:{limit:20, order:'startedAt DESC', where: {actionDescriptorId: this.actionDescriptionId}
 			}
 		});
 		
