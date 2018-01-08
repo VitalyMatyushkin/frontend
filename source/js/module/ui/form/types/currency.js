@@ -27,7 +27,7 @@ const TypeCurrency =  React.createClass({
 		this.changeValue(value);
 	},
 	render: function () {
-		const value	= this.getDefaultBinding().get('value');
+		const value = String(this.getDefaultBinding().get('value'));
 
 		return (
 			<CurrencyInput
