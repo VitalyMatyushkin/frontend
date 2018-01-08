@@ -9,7 +9,7 @@ const	{ If }				= require('module/ui/if/if'),
 
 const DefaultPlayerChooser = React.createClass({
 	propTypes: {
-		PlayerChoosersTabsModel:	React.PropTypes.object.isRequired,
+		PlayerChoosersTabsModel:	React.PropTypes.object,
 		students:					React.PropTypes.array.isRequired,
 		handleChangeSearchText:		React.PropTypes.func.isRequired,
 		handleClickStudent:			React.PropTypes.func.isRequired,

@@ -22,7 +22,7 @@ const DateSelector = React.createClass({
 	},
 
 	getExtraStyleForDateSelector: function () {
-		let extraStyle;
+		let extraStyle = '';
 
 		if(this.props.isSmallView) {
 			extraStyle = this.SMALL_DATE_SELECTOR_CSS_STYLE;

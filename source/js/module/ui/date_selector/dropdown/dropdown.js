@@ -24,19 +24,21 @@ const Dropdown = React.createClass({
 	render: function() {
 		const days = this.props.optionsArray.map(option => {
 				return (
-					<option	key		= {option.id}
-							value	= {option.value}
+					<option
+						key		= { option.id }
+						value	= { option.value }
 					>
-						{`${option.text}`}
+						{ `${option.text}` }
 					</option>
 				);
 			}
 		);
 
 		return (
-			<select	className	= { this.getSelectCssStyle() }
-					value		= { this.props.currentOptionId }
-					onChange	= { this.handleChange }
+			<select
+				className	= { this.getSelectCssStyle() }
+				value		= { this.props.currentOptionId }
+				onChange	= { this.handleChange }
 			>
 				{days}
 			</select>
