@@ -27,7 +27,9 @@ const TypeCurrency =  React.createClass({
 		this.changeValue(value);
 	},
 	render: function () {
-		const value = String(this.getDefaultBinding().get('value'));
+		const value = typeof this.getDefaultBinding().get('value') !== 'undefined' ?
+			String(this.getDefaultBinding().get('value')) :
+			this.getDefaultBinding().get('value');
 
 		return (
 			<CurrencyInput

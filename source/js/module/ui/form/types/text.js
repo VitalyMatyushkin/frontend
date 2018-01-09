@@ -23,7 +23,9 @@ const TypeText =  React.createClass({
 		this.changeValue(value);
 	},
 	render: function () {
-		const value	= String(this.getDefaultBinding().get('value'));
+		const value = typeof this.getDefaultBinding().get('value') !== 'undefined' ?
+			String(this.getDefaultBinding().get('value')) :
+			this.getDefaultBinding().get('value');
 
 		// Use wrapper for input component because
 		// input component with Morearty state has incorrect behaviour - cursor jump to end while user type text
