@@ -6,7 +6,6 @@ import * as papa from 'papaparse';
 import * as BPromise from 'bluebird';
 import dateParser from './date_parser';
 
-
 /** Tiny wrapper for Papa parse to return Promise.
  * Note, it is impossible to wrap it with Bluebird's converters as it use custom config.
  * @param file file to parse

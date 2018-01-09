@@ -23,7 +23,7 @@ const EventInvitationMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
 		type:					React.PropTypes.string.isRequired,
-		userType:				React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,

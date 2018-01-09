@@ -12,7 +12,7 @@ const	InfiniteScroll						= require('react-infinite-scroller'),
 const MessageList = React.createClass({
 	propTypes: {
 		messageType:			React.PropTypes.string.isRequired,
-		userType:				React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string,
 		loadMessages:			React.PropTypes.func.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		user: 					React.PropTypes.object.isRequired,

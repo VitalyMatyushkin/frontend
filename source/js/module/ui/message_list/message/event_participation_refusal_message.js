@@ -16,7 +16,7 @@ const	React									= require('react'),
 const EventParticipationRefusalMessage = React.createClass({
 	propTypes: {
 		message:				React.PropTypes.object.isRequired,
-		userType:				React.PropTypes.string.isRequired,
+		userType:				React.PropTypes.string,
 		type:					React.PropTypes.string.isRequired,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
