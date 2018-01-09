@@ -3,42 +3,25 @@
  */
 
 const   React           = require('react'),
-		Loader 			= require('module/ui/loader'),
 		FixtureTitle 	= require('./fixture_title'),
 		FixtureList 	= require('./fixture_list');
 
 const EventFixtures = React.createClass({
 	propTypes:{
-		events: 		React.PropTypes.array.isRequired,
+		date: 			React.PropTypes.object.isRequired,
 		activeSchoolId: React.PropTypes.string,
 		onClick: 		React.PropTypes.func,
 		sync: 			React.PropTypes.bool
 	},
-    getFixtures: function () {
-        const   events  		= this.props.events,
-				activeSchoolId  = this.props.activeSchoolId,
-				sync  			= this.props.sync,
-				onClick 		= this.props.onClick;
-
-        let result;
-
-        if(sync) {
-			result = (
-				<FixtureList events={events} activeSchoolId={activeSchoolId} onClick={onClick} />
-			);
-        } else {
-			result = <div><br /><br /><Loader /></div>;
-		}
-
-        return result;
-    },
 	render: function () {
-        const   challenges = this.getFixtures();
+        const   date  			= this.props.date,
+				activeSchoolId  = this.props.activeSchoolId,
+				onClick 		= this.props.onClick;
 
 		return (
 			<div className="bChallenges">
 				<FixtureTitle />
-				{challenges}
+				<FixtureList key={date} children={this.props.children} childIdList ={this.props. childIdList} date={date} activeSchoolId={activeSchoolId} onClick={onClick} />
 			</div>
         );
 	}
