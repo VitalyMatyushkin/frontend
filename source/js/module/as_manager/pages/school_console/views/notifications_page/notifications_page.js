@@ -12,11 +12,17 @@ const NotificationsForm = require('./notifications_form');
 const NotificationsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	onSubmit: function(data){
-		window.Server.schoolNotifications.put(
-			SchoolHelper.getActiveSchoolId(this),
-			data
-		)
-		.then( () => {
+
+		const patchedData = { ...data };
+		Object.keys(patchedData).forEach( key => {
+			const value = patchedData[key];
+			switch (value) {
+				case true:	patchedData[key] = 'AUTO'; break;
+				case false:	patchedData[key] = 'DISABLED'; break;
+			}
+		});
+
+		window.Server.schoolNotifications.put(SchoolHelper.getActiveSchoolId(this), patchedData).then( () => {
 			window.simpleAlert(
 				`Notifications settings has been saved`,
 				'Ok',

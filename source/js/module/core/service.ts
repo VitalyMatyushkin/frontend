@@ -134,32 +134,35 @@ export class Service<DataType = any> {
 		});
 	}
 
-	getPreparedDataForCallService(options?: object, data?: object) {
+	getPreparedDataForCallService(options?: any, data?: object): { data?: object, options?: object} {
 		const preparedData = {
-			data: undefined,
-			options: undefined
+			data:       undefined,
+			options:    undefined
 		};
 
+		const isParamsRequired = typeof this.requiredParams !== 'undefined';
+
 		switch (true) {
-			case typeof this.requiredParams !== 'undefined' && !options && !data: {
-				this.showError();
-
+			case isParamsRequired && !options && !data: {
+				this.showError();   // wtf? what to return here, Oleg?
 				break;
 			}
-			case typeof this.requiredParams !== 'undefined'  && typeof options !== 'object': {
+			case isParamsRequired && typeof options !== 'object' && this.requiredParams.length > 1: {
 				// if options is not an object but we expecting multiple params.. error
-				if (this.requiredParams.length > 1) {
-					this.showError();
-				} else {
-					preparedData.options = {};
-					preparedData.options[ this.requiredParams[0] ] = options;
-				}
-
+				this.showError();
 				break;
 			}
+
+            case isParamsRequired && typeof options !== 'object' && this.requiredParams.length <= 1: {
+                preparedData.options = {};
+                preparedData.options[ this.requiredParams[0] ] = options;
+                preparedData.data = data;
+                break;
+            }
+
 			case typeof this.requiredParams !== 'undefined'  && typeof options === 'object': {
 				preparedData.options = options;
-
+                preparedData.data = data;
 				break;
 			}
 			default: {
