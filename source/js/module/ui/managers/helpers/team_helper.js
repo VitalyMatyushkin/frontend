@@ -1270,10 +1270,11 @@ function deleteTeamFromEvent(schoolId, eventId, teamId) {
 }
 
 function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
-	const players = teamWrapper.reduce(
+	let players = teamWrapper.reduce(
 		(players, teamWrapper) => players.concat(teamWrapper.___teamManagerBinding.teamStudents),
 		[]
 	);
+	players = players.filter(player => player.schoolId === schoolId);
 
 	return window.Server.schoolEventIndividualsBatch.post(
 		{
