@@ -1,19 +1,22 @@
 import * as React from 'react';
 import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
+
+import * as BPromise from 'bluebird';
 import * as bowser from 'bowser';
+
 import * as LoginForm from '../../ui/login/user/form';
 import * as LoginError from '../../ui/login/user/error';
 import {RoleSelector} from '../../as_login/pages/RoleSelector';
 
-import * as	RoleHelper from 'module/helpers/role_helper';
-import * as RoleListHelper from 'module/shared_pages/head/role_list_helper';
-import * as	AuthorizationServices from 'module/core/services/AuthorizationServices';
-import * as	ApplicationLinks from '../../ui/application_links/application_links';
-import * as	ApplicationConst from 'module/helpers/consts/application_links';
-import * as	SessionHelper from 'module/helpers/session_helper';
-import * as	P from 'bluebird';
+import * as ApplicationLinks from '../../ui/application_links/application_links';
 import {SVG} from '../../ui/svg';
+
+import {AuthorizationServices} from 'module/core/services/AuthorizationServices';
+import * as RoleHelper from 'module/helpers/role_helper';
+import * as RoleListHelper from 'module/shared_pages/head/role_list_helper';
+import * as SessionHelper from 'module/helpers/session_helper';
+import * as ApplicationConst from 'module/helpers/consts/application_links';
 
 const LoginUserPage2 = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -38,7 +41,7 @@ const LoginUserPage2 = (React as any).createClass({
 			promise = this.setPermissions();
 		}
 
-		P.resolve(promise).then(() => binding.set('isSync', Immutable.fromJS(true)));
+		BPromise.resolve(promise).then(() => binding.set('isSync', Immutable.fromJS(true)));
 	},
 	onSuccess: function() {
 		if(this.isAuthorized()) {

@@ -3,19 +3,16 @@
  */
 
 import * as React from 'react';
-import * as	Immutable from 'immutable';
-import * as	classNames from 'classnames';
-import {If} from 'module/ui/if/if'
 import * as	Morearty from 'morearty';
+import * as	Immutable from 'immutable';
+
+import {If} from 'module/ui/if/if'
+import * as	classNames from 'classnames';
+import {AuthorizationServices} from 'module/core/services/AuthorizationServices';
+
 import * as RoleListHelper from './role_list_helper';
 import * as	RoleHelper from 'module/helpers/role_helper';
 import * as	SessionHelper from 'module/helpers/session_helper';
-import * as	Auth from 'module/core/services/AuthorizationServices';
-
-
-export interface RoleListProps {
-    onlyLogout: boolean
-}
 
 const  RoleList = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -67,7 +64,7 @@ const  RoleList = (React as any).createClass({
 		this.roleBecome(roleName, school.kind);
 	},
 	roleBecome:function(roleName){
-		Auth.become(roleName).then(() => window.location.reload());
+		AuthorizationServices.become(roleName).then(() => window.location.reload());
 	},
 	renderRole:function(permission, active: boolean){
 		const	role			= permission.role,

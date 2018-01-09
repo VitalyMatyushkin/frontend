@@ -1,13 +1,16 @@
-const	React				= require('react'),
-		TeamManager			= require('./team_manager/team_manager'),
-		SetTeamsLaterBlock	= require('./set_teams_later_block/set_teams_later_block'),
-		TeamName			= require('./team_name'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		classNames			= require('classnames'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		{Button}			= require('module/ui/button/button');
+const React = require('react');
+const Morearty = require('morearty');
+const Immutable = require('immutable');
+
+const classNames = require('classnames');
+
+const TeamName = require('./team_name');
+const TeamManager = require('./team_manager/team_manager');
+const {Button} = require('module/ui/button/button');
+const SetTeamsLaterBlock= require('./set_teams_later_block/set_teams_later_block');
+
+const TeamHelper = require('module/ui/managers/helpers/team_helper');
+const MoreartyHelper = require('module/helpers/morearty_helper');
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -251,7 +254,7 @@ const TeamWrapper = React.createClass({
 	/**
 	 * Get team players from server by team ID
 	 * @param teamId - team ID
-	 * @returns {Promise}
+	 * @returns {BPromise}
 	 * @private
 	 */
 	_getPlayersFromServer: function(teamId) {
@@ -265,7 +268,7 @@ const TeamWrapper = React.createClass({
 	/**
 	 * Get team from server by team ID
 	 * @param teamId - team ID
-	 * @returns {Promise}
+	 * @returns {BPromise}
 	 * @private
 	 */
 	_getTeamFromServer: function(teamId) {

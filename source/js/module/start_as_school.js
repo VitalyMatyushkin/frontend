@@ -1,13 +1,12 @@
 const	SchoolApplicationView		= require('./as_school/application'),
 		SchoolUnionApplicationView	= require('./as_school_union/application'),
-		SimpleAlertFactory			= require('./helpers/simple_alert_factory'),
-		ConfirmAlertFactory			= require('./helpers/confirm_alert_factory'),
-		serviceList 				= require('module/core/service_list'),
-		userDataInstance 			= require('module/data/user_data'),
-		cookiePopupData 			= require('module/data/cookie_popup_data'),
-		authController 				= require('module/core/auth_controller'),
-		initTawkTo					= require('module/tawk_to/tawk_to'),
-		SessionHelper				= require('module/helpers/session_helper'),
+		{SimpleAlertFactory}		= require('./helpers/simple_alert_factory'),
+		{ConfirmAlertFactory}		= require('./helpers/confirm_alert_factory'),
+		{OpenServiceList}			= require('module/core/service_list/open_service_list'),
+		{ServiceList}				= require("module/core/service_list/service_list"),
+		userDataInstance			= require('module/data/user_data'),
+		cookiePopupData			= require('module/data/cookie_popup_data'),
+		{authController}			= require('module/core/auth_controller'),
 		Immutable					= require('immutable'),
 		ReactDom 					= require('react-dom'),
 		React 						= require('react'),
@@ -87,12 +86,7 @@ function initMainSchoolView(school) {
 
 	const binding = MoreartyContext.getBinding();
 
-	window.Server = serviceList;
-
-	serviceList.initializeOpenServices();
-	serviceList.initialize(
-		binding.sub('userData')
-	);
+	window.Server = new ServiceList(binding.sub('userData'));
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -194,12 +188,7 @@ function initMainSchoolUnionView(school) {
 
 	const binding = MoreartyContext.getBinding();
 
-	window.Server = serviceList;
-	// TODO: fix me
-	serviceList.initializeOpenServices();
-	serviceList.initialize(
-		binding.sub('userData')
-	);
+	window.Server = new ServiceList(binding.sub('userData'));
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -232,7 +221,7 @@ function init404View() {
 }
 
 function runMainMode() {
-	serviceList.initializeOpenServices();
+	const openServiceList = new OpenServiceList();
 
 	const schoolDomain = document.location.host.split('.')[0];
 
@@ -245,7 +234,7 @@ function runMainMode() {
 		}
 	};
 
-	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
+	return openServiceList.publicSchools.get({filter: filter}).then( schoolList => {
 		const optSchool = schoolList[0];
 		switch (true) {
 			case typeof optSchool === "undefined":

@@ -13,6 +13,8 @@ const	Form				= require('../../../../ui/form/form'),
 		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
+const FilteringServices = require('module/core/services/FilteringServices');
+
 const GrantRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
@@ -35,11 +37,11 @@ const GrantRole = React.createClass({
 		this.getDefaultBinding().clear();
 	},
 	getStudents:function(filter){
-		const   self        = this,
-				binding     = self.getDefaultBinding().sub('formGrantRole'),
-				schoolId    = binding.meta('schoolId.value').toJS();
+		const self = this;
+		const binding = self.getDefaultBinding().sub('formGrantRole');
+		const schoolId = binding.meta('schoolId.value').toJS();
 
-		return window.Server.schoolStudents.filter(schoolId, filter);
+		return FilteringServices.studentsFilteringByLastName(schoolId, filter);
 	},
 	getRoleList: function() {
 		if (typeof this.selectedSchool !== 'undefined') {

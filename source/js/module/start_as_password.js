@@ -1,19 +1,18 @@
 /**
  * Created by wert on 16.01.16.
  */
-const   ApplicationView     = require('module/as_password/application'),
-        SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
-        ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
-        userDataInstance    = require('module/data/user_data'),
-        userRulesInstance   = require('module/data/user_rules'),
-        authController      = require('module/core/auth_controller'),
-        serviceList         = require('module/core/service_list'),
-        initTawkTo			= require('module/tawk_to/tawk_to'),
-	    SessionHelper		= require('module/helpers/session_helper'),
-        Morearty			= require('morearty'),
+const	ApplicationView		= require('module/as_password/application'),
+		{SimpleAlertFactory}	= require('./helpers/simple_alert_factory'),
+		{ConfirmAlertFactory}	= require('./helpers/confirm_alert_factory'),
+		userDataInstance	= require('module/data/user_data'),
+		userRulesInstance	= require('module/data/user_rules'),
+		{authController}	= require('module/core/auth_controller'),
+		{ServiceList} = require("module/core/service_list/service_list"),
+		initTawkTo			= require('module/tawk_to/tawk_to'),
+		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-        ReactDom            = require('react-dom'),
-        React               = require('react');
+		ReactDom			= require('react-dom'),
+		React				= require('react');
 
 function runPasswordMode() {
 // Create Morearty context
@@ -56,14 +55,7 @@ function runPasswordMode() {
 
     const binding = MoreartyContext.getBinding();
 
-    window.Server = serviceList;
-    // initializing all services (open too) only when we got all vars set in window.
-    // this is not too very brilliant idea, but there is no other way to fix it quick
-    serviceList.initializeOpenServices();
-    // Enable services
-    serviceList.initialize(
-		binding.sub('userData')
-    );
+	window.Server = new ServiceList(binding.sub('userData'));
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {

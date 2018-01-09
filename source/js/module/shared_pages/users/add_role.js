@@ -12,6 +12,8 @@ const   React           	= require('react'),
 		RoleHelper			= require('module/helpers/role_helper'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
+const FilteringServices = require('module/core/services/FilteringServices');
+
 const AddRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
@@ -70,10 +72,10 @@ const AddRole = React.createClass({
 		}
 	},
 	getStudents:function(filter){
-		const   formBinding = this.getDefaultBinding().sub('formAddRole'),
-				schoolId    = formBinding.meta('schoolId.value').toJS();
+		const formBinding = this.getDefaultBinding().sub('formAddRole');
+		const schoolId = formBinding.meta('schoolId.value').toJS();
 
-		return window.Server.schoolStudents.filter(schoolId, filter);
+		return FilteringServices.studentsFilteringByLastName(schoolId, filter);
 	},
 	getRoleList: function() {
 		if (typeof this.selectedSchool !== 'undefined') {

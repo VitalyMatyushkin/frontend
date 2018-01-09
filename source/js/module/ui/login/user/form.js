@@ -1,11 +1,14 @@
-const	Form				= require('module/ui/form/form'),
-		FormField 			= require('module/ui/form/form_field'),
-	{If}				= require('module/ui/if/if'),
-		React				= require('react'),
-		Morearty			= require('morearty'),
-		Auth				= require('module/core/services/AuthorizationServices'),
-		RememberMeCheckbox	= require('module/ui/login/user/form_components/remember_me_checkbox'),
-		bFormStyles			= require('../../../../../styles/ui/forms/b_form.scss');
+const React = require('react');
+const Morearty = require('morearty');
+
+const Form = require('module/ui/form/form');
+const FormField = require('module/ui/form/form_field');
+
+const {If} = require('module/ui/if/if');
+const {AuthorizationServices} = require('module/core/services/AuthorizationServices');
+const RememberMeCheckbox = require('module/ui/login/user/form_components/remember_me_checkbox');
+
+const bFormStyles = require('../../../../../styles/ui/forms/b_form.scss');
 
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -30,7 +33,7 @@ const LoginUserForm = React.createClass({
 		return (
 			<div className="bLoginForm">
 				<Form	name				= {this.tmpFormName}
-						service				= {Auth.login}
+						service				= {AuthorizationServices.login}
 						binding				= {this.getDefaultBinding().sub('form')}
 						onSuccess			= {this.props.onSuccess}
 						onError				= {this.props.onError}

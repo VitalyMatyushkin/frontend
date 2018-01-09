@@ -1,7 +1,7 @@
 /**
  * Created by Bright on 04/12/2015.
  */
-var AJAX = require('module/core/AJAX');
+let {AJAX} = require('module/core/AJAX');
 
 'use strict';
 var uploadService = function(url){

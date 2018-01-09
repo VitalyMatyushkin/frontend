@@ -2,13 +2,13 @@
  * Created by vitaly on 15.09.17.
  */
 
-import * as Promise from 'bluebird';
+import * as BPromise from 'bluebird';
 
 export function isCanvasSupported() {
 	return !!document.createElement('canvas').getContext;
 }
 
-export function rotateImage(picUrl: any, angle: number): Promise<any> {
+export function rotateImage(picUrl: any, angle: number): BPromise<any> {
 	const 	canvas = _addCanvasToPage(),
 			image = document.createElement('img');
 	return _loadImage(picUrl, image, canvas)
@@ -17,7 +17,7 @@ export function rotateImage(picUrl: any, angle: number): Promise<any> {
 }
 
 function _loadImage(picUrl: string, image: any, canvas: any): any{
-	return new Promise((resolve, reject) => {
+	return new BPromise((resolve, reject) => {
 		image.crossOrigin = 'anonymous';
 		image.onload = () => {
 			canvas.width = image.height;

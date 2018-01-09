@@ -1,10 +1,11 @@
-const 	React 			= require('react'),
-		Auth			= require('module/core/services/AuthorizationServices'),
-		DomainHelper 	= require('module/helpers/domain_helper');
+const React = require('react');
+
+const {AuthorizationServices} = require('module/core/services/AuthorizationServices');
+const DomainHelper = require('module/helpers/domain_helper');
 
 const Logout = function() {
 	// clear authorizationInfo
-	Auth.clear();
+	AuthorizationServices.clear();
 	
 	// redirect to login
 	window.location.href = DomainHelper.getLoginUrl();

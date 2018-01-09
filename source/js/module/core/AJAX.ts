@@ -2,8 +2,8 @@
  * Created by wert on 08.12.15.
  */
 
-const   $       = require('jquery'),
-        Promise = require('bluebird');
+import * as $ from 'jquery';
+import * as BPromise from 'bluebird';
 
 /**
  * Does $.ajax({...}) and return result as Promise
@@ -21,16 +21,16 @@ const   $       = require('jquery'),
  *  Promise semantics.
  * @returns {Promise}
  */
-function ajax(configDetails, dataOnly) {
-    return new Promise(function (resolve, reject, onCancel) {
-        configDetails.error = function(jqXHR, textStatus, errorThrown){
-            const errorToReturn         = new Error('Http non-2xx status. Considered an error in current AJAX implementation');
-            errorToReturn.xhr           = jqXHR;
-            errorToReturn.textStatus    = textStatus;
-            errorToReturn.errorThrown   = errorThrown;
+export function AJAX(configDetails, dataOnly: boolean): BPromise<any> {
+    return new BPromise((resolve, reject, onCancel) => {
+        configDetails.error = (jqXHR, textStatus, errorThrown) => {
+            const errorToReturn             = new Error('Http non-2xx status. Considered an error in current AJAX implementation');
+            errorToReturn['xhr']            = jqXHR;
+            errorToReturn['textStatus']     = textStatus;
+            errorToReturn['errorThrown']    = errorThrown;
             reject(errorToReturn);
         };
-        configDetails.success = function(data, textStatus, jqXHR){
+        configDetails.success = (data, textStatus, jqXHR) => {
            if(dataOnly){       // todo: fix me. dataOnly required for back compatability
                 resolve(data);
            } else {
@@ -44,11 +44,6 @@ function ajax(configDetails, dataOnly) {
 
         const request = $.ajax(configDetails);
 
-        onCancel(function () {
-            request.abort();
-        });
+        onCancel(() => request.abort());
     });
 }
-
-
-module.exports = ajax;

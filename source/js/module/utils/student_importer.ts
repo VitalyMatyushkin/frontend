@@ -11,12 +11,17 @@ import dateParser from './date_parser';
  * @param file file to parse
  * @param config papa's config except `complete` and `error` props.
  */
-const parseCSVFile = function(file, config) {
+const parseCSVFile = function(file, config): BPromise<any> {
 	return new BPromise((resolve, reject) => {
-		const effectiveConfig = Object.assign({}, config, {
+		const effectiveConfig = Object.assign(
+			{},
+			config,
+			{
 			complete:	(results, file) => { resolve(results) },
 			error: 		(error, file) => { reject(error) }
-		});
+			}
+		);
+
 		papa.parse(file, effectiveConfig);
 		// no return
 	});

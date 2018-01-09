@@ -1,10 +1,10 @@
-import * as Promise from 'bluebird';
+import * as BPromise from 'bluebird';
 
 export class PromiseHelper {
 	promiseFor: any;
 
 	constructor() {
-		this.promiseFor = Promise.method((condition, action, value) => {
+		this.promiseFor = BPromise.method((condition, action, value) => {
 			if (!condition(value)) {
 				return value;
 			}

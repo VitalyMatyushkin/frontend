@@ -1,20 +1,22 @@
 // @flow
+import * as React from 'react';
+import * as ReactDom from 'react-dom';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
 
-const	ApplicationView 	= require('module/as_manager/application'),
-		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
-		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
-		SliderAlertFactory	= require('./helpers/slider_alert_factory'),
-		userDataInstance 	= require('module/data/user_data'),
-		userRulesInstance 	= require('module/data/user_rules'),
-		authController 		= require('module/core/auth_controller'),
-		serviceList 		= require('module/core/service_list'),
-		initTawkTo			= require('module/tawk_to/tawk_to'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		ReactDom 			= require('react-dom'),
-		React 				= require('react');
+import {authController} from 'module/core/auth_controller';
+import {ServiceList} from 'module/core/service_list/service_list';
 
-function runManagerMode() {
+import * as ApplicationView from 'module/as_manager/application';
+import {SimpleAlertFactory} from 'module/helpers/simple_alert_factory';
+import {ConfirmAlertFactory} from 'module/helpers/confirm_alert_factory';
+import {SliderAlertFactory} from 'module/helpers/slider_alert_factory';
+import * as userDataInstance from 'module/data/user_data';
+import * as userRulesInstance from 'module/data/user_rules';
+
+import * as initTawkTo  from 'module/tawk_to/tawk_to';
+
+export function asApp() {
 	const today = new Date();
 
 	const MoreartyContext = Morearty.createContext({
@@ -123,13 +125,7 @@ function runManagerMode() {
 
 	const binding = MoreartyContext.getBinding();
 
-	window.Server = serviceList;
-	// initializing all services (open too) only when we got all vars set in window.
-	// this is not too very brilliant idea, but there is no other way to fix it quick
-	serviceList.initializeOpenServices();
-	serviceList.initialize(
-		binding.sub('userData')
-	);
+	window.Server = new ServiceList(binding.sub('userData'));
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -156,5 +152,3 @@ function runManagerMode() {
 				});
 		});
 }
-
-module.exports = runManagerMode;

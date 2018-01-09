@@ -1,14 +1,16 @@
-const   ApplicationView 	= require('./as_bigscreen/application'),
-		serviceList 		= require('module/core/service_list'),
-		userDataInstance 	= require('module/data/user_data'),
-		authController 		= require('module/core/auth_controller'),
-		Immutable			= require('immutable'),
-		ReactDom 			= require('react-dom'),
-		React 				= require('react'),
-		Morearty			= require('morearty'),
-		SessionHelper		= require('module/helpers/session_helper'),
+const React = require('react');
+const Immutable = require('immutable');
+const ReactDom = require('react-dom');
+const Morearty = require('morearty');
 
-		BigscreenConsts 	= require('./as_bigscreen/pages/consts/consts');
+const {authController} = require('module/core/auth_controller');
+const ApplicationView  = require('./as_bigscreen/application');
+const userDataInstance = require('module/data/user_data');
+
+const {ServiceList} = require("module/core/service_list/service_list");
+const {OpenServiceList} = require('module/core/service_list/open_service_list');
+
+const BigscreenConsts = require('./as_bigscreen/pages/consts/consts');
 
 function initMainView(school) {
 	// creating morearty context
@@ -58,13 +60,7 @@ function initMainView(school) {
 
 	const binding = MoreartyContext.getBinding();
 
-	window.Server = serviceList;
-	// initializing all services (open too) only when we got all vars set in window.
-	// this is not too very brilliant idea, but there is no other way to fix it quick
-	serviceList.initializeOpenServices();
-	serviceList.initialize(
-		binding.sub('userData')
-	);
+	window.Server = new ServiceList(binding.sub('userData'));
 
 	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
@@ -94,7 +90,7 @@ function init404View() {
 }
 
 function runMainMode() {
-	serviceList.initializeOpenServices();
+	const openServiceList = new OpenServiceList();
 
 	const schoolDomain = document.location.host.split('.')[0].substring(10);
 
@@ -104,7 +100,7 @@ function runMainMode() {
 		}
 	};
 
-	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
+	return openServiceList.publicSchools.get({filter: filter}).then( schoolList => {
 		const optSchool = schoolList[0];
 		if(optSchool) {
 			initMainView(optSchool);

@@ -2,7 +2,7 @@
  * Created by Vitaly on 11.07.17.
  */
 const   React       = require('react'),
-        AJAX        = require('module/core/AJAX'),
+		{AJAX}      = require('module/core/AJAX'),
         LoggingList = require('module/as_api_test/logging-list'),
 	    {SVG} 	    = require('module/ui/svg'),
         loaderUtils = require('module/helpers/loader_utils'),

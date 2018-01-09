@@ -1,3 +1,5 @@
+import {ServiceList} from "module/core/service_list/service_list";
+import * as BPromise from  'bluebird';
 
 // TODO: this is not full type of result
 // TODO: it should be declared somewhere else as this type is server-related. But it will be declared here for a while
@@ -7,8 +9,8 @@ interface Permission {
 }
 
 
-export function getUserRoles(): Promise<Permission[]> {
-    return (window as any).Server.roles.get().then(roles => {
+export function getUserRoles(): BPromise<Permission[]> {
+    return (window.Server as ServiceList).roles.get().then(roles => {
         if (roles && roles.length) {
             const permissions = [];
 

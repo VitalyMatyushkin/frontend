@@ -3,7 +3,7 @@
  */
 
 const 	log 		= require('loglevel'),
-		AJAX 		= require('module/core/AJAX'),
+		{AJAX} 		= require('module/core/AJAX'),
 		baseUrl 	= window.apiBase;	// using global vars is really bad practice
 
 /**
@@ -21,8 +21,8 @@ const Service = function(url, options) {	// service instance to return
 	this.options = options;
 
 	/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
-	var urlParams = _extractUrlParams(url);
-	this.requredParams = urlParams.length === 0 ? undefined : urlParams;
+	var urlParams       = _extractUrlParams(url);
+	this.requiredParams = urlParams.length === 0 ? undefined : urlParams;
 };
 
 /**
@@ -61,7 +61,7 @@ Service.prototype = {
 				filter 				= options && options.filter || data && data.filter || '',
 				key 				='filter';
 
-		if (self.requredParams) {
+		if (self.requiredParams) {
 			url = url.replace(/\{(.*?)\}/g, function(match, param) {
 				return options[param];
 			});
@@ -103,7 +103,7 @@ Service.prototype = {
 
 	_showError: function() {
 		var self = this;
-		log.error('Service ' + self.url +' expects params: ' + self.requredParams);
+		log.error('Service ' + self.url +' expects params: ' + self.requiredParams);
 	}
 };
 
@@ -113,7 +113,7 @@ Service.prototype = {
 			sendOptions;
 
 		// If params expected
-		if (self.requredParams) {
+		if (self.requiredParams) {
 			// but there is no params - return false and log an error
 			if (!options && !data) {
 				self._showError();
@@ -122,12 +122,12 @@ Service.prototype = {
 
 			if (typeof	options !== 'object') {
 				// if options is not an object but we expecting multiple params.. error
-				if (self.requredParams.length > 1) {
+				if (self.requiredParams.length > 1) {
 					self._showError();
 					return false;
 				} else {
-					sendOptions = {};
-					sendOptions[self.requredParams[0]] = options;
+					sendOptions                         = {};
+					sendOptions[self.requiredParams[0]] = options;
 				}
 			} else {
 				sendOptions = options;

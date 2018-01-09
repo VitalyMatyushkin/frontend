@@ -1,18 +1,22 @@
-const	DomainHelper			= require('module/helpers/domain_helper'),
-		SessionHelper			= require('module/helpers/session_helper'),
-		AuthorizationServices	= require('module/core/services/AuthorizationServices'),
-		RoleListHelper			= require('module/shared_pages/head/role_list_helper'),
-		UserInfoHelper			= require('module/shared_pages/head/user_info_helper'),
-		Immutable 				= require('immutable'),
-		Promise 				= require('bluebird'),
-		propz					= require('propz');
+import * as Immutable from  'immutable';
+import * as BPromise from  'bluebird';
 
-const authController = {
-	requestedPage:	undefined,
-	publicPages:	['register', 'login', 'reset-request', 'reset'],
-	asPublicSchool:	false,
+import {AuthorizationServices} from  'module/core/services/AuthorizationServices';
+import * as DomainHelper from 'module/helpers/domain_helper';
+import * as SessionHelper from 'module/helpers/session_helper';
+import * as RoleListHelper from 'module/shared_pages/head/role_list_helper';
+import * as UserInfoHelper from 'module/shared_pages/head/user_info_helper';
+
+import * as propz from  'propz';
+import {ServiceList} from "module/core/service_list/service_list";
+
+export const authController = {
+	requestedPage: undefined,
+	publicPages: ['register', 'login', 'reset-request', 'reset'],
+	asPublicSchool: false,
 	asBigscreen: false,
-	initialize: function(options) {
+
+	initialize(options) {
 		this.saveRequestedPage();
 		this.initBinding(options);
 
@@ -34,7 +38,7 @@ const authController = {
 			initPromises.push(this.becomeOneRole());
 		}
 
-		return Promise.all(initPromises).then(() => {
+		return BPromise.all(initPromises).then(() => {
 			SessionHelper.getSessionsDataBinding(
 				this.binding.sub('userData')
 			).addListener(this.handleUpdateUserAuthData.bind(this));
@@ -42,13 +46,13 @@ const authController = {
 			return true;
 		});
 	},
-	hasUserOnlyOneLoginRole: function () {
+	hasUserOnlyOneLoginRole() {
 		return (
 			typeof SessionHelper.getLoginSession(this.binding.sub('userData')) !== 'undefined' &&
 			typeof SessionHelper.getRoleSession(this.binding.sub('userData')) === 'undefined'
 		);
 	},
-	setUserInfo: function () {
+	setUserInfo() {
 		return UserInfoHelper
 			.getUserInfo()
 			.then(profile => {
@@ -60,7 +64,7 @@ const authController = {
 				return true;
 			});
 	},
-	setRoleList: function () {
+	setRoleList() {
 		return RoleListHelper
 			.getUserRoles()
 			.then(permissions => {
@@ -77,27 +81,26 @@ const authController = {
 	/**
 	 * Function gets user role session if user has one role
 	 */
-	becomeOneRole: function () {
-		return window.Server.roles.get()
-			.then(roles => {
-				if(roles && roles.length == 1) {
+	becomeOneRole() {
+		return (window.Server as ServiceList).roles.get().then(roles => {
+				if(roles[0] && roles.length == 1) {
 					return AuthorizationServices.become(roles[0].name);
 				} else {
-					return Promise.resolve(true);
+					return BPromise.resolve(true);
 				}
 			});
 	},
-	saveRequestedPage: function() {
+	saveRequestedPage() {
 		const isEmptyCurrentHash = document.location.hash === '';
 
 		if(!this.isPublicPage() && !isEmptyCurrentHash) {
 			this.requestedPage = document.location.hash;
 		}
 	},
-	initBinding: function(options) {
+	initBinding(options) {
 		this.binding = options.binding;
 	},
-	redirectUserByUserAuthData: function() {
+	redirectUserByUserAuthData() {
 		const	binding					= this.binding,
 				isRegistrationProcess	= binding.get('form.register.formFields'), //user not in registration process now
 				isUserAuth				= this.isUserAuth(),
@@ -153,14 +156,14 @@ const authController = {
 	 * Function returns true when user has authenticated
 	 * @returns {boolean}
 	 */
-	isUserAuth: function() {
+	isUserAuth() {
 		const binding = this.binding;
 
 		const loginSession = SessionHelper.getLoginSession(
 			binding.sub('userData')
 		);
 
-		const id = propz.get(loginSession, ['id']);
+		const id = propz.get(loginSession, ['id'], undefined);
 
 		return typeof id !== 'undefined';
 	},
@@ -168,7 +171,7 @@ const authController = {
 	 * Function returns true when user has been authorized
 	 * @returns {boolean}
 	 */
-	isUserOnRole: function() {
+	isUserOnRole() {
 		const binding = this.binding;
 
 		const hasUserRole = typeof SessionHelper.getRoleSession(binding.sub('userData')) !== 'undefined';
@@ -181,14 +184,14 @@ const authController = {
 	 * Function returns true when user is Super Admin
 	 * @returns {boolean}
 	 */
-	isSuperAdmin: function() {
+	isSuperAdmin() {
 		const binding = this.binding;
 
 		const loginSession = SessionHelper.getLoginSession(
 			binding.sub('userData')
 		);
 
-		const adminId = propz.get(loginSession, ['adminId']);
+		const adminId = propz.get(loginSession, ['adminId'], undefined);
 
 		return typeof adminId !== 'undefined';
 	},
@@ -196,16 +199,15 @@ const authController = {
 	 * Function returns true when current page is one from public pages
 	 * @returns {boolean}
 	 */
-	isPublicPage: function() {
-		const	self	= this,
-				path	= window.location.hash;
+	isPublicPage() {
+		const path = window.location.hash;
 
-		return self.publicPages.some(value => {return path.indexOf(value) !== -1});
+		return this.publicPages.some(value => {return path.indexOf(value) !== -1});
 	},
 	/**
 	 * Function redirects to requested page and clear field requested page
 	 */
-	redirectToRequestedPage: function() {
+	redirectToRequestedPage() {
 		const requestedPage = String(this.requestedPage);
 		this.requestedPage = undefined;
 
@@ -214,7 +216,7 @@ const authController = {
 	/**
 	 * Function redirects to page default for current user role.
 	 */
-	redirectToDefaultPage: function() {
+	redirectToDefaultPage() {
 		const binding = this.binding;
 
 		const roleSession = SessionHelper.getRoleSession(
@@ -245,7 +247,7 @@ const authController = {
 	/**
 	 * Function redirects to page default for superadmin.
 	 */
-	redirectToDefaultPageForSuperAdmin: function() {
+	redirectToDefaultPageForSuperAdmin() {
 		window.location.hash = 'users/users';
 
 		// just in case
@@ -265,11 +267,11 @@ const authController = {
 
 		return schoolKind;
 	},
-	getSchoolKindByRoleAndSchoolId: function(role, schoolId) {
-		const	binding = this.binding;
-		let		schoolKind;
+	getSchoolKindByRoleAndSchoolId(role, schoolId) {
+		const binding = this.binding;
+		let schoolKind;
 
-		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions']);
+		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions'], undefined);
 		if(typeof permissions !== 'undefined') {
 			const permission = permissions.find(p => p.role === role && p.schoolId === schoolId);
 
@@ -288,10 +290,10 @@ const authController = {
 	 * @returns {undefined}
 	 */
 	getRandomSchoolKindByRole: function(role) {
-		const	binding = this.binding;
-		let		schoolKind;
+		const binding = this.binding;
+		let schoolKind;
 
-		const permissions = propz.get(binding.toJS(), ['userData', 'roleList', 'permissions']);
+		const permissions = propz.get(binding.toJS(), ['userData', 'roleList', 'permissions'], undefined);
 
 		if(typeof permissions !== 'undefined') {
 			const permission = permissions.find(item => item.role === role && item.status === 'ACTIVE');
@@ -303,15 +305,16 @@ const authController = {
 
 		return schoolKind;
 	},
-	isRoleListExist: function() {
+	isRoleListExist() {
 		const binding = this.binding;
 
 		return (
-			typeof propz.get(binding.toJS('userData'), ['roleList']) !== 'undefined'
+			typeof propz.get(binding.toJS('userData'), ['roleList'], undefined) !== 'undefined'
 		);
 	},
-	isUserInSystem: function() {
-		const activeSchoolId = propz.get(this.binding.toJS('userRules'), ['activeSchoolId']);
+	isUserInSystem() {
+		const activeSchoolId = propz.get(this.binding.toJS('userRules'), ['activeSchoolId'], undefined);
+
 		// sometimes activeSchoolId is null
 		const isActiveSchoolExist = typeof activeSchoolId === 'string';
 
@@ -320,9 +323,7 @@ const authController = {
 	/**
 	 * Handler for user auth update event
 	 */
-	handleUpdateUserAuthData: function() {
+	handleUpdateUserAuthData() {
 		this.redirectUserByUserAuthData();
 	}
 };
-
-module.exports = authController;
