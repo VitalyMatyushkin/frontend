@@ -7,6 +7,7 @@ const	React			= require('react'),
 		propz			= require('propz'),
 		classNames		= require('classnames'),
 		ViewModeConsts	= require('module/ui/view_selector/consts/view_mode_consts'),
+		InviteConsts	= require('module/helpers/consts/invite'),
 		PlayersStyle	= require('../../../../../../../styles/ui/b_block_view_rivals/b_players.scss');
 
 const SPORT_SORT = {
@@ -36,6 +37,7 @@ const Players = React.createClass({
 	MEMBERS_NOT_ADDED:		'Team members have not been added yet',
 	ACCEPTED_BY_OPPONENT:	'Accepted by opponent but team members have not been added yet',
 	AWAITING_OPPONENT:		'Awaiting opponent',
+	EVENT_INVITE_REJECTED:	'The event invite has been rejected',
 	renderContent: function() {
 		const	event		= this.props.event,
 				eventType	= event.eventType;
@@ -132,19 +134,22 @@ const Players = React.createClass({
 			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {
 				return this.renderText(this.NO_TEAM_MEMBERS);
 			} else {
+				console.log(rival.invite.status);
 				//For public site we do not have access to invites, then we render AWAITING_OPPONENT text
 				//TODO: If we will have access, then fix it
 				if (typeof rival.invite === 'undefined') {
 					return this.renderText(this.AWAITING_OPPONENT);
-				} else if(rival.invite.status !== 'ACCEPTED') {							// Invite was not accepted yet
+				} else if(rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
+					return this.renderText(this.EVENT_INVITE_REJECTED);
+				} else if(rival.invite.status !== InviteConsts.INVITE_STATUS.ACCEPTED) {					// Invite was not accepted yet
 					return this.renderText(this.AWAITING_OPPONENT);
 				} else if(
-					rival.invite.status === 'ACCEPTED' &&							// Select team later
+					rival.invite.status === InviteConsts.INVITE_STATUS.ACCEPTED &&							// Select team later
 					typeof players === 'undefined'
 				) {
 					return this.renderText(this.ACCEPTED_BY_OPPONENT);
 				} else if(
-					rival.invite.status === 'ACCEPTED' &&							// Team was set, but empty
+					rival.invite.status === InviteConsts.INVITE_STATUS.ACCEPTED &&							// Team was set, but empty
 					typeof players !== 'undefined' &&
 					players.length === 0
 				) {
@@ -375,9 +380,7 @@ const Players = React.createClass({
 	},
 	render: function() {
 		return (
-			<div
-				className={classNames('bPlayers', this.props.customCss)}
-			>
+			<div className = {classNames('bPlayers', this.props.customCss)} >
 				{ this.renderEditButton() }
 				{ this.renderContent() }
 			</div>
