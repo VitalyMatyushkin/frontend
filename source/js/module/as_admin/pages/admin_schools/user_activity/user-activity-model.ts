@@ -52,7 +52,7 @@ export class UserActivityModel{
     }
 
     getDateTime(item: any): string {
-        return Timezone.tz(item.finishedAt, (<any>window).timezone).format('HH:mm:ss DD.MM');
+        return Timezone.tz(item.finishedAt, (<any>window).timezone).format('DD.MM.YY/HH:mm:ss');
     }
 
     getMethodList(){

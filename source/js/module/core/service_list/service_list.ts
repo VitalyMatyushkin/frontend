@@ -90,6 +90,7 @@ export class ServiceList {
 	teamsBySchoolId: Service;
 	teamPlayers: Service;
 	teamPlayer: Service;
+	schoolTeamPlayersBatch: Service;
 
 	// news
 	schoolNews: Service;
@@ -398,6 +399,7 @@ export class ServiceList {
 		this.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
 		this.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
 		this.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
+		this.schoolTeamPlayersBatch = new Service('/i/schools/{schoolId}/teams/{teamId}/players/batch', binding);
 
 		// news
 		this.schoolNews = new Service('/i/schools/{schoolId}/news', binding);

@@ -200,7 +200,7 @@ const TeamEditPage = React.createClass({
                         initialPlayers  = binding.get('initialPlayers').toJS();
 
 	            TeamHelper.commitPlayers(initialPlayers, players, teamId, self.activeSchoolId).then(() => {
-                    document.location.hash = '/#school_admin/teams';
+                    document.location.hash = '/school_admin/teams';
                     binding.clear();
                     binding.meta().clear();
                 });

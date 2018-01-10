@@ -28,6 +28,7 @@ class AdminUserNotificationsClass {
 				showStrip:true
 			},
 			columns:this.columns,
+            handleClick: this.handleClickNotification.bind(this),
 			filters:{limit: 20}
 		});
 		
@@ -41,6 +42,10 @@ class AdminUserNotificationsClass {
 			onLoad: 		this.getDataLoadedHandle()
 		});
 	}
+
+    handleClickNotification(id) {
+        window.location.hash = `user/notifications-view/item?id=${id}`;
+    }
 	
 	setColumns(){
 		this.columns = [
