@@ -23,8 +23,17 @@ const NotificationsForm = React.createClass({
 			binding.set(Immutable.fromJS(notifications));
 		});
 	},
-	renderFormField: function(){
-		
+	valueReader: function(value) {
+		switch (value) {
+			case 'DISABLED':	return false;
+			case 'AUTO':		return true;
+		}
+	},
+	valueWriter: function(value) {
+		switch (value) {
+			case false: return 'DISABLED';
+			case true:	return 'AUTO';
+		}
 	},
 	render: function(){
 		const binding = this.getDefaultBinding();
@@ -39,6 +48,8 @@ const NotificationsForm = React.createClass({
 				<FormColumn customStyle={'mTwoColumns'}>
 					<h3>Registration and profile management</h3>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_REQUEST_ACCEPTED"
@@ -46,6 +57,8 @@ const NotificationsForm = React.createClass({
 						User’s role request has been accepted
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_REQUEST_REJECTED"
@@ -53,6 +66,8 @@ const NotificationsForm = React.createClass({
 						User’s role request has been denied
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_CREATED"
@@ -61,16 +76,29 @@ const NotificationsForm = React.createClass({
 					</FormField>
 					<h3>User management</h3>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "PERMISSION_REQUEST_CREATED"
 					>
 						New role request
 					</FormField>
+					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "MERGE_STUDENT"
+					>
+						Student merged
+					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
 					<h3>Games management</h3>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_CREATED"
@@ -78,6 +106,8 @@ const NotificationsForm = React.createClass({
 						Event has been created
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_UPDATED"
@@ -85,6 +115,8 @@ const NotificationsForm = React.createClass({
 						Event has been rescheduled
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_CANCELED"
@@ -92,6 +124,8 @@ const NotificationsForm = React.createClass({
 						Event has been cancelled
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_DETAILS_UPDATED"
@@ -99,6 +133,8 @@ const NotificationsForm = React.createClass({
 						Event details has been updated
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_TEAM_PLAYER_ADDED"
@@ -106,6 +142,8 @@ const NotificationsForm = React.createClass({
 						Game team member has been added
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "EVENT_TEAM_PLAYER_REMOVED"
@@ -113,6 +151,8 @@ const NotificationsForm = React.createClass({
 						Game team member has been removed
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "MESSAGE_INBOX_CONSENT_REQUEST"
@@ -121,6 +161,8 @@ const NotificationsForm = React.createClass({
 					</FormField>
 					<h3>Invites management</h3>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "INVITE_INCOMING"
@@ -128,6 +170,8 @@ const NotificationsForm = React.createClass({
 						New event invite from an opposing school
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "INVITE_ACCEPTED_BY_OPPONENT"
@@ -135,6 +179,8 @@ const NotificationsForm = React.createClass({
 						An opposing school has accepted your event invite
 					</FormField>
 					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
 						field 			= "INVITE_REJECTED_BY_OPPONENT"
