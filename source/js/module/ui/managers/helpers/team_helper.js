@@ -200,23 +200,38 @@ function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId)
 }
 
 function changeTeamPlayers (schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove) {
-	return window.Server.schoolEventTeamPlayersBatch.post(
-		{
-			schoolId: schoolId,
-			eventId: eventId,
-			teamId: teamId
-		}, {
-			options: {
-				headers:	{ 'notification-mode': 'MANUAL' },
-				isDataOnly:	false
-			},
-			add: newPlayers,
-			update: playerChanges,
-			remove: playersToRemove
-		}
-	).then(response => {
-		return response.xhr.getResponseHeader('action-descriptor-id');
-	});
+	//for team prototype (in school pages) event not defined
+	if (typeof eventId === 'undefined') {
+		return window.Server.schoolTeamPlayersBatch.post(
+			{
+				schoolId: schoolId,
+				eventId: eventId,
+				teamId: teamId
+			}, {
+				add: newPlayers,
+				update: playerChanges,
+				remove: playersToRemove
+			}
+		)
+	} else {
+		return window.Server.schoolEventTeamPlayersBatch.post(
+			{
+				schoolId: schoolId,
+				eventId: eventId,
+				teamId: teamId
+			}, {
+				options: {
+					headers:	{ 'notification-mode': 'MANUAL' },
+					isDataOnly:	false
+				},
+				add: newPlayers,
+				update: playerChanges,
+				remove: playersToRemove
+			}
+		).then(response => {
+			return response.xhr.getResponseHeader('action-descriptor-id');
+		});
+	}
 }
 
 /**

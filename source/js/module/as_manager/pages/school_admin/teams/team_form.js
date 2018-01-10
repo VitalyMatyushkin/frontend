@@ -1,16 +1,19 @@
-const	Immutable					= require('immutable'),
-		{Autocomplete}				= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
-		TeamManager					= require('module/ui/managers/team_manager/team_manager'),
-		React						= require('react'),
-	{If}						= require('module/ui/if/if'),
-		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
-		Morearty					= require('morearty'),
-		classNames					= require('classnames'),
-		propz 						= require('propz'),
-		MultiselectDropdown			= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
-		MultiselectDropdownHelper	= require('module/ui/multiselect-dropdown/multiselect_dropdown_helper'),
-		SchoolConst 				= require('module/helpers/consts/schools');
+const	Immutable							= require('immutable'),
+		{Autocomplete}						= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		MoreartyHelper						= require('module/helpers/morearty_helper'),
+		TeamManager							= require('module/ui/managers/team_manager/team_manager'),
+		React								= require('react'),
+		{ If }								= require('module/ui/if/if'),
+		TeamHelper							= require('module/ui/managers/helpers/team_helper'),
+		Morearty							= require('morearty'),
+		classNames							= require('classnames'),
+		propz 								= require('propz'),
+		MultiselectDropdown					= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		MultiselectDropdownHelper			= require('module/ui/multiselect-dropdown/multiselect_dropdown_helper'),
+		SchoolConst 						= require('module/helpers/consts/schools'),
+		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
+		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
+		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
 
 const	MultiselectDropdownStyles	= require('../../../../../../styles/ui/multiselect_dropdown/bMultiSelectDropdown.scss');
 
@@ -23,6 +26,8 @@ const TeamForm = React.createClass({
 	genderListener: undefined,
 	agesListener: undefined,
 	houseIdListener: undefined,
+	playerChoosersTabsModel: undefined,
+	teamManagerActions: undefined,
 
 	componentWillMount: function() {
 		const	self	= this,
@@ -42,6 +47,9 @@ const TeamForm = React.createClass({
 		binding.sub('ages').addListener(() => {
 			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
 		});
+		
+		this.initPlayerChoosersTabsModel();
+		this.initTeamManagerActions();
 	},
 	componentWillUnmount: function() {
 		const	self	= this,
@@ -443,6 +451,14 @@ const TeamForm = React.createClass({
 			);
 		}
 	},
+	initPlayerChoosersTabsModel: function () {
+		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
+			ManagerTypes.Default
+		);
+	},
+	initTeamManagerActions: function () {
+		this.teamManagerActions = new TeamManagerActions( {schoolId: MoreartyHelper.getActiveSchoolId(this)} );
+	},
 	renderTeamManager: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -450,7 +466,11 @@ const TeamForm = React.createClass({
 		if(self.isShowTeamManager()) {
 			return (
 				<div>
-					<TeamManager binding={binding.sub('___teamManagerBinding')}/>
+					<TeamManager
+						binding 				= { binding.sub('___teamManagerBinding') }
+						playerChoosersTabsModel = { this.playerChoosersTabsModel }
+						actions 				= { this.teamManagerActions }
+					/>
 					<div className="eManager_group">
 						<div className="eTeam_errorBox">
 							{typeof binding.toJS('error') !== 'undefined' ? binding.get('error.text') : ''}

@@ -243,7 +243,7 @@ class TeamListModel {
 			columns:this.columns,
 			handleClick: this.props.handleClick,
 			filters: {
-				limit: 100,
+				limit: 20,
 				where: {
 					removed: false
 				}

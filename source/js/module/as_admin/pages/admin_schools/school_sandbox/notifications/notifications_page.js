@@ -12,7 +12,17 @@ const NotificationsPage = React.createClass({
 	onSubmit: function(data){
 		const 	binding 	= this.getDefaultBinding(),
 				schoolId 	= binding.get('schoolSandboxRouting.routing.pathParameters.0');
-		window.Server.schoolNotifications.put({ schoolId }, data ).then( response => {
+
+		const patchedData = { ...data };
+		Object.keys(patchedData).forEach( key => {
+			const value = patchedData[key];
+			switch (value) {
+				case true:	patchedData[key] = 'AUTO'; break;
+				case false:	patchedData[key] = 'DISABLED'; break;
+			}
+		});
+
+		window.Server.schoolNotifications.put({ schoolId }, patchedData ).then( response => {
 			window.simpleAlert(
 				`Notifications settings has been saved`,
 				'Ok',
