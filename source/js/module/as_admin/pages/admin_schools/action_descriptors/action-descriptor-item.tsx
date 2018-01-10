@@ -198,9 +198,6 @@ export const ActionDescriptorItem = (React as any).createClass({
 				</div>
 				{this.renderAffectedUserList()}
 				{this.renderUsersToNotifyList()}
-				<button className="bButton mCancel eActionDescriptor_button" onClick={() => document.location.hash = 'users/action_descriptors'}>
-					Back to Action Descriptors list
-				</button>
 			</div>
 		);
 	},

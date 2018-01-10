@@ -1,10 +1,10 @@
 @import "../!variables";
 
-.bActionDescriptor_container {
+.bNotificationItem_container {
   max-width: 900px;
   margin: auto;
 
-  .eActionDescriptor_main {
+  .eNotificationItem_main {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -38,7 +38,7 @@
     }
   }
 
-  .eActionDescriptor_table {
+  .eNotificationItem_table {
     width: 100%;
     display: inline-block;
     vertical-align: top;
@@ -46,15 +46,5 @@
     h3 {
       line-height: 20px;
     }
-  }
-}
-
-.eActionDescriptor_loader {
-  text-align: center;
-  padding: 25px;
-
-  .bIcon {
-    height: 50px;
-    width: 50px;
   }
 }

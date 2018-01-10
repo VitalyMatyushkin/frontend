@@ -69,7 +69,12 @@ export class NotificationsModel{
 			}
 		];
 	}
-	
+
+    handleClickNotification(id: string): void {
+        window.location.hash = `users/action_descriptor/${this.actionDescriptionId}/notifications/${id}`;
+        event.stopPropagation();
+    }
+
 	init(): any {
 		this.grid = new GridModel({
 			actionPanel:{
@@ -77,16 +82,17 @@ export class NotificationsModel{
 				showStrip:  true
 			},
 			columns:this.columns,
+            handleClick: this.handleClickNotification.bind(this),
 			filters:{limit:20, order:'startedAt DESC', where: {actionDescriptorId: this.actionDescriptionId}
 			}
 		});
-		
+
 		this.dataLoader =   new DataLoader({
 			serviceName:'allNotifications',
 			grid:       this.grid,
 			onLoad:     this.getDataLoadedHandle()
 		});
-		
+
 		return this;
 	};
 	

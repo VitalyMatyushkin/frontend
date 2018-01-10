@@ -81,7 +81,7 @@ const Center = React.createClass({
 							component	= { UsersComponent }
 						/>
 						<Route
-							path		= "/users/action_descriptor/:adId /users/action_descriptor/:adId/:subPage"
+							path		= "/users/action_descriptor/:adId /users/action_descriptor/:adId/:subFolder /users/action_descriptor/:adId/:subFolder/:subPage"
 							binding		= { binding.sub('actionDescriptorRouter') }
 							component	= { ActionDescriptorRouter }
 						/>
@@ -96,7 +96,7 @@ const Center = React.createClass({
 							component	= { SportsComponent }
 						/>
 						<Route
-							path		= "/user/view /user/notification-channel-view /user/notifications-view"
+							path		= "/user/view /user/notification-channel-view /user/notifications-view /users/notifications-view/:subPage"
 							binding		= { binding.sub('adminUserPage') }
 							component	= { AdminUserPageComponent }
 						/>
