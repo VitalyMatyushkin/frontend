@@ -140,7 +140,7 @@ function deleteIndividualPlayer(schoolId, eventId, individualId) {
  * @param {string} eventId
  * @return {Array}
  */
-function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId) {
+function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId, notificationMode) {
 	// normalize user array
 	const finalPlayers = _finalPlayers.map(p => {
 		// for users, not for players
@@ -196,42 +196,57 @@ function commitPlayers(initialPlayers, _finalPlayers, teamId, schoolId, eventId)
 		}
 	});
 
-	return changeTeamPlayers(schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove);
+	return changeTeamPlayers(schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove, notificationMode);
 }
 
-function changeTeamPlayers (schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove) {
-	//for team prototype (in school pages) event not defined
-	if (typeof eventId === 'undefined') {
-		return window.Server.schoolTeamPlayersBatch.post(
-			{
-				schoolId: schoolId,
-				eventId: eventId,
-				teamId: teamId
-			}, {
-				add: newPlayers,
-				update: playerChanges,
-				remove: playersToRemove
-			}
-		)
+function changeTeamPlayers (schoolId, eventId, teamId, newPlayers, playerChanges, playersToRemove, notificationMode = 'AUTO') {
+	let result;
+
+	if(
+		newPlayers.length > 0 ||
+		playerChanges.length > 0 ||
+		playersToRemove.length > 0
+	) {
+		// eventId is undefined if we change prototype team
+		if (typeof eventId === 'undefined') {
+			result = window.Server.schoolTeamPlayersBatch.post(
+				{
+					schoolId: schoolId,
+					teamId: teamId
+				}, {
+					add: newPlayers,
+					update: playerChanges,
+					remove: playersToRemove
+				}
+			).then(() => {
+				// because function return promise with action-descriptor-id
+				return undefined;
+			});
+		} else {
+			result = window.Server.schoolEventTeamPlayersBatch.post(
+				{
+					schoolId: schoolId,
+					eventId: eventId,
+					teamId: teamId
+				}, {
+					options: {
+						headers:	{ 'notification-mode': notificationMode },
+						isDataOnly:	false
+					},
+					add: newPlayers,
+					update: playerChanges,
+					remove: playersToRemove
+				}
+			).then(response => {
+				return response.xhr.getResponseHeader('action-descriptor-id');
+			});
+		}
 	} else {
-		return window.Server.schoolEventTeamPlayersBatch.post(
-			{
-				schoolId: schoolId,
-				eventId: eventId,
-				teamId: teamId
-			}, {
-				options: {
-					headers:	{ 'notification-mode': 'MANUAL' },
-					isDataOnly:	false
-				},
-				add: newPlayers,
-				update: playerChanges,
-				remove: playersToRemove
-			}
-		).then(response => {
-			return response.xhr.getResponseHeader('action-descriptor-id');
-		});
+		// because function return promise with action-descriptor-id
+		result = Promise.resolve(undefined);
 	}
+
+	return result;
 }
 
 /**

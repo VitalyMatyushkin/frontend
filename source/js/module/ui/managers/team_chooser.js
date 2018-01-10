@@ -143,7 +143,7 @@ const TeamChooser = React.createClass({
 			)
 		) {
 			teamItems.push((
-				<div	key			= 'sadsadas'
+				<div	key			= 'no_teams_item'
 						className	= 'eTeamChooser_team mLast mAlert'
 				>
 					There are no teams matching you criteria. To create a new team pick players from the list.

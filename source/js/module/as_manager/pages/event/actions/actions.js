@@ -100,7 +100,9 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 			} else {
 				promises = promises.concat(
 					commitTeamPlayerChangesByOrder(order, activeSchoolId, binding).then(actionDescriptorId => {
-						binding.set('actionDescriptorId', actionDescriptorId);
+						if(binding.toJS(`isManualNotificationMode`)) {
+							binding.set('actionDescriptorId', actionDescriptorId);
+						}
 
 						return true;
 					})
@@ -165,7 +167,8 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 			tw.___teamManagerBinding.teamStudents,
 			tw.selectedTeamId,
 			activeSchoolId,
-			binding.toJS('model').id
+			binding.toJS('model').id,
+			binding.toJS(`isManualNotificationMode`) ? 'MANUAL' : 'AUTO'
 		);
 }
 

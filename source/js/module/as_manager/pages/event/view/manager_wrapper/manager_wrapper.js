@@ -1,3 +1,5 @@
+import {SplitButtonWrapper} from "./components/split_button_wrapper";
+
 const	React 					= require('react'),
 		Morearty				= require('morearty'),
 		Immutable				= require('immutable'),
@@ -12,7 +14,8 @@ const	Manager					            = require('./../../../../../ui/managers/manager'),
 		classNames				            = require('classnames'),
 		TeamHelper				            = require('./../../../../../ui/managers/helpers/team_helper'),
 		{ ConfirmPopup }                    = require('module/ui/confirm_popup'),
-		{ CancelEventManualNotification }   = require("module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification");
+		{ CancelEventManualNotification }   = require("module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification"),
+		{ SplitButton }                     = require("module/ui/split_button/split_button");
 
 const	Actions								= require('../../actions/actions'),
 		EventHeaderActions                  = require('module/as_manager/pages/event/view/event_header/event_header_actions'),
@@ -82,6 +85,7 @@ const ManagerWrapper = React.createClass({
 			.set('isShowChangeModeManagerPopup', false)
 			.set('isChangeTeamManualNotificationPopupOpen', false)
 			.set('actionDescriptorId', undefined)
+			.set('isManualNotificationMode', false)
 			.commit();
 
 		this.addListeners();
@@ -267,8 +271,7 @@ const ManagerWrapper = React.createClass({
 		return this.getDefaultBinding().toJS('teamManagerWrapper.default.teamModeView.teamWrapper');
 	},
 	handleClickSubmitButton: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
@@ -277,14 +280,22 @@ const ManagerWrapper = React.createClass({
 			this.submit();
 		}
 	},
+	handleClickSaveAndEditNotificationList: function () {
+		const binding = this.getDefaultBinding();
+
+		// if true - then user click to finish button
+		// so we shouldn't do anything
+		if(this.isControlButtonActive()) {
+			binding.set('isSubmitProcessing', true);
+			binding.set('isManualNotificationMode', true);
+			this.submit();
+		}
+	},
 	isGroupEvent: function () {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
 		return typeof event.groupId !== 'undefined';
-	},
-	showChangeModeManagerPopup: function() {
-		this.getDefaultBinding().set('isShowChangeModeManagerPopup', true);
 	},
 	doAfterCommitActions: function() {
 		// just go to event page
@@ -420,6 +431,25 @@ const ManagerWrapper = React.createClass({
 			return null;
 		}
 	},
+	renderSaveButton: function () {
+		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
+			return (
+				<SplitButtonWrapper
+					handleClickSaveButton = { this.handleClickSubmitButton }
+					handleClickSaveAndEditNotificationList = { this.handleClickSaveAndEditNotificationList }
+					isDisableButton = { !this.getDefaultBinding().toJS('isControlButtonActive') }
+				/>
+			);
+		} else {
+			return (
+				<Button
+					text = "Save"
+					onClick = { this.handleClickSubmitButton }
+					extraStyleClasses = { this.getSaveButtonStyleClass() }
+				/>
+			);
+		}
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -437,11 +467,7 @@ const ManagerWrapper = React.createClass({
 						onClick				= { this.handleClickCancelButton }
 						extraStyleClasses	= { "mCancel" }
 					/>
-					<Button
-						text				= "Save"
-						onClick				= { this.handleClickSubmitButton }
-						extraStyleClasses	= { this.getSaveButtonStyleClass() }
-					/>
+					{ this.renderSaveButton() }
 				</div>
 				<SavingPlayerChangesPopup
 					binding	= { binding.sub('teamManagerWrapper.default') }
