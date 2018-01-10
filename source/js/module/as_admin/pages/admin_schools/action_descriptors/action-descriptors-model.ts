@@ -137,7 +137,7 @@ export class ActionDescriptorsModel{
 			filters:{limit:20, order:'createdAt DESC'}
 		});
 		
-		this.dataLoader =   new DataLoader({
+		this.dataLoader = new DataLoader({
 			serviceName:'actionDescriptors',
 			grid:       this.grid,
 			onLoad:     this.getDataLoadedHandle()

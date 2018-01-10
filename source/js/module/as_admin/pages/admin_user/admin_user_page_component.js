@@ -10,6 +10,7 @@ const	RouterView						= require('module/core/router'),
 		AdminUserNotificationChannel 	= require('module/as_admin/pages/admin_user/admin_user_notification_channel/admin_user_notification_channel'),
 		AdminUserNotifications 			= require('module/as_admin/pages/admin_user/admin_user_notifications/admin_user_notifications'),
 		UserViewComponent 				= require('module/shared_pages/users/user_view'),
+    	{NotificationItem} 				= require('module/as_admin/pages/admin_schools/action_descriptors/notification-item'),
 		SessionsComponent 				= require('module/as_admin/pages/admin_user/sessions/sessions');
 
 
@@ -72,6 +73,11 @@ const AdminUserPageComponent = React.createClass({
 							binding 	= { binding.sub('userNotifications') }
 							component 	= { AdminUserNotifications }
 							userId 		= { userId }
+						/>
+						<Route
+							path 		= "user/notifications-view/item"
+							binding 	= { binding.sub('userNotifications') }
+							component 	= { NotificationItem }
 						/>
 						<Route
 							path 		= "user/notification-channel-view"

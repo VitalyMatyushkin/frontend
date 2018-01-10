@@ -8,7 +8,8 @@ import * as RouterView from 'module/core/router';
 import * as Route from 'module/core/route';
 import * as	Immutable from 'immutable';
 import {SubMenu} from 'module/ui/menu/sub_menu';
-import	{ActionDescriptorItem}	from './action-descriptor-item';
+import {ActionDescriptorItem} from './action-descriptor-item';
+import {NotificationItem} from './notification-item';
 import {NotificationTable} from './notification-table';
 
 
@@ -63,6 +64,12 @@ export const ActionDescriptorRouter = (React as any).createClass({
 							path		= "/users/action_descriptor/:adId/notifications"
 							binding		= { subBinding }
 							component	= { NotificationTable }
+						/>
+						<Route
+							path		= "/users/action_descriptor/:adId/notifications/:notificationId"
+							binding		= { subBinding }
+							component	= { NotificationItem }
+							mode 		= "ACTION_DESCRIPTOR"
 						/>
 					</RouterView>
 				</div>
