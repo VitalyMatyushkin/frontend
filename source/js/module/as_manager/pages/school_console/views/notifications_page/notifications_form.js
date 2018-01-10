@@ -84,6 +84,15 @@ const NotificationsForm = React.createClass({
 					>
 						New role request
 					</FormField>
+					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
+						field 			= "MERGE_STUDENT"
+					>
+						Student merged
+					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
 					<h3>Games management</h3>
