@@ -43,7 +43,7 @@ const ReportAvailability = React.createClass({
 		binding.clear('formAvailability');
 		binding.sub('formAvailability').meta().clear();
 	},
-	onSubmitPermission: function (data) {
+	onSubmit: function (data) {
 		const   bindingForm	= this.getDefaultBinding().sub('formAvailability'),
 				rootBinding = this.getMoreartyContext().getBinding(),
 				eventId = this.props.eventId,
@@ -72,7 +72,10 @@ const ReportAvailability = React.createClass({
 						};
 
 				window.Server.parentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-					.then(() => this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false));
+					.then(() => {
+						this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false);
+						this.showSuccessAlert();
+					});
 			} else {
 				userId = rootBinding.get('userData.sessions.roleSession.userId'),
 				permissionId = this.getPermissionIdFromPlayers(userId);
@@ -84,10 +87,20 @@ const ReportAvailability = React.createClass({
 						};
 
 				window.Server.studentEventReportAvailability.post(eventId, {isTakePart, details, playerDetails})
-					.then(() => this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false));
+					.then(() => {
+						this.getDefaultBinding().set('isOpenEditReportAvailabilityPopup', false);
+						this.showSuccessAlert();
+					});
 			}
 		}
 
+	},
+	showSuccessAlert: function () {
+		window.simpleAlert(
+			"Your report has been successfully sent.",
+			'Ok',
+			() => {}
+		);
 	},
 	availabilityClientToData: function (selectedAvailability) {
 		let dataAvailabilityToServer;
@@ -153,8 +166,6 @@ const ReportAvailability = React.createClass({
 				dataUploaded	= binding.get('dataUploaded'),
 				isParent		= this.props.isParent;
 
-		console.log(binding.toJS());
-
 		if (dataUploaded) {
 			const 	childrenParticipatingEvent = isParent ? this.participatEventChildren : [],
 					titleForm = (isParent && childrenParticipatingEvent.length === 1) ?
@@ -166,7 +177,7 @@ const ReportAvailability = React.createClass({
 						formStyleClass	= "mNarrow"
 						name			= {titleForm}
 						binding			= {binding.sub('formAvailability')}
-						onSubmit		= {this.onSubmitPermission}
+						onSubmit		= {this.onSubmit}
 						defaultButton	= "Save"
 						onCancel		= {this.props.onCancel}
 					>

@@ -132,8 +132,6 @@ class MaskedInput extends React.Component {
 	}
 
 	_onChange(e) {
-		// console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
-
 		var maskValue = this.mask.getValue()
 		if (e.target.value !== maskValue) {
 			// Cut or delete operations will have shortened the value
@@ -155,8 +153,6 @@ class MaskedInput extends React.Component {
 	}
 
 	_onKeyDown(e) {
-		// console.log('onKeyDown', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
-
 		if (isUndo(e)) {
 			e.preventDefault()
 			if (this.mask.undo()) {
@@ -197,8 +193,6 @@ class MaskedInput extends React.Component {
 	}
 
 	_onKeyPress(e) {
-		// console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
-
 		// Ignore modified key presses
 		// Ignore enter key to allow form submission
 		if (e.metaKey || e.altKey || e.ctrlKey || e.key === 'Enter') { return }
@@ -215,8 +209,6 @@ class MaskedInput extends React.Component {
 	}
 
 	_onPaste(e) {
-		// console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
-
 		e.preventDefault()
 		this._updateMaskSelection()
 		// getData value needed for IE also works in FF & Chrome

@@ -213,8 +213,6 @@ const EventHeader = React.createClass({
 
 		if(binding.toJS('isOpenCancelEventManualNotificationPopup')) {
 
-			console.log( binding.toJS('actionDescriptor.affectedUserList') );
-
 			reactElement = (
 				<ConfirmPopup
 					okButtomText		= { 'Commit' }

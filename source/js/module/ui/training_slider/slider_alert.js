@@ -25,7 +25,6 @@ const SliderAlert = React.createClass({
 		const 	binding = this.getDefaultBinding();
 		
 		binding.set('webIntroEnabled', !event.target.checked);
-		console.log(!event.target.checked);
 		this.sendWebIntroEnabled(!event.target.checked);
 	},
 	sendWebIntroEnabled: function (webIntroEnabled) {

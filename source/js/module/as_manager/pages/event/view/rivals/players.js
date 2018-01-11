@@ -134,7 +134,6 @@ const Players = React.createClass({
 			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {
 				return this.renderText(this.NO_TEAM_MEMBERS);
 			} else {
-				console.log(rival.invite.status);
 				//For public site we do not have access to invites, then we render AWAITING_OPPONENT text
 				//TODO: If we will have access, then fix it
 				if (typeof rival.invite === 'undefined') {
