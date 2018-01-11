@@ -2,8 +2,7 @@
  * Created by wert on 26.02.16.
  */
 
-const Ajax = require('module/core/AJAX');
-
+const {AJAX} = require('module/core/AJAX');
 
 class ImageService {
 	constructor(endpoint) {
@@ -15,7 +14,7 @@ class ImageService {
 	upload(file){		// TODO: file type ???
 		const fd = new FormData();
 		fd.append('image', file);
-		return Ajax({
+		return AJAX({
 			type:           'POST',
 			url:            this.__uploadUrl,
 			data:           fd,
