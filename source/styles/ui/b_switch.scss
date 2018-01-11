@@ -1,0 +1,217 @@
+/*
+    Switch with 3 states for next sprint
+ */
+$cl-state-null: #bdbdbd;
+$cl-state-null-light: #fafafa;
+$cl-state-null-dark: #8b8b8b;
+$cl-state-on: #008ed3;
+$cl-state-on-dark: #0066ab;
+$cl-state-off: #f9a19a;
+$cl-state-off-dark: #f44336;
+.bSwitcher {
+  position: absolute;
+  display: inline-block;
+  width: 125px;
+  line-height: 23px;
+
+  & > input[type="radio"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+
+    & + i {
+      position: relative;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      vertical-align: top;
+
+      &, &:before, &:after {
+        transition: all 0.3s;
+      }
+    }
+
+    &:first-child {
+      z-index: 10;
+
+      &:checked {
+        z-index: 0;
+      }
+    }
+
+    &:checked {
+      & + input[type="radio"] {
+        z-index: 10;
+      }
+
+      & + i {
+        & + label, & + label + label {
+          display: none;
+        }
+      }
+
+      & + input[type="radio"] {
+        & + i {
+          //background-color: #0f0;
+
+          & + label, & + label + label + label {
+            display: none;
+          }
+        }
+
+        & + input[type="radio"] {
+          & + i {
+            // background-color: #00f;
+
+            & + label + label, & + label + label + label {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  & > input[type="radio"] {
+    width: 46px;
+    height: 24px;
+    left: -3px;
+    top: -1px;
+
+    & + i {
+      width: 40px;
+      height: 16px;
+      margin-right: 5px;
+      background-color: $cl-state-null;
+      border-radius: 8px;
+
+      &:before {
+        content: ' ';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        display: block;
+        width: 24px;
+        height: 24px;
+        background-color: $cl-state-null-light;
+        border-radius: 50%;
+        box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    &:checked {
+      & + i {
+        background-color: $cl-state-on;
+
+        &:before {
+          left: 19px;
+          background-color: $cl-state-on-dark;
+        }
+      }
+
+      & + input[type="radio"] {
+        & + i {
+          &:before {
+            left: 8px;
+          }
+        }
+
+        & + input[type="radio"] {
+          & + i {
+            background-color: $cl-state-off;
+
+            &:before {
+              background-color: $cl-state-off-dark;
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+$input-radius: 80% !default;
+$input-unit: 14px !default; // accepts px, em, rem
+$input-spacing: $input-unit * 1.125 !default; // adjust depending on font-family
+
+$radio-bg: #bdbdbd !default;
+$radio-txt-color: #007abf !default;
+
+$radio-checked-custom: (
+        background: #008ed3
+) !default;
+$radio-checked: #008ed3 !default;
+$radio-checked-focus: white !default;
+
+
+.bSwitcher {
+  width: 100px;
+}
+
+.input-control {
+  cursor: pointer;
+  display: inline-block;
+  padding-left: $input-spacing * 1.25;
+  position: relative;
+  font-size: $input-unit;
+  font-weight: 100;
+  line-height: $input-spacing;
+  color: $radio-txt-color;
+
+  input {
+    position: absolute;
+    width: auto !important;
+    z-index: 1;
+    opacity: 0;
+  }
+
+  &__indicator {
+    border-radius: $input-radius;
+    display: block;
+    height: $input-unit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none;
+    width: $input-unit;
+    text-align: center;
+    background-color: $radio-bg;
+    background-size: 50% 50%;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+}
+
+
+.input-control.radio {
+
+  input:focus ~ .input-control__indicator,
+  input:active ~ .input-control__indicator {
+    @each $key, $value in $radio-checked-custom {
+      #{$key} : #{$value};
+    }
+  }
+
+  input:checked ~ .input-control__indicator {
+    &:after {
+      border-radius: $input-radius;
+      content: "";
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: scale(.5);
+      transform-origin: center center;
+      width: 100%;
+      background: $radio-checked-focus;
+    }
+  }
+}

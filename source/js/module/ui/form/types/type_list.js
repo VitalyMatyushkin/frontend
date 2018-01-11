@@ -17,6 +17,7 @@ const  	TypeText 			= require('module/ui/form/types/text'),
 		TypeTermsCheckbox 	= require('module/ui/form/types/terms_checkbox'),
 		TypeImageFileUpload	= require('module/ui/form/types/imageFileType'),
 		TypeCheckbox 		= require('module/ui/form/types/checkbox'),
+		{TypeSwitch} 		= require('module/ui/form/types/switch'),
 		typeList = {};
 
 // Input element type list
@@ -39,5 +40,6 @@ typeList['textarea'] 			= TypeTextArea;
 typeList['imageFile']			= TypeImageFileUpload;
 typeList['terms'] 				= TypeTermsCheckbox;
 typeList['checkbox'] 			= TypeCheckbox;
+typeList['switch'] 				= TypeSwitch;
 
 module.exports = typeList;

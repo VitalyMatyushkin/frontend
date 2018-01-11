@@ -37,7 +37,7 @@ const NotificationsForm = React.createClass({
 	},
 	render: function(){
 		const binding = this.getDefaultBinding();
-		
+
 		return (
 			<Form
 				name 			= { "Notifications settings" }
