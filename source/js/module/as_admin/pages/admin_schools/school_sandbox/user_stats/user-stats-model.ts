@@ -45,10 +45,10 @@ export class UserStatsModel{
 	setColumns(): void {
 		this.columns = [
 			{
-				text:'UserId',
+				text:'Email',
 				isSorted:false,
 				cell:{
-					dataField:'userId',
+					dataField:'user.email',
 					type:'general'
 				}
 			},
