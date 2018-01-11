@@ -40,5 +40,44 @@ export const FixtureActions = {
                 }
             }
         )
+    },
+
+    loadDataForStudent: function (page, schoolId, gteDate, ltDate) {
+        let filter;
+        if (schoolId === '' || typeof schoolId === 'undefined') {
+            filter = {
+                skip: this.fixturesCountOnPage * (page - 1),
+                limit: this.fixturesCountLimit,
+                where: {
+                    startTime: {
+                        $gte: 	gteDate,
+                        $lt: 	ltDate
+                    },
+                    status: {
+                        $in: ['ACCEPTED', 'FINISHED']
+                    }
+                },
+                order: 'startTime ASC'
+            };
+        } else {
+            filter = {
+                skip: this.fixturesCountOnPage * (page - 1),
+                limit: this.fixturesCountLimit,
+                where: {
+                    startTime: {
+                        $gte: 	gteDate,
+                        $lt: 	ltDate
+                    },
+                    status: {
+                        $in: ['ACCEPTED', 'FINISHED']
+                    },
+                    schoolId: {
+                        $in: schoolId
+                    }
+                },
+                order: 'startTime ASC'
+            };
+        }
+        return (window as any).Server.studentSchoolEvents.get({ filter: filter });
     }
 };

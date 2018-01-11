@@ -13,11 +13,15 @@ const 	React 				= require('react'),
 
 const FixtureList = React.createClass({
 	propTypes: {
-		date: React.PropTypes.object.isRequired,
+		date:           React.PropTypes.object.isRequired,
 		activeSchoolId: React.PropTypes.string.isRequired,
-		onClick: React.PropTypes.func,
-        childIdList: React.PropTypes.array,
-        children: React.PropTypes.array
+		onClick:        React.PropTypes.func,
+        childIdList:    React.PropTypes.array,
+        children:       React.PropTypes.array,
+        schoolId:       React.PropTypes.array || React.PropTypes.string,
+        schoolIdList:   React.PropTypes.array,
+        school: 		React.PropTypes.array,
+        mode:           React.PropTypes.string
 	},
     getInitialState: function() {
         return {
@@ -27,32 +31,47 @@ const FixtureList = React.createClass({
     },
 
     loadFixtures: function (page) {
-        const 	gteDate = DateHelper.getStartDateTimeOfMonth(this.props.date),
+        const 	mode = this.props.mode,
+                gteDate = DateHelper.getStartDateTimeOfMonth(this.props.date),
             	ltDate 	= DateHelper.getEndDateTimeOfMonth(this.props.date);
-		if (this.props.childIdList) {
-            return FixtureActions.loadDataForParent(page, this.props.activeSchoolId, gteDate, ltDate, this.props.childIdList)
-                .then(_events => {
-                    this.injectChildrenToEvents(_events,  this.props.children, this.props.childIdList);
-                    let events = this.state.events;
-                    events = events.concat(_events);
-                    this.setState({
-                        events: events,
-                        hasMore: _events.length !== 0
+
+        switch (mode) {
+            case 'STUDENT':
+                return FixtureActions.loadDataForStudent(page, this.props.schoolId, gteDate, ltDate)
+                    .then(_events => {
+                        this.injectSchoolToEvents(_events, this.props.school, this.props.schoolIdList);
+                        let events = this.state.events;
+                        events = events.concat(_events);
+                        this.setState({
+                            events: events,
+                            hasMore: _events.length !== 0
+                        });
                     });
-                });
-		} else {
-            return FixtureActions.loadData(page, this.props.activeSchoolId, gteDate, ltDate)
-                .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, this.props.activeSchoolId)))
-                .then(_events => {
-                    let events = this.state.events;
-                    events = events.concat(_events);
-                    this.setState({
-                        events: events,
-                        hasMore: _events.length !== 0
+            case 'PARENT':
+                return FixtureActions.loadDataForParent(page, this.props.activeSchoolId, gteDate, ltDate, this.props.childIdList)
+                    .then(_events => {
+                        this.injectChildrenToEvents(_events,  this.props.children, this.props.childIdList);
+                        let events = this.state.events;
+                        events = events.concat(_events);
+                        this.setState({
+                            events: events,
+                            hasMore: _events.length !== 0
+                        });
+                    });
+            case 'ADMIN':
+                return FixtureActions.loadData(page, this.props.activeSchoolId, gteDate, ltDate)
+                    .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, this.props.activeSchoolId)))
+                    .then(_events => {
+                        let events = this.state.events;
+                        events = events.concat(_events);
+                        this.setState({
+                            events: events,
+                            hasMore: _events.length !== 0
+                        });
+
+                        return true;
                     });
 
-                    return true;
-                });
         }
 	},
 
@@ -67,6 +86,35 @@ const FixtureList = React.createClass({
                 }
             });
         }
+    },
+
+    injectSchoolToEvents: function(events, schoolList, currentSchoolIdList) {
+        if(currentSchoolIdList.length === 1) {
+            return this.injectSchoolsToEvents(events, schoolList.find(sch => sch.id === currentSchoolIdList[0]));
+        } else {
+            return events.forEach(event => {
+                const school = this.getSchoolFromEvent(event, schoolList);
+                if(typeof school !== "undefined") {
+                    event.school = school;
+                }
+            });
+        }
+    },
+    getSchoolFromEvent: function(event, schoolList) {
+        return schoolList.find(school => this.isSchoolPlayInEvent(event, school));
+    },
+    isSchoolPlayInEvent: function(event, school) {
+        const foundTeam = event.teamsData.find(t => this.isSchoolPlayInTeam(t, school));
+
+        return typeof foundTeam !== 'undefined';
+    },
+    isSchoolPlayInTeam: function(team, school) {
+        const foundPlayer = team.players.find(p => p.userId === school.id);
+
+        return typeof foundPlayer !== 'undefined';
+    },
+    injectSchoolsToEvents: function(events, school) {
+        return events.forEach(e => e.school = school);
     },
     getChildFromEvent: function(event, childList) {
         return childList.find(child => this.isChildPlayInEvent(event, child));

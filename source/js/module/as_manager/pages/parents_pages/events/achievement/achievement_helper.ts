@@ -3,8 +3,8 @@
  */
 
 export const titleToFilterResultType = {
-'playedCount': 	'ALL',
-'wonCount': 	'WON',
-'drewCount': 	'DREW',
-'lostCount': 	'LOST'
+    'playedCount': 	'ALL',
+    'wonCount': 	'WON',
+    'drewCount': 	'DREW',
+    'lostCount': 	'LOST'
 };

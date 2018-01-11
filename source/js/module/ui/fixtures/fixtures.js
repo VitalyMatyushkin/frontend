@@ -11,7 +11,12 @@ const EventFixtures = React.createClass({
 		date: 			React.PropTypes.object.isRequired,
 		activeSchoolId: React.PropTypes.string,
 		onClick: 		React.PropTypes.func,
-		sync: 			React.PropTypes.bool
+        childIdList: 	React.PropTypes.array,
+        children: 		React.PropTypes.array,
+        schoolId: 		React.PropTypes.array || React.PropTypes.string,
+        schoolIdList: 	React.PropTypes.array,
+        school: 		React.PropTypes.array,
+        mode: 			React.PropTypes.string.isRequired
 	},
 	render: function () {
         const   date  			= this.props.date,
@@ -21,7 +26,18 @@ const EventFixtures = React.createClass({
 		return (
 			<div className="bChallenges">
 				<FixtureTitle />
-				<FixtureList key={date} children={this.props.children} childIdList ={this.props. childIdList} date={date} activeSchoolId={activeSchoolId} onClick={onClick} />
+				<FixtureList
+					key				= {date}
+					mode			= {this.props.mode}
+					children		= {this.props.children}
+					childIdList 	= {this.props. childIdList}
+					date			= {date}
+					activeSchoolId	= {activeSchoolId}
+					onClick			= {onClick}
+					school			= {this.props.school}
+					schoolId		= {this.props.schoolId}
+					schoolIdList	= {this.props.schoolIdList}
+				/>
 			</div>
         );
 	}
