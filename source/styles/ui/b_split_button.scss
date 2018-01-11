@@ -20,7 +20,6 @@
   padding: 0 30px;
 
   border: solid 1px #164170;
-  border-right: none;
   border-radius: 5px 0 0 5px;
 
   font-size: 18px;
@@ -72,7 +71,12 @@
 
   vertical-align: top;
 
-  &:hover{
+  &:hover {
+    background: $lightBlue;
+    color: #fff;
+  }
+
+  &.mMarked {
     background: $lightBlue;
     color: #fff;
   }
@@ -88,7 +92,6 @@
 .eSplitButton_actionList {
   position: absolute;
 
-  left: 150px;
   top: 53px;
 
   width: 300px;
