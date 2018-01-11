@@ -139,17 +139,14 @@ class UsersActionsClass {
 				() => {
 					ids.forEach( userId => {
 						const params = {
-							userId:userId,
-							schoolId:schoolId
+							userId: 	userId,
+							schoolId: 	schoolId
 						};
 						
-						permissionList.get(params)
-						.then( data => {
+						permissionList.get(params).then( data => {
 							data.forEach( p => {
-								if(p.preset !== 'STUDENT'){
-									params.permissionId = p.id;
-									permission.delete(params).then( () => self.reloadData());
-								}
+								params.permissionId = p.id;
+								permission.delete(params).then( () => self.reloadData());
 							});
 						});
 					});

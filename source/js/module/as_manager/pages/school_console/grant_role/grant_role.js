@@ -209,6 +209,8 @@ const GrantRole = React.createClass({
 	},
 	getRoles: function() {
 		const	activeSchoolId		= this.getMoreartyContext().getBinding().toJS('userRules.activeSchoolId'),
+				formBinding			= this.getDefaultBinding().sub('form'),
+				fullSchoolData		= formBinding.meta('schoolId.fullValue').toJS(),
 				currentPermissions 	= this.props.userPermissionsBinding.toJS();
 
 		let currentRoles = [];
@@ -230,7 +232,7 @@ const GrantRole = React.createClass({
 
 		//if in school disabled registration student, we must cut role 'student' from role list
 		return roleList.filter(role => {
-			if (role.id === 'student') {
+			if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
 				return false;
 			} else {
 				return !hasUserCurrentRole(role.id);
