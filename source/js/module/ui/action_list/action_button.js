@@ -1,10 +1,10 @@
-const	React					= require('react');
+const React = require('react');
 
-const	ActionButtonCssStyle	= require('../../../../styles/ui/b_action_button.scss');
+const ActionButtonCssStyle = require('../../../../styles/ui/b_action_button.scss');
 
 function Button(props) {
-	const	extraStyleClasses = props.extraStyleClasses || '',
-			className = `bActionButton ${extraStyleClasses}`;
+	const extraStyleClasses = props.extraStyleClasses || '';
+	const className = `bActionButton ${extraStyleClasses}`;
 
 	return (
 		<button	className	= {className}

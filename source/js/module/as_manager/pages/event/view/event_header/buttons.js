@@ -3,8 +3,8 @@ const	React			= require('react');
 const	ActionList		= require('../../../../../ui/action_list/action_list');
 
 const	EventHelper		= require('module/helpers/eventHelper'),
-		TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
-		LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
+	TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
+	LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
@@ -13,27 +13,31 @@ const EventFormConsts = require('module/as_manager/pages/events/manager/event_fo
  * */
 const Buttons = React.createClass({
 	propTypes: {
-		event							: React.PropTypes.object.isRequired,
-		mode							: React.PropTypes.string.isRequired,
-		schoolType						: React.PropTypes.string.isRequired,
+		event											: React.PropTypes.object.isRequired,
+		mode											: React.PropTypes.string.isRequired,
+		schoolType										: React.PropTypes.string.isRequired,
 		// TRUE if active school id ==== inviter school id
-		isInviterSchool					: React.PropTypes.bool.isRequired,
-		isUserSchoolWorker				: React.PropTypes.bool.isRequired,
-		isParent						: React.PropTypes.bool.isRequired,
-		isStudent						: React.PropTypes.bool.isRequired,
-		isShowScoreEventButtonsBlock	: React.PropTypes.bool.isRequired,
-		handleClickCancelEvent			: React.PropTypes.func.isRequired,
-		handleClickCloseEvent			: React.PropTypes.func.isRequired,
-		handleClickDownloadPdf			: React.PropTypes.func.isRequired,
-		onReportAvailabilityEvent		: React.PropTypes.func.isRequired,
-		handleClickDownloadCSV			: React.PropTypes.func.isRequired,
-		onClickCloseCancel				: React.PropTypes.func.isRequired,
-		onClickOk						: React.PropTypes.func.isRequired,
-		onSendConsentRequest			: React.PropTypes.func.isRequired,
-		onReportNotParticipate			: React.PropTypes.func.isRequired,
-		onClickDeleteEvent				: React.PropTypes.func.isRequired,
-		onClickAddSchool				: React.PropTypes.func.isRequired,
-		onClickAddTeam					: React.PropTypes.func.isRequired
+		isInviterSchool									: React.PropTypes.bool.isRequired,
+		isUserSchoolWorker								: React.PropTypes.bool.isRequired,
+		isParent										: React.PropTypes.bool.isRequired,
+		isStudent										: React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock					: React.PropTypes.bool.isRequired,
+
+		// Cancel event handlers
+		handleClickCancelEventButtonOnActionList: React.PropTypes.func.isRequired,
+		handleClickCancelEventAndEditNotificationListButtonOnActionList: React.PropTypes.func.isRequired,
+
+		handleClickCloseEvent							: React.PropTypes.func.isRequired,
+		handleClickDownloadPdf							: React.PropTypes.func.isRequired,
+		onReportAvailabilityEvent						: React.PropTypes.func.isRequired,
+		handleClickDownloadCSV							: React.PropTypes.func.isRequired,
+		onClickCloseCancel								: React.PropTypes.func.isRequired,
+		onClickOk										: React.PropTypes.func.isRequired,
+		onSendConsentRequest							: React.PropTypes.func.isRequired,
+		onReportNotParticipate							: React.PropTypes.func.isRequired,
+		onClickDeleteEvent								: React.PropTypes.func.isRequired,
+		onClickAddSchool								: React.PropTypes.func.isRequired,
+		onClickAddTeam									: React.PropTypes.func.isRequired
 	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
@@ -45,8 +49,8 @@ const Buttons = React.createClass({
 		if(actions.length > 0) {
 			actionList = (
 				<ActionList	buttonText				= 'Actions'
-							actionList				= { actions }
-							handleClickActionItem	= { this.handleClickActionItem }
+				               actionList				= { actions }
+				               handleClickActionItem	= { this.handleClickActionItem }
 				/>
 			);
 		}
@@ -82,6 +86,10 @@ const Buttons = React.createClass({
 
 		if(this.isCancelEventActionAvailable()) {
 			actionList.push({id:'cancel', text:'Cancel Event'});
+		}
+
+		if(this.isCancelEventActionAvailable()) {
+			actionList.push({id:'cancel_and_edit_notification_list', text:'Cancel Event And Edit Notification List'});
 		}
 
 		if(this.isReportAvailabilityAvailable()) {
@@ -170,7 +178,7 @@ const Buttons = React.createClass({
 	},
 	isNotExpiredEventTime: function() {
 		const	today		= new Date(),
-				eventTime	= new Date(this.props.event.startTime);
+			eventTime	= new Date(this.props.event.startTime);
 
 		// not expired if event date is today
 		if(
@@ -204,14 +212,14 @@ const Buttons = React.createClass({
 			eventStatus === EventHelper.EVENT_STATUS.FINISHED &&
 			(
 				this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ||
+				(
+					this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
 					(
-						this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION &&
-						(
-							TeamHelper.isTeamSport(this.props.event) ||
-							TeamHelper.isOneOnOneSport(this.props.event) ||
-							TeamHelper.isTwoOnTwoSport(this.props.event)
-						)
+						TeamHelper.isTeamSport(this.props.event) ||
+						TeamHelper.isOneOnOneSport(this.props.event) ||
+						TeamHelper.isTwoOnTwoSport(this.props.event)
 					)
+				)
 			)
 		);
 	},
@@ -236,7 +244,10 @@ const Buttons = React.createClass({
 				this.props.handleClickCloseEvent();
 				break;
 			case 'cancel':
-				this.props.handleClickCancelEvent();
+				this.props.handleClickCancelEventButtonOnActionList();
+				break;
+			case 'cancel_and_edit_notification_list':
+				this.props.handleClickCancelEventAndEditNotificationListButtonOnActionList();
 				break;
 			case 'send_consent_request':
 				this.props.onSendConsentRequest();
@@ -273,12 +284,12 @@ const Buttons = React.createClass({
 		return (
 			<div className="bEventButtons">
 				<div	className	= "bButton mCancel mMarginRight"
-						onClick		= {this.props.onClickCloseCancel}
+				        onClick		= {this.props.onClickCloseCancel}
 				>
 					Cancel
 				</div>
 				<div	className	= "bButton"
-						onClick		= {this.props.onClickOk}
+				        onClick		= {this.props.onClickOk}
 				>
 					Save
 				</div>

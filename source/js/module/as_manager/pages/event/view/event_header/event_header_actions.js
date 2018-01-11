@@ -2,10 +2,10 @@
  * Created by Woland on 11.01.2017.
  */
 const 	Immutable 			= require('immutable'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		SportHelper			= require('module/helpers/sport_helper'),
-		Promise				= require('bluebird');
+	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+	EventHelper			= require('module/helpers/eventHelper'),
+	SportHelper			= require('module/helpers/sport_helper'),
+	Promise				= require('bluebird');
 
 const converter = require('json-2-csv');
 
@@ -74,10 +74,6 @@ function getCSVPlayer(firstName, lastName, form, ageGroup, event) {
 }
 
 function cancelEvent(schoolId, eventId, notificationMode, binding) {
-	cancelEventOnServer(schoolId, eventId, notificationMode, binding);
-}
-
-function cancelEventOnServer(schoolId, eventId, notificationMode, binding) {
 	return window.Server.eventCancel.post(
 		{
 			schoolId:	schoolId,
@@ -89,26 +85,26 @@ function cancelEventOnServer(schoolId, eventId, notificationMode, binding) {
 				isDataOnly:	false
 			}
 		}
-	)
-	.then(response => {
-		if(notificationMode === 'MANUAL') {
-			const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
+		)
+		.then(response => {
+			if(notificationMode === 'MANUAL') {
+				const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
 
-			return window.Server.actionDescriptor.get({actionDescriptorId: actionDescriptorId}).then(actionDescriptor => {
-				actionDescriptor.affectedUserList = convertAffectedUsersToClient(actionDescriptor.affectedUserList);
+				return window.Server.actionDescriptor.get({actionDescriptorId: actionDescriptorId}).then(actionDescriptor => {
+					actionDescriptor.affectedUserList = convertAffectedUsersToClient(actionDescriptor.affectedUserList);
 
-				binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
-				binding.set('isOpenCancelEventPopupPopup', false);
-				binding.set('isOpenCancelEventManualNotificationPopup', true);
+					binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
+					binding.set('isOpenCancelEventPopupPopup', false);
+					binding.set('isOpenCancelEventManualNotificationPopup', true);
+
+					return true;
+				});
+			} else {
+				document.location.hash = 'events/calendar';
 
 				return true;
-			});
-		} else {
-			document.location.hash = 'events/calendar';
-
-			return true;
-		}
-	});
+			}
+		});
 }
 
 function convertAffectedUsersToClient(affectedUsers) {
@@ -121,11 +117,11 @@ function convertAffectedUsersToClient(affectedUsers) {
 
 function commitUsersToActionDescriptorChanges(actionDescriptorId, users) {
 	return window.Server.actionDescriptor.put(
-			{
-				actionDescriptorId: actionDescriptorId
-			}, {
-				usersToNotifyList: users.filter(user => user.checked)
-			}
+		{
+			actionDescriptorId: actionDescriptorId
+		}, {
+			usersToNotifyList: users.filter(user => user.checked)
+		}
 		)
 		.then(() => {
 			document.location.hash = 'events/calendar';
@@ -413,20 +409,20 @@ function submitCricketResults(activeSchoolId, event) {
 		const cricketResult = {
 			result: cricketTextResult
 		};
-		
+
 		if (typeof event.results.cricketResult !== 'undefined' && event.results.cricketResult.who !== '') {
 			cricketResult.who = event.results.cricketResult.who
 		}
-		
+
 		let promises = [];
-		
+
 		promises = promises.concat(
 			window.Server.schoolEventResultCricket.post({
 				schoolId: activeSchoolId,
 				eventId: event.id
 			}, cricketResult)
 		);
-		
+
 		return Promise.all(promises);
 	} else {
 		return Promise.resolve(true);
@@ -495,11 +491,11 @@ function closeMatch(activeSchoolId, event, binding){
 function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 
 	return window.Server.finishSchoolEvent.post({
-		schoolId:	activeSchoolId,
-		eventId:	event.id
-	})
-	.then(() => submitResultsForIndividualSport(activeSchoolId, event))
-	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
+			schoolId:	activeSchoolId,
+			eventId:	event.id
+		})
+		.then(() => submitResultsForIndividualSport(activeSchoolId, event))
+		.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 }
 
 /**
@@ -508,11 +504,11 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 function closeMatchForTeamsSport(activeSchoolId, event, binding) {
 
 	return window.Server.finishSchoolEvent.post({
-		schoolId:	activeSchoolId,
-		eventId:	event.id
-	})
-	.then(() => submitResultsForTeamsSport(activeSchoolId, event))
-	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
+			schoolId:	activeSchoolId,
+			eventId:	event.id
+		})
+		.then(() => submitResultsForTeamsSport(activeSchoolId, event))
+		.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 }
 
 /**Save match report

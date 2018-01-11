@@ -2,31 +2,31 @@
 import {CancelEventManualNotification} from "./cancel_event_manual_notification/cancel_event_manual_notification";
 
 const	React				= require('react'),
-		Morearty			= require('morearty'),
-		propz				= require('propz');
+	Morearty			= require('morearty'),
+	propz				= require('propz');
 
 // React components
 const	PencilButton		= require('module/ui/pencil_button'),
-		TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
-		{ ConfirmPopup }	= require('module/ui/confirm_popup'),
-		{ CancelEvent }		= require('module/as_manager/pages/event/view/event_header/cancel_event'),
-		ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
-		ViewSelector		= require('module/ui/view_selector/view_selector'),
-		{ If }				= require('module/ui/if/if'),
-		Buttons				= require('module/as_manager/pages/event/view/event_header/buttons');
+	TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
+	{ ConfirmPopup }	= require('module/ui/confirm_popup'),
+	{ CancelEvent }		= require('module/as_manager/pages/event/view/event_header/cancel_event'),
+	ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
+	ViewSelector		= require('module/ui/view_selector/view_selector'),
+	{ If }				= require('module/ui/if/if'),
+	Buttons				= require('module/as_manager/pages/event/view/event_header/buttons');
 
 // Helpers
 const	{ DateHelper }		= require('module/helpers/date_helper'),
-		DomainHelper		= require('module/helpers/domain_helper'),
-		RoleHelper			= require('module/helpers/role_helper'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		SchoolHelper		= require('module/helpers/school_helper'),
-		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
+	DomainHelper		= require('module/helpers/domain_helper'),
+	RoleHelper			= require('module/helpers/role_helper'),
+	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+	SchoolHelper		= require('module/helpers/school_helper'),
+	ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
 
 // Consts
 const	EventConsts			= require('module/helpers/consts/events'),
-		SchoolConst			= require('module/helpers/consts/schools'),
-		ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
+	SchoolConst			= require('module/helpers/consts/schools'),
+	ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
 
 // Styles
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');
@@ -46,8 +46,13 @@ const EventHeader = React.createClass({
 		isParent:									React.PropTypes.bool.isRequired,
 		isStudent:									React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:				React.PropTypes.bool.isRequired,
-		handleClickOpenCancelEventPopup:			React.PropTypes.func.isRequired,
-		handleClickOkButtonOnCancelEventPopup:		React.PropTypes.func.isRequired,
+
+		handleClickCancelEventButtonOnActionList: React.PropTypes.func.isRequired,
+		handleClickCancelEventAndEditNotificationListButtonOnActionList: React.PropTypes.func.isRequired,
+
+		handleClickCancelEventButton:                     React.PropTypes.func.isRequired,
+		handleClickCancelEventAndEditNotificationList:    React.PropTypes.func.isRequired,
+
 		handleClickCancelButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
 		handleClickCommitButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
 		handleClickCheckboxMode:					React.PropTypes.func.isRequired,
@@ -71,7 +76,7 @@ const EventHeader = React.createClass({
 		schoolDomain: 								React.PropTypes.string.isRequired,
 		activeSchoolId: 							React.PropTypes.string.isRequired,
 		twitterIdDefault: 							React.PropTypes.string.isRequired,
-		
+
 		//prop for view mode
 		onClickViewMode: 							React.PropTypes.func
 	},
@@ -91,8 +96,8 @@ const EventHeader = React.createClass({
 	 */
 	getEventAges: function(){
 		const	schoolInfo 		= SchoolHelper.getActiveSchoolInfo(this),
-				ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']),
-				data = this.props.eventAges;
+			ageGroupsNaming = propz.get(schoolInfo, ['ageGroupsNaming']),
+			data = this.props.eventAges;
 
 		return data.length > 0 ? data
 			.sort()
@@ -187,11 +192,14 @@ const EventHeader = React.createClass({
 		if(binding.toJS('isOpenCancelEventPopupPopup')) {
 			reactElement = (
 				<ConfirmPopup
-					handleClickOkButton		= { () => this.props.handleClickOkButtonOnCancelEventPopup() }
-					handleClickCancelButton	= { () => this.props.handleClickCancelButtonOnCancelEventPopup() }
-					customStyle				= { 'mSmallWidth' }
+					isShowButtons = { false }
+					customStyle = { 'mSmallWidth' }
 				>
-					<CancelEvent handleClickCheckboxMode = { () => this.props.handleClickCheckboxMode() } />
+					<CancelEvent
+						handleClickCancelButton = { () => this.props.handleClickCancelButtonOnCancelEventPopup() }
+						handleClickCancelEventButton = { () => this.props.handleClickCancelEventButton() }
+						handleClickCancelEventAndEditNotificationListButton = { () => this.props.handleClickCancelEventAndEditNotificationListButton() }
+					/>
 				</ConfirmPopup>
 			);
 		}
@@ -226,18 +234,18 @@ const EventHeader = React.createClass({
 	},
 	render: function() {
 		const	challengeModel		= this.props.challengeModel,
-				eventAges			= this.getEventAges(),
-				eventLocation		= this.getEventLocation(),
-				name				= challengeModel.name,
-				date				= DateHelper.toLocalWithMonthName(challengeModel.dateUTC),
-				time				= challengeModel.time,
-				sport				= challengeModel.sport,
-				protocol			= document.location.protocol + '//',
-				eventId				= challengeModel.id,
-				schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
-				linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
-				score				= challengeModel.isFinished && typeof challengeModel.score !== 'undefined' && challengeModel.score !== '' ? `Score: ${challengeModel.score}` : '',
-				textForTweet		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
+			eventAges			= this.getEventAges(),
+			eventLocation		= this.getEventLocation(),
+			name				= challengeModel.name,
+			date				= DateHelper.toLocalWithMonthName(challengeModel.dateUTC),
+			time				= challengeModel.time,
+			sport				= challengeModel.sport,
+			protocol			= document.location.protocol + '//',
+			eventId				= challengeModel.id,
+			schoolDomain 		= DomainHelper.getSubDomain(this.props.schoolDomain),
+			linkForTweet 		= this.props.schoolDomain !== '' ? protocol + schoolDomain + '/#event/' + eventId : '',
+			score				= challengeModel.isFinished && typeof challengeModel.score !== 'undefined' && challengeModel.score !== '' ? `Score: ${challengeModel.score}` : '',
+			textForTweet		= `${name} ${time} / ${date} Years: ${eventAges} ${score}`;
 
 		return (
 			<div className="bEventHeader">
@@ -272,26 +280,30 @@ const EventHeader = React.createClass({
 					</div>
 					<div className="eEventHeader_rightSide">
 						<Buttons
-							event							= { this.props.event }
-							mode							= { this.props.mode }
-							schoolType						= { this.props.schoolType }
-							isInviterSchool 				= { this.props.isInviterSchool }
-							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
-							isParent		 				= { this.props.isParent }
-							isStudent		 				= { this.props.isStudent }
-							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-							handleClickCancelEvent			= { this.props.handleClickOpenCancelEventPopup }
-							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
-							handleClickDownloadPdf			= { this.props.handleClickDownloadPdf }
-							handleClickDownloadCSV			= { this.props.handleClickDownloadCSV }
-							onClickCloseCancel				= { this.props.onClickCloseCancel }
-							onClickOk						= { this.props.onClickOk }
-							onSendConsentRequest			= { this.props.onSendConsentRequest }
-							onReportNotParticipate			= { this.props.onReportNotParticipate }
-							onReportAvailabilityEvent		= { this.props.onReportAvailabilityEvent }
-							onClickDeleteEvent 				= { this.props.onClickDeleteEvent }
-							onClickAddSchool 				= { this.props.onClickAddSchool }
-							onClickAddTeam 					= { this.props.onClickAddTeam }
+							event = { this.props.event }
+							mode = { this.props.mode }
+							schoolType = { this.props.schoolType }
+							isInviterSchool = { this.props.isInviterSchool }
+							isUserSchoolWorker = { this.props.isUserSchoolWorker }
+							isParent = { this.props.isParent }
+							isStudent = { this.props.isStudent }
+							isShowScoreEventButtonsBlock = { this.props.isShowScoreEventButtonsBlock }
+
+							// cancel event handlers
+							handleClickCancelEventButtonOnActionList = { this.props.handleClickCancelEventButtonOnActionList }
+							handleClickCancelEventAndEditNotificationListButtonOnActionList = { this.props.handleClickCancelEventAndEditNotificationListButtonOnActionList }
+
+							handleClickCloseEvent = { this.props.handleClickCloseEvent }
+							handleClickDownloadPdf = { this.props.handleClickDownloadPdf }
+							handleClickDownloadCSV = { this.props.handleClickDownloadCSV }
+							onClickCloseCancel = { this.props.onClickCloseCancel }
+							onClickOk = { this.props.onClickOk }
+							onSendConsentRequest = { this.props.onSendConsentRequest }
+							onReportNotParticipate = { this.props.onReportNotParticipate }
+							onReportAvailabilityEvent = { this.props.onReportAvailabilityEvent }
+							onClickDeleteEvent = { this.props.onClickDeleteEvent }
+							onClickAddSchool = { this.props.onClickAddSchool }
+							onClickAddTeam = { this.props.onClickAddTeam }
 						/>
 					</div>
 				</div>

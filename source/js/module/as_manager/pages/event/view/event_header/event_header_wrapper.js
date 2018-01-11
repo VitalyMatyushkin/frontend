@@ -2,19 +2,19 @@
  * Created by Woland on 10.01.2017.
  */
 const 	React 				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty 			= require('morearty'),
+	Immutable			= require('immutable'),
+	Morearty 			= require('morearty'),
 
-		ChallengeModel		= require('module/ui/challenges/challenge_model'),
+	ChallengeModel		= require('module/ui/challenges/challenge_model'),
 
-		propz				= require('propz'),
+	propz				= require('propz'),
 
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		RoleHelper			= require('module/helpers/role_helper'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+	MoreartyHelper		= require('module/helpers/morearty_helper'),
+	RoleHelper			= require('module/helpers/role_helper'),
+	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 
-		EventHeader 		= require('./event_header'),
-		EventHeaderActions 	= require('./event_header_actions');
+	EventHeader 		= require('./event_header'),
+	EventHeaderActions 	= require('./event_header_actions');
 
 const	ManagerConsts	= require('module/ui/managers/helpers/manager_consts');
 
@@ -37,16 +37,16 @@ const EventHeaderWrapper = React.createClass({
 	},
 	handleClickDownloadPdf: function() {
 		const 	binding		= this.getDefaultBinding(),
-				schoolId 	= this.props.activeSchoolId,
-				event		= binding.toJS('model'),
-				eventId 	= binding.toJS('model.id');
+			schoolId 	= this.props.activeSchoolId,
+			event		= binding.toJS('model'),
+			eventId 	= binding.toJS('model.id');
 
 		EventHeaderActions.downloadPdf(schoolId, eventId, event);
 	},
 	handleClickDownloadCSV: function() {
 		const 	binding		= this.getDefaultBinding(),
-				schoolId	= this.props.activeSchoolId,
-				event		= binding.toJS('model');
+			schoolId	= this.props.activeSchoolId,
+			event		= binding.toJS('model');
 
 		EventHeaderActions.downloadCSV(schoolId, event);
 	},
@@ -85,8 +85,8 @@ const EventHeaderWrapper = React.createClass({
 	 */
 	onClickOk: function () {
 		const	binding 		= this.getDefaultBinding(),
-				event			= binding.toJS('model'),
-				activeSchoolId	= this.props.activeSchoolId;
+			event			= binding.toJS('model'),
+			activeSchoolId	= this.props.activeSchoolId;
 
 		if(this.isValidScore(event)) {
 			let promise;
@@ -145,8 +145,8 @@ const EventHeaderWrapper = React.createClass({
 	},
 	onSendConsentRequest: function() {
 		const	binding			= this.getDefaultBinding(),
-				event			= binding.toJS('model'),
-				activeSchoolId	= this.props.activeSchoolId;
+			event			= binding.toJS('model'),
+			activeSchoolId	= this.props.activeSchoolId;
 
 		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
 			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
@@ -163,7 +163,7 @@ const EventHeaderWrapper = React.createClass({
 	},
 	onReportNotParticipate: function() {
 		const	binding		= this.getDefaultBinding(),
-				event		= binding.toJS('model');
+			event		= binding.toJS('model');
 
 		EventHeaderActions.reportNotParticipate(event).then(messages => {
 			binding.set('parentalReportTab.messages', Immutable.fromJS(messages));
@@ -194,16 +194,31 @@ const EventHeaderWrapper = React.createClass({
 
 		binding.set('isDeleteEventPopupOpen', true);
 	},
-	handleClickOkButtonOnCancelEventPopup: function () {
+	handleClickCancelEventButtonOnActionList: function () {
 		const binding = this.getDefaultBinding();
 		const schoolId = this.props.activeSchoolId;
 		const eventId = binding.toJS('model.id');
-		const isManualMode = binding.toJS('isManualMode');
 
-		EventHeaderActions.cancelEvent(schoolId, eventId, isManualMode ? 'MANUAL' : 'AUTO', binding);
+		window.confirmAlert(
+			`You are going to cancel the fixture. Are you sure?`,
+			"Ok",
+			"Cancel",
+			() => EventHeaderActions.cancelEvent(schoolId, eventId, 'AUTO', binding),
+			() => {}
+		);
 	},
-	handleClickOpenCancelEventPopup: function () {
-		this.getDefaultBinding().set('isOpenCancelEventPopupPopup', true);
+	handleClickCancelEventAndEditNotificationListButtonOnActionList: function () {
+		const binding = this.getDefaultBinding();
+		const schoolId = this.props.activeSchoolId;
+		const eventId = binding.toJS('model.id');
+
+		window.confirmAlert(
+			`You are going to cancel the fixture. Are you sure?`,
+			"Ok",
+			"Cancel",
+			() => EventHeaderActions.cancelEvent(schoolId, eventId, 'MANUAL', binding),
+			() => {}
+		);
 	},
 	handleClickUserActivityCheckbox: function (userId, permissionId) {
 		let affectedUserList = this.getDefaultBinding().toJS('actionDescriptor.affectedUserList');
@@ -241,21 +256,21 @@ const EventHeaderWrapper = React.createClass({
 	 */
 	render: function() {
 		const	binding 						= this.getDefaultBinding(),
-				event							= binding.toJS('model'),
-				challengeModel					= new ChallengeModel(event, this.props.activeSchoolId),
-				mode 							= binding.toJS('mode'),
-				viewMode 						= binding.toJS('viewMode'),
-				eventAges						= binding.toJS('model.ages'),
-				isUserSchoolWorker				= RoleHelper.isUserSchoolWorker(this),
-				isParent						= RoleHelper.isParent(this),
-				isStudent						= RoleHelper.isStudent(this),
-				isShowScoreEventButtonsBlock	= TeamHelper.isShowScoreEventButtonsBlock(this);
+			event							= binding.toJS('model'),
+			challengeModel					= new ChallengeModel(event, this.props.activeSchoolId),
+			mode 							= binding.toJS('mode'),
+			viewMode 						= binding.toJS('viewMode'),
+			eventAges						= binding.toJS('model.ages'),
+			isUserSchoolWorker				= RoleHelper.isUserSchoolWorker(this),
+			isParent						= RoleHelper.isParent(this),
+			isStudent						= RoleHelper.isStudent(this),
+			isShowScoreEventButtonsBlock	= TeamHelper.isShowScoreEventButtonsBlock(this);
 		//const for tweet button
 		const 	twitterData 				= typeof binding.toJS('twitterData') !== 'undefined' ? binding.toJS('twitterData') : [],
-				twitterIdDefault 			= typeof binding.toJS('twitterIdDefault') !== 'undefined' ? binding.toJS('twitterIdDefault') : '',
-				role 						= RoleHelper.getLoggedInUserRole(this),
-				isPublicAvailableDomain 	= binding.toJS('activeSchoolInfo.publicSite.status') === 'PUBLIC_AVAILABLE',
-				schoolDomain 				= isPublicAvailableDomain && typeof binding.toJS('activeSchoolInfo.domain') !== 'undefined' ? binding.toJS('activeSchoolInfo.domain') : '';
+			twitterIdDefault 			= typeof binding.toJS('twitterIdDefault') !== 'undefined' ? binding.toJS('twitterIdDefault') : '',
+			role 						= RoleHelper.getLoggedInUserRole(this),
+			isPublicAvailableDomain 	= binding.toJS('activeSchoolInfo.publicSite.status') === 'PUBLIC_AVAILABLE',
+			schoolDomain 				= isPublicAvailableDomain && typeof binding.toJS('activeSchoolInfo.domain') !== 'undefined' ? binding.toJS('activeSchoolInfo.domain') : '';
 
 		return (
 			<EventHeader
@@ -272,9 +287,11 @@ const EventHeaderWrapper = React.createClass({
 				isParent									= { isParent }
 				isStudent									= { isStudent }
 				isShowScoreEventButtonsBlock 				= { isShowScoreEventButtonsBlock }
-				handleClickOkButtonOnCancelEventPopup		= { this.handleClickOkButtonOnCancelEventPopup }
-				handleClickCancelButtonOnCancelEventPopup	= { this.handleClickCancelButtonOnCancelEventPopup }
-				handleClickOpenCancelEventPopup				= { this.handleClickOpenCancelEventPopup }
+
+				// cancel event handlers
+				handleClickCancelEventButtonOnActionList = { this.handleClickCancelEventButtonOnActionList }
+				handleClickCancelEventAndEditNotificationListButtonOnActionList = { this.handleClickCancelEventAndEditNotificationListButtonOnActionList }
+
 				handleClickCommitButtonOnCancelEventPopup	= { this.handleClickCommitButtonOnCancelEventPopup }
 				handleClickUserActivityCheckbox				= { this.handleClickUserActivityCheckbox }
 				handleClickCheckboxMode						= { this.handleClickCheckboxMode }
