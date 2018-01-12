@@ -108,7 +108,8 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 				studentWithoutHistoryId 		= propz.get(studentWithoutHistoryPermission, ['requesterId']),
 				routingData 					= globalBinding.sub('routing.parameters').toJS(),
 				schoolId 						= routingData.schoolId,
-				permissionId 					= routingData.permissionId;
+				permissionId 					= routingData.permissionId,
+				emailStudentWithHistory			= binding.toJS('studentWithHistory.email') ? `(${binding.toJS('studentWithHistory.email')})` : '';
 		
 		binding.set('isPopupOpen', false);
 		
@@ -127,8 +128,10 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 			},
 			err => {
 				window.simpleAlert(
-					'Unable to merge this student.\nCheck that following preconditions are passed: student not take part in any event, student not take part in any team, student have the only permission or contact support.',
-					'Ok',
+                    'Unable to merge this student'+emailStudentWithHistory+'\nCheck that following are true:\n- student does not take part in any even\n' +
+                    '- student does not take part in any team\n- student has the only permission' +
+                    '\nContact Squad In Touch support team if you should have further questions.',
+                    'Ok',
 					() => {}
 				);
 				console.error(err.message);

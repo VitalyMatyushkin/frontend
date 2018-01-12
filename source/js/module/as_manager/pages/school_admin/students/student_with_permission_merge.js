@@ -96,10 +96,11 @@ const StudentWithPermissionMergeComponent = React.createClass({
 		const 	binding 				= this.getDefaultBinding(),
 				studentWithoutHistoryId = binding.toJS('studentWithoutHistoryId'),
 				schoolId 				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				studentWithHistoryId 	= this.getStudentIdFromUrl();
+				studentWithHistoryId 	= this.getStudentIdFromUrl(),
+            	emailStudentWithHistory	= binding.toJS('studentWithHistory.email') ? `(${binding.toJS('studentWithHistory.email')})` : '';
 		
 		binding.set('isPopupOpen', false);
-		
+
 		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {userId: studentWithoutHistoryId}).then(
 			res => {
 				window.simpleAlert(
@@ -112,7 +113,9 @@ const StudentWithPermissionMergeComponent = React.createClass({
 			},
 			err => {
 				window.simpleAlert(
-					'Unable to merge this student.\nCheck that following preconditions are passed: student not take part in any event, student not take part in any team, student have the only permission or contact support.',
+                    'Unable to merge this student'+emailStudentWithHistory+'\nCheck that following are true:\n- student does not take part in any even\n' +
+                    '- student does not take part in any team\n- student has the only permission' +
+                    '\nContact Squad In Touch support team if you should have further questions.',
 					'Ok',
 					() => {}
 				);
