@@ -1,0 +1,78 @@
+@import "../!variables";
+
+.bClubParticipationMessage {
+  border: $mainBorder;
+  border-radius: 5px;
+  margin-bottom: 10px;
+
+  font-size: 1rem;
+
+  padding: 15px;
+}
+
+.eClubParticipationMessage_info {
+ min-height: 280px;
+}
+
+.eClubParticipationMessage_headerImg {
+  display: inline-block;
+  vertical-align: top;
+
+  height: 85px;
+  width: 100px;
+
+  margin-right: 10px;
+
+
+  background: no-repeat center center;
+  background-size: contain;
+}
+
+.eClubParticipationMessage_header {
+  display: inline-block;
+  vertical-align: top;
+
+  padding-top: 4px;
+}
+
+.eClubParticipationMessage_headerText {
+  margin-bottom: 12px;
+}
+
+.eClubParticipationMessage_gender {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_date {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_time {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_text {
+  margin-top: 40px;
+}
+
+.eClubParticipationMessage_description {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_membersOfStaff {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_content {
+  margin-bottom: 8px;
+}
+
+.eClubParticipationMessage_boldTag {
+  font-weight: bold;
+}
+
+.bSchoolMaster .bClubParticipationMessage .bMapView{
+  min-height: 280px;
+  width: 100%;
+  max-width: 100%;
+}

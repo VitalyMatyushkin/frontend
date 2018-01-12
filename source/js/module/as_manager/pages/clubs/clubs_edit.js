@@ -45,12 +45,6 @@ const ClubEditPage = React.createClass({
 				routes:	[`/#clubs/editChildren?id=${clubId}`]
 			},
 			{
-				href:	`/#clubs/booking?id=${clubId}`,
-				name:	'Children Booking',
-				key:	'Children_booking',
-				routes:	[`/#clubs/booking?id=${clubId}`]
-			},
-			{
 				href:	`/#clubs/activateClub?id=${clubId}`,
 				name:	'Activate club',
 				key:	'Activate_club',

@@ -1,19 +1,22 @@
+import {If} from 'module/ui/if/if';
+import * as propz from "propz";
+
+import {ClubParticipationMessageSchoolLogo} from 'module/ui/message_list/message/components/club_participation_message_school_logo';
+import {ClubParticipationMessageHeader} from 'module/ui/message_list/message/components/club_participation_message_header';
+import {ClubInfo} from 'module/ui/message_list/message/components/club_info';
+import {ClubParticipationMessageVenue} from 'module/ui/message_list/message/components/club_participation_message_venue';
+
 const	React							= require('react');
 
-const	SchoolLogo						= require('module/ui/message_list/message/components/school_logo'),
-		TeamInfo						= require('module/ui/message_list/message/components/team_info'),
-		ChildName						= require('module/ui/message_list/message/components/child_name'),
-		EventInvitationMessageButtons	= require('module/ui/message_list/message/components/buttons/event_invitation_message_buttons'),
-		ClubInfo						= require('module/ui/message_list/message/components/club_info'),
-		MessageText						= require('module/ui/message_list/message/components/message_text'),
-		MessageStatus					= require('module/ui/message_list/message/components/message_status'),
-		MessageConsts					= require('module/ui/message_list/message/const/message_consts'),
-		EventMessageComments			= require('module/ui/message_list/message/components/comments/event_message_comments');
-
-const	{ If }							= require('module/ui/if/if');
+const	EventInvitationMessageButtons		= require('module/ui/message_list/message/components/buttons/event_invitation_message_buttons'),
+		MessageText							= require('module/ui/message_list/message/components/message_text'),
+		MessageStatus						= require('module/ui/message_list/message/components/message_status'),
+		MessageConsts						= require('module/ui/message_list/message/const/message_consts'),
+		EventMessageComments				= require('module/ui/message_list/message/components/comments/event_message_comments'),
+		Venue								= require('module/ui/message_list/message/components/venue');
 
 const	Bootstrap						= require('styles/bootstrap-custom.scss'),
-		InviteStyles					= require('styles/pages/events/b_invite.scss');
+		Style							= require('styles/ui/b_club_participation_message.scss');
 
 const ClubParticipationMessage = React.createClass({
 	propTypes: {
@@ -71,9 +74,9 @@ const ClubParticipationMessage = React.createClass({
 			case MessageConsts.MESSAGE_TYPE.INBOX:
 				return (
 					<EventInvitationMessageButtons
-						acceptButtonText	= {'Book'}
-						onAccept			= {this.onAccept}
-						onDecline			= {this.onDecline}
+						acceptButtonText = {'Book now'}
+						onAccept = {this.onAccept}
+						onDecline = {this.onDecline}
 					/>
 				);
 			default:
@@ -123,21 +126,20 @@ const ClubParticipationMessage = React.createClass({
 				comments		= typeof this.props.message.comments === 'undefined' ? [] : this.props.message.comments;
 
 		return (
-			<div className='bInvite'>
+			<div className='bClubParticipationMessage'>
 				<div className="row">
-					<div className="col-md-6 eInvite_left">
-						<div className="row">
-							<SchoolLogo message = { this.props.message } />
-							<div className="eInvite_info col-md-7 col-sm-7">
-								<ChildName message = { this.props.message } />
-								<TeamInfo message = { this.props.message } />
-								<ClubInfo message = { this.props.message } />
-								<MessageText message = { this.props.message } />
-								{ this.renderButtons() }
-								{ this.renderStatus() }
-								{ this.renderShowCommentButton() }
-							</div>
+					<div className="col-md-6 col-sm-6">
+						<div className='eClubParticipationMessage_info'>
+							<ClubParticipationMessageSchoolLogo message={this.props.message}/>
+							<ClubParticipationMessageHeader message={this.props.message}/>
+							<ClubInfo message = { this.props.message } />
 						</div>
+						{ this.renderButtons() }
+						{ this.renderStatus() }
+						{ this.renderShowCommentButton() }
+					</div>
+					<div className='col-md-6 col-sm-6'>
+						<ClubParticipationMessageVenue venue={propz.get(this.props.message, ['clubData', 'venue', 'placeData'])}/>
 					</div>
 				</div>
 				<If condition = { isShowComments }>
