@@ -3,9 +3,17 @@
  */
 
 const GENDER = {
-	MALE: 	'MALE',
-	FEMALE: 'FEMALE',
-	NOT_DEFINED: null
+	MALE: 			'MALE',
+	FEMALE: 		'FEMALE',
+	NOT_DEFINED: 	null
 };
 
-module.exports.GENDER = GENDER;
+const PERMISSION_STATUS = {
+	ACTIVE: 	'ACTIVE',
+	BLOCKED: 	'BLOCKED',
+	REMOVED: 	'REMOVED',
+	ARCHIVED: 	'ARCHIVED'
+};
+
+module.exports.GENDER 				= GENDER;
+module.exports.PERMISSION_STATUS 	= PERMISSION_STATUS;

@@ -1,9 +1,9 @@
 /**
  * Created by Anatoly on 22.08.2016.
  */
-const   React 				= require('react'),
+const 	React 				= require('react'),
 		Morearty			= require('morearty'),
-		TeamPlayersModel  	= require('./team-players-model'),
+		{TeamPlayersClass} 	= require('./team-players-model'),
 		{Grid}				= require('module/ui/grid/grid'),
 		Immutable			= require('immutable');
 
@@ -14,7 +14,7 @@ const TeamPlayers = React.createClass({
 		handleClick: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		this.model = new TeamPlayersModel(this).createGrid();
+		this.model = new TeamPlayersClass(this).createGrid();
 	},
 	render: function () {
 		const binding = this.getDefaultBinding();

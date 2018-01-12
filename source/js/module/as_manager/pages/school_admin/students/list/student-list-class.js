@@ -18,16 +18,16 @@ const 	React 			= require('react'),
  * */
 class StudentListClass{
 	constructor(page){
-		this.getDefaultBinding = page.getDefaultBinding;
+		this.getDefaultBinding 	= page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
 		this.props = page.props;
 		this.state = page.state;
 		
-		this.rootBinding = this.getMoreartyContext().getBinding();
+		this.rootBinding 	= this.getMoreartyContext().getBinding();
 		this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 		
-		this.title = 'Students';
-		this.filters = {limit:20};
+		this.title 		= 'Students';
+		this.filters 	= { limit:20 };
 		this.setAddButton();
 		this.setColumns();
 	}
@@ -52,22 +52,28 @@ class StudentListClass{
 	}
 	
 	getForms(){
-		return window.Server.schoolForms.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
+		return window.Server.schoolForms.get(
+			{ schoolId: 	this.activeSchoolId },
+			{ filter: 		{ limit:100 } }
+		);
 	}
 	
 	getHouses(){
-		return window.Server.schoolHouses.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
+		return window.Server.schoolHouses.get(
+			{ schoolId: 	this.activeSchoolId },
+			{ filter: 		{ limit:100 } }
+		);
 	}
 	
 	getGenders(){
 		return [
 			{
-				key:'MALE',
-				value:'Boy'
+				key: 	'MALE',
+				value:	'Boy'
 			},
 			{
-				key:'FEMALE',
-				value:'Girl'
+				key: 	'FEMALE',
+				value: 	'Girl'
 			}
 		];
 	}
@@ -79,7 +85,9 @@ class StudentListClass{
 		/**Only school admin and manager can add new students. All other users should not see that button.*/
 		this.btnAdd = changeAllowed ?
 			(
-				<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
+				<div className="addButton bTooltip" data-description="Add Student" onClick={ () => {
+					document.location.hash += '/add';
+				}}>
 					<SVG icon="icon_add_student" />
 				</div>
 			) : null
@@ -143,114 +151,114 @@ class StudentListClass{
 	setColumns(){
 		this.columns = [
 			{
-				text:'Gender',
-				cell:{
-					dataField:'gender',
-					type:'gender'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						items: this.getGenders(),
-						hideFilter:true,
-						hideButtons:true
-					},
-					id:'find_student_gender'
-				}
-			},
-			{
-				text:'Name',
-				isSorted:true,
-				cell:{
-					dataField:'firstName'
-				},
-				filter:{
-					type:'string',
-					id:'find_student_name'
-				}
-			},
-			{
-				text:'Surname',
-				isSorted:true,
-				cell:{
-					dataField:'lastName'
-				},
-				filter:{
-					type:'string',
-					id:'find_student_surname'
-				}
-			},
-			{
-				text:'Form',
+				text: 'Gender',
 				cell: {
-					dataField:'form.name'
+					dataField: 	'gender',
+					type: 		'gender'
+				},
+				filter: {
+					type: 	'multi-select',
+					id: 	'find_student_gender',
+					typeOptions: {
+						items: 			this.getGenders(),
+						hideFilter: 	true,
+						hideButtons: 	true
+					}
 				}
 			},
 			{
-				text:'Form',
-				hidden:true,
-				cell:{
-					dataField:'formId'
+				text: 			'Name',
+				isSorted: 		true,
+				cell: {
+					dataField: 'firstName'
+				},
+				filter: {
+					type: 	'string',
+					id: 	'find_student_name'
+				}
+			},
+			{
+				text: 		'Surname',
+				isSorted: 	true,
+				cell: {
+					dataField: 'lastName'
 				},
 				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: this.getForms(),
-						valueField:'name',
-						keyField:'id'
+					type: 	'string',
+					id: 	'find_student_surname'
+				}
+			},
+			{
+				text: 'Form',
+				cell: {
+					dataField: 'form.name'
+				}
+			},
+			{
+				text: 	'Form',
+				hidden:	true,
+				cell: {
+					dataField: 'formId'
+				},
+				filter: {
+					type: 'multi-select',
+					typeOptions: {
+						getDataPromise: 	this.getForms(),
+						valueField: 		'name',
+						keyField: 			'id'
 					},
-					id:'find_student_class'
+					id: 'find_student_class'
 				}
 			},
 			{
-				text:'House',
-				cell:{
-					dataField:'house.name'
+				text: 'House',
+				cell: {
+					dataField: 'house.name'
 				}
 			},
 			{
-				text:'House',
-				hidden:true,
-				cell:{
-					dataField:'houseId'
+				text: 	'House',
+				hidden: true,
+				cell: {
+					dataField: 'houseId'
 				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
+				filter: {
+					type: 'multi-select',
+					typeOptions: {
 						getDataPromise: this.getHouses(),
-						valueField:'name',
-						keyField:'id'
+						valueField: 	'name',
+						keyField: 		'id'
 					},
-					id:'find_student_house'
+					id: 'find_student_house'
 				}
 			},
 			{
-				text:'Birthday',
-				isSorted:true,
-				cell:{
-					dataField:'birthday',
-					type:'date'
+				text: 		'Birthday',
+				isSorted: 	true,
+				cell: {
+					dataField: 'birthday',
+					type: 		'date'
 				},
 				filter:{
-					type:'between-date',
-					id:'find_student_birthday'
+					type: 	'between-date',
+					id: 	'find_student_birthday'
 				}
 			},
 			{
-				text:'Parents',
-				cell:{
-					dataField:'parents',
-					type:'custom',
-					typeOptions:{
+				text: 'Parents',
+				cell: {
+					dataField: 	'parents',
+					type: 		'custom',
+					typeOptions: {
 						parseFunction:this.getParents.bind(this)
 					}
 				}
 			},
 			{
-				text:'Actions',
-				cell:{
-					type:'action-list',
-					typeOptions:{
+				text: 'Actions',
+				cell: {
+					type: 'action-list',
+					typeOptions: {
 						getActionList: this.getActions.bind(this),
 						actionHandler: this._getQuickEditActionFunctions.bind(this)
 					}
@@ -283,10 +291,10 @@ class StudentListClass{
 			{
 				text: 'Captain',
 				cell: {
-					dataField: 'captain',
-					type: 'custom',
+					dataField: 	'captain',
+					type: 		'custom',
 					typeOptions: {
-						parseFunction:this.getCaptainStar.bind(this)
+						parseFunction: this.getCaptainStar.bind(this)
 					}
 				}
 			}
@@ -299,25 +307,25 @@ class StudentListClass{
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
 			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
 				//if we view team, we want display column 'Captain'
-				if (this.team) {
+				if (this.isTeamView) {
 					this.getColumnsCaptain();
 				}
 				this.grid = new GridModel({
 					actionPanel: {
-						title: this.title,
-						showStrip: true,
-						btnAdd: this.btnAdd
+						title: 		this.title,
+						showStrip: 	true,
+						btnAdd: 	this.btnAdd
 					},
-					columns: this.columns,
-					handleClick: this.props.handleClick,
-					filters: this.filters
+					columns: 		this.columns,
+					handleClick: 	this.props.handleClick,
+					filters: 		this.filters
 				});
 				
 				this.dataLoader = new DataLoader({
-					serviceName: 'schoolStudents',
-					params: {schoolId: this.activeSchoolId},
-					grid: this.grid,
-					onLoad: this.getDataLoadedHandle()
+					serviceName: 	'schoolStudents',
+					params: 		{ schoolId: this.activeSchoolId },
+					grid: 			this.grid,
+					onLoad: 		this.getDataLoadedHandle()
 				});
 			}
 		});
@@ -332,29 +340,29 @@ class StudentListClass{
 		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
 			if (schoolHelper.schoolSubscriptionPlanIsFull(this)) {
 				//if we view team, we want display column 'Captain'
-				if (this.team) {
+				if (this.isTeamView) {
 					this.getColumnsCaptain();
 				}
 				this.grid = new GridModel({
 					actionPanel: {
-						title: this.title,
-						showStrip: true,
-						btnAdd: this.btnAdd
+						title: 		this.title,
+						showStrip: 	true,
+						btnAdd: 	this.btnAdd
 					},
-					columns: this.columns,
-					handleClick: this.props.handleClick,
+					columns: 		this.columns,
+					handleClick: 	this.props.handleClick,
 					filters: {
 						where: grid.filter.where,
 						order: grid.filter.order
 					},
-					badges: grid.filterPanel.badgeArea
+					badges: 		grid.filterPanel.badgeArea
 				});
 				
 				this.dataLoader = new DataLoader({
-					serviceName: 'schoolStudents',
-					params: {schoolId: this.activeSchoolId},
-					grid: this.grid,
-					onLoad: this.getDataLoadedHandle()
+					serviceName: 	'schoolStudents',
+					params: 		{ schoolId: this.activeSchoolId },
+					grid: 			this.grid,
+					onLoad: 		this.getDataLoadedHandle()
 				});
 			}
 		});
