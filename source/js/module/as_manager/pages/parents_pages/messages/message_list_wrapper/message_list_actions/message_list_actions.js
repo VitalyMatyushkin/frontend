@@ -167,7 +167,24 @@ const MessageListActions = {
 		return window.Server.children.get().then(children => {
 			return children.map(child => child.schoolId);
 		});
-	}
+	},
+    acceptInvitationMessage: function(messageId) {
+        return window.Server.childMessageAccept.post(
+            {
+                messageId: messageId
+            }
+        );
+    },
+    declineInvitationMessage: function(messageId) {
+        return window.Server.childMessageReject.post(
+            {
+                messageId: messageId
+            }
+        );
+    },
+    sendConsentRequestTemplateWithValue: function(messageId, templateData){
+        return window.Server.childMessage.put({ messageId: messageId }, { fields: templateData });
+    }
 };
 
 module.exports = MessageListActions;
