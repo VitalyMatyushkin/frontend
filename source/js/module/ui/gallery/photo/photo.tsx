@@ -100,7 +100,7 @@ export const Photo = (React as any).createClass({
 	rotatePhoto: function (angle: number): any {
 		return rotateImage(this.picUrl, angle)
 			.then((data) => {
-				const file = CropImageHelper.dataURLtoFile(data, 'image-squadintouch.jpeg');
+				const file = CropImageHelper.dataURLtoFile(data);
 				(window as any).Server.images.upload(file)
 					.then( picUrl => {
 						const model = {

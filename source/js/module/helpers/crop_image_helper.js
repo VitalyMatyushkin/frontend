@@ -8,7 +8,7 @@ const CropImageHelper = {
 	 * @param {string} filename
 	 * @returns {File}
 	 */
-	dataURLtoFile: function(dataurl, filename) {
+	dataURLtoFile: function(dataurl) {
 		const 	arrayFromDataUrl	= dataurl.split(','),
 				mimeType 			= arrayFromDataUrl[0].match(/:(.*?);/)[1], //mime type: image/jpeg
 				stringFromDataUrl	= window.atob(arrayFromDataUrl[1]); //function decodes a string of data which has been encoded using base-64 encoding
@@ -19,8 +19,8 @@ const CropImageHelper = {
 		while (stringFromDataUrlLength--) {
 			u8arr[stringFromDataUrlLength] = stringFromDataUrl.charCodeAt(stringFromDataUrlLength);
 		}
-		
-		return new window.File([u8arr], filename, {type:mimeType});
+
+		return new window.Blob([u8arr], {type:mimeType});
 	}
 };
 

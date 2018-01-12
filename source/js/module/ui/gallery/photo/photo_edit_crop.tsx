@@ -48,7 +48,7 @@ export class PhotoEditCrop extends React.Component<PhotoEditCropProps> {
 	
 	onCropClick(): void {
 		const 	canvas 	= this.refs.canvasImage,
-				file 	= CropImageHelper.dataURLtoFile((canvas as any).toDataURL("image/jpeg"), 'image-squadintouch.jpeg');
+				file 	= CropImageHelper.dataURLtoFile((canvas as any).toDataURL("image/jpeg"));
 		
 		(window as any).Server.images.upload(file)
 			.then( picUrl => {
