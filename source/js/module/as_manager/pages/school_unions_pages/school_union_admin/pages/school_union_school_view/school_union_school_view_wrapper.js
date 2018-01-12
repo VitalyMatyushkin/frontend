@@ -5,6 +5,9 @@ const	React 								= require('react'),
 		SchoolUnionSchoolViewWrapperStyle	= require('../../../../../../../../styles/ui/b_school_view_wrapper.scss');
 
 const SchoolUnionSchoolViewWrapper = React.createClass({
+	propTypes: {
+		schoolUnionId: React.PropTypes.string.isRequired
+	},
 	schoolId: undefined,
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
@@ -24,7 +27,15 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 	loadSchoolById: function(schoolId) {
 		const binding = this.getDefaultBinding();
 
-		window.Server.school.get(schoolId, {filter:{include:'postcode'}}).then(school => {
+		window.Server.schoolUnionSchool.get(
+			{
+				schoolUnionId: this.props.schoolUnionId,
+				schoolId: schoolId
+			},
+			{
+				filter: {include:'postcode'}
+			}
+		).then(school => {
 			if(school.postcode && school.postcode._id){
 				school.postcode.id = school.postcode._id;
 			}

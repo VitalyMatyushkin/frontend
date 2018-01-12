@@ -3,6 +3,7 @@ const	React							= require('react'),
 		RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		Immutable						= require('immutable'),
+		MoreartyHelper				    = require('module/helpers/morearty_helper'),
 		SchoolUnionSummary				= require('./pages/school_union_summary/school_union_summary'),
 		SchoolUnionEdit					= require('./pages/school_union_edit/school_union_edit'),
 		SchoolUnionSchoolListWrapper	= require('./pages/school_union_school_list/school_union_school_list_wrapper'),
@@ -41,6 +42,8 @@ const SchoolUnionAdmin = React.createClass({
 	},
 	componentWillMount: function() {
 		this.setMenuItems();
+
+		this.schoolUnionId = MoreartyHelper.getActiveSchoolId(this);
 	},
 	setMenuItems: function() {
 		this.menuItems = [{
@@ -91,13 +94,14 @@ const SchoolUnionAdmin = React.createClass({
 								component	= {SchoolUnionNews}
 						/>
 						<Route	path		= "/school_union_admin/gallery /school_union_admin/gallery/:mode"
-								  binding	= {binding.sub('schoolUnionGallery')}
-								  component	= {SchoolUnionGallery}
+								binding	= {binding.sub('schoolUnionGallery')}
+								component	= {SchoolUnionGallery}
 						/>
 
-						<Route	path		= "/school_union_admin/school /school_union_admin/school/:schoolId"
-								binding		= {binding.sub('schoolUnionSchoolView')}
-								component	= {SchoolUnionSchoolViewWrapper}
+						<Route	path		    = "/school_union_admin/school /school_union_admin/school/:schoolId"
+								binding		    = {binding.sub('schoolUnionSchoolView')}
+								component	    = {SchoolUnionSchoolViewWrapper}
+						        schoolUnionId   = {this.schoolUnionId}
 						/>
 					</RouterView>
 				</div>
