@@ -10,11 +10,11 @@ export enum MembersOfStaffTypes {
 	MemberOfStaff = 'MEMBER_OF_STAFF'
 }
 
-export interface ClubInfoProps {
+export interface ClubParticipationMessageMiddleInfoSectionProps {
 	message: any
 }
 
-export class ClubInfo extends React.Component<ClubInfoProps, {}> {
+export class ClubParticipationMessageMiddleInfoSection extends React.Component<ClubParticipationMessageMiddleInfoSectionProps, {}> {
 	getClub() {
 		return this.props.message.clubData;
 	}
@@ -48,7 +48,7 @@ export class ClubInfo extends React.Component<ClubInfoProps, {}> {
 			club.staff.filter(staff => staff.staffRole === membersOfStaffType).length > 0
 		) {
 			result = (
-				<div className="eClubParticipationMessage_membersOfStaff">
+				<div className="eClubParticipationMessage_simpleField">
 					<span className='eClubParticipationMessage_boldTag'>
 						{
 							`${ membersOfStaffType === MembersOfStaffTypes.MemberOfStaff ? 'Members of staff: ' : 'Coach: '}`
@@ -72,10 +72,29 @@ export class ClubInfo extends React.Component<ClubInfoProps, {}> {
 		const description = this.getClub().description;
 
 		let result = null;
-		if(description !== '') {
+		if(
+			typeof description !== 'undefined' &&
+			description !== ''
+		) {
 			result = (
-				<div className="eClubParticipationMessage_description">
+				<div className="eClubParticipationMessage_simpleField">
 					<span className='eClubParticipationMessage_boldTag'>Description:</span> {description}
+				</div>
+			);
+		}
+
+		return result;
+	}
+
+	renderVenue() {
+		const placeData = propz.get(this.props.message, ['clubData', 'venue', 'placeData'], undefined);
+
+		let result = null;
+		if(typeof placeData !== 'undefined') {
+			let venueText = `${placeData.name}, ${placeData.postcode}`;
+			result = (
+				<div className="eClubParticipationMessage_simpleField">
+					<span className='eClubParticipationMessage_boldTag'>Venue:</span> {venueText}
 				</div>
 			);
 		}
@@ -120,19 +139,14 @@ export class ClubInfo extends React.Component<ClubInfoProps, {}> {
 
 	render() {
 		return (
-			<div className="eClubParticipationMessage_content">
-				<div className="eClubParticipationMessage_time">
+			<div className="eClubParticipationMessage_middleInfoSection">
+				<div className="eClubParticipationMessage_simpleField">
 					<span className='eClubParticipationMessage_boldTag'>Time:</span>{this.getTime()}
 				</div>
-				{ this.renderMembersOfStuff(MembersOfStaffTypes.Coach) }
-				{ this.renderMembersOfStuff(MembersOfStaffTypes.MemberOfStaff) }
-				{ this.renderDescription() }
-
-				<div className='eClubParticipationMessage_text'>
-					<h4>
-						To reserve a place for {this.getFullName()}, click the 'Book now' bellow button
-					</h4>
-				</div>
+				{this.renderMembersOfStuff(MembersOfStaffTypes.Coach)}
+				{this.renderMembersOfStuff(MembersOfStaffTypes.MemberOfStaff)}
+				{this.renderDescription()}
+				{this.renderVenue()}
 			</div>
 		);
 	}

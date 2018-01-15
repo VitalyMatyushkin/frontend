@@ -69,7 +69,7 @@ export class ClubParticipationMessageHeader extends React.Component<ClubParticip
 		switch (true) {
 			case this.getStartDate() === this.getEndDate(): {
 				result = (
-					<div className='eClubParticipationMessage_date'>
+					<div className='eClubParticipationMessage_simpleField'>
 						<span className='eClubParticipationMessage_boldTag'>Date:</span>{` ${this.getStartDate()}`}
 					</div>
 				);
@@ -77,7 +77,7 @@ export class ClubParticipationMessageHeader extends React.Component<ClubParticip
 			}
 			default: {
 				result = (
-					<div className='eClubParticipationMessage_date'>
+					<div className='eClubParticipationMessage_simpleField'>
 						<span className='eClubParticipationMessage_boldTag'>Start:</span>{` ${this.getStartDate()} `}
 						<span className='eClubParticipationMessage_boldTag'>End:</span>{` ${this.getEndDate()}`}
 					</div>
@@ -98,7 +98,7 @@ export class ClubParticipationMessageHeader extends React.Component<ClubParticip
 					{`A new opportunity for ${this.getFullName()} is available`}<br/>
 					{this.getClubName()}
 				</h4>
-				<div className='eClubParticipationMessage_gender'>
+				<div className='eClubParticipationMessage_simpleField'>
 					{`${this.getGender()}, ${this.getClubAges()}`}
 				</div>
 				{ this.renderDate() }

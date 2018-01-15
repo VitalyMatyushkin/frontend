@@ -10,8 +10,22 @@
   padding: 15px;
 }
 
+.eClubParticipationMessage_topSection {
+
+}
+
+.eClubParticipationMessage_bottomSection {
+
+}
+
 .eClubParticipationMessage_info {
- min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 280px;
+
+  margin-bottom: 25px;
 }
 
 .eClubParticipationMessage_headerImg {
@@ -39,32 +53,16 @@
   margin-bottom: 12px;
 }
 
-.eClubParticipationMessage_gender {
+.eClubParticipationMessage_middleInfoSection {
   margin-bottom: 8px;
 }
 
-.eClubParticipationMessage_date {
+.eClubParticipationMessage_simpleField {
   margin-bottom: 8px;
 }
 
-.eClubParticipationMessage_time {
-  margin-bottom: 8px;
-}
-
-.eClubParticipationMessage_text {
+.eClubParticipationMessage_topSection {
   margin-top: 40px;
-}
-
-.eClubParticipationMessage_description {
-  margin-bottom: 8px;
-}
-
-.eClubParticipationMessage_membersOfStaff {
-  margin-bottom: 8px;
-}
-
-.eClubParticipationMessage_content {
-  margin-bottom: 8px;
 }
 
 .eClubParticipationMessage_boldTag {

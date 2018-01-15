@@ -3,7 +3,8 @@ import * as propz from "propz";
 
 import {ClubParticipationMessageSchoolLogo} from 'module/ui/message_list/message/components/club_participation_message_school_logo';
 import {ClubParticipationMessageHeader} from 'module/ui/message_list/message/components/club_participation_message_header';
-import {ClubInfo} from 'module/ui/message_list/message/components/club_info';
+import {ClubParticipationMessageMiddleInfoSection} from 'module/ui/message_list/message/components/club_participation_message_middle_info_section';
+import {ClubParticipationMessageText} from 'module/ui/message_list/message/components/club_participation_message_text';
 import {ClubParticipationMessageVenue} from 'module/ui/message_list/message/components/club_participation_message_venue';
 
 const	React							= require('react');
@@ -130,9 +131,14 @@ const ClubParticipationMessage = React.createClass({
 				<div className="row">
 					<div className="col-md-6 col-sm-6">
 						<div className='eClubParticipationMessage_info'>
-							<ClubParticipationMessageSchoolLogo message={this.props.message}/>
-							<ClubParticipationMessageHeader message={this.props.message}/>
-							<ClubInfo message = { this.props.message } />
+							<div className='eClubParticipationMessage_topSection'>
+								<ClubParticipationMessageSchoolLogo message={this.props.message}/>
+								<ClubParticipationMessageHeader message={this.props.message}/>
+								<ClubParticipationMessageMiddleInfoSection message={this.props.message}/>
+							</div>
+							<div className='eClubParticipationMessage_bottomSection'>
+								<ClubParticipationMessageText message={this.props.message}/>
+							</div>
 						</div>
 						{ this.renderButtons() }
 						{ this.renderStatus() }
