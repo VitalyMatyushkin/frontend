@@ -146,6 +146,15 @@ const NotificationsForm = React.createClass({
 						valueWriter		= {this.valueWriter}
 						classNames 		= "mWideSingleLine"
 						type 			= "checkbox"
+						field 			= "EVENT_TEAM_PLAYER_UPDATED"
+					>
+						Game team member has been updated
+					</FormField>
+					<FormField
+						valueReader		= {this.valueReader}
+						valueWriter		= {this.valueWriter}
+						classNames 		= "mWideSingleLine"
+						type 			= "checkbox"
 						field 			= "EVENT_TEAM_PLAYER_REMOVED"
 					>
 						Game team member has been removed
