@@ -5,7 +5,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		{MonthYearSelector}	= require('module/ui/calendar/month_year_selector'),
-		// {MODE_FIXTURES}		= require('module/ui/fixtures/fixtures_helper'),
+		{MODE_FIXTURES}		= require('module/ui/fixtures/fixtures_helper'),
 		Fixtures			= require('../../../../ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
@@ -39,7 +39,7 @@ const EventFixtures = React.createClass({
 						onMonthClick 	= {date => this.onMonthClick(date)}
 					/>
 					<Fixtures
-						mode			= 'STUDENT'
+						mode			= {MODE_FIXTURES.STUDENT}
 						date			= {binding.get('monthDate')}
 						activeSchoolId	= {activeSchoolId}
 						onClick			= {this.onClickChallenge}
