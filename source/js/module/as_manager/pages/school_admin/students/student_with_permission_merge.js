@@ -11,6 +11,7 @@ const 	React 			= require('react'),
 		{ConfirmPopup}	= require('module/ui/confirm_popup');
 
 const StudentMergeComponentStyles = require('styles/pages/schools/b_school_student_merge.scss');
+const MergeStubentIssueStyles = require('styles/ui/b_merge_student_issue.scss');
 
 const StudentWithPermissionMergeComponent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -93,12 +94,12 @@ const StudentWithPermissionMergeComponent = React.createClass({
 		binding.set('isPopupOpen', false);
 	},
 	onPopupOkClick: function(){
-		const 	binding 				= this.getDefaultBinding(),
-				studentWithoutHistoryId = binding.toJS('studentWithoutHistoryId'),
+		const	binding					= this.getDefaultBinding(),
+				studentWithHistory		= binding.toJS('studentWithHistory'),
+				studentWithoutHistoryId	= binding.toJS('studentWithoutHistoryId'),
 				schoolId 				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				studentWithHistoryId 	= this.getStudentIdFromUrl(),
-            	emailStudentWithHistory	= binding.toJS('studentWithHistory.email') ? `(${binding.toJS('studentWithHistory.email')})` : '';
-		
+				studentWithHistoryId	= this.getStudentIdFromUrl();
+
 		binding.set('isPopupOpen', false);
 
 		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {userId: studentWithoutHistoryId}).then(
@@ -112,10 +113,26 @@ const StudentWithPermissionMergeComponent = React.createClass({
 				);
 			},
 			err => {
+				const email = studentWithHistory.email;
+				const emailText = typeof email !== 'undefined' ? ` (email: ${email})` : '';
+
 				window.simpleAlert(
-                    'Unable to merge this student'+emailStudentWithHistory+'\nCheck that following are true:\n- student does not take part in any even\n' +
-                    '- student does not take part in any team\n- student has the only permission' +
-                    '\nContact Squad In Touch support team if you should have further questions.',
+					<div className='bMergeStudentIssue'>
+						<p>
+							{`Unable to merge this student${emailText}.\n`}
+						</p>
+						<p>
+							{
+								'Check that following are true:\n' +
+								'- student does not take part in any event\n' +
+								'- student does not take part in any team\n' +
+								'- student has the only permission\n'
+							}
+						</p>
+						<p>
+							Contact Squad In Touch support team if you should have further questions.
+						</p>
+					</div>,
 					'Ok',
 					() => {}
 				);

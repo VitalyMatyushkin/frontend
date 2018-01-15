@@ -13,6 +13,7 @@ const 	React 			= require('react'),
 		{ConfirmPopup}	= require('module/ui/confirm_popup');
 
 const StudentMergeComponentStyles = require('styles/pages/schools/b_school_student_merge.scss');
+const MergeStubentIssueStyles = require('styles/ui/b_merge_student_issue.scss');
 
 const StudentWithoutPermissionMergeComponent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -84,9 +85,9 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 		//because service window.Server.user don't contain information about form
 		const filter = {where: {_id : studentId}};
 		
-		window.Server.schoolStudents.get(schoolId, { filter: filter }).then(user => {
+		window.Server.schoolStudents.get(schoolId, { filter: filter }).then(users => {
 			//user it is array with one element
-			binding.set('studentWithHistory', user[0]);
+			binding.set('studentWithHistory', users[0]);
 		});
 	},
 	onClickMergeButton: function(){
@@ -108,16 +109,15 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 				studentWithoutHistoryId 		= propz.get(studentWithoutHistoryPermission, ['requesterId']),
 				routingData 					= globalBinding.sub('routing.parameters').toJS(),
 				schoolId 						= routingData.schoolId,
-				permissionId 					= routingData.permissionId,
-				emailStudentWithHistory			= binding.toJS('studentWithHistory.email') ? `(${binding.toJS('studentWithHistory.email')})` : '';
-		
+				permissionId 					= routingData.permissionId;
+
 		binding.set('isPopupOpen', false);
-		
+
 		window.Server.schoolStudentMerge.post({schoolId, studentId: studentWithHistoryId}, {
-			userId: 		studentWithoutHistoryId,
-			permissionId: 	permissionId
+			userId: studentWithoutHistoryId,
+			permissionId: permissionId
 		}).then(
-			res => {
+			() => {
 				window.simpleAlert(
 					'Merged successfully',
 					'Ok',
@@ -127,11 +127,27 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 				);
 			},
 			err => {
+				const email = studentWithHistory.email;
+				const emailText = typeof email !== 'undefined' ? ` (email: ${email})` : '';
+
 				window.simpleAlert(
-                    'Unable to merge this student'+emailStudentWithHistory+'\nCheck that following are true:\n- student does not take part in any even\n' +
-                    '- student does not take part in any team\n- student has the only permission' +
-                    '\nContact Squad In Touch support team if you should have further questions.',
-                    'Ok',
+					<div className='bMergeStudentIssue'>
+						<p>
+							{`Unable to merge this student${emailText}.\n`}
+						</p>
+						<p>
+							{
+								'Check that following are true:\n' +
+								'- student does not take part in any event\n' +
+								'- student does not take part in any team\n' +
+								'- student has the only permission\n'
+							}
+						</p>
+						<p>
+							Contact Squad In Touch support team if you should have further questions.
+						</p>
+					</div>,
+					'Ok',
 					() => {}
 				);
 				console.error(err.message);
