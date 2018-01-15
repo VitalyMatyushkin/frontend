@@ -70,6 +70,10 @@ $active-day-background: #b2d7ec;
 
   align-items: flex-end;
   margin: 0px;
+
+  &.mAlignStart {
+    align-items: flex-start;
+  }
 }
 
 .eMonth_row {

@@ -425,6 +425,7 @@ const ClubsForm = React.createClass({
 									selectedDate	= {selectedStartDate}
 									onMonthClick	= { (date) => 	binding.set('monthStartDate', date) }
 									onDateClick		= { (date) =>	binding.set('startDate', date) }
+									customStyle		= { 'mAlignStart' }
 								/>
 							</div>
 							<div className="eForm_field">
@@ -437,7 +438,22 @@ const ClubsForm = React.createClass({
 									selectedDate	= {selectedEndDate}
 									onMonthClick	= { (date) => 	binding.set('monthEndDate', date) }
 									onDateClick		= { (date) =>	binding.set('finishDate', date) }
+									customStyle		= { 'mAlignStart' }
 								/>
+							</div>
+							<div className="eForm_field">
+								<div className="eForm_fieldName">
+									Week days
+								</div>
+								<MultiselectDropdown
+									items			= { this.getWeekDays() }
+									selectedItems	= { this.getSelectedWeekDays() }
+									handleClickItem	= { this.handleSelectWeekDay }
+									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
+								/>
+								{isRequiredError ?
+									<div className="eForm_fieldValidIconCustom" title="Please enter Week days">⚠</div> : <div/>
+								}
 							</div>
 							<div className="eForm_field">
 								<div className="eForm_fieldName">
@@ -456,20 +472,6 @@ const ClubsForm = React.createClass({
 							>
 								Duration(min)
 							</FormField>
-							<div className="eForm_field">
-								<div className="eForm_fieldName">
-									Week days
-								</div>
-								<MultiselectDropdown
-									items			= { this.getWeekDays() }
-									selectedItems	= { this.getSelectedWeekDays() }
-									handleClickItem	= { this.handleSelectWeekDay }
-									extraStyle		= { isRequiredError ? 'mSmallWide mError' : 'mSmallWide' }
-								/>
-								{isRequiredError ?
-									<div className="eForm_fieldValidIconCustom" title="Please enter Week days">⚠</div> : <div/>
-								}
-							</div>
 						</FormColumn>
 					</Form>
 				</div>

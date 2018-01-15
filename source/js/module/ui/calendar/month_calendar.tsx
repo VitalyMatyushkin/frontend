@@ -35,6 +35,7 @@ interface MonthCalendarProps {
 	onPrevMonthClick?:	() => void	// Function to be called when user hit `prev` in MonthYearSelector
 	onDateClick?:		() => void	// Function to be called when user hit any date panel. Function will receive one argument - date
 	eventsData?:		any			// Immutable map where keys are stringified dates (2016-1-9) and values are booleans, where true mean that date have events
+	customStyle?:		string
 }
 
 export class MonthCalendar extends React.Component<MonthCalendarProps> {
@@ -47,12 +48,16 @@ export class MonthCalendar extends React.Component<MonthCalendarProps> {
 	onClick(date: any): void {
 		this.props.isSync && this.props.onClick(date);
 	}
+
+	getCustomStyle() {
+		return typeof this.props.customStyle !== 'undefined' ? this.props.customStyle : '';
+	}
 	
 	render() {
 		const monthDate = this.props.monthDate;
 		
 		return (
-			<div className="eCalendar_eMonth">
+			<div className={`eCalendar_eMonth ${this.getCustomStyle()}`}>
 				<MonthYearSelector
 					isSync			= {this.props.isSync}
 					date			= {monthDate}
