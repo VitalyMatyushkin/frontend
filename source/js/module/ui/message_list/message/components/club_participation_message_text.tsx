@@ -21,7 +21,7 @@ export class ClubParticipationMessageText extends React.Component<ClubParticipat
 		return (
 			<div className='eClubParticipationMessage_text'>
 				<h4>
-					To reserve a place for {this.getFullName()}, click the 'Book now' below button
+					To reserve a place for {this.getFullName()}, click the 'Book now' button below
 				</h4>
 			</div>
 		);
