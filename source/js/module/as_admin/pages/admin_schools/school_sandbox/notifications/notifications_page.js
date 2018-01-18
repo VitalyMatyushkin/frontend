@@ -10,8 +10,8 @@ const NotificationsForm = require('./notifications_form');
 const NotificationsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	onSubmit: function(data){
-		const 	binding 	= this.getDefaultBinding(),
-				schoolId 	= binding.get('schoolSandboxRouting.routing.pathParameters.0');
+		const binding = this.getDefaultBinding();
+		const schoolId = binding.get('schoolSandboxRouting.routing.pathParameters.0');
 
 		const patchedData = { ...data };
 		Object.keys(patchedData).forEach( key => {
@@ -22,7 +22,7 @@ const NotificationsPage = React.createClass({
 			}
 		});
 
-		window.Server.schoolNotifications.put({ schoolId }, patchedData ).then( response => {
+		window.Server.schoolNotifications.put({ schoolId }, patchedData ).then( () => {
 			window.simpleAlert(
 				`Notifications settings has been saved`,
 				'Ok',
@@ -31,15 +31,11 @@ const NotificationsPage = React.createClass({
 		});
 	},
 	render: function(){
-		const 	binding 				= this.getDefaultBinding(),
-				notificationBinding 	= binding.sub('notifications'),
-				schoolId 				= binding.get('schoolSandboxRouting.routing.pathParameters.0');
-
 		return (
 			<NotificationsForm
-				binding 	= { notificationBinding }
-				onSubmit 	= { this.onSubmit }
-				schoolId 	= { schoolId }
+				binding={this.getDefaultBinding().sub('notificationsForm')}
+				onSubmit={this.onSubmit}
+				schoolId={this.getDefaultBinding().get('schoolSandboxRouting.routing.pathParameters.0')}
 			/>
 		);
 	}

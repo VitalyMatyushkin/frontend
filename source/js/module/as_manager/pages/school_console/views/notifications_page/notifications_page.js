@@ -11,14 +11,14 @@ const NotificationsForm = require('./notifications_form');
 
 const NotificationsPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	onSubmit: function(data){
+	onSubmit: function(data) {
 
 		const patchedData = { ...data };
 		Object.keys(patchedData).forEach( key => {
 			const value = patchedData[key];
 			switch (value) {
-				case true:	patchedData[key] = 'AUTO'; break;
-				case false:	patchedData[key] = 'DISABLED'; break;
+				case true: patchedData[key] = 'AUTO'; break;
+				case false: patchedData[key] = 'DISABLED'; break;
 			}
 		});
 
@@ -30,16 +30,12 @@ const NotificationsPage = React.createClass({
 			);
 		});
 	},
-	render: function(){
-		const 	binding 				= this.getDefaultBinding(),
-				notificationBinding 	= binding.sub('notifications'),
-				schoolId 				= SchoolHelper.getActiveSchoolId(this);
-		
+	render: function() {
 		return (
 			<NotificationsForm
-				binding 	= { notificationBinding }
-				onSubmit 	= { this.onSubmit }
-				schoolId 	= { schoolId }
+				binding={this.getDefaultBinding().sub('notificationsForm')}
+				onSubmit={this.onSubmit}
+				schoolId={SchoolHelper.getActiveSchoolId(this)}
 			/>
 		);
 	}
