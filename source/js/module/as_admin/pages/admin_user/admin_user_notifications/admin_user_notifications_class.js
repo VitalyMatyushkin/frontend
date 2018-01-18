@@ -29,7 +29,7 @@ class AdminUserNotificationsClass {
 			},
 			columns:this.columns,
             handleClick: this.handleClickNotification.bind(this),
-			filters:{limit: 20}
+			filters:{limit: 20, order:'createdAt DESC'}
 		});
 		
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),

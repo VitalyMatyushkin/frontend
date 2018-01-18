@@ -83,7 +83,7 @@ export class NotificationsModel{
 			},
 			columns:this.columns,
             handleClick: this.handleClickNotification.bind(this),
-			filters:{limit:20, order:'startedAt DESC', where: {actionDescriptorId: this.actionDescriptionId}
+			filters:{limit:20, order:'createdAt DESC', where: {actionDescriptorId: this.actionDescriptionId}
 			}
 		});
 

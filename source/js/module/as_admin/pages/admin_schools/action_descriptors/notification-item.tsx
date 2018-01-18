@@ -20,7 +20,7 @@ export const NotificationItem = (React as any).createClass({
 
     },
     renderChannelStatusList(notificationChannels: ChanelStatus[]): React.ReactNode {
-        const titles = ['channelId', 'deliveryStatus', 'sentTime', 'status'];
+        const titles = ['channelId', 'channelType', 'deliveryStatus', 'sentTime', 'status'];
 
         const rows = notificationChannels.map((rowObj, i) => {
             const cells = titles.map( title => {
@@ -46,6 +46,7 @@ export const NotificationItem = (React as any).createClass({
                     <tr>
                         <th >#</th>
                         <th>Channel Id</th>
+                        <th>Channel Type</th>
                         <th>Delivery Status</th>
                         <th>Sent Time</th>
                         <th>Status</th>
