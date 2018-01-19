@@ -4,7 +4,7 @@ const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Promise		= require('bluebird');
 
-const	TeamManager	= require('module/ui/managers/team_manager/team_manager'),
+const	{TeamManager}= require('module/ui/managers/team_manager/team_manager'),
 		{Button}	= require('module/ui/button/button'),
 		Header		= require('module/as_manager/pages/clubs/clubs_children_edit/header'),
 		Error		= require('module/ui/managers/models/error'),

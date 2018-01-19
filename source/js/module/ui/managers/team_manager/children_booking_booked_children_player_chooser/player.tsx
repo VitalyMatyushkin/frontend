@@ -1,10 +1,11 @@
 import * as React from 'react'
 import * as classNames from 'classnames'
 import { ClubsChildrenBookingHelper } from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_helper/clubs_children_booking_helper";
+import {BookedChildrenStudent} from "module/ui/managers/models/booked_children_student";
 
 export interface PlayerProps {
-	player:                 any,
-	handleClickStudent:     (playerId: string) => void
+	player: BookedChildrenStudent,
+	handleClickStudent: (playerId: string) => void
 }
 
 export interface PlayerState {

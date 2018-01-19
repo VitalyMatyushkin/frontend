@@ -1,16 +1,23 @@
 import * as React from 'react'
-import * as DefaultPlayerChooser from "module/ui/managers/team_manager/default_player_chooser/default_player_chooser"
-import * as ChildrenBookingBookedChildrenPlayerChooser from "module/ui/managers/team_manager/children_booking_booked_children_player_chooser/booked_children_player_chooser"
-import * as ChildrenBookingAllChildrenPlayerChooser from 'module/ui/managers/team_manager/children_booking_all_children_player_chooser/all_children_player_chooser'
+
 import * as classNames from "classnames"
+
+import {DefaultPlayerChooser} from "module/ui/managers/team_manager/default_player_chooser/default_player_chooser"
+import {ChildrenBookingBookedChildrenPlayerChooser} from "module/ui/managers/team_manager/children_booking_booked_children_player_chooser/booked_children_player_chooser"
+import {ChildrenBookingAllChildrenPlayerChooser} from 'module/ui/managers/team_manager/children_booking_all_children_player_chooser/all_children_player_chooser'
+import { PlayerChooserTabs } from "module/ui/managers/team_manager/player_choosers/player_chooser_tabs"
+
 import { PlayerChoosersTabsModel } from "module/ui/managers/models/player_choosers_tabs_model/player_choosers_tabs_model"
 import { TabTypes } from "module/ui/managers/models/player_choosers_tabs_model/tab_types"
-import { PlayerChooserTabs } from "module/ui/managers/team_manager/player_choosers/player_chooser_tabs";
+import {DefaultStudent} from "module/ui/managers/models/default_student";
+import {AllChildrenStudent} from "module/ui/managers/models/all_children_student";
+import {BookedChildrenStudent} from "module/ui/managers/models/booked_children_student";
+
 
 export interface PlayerChoosersProps {
 	playerChoosersTabsModel:    PlayerChoosersTabsModel,
 	selectedTabId:              string
-	students:					any[]
+	students:					DefaultStudent[] | AllChildrenStudent[] | BookedChildrenStudent[]
 	handleChangeSearchText:		(text: string) => void
 	handleClickStudent:			(studentId: string) => void
 	handleClickAddTeamButton:	() => void
@@ -35,12 +42,6 @@ export class PlayerChoosers extends React.Component<PlayerChoosersProps, {}> {
 		return style;
 	}
 
-	handleClickTab(tabId) {
-		this.setState({
-			selectedTabId: tabId
-		});
-	}
-
 	renderDefaultPlayerChooser() {
 		return (
 			<DefaultPlayerChooser
@@ -57,7 +58,7 @@ export class PlayerChoosers extends React.Component<PlayerChoosersProps, {}> {
 	renderAllChildrenPlayerChooser() {
 		return (
 			<ChildrenBookingAllChildrenPlayerChooser
-				students					= { this.props.students }
+				students					= { this.props.students as AllChildrenStudent[]}
 				handleChangeSearchText		= { (text) => this.props.handleChangeSearchText(text) }
 				handleClickStudent			= { (studentId) => this.props.handleClickStudent(studentId) }
 				handleClickAddTeamButton	= { () => this.props.handleClickAddTeamButton() }
@@ -70,7 +71,7 @@ export class PlayerChoosers extends React.Component<PlayerChoosersProps, {}> {
 	renderBookedChildrenPlayerChooser() {
 		return (
 			<ChildrenBookingBookedChildrenPlayerChooser
-				students					= { this.props.students }
+				students					= { this.props.students as BookedChildrenStudent[]}
 				handleChangeSearchText		= { (text) => this.props.handleChangeSearchText(text) }
 				handleClickStudent			= { (studentId) => this.props.handleClickStudent(studentId) }
 				handleClickAddTeamButton	= { () => this.props.handleClickAddTeamButton() }

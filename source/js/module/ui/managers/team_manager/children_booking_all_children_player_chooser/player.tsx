@@ -1,8 +1,9 @@
 import * as React from 'react'
 import * as classNames from 'classnames'
+import {AllChildrenStudent} from "module/ui/managers/models/all_children_student";
 
 export interface PlayerProps {
-	player:                 any,
+	player:                 AllChildrenStudent,
 	handleClickStudent:     (playerId: string) => void
 }
 

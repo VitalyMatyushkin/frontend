@@ -1,28 +1,25 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		Promise				= require('bluebird'),
-		{Team}				= require('./team/team'),
-		{PlayerChoosers}	= require('module/ui/managers/team_manager/player_choosers/player_choosers'),
-		{TabTypes}			= require('module/ui/managers/models/player_choosers_tabs_model/tab_types');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const TeamManager = React.createClass({
+import * as BPromise from 'bluebird'
+
+import {Team} from './team/team'
+import {PlayerChoosers} from 'module/ui/managers/team_manager/player_choosers/player_choosers'
+
+export const TeamManager = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+
 	listeners: [],
-	propTypes: {
-		isNonTeamSport:				React.PropTypes.bool,
-		playerChoosersTabsModel:	React.PropTypes.object,
-		clubId:						React.PropTypes.string,
-		actions:					React.PropTypes.object.isRequired
-	},
 	currentSearchRequest: undefined,
 	currentSearchText: '',
-	getDefaultProps: function() {
+	
+	getDefaultProps() {
 		return {
 			isNonTeamSport: false
 		};
 	},
-	getDefaultState: function () {
+	getDefaultState() {
 		return Immutable.fromJS({
 			isActive:					true,
 			filter:						undefined,
@@ -43,34 +40,33 @@ const TeamManager = React.createClass({
 			isAddTeamButtonBlocked:		false
 		});
 	},
-	componentWillMount: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	componentWillMount() {
+		const binding = this.getDefaultBinding();
 
-		self.searchAndSetStudents('', binding);
-		self.initTeamValues();
-		self.initSelectedTabId();
+		this.searchAndSetStudents('', binding);
+		this.initTeamValues();
+		this.initSelectedTabId();
 
-		self.listeners.push(binding.sub('filter').addListener(() => {
-			this.isActive() && self.searchAndSetStudents(self.currentSearchText, binding);
+		this.listeners.push(binding.sub('filter').addListener(() => {
+			this.isActive() && this.searchAndSetStudents(this.currentSearchText, binding);
 		}));
-		self.listeners.push(binding.sub('blackList').addListener(() => {
-			this.isActive() && self.searchAndSetStudents(self.currentSearchText, binding);
+		this.listeners.push(binding.sub('blackList').addListener(() => {
+			this.isActive() && this.searchAndSetStudents(this.currentSearchText, binding);
 		}));
-		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
-			this.isActive() && !descriptor.getCurrentValue() && self.clearTeamValues();
+		this.listeners.push(binding.sub('isSync').addListener((descriptor) => {
+			this.isActive() && !descriptor.getCurrentValue() && this.clearTeamValues();
 		}));
-		self.listeners.push(binding.sub('isNeedSearch').addListener((descriptor) => {
+		this.listeners.push(binding.sub('isNeedSearch').addListener((descriptor) => {
 			if (
 				this.isActive() &&
 				// if prev === false and curr === true
 				descriptor.getPreviousValue() !== descriptor.getCurrentValue() &&
 				descriptor.getCurrentValue()
 			) {
-				self.searchAndSetStudents(self.currentSearchText, binding);
+				this.searchAndSetStudents(this.currentSearchText, binding);
 			}
 		}));
-		self.listeners.push(binding.sub('isActive').addListener((descriptor) => {
+		this.listeners.push(binding.sub('isActive').addListener((descriptor) => {
 			if(
 				// if prev value TRUE and current value FALSE
 				typeof descriptor.getCurrentValue() === 'boolean' &&
@@ -82,32 +78,31 @@ const TeamManager = React.createClass({
 			}
 		}));
 	},
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		this.removeListeners();
 		this.cancelCurrentSearchRequest();
 	},
-	initSelectedTabId: function () {
+	initSelectedTabId () {
 		this.getDefaultBinding().set('selectedTabId', this.props.playerChoosersTabsModel.tabs[0].id);
 	},
-	isActive: function() {
+	isActive() {
 		return (
 			typeof this.getDefaultBinding().get('isActive') === 'boolean' &&
 			this.getDefaultBinding().get('isActive')
 		);
 	},
-	removeListeners: function() {
+	removeListeners() {
 		const binding = this.getDefaultBinding();
 
 		this.listeners.forEach(listenerId => binding.removeListener(listenerId));
 
 		this.listeners = [];
 	},
-	cancelCurrentSearchRequest: function() {
+	cancelCurrentSearchRequest() {
 		typeof this.currentSearchRequest !== 'undefined' && this.currentSearchRequest.cancel();
 	},
-	clearTeamValues: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	clearTeamValues() {
+		const binding = this.getDefaultBinding();
 
 		binding.atomically()
 			.set("selectedStudentIds",	Immutable.fromJS([]))
@@ -119,9 +114,8 @@ const TeamManager = React.createClass({
 	/**
 	 * Init some team stuff
 	 */
-	initTeamValues: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	initTeamValues() {
+		const binding = this.getDefaultBinding();
 
 		binding.atomically()
 			.set("selectedStudentIds",	Immutable.fromJS([]))
@@ -134,10 +128,8 @@ const TeamManager = React.createClass({
 	 * Search students by last name and set these to binding
 	 * @param searchText
 	 */
-	searchAndSetStudents: function(searchText, binding) {
-		const self = this;
-
-		return self.searchStudents(searchText).then(students => {
+	searchAndSetStudents(searchText, binding) {
+		return this.searchStudents(searchText).then(students => {
 			if(this.isActive()) {
 				binding.atomically()
 					.set("selectedStudentIds",	Immutable.fromJS([]))
@@ -155,9 +147,8 @@ const TeamManager = React.createClass({
 	 * @param searchText
 	 * @private
 	 */
-	searchStudents: function (searchText) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	searchStudents (searchText) {
+		const binding = this.getDefaultBinding();
 
 		const filter = binding.toJS('filter');
 
@@ -169,8 +160,10 @@ const TeamManager = React.createClass({
 				filter: {
 					where: {
 						_id: {
-							$nin: self.getNinUserId(binding)
-						}
+							$nin: this.getNinUserId(binding)
+						},
+						formId: undefined,
+						houseId: undefined
 					},
 					limit: 2000
 				}
@@ -189,17 +182,17 @@ const TeamManager = React.createClass({
 				];
 			}
 
-			self.setGenderToRequestFilter(filter.genders, requestFilter);
+			this.setGenderToRequestFilter(filter.genders, requestFilter);
 
 			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
 			// cancel prev request
-			typeof self.currentSearchRequest !== 'undefined' && self.currentSearchRequest.cancel();
+			typeof this.currentSearchRequest !== 'undefined' && this.currentSearchRequest.cancel();
 
 			const selectedTabId = binding.toJS('selectedTabId');
 			const tabs = this.props.playerChoosersTabsModel.tabs;
 
-			self.currentSearchRequest = this.props.actions.search(
+			this.currentSearchRequest = this.props.actions.search(
 					selectedTabId,
 					tabs,
 					requestFilter
@@ -215,24 +208,23 @@ const TeamManager = React.createClass({
 
 					return updPlayers;
 				});
-			return self.currentSearchRequest;
+			return this.currentSearchRequest;
 		} else {
-			return Promise.resolve([]);
+			return BPromise.resolve([]);
 		}
 	},
-	setGenderToRequestFilter: function(genders, requestFilter) {
+	setGenderToRequestFilter(genders, requestFilter) {
 		if(genders.length === 1) {
 			requestFilter.filter.where.gender = genders[0];
 		} else if(genders.length === 2) {
 			requestFilter.filter.where.gender = { $in: [genders[0], genders[1]] };
 		}
 	},
-	getNinUserId: function(binding) {
-		const self = this;
-
-		return	self.getPlayerIdsFromPlayerStore(binding, 'teamStudents').concat(self.getPlayerIdsFromPlayerStore(binding, 'blackList'));
+	getNinUserId(binding) {
+		return this.getPlayerIdsFromPlayerStore(binding, 'teamStudents')
+			.concat(this.getPlayerIdsFromPlayerStore(binding, 'blackList'));
 	},
-	getPlayerIdsFromPlayerStore: function(binding, playerStoreName) {
+	getPlayerIdsFromPlayerStore(binding, playerStoreName) {
 		const playerStore = binding.toJS(playerStoreName);
 
 		if(playerStore) {
@@ -241,17 +233,15 @@ const TeamManager = React.createClass({
 			return [];
 		}
 	},
-	handleChangeSearchText: function(text) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleChangeSearchText(text) {
+		const binding = this.getDefaultBinding();
 
-		self.currentSearchText = text;
+		this.currentSearchText = text;
 
-		self.searchAndSetStudents(text, binding);
+		this.searchAndSetStudents(text, binding);
 	},
-	handleClickPlayer: function(playerId) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickPlayer(playerId) {
+		const binding = this.getDefaultBinding();
 
 		const	selectedPlayerIds	= binding.toJS('selectedPlayerIds'),
 				foundPlayerIndex	= selectedPlayerIds.findIndex(p => p === playerId);
@@ -264,9 +254,8 @@ const TeamManager = React.createClass({
 
 		binding.set('selectedPlayerIds', Immutable.fromJS(selectedPlayerIds));
 	},
-	handleClickStudent: function(studentId) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickStudent(studentId) {
+		const binding = this.getDefaultBinding();
 
 		const	selectedStudentIds	= binding.toJS('selectedStudentIds'),
 				foundStudentIndex	= selectedStudentIds.findIndex(s => s === studentId);
@@ -282,9 +271,8 @@ const TeamManager = React.createClass({
 	/**
 	 * Add student to team
 	 */
-	handleClickAddStudentButton: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickAddStudentButton() {
+		const binding = this.getDefaultBinding();
 
 		const selectedStudentIds = binding.toJS('selectedStudentIds');
 		
@@ -322,9 +310,8 @@ const TeamManager = React.createClass({
 				.commit();
 		}
 	},
-	handleClickRemovePlayerButton: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickRemovePlayerButton() {
+		const binding = this.getDefaultBinding();
 
 		const selectedPlayerIds = binding.toJS('selectedPlayerIds');
 
@@ -353,13 +340,12 @@ const TeamManager = React.createClass({
 				.set('removedPlayers',		Immutable.fromJS(removedPlayers))
 				.commit();
 
-			self.searchAndSetStudents(self.currentSearchText, binding)
+			this.searchAndSetStudents(this.currentSearchText, binding)
 				.then(() => binding.set("isRemovePlayerButtonBlock", false));
 		}
 	},
-	handleChangePlayerPosition: function(playerId, positionId) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleChangePlayerPosition(playerId, positionId) {
+		const binding = this.getDefaultBinding();
 
 		const	teamStudents	= binding.toJS('teamStudents'),
 				playerIndex		= teamStudents.findIndex(s => s.id === playerId);
@@ -368,15 +354,14 @@ const TeamManager = React.createClass({
 
 		binding.set('teamStudents', Immutable.fromJS(teamStudents));
 	},
-	handleClickTab: function (tabId) {
+	handleClickTab (tabId) {
 		const binding = this.getDefaultBinding();
 
 		binding.set('selectedTabId', tabId);
 		this.searchAndSetStudents(this.currentSearchText, binding);
 	},
-	handleClickPlayerSub: function(playerId, isSub) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickPlayerSub(playerId, isSub) {
+		const binding = this.getDefaultBinding();
 
 		const	teamStudents	= binding.toJS('teamStudents'),
 				playerIndex		= teamStudents.findIndex(s => s.id === playerId);
@@ -385,9 +370,8 @@ const TeamManager = React.createClass({
 
 		binding.set('teamStudents', Immutable.fromJS(teamStudents));
 	},
-	handleClickPlayerIsCaptain: function(playerId, isCaptain) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickPlayerIsCaptain(playerId, isCaptain) {
+		const binding = this.getDefaultBinding();
 
 		const	teamStudents	= binding.toJS('teamStudents'),
 				playerIndex		= teamStudents.findIndex(s => s.id === playerId),
@@ -402,31 +386,30 @@ const TeamManager = React.createClass({
 
 		binding.set('teamStudents', Immutable.fromJS(teamStudents));
 	},
-	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	render() {
+		const binding = this.getDefaultBinding();
 
 		return (
 			<div>
 				<Team
-					isNonTeamSport					= { self.props.isNonTeamSport }
+					isNonTeamSport					= { this.props.isNonTeamSport }
 					players							= { binding.toJS('teamStudents') }
 					positions						= { binding.toJS('positions') }
-					handleClickPlayer				= { self.handleClickPlayer }
-					handleChangePlayerPosition		= { self.handleChangePlayerPosition }
-					handleClickPlayerSub			= { self.handleClickPlayerSub }
-					handleClickPlayerIsCaptain		= { self.handleClickPlayerIsCaptain }
-					handleClickRemovePlayerButton	= { self.handleClickRemovePlayerButton }
+					handleClickPlayer				= { this.handleClickPlayer }
+					handleChangePlayerPosition		= { this.handleChangePlayerPosition }
+					handleClickPlayerSub			= { this.handleClickPlayerSub }
+					handleClickPlayerIsCaptain		= { this.handleClickPlayerIsCaptain }
+					handleClickRemovePlayerButton	= { this.handleClickRemovePlayerButton }
 					isRemovePlayerButtonBlock		= { binding.toJS('isRemovePlayerButtonBlock') }
 					error							= { typeof this.getBinding('error') !== 'undefined' ? this.getBinding('error').toJS() : {} }
 				/>
 				<PlayerChoosers
 					selectedTabId				= { binding.toJS('selectedTabId') }
 					students					= { binding.toJS('foundStudents') }
-					handleChangeSearchText		= { self.handleChangeSearchText }
-					handleClickTab				= { self.handleClickTab }
-					handleClickStudent			= { self.handleClickStudent }
-					handleClickAddTeamButton	= { self.handleClickAddStudentButton }
+					handleChangeSearchText		= { this.handleChangeSearchText }
+					handleClickTab				= { this.handleClickTab }
+					handleClickStudent			= { this.handleClickStudent }
+					handleClickAddTeamButton	= { this.handleClickAddStudentButton }
 					isSearch					= { binding.toJS('isSearch') }
 					isAddTeamButtonBlocked		= { binding.toJS('isAddTeamButtonBlocked') }
 					playerChoosersTabsModel		= { this.props.playerChoosersTabsModel }
@@ -435,5 +418,3 @@ const TeamManager = React.createClass({
 		);
 	}
 });
-
-module.exports = TeamManager;

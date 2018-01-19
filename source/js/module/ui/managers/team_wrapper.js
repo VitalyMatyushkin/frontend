@@ -5,7 +5,7 @@ const Immutable = require('immutable');
 const classNames = require('classnames');
 
 const TeamName = require('./team_name');
-const TeamManager = require('./team_manager/team_manager');
+import {TeamManager} from './team_manager/team_manager';
 const {Button} = require('module/ui/button/button');
 const SetTeamsLaterBlock= require('./set_teams_later_block/set_teams_later_block');
 
