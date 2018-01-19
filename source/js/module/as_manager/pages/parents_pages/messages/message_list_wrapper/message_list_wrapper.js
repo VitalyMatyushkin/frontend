@@ -32,6 +32,9 @@ const MessageListWrapper = React.createClass({
 	getTemplatesFromBinding: function(binding) {
 		return binding.toJS('template');
 	},
+	triggerMsgCountUpdater: function () {
+		this.getMoreartyContext().getBinding().set('isMessagesCountNeedUpdate', true);
+	},
 	onAction: function (messageId, messageKind, actionType, templateData) {
 		this.props.actions.onAction(
 			this.getDefaultBinding(),
@@ -41,7 +44,7 @@ const MessageListWrapper = React.createClass({
 			messageKind,
 			actionType,
 			templateData
-		);
+		).then(() => this.triggerMsgCountUpdater());
 	},
 	onClickShowComments: function(messageId){
 		this.props.actions.onClickShowComments(

@@ -14,36 +14,46 @@ const MessageListActions = {
 	onAction: function(binding, userType, boxType, messageId, messageKind, actionType, templateData) {
 		switch (messageKind) {
 			case MessageConsts.MESSAGE_KIND.INVITATION:
-				this.onActionForRefusalMessage(binding, userType, boxType, messageId, actionType, templateData);
-				break;
+				return this.onActionForRefusalMessage(binding, userType, boxType, messageId, actionType, templateData);
 			case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
-				this.onActionForClubParticipantInvitationMessage(binding, userType, boxType, messageId, actionType);
-				break;
+				return this.onActionForClubParticipantInvitationMessage(binding, userType, boxType, messageId, actionType);
 		}
 	},
 	onActionForRefusalMessage: function(binding, userType, boxType, messageId, actionType, templateData) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
-				MessagesServerRequests.acceptInvitationMessage(userType, messageId)
+				return MessagesServerRequests.acceptInvitationMessage(userType, messageId)
 					.then(() => this.updateConsentRequestTemplate(userType, messageId, templateData))
-					.then(() => this.reloadMessageList(binding));
-				break;
+					.then(() => {
+						this.reloadMessageList(binding);
+
+						return true;
+					});
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
-				MessagesServerRequests.declineInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList(binding));
-				break;
+				return MessagesServerRequests.declineInvitationMessage(userType, messageId)
+					.then(() => {
+						this.reloadMessageList(binding);
+
+						return true;
+					});
 		}
 	},
 	onActionForClubParticipantInvitationMessage: function(binding, userType, boxType, messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT:
-				MessagesServerRequests.acceptClubParticipantInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList(binding));
-				break;
+				return MessagesServerRequests.acceptClubParticipantInvitationMessage(userType, messageId)
+					.then(() => {
+						this.reloadMessageList(binding);
+
+						return true;
+					});
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE:
-				MessagesServerRequests.declineClubParticipantInvitationMessage(userType, messageId)
-					.then(() => this.reloadMessageList(binding));
-				break;
+				return MessagesServerRequests.declineClubParticipantInvitationMessage(userType, messageId)
+					.then(() => {
+						this.reloadMessageList(binding);
+
+						return true;
+					});
 		}
 	},
 	loadMessages: function(userType, boxType) {

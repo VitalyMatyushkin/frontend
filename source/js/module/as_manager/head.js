@@ -17,12 +17,17 @@ const	Logo			= require('module/as_manager/head/logo'),
 const Head = React.createClass({
 	role: undefined,
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	componentDidMount:function(){
 		this.createTopMenu();
 		this.getMoreartyContext().getBinding().sub('userData.roleList.activePermission').addListener(() => {
 			this.createTopMenu();
 			this.initData();
+			this.addListeners();
 		});
+	},
+	componentWillUnmount: function() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	initData: function() {
 		const	role		= RoleHelper.getLoggedInUserRole(this),
@@ -31,18 +36,49 @@ const Head = React.createClass({
 		this.role = role;
 
 		if(kindSchool === 'School') {
+			this.getDefaultBinding().set('isInvitesCountNeedUpdate', false);
+			this.getDefaultBinding().set('isMessagesCountNeedUpdate', false);
+
 			if(
 				role !== RoleHelper.USER_ROLES.PARENT &&
 				role !== RoleHelper.USER_ROLES.STUDENT
 			) {
 				this.setInvitesCountToMenu();
 			}
+
 			if(
 				role !== RoleHelper.USER_ROLES.STUDENT
 			) {
 				this.setMessagesCountToMenu();
 			}
 		}
+	},
+	addListeners: function () {
+		const binding = this.getDefaultBinding();
+
+		this.listeners.push(
+			binding.sub('isInvitesCountNeedUpdate')
+				.addListener(eventDescriptor => {
+					const isInvitesCountNeedUpdate = eventDescriptor.getCurrentValue();
+
+					if(isInvitesCountNeedUpdate) {
+						this.setInvitesCountToMenu();
+						this.getDefaultBinding().set('isInvitesCountNeedUpdate', false);
+					}
+				})
+		);
+
+		this.listeners.push(
+			binding.sub('isMessagesCountNeedUpdate')
+				.addListener(eventDescriptor => {
+					const isMessagesCountNeedUpdate = eventDescriptor.getCurrentValue();
+
+					if(isMessagesCountNeedUpdate) {
+						this.setMessagesCountToMenu();
+						this.getDefaultBinding().set('isMessagesCountNeedUpdate', false);
+					}
+				})
+		);
 	},
 	/**
 	 * Function get's count of inbox invites from server and set it to Invites menu item.
@@ -67,26 +103,31 @@ const Head = React.createClass({
 		});
 	},
 	setMessagesCountToMenu: function() {
-		const	role	= RoleHelper.getLoggedInUserRole(this);
+		const role = RoleHelper.getLoggedInUserRole(this);
+
 		let service, params, filter;
-		if (role === 'PARENT') {
-			service	= window.Server.childMessageInbox;
+
+		if(role === 'PARENT') {
+			service	= window.Server.childMessageInboxCount;
 			params = {};
-			filter = {filter:{limit:1000}};
+			filter = {};
 		} else {
-			service = window.Server.schoolEventsMessagesInbox;
+			service = window.Server.schoolEventsMessagesInboxCount;
 			params = MoreartyHelper.getActiveSchoolId(this);
-			filter = {filter:{where: { allMessageTypes: true }, limit:1000}};
+			filter = {
+				filter: { where: {allMessageTypes: true} }
+			};
 		}
 		
 		service.get(params ,filter).then(data => {
-			if(data.length > 0) {
-				const	rootBinding		= this.getMoreartyContext().getBinding(),
-						topMenuItems	= rootBinding.toJS('topMenuItems');
+			console.log(data);
+			if(data.count > 0) {
+				const rootBinding = this.getMoreartyContext().getBinding();
+				const topMenuItems = rootBinding.toJS('topMenuItems');
 
 				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
 				if(inviteItemIndex !== -1) {
-					topMenuItems[inviteItemIndex].name = `Messages(${data.length})`;
+					topMenuItems[inviteItemIndex].name = `Messages(${data.count})`;
 
 					rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 				}

@@ -79,12 +79,13 @@ const InviteList = React.createClass({
 		return invitesList;
 	},
 	onDecline:function (inviteId, commentText) {
-		const
-			binding 		= this.getDefaultBinding(),
-			rootBinding 	= this.getMoreartyContext().getBinding(),
-			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
+		const binding = this.getDefaultBinding();
+		const rootBinding = this.getMoreartyContext().getBinding();
+		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
-		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText);
+		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText).then(() => {
+			rootBinding.set('isInvitesCountNeedUpdate', true);
+		});
 	},
 	render: function() {
 		const	binding = this.getDefaultBinding(),

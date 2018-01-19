@@ -119,6 +119,9 @@ const InviteAcceptView = React.createClass({
 
         binding.clear();
     },
+	triggerMsgCountUpdater: function () {
+		this.getMoreartyContext().getBinding().set('isInvitesCountNeedUpdate', true);
+	},
 	createRivalsByInvite: function(invite) {
 		return [
 			new InterSchoolsRivalModel(invite.invitedSchool)
@@ -211,6 +214,7 @@ const InviteAcceptView = React.createClass({
                 )
                 .then(() => {
 					this.removeAcceptedInvite(binding.get('invite.id'));
+	                this.triggerMsgCountUpdater();
                     document.location.hash = '#event/' + event.id;
 
                     return true;
@@ -241,16 +245,12 @@ const InviteAcceptView = React.createClass({
                 )
                 .then(() => {
 					this.removeAcceptedInvite(binding.get('invite.id'));
+	                this.triggerMsgCountUpdater();
                     document.location.hash = '#event/' + event.id;
 
                     return true;
                 });
         }
-    },
-    _isEventDataCorrect: function() {
-        const self = this;
-
-        return !self.getDefaultBinding().toJS('error.0').isError;
     },
 	isControlButtonActive: function() {
 		const	binding			= this.getDefaultBinding();

@@ -21,6 +21,9 @@ const MessageListWrapper = React.createClass({
 			this.setSync(true);
 		});
 	},
+	triggerMsgCountUpdater: function () {
+		this.getMoreartyContext().getBinding().set('isMessagesCountNeedUpdate', true);
+	},
 	reloadMessageList: function() {
 		this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
 	},
@@ -28,40 +31,41 @@ const MessageListWrapper = React.createClass({
 		this.getDefaultBinding().set('isSync', value);
 	},
 	onAction: function(messageId, messageKind, actionType) {
-		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType);
+		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType)
+			.then(() => this.triggerMsgCountUpdater());
 	},
 	onActionByMessageKindAndActionType: function(messageId, messageKind, actionType) {
 		switch (messageKind) {
 			case MessageConsts.MESSAGE_KIND.REFUSAL:
-				this.onActionForRefusalMessageByActionType(messageId, actionType);
-				break;
+				return this.onActionForRefusalMessageByActionType(messageId, actionType);
 			case MessageConsts.MESSAGE_KIND.AVAILABILITY:
-				this.onActionForReportMessageByActionType(messageId, actionType);
-				break;
+				return this.onActionForReportMessageByActionType(messageId, actionType);
 		}
 	},
 	onActionForRefusalMessageByActionType: function(messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
-				MessageListActions.gotItRefusalMessage(
+				return MessageListActions.gotItRefusalMessage(
 					this.props.activeSchoolId,
 					messageId
 				).then(() => {
 					this.reloadMessageList();
+
+					return true;
 				});
-				break;
 		}
 	},
 	onActionForReportMessageByActionType: function(messageId, actionType) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
-				MessageListActions.gotItReportMessage(
+				return MessageListActions.gotItReportMessage(
 					this.props.activeSchoolId,
 					messageId
 				).then(() => {
 					this.reloadMessageList();
+
+					return true;
 				});
-				break;
 		}
 	},
 	onClickShowComments: function(messageId){

@@ -196,6 +196,7 @@ export class ServiceList {
 	schoolEventsMessages			: Service;
 	schoolEventsMessagesCount		: Service;
 	schoolEventsMessagesInbox		: Service;
+	schoolEventsMessagesInboxCount  : Service;
 	schoolEventsMessagesOutbox		: Service;
 	schoolEventsMessagesArchive		: Service;
 
@@ -238,6 +239,7 @@ export class ServiceList {
 	childMessage: Service;
 	childEventMessages: Service;
 	childMessageInbox: Service;
+	childMessageInboxCount: Service;
 	childMessageOutbox: Service;
 	childMessageArchive: Service;
 	childMessageAccept: Service;
@@ -507,6 +509,7 @@ export class ServiceList {
 		this.schoolEventsMessages			= new Service('/i/schools/{schoolId}/events/messages', binding);
 		this.schoolEventsMessagesCount		= new Service('/i/schools/{schoolId}/events/messages/count', binding);
 		this.schoolEventsMessagesInbox		= new Service('/i/schools/{schoolId}/events/messages/inbox', binding);
+		this.schoolEventsMessagesInboxCount = new Service('/i/schools/{schoolId}/events/messages/inbox/count', binding);
 		this.schoolEventsMessagesOutbox		= new Service('/i/schools/{schoolId}/events/messages/outbox', binding);
 		this.schoolEventsMessagesArchive		= new Service('/i/schools/{schoolId}/events/messages/archive', binding);
 
@@ -549,6 +552,7 @@ export class ServiceList {
 		this.childMessage = new Service('/i/children/events/messages/{messageId}', binding);
 		this.childEventMessages = new Service('/i/children/events/{eventId}/messages', binding);
 		this.childMessageInbox = new Service('/i/children/events/messages/inbox', binding);
+		this.childMessageInboxCount = new Service('/i/children/events/messages/inbox/count', binding);
 		this.childMessageOutbox = new Service('/i/children/events/messages/outbox', binding);
 		this.childMessageArchive = new Service('/i/children/events/messages/archive', binding);
 		this.childMessageAccept = new Service('/i/children/events/messages/{messageId}/accept', binding);
