@@ -135,10 +135,15 @@ $chooserIconSize: 35px;
 }
 .bRegistration {
   .bForm {
-  max-width: 460px;
-  padding: 0;
-  margin-left: 40px;
+    max-width: 460px;
+    padding: 0;
+    margin-left: 40px;
+  }
 }
+.bRegistrationNew {
+  .bForm {
+    margin: 0;
+  }
 }
 .bRegistrationTitle {
   color: $COLOR;
@@ -151,7 +156,15 @@ $chooserIconSize: 35px;
 .bRegistrationTitle.mActive {
   display: block;
 }
-
+.bRegistrationTitleNew {
+  color: $COLOR;
+  font-weight: normal;
+  text-align: center;
+  margin: 40px;
+  font-size: 30px;
+  display: block;
+  width: 100%;
+}
 .eRegistration_verificationWrapper {
   margin-left: 90px;
 }

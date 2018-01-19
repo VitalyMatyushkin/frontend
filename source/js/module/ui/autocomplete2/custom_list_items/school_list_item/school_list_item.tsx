@@ -9,7 +9,7 @@ interface SchoolListItemProps {
 	data: 			School
 }
 
-interface School {
+export interface School {
 	address: 						string
 	defaultAlbumId:					string
 	domain:							string

@@ -29,6 +29,7 @@ const Form = React.createClass({
 		onCancel: 			React.PropTypes.func,
 		name: 				React.PropTypes.string,
 		defaultButton: 		React.PropTypes.string, // It should be name as defaultButtonText, stupid
+		rejectButtonText:   React.PropTypes.string,
 		loadingButton: 		React.PropTypes.string,
 		updateBinding: 		React.PropTypes.bool,
 		// False by default, if true, then browser doesn't save data for this field.
@@ -300,7 +301,7 @@ const Form = React.createClass({
 					<div className={classNames('eForm_savePanel', this.props.formButtonsClass)}>
 						<If condition={!this.props.hideCancelButton}>
 							<button className="bButton mRight mCancel mMarginRight" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
-								Cancel
+								{this.props.rejectButtonText ? this.props.rejectButtonText : 'Cancel'}
 							</button>
 						</If>
 						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
