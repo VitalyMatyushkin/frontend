@@ -95,29 +95,48 @@ function getPlayersWithUserInfo(players, users) {
 	});
 }
 
-function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
-	const self = this;
+function commitIndividualPlayers(schoolId, eventId, initialPlayers, players, notificationMode) {
 
-	const promises = [];
-
+	const playersToRemove = [];
 	initialPlayers.forEach(initialPlayer =>
-		// If player wasn't find - add delete promise to promise array
-		!Lazy(players).findWhere({id:initialPlayer.id}) &&
-		promises.push(
-			self.deleteIndividualPlayer(
-				schoolId,
-				eventId,
-				initialPlayer.id,
-			)
-		)
+		!Lazy(players).findWhere({id:initialPlayer.id}) && playersToRemove.push(initialPlayer.id)
 	);
 
-	// Add new player promises to promise array.
-	// A little trick:
-	// user without userId - is a new user.
-	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p) ));
+	const newPlayers = [];
+	players.forEach(player => !player.userId &&
+		newPlayers.push( {userId: player.id, permissionId: player.permissionId} )
+	);
 
-	return promises;
+	return changeIndividualPlayers(schoolId, eventId, newPlayers, playersToRemove, notificationMode);
+}
+
+function changeIndividualPlayers(schoolId, eventId, newPlayers, playersToRemove, notificationMode = 'AUTO') {
+	let result;
+
+	if(
+		newPlayers.length > 0 ||
+		playersToRemove.length > 0
+	) {
+		result = window.Server.schoolEventIndividualsBatch.post(
+			{
+				schoolId: schoolId,
+				eventId: eventId
+			}, {
+				options: {
+					headers:	{ 'notification-mode': notificationMode },
+					isDataOnly:	false
+				},
+				add: newPlayers,
+				remove: playersToRemove
+			}
+		).then(response => {
+			return response.xhr.getResponseHeader('action-descriptor-id');
+		});
+	} else {
+		result = Promise.resolve(undefined);
+	}
+
+	return result;
 }
 
 function addIndividualPlayer(schoolId, eventId, player) {
@@ -1312,7 +1331,7 @@ function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
 			eventId:	event.id
 		},
 		{
-			individuals: players.map(p => {
+			add: players.map(p => {
 				return {
 					userId:			this.getUserIdFromPlayer(p),
 					permissionId:	p.permissionId

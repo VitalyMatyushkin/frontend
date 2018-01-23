@@ -200,25 +200,24 @@ const InviteAcceptView = React.createClass({
 
         if(TeamHelper.isNonTeamSport(event)) {
             // add new individuals
-            Promise
-                .all(TeamHelper.addIndividualPlayersToEvent(
+            TeamHelper.addIndividualPlayersToEvent(
 					this.props.activeSchoolId,
-                    event,
-                    binding.toJS(`teamModeView.teamWrapper`
-                )))
-                // accept invite
-                .then(() => window.Server.acceptSchoolInvite.post({
-                        schoolId: this.props.activeSchoolId,
-                        inviteId: binding.get('invite.id')
-                    })
-                )
-                .then(() => {
+	                event,
+	                binding.toJS(`teamModeView.teamWrapper`
+	            ))
+	            // accept invite
+	            .then(() => window.Server.acceptSchoolInvite.post({
+	                    schoolId: this.props.activeSchoolId,
+	                    inviteId: binding.get('invite.id')
+	                })
+	            )
+	            .then(() => {
 					this.removeAcceptedInvite(binding.get('invite.id'));
 	                this.triggerMsgCountUpdater();
-                    document.location.hash = '#event/' + event.id;
+	                document.location.hash = '#event/' + event.id;
 
-                    return true;
-                });
+	                return true;
+	            });
         } else {
 			const	activeSchoolId	= this.props.activeSchoolId,
 					rivals			= binding.toJS(`rivals`),

@@ -128,6 +128,7 @@ export class ServiceList {
 	schoolEventActivate: Service;
 	schoolEventTeams: Service;
 	schoolEventTeamPlayersBatch: Service;
+	schoolEventIndividuasPlayersBatch: Service;
 	schoolEventTeam: Service;
 	schoolEventPhoto: Service;
 	schoolEventPhotos: Service;

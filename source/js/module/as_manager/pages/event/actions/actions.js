@@ -80,9 +80,19 @@ function commitIndividualPlayerChanges(activeSchoolId, binding) {
 		initialPlayers	= AfterRivalsChangesHelper.getInitPlayersForIndividualEvent(event, binding);
 	}
 
-	return Promise.all(
-		TeamHelper.commitIndividualPlayers(activeSchoolId, eventId, initialPlayers, players)
-	);
+	return TeamHelper.commitIndividualPlayers(
+			activeSchoolId,
+			eventId,
+			initialPlayers,
+			players,
+			binding.toJS(`isManualNotificationMode`) ? 'MANUAL' : 'AUTO'
+		).then(actionDescriptorId => {
+			if(binding.toJS(`isManualNotificationMode`)) {
+				binding.set('actionDescriptorId', actionDescriptorId);
+			}
+
+			return true;
+		})
 }
 
 /** Submit team players changes for team game.

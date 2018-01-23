@@ -432,23 +432,13 @@ const ManagerWrapper = React.createClass({
 		}
 	},
 	renderSaveButton: function () {
-		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
-			return (
-				<SplitButtonWrapper
-					handleClickSaveButton = { this.handleClickSubmitButton }
-					handleClickSaveAndEditNotificationList = { this.handleClickSaveAndEditNotificationList }
-					isDisableButton = { !this.getDefaultBinding().toJS('isControlButtonActive') }
-				/>
-			);
-		} else {
-			return (
-				<Button
-					text = "Save"
-					onClick = { this.handleClickSubmitButton }
-					extraStyleClasses = { this.getSaveButtonStyleClass() }
-				/>
-			);
-		}
+		return (
+			<SplitButtonWrapper
+				handleClickSaveButton = { this.handleClickSubmitButton }
+				handleClickSaveAndEditNotificationList = { this.handleClickSaveAndEditNotificationList }
+				isDisableButton = { !this.getDefaultBinding().toJS('isControlButtonActive') }
+			/>
+		);
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
