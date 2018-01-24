@@ -8,6 +8,7 @@ import * as	Immutable from 'immutable';
 import {SVG} from 'module/ui/svg';
 
 import 'styles/pages/b_action_descriptor.scss';
+import {ServiceList} from "module/core/service_list/service_list";
 
 interface ExtraDataAffectedUser {
 	type: string
@@ -84,7 +85,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 		
 		binding.set('isSync', false);
 		
-		(window as any).Server.actionDescriptor.get({adId: actionDescriptorId,})
+		(window.Server as ServiceList).actionDescriptor.get({adId: actionDescriptorId,})
 			.then((actionDescriptor: ActionDescriptor[]) => {
 				binding.set('isSync', true);
 				binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));

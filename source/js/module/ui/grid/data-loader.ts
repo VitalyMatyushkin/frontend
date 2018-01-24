@@ -21,8 +21,6 @@ interface DataLoaderOptions {
     onLoad: any
 }
 
-
-
 export class DataLoader {
 
     serviceName: string;

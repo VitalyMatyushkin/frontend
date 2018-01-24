@@ -1,28 +1,35 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
-		Form		= require('../../../../../ui/form/form'),
-		FormField	= require('../../../../../ui/form/form_field'),
-		{Map}		= require('../../../../../ui/map/map2');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const PlaceForm = React.createClass({
+import * as BPromise from 'bluebird'
+
+import * as Form from '../../../../../ui/form/form'
+import * as FormField from '../../../../../ui/form/form_field'
+import {Map} from '../../../../../ui/map/map2'
+import {ServiceList} from "module/core/service_list/service_list";
+
+export interface PlaceFormData {
+	name: string,
+	ownerId: string
+	postcode: string
+}
+
+export const PlaceForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		title:			React.PropTypes.string.isRequired,
-		onSubmit:		React.PropTypes.func.isRequired,
-		onCancel:		React.PropTypes.func.isRequired
-	},
+
 	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
-	getPoint: function() {
+
+	getPoint() {
 		const binding = this.getDefaultBinding();
 
 		const postcode = binding.toJS('selectedPostcode');
 
 		return typeof postcode !== 'undefined' ? postcode.point : this.DEFAULT_VENUE_POINT;
 	},
-	postcodeService: function(searchText) {
-		return window.Server.postCodes.get(
+
+	postcodeService(searchText: string): BPromise<any> {
+		return (window.Server as ServiceList).postCodes.get(
 			{
 				filter: {
 					where: {
@@ -35,10 +42,12 @@ const PlaceForm = React.createClass({
 				}
 			});
 	},
-	onSelectPostcode: function(id, postcode) {
+
+	onSelectPostcode(id: string, postcode: object) {
 		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode))
 	},
-	render: function() {
+
+	render() {
 		const selectedPostcode = this.getDefaultBinding().toJS('selectedPostcode');
 
 		return (
@@ -75,5 +84,3 @@ const PlaceForm = React.createClass({
 		);
 	}
 });
-
-module.exports = PlaceForm;

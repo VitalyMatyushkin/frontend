@@ -7,7 +7,7 @@ const	{Button}	= require('module/ui/button/button'),
 		Loader		= require('module/ui/loader');
 
 const	ActiveClubHelper	= require('module/as_manager/pages/clubs/activate_club/active_club_helper'),
-		ClubsActions		= require('module/as_manager/pages/clubs/clubs_actions');
+		{ClubsActions}		= require('module/as_manager/pages/clubs/clubs_actions');
 
 const	LoaderStyle			= require('styles/ui/loader.scss'),
 		ActivateClubStyle	= require('styles/ui/b_activate_club.scss'),
@@ -42,7 +42,7 @@ const ActivateClub = React.createClass({
 
 		binding.set('isSync', false);
 		ClubsActions
-			.acvitateClub(this.props.activeSchoolId, this.props.clubId)
+			.activateClub(this.props.activeSchoolId, this.props.clubId)
 			.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
 			.then(club => {
 				window.simpleAlert('The club has been activated successfully.');

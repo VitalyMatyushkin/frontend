@@ -4,7 +4,7 @@ const	RouterView						= require('module/core/router'),
 		Tabs							= require('module/ui/tabs/tabs'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
-		GeneralPageComponent			= require("module/shared_pages/settings/general/general_page"),
+		{GeneralSettingsPage}			= require("module/shared_pages/settings/general/general_page"),
 		ChangePasswordPageComponent		= require("module/shared_pages/settings/password/change_password_page"),
 		AccountRolesComponent			= require("module/shared_pages/settings/account/account_roles"),
 		AccountRequestsComponent		= require("module/shared_pages/settings/account/request-list"),
@@ -146,7 +146,7 @@ const SettingsPage = React.createClass({
 						<Route
 							path 		="/settings/general"
 							binding 	={ binding.sub('userInfo') }
-							component 	={ GeneralPageComponent }
+							component 	={ GeneralSettingsPage }
 						/>
 						<Route
 							path 		="/settings/password"

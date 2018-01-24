@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import {Sport} from './sport'
+
 import {ReactNode} from "react";
+import {Sport} from "module/models/sport/sport";
 
 interface SportListManagerProps {
 	sportList: 			Sport[],

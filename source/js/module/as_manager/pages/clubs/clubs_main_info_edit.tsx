@@ -1,23 +1,22 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const	ClubForm	= require('module/as_manager/pages/clubs/clubs_form/clubs_form'),
-		Loader		= require('module/ui/loader');
+import * as ClubForm from 'module/as_manager/pages/clubs/clubs_form/clubs_form'
+import * as Loader  from 'module/ui/loader'
 
-const	ClubsConst		= require('module/helpers/consts/clubs'),
-		EventConsts		= require('module/helpers/consts/events'),
-		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper');
+import * as ClubConsts from 'module/helpers/consts/clubs'
+import * as EventConsts from 'module/helpers/consts/events'
+import * as ClubsHelper from 'module/as_manager/pages/clubs/clubs_helper'
 
-const	LoaderStyle	= require('styles/ui/loader.scss');
+import {ServiceList} from "module/core/service_list/service_list";
+import {ClubFormData} from "module/as_manager/pages/clubs/clubs_form/models/club_form_data";
 
-const ClubMainInfoEdit = React.createClass({
+const LoaderStyle = require('styles/ui/loader.scss');
+
+export const ClubMainInfoEdit = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		clubId:			React.PropTypes.string.isRequired
-	},
-	componentWillMount: function () {
+	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
 		const clubId = this.props.clubId;
@@ -25,7 +24,7 @@ const ClubMainInfoEdit = React.createClass({
 		binding.set('isSync', false);
 		let club;
 		if (typeof clubId !== 'undefined') {
-			window.Server.schoolClub.get(
+			(window.Server as ServiceList).schoolClub.get(
 				{
 					schoolId:	this.props.activeSchoolId,
 					clubId:		clubId
@@ -34,7 +33,7 @@ const ClubMainInfoEdit = React.createClass({
 			.then(data => {
 				club = data;
 
-				return window.Server.sport.get(club.sportId);
+				return (window.Server as ServiceList).sport.get(club.sportId);
 			})
 			.then(sport => {
 				binding.set('isSync', true);
@@ -65,15 +64,18 @@ const ClubMainInfoEdit = React.createClass({
 				binding.set(
 					'clubsForm.form.priceType',
 					Immutable.fromJS(
-						ClubsConst.SERVER_TO_CLIENT_PRICING_MAPPING[club.price.priceType]
+						ClubConsts.SERVER_TO_CLIENT_PRICING_MAPPING[club.price.priceType]
 					)
 				);
 			});
 		}
 	},
-	submitEdit: function(data) {
-		const 	binding 		= this.getDefaultBinding(),
-				formDataDays 	= typeof this.getDefaultBinding().toJS('clubsForm.days') !== 'undefined' ? this.getDefaultBinding().toJS('clubsForm.days') : [];
+	submitEdit(data: ClubFormData) {
+		const binding = this.getDefaultBinding();
+		const formDataDays = typeof this.getDefaultBinding().toJS('clubsForm.days') !== 'undefined' ?
+			this.getDefaultBinding().toJS('clubsForm.days') :
+			[];
+
 		//week days is required
 		if (formDataDays.length === 0) {
 			binding.set('clubsForm.isRequiredErrorDays', true);
@@ -83,7 +85,7 @@ const ClubMainInfoEdit = React.createClass({
 				data,
 				this.getDefaultBinding().toJS('clubsForm')
 			);
-			window.Server.schoolClub.put(
+			(window.Server as ServiceList).schoolClub.put(
 				{
 					schoolId:	this.props.activeSchoolId,
 					clubId:		this.props.clubId
@@ -92,7 +94,7 @@ const ClubMainInfoEdit = React.createClass({
 			).then(() => ClubsHelper.redirectToClubListPage());
 		}
 	},
-	render: function() {
+	render() {
 		const binding = this.getDefaultBinding();
 
 		let clubForm = null;
@@ -116,5 +118,3 @@ const ClubMainInfoEdit = React.createClass({
 		return clubForm;
 	}
 });
-
-module.exports = ClubMainInfoEdit;

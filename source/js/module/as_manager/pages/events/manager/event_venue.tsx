@@ -1,32 +1,27 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable');
+import * as React	 from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const	propz				= require('propz'),
-		Promise				= require('bluebird'),
-		{If}				= require('../../../../ui/if/if'),
-		{Map}				= require('../../../../ui/map/map2'),
-		{Autocomplete}		= require('../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		{PlaceListItem}		= require('../../../../ui/autocomplete2/custom_list_items/place_list_item/place_list_item'),
-		PlacePopup			= require('./place_popup'),
-		StarButton			= require('../../../../ui/star_button');
+import * as propz from 'propz'
+import * as Promise  from 'bluebird'
+import {If} from  'module/ui/if/if'
+import {Map} from 'module/ui/map/map2'
+import {Autocomplete} from  'module/ui/autocomplete2/OldAutocompleteWrapper'
+import {PlaceListItem} from 'module/ui/autocomplete2/custom_list_items/place_list_item/place_list_item'
+import {PlacePopup} from './place_popup'
+import * as StarButton from '../../../../ui/star_button'
+import {ServiceList} from "module/core/service_list/service_list";
 
 const	InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
 		DropdownStyles		= require('./../../../../../../styles/ui/b_dropdown.scss');
 
-const EventVenue = React.createClass({
+export const EventVenue = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
 
-	propTypes: {
-		eventType				: React.PropTypes.string.isRequired,
-		activeSchoolInfo		: React.PropTypes.object.isRequired,
-		isCopyMode				: React.PropTypes.bool,
-		opponentSchoolInfoArray	: React.PropTypes.array
-	},
 	componentWillReceiveProps:function(nextProps){
 		// Listen changes of event type.
 		// This component doesn't contain eventType field,
@@ -37,7 +32,7 @@ const EventVenue = React.createClass({
 		}
 	},
 
-	componentWillMount: function() {
+	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
 		// It's auto generated key for postcode input.
@@ -45,11 +40,13 @@ const EventVenue = React.createClass({
 		binding.set('postcodeInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.sub('fartherThen').addListener(() => this.clearVenueData());
 	},
-	generatePostcodeInputKey: function() {
+
+	generatePostcodeInputKey() {
 		// just current date in timestamp view
 		return + new Date();
 	},
-	handleChangeGameType: function() {
+
+	handleChangeGameType() {
 		const currentGameType = this.props.eventType;
 
 		const homePostCode = this.getHomeSchoolPostCode();
@@ -68,6 +65,7 @@ const EventVenue = React.createClass({
 				break;
 		}
 	},
+
 	/**
 	 * Clear all venue data:
 	 * 1) venue type
@@ -75,18 +73,19 @@ const EventVenue = React.createClass({
 	 *
 	 * And generate new key for postcode input. By this operation we can reload state of postcode input
 	 */
-	clearVenueData: function() {
+	clearVenueData() {
 		this.getDefaultBinding().atomically()
 			.set('postcodeInputKey',	Immutable.fromJS(this.generatePostcodeInputKey()))
 			.set('model.venue',			Immutable.fromJS({}))
 			.commit();
 	},
+
 	/**
 	 * Get home school postcode
 	 * @returns {*}
 	 * @private
 	 */
-	getHomeSchoolPostCode: function() {
+	getHomeSchoolPostCode() {
 		const schoolInfo = this.props.activeSchoolInfo;
 
 		const postcode = schoolInfo.postcode;
@@ -94,12 +93,13 @@ const EventVenue = React.createClass({
 
 		return postcode;
 	},
+
 	/**
 	 * Get home school postcode
 	 * @returns {*}
 	 * @private
 	 */
-	getOpponentSchoolPostCodes: function() {
+	getOpponentSchoolPostCodes() {
 		const opponentSchoolInfoArray = this.props.opponentSchoolInfoArray;
 
 		if(typeof opponentSchoolInfoArray !== 'undefined') {
@@ -116,14 +116,16 @@ const EventVenue = React.createClass({
 			return [];
 		}
 	},
-	getTBDPostcode: function() {
+
+	getTBDPostcode() {
 		return {
 			id			: "TBD",
 			postcode	: "TBD"
 		};
 	},
-	getResultForEmptySearchString: function() {
-		return window.Server.schoolPlaces.get(this.props.activeSchoolInfo.id)
+
+	getResultForEmptySearchString() {
+		return (window.Server as ServiceList).schoolPlaces.get(this.props.activeSchoolInfo.id)
 			.then(places => {
 				let result = [];
 
@@ -146,7 +148,8 @@ const EventVenue = React.createClass({
 				return Promise.resolve(result);
 			});
 	},
-	getResultForNotEmptySearchString: function(postcode) {
+
+	getResultForNotEmptySearchString(postcode) {
 		const	gameType	= this.props.eventType;
 
 		const	homePostcode		= this.getHomeSchoolPostCode(),
@@ -163,7 +166,7 @@ const EventVenue = React.createClass({
 			limit: 10
 		};
 
-		return window.Server.schoolPlacesAndPostcodes.get(
+		return (window.Server as ServiceList).schoolPlacesAndPostcodes.get(
 			this.props.activeSchoolInfo.id,
 			{
 				filter: postCodeFilter
@@ -200,7 +203,8 @@ const EventVenue = React.createClass({
 			return postcodes;
 		});
 	},
-	postcodeService: function (postcode) {
+
+	postcodeService(postcode) {
 		if(postcode === '') {
 			return this.getResultForEmptySearchString();
 		} else {
@@ -213,7 +217,7 @@ const EventVenue = React.createClass({
 	 * @param postcodes
 	 * @returns {*}
 	 */
-	upPostcodeToStart: function(currentPostcodeIndex, postcodes) {
+	upPostcodeToStart(currentPostcodeIndex, postcodes) {
 		const postcodeElement = postcodes[currentPostcodeIndex];
 
 		postcodes.splice(currentPostcodeIndex, 1);
@@ -221,7 +225,8 @@ const EventVenue = React.createClass({
 
 		return postcodes;
 	},
-	getVenueTypeByPostcode: function(value) {
+
+	getVenueTypeByPostcode(value) {
 				// home postcode can be undefined, so - check it
 		const	homePostcode		= this.getHomeSchoolPostCode(),
 				homePostcodeId		= typeof homePostcode !== 'undefined' ? homePostcode.id : undefined,
@@ -240,23 +245,25 @@ const EventVenue = React.createClass({
 				return 'CUSTOM';
 		}
 	},
-	getVenueType: function() {
+	getVenueType() {
 		return this.getDefaultBinding().get('model.venue.venueType');
 	},
-	setPostcode: function(postcode) {
+	setPostcode(postcode) {
 		this.getDefaultBinding().atomically()
 			.set('model.venue.venueType',		Immutable.fromJS(this.getVenueTypeByPostcode(postcode)))
 			.set('model.venue.postcodeData',	Immutable.fromJS(postcode))
 			.commit();
 	},
-	isPlace: function(value) {
+
+	isPlace(value) {
 		return typeof value.name !== 'undefined';
 	},
+
 	/**
 	 * Function converts place to postcode and adds name place and placeId to it.
 	 * @param place
 	 */
-	convertPlaceToPostcodeWithPlaceName: function(place) {
+	convertPlaceToPostcodeWithPlaceName(place) {
 		return {
 			id:					place.postcodeId,
 			placeId:			place.id,
@@ -266,7 +273,8 @@ const EventVenue = React.createClass({
 			postcodeNoSpaces:	place.postcodeNoSpaces
 		};
 	},
-	handleSelectPostcode: function(id, value) {
+
+	handleSelectPostcode(id, value) {
 		let postcode = value;
 
 		if(this.isPlace(postcode)) {
@@ -275,7 +283,8 @@ const EventVenue = React.createClass({
 
 		this.setPostcode(postcode);
 	},
-	handleClickPostcodeInput: function(eventDescriptor) {
+
+	handleClickPostcodeInput(eventDescriptor) {
 		if(this.isPostcodeInputBlocked()) {
 			window.simpleAlert(
 				'Please, select your opposing school first.',
@@ -285,16 +294,17 @@ const EventVenue = React.createClass({
 			eventDescriptor.stopPropagation();
 		}
 	},
+
 	/**
 	 * Get geo point for map.
 	 * Return default geo point when postcode isn't selected.
 	 * @returns {*}
 	 */
-	getPoint: function() {
+	getPoint() {
 		const	binding		= this.getDefaultBinding(),
 				schoolInfo	= this.props.activeSchoolInfo;
 
-		let point = propz.get(schoolInfo, ['postcode', 'point']);
+		let point = propz.get(schoolInfo, ['postcode', 'point'], undefined);
 		if(typeof point === "undefined") {
 			point = this.DEFAULT_VENUE_POINT;
 		}
@@ -309,30 +319,33 @@ const EventVenue = React.createClass({
 				return point;
 			case typeof venuePoint !== 'undefined':
 				return venuePoint.point;
-		};
+		}
 	},
-	isPostcodeInputBlocked: function() {
+
+	isPostcodeInputBlocked() {
 		const	gameType			= this.props.eventType,
 				opponentSchoolArray	= this.props.opponentSchoolInfoArray;	// opponent school for inter-schools event
 
 		return (
 			gameType === 'inter-schools' &&
-			typeof opponentSchoolArray === 'undefined' &&
+			typeof opponentSchoolArray !== 'undefined' &&
 			opponentSchoolArray.length !== 0
 		);
 	},
+
 	/**
 	 * Show map when venue isn't equal TBD
 	 */
-	isShowMap: function() {
+	isShowMap() {
 		return this.getVenueType() !== "TBD";
 	},
-	getDefaultPostcode: function() {
+
+	getDefaultPostcode() {
 		const	homePostcode	= this.getHomeSchoolPostCode(),
 				awayPostcodes	= this.getOpponentSchoolPostCodes(),
 				model			= this.getDefaultBinding().toJS('model'),
-				venue			= propz.get(model, ['venue']);
-		let		defPostcode		= propz.get(model, ['venue', 'postcodeData']);
+				venue			= propz.get(model, ['venue'], undefined);
+		let		defPostcode		= propz.get(model, ['venue', 'postcodeData'], undefined);
 
 		if(typeof venue !== 'undefined') {
 			switch(true) {
@@ -362,27 +375,33 @@ const EventVenue = React.createClass({
 
 		return defPostcode;
 	},
-	getPostcodeTitle: function(elem) {
+
+	getPostcodeTitle(elem) {
 		return typeof elem.name !== 'undefined' ? elem.name : elem.postcode;
 	},
-	isStarButtonEnable: function() {
+
+	isStarButtonEnable() {
 		const postcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
 
 		return typeof postcode !== 'undefined' ? this.isPlace(postcode) : false;
 	},
-	isShowPlacePopup: function() {
+
+	isShowPlacePopup() {
 		return Boolean(this.getDefaultBinding().get('isShowPlacePopup'));
 	},
-	showPlacePopup: function() {
+
+	showPlacePopup() {
 		this.getDefaultBinding().set('isShowPlacePopup', true);
 	},
-	closePlacePopup: function() {
+
+	closePlacePopup() {
 		this.getDefaultBinding().set('isShowPlacePopup', false);
 	},
-	removePlace: function(place) {
+
+	removePlace(place) {
 		const binding = this.getDefaultBinding();
 
-		window.Server.schoolPlace.delete(
+		(window.Server as ServiceList).schoolPlace.delete(
 			{
 				schoolId: this.props.activeSchoolInfo.id,
 				placeId: place.placeId
@@ -400,7 +419,8 @@ const EventVenue = React.createClass({
 			binding.set('model.venue.postcodeData', Immutable.fromJS(postcode));
 		});
 	},
-	onClickStarButton: function() {
+
+	onClickStarButton() {
 		const	binding		= this.getDefaultBinding(),
 				postcode	= binding.toJS('model.venue.postcodeData');
 
@@ -419,7 +439,8 @@ const EventVenue = React.createClass({
 				break;
 		}
 	},
-	onSubmit: function(newPlace) {
+
+	onSubmit(newPlace) {
 		const binding =  this.getDefaultBinding();
 
 		const place = this.convertPlaceToPostcodeWithPlaceName(newPlace);
@@ -429,10 +450,12 @@ const EventVenue = React.createClass({
 			.set('model.venue.postcodeData', Immutable.fromJS(place))
 			.commit();
 	},
-	onCancel: function() {
+
+	onCancel() {
 		this.closePlacePopup();
 	},
-	render: function() {
+
+	render() {
 		const binding = this.getDefaultBinding();
 
 		// Note. Pls look at Autocomplete component.
@@ -446,16 +469,18 @@ const EventVenue = React.createClass({
 					<div className="bInputLabel">
 						Postcode
 					</div>
-					<Autocomplete	key					= { binding.toJS('postcodeInputKey') }
-									customListItem		= { PlaceListItem }
-									getElementTitle		= { this.getPostcodeTitle }
-									serverField			= "postcode"
-									defaultItem			= { this.getDefaultPostcode() }
-									serviceFilter		= { this.postcodeService }
-									onSelect			= { this.handleSelectPostcode }
-									placeholder			= { 'Select Postcode' }
-									isBlocked			= { this.isPostcodeInputBlocked() }
-									extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin mWhiteBG' }
+					<Autocomplete
+						key					= { binding.toJS('postcodeInputKey') }
+	                    serverField			= "postcode"
+					    customListItem		= { PlaceListItem }
+						getElementTitle		= { this.getPostcodeTitle }
+
+						defaultItem			= { this.getDefaultPostcode() }
+						serviceFilter		= { this.postcodeService }
+						onSelect			= { this.handleSelectPostcode }
+						placeholder			= { 'Select Postcode' }
+						isBlocked			= { this.isPostcodeInputBlocked() }
+						extraCssStyle		= { 'mBigSize mWidth350 mInline mRightMargin mWhiteBG' }
 					/>
 					<StarButton	handleClick	= { this.onClickStarButton }
 								isEnable	= { this.isStarButtonEnable() }
@@ -477,5 +502,3 @@ const EventVenue = React.createClass({
 		);
 	}
 });
-
-module.exports = EventVenue;

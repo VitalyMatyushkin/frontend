@@ -1,36 +1,36 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		classNames	= require('classnames'),
-		Immutable	= require('immutable'),
-		Promise		= require('bluebird');
+import * as  React from 'react'
+import * as  Morearty from 'morearty'
+import * as  classNames from 'classnames'
+import * as  Immutable from 'immutable'
+import * as  Promise from 'bluebird'
 
-const	{TeamManager}= require('module/ui/managers/team_manager/team_manager'),
-		{Button}	= require('module/ui/button/button'),
-		Header		= require('module/as_manager/pages/clubs/clubs_children_edit/header'),
-		Error		= require('module/ui/managers/models/error'),
-		Loader		= require('module/ui/loader');
+import {TeamManager} from 'module/ui/managers/team_manager/team_manager'
+import {Button} from 'module/ui/button/button'
+import * as Header from 'module/as_manager/pages/clubs/clubs_children_edit/header'
+import * as  Error from 'module/ui/managers/models/error'
+import * as Loader from 'module/ui/loader'
 
-const	TeamHelper							= require('module/ui/managers/helpers/team_helper'),
-		RandomHelper						= require('module/helpers/random_helper'),
-		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
-		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions'),
-		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
-		{ ClubsChildrenBookingActionArea }	= require('module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_action_area/clubs_children_booking_action_area'),
-		ClubsActions						= require('module/as_manager/pages/clubs/clubs_actions');
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper'
+import * as RandomHelper from 'module/helpers/random_helper'
+import {PlayerChoosersTabsModelFactory} from 'module/helpers/player_choosers_tabs_models_factory'
+import {TeamManagerActions} from 'module/helpers/actions/team_manager_actions'
+import {ManagerTypes} from 'module/ui/managers/helpers/manager_types'
+import {ClubsChildrenBookingActionArea} from 'module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_action_area/clubs_children_booking_action_area'
+import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
+import {ServiceList} from "module/core/service_list/service_list";
+import {Sport} from "module/models/sport/sport";
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
 const	ClubcChildrenWrapperStyle	= require('styles/pages/b_club_children_manager_wrapper.scss');
 
-const ClubChildrenEdit = React.createClass({
+export const ClubChildrenEdit = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		clubId:			React.PropTypes.string.isRequired
-	},
+	
 	listeners: [],
 	playerChoosersTabsModel: undefined,
 	teamManagerActions: undefined,
-	componentWillMount: function () {
+	
+	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
 		this.initPlayerChoosersTabsModel();
@@ -43,14 +43,14 @@ const ClubChildrenEdit = React.createClass({
 
 		binding.set('isSync', false);
 		if (typeof clubId !== 'undefined') {
-			window.Server.school.get(this.props.activeSchoolId).then(_school => {
+			(window.Server as ServiceList).school.get(this.props.activeSchoolId).then(_school => {
 				school = _school;
 
-				return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
+				return (window.Server as ServiceList).schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
 			}).then(forms => {
 				school.forms = forms;
 
-				return window.Server.schoolClub.get(
+				return (window.Server as ServiceList).schoolClub.get(
 					{
 						schoolId:	this.props.activeSchoolId,
 						clubId:		clubId
@@ -69,7 +69,7 @@ const ClubChildrenEdit = React.createClass({
 					)
 				));
 
-				return window.Server.schoolClubParticipats.get(
+				return (window.Server as ServiceList).schoolClubParticipants.get(
 					{
 						schoolId:	this.props.activeSchoolId,
 						clubId:		clubId
@@ -83,7 +83,7 @@ const ClubChildrenEdit = React.createClass({
 				
 				const filter = { filter: { where: { isAllSports: true } } };
 
-				return window.Server.schoolSport.get(
+				return (window.Server as ServiceList).schoolSport.get(
 					{
 						schoolId:	this.props.activeSchoolId,
 						sportId:	club.sportId
@@ -104,24 +104,24 @@ const ClubChildrenEdit = React.createClass({
 			});
 		}
 	},
-	componentWillUnmount: function () {
+	componentWillUnmount() {
 		this.getDefaultBinding().clear();
 
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
-	addListeners: function () {
+	addListeners() {
 		this.listeners.push(
 			this.getDefaultBinding().sub('teamManager.teamStudents').addListener(() => {
 				this.validate();
 			})
 		);
 	},
-	initPlayerChoosersTabsModel: function () {
+	initPlayerChoosersTabsModel() {
 		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
 			ManagerTypes.ChildrenBooking
 		);
 	},
-	initTeamManagerActions: function () {
+	initTeamManagerActions() {
 		this.teamManagerActions = new TeamManagerActions(
 			{
 				schoolId:	this.props.activeSchoolId,
@@ -129,7 +129,7 @@ const ClubChildrenEdit = React.createClass({
 			}
 		);
 	},
-	validate: function () {
+	validate() {
 		const binding = this.getDefaultBinding();
 		const error = binding.toJS('error');
 		const isValid = this.isSaveButtonEnable();
@@ -150,7 +150,7 @@ const ClubChildrenEdit = React.createClass({
 	setNewManagerComponentKey: function() {
 		this.getDefaultBinding().set('managerComponentKey', RandomHelper.getRandomString());
 	},
-	getTeamManagerDefaultState: function (school, club, sport, participants) {
+	getTeamManagerDefaultState(school: object, club: any, sport: Sport, participants: object) {
 		const genders = TeamHelper.getFilterGender(club.gender);
 
 		return {
@@ -165,7 +165,7 @@ const ClubChildrenEdit = React.createClass({
 			)
 		};
 	},
-	isSaveButtonEnable: function () {
+	isSaveButtonEnable() {
 		const clubStudentsCount = this.getDefaultBinding().toJS('teamManager.teamStudents').length;
 		const maxParticipants = this.getMaxParticipants();
 
@@ -175,7 +175,7 @@ const ClubChildrenEdit = React.createClass({
 				true
 		);
 	},
-	getMaxParticipants: function () {
+	getMaxParticipants() {
 		return this.getDefaultBinding().toJS('club.maxParticipants');
 	},
 	getSaveButtonStyleClass: function() {
@@ -183,7 +183,7 @@ const ClubChildrenEdit = React.createClass({
 			'mDisable': !this.isSaveButtonEnable()
 		});
 	},
-	saveChildren: function () {
+	saveChildren() {
 		const prevParticipants = this.getDefaultBinding().toJS('prevParticipants');
 		const currentParticipants = this.getDefaultBinding().toJS('teamManager.teamStudents');
 
@@ -239,8 +239,8 @@ const ClubChildrenEdit = React.createClass({
 
 		return Promise.all(promises);
 	},
-	getAndSetNewClubData: function () {
-		return window.Server.schoolClubParticipats.get(
+	getAndSetNewClubData() {
+		return (window.Server as ServiceList).schoolClubParticipants.get(
 			{
 				schoolId:	this.props.activeSchoolId,
 				clubId:		this.props.clubId
@@ -252,13 +252,13 @@ const ClubChildrenEdit = React.createClass({
 			return true;
 		});
 	},
-	doAfterSaveActions: function () {
+	doAfterSaveActions() {
 		this.getDefaultBinding().set('isSync', true);
 		window.simpleAlert('The pupils have been added successfully.');
 	},
-	handleSendMessages: function () {
+	handleSendMessages() {
 		this.getDefaultBinding().set('isSync', false);
-		return window.Server.schoolClubSendMessages.post(
+		return (window.Server as ServiceList).schoolClubSendMessages.post(
 			{
 				schoolId:	this.props.activeSchoolId,
 				clubId:		this.props.clubId
@@ -272,7 +272,7 @@ const ClubChildrenEdit = React.createClass({
 			this.getDefaultBinding().set('isSync', true);
 		});
 	},
-	handleClickSubmitButton: function () {
+	handleClickSubmitButton() {
 		if(this.isSaveButtonEnable()) {
 			this.getDefaultBinding().set('isSync', false);
 
@@ -281,7 +281,7 @@ const ClubChildrenEdit = React.createClass({
 				.then(() => this.doAfterSaveActions());
 		}
 	},
-	render: function() {
+	render() {
 		const binding = this.getDefaultBinding();
 
 		let clubForm = null;
@@ -324,5 +324,3 @@ const ClubChildrenEdit = React.createClass({
 		return clubForm;
 	}
 });
-
-module.exports = ClubChildrenEdit;

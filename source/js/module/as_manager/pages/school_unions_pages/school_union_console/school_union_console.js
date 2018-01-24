@@ -9,7 +9,7 @@ const	{SubMenu}					= require('module/ui/menu/sub_menu'),
 		UserRequestList				= require('./pages/user_request_list'),
 		UserRequestListArchive		= require('./pages/user_request_list_archive'),
 		UserViewComponent			= require('../../../../shared_pages/users/user_view'),
-		PlacesPage					= require('./pages/places_page/places_page'),
+		{PlacesPage}				= require('./pages/places_page/places_page'),
 		FavouriteSportPageWrapper	= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
 		MoreartyHelper				= require('module/helpers/morearty_helper');
 
@@ -146,11 +146,10 @@ const SchoolUnionConsole = React.createClass({
 									component	= {FavouriteSportPageWrapper}
 							/>
 
-							<Route	path					= "/user/view"
-									binding					= {binding.sub('userDetailPage')}
-									userPermissionsService	= {window.Server.schoolUserPermissions}
-									isEditable				= {false}
-									component				= {UserViewComponent}
+							<Route	path        = "/user/view"
+									binding     = {binding.sub('userDetailPage')}
+									isEditable  = {false}
+									component   = {UserViewComponent}
 							/>
 						</RouterView>
 					</div>

@@ -14,7 +14,7 @@ import * as RoleListHelper from './role_list_helper';
 import * as	RoleHelper from 'module/helpers/role_helper';
 import * as	SessionHelper from 'module/helpers/session_helper';
 
-const  RoleList = (React as any).createClass({
+const RoleList = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function(){
 		return Immutable.Map({

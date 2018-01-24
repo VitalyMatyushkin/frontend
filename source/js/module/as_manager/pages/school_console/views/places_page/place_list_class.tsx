@@ -1,10 +1,20 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		{SVG}			= require('module/ui/svg'),
-		{DataLoader}	= require('module/ui/grid/data-loader'),
-		{GridModel}		= require('module/ui/grid/grid-model');
+import * as React from 'react'
+import {SVG} from 'module/ui/svg'
+import {DataLoader}	from 'module/ui/grid/data-loader'
+import {GridModel} from 'module/ui/grid/grid-model'
+import {ServiceList} from "module/core/service_list/service_list";
 
-class PlaceListModel {
+export class PlaceListClass {
+	getDefaultBinding: any;
+	getMoreartyContext: any;
+	props: any;
+	state: any;
+	rootBinding: any;
+	activeSchoolId: string;
+	dataLoader: DataLoader;
+	columns: any;
+	grid: GridModel;
+
 	constructor(page){
 		this.getDefaultBinding = page.getDefaultBinding;
 		this.getMoreartyContext = page.getMoreartyContext;
@@ -19,7 +29,7 @@ class PlaceListModel {
 		this.getColumns();
 	}
 	
-	reloadData(){
+	reloadData() {
 		this.dataLoader.loadData();
 	}
 	
@@ -35,7 +45,7 @@ class PlaceListModel {
 			`Are you sure you want to remove place ${place.name}?`,
 			"Ok",
 			"Cancel",
-			() => window.Server.schoolPlace
+			() => (window.Server as ServiceList).schoolPlace
 			.delete(
 				{
 					schoolId: self.activeSchoolId,
@@ -48,7 +58,7 @@ class PlaceListModel {
 		eventDescriptor.stopPropagation();
 	}
 	getPlaces(schoolId) {
-		return window.Server.schoolPlaces.get(schoolId, {filter:{limit:1000}});
+		return (window.Server as ServiceList).schoolPlaces.get(schoolId, {filter:{limit:1000}});
 	}
 	
 	getColumns() {
@@ -86,7 +96,7 @@ class PlaceListModel {
 		];
 	}
 	
-	createGrid(){
+	createGrid() {
 		this.grid = new GridModel({
 			actionPanel: {
 				title: 'Venues',
@@ -152,10 +162,7 @@ class PlaceListModel {
 		return this;
 	}
 	
-	onLoadData(){
+	onLoadData() {
 		this.getDefaultBinding().set('data', this.grid.table.data);
 	}
-	
 }
-
-module.exports = PlaceListModel;

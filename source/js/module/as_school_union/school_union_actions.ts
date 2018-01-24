@@ -6,9 +6,11 @@ import * as leagueSports from 'module/as_school_union/pages/school_home/league/l
 import * as Immutable from 'immutable';
 import * as ScoreHelper from 'module/as_school_union/pages/school_home/league/score_helper';
 
+import {ServiceList} from "module/core/service_list/service_list";
+
 export class SchoolUnionActions {
 	static getTournaments(binding, schoolUnionId) {
-		(window as any).Server.publicTournaments.get({schoolUnionId})
+		(window.Server as ServiceList).publicTournaments.get({schoolUnionId})
 			.then(tournaments => {
 				const tournamentsWithLink = tournaments.filter(tournament => typeof tournament.link !== 'undefined');
 				binding.sub('schoolHomePage')
@@ -32,9 +34,10 @@ export class SchoolUnionActions {
 		
 		leagueSports.forEach(sport => filterSport.filter.where.$or.push({name: sport}));
 		
-		(window as any).Server.publicSchoolSports.get(activeSchoolId, filterSport)
+		(window.Server as ServiceList).publicSchoolSports
+			.get(activeSchoolId, filterSport)
 			.then(sports => {
-				const 	sportIds = sports.map(s => s.id),
+				const sportIds = sports.map(s => s.id),
 					filterEvent = {
 						filter: {
 							limit: 1000,
@@ -47,9 +50,10 @@ export class SchoolUnionActions {
 							}
 						}
 					};
+
 				sportIds.forEach(sportId => filterEvent.filter.where.$or.push({sportId: sportId}));
 				
-				(window as any).Server.publicSchoolEvents.get(activeSchoolId, filterEvent)
+				(window.Server as ServiceList).publicSchoolEvents.get(activeSchoolId, filterEvent)
 					.then(events => {
 						const sportIdsFromEvent = events.map(e => e.sportId);
 						const resultSports = sports.filter(s => sportIdsFromEvent.indexOf(s.id) !== -1);
@@ -72,7 +76,7 @@ export class SchoolUnionActions {
 		if (sportId !== null) {
 			const 	events = binding.toJS('leagueEvents'),
 					eventFilteredBySport = events.filter(event => event.sportId === sportId);
-			(window as any).Server.publicSchoolUnionSchools.get(activeSchoolId)
+			(window.Server as ServiceList).publicSchoolUnionSchools.get(activeSchoolId)
 				.then(schools => {
 					const schoolsId = schools.map(schools => schools.id);
 					const scoresData = [];

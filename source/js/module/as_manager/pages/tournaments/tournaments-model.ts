@@ -6,6 +6,7 @@ import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
 import * as Timezone    from 'moment-timezone';
 import {Tournament}     from 'module/as_manager/pages/tournaments/tournament';
+import {ServiceList} from "module/core/service_list/service_list";
 
 /**
  * TournamentsModel
@@ -49,7 +50,7 @@ export class TournamentsModel{
     }
 
     getSportsFromServer(): any {
-        return (<any>window).Server.sports.get({filter:{limit:1000}});
+        return (window.Server as ServiceList).sports.get({filter:{limit:1000}});
     }
 
     getStartTime(item: any): string {

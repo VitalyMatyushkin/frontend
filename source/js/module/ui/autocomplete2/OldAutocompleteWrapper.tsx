@@ -15,7 +15,7 @@ interface AutocompleteProps {
 	defaultItem?:		any,
 	extraCssStyle?:		string,
 	getElementTitle?:	(elem: any) => string,
-	customListItem?:	() => any,
+	customListItem?:	any,
 	id?:				string
 }
 

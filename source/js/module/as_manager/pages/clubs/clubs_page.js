@@ -1,13 +1,12 @@
-
 const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Immutable	= require('immutable'),
 		Route		= require('module/core/route'),
 		RouterView	= require('module/core/router');
 
-const	ClubList	= require("module/as_manager/pages/clubs/club_list/club_list"),
-		ClubAdd		= require("module/as_manager/pages/clubs/clubs_add"),
-		ClubEdit	= require("module/as_manager/pages/clubs/clubs_edit");
+const	{ClubList}	= require("module/as_manager/pages/clubs/club_list/club_list"),
+		{ClubsAdd}  = require("module/as_manager/pages/clubs/clubs_add"),
+		{ClubsEdit} = require("module/as_manager/pages/clubs/clubs_edit");
 
 const ClubsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -53,14 +52,14 @@ const ClubsPage = React.createClass({
 					path			= "/clubs/add"
 					binding			= { binding.sub('clubsAdd') }
 					activeSchoolId	= { this.props.activeSchoolId }
-					component		= { ClubAdd }
+					component		= { ClubsAdd }
 				/>
 
 				<Route
 					path			= "/clubs/editMainInfo /clubs/editChildren"
 					binding			= { binding.sub('clubsEdit') }
 					activeSchoolId	= { this.props.activeSchoolId }
-					component		= { ClubEdit }
+					component		= { ClubsEdit }
 				/>
 			</RouterView>
 		)

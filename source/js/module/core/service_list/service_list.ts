@@ -1,12 +1,19 @@
 import {Service} from 'module/core/service';
-import {Role} from "module/models/role/role";
+
 import * as ImageService from "module/core/services/ImageService";
+
+import {Role} from "module/models/role/role";
+import {Sport} from "module/models/sport/sport";
+import {Permission} from "module/models/permission/permission";
+import {Club} from "module/models/club/club";
+import {Place} from "module/models/place/place";
+import {Profile} from "module/models/profile/profile";
 
 /** Collection of services to reach REST API from server */
 export class ServiceList {
 	// authorization
 	_login: Service;
-	roles: Service<Role[]>;
+	roles: Service<Role[], Role, any>;
 	_become: Service;
 
 	// password
@@ -14,7 +21,7 @@ export class ServiceList {
 	passwordsReset: Service;
 
 	// profile
-	profile: Service;
+	profile: Service<Profile, Profile, any>;
 	profileEmail: Service;
 	profileEmailResend: Service;
 	profilePhone: Service;
@@ -40,25 +47,25 @@ export class ServiceList {
 	schoolSettings: Service;
 	publicSchool: Service;
 	publicSchools: Service;
-	publicSchoolSports: Service;
+	publicSchoolSports: Service<Sport[], Sport, any>;
 	publicSchoolCheckPassword: Service;
 	publicBigscreenCheckPassword: Service;
 
-	schoolSports: Service;
-	schoolSport: Service;
+	schoolSports: Service<Sport[], Sport, any>;
+	schoolSport: Service<Sport, Sport, any>;
 
 	// clubs
-	schoolClubs: Service;
-	schoolClub: Service;
+	schoolClubs: Service<Club[], Club, any>;
+	schoolClub: Service<Club, Club, any>;
 	schoolClubAcceptableUsers: Service;
-	schoolClubParticipats: Service;
-	schoolClubParticipat: Service;
+	schoolClubParticipants: Service;
+	schoolClubParticipant: Service;
 	schoolClubActivate: Service;
 	schoolClubSendMessages: Service;
 
 	// places
-	schoolPlaces: Service;
-	schoolPlace: Service;
+	schoolPlaces: Service<Place[], Place, any>;
+	schoolPlace: Service<Place, Place, any>;
 	schoolPlacesAndPostcodes: Service;
 
 	// students
@@ -106,12 +113,12 @@ export class ServiceList {
 	statusPermissionRequest: Service;
 
 	//Permissions
-	schoolUserPermissions: Service;
-	schoolUserPermission: Service;
+	schoolUserPermissions: Service<Permission[], Permission, any>;
+	schoolUserPermission: Service<Permission, Permission, any>;
 
 	// sports
-	sport: Service;
-	sports: Service;
+	sport: Service<Sport, Sport, any>;
+	sports: Service<Sport[], Sport, any>;
 
 	//events
 	events: Service;
@@ -318,7 +325,7 @@ export class ServiceList {
 	constructor(binding) {
 		// authorization
 		this._login = new Service('/i/login', binding);
-		this.roles = new Service<Role[]>('/i/roles', binding);
+		this.roles = new Service<Role[], Role, any>('/i/roles', binding);
 		this._become = new Service('/i/roles/{roleName}/become', binding);
 
 		// password
@@ -326,7 +333,7 @@ export class ServiceList {
 		this.passwordsReset = new Service('/public/passwords/reset', binding);
 
 		// profile
-		this.profile = new Service('/i/profile', binding);
+		this.profile = new Service<Profile, Profile, any>('/i/profile', binding);
 		this.profileEmail = new Service('/i/profile/email', binding);
 		this.profileEmailResend = new Service('/i/profile/email/resend', binding);
 		this.profilePhone = new Service('/i/profile/phone', binding);
@@ -352,25 +359,25 @@ export class ServiceList {
 		this.schoolSettings = new Service('/i/schools/{schoolId}/settings', binding);
 		this.publicSchool = new Service('/public/schools/{schoolId}', binding);
 		this.publicSchools = new Service('/public/schools', binding);
-		this.publicSchoolSports = new Service('/public/schools/{schoolId}/sports', binding);
+		this.publicSchoolSports = new Service<Sport[], Sport, any>('/public/schools/{schoolId}/sports', binding);
 		this.publicSchoolCheckPassword = new Service('/public/schools/{schoolId}/publicSite/password/check', binding);
 		this.publicBigscreenCheckPassword = new Service('/public/schools/{schoolId}/publicBigscreenSite/password/check', binding);
 
-		this.schoolSports = new Service('/i/schools/{schoolId}/sports', binding);
-		this.schoolSport = new Service('/i/schools/{schoolId}/sports/{sportId}', binding);
+		this.schoolSports = new Service<Sport[], Sport, any>('/i/schools/{schoolId}/sports', binding);
+		this.schoolSport = new Service<Sport, Sport, any>('/i/schools/{schoolId}/sports/{sportId}', binding);
 
 		// clubs
-		this.schoolClubs = new Service('/i/schools/{schoolId}/clubs', binding);
-		this.schoolClub = new Service('/i/schools/{schoolId}/clubs/{clubId}', binding);
+		this.schoolClubs = new Service<Club[], Club, any>('/i/schools/{schoolId}/clubs', binding);
+		this.schoolClub = new Service<Club, Club, any>('/i/schools/{schoolId}/clubs/{clubId}', binding);
 		this.schoolClubAcceptableUsers = new Service('/i/schools/{schoolId}/clubs/{clubId}/acceptableUsers', binding);
-		this.schoolClubParticipats = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants', binding);
-		this.schoolClubParticipat = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants/{participantId}', binding);
+		this.schoolClubParticipants = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants', binding);
+		this.schoolClubParticipant = new Service('/i/schools/{schoolId}/clubs/{clubId}/participants/{participantId}', binding);
 		this.schoolClubActivate = new Service('/i/schools/{schoolId}/clubs/{clubId}/activate', binding);
 		this.schoolClubSendMessages = new Service('/i/schools/{schoolId}/clubs/{clubId}/messages/invite', binding);
 
 		// places
-		this.schoolPlaces = new Service('/i/schools/{schoolId}/places', binding);
-		this.schoolPlace = new Service('/i/schools/{schoolId}/places/{placeId}', binding);
+		this.schoolPlaces = new Service<Place[], Place, any>('/i/schools/{schoolId}/places', binding);
+		this.schoolPlace = new Service<Place, Place, any>('/i/schools/{schoolId}/places/{placeId}', binding);
 		this.schoolPlacesAndPostcodes = new Service('/i/schools/{schoolId}/placesAndPostcodes', binding);
 
 		// students
@@ -418,12 +425,12 @@ export class ServiceList {
 		this.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
 		//Permissions
-		this.schoolUserPermissions = new Service('/i/schools/{schoolId}/users/{userId}/permissions',binding);
-		this.schoolUserPermission = new Service('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
+		this.schoolUserPermissions = new Service<Permission[], Permission, any>('/i/schools/{schoolId}/users/{userId}/permissions',binding);
+		this.schoolUserPermission = new Service<Permission, Permission, any>('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
 
 		// sports
-		this.sport = new Service('/public/sports/{sportId}', binding);
-		this.sports = new Service('/public/sports', binding);
+		this.sport = new Service<Sport, Sport, any>('/public/sports/{sportId}', binding);
+		this.sports = new Service<Sport[], Sport, any>('/public/sports', binding);
 
 		//events
 		this.events = new Service('/i/schools/{schoolId}/events', binding);

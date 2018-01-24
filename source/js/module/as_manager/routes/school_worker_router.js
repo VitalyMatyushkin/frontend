@@ -88,21 +88,20 @@ const SchoolWorkerRouter = React.createClass({
 						component	= {SchoolConsoleComponent}
 				/>
 
-				<Route	path					= "/user/view"
-						binding					= {binding.sub('userDetailPage')}
-						userPermissionsService	= {window.Server.schoolUserPermissions}
-						isEditable				= {false}
-						component				= {UserViewComponent}
+				<Route	path        = "/user/view"
+						binding     = {binding.sub('userDetailPage')}
+						isEditable  = {false}
+						component   = {UserViewComponent}
 				/>
 				
-				<Route	path					= "/demo"
-						binding					= {binding.sub('demo')}
-						component				= {DemoViewComponent}
+				<Route	path        = "/demo"
+						binding     = {binding.sub('demo')}
+						component   = {DemoViewComponent}
 				/>
 
-				<Route	path					= "/supported_browsers"
-						binding					= {binding.sub('supported_browsers')}
-						component				= {SupportedBrowsers}
+				<Route	path        = "/supported_browsers"
+						binding     = {binding.sub('supported_browsers')}
+						component   = {SupportedBrowsers}
 				/>
 			</RouterView>
 		);

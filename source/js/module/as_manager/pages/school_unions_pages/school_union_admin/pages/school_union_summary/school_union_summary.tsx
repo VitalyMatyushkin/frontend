@@ -6,6 +6,7 @@ import * as Morearty from 'morearty';
 import * as DomainHelper from '../../../../../../helpers/domain_helper';
 import * as MoreartyHelper from '../../../../../../helpers/morearty_helper';
 import {SchoolUnionSummaryPanel} from './school_union_summary_panel';
+import {ServiceList} from "module/core/service_list/service_list";
 
 const SchoolSummary = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -27,7 +28,7 @@ const SchoolSummary = (React as any).createClass({
 
 		binding.set('isSchoolDataLoading', true);	// setting flag, that we are loading data...
 
-        (window as any).Server.school.get(activeSchoolId)
+        (window.Server as ServiceList).school.get(activeSchoolId)
             .then(schoolData => {
                 binding.atomically()
                     .set('schoolData',			Immutable.fromJS(schoolData))

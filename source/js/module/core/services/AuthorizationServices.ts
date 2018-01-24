@@ -7,11 +7,13 @@ import * as SessionHelper from 'module/helpers/session_helper'
 import * as StorageHelper from 'module/helpers/storage'
 import * as BPromise from 'bluebird'
 import {Role} from "module/models/role/role";
+import {ServiceList} from "module/core/service_list/service_list";
+import {AdminServiceList} from "module/core/service_list/admin_service_list";
 
 /** Authorization Services */
 export const AuthorizationServices ={
 	login(data) {
-		const service = (window as any).Server._login;
+		const service = (window.Server as ServiceList | AdminServiceList)._login;
 		const userDataBinding = service.binding;
 
 		return service.post(data).then(authData => {
@@ -32,7 +34,7 @@ export const AuthorizationServices ={
 					SessionHelper.getLoginSessionBinding(userDataBinding).set(Immutable.fromJS(authInfo));
 					
 					if(authData.userId) {
-						return (window as any).Server.profile.get().then(profile => {
+						return (window.Server as ServiceList).profile.get().then(profile => {
 							userDataBinding.set('userInfo',	Immutable.fromJS(profile));
 							SessionHelper.getLoginSessionBinding(userDataBinding).sub('email').set(profile.email);
 							SessionHelper.getLoginSessionBinding(userDataBinding).sub('phone').set(profile.phone);
@@ -43,7 +45,7 @@ export const AuthorizationServices ={
 								"personal":	profile.verification.status.personal
 								}
 							));
-							return (window as any).Server.roles.get();
+							return (window.Server as ServiceList).roles.get();
 						}).then((roles: Role[]) => {
 							if(roles && roles.length == 1) {
 								return AuthorizationServices.become(roles[0].name);
@@ -64,7 +66,7 @@ export const AuthorizationServices ={
 			});
 	},
 	become(roleName) {
-		const service = (window as any).Server._become;
+		const service = (window.Server as ServiceList)._become;
  		const userDataBinding = service.binding;
 
 		let authInfo;
@@ -80,7 +82,7 @@ export const AuthorizationServices ={
 			}
 
 			/** Server not allow profile request before become */
-			return (window as any).Server.profile.get();
+			return (window.Server as ServiceList).profile.get();
 		}).then(profile => {
 			/** save verification status */
 			authInfo.verified = profile.verification && profile.verification.status;
@@ -108,7 +110,7 @@ export const AuthorizationServices ={
 	 * That contain some user data like and user sessions
 	 */
 	setEmptyUserData() {
-		const service = (window as any).Server._login;
+		const service = (window.Server as ServiceList | AdminServiceList)._login;
 		const binding = service.binding;
 
 		binding.set(Immutable.fromJS({'sessions': SessionHelper.createSessionsObject(undefined,undefined)}));

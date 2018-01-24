@@ -22,7 +22,7 @@ const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		Consts			= require('module/as_manager/pages/event/view/details/details_components/consts'),
 		ClubsConst		= require('module/helpers/consts/clubs');
 
-const ClubsActions = require('module/as_manager/pages/clubs/clubs_actions');
+const   {ClubsActions}  = require('module/as_manager/pages/clubs/clubs_actions');
 
 const LoaderStyle = require('styles/ui/loader.scss');
 

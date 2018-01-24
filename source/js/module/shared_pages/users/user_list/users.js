@@ -1,10 +1,10 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		UserActions		= require('./users-actions-class'),
-		{Grid}			= require('module/ui/grid/grid'),
-		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
-		{ConfirmPopup}	= require('module/ui/confirm_popup'),
-		Immutable		= require('immutable');
+const	React               = require('react'),
+		Morearty            = require('morearty'),
+		Immutable           = require('immutable'),
+		{UsersActionsClass} = require('./users-actions-class'),
+		{Grid}              = require('module/ui/grid/grid'),
+		{GrantRole}         = require('module/as_manager/pages/school_console/grant_role/grant_role'),
+		{ConfirmPopup}      = require('module/ui/confirm_popup');
 
 const	CSVExportPopupStyle	= require('styles/ui/b_csv_export_popup/b_csv_export_popup.scss');
 
@@ -32,9 +32,9 @@ const Users = React.createClass({
 		binding.set('isShowCSVExportPopup', false);
 
 		if (grid) {
-			this.model = new UserActions(this).createGridFromExistingData(grid);
+			this.model = new UsersActionsClass(this).createGridFromExistingData(grid);
 		} else {
-			this.model = new UserActions(this).createGrid();
+			this.model = new UsersActionsClass(this).createGrid();
 		}
 	},
 	handleSuccess: function() {
@@ -54,11 +54,11 @@ const Users = React.createClass({
 		if(binding.get('popup')) {
 			return (
 				<ConfirmPopup isShowButtons={false}>
-					<GrantRole	binding				= {binding.sub('grantRole')}
-								userIdsBinding		= {binding.sub('groupIds')}
+					<GrantRole	binding				    = {binding.sub('grantRole')}
+								userIdsBinding		    = {binding.sub('groupIds')}
 								userPermissionsBinding	= {binding.sub('groupPermissions')}
-								onSuccess			= {this.handleSuccess}
-								handleClickCancel	= {this.closePopup}
+								onSuccess			    = {this.handleSuccess}
+								handleClickCancel	    = {this.closePopup}
 					/>
 				</ConfirmPopup>
 			);

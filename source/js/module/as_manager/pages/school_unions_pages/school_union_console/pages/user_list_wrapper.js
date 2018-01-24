@@ -1,6 +1,6 @@
 const	React		= require('react'),
 		Morearty	= require('morearty'),
-		GrantRole	= require('../../../school_console/grant_role/grant_role'),
+		{GrantRole}	= require('module/as_manager/pages/school_console/grant_role/grant_role'),
 		UserList	= require('../../../../../shared_pages/users/user_list/users');
 
 const UserListWrapper = React.createClass({

@@ -5,26 +5,37 @@ const ClubsHeper = {
 	redirectToClubListPage: function () {
 		document.location.hash = 'clubs/clubList';
 	},
-	convertClientToServerFormData: function(data, clubsFormPageData) {
-		data.maxParticipants = Number(data.maxParticipants);
 
-		data.ages = clubsFormPageData.ages;
-		data.sport = clubsFormPageData.sport;
-		data.price = {
-			price:		data.price,
-			priceType:	ClubsConst.CLIENT_TO_SERVER_PRICING_MAPPING[data.priceType]
+	/**
+	 * Function converts data from club form and some additional data to server type form
+	 * @param data - main data from club form
+	 * @param clubsFormPageData - additional data from club form
+	 * @returns {{} & any}
+	 */
+	convertClientToServerFormData: function(data, clubsFormPageData) {
+		const cpData = Object.assign({}, data);
+
+		cpData.maxParticipants = Number(cpData.maxParticipants);
+
+		cpData.ages = clubsFormPageData.ages;
+		cpData.sport = clubsFormPageData.sport;
+		cpData.price = {
+			price:		cpData.price,
+			priceType:	ClubsConst.CLIENT_TO_SERVER_PRICING_MAPPING[cpData.priceType]
 		};
-		data.schedule = {
+		cpData.schedule = {
 			scheduleType:	'WEEKLY_SCHEDULE',
 			startDate:		clubsFormPageData.startDate,
 			finishDate:		clubsFormPageData.finishDate,
 			time:			clubsFormPageData.time,
 			days:			this.convertWeekDaysFromClientToServer(clubsFormPageData.days),
-			duration:		Number(data.duration)
+			duration:		Number(cpData.duration)
 		};
-		delete data.duration;
-		data.gender = EventConsts.MAP_CLIENT_TO_SERVER_EVENT_GENDERS[clubsFormPageData.gender];
-		data.staff 	= clubsFormPageData.staff;
+		delete cpData.duration;
+		cpData.gender = EventConsts.MAP_CLIENT_TO_SERVER_EVENT_GENDERS[clubsFormPageData.gender];
+		cpData.staff 	= clubsFormPageData.staff;
+
+		return cpData;
 	},
 	getWeekDays: function () {
 		return [

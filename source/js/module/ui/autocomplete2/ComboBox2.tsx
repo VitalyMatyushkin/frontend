@@ -50,7 +50,7 @@ interface ComboBoxProps {
 	 * False by default.
 	 */
 	isBlocked?:				boolean,
-	customListItem?:		() => any,
+	customListItem?:		any,
 	/**
 	 * html id
 	 */

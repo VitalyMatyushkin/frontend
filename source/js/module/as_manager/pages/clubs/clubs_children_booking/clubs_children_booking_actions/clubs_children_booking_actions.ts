@@ -1,6 +1,7 @@
 import * as Immutable from 'immutable';
 import { ClubBookingChildModel } from "module/as_manager/pages/clubs/clubs_children_booking/club_booking_child/club_booking_child_model";
 import { ClubsChildrenBookingHelper } from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_helper/clubs_children_booking_helper";
+import {ServiceList} from "module/core/service_list/service_list";
 
 export class ClubsChildrenBookingActions {
 	handleSendMessages(schoolId, clubId, binding) {
@@ -17,7 +18,7 @@ export class ClubsChildrenBookingActions {
 	}
 
 	sendMessages(schoolId, clubId) {
-		return (window as any).Server.schoolClubSendMessages.post(
+		return (window.Server as ServiceList).schoolClubSendMessages.post(
 			{
 				schoolId:	schoolId,
 				clubId:		clubId
@@ -27,7 +28,7 @@ export class ClubsChildrenBookingActions {
 	}
 
 	getClubBookingChildren(schoolId, clubId) {
-		return (window as any).Server.schoolClubAcceptableUsers.get(
+		return (window.Server as ServiceList).schoolClubAcceptableUsers.get(
 			{ schoolId, clubId }
 		).then(students => {
 			return this.convertServerDataToClientModels(students);

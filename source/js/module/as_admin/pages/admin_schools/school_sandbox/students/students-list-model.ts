@@ -1,11 +1,12 @@
 /**
  * Created by vitaly on 23.08.17.
  */
-
+import * as	React from 'react';
 
 import {DataLoader} from 'module/ui/grid/data-loader';
-import * as	React from 'react';
+
 import {GridModel} from 'module/ui/grid/grid-model';
+import {AdminServiceList} from "module/core/service_list/admin_service_list";
 
 /**
  * StudentsListClass
@@ -89,13 +90,13 @@ export class StudentListModel {
 	getForms(){
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
-		return (window as any).Server.schoolForms.get({schoolId:schoolId},{filter:{limit:100}});
+		return (window.Server as AdminServiceList).schoolForms.get({schoolId:schoolId},{filter:{limit:100}});
 	}
 	
 	getHouses(){
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				schoolId 		= globalBinding.get('routing.pathParameters.0');
-		return (window as any).Server.schoolHouses.get({schoolId:schoolId},{filter:{limit:100}});
+		return (window.Server as AdminServiceList).schoolHouses.get({schoolId:schoolId},{filter:{limit:100}});
 	}
 	
 	setColumns(){

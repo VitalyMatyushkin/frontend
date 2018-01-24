@@ -1,18 +1,18 @@
 /**
  * Created by Anatoly on 25.07.2016.
  */
+import * as React from 'react'
 
-const	React				= require('react');
+import {DataLoader} from 'module/ui/grid/data-loader'
+import * as UserModel from 'module/data/UserModel'
+import {GridModel}  from  'module/ui/grid/grid-model'
 
-const	{DataLoader}		= require('module/ui/grid/data-loader'),
-		UserModel			= require('module/data/UserModel'),
-		{GridModel}			= require('module/ui/grid/grid-model');
+import {CSVExportButton} from 'module/shared_pages/users/user_list/buttons/csv_export_button'
+import * as CSVExportConsts	from 'module/ui/grid/csv_export/consts'
+import * as CSVExportController from 'module/ui/grid/csv_export/csv_export_controller'
 
-const	{CSVExportButton}	= require('module/shared_pages/users/user_list/buttons/csv_export_button'),
-		CSVExportConsts		= require('module/ui/grid/csv_export/consts'),
-		CSVExportController	= require('module/ui/grid/csv_export/csv_export_controller');
-
-const	RoleHelper			= require('module/helpers/role_helper');
+import * as RoleHelper from 'module/helpers/role_helper'
+import {ServiceList} from "module/core/service_list/service_list";
 
 /**
  * UsersActionsClass
@@ -20,7 +20,16 @@ const	RoleHelper			= require('module/helpers/role_helper');
  * @param {object} page
  *
  * */
-class UsersActionsClass {
+export class UsersActionsClass {
+	page: any;
+	binding: any;
+	rootBinding: any;
+	activeSchoolId: string;
+	props: any;
+	columns: any;
+	dataLoader: DataLoader;
+	grid: GridModel;
+
 	constructor(page) {
 		this.page = page;
 		this.binding = page.getDefaultBinding();
@@ -129,8 +138,10 @@ class UsersActionsClass {
 		
 		if(ids && ids.length > 0 ){
 			const	schoolId		= self.activeSchoolId,
-					permission		= window.Server[self.props.permissionServiceName],
-					permissionList	= window.Server[`${self.props.permissionServiceName}s`];
+					// TODO pass service by props
+					// but service not a service name
+					permission		= (window.Server as ServiceList)[self.props.permissionServiceName],
+					permissionList	= (window.Server as ServiceList)[`${self.props.permissionServiceName}s`];
 			
 			window.confirmAlert(
 				"Are you sure you want revoke all roles?",
@@ -140,7 +151,8 @@ class UsersActionsClass {
 					ids.forEach( userId => {
 						const params = {
 							userId: 	userId,
-							schoolId: 	schoolId
+							schoolId: 	schoolId,
+							permissionId: undefined
 						};
 						
 						permissionList.get(params).then( data => {
@@ -159,7 +171,7 @@ class UsersActionsClass {
 	revokeRole(ids, action) {
 		const   self            = this,
 				schoolId  		= self.activeSchoolId,
-				permission 		= window.Server[self.props.permissionServiceName];
+				permission 		= (window.Server as ServiceList)[self.props.permissionServiceName];
 		
 		if(ids && ids.length > 0 ) {
 			window.confirmAlert(
@@ -218,7 +230,7 @@ class UsersActionsClass {
 		return roles;
 	}
 	
-	getGenders(){
+	getGenders() {
 		return [
 			{
 				key:'MALE',
@@ -395,7 +407,7 @@ class UsersActionsClass {
 					filter:{
 						type:'multi-select',
 						typeOptions:{
-							getDataPromise: window.Server.publicSchools.get({filter:{limit:2000,order:"name ASC"}}),
+							getDataPromise: (window.Server as ServiceList).publicSchools.get({filter:{limit:2000,order:"name ASC"}}),
 							valueField:'name',
 							keyField:'id'
 						}
@@ -491,5 +503,3 @@ class UsersActionsClass {
 		};
 	}
 };
-
-module.exports = UsersActionsClass;

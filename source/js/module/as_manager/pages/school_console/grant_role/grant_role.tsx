@@ -1,37 +1,29 @@
-/**
- * Created by Anatoly on 09.03.2016.
- */
+import * as React 		from 'react'
+import * as Morearty 	from 'morearty'
+import * as Immutable 	from 'immutable'
 
-const 	Form 				= require('module/ui/form/form'),
-		FormField 			= require('module/ui/form/form_field'),
-		React 				= require('react'),
-		classNames 			= require('classnames'),
-		Morearty			= require('morearty'),
-		roleList 			= require('module/data/roles_data'),
-		Immutable			= require('immutable'),
-		ErrorAddRole		= require('module/data/text_add_role_error'),
-		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
+import * as Form            from 'module/ui/form/form'
+import * as FormField       from 'module/ui/form/form_field'
+import * as roleList        from 'module/data/roles_data'
+import * as ErrorAddRole    from 'module/data/text_add_role_error'
+import * as SportManager    from 'module/shared_pages/settings/account/helpers/sport-manager'
+import {ServiceList} from "module/core/service_list/service_list";
 
-const GrantRole = React.createClass({
+export const GrantRole = (React as any).createClass({
 	mixins:[Morearty.Mixin],
-	propTypes: {
-		userIdsBinding: 		React.PropTypes.object,
-		userPermissionsBinding: React.PropTypes.object,
-		onSuccess: 				React.PropTypes.func,
-		handleClickCancel: 		React.PropTypes.func
-	},
-	componentWillMount:function(){
-		const 	ids 	= this.props.userIdsBinding.toJS();
+	componentWillMount() {
+		const ids = this.props.userIdsBinding.toJS();
 
 		this.initCountSportFieldsBlocks();
 		this.getDefaultBinding().set('errorAddChild', false);
-		if(!ids)
+		if(!ids) {
 			console.error('Error! "userIdsBinding" is not set.');
+		}
 	},
-	componentWillUnmount:function(){
+	componentWillUnmount() {
 		this.getDefaultBinding().sub('formGrantRole').clear();
 	},
-	getStudents:function(name){
+	getStudents(name) {
 		const 	rootBinding 	= this.getMoreartyContext().getBinding(),
 				formId			= this.getDefaultBinding().sub('formGrantRole').meta('formId.value').toJS(),
 				houseId			= this.getDefaultBinding().sub('formGrantRole').meta('houseId.value').toJS(),
@@ -42,6 +34,7 @@ const GrantRole = React.createClass({
 						formId: {
 							$in: formId
 						},
+						houseId: undefined,
 						$or: [
 							{
 								firstName: {
@@ -75,7 +68,7 @@ const GrantRole = React.createClass({
 				return students;
 			});
 	},
-	continueButtonClick:function(model){
+	continueButtonClick(model) {
 		const 	rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
 				studentId 		= this.getDefaultBinding().sub('formGrantRole').meta('studentId.value').toJS(),
@@ -114,20 +107,28 @@ const GrantRole = React.createClass({
 				}
 
 				if((model.preset === 'parent' && typeof studentId !== 'undefined') || model.preset !== 'parent') {
-					window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
-					.then(result => this.props.onSuccess && this.props.onSuccess(result))
-					.catch((e) => {
-						if (e.xhr.status === 404) {
-							this.getDefaultBinding().set('errorAddChild', true);
-						}
-					});
+					(window.Server as ServiceList).schoolUserPermissions
+						.post(
+							{schoolId:activeSchoolId, userId:currentId},
+							body
+						)
+						.then(result => {
+							console.log(result);
+
+							this.props.onSuccess && this.props.onSuccess(result);
+						})
+						.catch((e) => {
+							if (e.xhr.status === 404) {
+								this.getDefaultBinding().set('errorAddChild', true);
+							}
+						});
 				}
 			}
 
 
 		});
 	},
-	getFormFieldClasses(isParent){
+	getFormFieldClasses(isParent) {
 		if (isParent ) {
 			return (
 				<FormField
@@ -144,7 +145,7 @@ const GrantRole = React.createClass({
 			)
 		}
 	},
-	getFormFieldHouses(isParent){
+	getFormFieldHouses(isParent) {
 		if (isParent ) {
 			return (
 				<FormField
@@ -161,7 +162,7 @@ const GrantRole = React.createClass({
 			)
 		}
 	},
-	getFormFieldStudent(isParent, currentForm){
+	getFormFieldStudent(isParent, currentForm) {
 		if (isParent && typeof currentForm !== 'undefined') {
 			return (
 				<FormField
@@ -179,7 +180,7 @@ const GrantRole = React.createClass({
 			)
 		}
 	},
-	getForms: function(formName) {
+	getForms(formName) {
 		const 	schoolId 	= this.getMoreartyContext().getBinding().toJS('userRules.activeSchoolId');
 
 		return window.Server.schoolForms.get(schoolId, {
@@ -193,7 +194,7 @@ const GrantRole = React.createClass({
 			}
 		});
 	},
-	getHouses: function(houseName) {
+	getHouses(houseName) {
 		const 	schoolId 	= this.getMoreartyContext().getBinding().toJS('userRules.activeSchoolId');
 
 		return window.Server.schoolHouses.get(schoolId, {
@@ -207,7 +208,7 @@ const GrantRole = React.createClass({
 			}
 		});
 	},
-	getRoles: function() {
+	getRoles() {
 		const	activeSchoolId		= this.getMoreartyContext().getBinding().toJS('userRules.activeSchoolId'),
 				formBinding			= this.getDefaultBinding().sub('form'),
 				fullSchoolData		= formBinding.meta('schoolId.fullValue').toJS(),
@@ -239,7 +240,7 @@ const GrantRole = React.createClass({
 			}
 		});
 	},
-	initCountSportFieldsBlocks: function() {
+	initCountSportFieldsBlocks() {
 		const binding = this.getDefaultBinding();
 
 		const countSportFields = binding.toJS('countSportFields');
@@ -249,14 +250,48 @@ const GrantRole = React.createClass({
 		}
 		binding.set('rivals', Immutable.fromJS([]));
 	},
-	render:function(){
-		const 	self 				= this,
-				binding 			= self.getDefaultBinding(),
-				bindingForm			= self.getDefaultBinding().sub('formGrantRole'),
-				errorAddChild 		= binding.get('errorAddChild'),
-				isParent 			= bindingForm.meta('preset.value').toJS() === 'parent',
-				currentForm	 		= bindingForm.meta('formId.value').toJS(),
-				isCoachOrTeacher 	= bindingForm.meta('preset.value').toJS() === 'coach' || bindingForm.meta('preset.value').toJS() === 'teacher';
+	renderAddChildError() {
+		// IMPORTANT! Form component must not be a null
+		let addChildError = <span/>;
+
+		const binding = this.getDefaultBinding();
+		const errorAddChild = binding.get('errorAddChild');
+
+		if(errorAddChild) {
+			addChildError = <span className="verify_error">{ ErrorAddRole.addChild }</span>;
+		}
+
+		return addChildError;
+	},
+	renderSportField() {
+		// IMPORTANT! Form component must not be a null
+		let sportField = <div/>;
+
+		const binding = this.getDefaultBinding();
+		const bindingForm = this.getDefaultBinding().sub('formGrantRole');
+		const isCoachOrTeacher = bindingForm.meta('preset.value').toJS() === 'coach' ||
+			bindingForm.meta('preset.value').toJS() === 'teacher';
+
+		if(isCoachOrTeacher) {
+			 sportField = (
+				 <div className="eForm_field">
+					 <div className="eForm_fieldName">Sports</div>
+					 <SportManager
+						 binding={binding}
+						 schoolId={this.getMoreartyContext().getBinding().get('userRules.activeSchoolId')}
+						 serviceName="sports"
+						 extraCssStyle="mInline mRightMargin mWidth250"
+					 />
+				 </div>
+			 );
+		}
+
+		return sportField;
+	},
+	render() {
+		const 	bindingForm = this.getDefaultBinding().sub('formGrantRole'),
+				isParent    = bindingForm.meta('preset.value').toJS() === 'parent',
+				currentForm = bindingForm.meta('formId.value').toJS();
 
 		return (
 			<Form
@@ -264,7 +299,7 @@ const GrantRole = React.createClass({
 				updateBinding	= { true }
 				onCancel 		= { this.props.handleClickCancel }
 				binding			= { bindingForm }
-				onSubmit		= { self.continueButtonClick }
+				onSubmit		= { this.continueButtonClick }
 				formStyleClass	= "bGrantContainer"
 				defaultButton	= "Submit"
 			>
@@ -276,29 +311,10 @@ const GrantRole = React.createClass({
 				>
 					Role
 				</FormField>
-				{ isCoachOrTeacher ?
-					<div className="eForm_field">
-						<div className="eForm_fieldName">
-							Sports
-						</div>
-						<SportManager
-							binding		= { binding }
-							schoolId	= { this.getMoreartyContext().getBinding().get('userRules.activeSchoolId') }
-							serviceName = "sports"
-							extraCssStyle	= "mInline mRightMargin mWidth250"
-						/>
-					</div>
-					:
-					<div></div>
-				}
+				{ this.renderSportField() }
 				{ this.getFormFieldClasses(isParent) }
 				{ this.getFormFieldHouses(isParent) }
-				{
-					errorAddChild ?
-						<span className="verify_error">{ ErrorAddRole.addChild }</span>
-						:
-						<span></span>
-				}
+				{ this.renderAddChildError() }
 				{ this.getFormFieldStudent(isParent, currentForm) }
 				<FormField
 					type		= "textarea"
@@ -311,5 +327,3 @@ const GrantRole = React.createClass({
 		);
 	}
 });
-
-module.exports = GrantRole;

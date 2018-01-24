@@ -1,5 +1,7 @@
 import { TabTypes } from 'module/ui/managers/models/player_choosers_tabs_model/tab_types';
 import { PlayerChoosersTabModel } from "module/ui/managers/models/player_choosers_tabs_model/player_choosers_tab_model";
+import {AdminServiceList} from "module/core/service_list/admin_service_list";
+import {ServiceList} from "module/core/service_list/service_list";
 
 interface TeamManagerActionsOptions {
 	schoolId: string
@@ -33,13 +35,13 @@ export class TeamManagerActions implements TeamManagerActionsOptions {
 
 		switch (tabType) {
 			case TabTypes.DefaultTab:
-				service =  (window as any).Server.schoolStudents;
+				service = (window.Server as ServiceList).schoolStudents;
 				break;
 			case TabTypes.ChildrenBookingAllChildrenTab:
-				service =  (window as any).Server.schoolStudents;
+				service = (window.Server as ServiceList).schoolStudents;
 				break;
 			case TabTypes.ChildrenBookingBookedChildrenTab:
-				service =  (window as any).Server.schoolClubAcceptableUsers;
+				service = (window.Server as ServiceList).schoolClubAcceptableUsers;
 				break;
 		}
 

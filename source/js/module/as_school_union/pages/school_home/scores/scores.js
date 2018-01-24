@@ -25,6 +25,7 @@ const Scores = React.createClass({
 
 		window.Server.publicSchoolSports.get(activeSchoolId, filter)
 			.then(sports => {
+				console.log(sports);
 				//const favoriteSports = this.filterFavoriteSports(sports);
 				//
 				//let resultSports;

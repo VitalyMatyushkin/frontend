@@ -6,7 +6,7 @@ const	React				= require('react'),
 const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 		FullTimeInput		= require('../../../../../ui/full_time_input/full_time_input'),
 		SaveChangesManager	= require('module/as_manager/pages/event/view/edit_event_popup/save_changes_manager'),
-		EventVenue			= require('../../../events/manager/event_venue');
+		{EventVenue}		= require('../../../events/manager/event_venue');
 
 // Helpers
 const	EventHelper			= require('../../../events/eventHelper');

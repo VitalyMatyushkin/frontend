@@ -1,27 +1,7 @@
-/**
- * Created by vitaly on 12.12.17.
- */
+import * as BPromise from 'bluebird';
+import {Profile} from "module/models/profile/profile";
+import {ServiceList} from "module/core/service_list/service_list";
 
-interface Profile {
-	avatar: 			string
-	birthday:			string
-	createdAt:			string
-	email:				string
-	firstName:			string
-	gender:				string
-	id:					string
-	lastName:			string
-	notification:		any
-	phone:				string
-	status:				string
-	updatedAt:			string
-	verification:		any
-	webIntroEnabled:	boolean
-	webIntroShowTimes:	number
-}
-
-export function getUserInfo(): Promise<Profile> {
-	return (window as any).Server.profile.get().then(profile => {
-		return profile;
-	});
+export function getUserInfo(): BPromise<Profile> {
+	return (window.Server as ServiceList).profile.get();
 }

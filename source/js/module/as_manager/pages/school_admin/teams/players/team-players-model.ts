@@ -3,6 +3,7 @@
  */
 import * as userConst from 'module/helpers/consts/user';
 import * as StudentListClass from './../../students/list/student-list-class';
+import {ServiceList} from "module/core/service_list/service_list";
 
 export class TeamPlayersClass{
 
@@ -37,7 +38,7 @@ export class TeamPlayersClass{
 	}
 	
 	createGrid(){
-		(window as any).Server.teamPlayers.get(
+		(window.Server as ServiceList).teamPlayers.get(
 			{ schoolId: this.activeSchoolId, teamId: this.teamId },
 			{ filter: { limit: 100 } }
 		).then(data => {
@@ -60,7 +61,7 @@ export class TeamPlayersClass{
 		return this.model;
 	}
 	createGridFromExistingData(grid: any){
-		(window as any).Server.teamPlayers.get(
+		(window.Server as ServiceList).teamPlayers.get(
 			{ schoolId: this.activeSchoolId, teamId: this.teamId },
 			{ filter: { limit: 100 } }
 		).then(data => {

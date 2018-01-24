@@ -1,6 +1,8 @@
 import {Service} from 'module/core/service';
 import * as ImageService from "module/core/services/ImageService";
 
+import {Sport} from "module/models/sport/sport";
+
 /** Collection of services to reach REST API from server */
 export class AdminServiceList {
 	// authorization
@@ -33,13 +35,13 @@ export class AdminServiceList {
 	school: Service;
 	publicSchools: Service;
 
-	schoolSports: Service;
-	schoolSport: Service;
+	schoolSports: Service<Sport[], Sport, any>;
+	schoolSport: Service<Sport, Sport, any>;
 	schoolAllowedSports: Service;
 
 	// sports
-	sports: Service;
-	sport: Service;
+	sports: Service<Sport[], Sport, any>;
+	sport: Service<Sport, Sport, any>;
 
 	// postcode
 	postCodes: Service;
@@ -137,13 +139,13 @@ export class AdminServiceList {
 		this.school = new Service('/superadmin/schools/{schoolId}', binding);
 		this.publicSchools = new Service('/public/schools', binding);
 
-		this.schoolSports = new Service('/superadmin/schools/{schoolId}/sports', binding);
-		this.schoolSport = new Service('/superadmin/schools/{schoolId}/sports/{sportId}', binding);
+		this.schoolSports = new Service<Sport[], Sport, any>('/superadmin/schools/{schoolId}/sports', binding);
+		this.schoolSport = new Service<Sport, Sport, any>('/superadmin/schools/{schoolId}/sports/{sportId}', binding);
 		this.schoolAllowedSports = new Service('/superadmin/schools/{schoolId}/allowedSports', binding);
 
 		// sports
-		this.sports = new Service('/superadmin/sports', binding);
-		this.sport =  new Service('/superadmin/sports/{sportId}', binding);
+		this.sports = new Service<Sport[], Sport, any>('/superadmin/sports', binding);
+		this.sport =  new Service<Sport, Sport, any>('/superadmin/sports/{sportId}', binding);
 
 		// postcode
 		this.postCodes = new Service('/superadmin/postcodes', binding);

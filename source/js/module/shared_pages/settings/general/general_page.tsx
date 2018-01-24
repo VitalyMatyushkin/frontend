@@ -1,22 +1,25 @@
-const	Form			= require('module/ui/form/form'),
-		FormColumn 		= require('module/ui/form/form_column'),
-		FormField		= require('module/ui/form/form_field'),
-		React			= require('react'),
-		Morearty        = require('morearty'),
-		Immutable		= require('immutable'),
-		SessionHelper	= require('module/helpers/session_helper'),
-		Bootstrap		= require('../../../../../styles/bootstrap-custom.scss');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
+
+import * as Form from 'module/ui/form/form'
+import * as FormColumn from 'module/ui/form/form_column'
+import * as FormField from 'module/ui/form/form_field'
+import * as SessionHelper from'module/helpers/session_helper';
+import {ServiceList} from "module/core/service_list/service_list";
+
+const Bootstrap = require('../../../../../styles/bootstrap-custom.scss');
 
 const USER = require('module/helpers/consts/user');
 
-const GeneralSettingsPage = React.createClass({
+export const GeneralSettingsPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		//binding.clear();
-		window.Server.profile.get().then(function (data) {
+		(window.Server as ServiceList).profile.get().then(function (data) {
 			binding.set(Immutable.fromJS(data));
 		});
 	},
@@ -31,7 +34,7 @@ const GeneralSettingsPage = React.createClass({
 			data.birthday = null;
 		}
 
-		window.Server.profile.put(data).then(data => {
+		(window.Server as ServiceList).profile.put(data).then(data => {
 			binding.set(
 				Immutable.fromJS(data)
 			);
@@ -142,6 +145,3 @@ const GeneralSettingsPage = React.createClass({
 		);
 	}
 });
-
-
-module.exports = GeneralSettingsPage;

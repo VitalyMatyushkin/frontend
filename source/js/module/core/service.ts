@@ -8,9 +8,9 @@ const baseUrl = () => (window as any).apiBase;
 
 type MethodType = 'GET' | 'PUT' | 'POST' | 'HEAD' | 'DELETE';
 
-export class Service<DataType = any> {
+export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
 	url:  string;
-	binding: object;
+	binding: any;
 	requiredParams: any[];
 
 	constructor(url: string, binding: object) {
@@ -22,34 +22,34 @@ export class Service<DataType = any> {
 		this.requiredParams = urlParams.length === 0 ? undefined : urlParams;
 	}
 
-	get(options?: object, data?: object): BPromise<DataType> {
+	get(options?: object, data?: object): BPromise<GetDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('GET', preparedData.options, preparedData.data);
+		return this.callService('GET', preparedData.options, preparedData.data) as BPromise<GetDataType>;
 	}
 
-	post(options?: object, data?: object): BPromise<DataType> {
+	post(options?: object, data?: object): BPromise<PostDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('POST', preparedData.options, preparedData.data);
+		return this.callService('POST', preparedData.options, preparedData.data) as BPromise<PostDataType>;
 	}
 
-	put(options?: object, data?: object): BPromise<DataType> {
+	put(options?: object, data?: object): BPromise<PostDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('PUT', preparedData.options, preparedData.data);
+		return this.callService('PUT', preparedData.options, preparedData.data) as BPromise<PostDataType>;
 	}
 
-	delete(options?: object, data?: object): BPromise<DataType> {
+	delete(options?: object, data?: object): BPromise<DeleteDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('DELETE', preparedData.options, preparedData.data);
+		return this.callService('DELETE', preparedData.options, preparedData.data) as BPromise<DeleteDataType>;
 	}
 
-	head(options?: object, data?: object): BPromise<DataType> {
+	head(options?: object, data?: object): BPromise<GetDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('HEAD', preparedData.options, preparedData.data);
+		return this.callService('HEAD', preparedData.options, preparedData.data) as BPromise<GetDataType>;
 	}
 
 	/**
@@ -60,7 +60,7 @@ export class Service<DataType = any> {
 	 * @returns {*}
 	 * @private
 	 */
-	callService(type: MethodType, requestParams: object, data: object): BPromise<DataType> {
+	callService(type: MethodType, requestParams: object, data: object): BPromise<GetDataType | PostDataType | DeleteDataType> {
 		// copy data because we will change it
 		const dataCopy = { ...data };
 
@@ -125,9 +125,9 @@ export class Service<DataType = any> {
 			isDataOnly
 		).then(response => {
 			if(isDataOnly) {
-				return response as DataType;
+				return response as GetDataType | PostDataType | DeleteDataType;
 			} else {
-				response.data =  response.data as DataType;
+				response.data =  response.data as GetDataType | PostDataType | DeleteDataType;
 
 				return response;
 			}

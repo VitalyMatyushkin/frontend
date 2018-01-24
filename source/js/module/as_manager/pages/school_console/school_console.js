@@ -19,7 +19,7 @@ const	React									= require('react'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
 		FavouriteSportPageWrapper				= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
-		PlacesPage								= require('./views/places_page/places_page'),
+		{PlacesPage}							= require('./views/places_page/places_page'),
 		NotificationsPage 						= require('./views/notifications_page/notifications_page'),
 
 		SessionHelper							= require('module/helpers/session_helper'),

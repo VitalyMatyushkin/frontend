@@ -1,16 +1,24 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
-		MoreartyHelper	= require('../../../../../helpers/morearty_helper'),
-		PlaceHelper		= require('./place_helper'),
-		PlaceForm		= require('./place_form');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const PlaceEdit = React.createClass({
+import * as MoreartyHelper from '../../../../../helpers/morearty_helper'
+import {PlaceHelper} from './place_helper'
+import {PlaceForm} from './place_form'
+
+import {ServiceList} from "module/core/service_list/service_list";
+import {PlaceFormData} from "module/as_manager/pages/school_console/views/places_page/place_form";
+
+export const PlaceEdit = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount: function() {
-		const	binding			= this.getDefaultBinding(),
-				globalBinding	= this.getMoreartyContext().getBinding(),
-				routingData		= globalBinding.sub('routing.parameters').toJS();
+
+	placeId: '',
+	activeSchoolId: '',
+
+	componentWillMount() {
+		const	binding         = this.getDefaultBinding(),
+				globalBinding   = this.getMoreartyContext().getBinding(),
+				routingData     = globalBinding.sub('routing.parameters').toJS();
 
 		this.placeId = routingData.id;
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
@@ -18,13 +26,13 @@ const PlaceEdit = React.createClass({
 		if (typeof this.placeId !== 'undefined') {
 			let placeData;
 
-			window.Server.schoolPlace.get({
+			(window.Server as ServiceList).schoolPlace.get({
 				schoolId: this.activeSchoolId,
 				placeId: this.placeId
 			}).then(_placeData => {
 				placeData = _placeData;
 
-				return window.Server.postCodeById.get(placeData.postcodeId);
+				return (window.Server as ServiceList).postCodeById.get(placeData.postcodeId);
 			}).then(postcodeData => {
 				binding.atomically()
 					.set('form', Immutable.fromJS({
@@ -37,11 +45,14 @@ const PlaceEdit = React.createClass({
 			});
 		}
 	},
-	componentWillUnmount: function() {
+
+	componentWillUnmount() {
 		this.getDefaultBinding().clear();
 	},
-	onSubmit: function(data) {
-		window.Server.schoolPlace.put(
+
+
+	onSubmit(data: PlaceFormData) {
+		(window.Server as ServiceList).schoolPlace.put(
 			{
 				schoolId: this.activeSchoolId,
 				placeId: this.placeId
@@ -49,11 +60,10 @@ const PlaceEdit = React.createClass({
 				name: data.name,
 				postcodeId: data.postcode
 			}
-		).then(() => {
-			this.isMounted() && PlaceHelper.redirectToPlaceListPage();
-		});
+		).then(() => PlaceHelper.redirectToPlaceListPage());
 	},
-	render: function() {
+
+	render() {
 		if(this.getDefaultBinding().toJS('isSync')) {
 			return (
 				<div className="container">
@@ -71,5 +81,3 @@ const PlaceEdit = React.createClass({
 		}
 	}
 });
-
-module.exports = PlaceEdit;

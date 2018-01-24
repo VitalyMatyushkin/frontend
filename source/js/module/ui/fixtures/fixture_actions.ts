@@ -1,9 +1,11 @@
+import {ServiceList} from "module/core/service_list/service_list";
+
 export const FixtureActions = {
     fixturesCountOnPage: 20,
     fixturesCountLimit: 20,
 
     loadData: function (page, schoolId, gteDate, ltDate) {
-        return (window as any).Server.events.get(schoolId,
+        return (window.Server as ServiceList).events.get(schoolId,
             {
                 filter: {
                     skip: this.fixturesCountOnPage * (page - 1),
@@ -21,7 +23,7 @@ export const FixtureActions = {
     },
 
     loadDataForParent: function (page, schoolId, gteDate, ltDate, childIdList) {
-        return (window as any).Server.childrenEvents.get(schoolId,
+        return (window.Server as ServiceList).childrenEvents.get(schoolId,
             {
                 filter: {
                     skip: this.fixturesCountOnPage * (page - 1),
@@ -78,6 +80,6 @@ export const FixtureActions = {
                 order: 'startTime ASC'
             };
         }
-        return (window as any).Server.studentSchoolEvents.get({ filter: filter });
+        return (window.Server as ServiceList).studentSchoolEvents.get({ filter: filter });
     }
 };

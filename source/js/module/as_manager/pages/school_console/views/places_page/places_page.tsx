@@ -1,20 +1,22 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		RouterView	= require('module/core/router'),
-		Route		= require('module/core/route');
+import * as React from 'react'
+import * as Morearty from 'morearty'
 
-const	PlaceList	= require('./place_list'),
-		PlaceView	= require('./place_view'),
-		PlaceEdit	= require('./place_edit'),
-		PlaceAdd	= require('./place_add');
+import * as RouterView from 'module/core/router'
+import * as Route from 'module/core/route'
 
-const PlacesPage = React.createClass({
+import {PlaceList} from 'module/as_manager/pages/school_console/views/places_page/place_list'
+import {PlaceEdit} from 'module/as_manager/pages/school_console/views/places_page/place_edit'
+import {PlaceAdd} from 'module/as_manager/pages/school_console/views/places_page/place_add'
+
+export const PlacesPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+
 	//The function, which will call when user click on <Row> in Grid
-	handleClick: function(place) {
+	handleClick(place: string) {
 		document.location.hash += `/edit?id=${place}`;
 	},
-	render: function() {
+
+	render() {
 		const	binding 		= this.getDefaultBinding(),
 				globalBinding	= this.getMoreartyContext().getBinding();
 
@@ -38,14 +40,7 @@ const PlacesPage = React.createClass({
 					binding		= { binding.sub('placeFormWrapper') }
 					component	= { PlaceEdit }
 				/>
-				<Route
-					path		= "/school_console/venues/view"
-					binding		= { binding.sub('placeView') }
-					component	= { PlaceView }
-				/>
 			</RouterView>
 		)
 	}
 });
-
-module.exports = PlacesPage;

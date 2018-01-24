@@ -4,6 +4,7 @@
 
 import * as	Immutable from 'immutable';
 import * as	Lazy from 'lazy.js';
+import {ServiceList} from "module/core/service_list/service_list";
 
 const eventsCountOnPage = 20;
 const eventsCountLimit = 20;
@@ -16,8 +17,8 @@ export class AchievementActions {
 				limit: 10000
 			}
 		};
-		
-		(window as any).Server.childSports.get(childId, filterSport)
+
+		(window.Server as ServiceList).childSports.get({childId: childId}, filterSport)
 			.then(sports => {
 				const uniqueSports = (Lazy(sports) as any).uniq('id').toArray();
 				binding
@@ -38,8 +39,8 @@ export class AchievementActions {
 				limit: 1000
 			}
 		};
-		
-		(window as any).Server.childAchievements.get(childId, filterAchievements)
+
+		(window.Server as ServiceList).childAchievements.get({childId: childId}, filterAchievements)
 			.then(achievement => {
 				binding
 					.atomically()
@@ -59,7 +60,7 @@ export class AchievementActions {
 			}
 		};
 		
-		(window as any).Server.childrenSports.get(filterSport)
+		(window.Server as ServiceList).childrenSports.get(filterSport)
 			.then(sports => {
 				const uniqueSports = (Lazy(sports) as any).uniq('id').toArray();
 				binding
@@ -82,7 +83,7 @@ export class AchievementActions {
 			}
 		};
 		
-		(window as any).Server.childrenAchievements.get(filterAchievements)
+		(window.Server as ServiceList).childrenAchievements.get(filterAchievements)
 			.then(achievement => {
 				binding
 					.atomically()
@@ -102,6 +103,6 @@ export class AchievementActions {
 				order: 'startTime DESC',
 			}
 		};
-		return (window as any).Server.childTeamEvents.get({childId, sportId},filterEvents)
+		return (window.Server as ServiceList).childTeamEvents.get({childId, sportId},filterEvents)
 	}
 }

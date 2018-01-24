@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as BPromise from 'bluebird';
+import {AdminServiceList} from "module/core/service_list/admin_service_list";
+
+import {Sport} from "module/models/sport/sport";
 
 import * as Loader from "module/ui/loader";
 import {Button} from "module/ui/button/button";
 import {SportListManager} from "./sport_list_manager";
+
 import "styles/pages/admin_allowed_sports/b_allowed_sports_manager.scss";
-import {Sport} from './sport'
 
 interface AllowedSportsManagerProps {
 	schoolId: string
@@ -27,17 +30,27 @@ export class AllowedSportsManager extends React.Component<AllowedSportsManagerPr
 		};
 	}
 	componentWillMount(){
-		const 	allowedSportIdsPromise 	= (window as any).Server.schoolAllowedSports.get({ schoolId: this.props.schoolId }),
-				allSportsPromise 		= (window as any).Server.schoolSports.get({ schoolId: this.props.schoolId }, { filter: { limit: 100 } });
-		BPromise.all([allowedSportIdsPromise, allSportsPromise]).then( ([allowedSportIds, allSports]) => {
+		const allowedSportIdsPromise = (window.Server as AdminServiceList).schoolAllowedSports
+			.get({ schoolId: this.props.schoolId } );
+
+		const allSportsPromise = (window.Server as AdminServiceList).schoolSports
+			.get(
+				{ schoolId: this.props.schoolId },
+				{ filter: { limit: 100 } }
+				);
+
+		BPromise.all([allowedSportIdsPromise, allSportsPromise])
+			.then( ([allowedSportIds, allSports]) => {
 			//Get sports without allowed sports
 			const allSportsFiltered = allSports.filter(sport => allowedSportIds.every(allowedSportId => {
 				return allowedSportId !== sport.id;
 			}));
+
 			//Get allowed sports info such as name etc.
 			const allowedSports = allSports.filter(sport => allowedSportIds.some(allowedSportId => {
 				return allowedSportId === sport.id;
 			}));
+
 			this.setState({
 				allowedSports: 		allowedSports,
 				allSportsFiltered: 	allSportsFiltered,
@@ -74,8 +87,8 @@ export class AllowedSportsManager extends React.Component<AllowedSportsManagerPr
 	}
 	onClickButtonSave(): void {
 		const allowedSportIds = this.state.allowedSports.map(allowedSport => allowedSport.id);
-		
-		(window as any).Server.schoolAllowedSports.put(
+
+		(window.Server as AdminServiceList).schoolAllowedSports.put(
 			{ schoolId: this.props.schoolId },
 			{ sportIds: allowedSportIds })
 		.then(
