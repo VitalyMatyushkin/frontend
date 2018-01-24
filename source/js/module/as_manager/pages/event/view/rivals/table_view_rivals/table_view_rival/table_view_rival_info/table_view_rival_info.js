@@ -56,6 +56,7 @@ const TableViewRivalInfo = React.createClass({
 						mode			= { this.props.mode }
 						isLast			= { this.props.isLast }
 						onChangeScore	= { this.props.onChangeScore }
+						options			= { this.props.options }
 					/>
 				);
 			default:

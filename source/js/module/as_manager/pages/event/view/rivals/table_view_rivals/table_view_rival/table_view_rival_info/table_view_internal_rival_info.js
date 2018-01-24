@@ -3,6 +3,7 @@ const	React				= require('react');
 const	propz				= require('propz');
 
 const	Order				= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/table_view_rival_info/components/order'),
+		Actions				= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/table_view_rival_info/components/actions'),
 		RivalInfo			= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/table_view_rival_info/components/rival_info'),
 		Score				= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/table_view_rival_info/components/score');
 
@@ -50,6 +51,10 @@ const TableViewInternalRivalInfo = React.createClass({
 					event			= { this.props.event }
 					mode			= { this.props.mode }
 					onChangeScore	= { this.props.onChangeScore }
+				/>
+				<Actions
+					rival	= { this.props.rival }
+					options	= { this.props.options }
 				/>
 			</div>
 		);

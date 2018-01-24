@@ -16,8 +16,7 @@ const RivalInfo = React.createClass({
 		const classNameStyle =  classNames({
 			bTableViewRivalInfo	:	true,
 			mLong:					(
-				this.props.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses'] ||
-				this.props.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
+				this.props.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			)
 		});
 

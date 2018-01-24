@@ -42,7 +42,6 @@ const Actions = React.createClass({
 	},
 	render: function() {
 		let buttons = null;
-
 		const buttonDataArray = propz.get(this.props, ['options', 'buttonsList']);
 		if(typeof buttonDataArray !== 'undefined') {
 			buttons = buttonDataArray

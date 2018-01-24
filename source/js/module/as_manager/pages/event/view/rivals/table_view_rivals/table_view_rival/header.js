@@ -39,10 +39,13 @@ const Header = React.createClass({
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				return (
 					<div className='bTableViewRivalsHeader'>
-						<div className="eTableViewRivalsHeader_plug mLong">
+						<div className="eTableViewRivalsHeader_plug mShort">
 						</div>
 						<div className="eTableViewRivalsHeader_score">
 							Score
+						</div>
+						<div className="eTableViewRivalsHeader_actions">
+							Actions
 						</div>
 					</div>
 				);
