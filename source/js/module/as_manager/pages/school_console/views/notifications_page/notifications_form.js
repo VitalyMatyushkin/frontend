@@ -170,6 +170,24 @@ const NotificationsForm = React.createClass({
 							Game team member has been removed
 						</FormField>
 						<FormField
+							valueReader={this.valueReader}
+							valueWriter={this.valueWriter}
+							classNames="mWideSingleLine"
+							type="checkbox"
+							field="EVENT_INDIVIDUAL_PLAYER_ADDED"
+						>
+							Game individual member has been added
+						</FormField>
+						<FormField
+							valueReader={this.valueReader}
+							valueWriter={this.valueWriter}
+							classNames="mWideSingleLine"
+							type="checkbox"
+							field="EVENT_INDIVIDUAL_PLAYER_REMOVED"
+						>
+							Game individual member has been removed
+						</FormField>
+						<FormField
 							valueReader		= {this.valueReader}
 							valueWriter		= {this.valueWriter}
 							classNames 		= "mWideSingleLine"
@@ -177,6 +195,15 @@ const NotificationsForm = React.createClass({
 							field 			= "MESSAGE_INBOX_CONSENT_REQUEST"
 						>
 							Consent request has been sent
+						</FormField>
+						<FormField
+							valueReader		= {this.valueReader}
+							valueWriter		= {this.valueWriter}
+							classNames 		= "mWideSingleLine"
+							type 			= "checkbox"
+							field 			= "CLUB_CREATED"
+						>
+							Club has been created
 						</FormField>
 						<h3>Invites management</h3>
 						<FormField
