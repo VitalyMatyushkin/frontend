@@ -169,7 +169,7 @@ export class AdminServiceList {
 
 		//user sessions
 		this.userSessions = new Service('/superadmin/users/{userId}/sessions', binding);
-		this.userSession = new Service('/superadmin/users/:userId/sessions{sessionId}', binding);
+		this.userSession = new Service('/superadmin/users/{userId}/sessions/{sessionKey}', binding);
 
 		// action descriptors
 		this.actionDescriptors = new Service('/superadmin/actiondescriptors', binding);

@@ -67,6 +67,24 @@ export class SessionsModel {
         return item.appDetails ? `${item.appDetails.appName}/${item.appDetails.appVersion}` : '';
     }
 
+	onRemove(session, eventDescriptor: any) {
+		(<any>window).confirmAlert(
+			`Are you sure you want to remove session?`,
+			"Ok",
+			"Cancel",
+			() => (<any>window).Server.userSession
+				.delete(
+					{
+						userId: this.props.userId,
+						sessionKey: session.key
+					}
+				)
+				.then(() => this.dataLoader.loadData()),
+			() => {}
+		);
+		eventDescriptor.stopPropagation();
+	}
+
     setColumns(): void {
         this.columns = [
             {
@@ -123,11 +141,20 @@ export class SessionsModel {
                     }
                 }
             },
+	        {
+		        text: 'Actions',
+		        cell: {
+			        type: 'action-buttons',
+			        typeOptions: {
+				        onItemRemove: this.onRemove.bind(this)
+			        }
+		        }
+	        }
         ];
     }
 
     init(){
-        this.grid = new GridModel({
+	    this.grid = new GridModel({
             actionPanel: {
                 title:      'Sessions',
                 showStrip:  true
