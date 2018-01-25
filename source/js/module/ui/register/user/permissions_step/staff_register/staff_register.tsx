@@ -1,18 +1,15 @@
 import * as React from 'react';
 import * as Morearty from 'morearty';
 import * as Immutable from 'immutable';
-import {StaffSchoolStep} from './staff_school_step';
+import {SchoolStep} from '../school_step';
+import {StaffRoleStep} from './staff_role_step';
 import {MemberSchoolStep} from './member_school_step';
-import {VerificationStep} from '../verification_step';
 import {TermsAndConditionsStep} from './terms_and_conditions_step';
-import {FinishStep} from '../finish_step';
-import {AccountForm} from '../account_step';
 import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
 
-interface SchoolAndRoleData {
-	schoolId:   string
-	preset:     string
-	ownerId:    string
+interface SchoolData {
+	schoolId: string
+	ownerId: string
 }
 
 interface AccountData {
@@ -32,15 +29,7 @@ interface AccountData {
 const STEP_STAFF = {
 	SCHOOL: {
 		key: 'SCHOOL',
-		title: 'Choose a school. Choose a role'
-	},
-	ACCOUNT: {
-		key: 'ACCOUNT',
-		title: 'Input personal details and the password'
-	},
-	VERIFICATION: {
-		key: 'VERIFICATION',
-		title: 'Confirm email and phone codes'
+		title: 'Choose a school.'
 	},
 	MEMBER_OF_SCHOOL: {
 		key: 'MEMBER_OF_SCHOOL',
@@ -50,9 +39,9 @@ const STEP_STAFF = {
 		key: 'TERMS_AND_CONDITIONS',
 		title: 'Terms and conditions'
 	},
-	FINISH: {
-		key: 'FINISH',
-		title: 'Finish'
+	STAFF_ROLE_STEP: {
+		key: 'STAFF_ROLE_STEP',
+		title: ''
 	}
 };
 
@@ -65,56 +54,48 @@ export const StaffRegister = (React as any).createClass({
 		});
 	},
 
-	handleChangeSchoolAndRole: function (data: SchoolAndRoleData, school: School): void {
+	handleChangeSchool: function (data: SchoolData, school: School): void {
 		const   binding     = this.getDefaultBinding();
 
 		binding.sub('schoolFields').set(Immutable.fromJS(data));
 		binding.set('school', school);
 		this.addToHistory();
-		binding.set('registerStep', STEP_STAFF.ACCOUNT);
-
-	},
-
-	setAccountData: function (data: AccountData): void {
-		const   binding     = this.getDefaultBinding();
-
-		this.addToHistory();
-		binding.sub('accountFields').set(Immutable.fromJS(data));
-		binding.set('registerStep', STEP_STAFF.VERIFICATION);
+		if (school.name === 'Great Walstead School') { //The first member of school PE staff? check from server
+			binding.set('registerStep', STEP_STAFF.MEMBER_OF_SCHOOL);
+		} else {
+			binding.set('registerStep', STEP_STAFF.STAFF_ROLE_STEP);
+		}
 	},
 
 	renderTitle: function (): React.ReactNode {
 		const   binding     = this.getDefaultBinding(),
 				currentStep = binding.get('registerStep');
 
-		return <div className="bRegistrationTitleNew">{currentStep.title}</div>
+		return currentStep.title !== '' ? <div className="bRegistrationTitlePermissionsStep">{currentStep.title}</div> : null;
 	},
 
-	checkMemberAndSetNextStep: function(): void{
-		const   binding = this.getDefaultBinding(),
-				school  = binding.toJS('school');
-
-		this.addToHistory();
-		if (school.name === 'Great Walstead School') { //The first member of school PE staff? check from server
-			binding.set('registerStep', STEP_STAFF.MEMBER_OF_SCHOOL);
-		} else {
-			binding.set('registerStep', STEP_STAFF.FINISH);
+	setRole: function (role: string): void {
+		if (role !== '') {
+			const binding = this.getDefaultBinding();
+			this.addToHistory();
+			binding.set('role', role);
+			this.props.goToFinishStep();
 		}
 	},
 
 	setSubscriptionOption: function (type: string): void {
-		const   binding     = this.getDefaultBinding();
+		if (type !== '') {
+			const binding = this.getDefaultBinding();
 
-		this.addToHistory();
-		binding.set('subscriptionOption', type);
-		binding.set('registerStep', STEP_STAFF.TERMS_AND_CONDITIONS);
+			this.addToHistory();
+			binding.set('subscriptionOption', type);
+			binding.set('registerStep', STEP_STAFF.TERMS_AND_CONDITIONS);
+		}
 	},
 
 	handleTermsAndConditions: function (): void {
-		const   binding     = this.getDefaultBinding();
-
 		this.addToHistory();
-		binding.set('registerStep', STEP_STAFF.FINISH);
+		this.props.goToFinishStep();
 	},
 
 	addToHistory: function (): void {
@@ -123,7 +104,6 @@ export const StaffRegister = (React as any).createClass({
 				historyStep = binding.toJS('historyStep');
 
 		historyStep.push(currentStep);
-		console.log(binding.toJS());
 		binding.set('historyStep', historyStep);
 	},
 
@@ -132,9 +112,8 @@ export const StaffRegister = (React as any).createClass({
 				historyStep = binding.toJS('historyStep');
 
 		if (historyStep.length === 0) {
-			window.location.reload();
+			this.props.backToUserType();
 		} else {
-			console.log(binding.toJS());
 			const currentStep = historyStep.pop();
 			binding.set('historyStep', historyStep);
 			binding.set('registerStep', currentStep);
@@ -150,29 +129,11 @@ export const StaffRegister = (React as any).createClass({
 		switch (currentStep.key) {
 			case STEP_STAFF.SCHOOL.key:
 				currentView = (
-					<StaffSchoolStep
-						binding                     = {binding.sub('schoolFields')}
-						defaultSchool               = {binding.toJS('school')}
-						handleChangeSchoolAndRole   = {this.handleChangeSchoolAndRole}
-						handleClickBack             = {this.handleClickBack}
-					/>
-				);
-				break;
-			case STEP_STAFF.ACCOUNT.key:
-				currentView = (
-					<AccountForm
-					    binding         = {binding.sub('accountFields')}
-					    onSubmit        = {this.setAccountData}
-					    handleClickBack = {this.handleClickBack}
-					/>
-				);
-				break;
-			case STEP_STAFF.VERIFICATION.key:
-				currentView = (
-					<VerificationStep
-						binding         = {binding.sub('verification')}
-						setStep         = {this.checkMemberAndSetNextStep}
-						handleClickBack = {this.handleClickBack}
+					<SchoolStep
+						binding             = {binding.sub('schoolField')}
+						defaultSchool       = {binding.toJS('school')}
+						handleChangeSchool  = {this.handleChangeSchool}
+						handleClickBack     = {this.handleClickBack}
 					/>
 				);
 				break;
@@ -194,15 +155,20 @@ export const StaffRegister = (React as any).createClass({
 					/>
 				);
 				break;
-			case STEP_STAFF.FINISH.key:
+			case STEP_STAFF.STAFF_ROLE_STEP.key:
 				currentView = (
-					<FinishStep/>
+					<StaffRoleStep
+						defaultRole     = {binding.toJS('role')}
+						schoolName      = {binding.toJS('school').name}
+						handleClickBack = {this.handleClickBack}
+						setRole         = {this.setRole}
+					/>
 				);
 				break;
 		}
 
 		return (
-			<div className="bRegistration bRegistrationNew">
+			<div className="bRegistrationPermissionsStep">
 				{this.renderTitle()}
 				{currentView}
 			</div>

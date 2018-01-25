@@ -2,7 +2,6 @@ const 	Morearty    			= require('morearty'),
 		React 					= require('react'),
 		Route 					= require('module/core/route'),
 		RegisterUserComponent 	= require('module/ui/register/user'),
-		{RegisterComponent} 	= require('module/ui/register_test/register_component'),
 		LoginUserComponent		= require('module/ui/login/user'),
 		LogoutUserComponent		= require('module/ui/logout/logout'),
 		RegisterDoneComponent	= require('module/ui/register/user/register_done');
@@ -24,7 +23,6 @@ const AuthRoutes = React.createClass({
 		return (
 			<span>
 				<Route path="/register"  	binding={binding.sub('form.register')} 	component={RegisterUserComponent} 	unauthorizedAccess={true}  />
-				<Route path="/register_test"  	binding={binding.sub('form.registerTest')} 	component={RegisterComponent} 	unauthorizedAccess={true}  />
 				<Route path="/login" 		binding={binding.sub('userData')} 		component={LoginUserComponent} 		loginRoute={true}  />
 				<Route path="/logout" 		binding={binding.sub('userData')} 		component={LogoutUserComponent} 	unauthorizedAccess={true}  />
 				<Route path="/verify"  		binding={binding.sub('userData')} 		component={RegisterDoneComponent} 	verifyRoute={true}  />

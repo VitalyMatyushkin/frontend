@@ -156,12 +156,12 @@ $chooserIconSize: 35px;
 .bRegistrationTitle.mActive {
   display: block;
 }
-.bRegistrationTitleNew {
+.bRegistrationTitlePermissionsStep {
   color: $COLOR;
+  margin-bottom: 20px;
   font-weight: normal;
   text-align: center;
-  margin: 40px;
-  font-size: 30px;
+  font-size: 25px;
   display: block;
   width: 100%;
 }

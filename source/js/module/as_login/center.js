@@ -6,7 +6,6 @@ const   React               = require('react'),
         LoginRoute2         = require('../core/routes/login_route2'),
         LogoutRoute         = require('module/core/routes/logout_route'),
         RegisterRoute       = require('module/core/routes/register_route'),
-        RegisterTestRoute   = require('module/core/routes/register_test_route'),
         SettingsRoute       = require('module/core/routes/settings_route'),
         Morearty            = require('morearty'),
         NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
@@ -26,7 +25,6 @@ const Center = React.createClass({
                 <div className="bPageWrap">
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
                         <RegisterRoute  binding={binding.sub('form.register')} />
-                        <RegisterTestRoute  binding={binding.sub('form.form.registerTest')} />
                         <LoginRoute2    binding={binding.sub('userData')} />
                         <LogoutRoute    binding={binding.sub('userData')} />
                         <SettingsRoute  binding={binding.sub('userData')} />

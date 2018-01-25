@@ -5,11 +5,16 @@ import {StaffRegister} from './staff_register/staff_register';
 import {ParentRegister} from './parent_register/parent_register';
 import {StudentRegister} from './student_register/student_register';
 import {TYPE_USER} from './register_user_type';
+import 'styles/pages/register/b_register_permission_step.scss';
 
-export const RegisterComponent = (React as any).createClass({
+export const PermissionsStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	setRegisterType: function(type: string): void {
 		this.getDefaultBinding().set('userType', type);
+	},
+
+	backToUserType: function () {
+		this.getDefaultBinding().set('userType', '');
 	},
 
 	render: function()  {
@@ -20,13 +25,29 @@ export const RegisterComponent = (React as any).createClass({
 
 		switch (userType) {
 			case TYPE_USER.STAFF:
-				currentView = <StaffRegister binding={binding.sub('staffRegister')}/>;
+				currentView = (
+					<StaffRegister
+						goToFinishStep  = {this.props.onSuccess}
+						backToUserType  = {this.backToUserType}
+						binding         = {binding.sub('staffRegister')}
+					/>
+				);
 				break;
 			case TYPE_USER.PARENT:
-				currentView = <ParentRegister binding={binding.sub('parentRegister')}/>;
+				currentView = (
+					<ParentRegister
+						goToFinishStep  = {this.props.onSuccess}
+						backToUserType  = {this.backToUserType}
+						binding         = {binding.sub('parentRegister')}/>
+				);
 				break;
 			case TYPE_USER.STUDENT:
-				currentView = <StudentRegister binding={binding.sub('studentRegister')}/>;
+				currentView = (
+					<StudentRegister
+						goToFinishStep  = {this.props.onSuccess}
+						backToUserType  = {this.backToUserType}
+						binding         = {binding.sub('studentRegister')}/>
+				);
 				break;
 			default:
 				currentView = <RegisterUserType setRegisterType = {this.setRegisterType}/>;
@@ -34,7 +55,7 @@ export const RegisterComponent = (React as any).createClass({
 		}
 
 		return (
-			<div className="bRegistration">
+			<div>
 				{currentView}
 			</div>
 		);

@@ -1,6 +1,7 @@
 const   RegisterDone        = require('module/ui/register/user/register_done'),
         AccountForm         = require('module/ui/register/user/account_step'),
         PermissionsList     = require('module/ui/register/user/permissions_step'),
+        {PermissionsStep}   = require('module/ui/register/user/permissions_step/permissions_step'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
         classNames          = require('classnames'),
         React               = require('react'),
@@ -424,13 +425,9 @@ const RegisterUserPage = React.createClass({
                 );
                 break;
             case 'permissions':
-                currentView = <PermissionsList
+                currentView = <PermissionsStep
                     onSuccess={self.setStepFunction.bind(null, 'finish')}
-                    binding={{
-                        //account: binding.sub('account'),
-                        //formFields: binding.sub('formFields'),
-                        default: binding
-					}}
+                    binding={binding.sub('permissionsStep')}
                     />;
                 break;
             case 'finish':
