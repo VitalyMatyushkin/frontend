@@ -106,7 +106,9 @@ function commitTeamChangesByOrder(order, activeSchoolId, binding) {
 			break;
 		case !AfterRivalsChangesHelper.isSetTeamLaterByOrder(order, binding):
 			if(AfterRivalsChangesHelper.isTeamChangedByOrder(order, binding)) {
-				promises = promises.concat(changeTeamByOrder(order, activeSchoolId, binding));
+				promises = promises.concat(
+					changeTeamByOrder(order, activeSchoolId, binding)
+				);
 			} else {
 				promises = promises.concat(
 					commitTeamPlayerChangesByOrder(order, activeSchoolId, binding).then(actionDescriptorId => {
@@ -155,16 +157,24 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 		);
 	}
 
-	return Promise.resolve( deleteTeamFromEventPromise )
+	return Promise.resolve(deleteTeamFromEventPromise)
 		.then(() => TeamHelper.addTeamsToEvent(
 			activeSchoolId,
 			binding.toJS('model').id,
-			[team]
+			[team],
+			binding.toJS(`isManualNotificationMode`) ? 'MANUAL' : 'AUTO'
 		))
-		.then(teams => {
+		.then(data => {
+			if(binding.toJS(`isManualNotificationMode`)) {
+				binding.set('actionDescriptorId', data[0].actionDescriptorId);
+			}
+
+			return data[0].team;
+		})
+		.then(team => {
 			binding.set(
 				`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`,
-				Immutable.fromJS(teams[0].id)
+				Immutable.fromJS(team.id)
 			);
 		});
 }

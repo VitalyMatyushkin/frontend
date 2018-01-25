@@ -1345,14 +1345,28 @@ function getUserIdFromPlayer(player) {
 	return typeof player.userId !== 'undefined' ? player.userId : player.id;
 }
 
-function addTeamsToEvent(schoolId, eventId, teams) {
-	return Promise.all(teams.map(team => window.Server.schoolEventTeams.post(
-		{
-			schoolId:	schoolId,
-			eventId:	eventId
-		},
-		team
-	)));
+function addTeamsToEvent(schoolId, eventId, teams, notificationMode = 'AUTO') {
+	return Promise.all(teams.map(team => {
+		team.options = {
+			headers:	{ 'notification-mode': notificationMode },
+			isDataOnly:	false
+		};
+
+		return window.Server.schoolEventTeams.post(
+			{
+				schoolId:	schoolId,
+				eventId:	eventId
+			},
+			team
+		).then(response => {
+			const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
+
+			return {
+				team: response.data,
+				actionDescriptorId: actionDescriptorId
+			}
+		});
+	}));
 }
 
 /** Return client's event  type of event. Yes, there are client's and server's event type. Why? Who knows. */
