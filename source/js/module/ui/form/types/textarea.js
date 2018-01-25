@@ -21,7 +21,6 @@ const TypeTextArea = React.createClass({
 		binding.addListener('defaultValue', () => {
 			this.forceNewValue(binding.get('defaultValue'));
 		});
-		this.scrollPosition = 0;
 	},
 	componentDidUpdate: function () {
 
@@ -44,15 +43,11 @@ const TypeTextArea = React.createClass({
 	handleChange: function(event) {
 
 		this.cursorPosition = event.target.selectionStart;
-		this.scrollPosition = this.refs.fieldInput.scrollTop;
 		this.changeValue(this.refs.fieldInput.value);
 	},
 	render: function () {
-		const 	defaultValue	= this.getDefaultBinding().get('defaultValue'),
-				value			= this.getDefaultBinding().get('value');
-		if (typeof this.refs.fieldInput !== 'undefined') {
-			this.refs.fieldInput.scrollTop = this.scrollPosition;
-		}
+		const value = this.getDefaultBinding().get('value');
+
 		return (
 			<textarea	ref			= "fieldInput"
 						value		= { value }
