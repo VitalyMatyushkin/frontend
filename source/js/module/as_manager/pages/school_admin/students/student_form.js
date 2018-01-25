@@ -173,9 +173,17 @@ const StudentForm = React.createClass({
 				</FormField>
 				<FormField
 					type		='phone'
-					field		={`nok_${index}_phone`}
+					field		={`nok_${index}_phone_0`}
 					validation	='phone'
-					id 			= {`phone_kin_${index}`}
+					id 			= {`phone_0_kin_${index}`}
+				>
+					Phone
+				</FormField>
+				<FormField
+					type		='phone'
+					field		={`nok_${index}_phone_1`}
+					validation	='phone'
+					id 			= {`phone_1_kin_${index}`}
 				>
 					Phone
 				</FormField>
@@ -191,9 +199,6 @@ const StudentForm = React.createClass({
 		);
 	},
 	renderNextOfKinColumn: function() {
-		const	binding					= this.getDefaultBinding(),
-				countNextOfKinBlocks	= binding.get('countNextOfKinBlocks');
-
 		const nextOfKins = [];
 
 		for(let i = 0; i < StudentsFormHelper.MAX_COUNT_NEXT_KIN_BLOCK; i++) {

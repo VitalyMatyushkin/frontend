@@ -129,5 +129,4 @@ const StudentEditPage = React.createClass({
 	}
 });
 
-
 module.exports = StudentEditPage;

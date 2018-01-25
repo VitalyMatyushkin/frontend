@@ -5,7 +5,7 @@ const StudentsFormHelper = {
 		'relationship',
 		'firstName',
 		'lastName',
-		'phone',
+		'phones',
 		'email'
 	],
 	/**
@@ -30,7 +30,13 @@ const StudentsFormHelper = {
 			for(let key in nextOfKinItem){
 				const value = nextOfKinItem[key];
 				if(typeof value !== 'undefined') {
-					data[`nok_${index}_${key}`] = value;
+					if(key === 'phones') {
+						value.forEach((phone, phoneIndex) => {
+							data[`nok_${index}_phone_${phoneIndex}`] = phone;
+						});
+					} else {
+						data[`nok_${index}_${key}`] = value;
+					}
 				}
 			}
 		});
@@ -52,13 +58,29 @@ const StudentsFormHelper = {
 			// nok_N_email
 			// N = MAX_COUNT_NEXT_KIN_BLOCK
 			this.nextOfKinFields.forEach(field => {
-				const value = data[`nok_${index}_${field}`];
+				switch (field) {
+					case 'phones': {
+						// collect phone_0, phone_1, ..., phone_n
+						emptyNextOfKin.phones = [];
+						let count = 0;
+						while(typeof data[`nok_${index}_phone_${count}`] !== 'undefined') {
+							emptyNextOfKin.phones.push(data[`nok_${index}_phone_${count}`]);
+							data[`nok_${index}_phone_${count}`] = undefined;
+							count++;
+						}
+						break;
+					}
+					default: {
+						const value = data[`nok_${index}_${field}`];
 
-				if(typeof value !== 'undefined' && value !== '') {
-					emptyNextOfKin[field] = value;
-					// it's a little trick - delete old form data
-					// because this should not be in post data
-					data[`nok_${index}_${field}`] = undefined;
+						if(typeof value !== 'undefined' && value !== '') {
+							emptyNextOfKin[field] = value;
+							// it's a little trick - delete old form data
+							// because this should not be in post data
+							data[`nok_${index}_${field}`] = undefined;
+						}
+						break;
+					}
 				}
 			});
 

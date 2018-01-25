@@ -38,5 +38,4 @@ const StudentAddPage = React.createClass({
 	}
 });
 
-
 module.exports = StudentAddPage;
