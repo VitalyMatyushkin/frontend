@@ -5,7 +5,7 @@ const 	SchoolForm 		= require('../../schools/school_form'),
 		React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
-		SchoolHelper 	= require('module/helpers/school_helper');
+		Loader          = require('module/ui/loader');
 
 const EditSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -15,12 +15,14 @@ const EditSchoolForm = React.createClass({
 				routingData 	= globalBinding.sub('routing.parameters').toJS(),
 				schoolId 		= routingData.id;
 
+		binding.set('isSync', false);
 		if (schoolId) {
 			window.Server.school.get(schoolId).then( data => {
 				if(data.postcode && data.postcode._id){
 					data.postcode.id = data.postcode._id;
 				}
 				binding.set(Immutable.fromJS(data));
+				binding.set('isSync', true);
 			}).catch(err => {
 				window.simpleAlert(
 					`${err.errorThrown} server error`,
@@ -39,13 +41,17 @@ const EditSchoolForm = React.createClass({
 
 	},
 	render: function() {
-		return (
-			<SchoolForm
-				title 		= "Edit school..."
-				onSubmit 	= { this.submitEdit }
-				binding 	= { this.getDefaultBinding() }
-			/>
-		)
+		if (this.getDefaultBinding().toJS('isSync')) {
+			return (
+				<SchoolForm
+					title="Edit school..."
+					onSubmit={this.submitEdit}
+					binding={this.getDefaultBinding()}
+				/>
+			)
+		} else {
+			return <Loader/>;
+		}
 	}
 });
 

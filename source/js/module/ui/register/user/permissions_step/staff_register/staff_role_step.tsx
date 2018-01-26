@@ -5,10 +5,20 @@ interface StaffRoleStepProps {
 	setRole: (type: string) => void
 	handleClickBack: () => void
 	schoolName: string
+	availableRoles: AllowedPermission
 }
 
 interface StaffRoleStepState {
 	selectedOption: string
+}
+
+interface AllowedPermission {
+	ADMIN:      boolean
+	MANAGER:    boolean
+	TEACHER:    boolean
+	COACH:      boolean
+	STUDENT:    boolean
+	PARENT:	    boolean
 }
 
 export const STAFF_ROLES = {
@@ -35,18 +45,20 @@ export class StaffRoleStep extends React.Component<StaffRoleStepProps, StaffRole
 	renderRolesOptions() {
 		const options = [];
 		for (const role in STAFF_ROLES) {
-			options.push(
-				<div key={STAFF_ROLES[role].value}>
-					<input
-						type        = "radio"
-						id          = {`radio_${STAFF_ROLES[role].value}`}
-						value       = {STAFF_ROLES[role].value}
-						checked     = {this.state.selectedOption === STAFF_ROLES[role].value}
-						onChange    = {this.handleOptionChange.bind(this)}
-					/>
-					<label htmlFor={`radio_${STAFF_ROLES[role].value}`}>{STAFF_ROLES[role].displayText}</label>
-				</div>
-			)
+			if (this.props.availableRoles[STAFF_ROLES[role].value]) {  //if this role available in current school
+				options.push(
+					<div key={STAFF_ROLES[role].value}>
+						<input
+							type="radio"
+							id={`radio_${STAFF_ROLES[role].value}`}
+							value={STAFF_ROLES[role].value}
+							checked={this.state.selectedOption === STAFF_ROLES[role].value}
+							onChange={this.handleOptionChange.bind(this)}
+						/>
+						<label htmlFor={`radio_${STAFF_ROLES[role].value}`}>{STAFF_ROLES[role].displayText}</label>
+					</div>
+				)
+			}
 		}
 		return <div className="bRegistrationOptions">{options}</div>;
 	}

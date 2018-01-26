@@ -10,11 +10,16 @@ import 'styles/pages/register/b_register_permission_step.scss';
 export const PermissionsStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	setRegisterType: function(type: string): void {
-		this.getDefaultBinding().set('userType', type);
+		const binding = this.getDefaultBinding();
+		binding.set('userType', type);
+		binding.sub('staffRegister').set('userType', type);
+		binding.sub('parentRegister').set('userType', type);
+		binding.sub('studentRegister').set('userType', type);
 	},
 
 	backToUserType: function () {
 		this.getDefaultBinding().set('userType', '');
+		this.getDefaultBinding().clear();
 	},
 
 	render: function()  {

@@ -5,25 +5,12 @@ import {SchoolStep} from '../school_step';
 import {StaffRoleStep} from './staff_role_step';
 import {MemberSchoolStep} from './member_school_step';
 import {TermsAndConditionsStep} from './terms_and_conditions_step';
+import {FinishPermissionsStep} from '../finish_permissions_step';
 import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
 
 interface SchoolData {
 	schoolId: string
 	ownerId: string
-}
-
-interface AccountData {
-	createdAt:          string
-	email:              string
-	firstName:          string
-	id:                 string
-	lastName:           string
-	notification:       any
-	phone:              string
-	status:             string
-	updatedAt:          string
-	verification:       any
-	webIntroEnabled:    boolean
 }
 
 const STEP_STAFF = {
@@ -42,6 +29,10 @@ const STEP_STAFF = {
 	STAFF_ROLE_STEP: {
 		key: 'STAFF_ROLE_STEP',
 		title: ''
+	},
+	FINISH: {
+		key: 'FINISH',
+		title: 'Selecting permissions is complete'
 	}
 };
 
@@ -55,16 +46,30 @@ export const StaffRegister = (React as any).createClass({
 	},
 
 	handleChangeSchool: function (data: SchoolData, school: School): void {
-		const   binding     = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		binding.sub('schoolFields').set(Immutable.fromJS(data));
-		binding.set('school', school);
+		binding.sub('schoolField').set(Immutable.fromJS(data));
+		if (typeof school !== "undefined") {
+			binding.set('school', school);
+		}
+
 		this.addToHistory();
-		if (school.name === 'Great Walstead School') { //The first member of school PE staff? check from server
+		if (this.isSchoolWithoutUsers(binding.toJS('school'))) { //The first member of school PE staff? check from server
 			binding.set('registerStep', STEP_STAFF.MEMBER_OF_SCHOOL);
+			binding.set('role', undefined);
 		} else {
 			binding.set('registerStep', STEP_STAFF.STAFF_ROLE_STEP);
+			binding.set('subscriptionOption', undefined);
 		}
+	},
+
+	isSchoolWithoutUsers: function (school): boolean {
+		const rolesExistence  = school.stats.rolesExistence;
+		let result = false;
+		for (const key in rolesExistence) {
+			result = result || rolesExistence[key];
+		}
+		return !result;
 	},
 
 	renderTitle: function (): React.ReactNode {
@@ -79,7 +84,7 @@ export const StaffRegister = (React as any).createClass({
 			const binding = this.getDefaultBinding();
 			this.addToHistory();
 			binding.set('role', role);
-			this.props.goToFinishStep();
+			binding.set('registerStep', STEP_STAFF.FINISH);
 		}
 	},
 
@@ -95,7 +100,7 @@ export const StaffRegister = (React as any).createClass({
 
 	handleTermsAndConditions: function (): void {
 		this.addToHistory();
-		this.props.goToFinishStep();
+		this.getDefaultBinding().set('registerStep', STEP_STAFF.FINISH);
 	},
 
 	addToHistory: function (): void {
@@ -158,10 +163,20 @@ export const StaffRegister = (React as any).createClass({
 			case STEP_STAFF.STAFF_ROLE_STEP.key:
 				currentView = (
 					<StaffRoleStep
-						defaultRole     = {binding.toJS('role')}
-						schoolName      = {binding.toJS('school').name}
-						handleClickBack = {this.handleClickBack}
-						setRole         = {this.setRole}
+						defaultRole      = {binding.toJS('role')}
+						availableRoles   = {binding.toJS('school').allowedPermissionPresets}
+						schoolName       = {binding.toJS('school').name}
+						handleClickBack  = {this.handleClickBack}
+						setRole          = {this.setRole}
+					/>
+				);
+				break;
+			case STEP_STAFF.FINISH.key:
+				currentView = (
+					<FinishPermissionsStep
+						binding             = {binding}
+						handleClickBack     = {this.handleClickBack}
+						handleClickContinue = {this.props.goToFinishStep}
 					/>
 				);
 				break;

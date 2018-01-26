@@ -2,13 +2,15 @@
  * Created by wert on 18.11.16.
  */
 
-const 	Form 			= require('module/ui/form/form'),
-		FormField 		= require('module/ui/form/form_field'),
-		FormColumn 		= require('module/ui/form/form_column'),
-		SchoolConsts	= require('../../../helpers/consts/schools'),
-		Immutable		= require('immutable'),
-		Morearty		= require('morearty'),
-		React 			= require('react');
+const 	Form 			    = require('module/ui/form/form'),
+		FormField 		    = require('module/ui/form/form_field'),
+		FormColumn 		    = require('module/ui/form/form_column'),
+		{RolesHelper} 		= require('./roles_helper'),
+		SchoolConsts	    = require('../../../helpers/consts/schools'),
+		Immutable		    = require('immutable'),
+		Morearty		    = require('morearty'),
+		MultiselectDropdown	= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		React 			    = require('react');
 
 const SystemAdminSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,9 +19,17 @@ const SystemAdminSchoolForm = React.createClass({
 		onSubmit: 	React.PropTypes.func
 	},
 	componentWillMount: function () {
-		this.getDefaultBinding().clear();
+		const   binding = this.getDefaultBinding(),
+				serverRoles = binding.toJS('allowedPermissionPresets');
+
 		// if it need
 		this.setDefaultPublicSiteAccess();
+
+		binding.set('availableRoles', Immutable.fromJS(RolesHelper.convertRolesFromServerToClient(serverRoles)));
+		let roles = binding.toJS('availableRoles');
+		if(typeof roles === 'undefined') {
+			binding.set('availableRoles', Immutable.fromJS([]));
+		}
 	},
 	getPublicSiteAccessTypes: function() {
 		const result = [];
@@ -43,6 +53,26 @@ const SystemAdminSchoolForm = React.createClass({
 			);
 		}
 	},
+	getSelectedRoles: function () {
+		return this.getDefaultBinding().toJS('availableRoles');
+	},
+	handleSelectRole: function (role) {
+		const   binding     = this.getDefaultBinding(),
+				roles       = binding.toJS('availableRoles'),
+				roleIndex   = roles.findIndex(_r => _r.id === role.id);
+
+		if(roleIndex !== -1) {
+			roles.splice(roleIndex, 1);
+		} else {
+			roles.push(role);
+		}
+
+		binding.set('availableRoles', Immutable.fromJS(roles));
+	},
+	onSubmit: function (data) {
+		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(this.getDefaultBinding().toJS('availableRoles'));
+		this.props.onSubmit(data);
+	},
 	render: function () {
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
@@ -60,7 +90,7 @@ const SystemAdminSchoolForm = React.createClass({
 				name 			= { this.props.title }
 				binding 		= { this.getDefaultBinding() }
 				service 		= "i/schools/domains"
-				onSubmit 		= { this.props.onSubmit }
+				onSubmit 		= { this.onSubmit }
 				submitOnEnter 	= { false }
 			>
 				<FormColumn customStyle={'mTwoColumns'}>
@@ -243,6 +273,17 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Age groups naming
 					</FormField>
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
+							Available roles
+						</div>
+						<MultiselectDropdown
+							items			= { RolesHelper.getRoles() }
+							selectedItems	= { this.getSelectedRoles() }
+							handleClickItem	= { this.handleSelectRole }
+							extraStyle		= 'mSmallWide'
+						/>
+					</div>
 				</FormColumn>
 			</Form>
 		);

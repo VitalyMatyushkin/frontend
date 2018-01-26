@@ -5,21 +5,8 @@ import {RegisterTypeStep} from '../register_type_step';
 import {TYPE_REGISTER} from '../register_type_step';
 import {SchoolStep} from '../school_step';
 import {SportsStarsTeamStep} from '../sports_stars_team_step';
+import {FinishPermissionsStep} from '../finish_permissions_step';
 import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
-
-interface AccountData {
-	createdAt:          string
-	email:              string
-	firstName:          string
-	id:                 string
-	lastName:           string
-	notification:       any
-	phone:              string
-	status:             string
-	updatedAt:          string
-	verification:       any
-	webIntroEnabled:    boolean
-}
 
 const STEP_STUDENT = {
 	SCHOOL: {
@@ -33,6 +20,10 @@ const STEP_STUDENT = {
 	REGISTER_TYPE: {
 		key: 'REGISTER_TYPE',
 		title: 'Choose register type'
+	},
+	FINISH: {
+		key: 'FINISH',
+		title: 'Selecting permissions is complete'
 	}
 };
 
@@ -58,19 +49,23 @@ export const StudentRegister = (React as any).createClass({
 			binding.set('registerType', type);
 			if (type === TYPE_REGISTER.INDIVIDUAL.type) {
 				binding.set('registerStep', STEP_STUDENT.SPORTS_STARS_TEAM);
+				binding.set('school', undefined);
 			} else {
 				binding.set('registerStep', STEP_STUDENT.SCHOOL);
+				binding.set('sportsStarsTeam', undefined);
 			}
 		}
 	},
 
 	handleChangeSchool: function (data: SchoolData, school: School): void {
-		const   binding     = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.sub('schoolField').set(Immutable.fromJS(data));
-		binding.set('school', school);
+		if (typeof school !== "undefined") {
+			binding.set('school', school);
+		}
 		this.addToHistory();
-		this.props.goToFinishStep();
+		binding.set('registerStep', STEP_STUDENT.FINISH);
 	},
 
 	renderTitle: function (): React.ReactNode {
@@ -81,8 +76,10 @@ export const StudentRegister = (React as any).createClass({
 	},
 
 	setSportsStarsTeam: function (): void {
+		const binding = this.getDefaultBinding();
+		binding.set('sportsStarsTeam', 'test');
 		this.addToHistory();
-		this.props.goToFinishStep()
+		binding.set('registerStep', STEP_STUDENT.FINISH);
 	},
 
 	addToHistory: function (): void {
@@ -136,6 +133,15 @@ export const StudentRegister = (React as any).createClass({
 				break;
 			case STEP_STUDENT.SPORTS_STARS_TEAM.key:
 				currentView = <SportsStarsTeamStep setSportsStarsTeam={this.setSportsStarsTeam} handleClickBack = {this.handleClickBack}/>;
+				break;
+			case STEP_STUDENT.FINISH.key:
+				currentView = (
+					<FinishPermissionsStep
+						binding             = {binding}
+						handleClickBack     = {this.handleClickBack}
+						handleClickContinue = {this.props.goToFinishStep}
+					/>
+				);
 				break;
 		}
 

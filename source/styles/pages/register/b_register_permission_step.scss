@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 .bSocialNetwork_button{
     display: block;
     margin: 10px auto;
@@ -24,7 +26,12 @@
 }
 
 .bRegistrationPermissionsStep {
-    max-width: 500px;
+    width: 460px;
+    margin-left: 40px;
+
+    .bForm {
+        margin: 0;
+    }
 
     .eForm_savePanel {
         padding: 20px 0;
@@ -53,6 +60,7 @@
                     & + label {
                         padding: 0 0 0 35px;
                         cursor: pointer;
+                        display: block;
                     }
 
                     & + label:before {
@@ -102,10 +110,42 @@
             }
         }
 
+        .bFinishSubtitle {
+            color: #333132;
+
+            span {
+                font-weight: bold;
+                color: #007abf;
+            }
+        }
+
     }
 
     .eRegistration_verification {
        margin-left: 0;
+    }
+
+    .eTextWrapper {
+        margin-top: 25px;
+
+        .eText{
+            flex-basis: 650px;
+            display: flex;
+            flex-wrap: wrap;
+
+            .eTextKey{
+                flex-basis: 150px;
+                margin-bottom: 25px;
+                font-size: 1em;
+                font-weight: bold;
+                color: #aaaaaa;
+            }
+
+            .eTextValue{
+                flex-basis: 310px;
+                margin-bottom: 25px;
+            }
+        }
     }
 }
 
