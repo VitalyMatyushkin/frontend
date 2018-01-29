@@ -6,7 +6,7 @@ const	React		= require('react'),
 
 const	{ClubList}	= require("module/as_manager/pages/clubs/club_list/club_list"),
 		{ClubsAdd}  = require("module/as_manager/pages/clubs/clubs_add"),
-		{ClubsEdit} = require("module/as_manager/pages/clubs/clubs_edit");
+		ClubsEdit = require("module/as_manager/pages/clubs/clubs_edit");
 
 const ClubsPage = React.createClass({
 	mixins: [Morearty.Mixin],
