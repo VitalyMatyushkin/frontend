@@ -50,7 +50,7 @@ export class RegisterTypeStep extends React.Component<RegisterTypeStepProps, Reg
 							checked     = {this.state.selectedOption === TYPE_REGISTER.SCHOOL.type}
 							onChange    = {this.handleOptionChange.bind(this)}
 						/>
-						<label htmlFor={`radio_${TYPE_REGISTER.SCHOOL.type}`}>{this.props.mode === 'student' ? TYPE_REGISTER.SCHOOL.studentText : TYPE_REGISTER.SCHOOL.parentText}</label>
+						<label htmlFor={`radio_${TYPE_REGISTER.SCHOOL.type}`}>{this.props.mode === 'STUDENT' ? TYPE_REGISTER.SCHOOL.studentText : TYPE_REGISTER.SCHOOL.parentText}</label>
 					</div>
 
 					<div>
@@ -61,7 +61,7 @@ export class RegisterTypeStep extends React.Component<RegisterTypeStepProps, Reg
 							checked     = {this.state.selectedOption === TYPE_REGISTER.INDIVIDUAL.type}
 							onChange    = {this.handleOptionChange.bind(this)}
 						/>
-						<label htmlFor={`radio_${TYPE_REGISTER.INDIVIDUAL.type}`}>{this.props.mode === 'student' ? TYPE_REGISTER.INDIVIDUAL.studentText : TYPE_REGISTER.INDIVIDUAL.parentText}</label>
+						<label htmlFor={`radio_${TYPE_REGISTER.INDIVIDUAL.type}`}>{this.props.mode === 'STUDENT' ? TYPE_REGISTER.INDIVIDUAL.studentText : TYPE_REGISTER.INDIVIDUAL.parentText}</label>
 
 					</div>
 				</div>

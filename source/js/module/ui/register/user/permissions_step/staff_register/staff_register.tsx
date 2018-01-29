@@ -93,8 +93,10 @@ export const StaffRegister = (React as any).createClass({
 			const binding = this.getDefaultBinding();
 
 			this.addToHistory();
+			binding.set('role', 'ADMIN');
 			binding.set('subscriptionOption', type);
-			binding.set('registerStep', STEP_STAFF.TERMS_AND_CONDITIONS);
+			// binding.set('registerStep', STEP_STAFF.TERMS_AND_CONDITIONS); //until we add conditions
+			binding.set('registerStep', STEP_STAFF.FINISH);
 		}
 	},
 
@@ -136,6 +138,7 @@ export const StaffRegister = (React as any).createClass({
 				currentView = (
 					<SchoolStep
 						binding             = {binding.sub('schoolField')}
+						mode                = {binding.toJS('userType')}
 						defaultSchool       = {binding.toJS('school')}
 						handleChangeSchool  = {this.handleChangeSchool}
 						handleClickBack     = {this.handleClickBack}
@@ -176,7 +179,6 @@ export const StaffRegister = (React as any).createClass({
 					<FinishPermissionsStep
 						binding             = {binding}
 						handleClickBack     = {this.handleClickBack}
-						handleClickContinue = {this.props.goToFinishStep}
 					/>
 				);
 				break;

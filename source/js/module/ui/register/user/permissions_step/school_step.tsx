@@ -2,19 +2,21 @@ import * as React from 'react';
 import * as Morearty from 'morearty';
 import * as Form from 'module/ui/form/form';
 import * as FormField from 'module/ui/form/form_field';
-import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
+import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
+import {TYPE_USER} from './register_user_type';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	getSchoolService: function() {
 		return (schoolName) => {
-			return (window as any).Server.publicSchools.get( {
+			const filter = {
 				filter: {
 					where: {
 						name: {
 							like: schoolName,
 							options: 'i'
 						},
+						allowedPermissionPresets: {},
 						/* this param was added later, so it is undefined on some schools. Default value is true.
 						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
 						 */
@@ -23,7 +25,16 @@ export const SchoolStep = (React as any).createClass({
 					limit: 1000,
 					order: 'name ASC'
 				}
-			});
+			};
+			switch (this.props.mode) {
+				case TYPE_USER.STUDENT:
+					filter.filter.where.allowedPermissionPresets = {STUDENT: true};
+					break;
+				case TYPE_USER.PARENT:
+					filter.filter.where.allowedPermissionPresets = {PARENT: true};
+					break;
+			}
+			return (window as any).Server.publicSchools.get(filter);
 		};
 	},
 

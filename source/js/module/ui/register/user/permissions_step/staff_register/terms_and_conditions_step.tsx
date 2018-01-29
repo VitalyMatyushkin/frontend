@@ -9,7 +9,7 @@ export class TermsAndConditionsStep extends React.Component<TermsAndConditionsSt
 	render() {
 		return (
 			<div className="bRegistrationMain">
-				<div>Agree with Terms adn Conditions adjusted</div>
+				<div>Agree with Terms and Conditions adjusted</div>
 				<div className="bRegistrationControlButtons">
 					<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
 					<button className="bButton" onClick={() => this.props.handleTermsAndConditions()}>Continue</button>

@@ -4,10 +4,10 @@ import * as Immutable from 'immutable';
 import {RegisterTypeStep} from '../register_type_step';
 import {TYPE_REGISTER} from '../register_type_step';
 import {SchoolStep} from '../school_step';
-import {SportsStarsTeamStep} from '../sports_stars_team_step';
+import {ChildStep} from '../child_step';
 import {FinishPermissionsStep} from '../finish_permissions_step';
 import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
-
+import * as Loader from 'module/ui/loader';
 
 interface SchoolData {
 	schoolId: string
@@ -19,9 +19,9 @@ const STEP_PARENT = {
 		key: 'SCHOOL',
 		title: 'Choose a school'
 	},
-	SPORTS_STARS_TEAM: {
-		key: 'SPORTS_STARS_TEAM',
-		title: 'Assign a school with SIT Sports Stars Team'
+	CHILD_STEP: {
+		key: 'CHILD_STEP',
+		title: 'Enter the child\'s name'
 	},
 	REGISTER_TYPE: {
 		key: 'REGISTER_TYPE',
@@ -42,6 +42,11 @@ export const ParentRegister = (React as any).createClass({
 		});
 	},
 
+	componentWillMount: function () {
+		this.getDefaultBinding().set('isSync', true);
+		this.getDefaultBinding().set('role', 'PARENT');
+	},
+
 	setRegisterType: function (type: string): void {
 		if (type !== '') {
 			const binding = this.getDefaultBinding();
@@ -49,12 +54,12 @@ export const ParentRegister = (React as any).createClass({
 			this.addToHistory();
 			binding.set('registerType', type);
 			if (type === TYPE_REGISTER.INDIVIDUAL.type) {
-				binding.set('registerStep', STEP_PARENT.SPORTS_STARS_TEAM);
-				binding.set('school', undefined);
+				this.getSSTSchool();
+				binding.set('registerStep', STEP_PARENT.CHILD_STEP);
 			} else {
 				binding.set('registerStep', STEP_PARENT.SCHOOL);
-				binding.set('sportsStarsTeam', undefined);
 			}
+			binding.set('school', undefined);
 		}
 	},
 
@@ -66,7 +71,29 @@ export const ParentRegister = (React as any).createClass({
 			binding.set('school', school);
 		}
 		this.addToHistory();
-		binding.set('registerStep', STEP_PARENT.FINISH);
+		binding.set('registerStep', STEP_PARENT.CHILD_STEP);
+	},
+
+	getSSTSchool: function() {
+		const   binding     = this.getDefaultBinding(),
+				schoolName  = 'Squad In Touch Sports Stars Team';
+		binding.set('isSync', false);
+		(window as any).Server.publicSchools.get(
+			{
+				filter: {
+					where: {
+						name: {
+							like: schoolName,
+							options: 'i'
+						}
+					},
+					limit: 1
+				}
+			}
+		).then(schools => {
+			binding.set('school', schools[0]);
+			binding.set('isSync', true);
+		})
 	},
 
 	renderTitle: function (): React.ReactNode {
@@ -76,9 +103,9 @@ export const ParentRegister = (React as any).createClass({
 		return <div className="bRegistrationTitlePermissionsStep">{currentStep.title}</div>
 	},
 
-	setSportsStarsTeam: function (): void {
+	setChild: function (data): void {
 		const binding = this.getDefaultBinding();
-		binding.set('sportsStarsTeam', 'test');
+		binding.sub('childFields').set(Immutable.fromJS(data));
 		this.addToHistory();
 		binding.set('registerStep', STEP_PARENT.FINISH);
 	},
@@ -126,15 +153,20 @@ export const ParentRegister = (React as any).createClass({
 				currentView = (
 					<SchoolStep
 						binding             = {binding.sub('schoolField')}
+						mode                = {binding.toJS('userType')}
 						defaultSchool       = {binding.toJS('school')}
 						handleChangeSchool  = {this.handleChangeSchool}
 						handleClickBack     = {this.handleClickBack}
 					/>
 				);
 				break;
-			case STEP_PARENT.SPORTS_STARS_TEAM.key:
+			case STEP_PARENT.CHILD_STEP.key:
 				currentView = (
-					<SportsStarsTeamStep setSportsStarsTeam={this.setSportsStarsTeam} handleClickBack = {this.handleClickBack}/>
+					<ChildStep
+						binding         = {binding.sub('childFields')}
+						setChild        = {this.setChild}
+						handleClickBack = {this.handleClickBack}
+					/>
 				);
 				break;
 			case STEP_PARENT.FINISH.key:
@@ -142,17 +174,24 @@ export const ParentRegister = (React as any).createClass({
 					<FinishPermissionsStep
 						binding             = {binding}
 						handleClickBack     = {this.handleClickBack}
-						handleClickContinue = {this.props.goToFinishStep}
 					/>
 				);
 				break;
 		}
 
-		return (
-			<div className="bRegistrationPermissionsStep">
-				{this.renderTitle()}
-				{currentView}
-			</div>
-		);
+		if (binding.get('isSync')) {
+			return (
+				<div className="bRegistrationPermissionsStep">
+					{this.renderTitle()}
+					{currentView}
+				</div>
+			);
+		} else {
+			return (
+				<div className="bRegistrationPermissionsStep">
+					<Loader/>
+				</div>
+			);
+		}
 	}
 });

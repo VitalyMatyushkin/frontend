@@ -1,6 +1,4 @@
-const   RegisterDone        = require('module/ui/register/user/register_done'),
-        AccountForm         = require('module/ui/register/user/account_step'),
-        PermissionsList     = require('module/ui/register/user/permissions_step'),
+const   AccountForm         = require('module/ui/register/user/account_step'),
         {PermissionsStep}   = require('module/ui/register/user/permissions_step/permissions_step'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
         classNames          = require('classnames'),
@@ -8,7 +6,6 @@ const   RegisterDone        = require('module/ui/register/user/register_done'),
         Immutable 	        = require('immutable'),
         $                   = require('jquery'),
         Morearty            = require('morearty'),
-        Helpers             = require('module/helpers/storage'),
 	    propz				= require('propz'),
         SessionHelper		= require('module/helpers/session_helper');
 
@@ -71,11 +68,6 @@ const RegisterUserPage = React.createClass({
                     school (for instance, a teacher and a parent) choose one of them and you will be able to request
                     more
                     permissions once your account has been confirmed.</p>
-            },
-            {
-                name: 'finish',
-                title: 'Finish',
-                mainTitle: 'Registration almost done'
             }
         ];
 
@@ -171,19 +163,6 @@ const RegisterUserPage = React.createClass({
                 break;
         }
         $('.bButton').text('Continue →');   // TODO: remove that shit
-    },
-    finish: function () {
-        //Profile will not be allowed  without session data!
-		// Helpers.cookie.remove('loginSession');
-		// const loginSessionBinding = SessionHelper.getLoginSessionBinding(
-		// 	this.getUserDataBinding()
-		// );
-		// typeof loginSessionBinding !== 'undefined' && loginSessionBinding.clear();
-		// document.location.href = '/';
-		let subdomains = document.location.host.split('.');
-		    subdomains[0] = subdomains[0] !=='admin' ? 'app': subdomains[0];
-		const domain = subdomains.join(".");
-		window.location.href = `//${domain}/#settings/general`;
     },
     renderMainTitle: function (step) {
         const   self        = this,
@@ -426,15 +405,8 @@ const RegisterUserPage = React.createClass({
                 break;
             case 'permissions':
                 currentView = <PermissionsStep
-                    onSuccess={self.setStepFunction.bind(null, 'finish')}
                     binding={binding.sub('permissionsStep')}
                     />;
-                break;
-            case 'finish':
-                currentView = <RegisterDone
-                    onSuccess={self.finish}
-                    binding={{default:binding}}
-                />;
                 break;
         }
 

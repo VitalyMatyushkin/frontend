@@ -13,7 +13,7 @@ interface  MemberSchoolStepState {
 
 export const SUBSCRIPTION_OPTIONS = {
 	FULL:   'FULL',
-	MONTH:  'MONTH',
+	TRIAL:  'TRIAL',
 	FREE:   'FREE'
 };
 
@@ -49,12 +49,12 @@ export class MemberSchoolStep extends React.Component< MemberSchoolStepProps,  M
 					<div>
 						<input
 							type        = "radio"
-							id          = {`radio_${SUBSCRIPTION_OPTIONS.MONTH}`}
-							value       = {SUBSCRIPTION_OPTIONS.MONTH}
-							checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.MONTH}
+							id          = {`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}
+							value       = {SUBSCRIPTION_OPTIONS.TRIAL}
+							checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.TRIAL}
 							onChange    = {this.handleOptionChange.bind(this)}
 						/>
-						<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.MONTH}`}>I'm {this.props.schoolName} official and I would like to sign up my school for 30 days trial subscription for free</label>
+						<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}>I'm {this.props.schoolName} official and I would like to sign up my school for 30 days trial subscription for free</label>
 					</div>
 
 					<div>

@@ -32,7 +32,6 @@ export const PermissionsStep = (React as any).createClass({
 			case TYPE_USER.STAFF:
 				currentView = (
 					<StaffRegister
-						goToFinishStep  = {this.props.onSuccess}
 						backToUserType  = {this.backToUserType}
 						binding         = {binding.sub('staffRegister')}
 					/>
@@ -41,7 +40,6 @@ export const PermissionsStep = (React as any).createClass({
 			case TYPE_USER.PARENT:
 				currentView = (
 					<ParentRegister
-						goToFinishStep  = {this.props.onSuccess}
 						backToUserType  = {this.backToUserType}
 						binding         = {binding.sub('parentRegister')}/>
 				);
@@ -49,7 +47,6 @@ export const PermissionsStep = (React as any).createClass({
 			case TYPE_USER.STUDENT:
 				currentView = (
 					<StudentRegister
-						goToFinishStep  = {this.props.onSuccess}
 						backToUserType  = {this.backToUserType}
 						binding         = {binding.sub('studentRegister')}/>
 				);
