@@ -99,17 +99,19 @@ const Players = React.createClass({
 				players			= propz.get(this.props.rival, ['team', 'players']),
 				activeSchoolId	= this.props.activeSchoolId;
 
-		if(activeSchoolId === rival.school.id) {									// If rival is activeSchool
-			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {					// For finished event
-				if(typeof players === 'undefined') {								// Select team later
+		if(activeSchoolId === rival.school.id) {									    // If rival is activeSchool
+			if(eventStatus === EventHelper.EVENT_STATUS.FINISHED) {					    // For finished event
+				if(typeof players === 'undefined') {								    // Select team later
 					return this.renderText(this.NO_TEAM_MEMBERS);
-				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+				} else if(typeof players !== 'undefined' && players.length === 0) {	    // Team was set, but empty
 					return this.renderText(this.NO_TEAM_MEMBERS);
 				}
-			} else {																// For not finished event
-				if(typeof players === 'undefined') {								// Select team later
+			} else {																    // For not finished event
+				if(rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
+					return this.renderText(this.EVENT_INVITE_REJECTED);
+				} else if(typeof players === 'undefined') {								// Select team later
 					return this.renderText(this.SELECT_TEAM_LATER);
-				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
+				} else if(typeof players !== 'undefined' && players.length === 0) {	    // Team was set, but empty
 					return this.renderText(this.MEMBERS_NOT_ADDED);
 				}
 			}
@@ -124,7 +126,9 @@ const Players = React.createClass({
 					return this.renderText(this.NO_TEAM_MEMBERS);
 				}
 			} else {																// For not finished event
-				if(typeof players === 'undefined') {								// Select team later
+				if(rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
+					return this.renderText(this.EVENT_INVITE_REJECTED);
+				} else if(typeof players === 'undefined') {								// Select team later
 					return this.renderText(this.ACCEPTED_BY_OPPONENT);
 				} else if(typeof players !== 'undefined' && players.length === 0) {	// Team was set, but empty
 					return this.renderText(this.ACCEPTED_BY_OPPONENT);
@@ -182,11 +186,17 @@ const Players = React.createClass({
 		}
 	},
 	renderEditButton: function() {
-		const	event			= this.props.event,
-				rivalSchoolId	= this.props.rival.school.id,
-				mode			= this.props.mode;
+		const event = this.props.event;
+		const rival = this.props.rival;
+		const rivalSchoolId	= rival.school.id;
+		const rivalInviteStatus = propz.get(rival, ['invite', 'status']);
+		const mode = this.props.mode;
 
 		switch (true) {
+			case rivalInviteStatus === InviteConsts.INVITE_STATUS.REJECTED:
+				return null;
+			case event.status === InviteConsts.INVITE_STATUS.REJECTED:
+				return null;
 			case !this.props.isShowControlButtons:
 				return null;
 			case this.props.isShowControlButtons && this.props.viewMode === ViewModeConsts.VIEW_MODE.OVERALL_VIEW:

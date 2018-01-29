@@ -1,21 +1,23 @@
 // Main
+import {CancelEventManualNotification} from "./cancel_event_manual_notification/cancel_event_manual_notification";
+
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		propz				= require('propz');
 
 // React components
-const	PencilButton		                = require('module/ui/pencil_button'),
-		TweetButton 		                = require('module/as_manager/pages/event/view/event_header/tweet_button'),
-		{ ConfirmPopup }	                = require('module/ui/confirm_popup'),
-		{ CancelEvent }		                = require('module/as_manager/pages/event/view/event_header/cancel_event'),
-		ReportAvailability	                = require('module/as_manager/pages/event/view/event_header/report_availability'),
-		ViewSelector		                = require('module/ui/view_selector/view_selector'),
-		{ If }				                = require('module/ui/if/if'),
-		{ CancelEventManualNotification }   = require('module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification'),
-		Buttons				                = require('module/as_manager/pages/event/view/event_header/buttons');
+const	PencilButton		= require('module/ui/pencil_button'),
+		TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
+		{ ConfirmPopup }	= require('module/ui/confirm_popup'),
+		{ CancelEvent }		= require('module/as_manager/pages/event/view/event_header/cancel_event'),
+		ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
+		ViewSelector		= require('module/ui/view_selector/view_selector'),
+		{ If }				= require('module/ui/if/if'),
+		Buttons				= require('module/as_manager/pages/event/view/event_header/buttons');
 
 // Helpers
 const	{ DateHelper }		= require('module/helpers/date_helper'),
+		EventHelper			= require('module/helpers/eventHelper'),
 		DomainHelper		= require('module/helpers/domain_helper'),
 		RoleHelper			= require('module/helpers/role_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
@@ -86,6 +88,16 @@ const EventHeader = React.createClass({
 
 		this.getDefaultBinding().set( 'isManualMode', false);
 	},
+	getInviteForActiveSchool: function(event) {
+		const invites = event.invites;
+
+		let invite;
+		if(typeof invites !== 'undefined') {
+			invite = invites.find(invite => invite.invitedSchoolId === this.props.activeSchoolId);
+		}
+
+		return invite;
+	},
 	/**
 	 * Function return string with all Age Groups
 	 * @example <caption>Example usage of getEventAges</caption>
@@ -116,19 +128,33 @@ const EventHeader = React.createClass({
 
 		return eventLocation;
 	},
-	//We don't show the pencil (edit) button for parent, student and if event is finished
-	isShowPencilButton: function(){
+	//We don't show the pencil(edit) button for parent, student and if event is finished
+	isShowPencilButton: function() {
+		const event = this.props.event;
+		const eventStatus = event.status;
 		const role = this.props.role;
+		const invite = this.getInviteForActiveSchool(event);
+		const inviteStatus = propz.get(invite, ['status']);
 
-		return role !== RoleHelper.USER_ROLES.PARENT && role !== RoleHelper.USER_ROLES.STUDENT && this.props.event.status !== "FINISHED";
+		return role !== RoleHelper.USER_ROLES.PARENT &&
+			role !== RoleHelper.USER_ROLES.STUDENT &&
+			eventStatus !== "FINISHED" &&
+			eventStatus !== "REJECTED" &&
+			inviteStatus !== "REJECTED";
 	},
 	closeReportAvailabilityPopup: function () {
-		const 	binding		= this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('isOpenEditReportAvailabilityPopup', false);
 	},
 	renderViewModeLinks: function() {
+		const event = this.props.event;
+		const invite = this.getInviteForActiveSchool(event);
+		const inviteStatus = propz.get(invite, ['status']);
+
 		if(
+			this.props.event.status !== EventHelper.EVENT_STATUS.REJECTED &&
+			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			TeamHelper.isNewEvent(this.props.event) &&
 			TeamHelper.isMultiparty(this.props.event) &&
 			(
@@ -280,6 +306,7 @@ const EventHeader = React.createClass({
 							event = { this.props.event }
 							mode = { this.props.mode }
 							schoolType = { this.props.schoolType }
+							activeSchoolId = { this.props.activeSchoolId }
 							isInviterSchool = { this.props.isInviterSchool }
 							isUserSchoolWorker = { this.props.isUserSchoolWorker }
 							isParent = { this.props.isParent }

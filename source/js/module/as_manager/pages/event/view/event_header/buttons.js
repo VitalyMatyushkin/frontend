@@ -1,10 +1,11 @@
 const	React			= require('react');
+const   propz   		= require('propz');
 
 const	ActionList		= require('../../../../../ui/action_list/action_list');
 
 const	EventHelper		= require('module/helpers/eventHelper'),
-	TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
-	LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
+		TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
+		LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
@@ -15,6 +16,7 @@ const Buttons = React.createClass({
 	propTypes: {
 		event											: React.PropTypes.object.isRequired,
 		mode											: React.PropTypes.string.isRequired,
+		activeSchoolId  								: React.PropTypes.string.isRequired,
 		schoolType										: React.PropTypes.string.isRequired,
 		// TRUE if active school id ==== inviter school id
 		isInviterSchool									: React.PropTypes.bool.isRequired,
@@ -39,6 +41,16 @@ const Buttons = React.createClass({
 		onClickAddSchool								: React.PropTypes.func.isRequired,
 		onClickAddTeam									: React.PropTypes.func.isRequired
 	},
+	getInviteForActiveSchool: function(event) {
+		const invites = event.invites;
+
+		let invite;
+		if(typeof invites !== 'undefined') {
+			invite = invites.find(invite => invite.invitedSchoolId === this.props.activeSchoolId);
+		}
+
+		return invite;
+	},
 	/**
 	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
 	 */
@@ -49,8 +61,8 @@ const Buttons = React.createClass({
 		if(actions.length > 0) {
 			actionList = (
 				<ActionList	buttonText				= 'Actions'
-				               actionList				= { actions }
-				               handleClickActionItem	= { this.handleClickActionItem }
+				            actionList				= { actions }
+				            handleClickActionItem	= { this.handleClickActionItem }
 				/>
 			);
 		}
@@ -96,7 +108,10 @@ const Buttons = React.createClass({
 			actionList.push({id:'report_availability', text:'Report Availability'});
 		}
 
+		const invite = this.getInviteForActiveSchool(this.props.event);
+		const inviteStatus = propz.get(invite, ['status']);
 		if(
+			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			this.props.isUserSchoolWorker &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		) {
@@ -104,7 +119,10 @@ const Buttons = React.createClass({
 			actionList.push({id: 'download_csv', text: 'Download CSV'});
 		}
 
-		if(this.props.isUserSchoolWorker) {
+		if(
+			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			this.props.isUserSchoolWorker
+		) {
 			actionList.push({id: 'delete_event', text: 'Delete Event'});
 		}
 
@@ -135,7 +153,10 @@ const Buttons = React.createClass({
 		);
 	},
 	isAddTeamAvailable: function() {
+		const event = this.props.event;
 		const eventStatus = this.props.event.status;
+		const invite = this.getInviteForActiveSchool(event);
+		const inviteStatus = propz.get(invite, ['status']);
 
 		return (
 			this.props.isUserSchoolWorker &&
@@ -147,17 +168,22 @@ const Buttons = React.createClass({
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED &&
+			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		);
 	},
 	isCancelEventActionAvailable: function() {
+		const event = this.props.event;
 		const eventStatus = this.props.event.status;
+		const invite = this.getInviteForActiveSchool(event);
+		const inviteStatus = propz.get(invite, ['status']);
 
 		return (
 			this.props.isUserSchoolWorker &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
-			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED &&
+			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED
 		);
 	},
 	isCloseEventActionAvailable: function() {
@@ -227,10 +253,16 @@ const Buttons = React.createClass({
 		);
 	},
 	isSendConsentRequestAvailable: function() {
+		const event = this.props.event;
+		const invite = this.getInviteForActiveSchool(event);
+		const inviteStatus = propz.get(invite, ['status']);
+
 		return (
 			typeof this.props.event.clubId === 'undefined' &&
 			this.props.isUserSchoolWorker &&
-			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
+			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL &&
+			this.props.event.status !== "REJECTED" &&
+			inviteStatus !== "REJECTED"
 		);
 	},
 	handleClickActionItem: function(id) {

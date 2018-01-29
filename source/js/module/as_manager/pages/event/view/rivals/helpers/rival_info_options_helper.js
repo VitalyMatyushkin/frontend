@@ -12,7 +12,7 @@ const RivalInfoOptionsHelper = {
 
 		if(
 			schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL ?
-				isShowControlButtons :
+				isShowControlButtons && event.status !== EventHelper.EVENT_STATUS.REJECTED:
 				true
 		) {
 			options = {

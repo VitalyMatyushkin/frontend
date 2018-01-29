@@ -72,7 +72,7 @@ const ChallengeListItem = React.createClass({
 		// TODO: actually it shouldn't be here. Click event should be triggered on any event and dispatched on
 		// TODO: top levels of hierarchy. But this is faster solution.
 		const handler = () => {
-			if(!isCancelled && !isRejected) this.onClick(event.id)
+			if(!isCancelled) this.onClick(event.id)
 		};
 
 		return (

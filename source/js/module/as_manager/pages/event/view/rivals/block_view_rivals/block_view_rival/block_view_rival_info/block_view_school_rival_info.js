@@ -108,11 +108,13 @@ const BlockViewSchoolRivalInfo = React.createClass({
 	},
 	renderPlaceMedal: function() {
 		let medal = null;
+		const event = this.props.event;
 
 		if(
 			!EventHelper.isNotFinishedEvent(this.props.event) &&
-			this.props.event.invitedSchoolIds.length > 1 &&
-			this.props.event.sport.multiparty
+			event.status !== EventHelper.EVENT_STATUS.REJECTED &&
+			event.invitedSchoolIds.length > 1 &&
+			event.sport.multiparty
 		) {
 			const	places		= ChallengeModelHelper.getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent(this.props.event),
 					placeData	= places.find(p => p.schoolIds.find(id => id === this.props.rival.school.id));
