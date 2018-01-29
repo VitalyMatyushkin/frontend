@@ -1,32 +1,31 @@
 // Main
-import {CancelEventManualNotification} from "./cancel_event_manual_notification/cancel_event_manual_notification";
-
 const	React				= require('react'),
-	Morearty			= require('morearty'),
-	propz				= require('propz');
+		Morearty			= require('morearty'),
+		propz				= require('propz');
 
 // React components
-const	PencilButton		= require('module/ui/pencil_button'),
-	TweetButton 		= require('module/as_manager/pages/event/view/event_header/tweet_button'),
-	{ ConfirmPopup }	= require('module/ui/confirm_popup'),
-	{ CancelEvent }		= require('module/as_manager/pages/event/view/event_header/cancel_event'),
-	ReportAvailability	= require('module/as_manager/pages/event/view/event_header/report_availability'),
-	ViewSelector		= require('module/ui/view_selector/view_selector'),
-	{ If }				= require('module/ui/if/if'),
-	Buttons				= require('module/as_manager/pages/event/view/event_header/buttons');
+const	PencilButton		                = require('module/ui/pencil_button'),
+		TweetButton 		                = require('module/as_manager/pages/event/view/event_header/tweet_button'),
+		{ ConfirmPopup }	                = require('module/ui/confirm_popup'),
+		{ CancelEvent }		                = require('module/as_manager/pages/event/view/event_header/cancel_event'),
+		ReportAvailability	                = require('module/as_manager/pages/event/view/event_header/report_availability'),
+		ViewSelector		                = require('module/ui/view_selector/view_selector'),
+		{ If }				                = require('module/ui/if/if'),
+		{ CancelEventManualNotification }   = require('module/as_manager/pages/event/view/event_header/cancel_event_manual_notification/cancel_event_manual_notification'),
+		Buttons				                = require('module/as_manager/pages/event/view/event_header/buttons');
 
 // Helpers
 const	{ DateHelper }		= require('module/helpers/date_helper'),
-	DomainHelper		= require('module/helpers/domain_helper'),
-	RoleHelper			= require('module/helpers/role_helper'),
-	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-	SchoolHelper		= require('module/helpers/school_helper'),
-	ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
+		DomainHelper		= require('module/helpers/domain_helper'),
+		RoleHelper			= require('module/helpers/role_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		SchoolHelper		= require('module/helpers/school_helper'),
+		ViewSelectorHelper	= require('module/ui/view_selector/helpers/view_selector_helper');
 
 // Consts
 const	EventConsts			= require('module/helpers/consts/events'),
-	SchoolConst			= require('module/helpers/consts/schools'),
-	ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
+		SchoolConst			= require('module/helpers/consts/schools'),
+		ViewModeConsts		= require('module/ui/view_selector/consts/view_mode_consts');
 
 // Styles
 const	EventHeaderStyle	= require('styles/pages/event/b_event_header.scss');

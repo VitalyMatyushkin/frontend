@@ -140,7 +140,10 @@ const Buttons = React.createClass({
 		return (
 			this.props.isUserSchoolWorker &&
 			TeamHelper.isMultiparty(this.props.event) &&
-			TeamHelper.isInterSchoolsEventForTeamSport(this.props.event) &&
+			(
+				TeamHelper.isInterSchoolsEventForTeamSport(this.props.event) ||
+				TeamHelper.isInternalEventForTeamSport(this.props.event)
+			) &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED &&
