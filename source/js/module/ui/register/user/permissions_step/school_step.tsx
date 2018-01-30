@@ -28,10 +28,10 @@ export const SchoolStep = (React as any).createClass({
 			};
 			switch (this.props.mode) {
 				case TYPE_USER.STUDENT:
-					filter.filter.where.allowedPermissionPresets = {STUDENT: true};
+					filter.filter.where.allowedPermissionPresets = {STUDENT: { $ne: false }};
 					break;
 				case TYPE_USER.PARENT:
-					filter.filter.where.allowedPermissionPresets = {PARENT: true};
+					filter.filter.where.allowedPermissionPresets = {PARENT: { $ne: false }};
 					break;
 			}
 			return (window as any).Server.publicSchools.get(filter);
