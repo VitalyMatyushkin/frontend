@@ -140,7 +140,7 @@ const NotificationsForm = React.createClass({
 							type="checkbox"
 							field="EVENT_DETAILS_UPDATED"
 						>
-							Event details has been updated
+							Event details have been updated
 						</FormField>
 						<FormField
 							valueReader={this.valueReader}
@@ -204,6 +204,15 @@ const NotificationsForm = React.createClass({
 							field 			= "CLUB_CREATED"
 						>
 							Club has been created
+						</FormField>
+						<FormField
+							valueReader		= {this.valueReader}
+							valueWriter		= {this.valueWriter}
+							classNames 		= "mWideSingleLine"
+							type 			= "checkbox"
+							field 			= "CLUB_ACTIVATED"
+						>
+							Club has been activated
 						</FormField>
 						<h3>Invites management</h3>
 						<FormField
