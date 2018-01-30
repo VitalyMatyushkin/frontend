@@ -328,8 +328,8 @@ export const EventVenue = (React as any).createClass({
 
 		return (
 			gameType === 'inter-schools' &&
-			typeof opponentSchoolArray !== 'undefined' &&
-			opponentSchoolArray.length !== 0
+			(typeof opponentSchoolArray === 'undefined' ||
+			opponentSchoolArray.length === 0)
 		);
 	},
 
