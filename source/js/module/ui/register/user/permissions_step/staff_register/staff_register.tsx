@@ -20,7 +20,7 @@ const STEP_STAFF = {
 	},
 	MEMBER_OF_SCHOOL: {
 		key: 'MEMBER_OF_SCHOOL',
-		title: 'The first member of school PE staff'
+		title: ''
 	},
 	TERMS_AND_CONDITIONS: {
 		key: 'TERMS_AND_CONDITIONS',

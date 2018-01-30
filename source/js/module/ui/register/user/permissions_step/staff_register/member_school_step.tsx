@@ -33,44 +33,47 @@ export class MemberSchoolStep extends React.Component< MemberSchoolStepProps,  M
 
 	render() {
 		return (
-			<div className="bRegistrationMain">
-				<div className="bRegistrationOptions">
-					<div>
-						<input
-							type        = "radio"
-							id          = {`radio_${SUBSCRIPTION_OPTIONS.FULL}`}
-							value       = {SUBSCRIPTION_OPTIONS.FULL}
-							checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.FULL}
-							onChange    = {this.handleOptionChange.bind(this)}
-						/>
-						<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.FULL}`}>I'm  {this.props.schoolName} official and I would like to sign up my school for full subscription</label>
-					</div>
+			<div>
+				<div className="bRegistrationTitlePermissionsStep">You appear to be the first member of staff for {this.props.schoolName} signed up with SquadInTouch. Please select an option to continue</div>
+				<div className="bRegistrationMain">
+					<div className="bRegistrationOptions">
+						<div>
+							<input
+								type        = "radio"
+								id          = {`radio_${SUBSCRIPTION_OPTIONS.FULL}`}
+								value       = {SUBSCRIPTION_OPTIONS.FULL}
+								checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.FULL}
+								onChange    = {this.handleOptionChange.bind(this)}
+							/>
+							<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.FULL}`}>I'm  {this.props.schoolName} official and I would like to sign up my school for full subscription</label>
+						</div>
 
-					<div>
-						<input
-							type        = "radio"
-							id          = {`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}
-							value       = {SUBSCRIPTION_OPTIONS.TRIAL}
-							checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.TRIAL}
-							onChange    = {this.handleOptionChange.bind(this)}
-						/>
-						<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}>I'm {this.props.schoolName} official and I would like to sign up my school for 30 days trial subscription for free</label>
-					</div>
+						<div>
+							<input
+								type        = "radio"
+								id          = {`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}
+								value       = {SUBSCRIPTION_OPTIONS.TRIAL}
+								checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.TRIAL}
+								onChange    = {this.handleOptionChange.bind(this)}
+							/>
+							<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.TRIAL}`}>I'm {this.props.schoolName} official and I would like to sign up my school for 30 days trial subscription for free</label>
+						</div>
 
-					<div>
-						<input
-							type        = "radio"
-							id          = {`radio_${SUBSCRIPTION_OPTIONS.FREE}`}
-							value       = {SUBSCRIPTION_OPTIONS.FREE}
-							checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.FREE}
-							onChange    = {this.handleOptionChange.bind(this)}
-						/>
-						<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.FREE}`}>I'm PE teacher for {this.props.schoolName} and I would like to sign up with Squad In Touch as a sole PE teacher for free</label>
+						<div>
+							<input
+								type        = "radio"
+								id          = {`radio_${SUBSCRIPTION_OPTIONS.FREE}`}
+								value       = {SUBSCRIPTION_OPTIONS.FREE}
+								checked     = {this.state.selectedOption === SUBSCRIPTION_OPTIONS.FREE}
+								onChange    = {this.handleOptionChange.bind(this)}
+							/>
+							<label htmlFor={`radio_${SUBSCRIPTION_OPTIONS.FREE}`}>I'm PE teacher for {this.props.schoolName} and I would like to sign up with Squad In Touch as a sole PE teacher for free</label>
+						</div>
 					</div>
-				</div>
-				<div className="bRegistrationControlButtons">
-					<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
-					<button className="bButton" onClick={() => this.props.setOptions(this.state.selectedOption)}>Continue</button>
+					<div className="bRegistrationControlButtons">
+						<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
+						<button className="bButton" onClick={() => this.props.setOptions(this.state.selectedOption)}>Continue</button>
+					</div>
 				</div>
 			</div>
 		);
