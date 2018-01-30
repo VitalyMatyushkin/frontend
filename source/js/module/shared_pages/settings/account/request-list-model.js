@@ -221,7 +221,7 @@ RequestListModel.prototype = {
 	getActions:function(request){
 		const self = this;
 
-		if(request.status === 'NEW'){
+		if(request.status === 'NEW' || request.status === 'PENDING'){
 			return (
 				<span title="Cancel Request" className="requestActions" onClick={self._cancelRequest.bind(this,request)}>Cancel</span>
 			);
