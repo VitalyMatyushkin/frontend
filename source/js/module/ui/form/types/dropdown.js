@@ -17,6 +17,8 @@ const TypeDropDown = React.createClass({
 	propTypes: {
 		options: React.PropTypes.array.isRequired,
 		defaultValue: React.PropTypes.string,
+		// This function is something like middleware for form dropdown
+		// If function returns false then field doesn't change value
 		onSelect: React.PropTypes.func,
         id: React.PropTypes.string
 	},
@@ -42,14 +44,23 @@ const TypeDropDown = React.createClass({
 
 	},
 	onChange:function(e){
-		const value = e.currentTarget.value,
-				binding = this.getDefaultBinding();
+		const value = e.currentTarget.value;
+		const binding = this.getDefaultBinding();
 
 		if (value === NULL_STRING) {
 			binding.set('value', null);
 		} else {
-			this.setValue(value);
-			typeof this.props.onSelect !== 'undefined' && this.props.onSelect(value);
+			if(
+				typeof this.props.onSelect !== 'undefined'
+			) {
+				const result = this.props.onSelect(value);
+				if(result) {
+					this.setValue(value);
+				}
+			} else {
+				this.setValue(value);
+			}
+
 		}
 
 		e.stopPropagation();

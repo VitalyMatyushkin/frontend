@@ -5,11 +5,14 @@
 const 	React 					= require('react'),
 		Morearty				= require('morearty'),
 		RequestActionsClass 	= require('module/as_manager/pages/school_console/views/request-actions-class'),
-	{Grid}					= require('module/ui/grid/grid'),
+		{Grid}					= require('module/ui/grid/grid'),
 		Immutable				= require('immutable');
 
 const SchoolRequest = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolInfo: React.PropTypes.object.isRequired
+	},
 	componentWillMount: function () {
 		const 	binding 	= this.getDefaultBinding(),
 				grid 		= binding.toJS('grid');

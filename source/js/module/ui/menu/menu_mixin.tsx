@@ -1,5 +1,3 @@
-// @flow
-
 import * as React    		from 'react';
 import {GoBackItem}    		from './sub_menu_items/go_back_item';
 import {ChooseFileItem}  	from './sub_menu_items/choose_file_item';
@@ -63,12 +61,32 @@ export const MenuMixin = {
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
 				if (typeof userId !== 'undefined')
-					return <DefaultItem key={'console'} name={item.name} href={item.href} className={item.className}
-										className2={className} num={item.num} icon={item.icon}/>;
+					return (
+						<DefaultItem 
+							key={'console'}
+							name={item.name}
+							href={item.href}
+							className={item.className}
+							className2={className}
+							num={item.num}
+							icon={item.icon}
+							handleClick={this.props.handleClick}
+						/>
+					);
 				return null;
 			default:
-				return <DefaultItem key={item.name} name={item.name} href={item.href} className={item.className}
-									className2={className} num={item.num} icon={item.icon}/>;
+				return (
+					<DefaultItem
+						key={item.name}
+						name={item.name}
+						href={item.href}
+						className={item.className}
+						className2={className}
+						num={item.num}
+						icon={item.icon}
+						handleClick={this.props.handleClick}
+					/>
+				);
 		}
 	},
 
@@ -91,7 +109,9 @@ export const MenuMixin = {
 
 		if (typeof menuItemArray.map === 'function') {
 			//rendering menu
-			const MenuItemsViews = menuItemArray.map(item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName));
+			const MenuItemsViews = menuItemArray.map(
+				item => this.__getMenuNode(item, globalBinding, authorization, currentPath, this.itemClassName)
+			);
 			return MenuItemsViews;
 		} else {
 			return null;

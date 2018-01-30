@@ -18,5 +18,4 @@ const ApplicationView = React.createClass({
 	}
 });
 
-
 module.exports = ApplicationView;

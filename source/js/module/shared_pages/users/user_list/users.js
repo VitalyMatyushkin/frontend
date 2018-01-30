@@ -12,6 +12,7 @@ const Users = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		grantRole: 					React.PropTypes.func,
+		canAcceptStaffRoles:		React.PropTypes.bool,
 		permissionServiceName: 		React.PropTypes.string,
 		blockService: 				React.PropTypes.object,
 		addButton:					React.PropTypes.func,
@@ -22,7 +23,8 @@ const Users = React.createClass({
 	getDefaultProps: function () {
 		return {
 			grantRole: GrantRole,
-			permissionServiceName: 'schoolUserPermission'
+			permissionServiceName: 'schoolUserPermission',
+			canAcceptStaffRoles: true
 		};
 	},
 	componentWillMount: function () {

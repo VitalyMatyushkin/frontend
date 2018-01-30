@@ -117,6 +117,14 @@ const SchoolHelper = {
 		if(data.publicBigscreenSite.status === c.Protected){
 			data.publicBigscreenSite.password = defaultPassValue;
 		}
+	},
+
+	showSubscriptionPlanAlert: function () {
+		window.simpleAlert(
+			'This feature is not available in your current subscription plan.',
+			'Ok',
+			() => {}
+		)
 	}
 };
 

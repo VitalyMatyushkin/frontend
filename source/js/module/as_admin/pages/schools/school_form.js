@@ -145,6 +145,27 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Enable push notification
 					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
+						field 		= "isClubsEnabled"
+					>
+						Enable clubs
+					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
+						field 		= "canPublishWebSite"
+					>
+						Enable publish web site
+					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
+						field 		= "canAcceptStaffRoles"
+					>
+						Enable accept staff roles
+					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
 					<FormField

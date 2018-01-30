@@ -50,8 +50,9 @@ export class UsersActionsClass {
 		if(typeof self.props.customActionList !== "undefined") {
 			return self.props.customActionList.slice();
 		} else {
-			return typeof self.props.blockService !== "undefined" ? ['View','Block','Unblock','Add Role','Revoke All Roles']
-				: ['View','Add Role','Revoke All Roles'];
+			return typeof self.props.blockService !== "undefined" ?
+				['View', 'Block', 'Unblock', 'Add Role', 'Revoke All Roles']:
+				['View', 'Add Role', 'Revoke All Roles'];
 		}
 	}
 	
@@ -59,25 +60,28 @@ export class UsersActionsClass {
 		const 	self 			= this,
 				activeSchoolId 	= self.activeSchoolId,
 				actionList 		= self.getActionList();
-		
-		item.permissions.filter(p => p.preset != 'STUDENT').forEach(p => {
-			let action = 'Revoke the role ';
-			if(p.preset === 'PARENT') {
-				action += `of ${p.student.firstName} ${p.student.lastName} parent`;
-			} else {
-				action += p.preset;
-				
-				if(!activeSchoolId) {
-					action +=' for ' + p.school.name;
+
+		if(self.props.canAcceptStaffRoles) {
+			item.permissions.filter(p => p.preset != 'STUDENT').forEach(p => {
+				let action = 'Revoke the role ';
+				if(p.preset === 'PARENT') {
+					action += `of ${p.student.firstName} ${p.student.lastName} parent`;
+				} else {
+					action += p.preset;
+
+					if(!activeSchoolId) {
+						action +=' for ' + p.school.name;
+					}
 				}
-			}
-			
-			actionList.push({
-				text: action,
-				key: 'revoke',
-				id: p.id
+
+				actionList.push({
+					text: action,
+					key: 'revoke',
+					id: p.id
+				});
 			});
-		});
+		}
+
 		return actionList;
 	}
 	

@@ -9,6 +9,8 @@ const	React									= require('react'),
 		Route									= require('module/core/route'),
 		{SubMenu}								= require('module/ui/menu/sub_menu'),
 
+		Loader				                    = require('module/ui/loader'),
+
 		UsersComponent							= require('module/as_manager/pages/school_console/views/users'),
 		AdminRequestsComponent 					= require('./views/requests'),
 		ImportStudents							= require('module/as_manager/pages/school_console/views/import_students'),
@@ -42,7 +44,8 @@ const SchoolConsole = React.createClass({
 				placeList: {},
 				placeView: {},
 				placeFormWrapper: {}
-			}
+			},
+			isSync: false
 		});
 	},
 	componentWillMount: function () {
@@ -50,8 +53,10 @@ const SchoolConsole = React.createClass({
 				role 			= SessionHelper.getRoleFromSession(rootBinding.sub('userData'));
 
 		if(role !== "ADMIN" && role !== "MANAGER") {
+			this.getDefaultBinding().set('isSync', true);
 			document.location.hash = 'school_admin/summary';
 		} else {
+			this.getDefaultBinding().set('isSync', false);
 			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
 				this.activeSchoolInfo = school;
 
@@ -59,6 +64,7 @@ const SchoolConsole = React.createClass({
 					this.activeSchoolInfo.studentImportForAdminAllowed = false;
 				}
 
+				this.getDefaultBinding().set('isSync', true);
 				this.createSubMenu();
 			});
 		}
@@ -158,81 +164,98 @@ const SchoolConsole = React.createClass({
 		binding.set('subMenuItems', Immutable.fromJS(menuItems));
 	},
 	render: function() {
-		const	binding			= this.getDefaultBinding(),
-				globalBinding	= this.getMoreartyContext().getBinding();
+		const binding = this.getDefaultBinding();
+		const globalBinding	= this.getMoreartyContext().getBinding();
 
-		return (
-			<div>
-				<SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />
-				<div className='bSchoolMaster'>
-					<RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
-						<Route
-							path 		= '/school_console /school_console/users'
-							binding 	= { binding.sub('users') }
-							component 	= { UsersComponent }
-						/>
-						<Route
-							path 		= '/school_console/requests'
-							binding 	= { binding.sub('requests') }
-							component 	= { AdminRequestsComponent }
-						/>
-						<Route
-							path 			= "/school_console/requests/accept"
-							binding 		= { binding.sub('parentPermission') }
-							component 		= { AdminPermissionAcceptComponent }
-							afterSubmitPage = "/school_console/requests"
-						/>
-						<Route
-							path 			= "/school_console/requests/accept-student"
-							binding 		= { binding.sub('studentPermission') }
-							component 		= { AdminPermissionAcceptStudentComponent }
-							afterSubmitPage = "/school_console/requests"
-						/>
-						<Route
-							path 			= "/school_console/requests/merge-student"
-							binding 		= { binding.sub('studentData') }
-							component 		= { MergeStudentComponent }
-							afterSubmitPage = "/school_console/requests"
-						/>
-						<Route
-							path 		= '/school_console/archive'
-							binding 	= { binding.sub('archives') }
-							component 	= { RequestArchiveComponent }
-						/>
-						<Route
-							path 		= '/school_console/import_students'
-							binding 	= { binding.sub('import') }
-							component 	= { ImportStudents }
-						/>
-						<Route
-							path 		= '/school_console/moderation'
-							binding 	= { binding.sub('moderation') }
-							component 	= { ModerationPage }
-						/>
-						<Route
-							path 		= '/school_console/integration'
-							binding 	= { binding.sub('integration') }
-							component 	= { IntegrationPage }
-						/>
-						<Route
-							path 		= '/school_console/sports'
-							binding 	= { binding.sub('sports') }
-							component 	= { FavouriteSportPageWrapper }
-						/>
-						<Route
-							path 		= '/school_console/venues /school_console/venues/:subPage'
-							binding 	= { binding.sub('places') }
-							component 	= { PlacesPage }
-						/>
-						<Route
-							path 		= '/school_console/notifications'
-							binding 	= { binding.sub('notifications') }
-							component 	= { NotificationsPage }
-						/>
-					</RouterView>
-				</div>
-			</div>
-		);
+		let result;
+		switch(true) {
+			case binding.toJS('isSync'): {
+				result = (
+					<div>
+						<SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }}/>
+						<div className='bSchoolMaster'>
+							<RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
+								<Route
+									path 		= '/school_console /school_console/users'
+									binding 	= { binding.sub('users') }
+									component 	= { UsersComponent }
+									activeSchoolInfo    = {this.activeSchoolInfo}
+								/>
+								<Route
+									path 		        = '/school_console/requests'
+									binding 	        = {binding.sub('requests')}
+									component 	        = {AdminRequestsComponent}
+									activeSchoolInfo    = {this.activeSchoolInfo}
+								/>
+								<Route
+									path 			= "/school_console/requests/accept"
+									binding 		= { binding.sub('parentPermission') }
+									component 		= { AdminPermissionAcceptComponent }
+									afterSubmitPage = "/school_console/requests"
+								/>
+								<Route
+									path 			= "/school_console/requests/accept-student"
+									binding 		= { binding.sub('studentPermission') }
+									component 		= { AdminPermissionAcceptStudentComponent }
+									afterSubmitPage = "/school_console/requests"
+								/>
+								<Route
+									path 			= "/school_console/requests/merge-student"
+									binding 		= { binding.sub('studentData') }
+									component 		= { MergeStudentComponent }
+									afterSubmitPage = "/school_console/requests"
+								/>
+								<Route
+									path 		= '/school_console/archive'
+									binding 	= { binding.sub('archives') }
+									component 	= { RequestArchiveComponent }
+								/>
+								<Route
+									path 		= '/school_console/import_students'
+									binding 	= { binding.sub('import') }
+									component 	= { ImportStudents }
+								/>
+								<Route
+									path 		= '/school_console/moderation'
+									binding 	= { binding.sub('moderation') }
+									component 	= { ModerationPage }
+								/>
+								<Route
+									path 		= '/school_console/integration'
+									binding 	= { binding.sub('integration') }
+									component 	= { IntegrationPage }
+								/>
+								<Route
+									path 		= '/school_console/sports'
+									binding 	= { binding.sub('sports') }
+									component 	= { FavouriteSportPageWrapper }
+								/>
+								<Route
+									path 		= '/school_console/venues /school_console/venues/:subPage'
+									binding 	= { binding.sub('places') }
+									component 	= { PlacesPage }
+								/>
+								<Route
+									path 		= '/school_console/notifications'
+									binding 	= { binding.sub('notifications') }
+									component 	= { NotificationsPage }
+								/>
+							</RouterView>
+						</div>
+					</div>
+				);
+				break;
+			}
+			default: {
+				result = (
+					<div className='bLoaderWrapper'>
+						<Loader condition={ true }/>
+					</div>
+				);
+			}
+		}
+
+		return result;
 	}
 });
 

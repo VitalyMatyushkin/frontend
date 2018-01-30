@@ -9,10 +9,24 @@ const 	React 		= require('react'),
 
 const AdminUsersList = React.createClass({
 	mixins:[Morearty.Mixin],
-	
+
+	propTypes: {
+		activeSchoolInfo: React.PropTypes.object.isRequired
+	},
+
 	//The function, which will call when user click on <Row> in Grid
-	getItemViewFunction:function(id){
+	getItemViewFunction:function(id) {
 		window.location.hash = 'user/view?id=' + id;
+	},
+
+	getCustomActionList: function() {
+		let customActionList;
+
+		if(!this.props.activeSchoolInfo.canAcceptStaffRoles) {
+			customActionList = ['VIew'];
+		}
+
+		return customActionList;
 	},
 	
 	render:function(){
@@ -24,6 +38,8 @@ const AdminUsersList = React.createClass({
 				binding					= { binding }
 				grantRole				= { GrantRole }
 				permissionServiceName	= "schoolUserPermission"
+				canAcceptStaffRoles     = { this.props.activeSchoolInfo.canAcceptStaffRoles }
+				customActionList        = { this.getCustomActionList() }
 			/>
 		);
 

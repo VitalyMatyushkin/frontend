@@ -8,6 +8,7 @@ const 	{DataLoader} 		= require('module/ui/grid/data-loader'),
 		Lazy 			= require('lazy.js'),
 		{GridModel}		= require('module/ui/grid/grid-model'),
 		SessionHelper	= require('module/helpers/session_helper'),
+		SchoolHelper	= require('module/helpers/school_helper'),
 		RoleHelper 		= require('module/helpers/role_helper');
 
 /**
@@ -111,12 +112,15 @@ class RequestActionsClass {
 				currentPr 	= self.getCurrentPermission(prId, binding.toJS()),
 				schoolId 	= currentPr.requestedPermission.schoolId,
 				email 		= currentPr.requester.email,
-				phone 		= currentPr.requester.phone,
-				studentId 	= currentPr.requesterId;
+				phone 		= currentPr.requester.phone;
 
-		let confirmMsg;
-		
-		switch (true){
+		switch (true) {
+			case !this.props.activeSchoolInfo.canAcceptStaffRoles &&
+				currentPr.requestedPermission.preset !== "PARENT" &&
+				currentPr.requestedPermission.preset !== "STUDENT": {
+				SchoolHelper.showSubscriptionPlanAlert();
+				break;
+			}
 			case action === 'Accept':
 				window.confirmAlert(
 					self.getConfirmMessage(email, phone),

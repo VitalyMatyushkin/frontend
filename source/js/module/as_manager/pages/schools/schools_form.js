@@ -2,6 +2,8 @@ const 	Form 			= require('module/ui/form/form'),
 		FormField 		= require('module/ui/form/form_field'),
 		FormColumn 		= require('module/ui/form/form_column'),
 		SchoolConsts	= require('./../../../helpers/consts/schools'),
+		SchoolHelper    = require('module/helpers/school_helper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
 		React 			= require('react');
@@ -14,6 +16,10 @@ const SchoolForm = React.createClass({
 	},
 	componentWillMount: function () {
 		this.getDefaultBinding().clear();
+		window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
+			this.activeSchoolInfo = school;
+		});
+
 		// if it need
 		this.setDefaultPublicSiteAccess();
 		this.setDefaultPublicBigscreenSiteAccess();
@@ -28,6 +34,20 @@ const SchoolForm = React.createClass({
 				});
 		}
 		return result;
+	},
+	/**
+	 * Function is something like middleware for form dropdown
+	 * If function returns false then field doesn't change value
+	 * @param accessType
+	 * @returns {boolean}
+	 */
+	handleSchoolAccessSelect: function(accessType) {
+		if(accessType === 'PUBLIC_AVAILABLE' && !this.activeSchoolInfo.canPublishWebSite) {
+			SchoolHelper.showSubscriptionPlanAlert();
+			return false;
+		} else {
+			return true;
+		}
 	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
@@ -160,7 +180,8 @@ const SchoolForm = React.createClass({
 							type 		= "dropdown"
 							field 		= "publicSite.status"
 							id 			= "school_access_select"
-							options 	={ this.getPublicSiteAccessTypes() }
+							options 	= {this.getPublicSiteAccessTypes()}
+							onSelect    = {this.handleSchoolAccessSelect}
 						>
 							Public Site Access
 						</FormField>

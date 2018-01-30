@@ -3,23 +3,24 @@
 const	Logo			= require('module/as_manager/head/logo'),
 		{TopMenu}		= require('module/ui/menu/top_menu'),
 		UserBlock		= require('module/shared_pages/head/user_block'),
-		{If}			= require('module/ui/if/if'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		SchoolHelper	= require('module/helpers/school_helper'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		RoleHelper		= require('module/helpers/role_helper'),
 		SessionHelper	= require('module/helpers/session_helper'),
-		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
 		{Avatar} 		= require('module/ui/avatar/avatar'),
+		TopNavStyle 	= require('styles/main/b_top_nav.scss'),
 		Bootstrap 		= require('styles/bootstrap-custom.scss');
 
 const Head = React.createClass({
 	role: undefined,
 	mixins: [Morearty.Mixin],
 	listeners: [],
-	componentDidMount:function(){
+	componentDidMount: function() {
 		this.createTopMenu();
+
 		this.getMoreartyContext().getBinding().sub('userData.roleList.activePermission').addListener(() => {
 			this.createTopMenu();
 			this.initData();
@@ -28,6 +29,15 @@ const Head = React.createClass({
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
+	getAndSetSchoolInfo: function() {
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+		if(typeof activeSchoolId !== 'undefined') {
+			window.Server.school.get({schoolId: activeSchoolId}).then(school => {
+				this.activeSchoolInfo = school;
+			});
+		}
 	},
 	initData: function() {
 		const	role		= RoleHelper.getLoggedInUserRole(this),
@@ -38,6 +48,13 @@ const Head = React.createClass({
 		if(kindSchool === 'School') {
 			this.getDefaultBinding().set('isInvitesCountNeedUpdate', false);
 			this.getDefaultBinding().set('isMessagesCountNeedUpdate', false);
+
+			if(
+				role !== RoleHelper.USER_ROLES.PARENT &&
+				role !== RoleHelper.USER_ROLES.STUDENT
+			) {
+				this.getAndSetSchoolInfo();
+			}
 
 			if(
 				role !== RoleHelper.USER_ROLES.PARENT &&
@@ -120,7 +137,6 @@ const Head = React.createClass({
 		}
 		
 		service.get(params ,filter).then(data => {
-			console.log(data);
 			if(data.count > 0) {
 				const rootBinding = this.getMoreartyContext().getBinding();
 				const topMenuItems = rootBinding.toJS('topMenuItems');
@@ -385,6 +401,21 @@ const Head = React.createClass({
 
 		binding.set('topMenuItems', this.getMenuItems());
 	},
+	handleClickTopMenuButton: function(name, href) {
+		let result = true;
+
+		switch(name) {
+			case 'Clubs': {
+				result = this.activeSchoolInfo.isClubsEnabled;
+				if(!result) {
+					SchoolHelper.showSubscriptionPlanAlert();
+				}
+				break;
+			}
+		}
+
+		return result;
+	},
 	render: function() {
 		const	binding = this.getDefaultBinding(),
 				loginSession = SessionHelper.getLoginSession(binding.sub('userData')),
@@ -409,7 +440,10 @@ const Head = React.createClass({
 							{
 								roleSession ?
 								<div>
-									<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
+									<TopMenu
+										binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}
+										handleClick={(name, href) => this.handleClickTopMenuButton(name, href)}
+									/>
 									<UserBlock binding={binding.sub('userData')}/>
 								</div>:
 								<div className="bTopMenu mRight">
