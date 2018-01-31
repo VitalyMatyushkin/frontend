@@ -29,7 +29,7 @@ const MESSAGE_INVITATION_STATUS = {
 };
 
 const MESSAGE_INVITATION_STATUS_MAP = {
-	'NOT_SEND':     'Not send',
+	'NOT_SEND':     'Not sent',
 	'ACCEPTED':		'Accepted',
 	'REJECTED':		'Declined',
 	'NOT_READY':	'Pending',
