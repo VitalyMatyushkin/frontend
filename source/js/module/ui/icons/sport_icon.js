@@ -23,11 +23,18 @@ const SportIcon = React.createClass({
 		sport = sport ? sport.trim().toLowerCase() : '';
 		switch (true){
 			case	sport === 'football' ||
+					sport === 'football 6-a-side' ||
+					sport === 'football 6-a-side (mt)' ||
 					sport === 'football 7-a-side' ||
 					sport === 'football 7-a-side (mt)' ||
+					sport === 'footbll 7-a-side (mt)' ||
 					sport === 'football 8-a-side' ||
 					sport === 'football 8-a-side (mt)' :
 				icon = "ball";
+				break;
+			case	sport === 'goalball' ||
+					sport === 'goalball (mt)':
+				icon = "goalball";
 				break;
 			case	sport === 'skiing' ||
 					sport === 'skiing (mt)' :
@@ -37,7 +44,9 @@ const SportIcon = React.createClass({
 					sport === 'volleyball (mt)' :
 				icon = "volleyball";
 				break;
-			case	sport === 'after school club':
+			case	sport === 'after school club' ||
+					sport === 'breakfast club' ||
+					sport === 'lunch time club' :
 				icon = "club";
 				break;
 			case 	sport === 'football indoor':
@@ -134,6 +143,7 @@ const SportIcon = React.createClass({
 				break;
 			case	sport === 'hockey indoor' ||
 					sport === 'hockey 6-a-side ' ||
+					sport === 'hockey 6-a-side' ||
 					sport === 'hockey 6-a-side (mt)' :
 				icon = "hockey_indoor";
 				break;
@@ -282,6 +292,12 @@ const SportIcon = React.createClass({
 					sport === 'swimming backstroke 50m (mt)' ||
 					sport === 'swimming backstroke 100m (mt)' ||
 					sport === 'swimming backstroke 200m (mt)' ||
+					sport === 'para swimming freestyle 50m' ||
+					sport === 'swimming freestyle relay 4×50m' ||
+					sport === 'swimming freestyle relay 4×100m' ||
+					sport === 'swimming freestyle relay 4×200m' ||
+					sport === 'swimming medley relay 4×50m' ||
+					sport === 'swimming medley relay 4×100m' ||
 					sport === 'swimming individual medley 400m':
 				icon = "swimming";
 			break;
@@ -430,7 +446,11 @@ const SportIcon = React.createClass({
 				icon="cricket_mini_tournament";
 				break;
 			case 	sport === 'cricket sixes (mini tournament)' ||
-					sport === 'cricket sixes (mt)':
+					sport === 'cricket sixes (mt)' ||
+					sport === 'cricket 10-a-side pairs' ||
+					sport === 'cricket 8-a-side incrediball' ||
+					sport === 'cricket 8-a-side incrediball (mt)' ||
+					sport === 'cricket 10-a-side pairs (mt)':
 				icon="cricket_sixes_mini_tournament";
 				break;
 			case 	sport === 'cricket t20 (mini tournament)' ||
@@ -580,6 +600,8 @@ const SportIcon = React.createClass({
 				icon="handball";
 				break;
 			case 	sport === 'soft ball' ||
+					sport === 'softball' ||
+					sport === 'softball (mt)' ||
 					sport === 'soft ball (mt)':
 				icon="baseball";
 				break;
@@ -601,6 +623,9 @@ const SportIcon = React.createClass({
 				break;
 			case 	sport === 'angling':
 				icon="angling";
+				break;
+			case 	sport === 'trampolining (mt)':
+				icon="trampolining";
 				break;
 			case 	sport === 'angling (mt)':
 				icon="angling_mini_tournament";
