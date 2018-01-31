@@ -29,6 +29,7 @@ const StudentStatistic = React.createClass({
     },
     render: function () {
         const binding = this.getDefaultBinding();
+
         return <StatsView binding={binding} />;
     }
 });

@@ -7,7 +7,7 @@ const   AboutMe             = require('module/shared_pages/student/view/about_me
 		UserFixtures        = require('module/shared_pages/student/view/user_fixtures'),
 		TeamStats           = require('module/shared_pages/student/view/team_stats'),
 		Loader       		= require('module/ui/loader'),
-	{If}					= require('module/ui/if/if'),
+		{If}				= require('module/ui/if/if'),
 		React               = require('react'),
         Morearty            = require('morearty');
 

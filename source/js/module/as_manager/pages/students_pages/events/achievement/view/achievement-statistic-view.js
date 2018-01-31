@@ -8,11 +8,11 @@ const	AboutMe				= require('./about_me'),
 		UserFixtures		= require('./user_fixtures'),
 		TeamStats			= require('./team_stats'),
 		Loader				= require('module/ui/loader'),
-	{If}					= require('module/ui/if/if'),
+		{If}				= require('module/ui/if/if'),
 		React				= require('react'),
 		Morearty			= require('morearty');
 
-const AchivementStatisticView = React.createClass({
+const AchievementStatisticView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function () {
 		var binding = this.getDefaultBinding(),
@@ -51,4 +51,5 @@ const AchivementStatisticView = React.createClass({
 		)
 	}
 });
-module.exports = AchivementStatisticView;
+
+module.exports = AchievementStatisticView;

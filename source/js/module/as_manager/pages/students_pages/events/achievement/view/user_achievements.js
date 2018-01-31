@@ -33,8 +33,8 @@ const UserAchievements = React.createClass({
 	 * Returns list of day events
 	 */
 	getEvents: function (date, theData) {
-		const	binding 		= this.getDefaultBinding(),
-				activeSchoolId 	= binding.get('schoolData.0.id');
+		const binding = this.getDefaultBinding();
+		const activeSchoolId = binding.get('schoolData.0.id');
 
 		let eventsByDate;
 
@@ -46,27 +46,16 @@ const UserAchievements = React.createClass({
 			});
 
 			return eventsByDate.map((event, index) => {
-				let comment;
-
-				if (event.result && event.result.comment){
-					comment = event.result.comment;
-				} else {
-					comment = "There are no comments on this fixture";
-				}
-
 				return (
-					<div key={index} className="bAchievement"
-						 onClick={() => {this.onClickChallenge(event.id)}}
-						 id={'challenge-' + event.id}
+					<div
+						key={index}
+						id={'challenge-' + event.id}
+						className="bAchievement"
+						onClick={() => {this.onClickChallenge(event.id)}}
 					>
 						<h4>{event.name}</h4>
 						<h6>{`Scored: ${event.studentScore}`}</h6>
 						<EventRivals event={event} activeSchoolId={activeSchoolId} />
-						{/*<div className="eAchievement_com_container">
-						 <div className="eChallenge_comments">
-						 {comment}
-						 </div>
-						 </div>*/}
 						<br/>
 					</div>
 				);
@@ -78,44 +67,51 @@ const UserAchievements = React.createClass({
 	 * Render a list of event (with score) grouped by date
 	 */
 	getDates: function (dataFrom) {
-
 		let dates;
 
 		if (typeof dataFrom !== 'undefined' && dataFrom.gamesScoredIn){
 			//Get array of uniq dates events
 			dates = dataFrom.gamesScoredIn.reduce((memo,val) => {
-				let date = Date.parse(val.startTime),
-					any = memo.some(d => {
-						return (this.sameDay(date,d));
-					});
-				if(!any){
+				let date = Date.parse(val.startTime);
+				let any = memo.some(d => this.sameDay(date, d));
+
+				if(!any) {
 					memo = memo.push(date);
 				}
+
 				return memo;
 			}, Immutable.List());
 
-			return dates.count()!==0 ? dates.sort().map((datetime, dateTimeIndex) => {
-					let date = new Date(datetime),
-						monthNames = [ "January", "February", "March", "April", "May", "June",
-							"July", "August", "September", "October", "November", "December" ];
-					return <div key={dateTimeIndex} className="bAchievementsDate">
+			return dates.count() !== 0 ? dates.sort().map((datetime, dateTimeIndex) => {
+				let date = new Date(datetime);
+				let	monthNames = [ "January", "February", "March", "April", "May", "June",
+						"July", "August", "September", "October", "November", "December" ];
+
+				return (
+					<div key={dateTimeIndex} className="bAchievementsDate">
 						<div className="eAchievementsDate_date">
-							{date.getDate() + ' ' +
-							monthNames[date.getMonth()] + ' ' +
-							date.getFullYear()}
+							{
+								date.getDate() + ' ' +
+								monthNames[date.getMonth()] + ' ' +
+								date.getFullYear()
+							}
 						</div>
-						<div className="eChallengeDate_list">{this.getEvents(datetime,dataFrom)}</div>
-					</div>;
-				}).toArray() : (<div>Student hasn't achieved a goal yet!</div>);
+						<div className="eChallengeDate_list">
+							{this.getEvents(datetime,dataFrom)}
+						</div>
+					</div>
+				);
+			}).toArray() : <div>Student hasn't achieved a goal yet!</div>;
 		}
 	},
 
 	render:function(){
-		const 	binding 	= this.getDefaultBinding(),
-				data 		= binding.toJS(),
-				teamStats 	= this.getDates(data);
+		const binding = this.getDefaultBinding();
+		const data = binding.toJS();
+		const teamStats = this.getDates(data);
 
-		return (<div>{teamStats}</div>)
+		return <div>{teamStats}</div>;
 	}
 });
+
 module.exports = UserAchievements;

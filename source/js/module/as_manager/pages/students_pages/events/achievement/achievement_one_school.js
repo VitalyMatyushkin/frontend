@@ -5,7 +5,7 @@ const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
 
-		AchivementStatisticView		= require('./view/achivement-statistic-view'),
+		AchievementStatisticView	= require('./view/achievement-statistic-view'),
 		StudentHelper				= require('module/helpers/studentHelper');
 
 const AchievementOneSchool = React.createClass({
@@ -41,7 +41,7 @@ const AchievementOneSchool = React.createClass({
 		}
 
 		return (
-			<AchivementStatisticView binding={binding} />
+			<AchievementStatisticView binding={binding} />
 		)
 	}
 });

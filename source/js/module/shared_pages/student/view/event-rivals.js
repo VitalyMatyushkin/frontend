@@ -3,8 +3,7 @@
  */
 const 	React 			= require('react'),
 		ChallengeModel 	= require('module/ui/challenges/challenge_model'),
-		Sport 			= require('module/ui/icons/sport_icon'),
-		classNames 		= require('classnames');
+		Sport 			= require('module/ui/icons/sport_icon');
 
 function EventRivals(props){
 	const 	event 				= props.event,
