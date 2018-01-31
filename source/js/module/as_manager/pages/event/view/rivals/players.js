@@ -107,7 +107,7 @@ const Players = React.createClass({
 					return this.renderText(this.NO_TEAM_MEMBERS);
 				}
 			} else {																    // For not finished event
-				if(rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
+				if(typeof rival.invite !== 'undefined' && rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
 					return this.renderText(this.EVENT_INVITE_REJECTED);
 				} else if(typeof players === 'undefined') {								// Select team later
 					return this.renderText(this.SELECT_TEAM_LATER);
@@ -126,7 +126,7 @@ const Players = React.createClass({
 					return this.renderText(this.NO_TEAM_MEMBERS);
 				}
 			} else {																// For not finished event
-				if(rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
+				if(typeof rival.invite !== 'undefined' && rival.invite.status === InviteConsts.INVITE_STATUS.REJECTED) {
 					return this.renderText(this.EVENT_INVITE_REJECTED);
 				} else if(typeof players === 'undefined') {								// Select team later
 					return this.renderText(this.ACCEPTED_BY_OPPONENT);
