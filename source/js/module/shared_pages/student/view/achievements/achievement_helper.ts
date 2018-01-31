@@ -48,5 +48,13 @@ export const AchievementHelper = {
 					}
 			}
 		});
+	},
+	getSortedTeamScoreArray(userId: string, permissionId: string, results: any, event: any) {
+		let scores = [];
+		scores = scores.concat(results.schoolScore);
+		scores = scores.concat(results.teamScore);
+
+
+		return this.getSortedScoreArray(scores, event.sport);
 	}
 };

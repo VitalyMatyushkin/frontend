@@ -49,7 +49,14 @@ const UserAchievements = React.createClass({
                 let achievement;
 
             	switch(true) {
-		            case TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event) || TeamHelper.isTwoOnTwoSport(event): {
+		            case (
+			            !TeamHelper.isMultiparty(event) &&
+		            	(
+		            		TeamHelper.isTeamSport(event) ||
+			                TeamHelper.isOneOnOneSport(event) ||
+			                TeamHelper.isTwoOnTwoSport(event)
+			            )
+		            ): {
 			            achievement = (
 				            <TeamSportAchievement
 					            key={index}
@@ -60,7 +67,12 @@ const UserAchievements = React.createClass({
 			            );
 			            break;
 		            }
-		            case TeamHelper.isIndividualSport(event): {
+		            case (
+			            (
+			            	TeamHelper.isTeamSport(event) && TeamHelper.isMultiparty(event)
+			            ) ||
+			            TeamHelper.isIndividualSport(event)
+		            ): {
 			            achievement = (
 				            <IndividualSportAchievement
 					            key={index}
@@ -122,7 +134,6 @@ const UserAchievements = React.createClass({
 
         const binding = self.getDefaultBinding();
         const data = binding.toJS();
-        console.log(data);
 	    const teamStats = self.getDates(data);
 
         return <div>{teamStats}</div>;
