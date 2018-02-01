@@ -16,7 +16,12 @@ const AddSchoolForm = React.createClass({
         var self = this;
 
         return (
-            <SchoolForm title="Add new school..." onSubmit={self.submitAdd} binding={self.getDefaultBinding().sub('form')} />
+            <SchoolForm
+                title="Add new school..."
+                onSubmit={self.submitAdd}
+                binding={self.getDefaultBinding().sub('form')}
+                isSuperAdmin={true}
+            />
         )
     }
 });

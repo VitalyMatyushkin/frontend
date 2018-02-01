@@ -47,6 +47,7 @@ const EditSchoolForm = React.createClass({
 					title="Edit school..."
 					onSubmit={this.submitEdit}
 					binding={this.getDefaultBinding()}
+					isSuperAdmin={true}
 				/>
 			)
 		} else {

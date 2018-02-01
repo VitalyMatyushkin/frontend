@@ -11,14 +11,18 @@ const 	Form 			= require('module/ui/form/form'),
 const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: 		React.PropTypes.string.isRequired,
-		onSubmit: 	React.PropTypes.func
+		title:          React.PropTypes.string.isRequired,
+		onSubmit:       React.PropTypes.func,
+		isSuperAdmin:   React.PropTypes.bool.isRequired
 	},
 	componentWillMount: function () {
 		this.getDefaultBinding().clear();
-		window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
-			this.activeSchoolInfo = school;
-		});
+
+		if(this.props.isSuperAdmin) {
+			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
+				this.activeSchoolInfo = school;
+			});
+		}
 
 		// if it need
 		this.setDefaultPublicSiteAccess();
@@ -42,12 +46,18 @@ const SchoolForm = React.createClass({
 	 * @returns {boolean}
 	 */
 	handleSchoolAccessSelect: function(accessType) {
-		if(accessType === 'PUBLIC_AVAILABLE' && !this.activeSchoolInfo.canPublishWebSite) {
-			SchoolHelper.showSubscriptionPlanAlert();
-			return false;
-		} else {
-			return true;
+		let result = true;
+
+		if(!this.props.isSuperAdmin) {
+			if(accessType === 'PUBLIC_AVAILABLE' && !this.activeSchoolInfo.canPublishWebSite) {
+				SchoolHelper.showSubscriptionPlanAlert();
+				result = false;
+			} else {
+				result = true;
+			}
 		}
+
+		return result;
 	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
