@@ -203,6 +203,7 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 function submitAllChanges(activeSchoolId, binding) {
 	switch ( binding.toJS('teamManagerMode') ) {
 		case 'ADD_TEAM': {
+			console.log('ADD TEAM');
 			const	selectedRivalIndex	= binding.toJS('teamManagerWrapper.default.teamModeView.selectedRivalIndex'),
 					event				= binding.toJS('model'),
 					rival				= binding.toJS(`teamManagerWrapper.default.rivals.${selectedRivalIndex}`),
@@ -217,10 +218,18 @@ function submitAllChanges(activeSchoolId, binding) {
 			);
 
 			return TeamHelper.addTeamsToEvent(
-				activeSchoolId,
-				event.id,
-				[team]
-			);
+					activeSchoolId,
+					event.id,
+					[team],
+					binding.toJS(`isManualNotificationMode`) ? 'MANUAL' : 'AUTO'
+				)
+				.then(data => {
+					if(binding.toJS(`isManualNotificationMode`)) {
+						binding.set('actionDescriptorId', data[0].actionDescriptorId);
+					}
+
+					return true;
+				});
 		}
 		case 'CHANGE_TEAM': {
 			return changeTeamNames(activeSchoolId, binding)
