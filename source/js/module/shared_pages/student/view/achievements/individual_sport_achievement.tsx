@@ -3,6 +3,8 @@ import {AchievementMainInfo} from "module/shared_pages/student/view/achievements
 import {AchievementPositionText} from "module/shared_pages/student/view/achievements/components/achievement_position_label";
 import {AchievementHelper} from "module/shared_pages/student/view/achievements/achievement_helper";
 
+import * as propz from 'propz';
+
 export interface IndividualSportAchievementProps {
 	activeSchoolId: string
 	userId: string
@@ -14,11 +16,11 @@ export interface IndividualSportAchievementProps {
 export class IndividualSportAchievement extends React.Component<IndividualSportAchievementProps, {}> {
 	renderSchoolLogo() {
 		const activeSchool = AchievementHelper.getActiveSchool(this.props.event, this.props.activeSchoolId);
-		const schoolPic = activeSchool.pic;
+		const schoolPic = propz.get(activeSchool, ['pic'], undefined);
 
 		let schoolLogo = null;
 		switch (true) {
-			case typeof schoolLogo !== 'undefined': {
+			case typeof schoolPic !== 'undefined': {
 				schoolLogo = <div className="eChallenge_rivalPic"><img src={schoolPic}/></div>;
 				break;
 			}
