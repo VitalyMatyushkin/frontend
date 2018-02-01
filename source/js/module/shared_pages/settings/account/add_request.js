@@ -90,10 +90,13 @@ const AddPermissionRequest = React.createClass({
 	getRoles: function() {
 		const	formBinding			= this.getDefaultBinding().sub('form'),
 				fullSchoolData		= formBinding.meta('schoolId.fullValue').toJS(),
+				availableRoles      = fullSchoolData ? fullSchoolData.allowedPermissionPresets : {},
 				currentPermissions 	= this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions');
 
 		let currentRoles = [];
-		
+
+		const roleListForSchool = roleList.filter(role => availableRoles[role.id.toUpperCase()]);
+
 		// user roles for active school
 		if (Array.isArray(currentPermissions)) {
 			currentRoles = currentPermissions
@@ -110,11 +113,11 @@ const AddPermissionRequest = React.createClass({
 		};
 		// for school union we leave only admin role
 		if (fullSchoolData && fullSchoolData.kind === 'SchoolUnion') {
-			return roleList.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
+			return roleListForSchool.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
 		}
 		
 		//if in school disabled registration student, we must cut role 'student' from role list
-		return roleList.filter(role => {
+		return roleListForSchool.filter(role => {
 			if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
 				return false;
 			} else {
@@ -193,17 +196,16 @@ const AddPermissionRequest = React.createClass({
 					customListItem	= { SchoolListItem }
 					placeholder 	= { 'Please select school' }
 					validation		= "required"
-					onSelect		= { this.clearSports }
 				>
 					School
 				</FormField>
-				<FormField
-					type		= "select"
-					field		= "preset"
-					sourceArray	= { this.getRoles() }
-					placeHolder	= { this.getPlaceHolderForRoleSelect() }
-					isDisabled	= { this.isRoleSelectDisabled() }
-					validation	= "required"
+				< FormField
+					type        = "select"
+					field        = "preset"
+					sourceArray    = {this.getRoles()}
+					placeHolder    = {this.getPlaceHolderForRoleSelect()}
+					isDisabled    = {this.isRoleSelectDisabled()}
+					validation    = "required"
 				>
 					Role
 				</FormField>

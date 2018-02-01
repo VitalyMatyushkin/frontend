@@ -160,7 +160,7 @@ export const FinishPermissionsStep = (React as any).createClass({
 				<div className="bFinishSubtitle">
 					You see the data that you selected in the previous steps.
 					You can go <span>back</span> and change them.
-					If all is correct, click <span>continue</span>.
+					If all is correct, click <span>finish</span>.
 				</div>
 				{result}
 				<div className="bRegistrationControlButtons">

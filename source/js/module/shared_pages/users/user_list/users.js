@@ -58,6 +58,7 @@ const Users = React.createClass({
 				<ConfirmPopup isShowButtons={false}>
 					<GrantRole	binding				    = {binding.sub('grantRole')}
 								userIdsBinding		    = {binding.sub('groupIds')}
+								activeSchoolInfo        = {this.props.activeSchoolInfo}
 								userPermissionsBinding	= {binding.sub('groupPermissions')}
 								onSuccess			    = {this.handleSuccess}
 								handleClickCancel	    = {this.closePopup}

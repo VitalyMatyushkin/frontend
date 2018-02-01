@@ -36,6 +36,15 @@ const STEP_STAFF = {
 	}
 };
 
+const SCHOOL_UNION_AVAILABLE_ROLES = {
+	ADMIN:      true,
+	MANAGER:    false,
+	TEACHER:    false,
+	COACH:      false,
+	STUDENT:    false,
+	PARENT:	    false
+};
+
 export const StaffRegister = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
@@ -164,10 +173,12 @@ export const StaffRegister = (React as any).createClass({
 				);
 				break;
 			case STEP_STAFF.STAFF_ROLE_STEP.key:
+				const allowedPermissionPresets = binding.toJS('school').kind === 'SchoolUnion' ? SCHOOL_UNION_AVAILABLE_ROLES
+					: binding.toJS('school').allowedPermissionPresets;
 				currentView = (
 					<StaffRoleStep
 						defaultRole      = {binding.toJS('role')}
-						availableRoles   = {binding.toJS('school').allowedPermissionPresets}
+						availableRoles   = {allowedPermissionPresets}
 						schoolName       = {binding.toJS('school').name}
 						handleClickBack  = {this.handleClickBack}
 						setRole          = {this.setRole}

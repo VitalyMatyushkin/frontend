@@ -9,14 +9,13 @@ export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	getSchoolService: function() {
 		return (schoolName) => {
-			const filter = {
+			const filter: any = {
 				filter: {
 					where: {
 						name: {
 							like: schoolName,
 							options: 'i'
 						},
-						allowedPermissionPresets: {},
 						/* this param was added later, so it is undefined on some schools. Default value is true.
 						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
 						 */
@@ -29,9 +28,15 @@ export const SchoolStep = (React as any).createClass({
 			switch (this.props.mode) {
 				case TYPE_USER.STUDENT:
 					filter.filter.where.allowedPermissionPresets = {STUDENT: { $ne: false }};
+					filter.filter.where.studentSelfRegistrationEnabled = { $ne: false };
+					filter.filter.where.kind = { $in:["School"] };
 					break;
 				case TYPE_USER.PARENT:
 					filter.filter.where.allowedPermissionPresets = {PARENT: { $ne: false }};
+					filter.filter.where.kind = { $in:["School"] };
+					break;
+				default:
+					filter.filter.where.kind = { $in:["School","SchoolUnion"] };
 					break;
 			}
 			return (window as any).Server.publicSchools.get(filter);

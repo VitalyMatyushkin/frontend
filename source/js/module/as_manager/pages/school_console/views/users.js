@@ -39,6 +39,7 @@ const AdminUsersList = React.createClass({
 				grantRole				= { GrantRole }
 				permissionServiceName	= "schoolUserPermission"
 				canAcceptStaffRoles     = { this.props.activeSchoolInfo.canAcceptStaffRoles }
+				activeSchoolInfo        = { this.props.activeSchoolInfo }
 				customActionList        = { this.getCustomActionList() }
 			/>
 		);
