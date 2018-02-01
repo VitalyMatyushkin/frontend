@@ -194,34 +194,36 @@ const Rivals = React.createClass({
 		}));
 	},
 	addListenerForTeamScore: function() {
-		const	teamScoreBinding	= this.getDefaultBinding().sub(`model.results.teamScore`),
-				teamScores			= teamScoreBinding.toJS();
+		const teamScoreBinding = this.getDefaultBinding().sub(`model.results.teamScore`);
+		const teamScores = teamScoreBinding.toJS();
 
 		for(let i = 0; i < teamScores.length; i++) {
 			this.listeners.push(teamScoreBinding.sub(i).addListener((eventDescriptor) => {
 				const binding = this.getDefaultBinding();
 
-				const	prevValue		= eventDescriptor.getPreviousValue().toJS(),
-						currentValue	= eventDescriptor.getCurrentValue().toJS();
+				const prevBinding = eventDescriptor.getPreviousValue();
+				const currentBinding = eventDescriptor.getCurrentValue();
 
-				if(
-					binding.toJS('mode') === 'closing' &&
-					prevValue.score !== currentValue.score
-				) {
-					const	rivals			= binding.toJS('rivals'),
-							teamId			= currentValue.teamId,
-							foundRivalIndex	= rivals.findIndex(rival => rival.team.id === teamId),
-							foundRival		= rivals[foundRivalIndex];
+				if(typeof prevBinding !== 'undefined' && typeof currentBinding !== 'undefined') {
+					const prevValue = prevBinding.toJS();
+					const currentValue = currentBinding.toJS();
 
-					if(
-						typeof foundRival !== 'undefined' &&
-						!foundRival.isIndividualScoreAvailable &&
-						!foundRival.isTeamScoreWasChanged
-					) {
-						rivals[foundRivalIndex].isTeamScoreWasChanged = true;
-						binding.set('rivals', Immutable.fromJS(rivals));
+					if(binding.toJS('mode') === 'closing' && prevValue.score !== currentValue.score) {
+						const rivals = binding.toJS('rivals');
+						const teamId = currentValue.teamId;
+						const foundRivalIndex = rivals.findIndex(rival => rival.team.id === teamId);
+						const foundRival = rivals[foundRivalIndex];
 
-						this.clearIndividualScoreByTeamId(teamId);
+						if(
+							typeof foundRival !== 'undefined' &&
+							!foundRival.isIndividualScoreAvailable &&
+							!foundRival.isTeamScoreWasChanged
+						) {
+							rivals[foundRivalIndex].isTeamScoreWasChanged = true;
+							binding.set('rivals', Immutable.fromJS(rivals));
+
+							this.clearIndividualScoreByTeamId(teamId);
+						}
 					}
 				}
 			}));
