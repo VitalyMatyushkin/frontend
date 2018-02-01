@@ -6,6 +6,7 @@ const	React					= require('react'),
 const	EventFormActions		= require('../../event_form_actions'),
 		{If}					= require('../../../../../../../ui/if/if'),
 		GenderHelper			= require('module/helpers/gender_helper'),
+		SchoolHelper 			= require('module/helpers/school_helper'),
 		{Autocomplete}			= require('../../../../../../../ui/autocomplete2/OldAutocompleteWrapper');
 
 // Helpers
@@ -25,11 +26,16 @@ const SportSelector = React.createClass({
 		mode:			React.PropTypes.string.isRequired
 	},
 	componentWillMount: function() {
-		const isSchoolHaveFavoriteSports = this.isSchoolHaveFavoriteSports();
-
-		this.getDefaultBinding().set('isShowAllSports',				!isSchoolHaveFavoriteSports );
-		this.getDefaultBinding().set('isSchoolHaveFavoriteSports',	isSchoolHaveFavoriteSports);
-		this.getDefaultBinding().set('eventFormSportSelectorKey',	Immutable.fromJS(this.getRandomString()));
+		const 	isSchoolHaveFavoriteSports 	= this.isSchoolHaveFavoriteSports(),
+				binding						= this.getDefaultBinding();
+		
+		binding.atomically()
+			.set('isShowAllSports',				!isSchoolHaveFavoriteSports )
+			.set('isSchoolHaveFavoriteSports',	isSchoolHaveFavoriteSports)
+			.set('eventFormSportSelectorKey',	Immutable.fromJS(this.getRandomString()))
+			.commit();
+		
+		this.setIsFavoriteSportsEnabled();
 	},
 
 	getRandomString: function() {
@@ -38,14 +44,22 @@ const SportSelector = React.createClass({
 	},
 	isOnlyFavoriteSports: function() {
 		const	binding						= this.getDefaultBinding(),
-				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports');
+				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
+				isFavoriteSportsEnabled		= binding.get('isFavoriteSportsEnabled');
 
 		switch (true) {
-			case !isSchoolHaveFavoriteSports:
+			case !isSchoolHaveFavoriteSports && isFavoriteSportsEnabled:
 				return false;
-			case !binding.get('isShowAllSports'):
+			case !isSchoolHaveFavoriteSports && !isFavoriteSportsEnabled:
+				return true;
+			case !binding.get('isShowAllSports') || !isFavoriteSportsEnabled:
 				return true;
 		}
+	},
+	setIsFavoriteSportsEnabled: function() {
+		SchoolHelper.loadActiveSchoolInfo(this).then(schoolData => {
+			this.getDefaultBinding().set('isFavoriteSportsEnabled', schoolData.isFavoriteSportsEnabled);
+		});
 	},
 	isSchoolHaveFavoriteSports: function() {
 		const sports = this.getDefaultBinding().toJS('sports');
@@ -128,7 +142,8 @@ const SportSelector = React.createClass({
 				sport						= propz.get(event, ['sportModel']),
 				isShowAllSports				= event.isShowAllSports,
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
-				eventFormSportSelectorKey	= binding.get('eventFormSportSelectorKey');
+				eventFormSportSelectorKey	= binding.get('eventFormSportSelectorKey'),
+				isFavoriteSportsEnabled 	= binding.get('isFavoriteSportsEnabled');
 
 		return(
 			<div className="bInputWrapper">
@@ -144,7 +159,8 @@ const SportSelector = React.createClass({
 					onSelect		= { this.handleChangeCompleteSport }
 					extraCssStyle	= "mWidth250 mInline mWhiteBG"
 				/>
-				<If condition={isSchoolHaveFavoriteSports}>
+				{/*hide show all sports checkbox, for limited school version and if school not have favorite sports*/}
+				<If condition={isSchoolHaveFavoriteSports && isFavoriteSportsEnabled}>
 					<div className="bSmallCheckboxBlock">
 						<div className="eForm_fieldInput mInline">
 							<input

@@ -40,12 +40,23 @@ class SportListModel{
 	getSelectAsFavoriteFunction(itemId) {
 		const sportId = itemId;
 		
+		const showAlert = function(error) {
+			window.simpleAlert(
+				`${error.xhr.responseJSON.details.text}`,
+				'Ok',
+				() => {}
+			);
+		};
+		
 		window.Server.schoolSport.put({
 			schoolId: this.schoolId,
 			sportId: sportId
 		}, {
 			isFavorite: true
-		}).then(() => this.onReload());
+		}).then(
+			() => this.onReload(),
+			(error) => showAlert(error)
+		);
 	}
 	
 	getUnselectAsFavoriteFunction(itemId) {

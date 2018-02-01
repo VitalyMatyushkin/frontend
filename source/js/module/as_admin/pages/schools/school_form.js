@@ -166,6 +166,13 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Enable accept staff roles
 					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
+						field 		= "isFavoriteSportsEnabled"
+					>
+						Enable favorite sports in limited school version
+					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
 					<FormField
