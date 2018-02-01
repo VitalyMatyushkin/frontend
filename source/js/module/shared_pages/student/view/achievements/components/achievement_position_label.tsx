@@ -23,12 +23,17 @@ export class AchievementPositionText extends React.Component<AchievementPosition
 					event
 				);
 
-				const player = event.players.find(player => player.userId === this.props.userId &&
+				const foundPlayer = event.players.find(player => player.userId === this.props.userId &&
 					player.permissionId === this.props.permissionId
 				);
 
-				const userTeamScoreDataIndex = teamSortedScores.findIndex(scoreData => scoreData.teamId === player.teamId);
-				text = ` ${userTeamScoreDataIndex + 1} out of ${teamSortedScores.length} teams`;
+				if(typeof foundPlayer !== 'undefined') {
+					const userTeamScoreDataIndex = teamSortedScores.findIndex(scoreData => scoreData.teamId === foundPlayer.teamId);
+					text = ` ${userTeamScoreDataIndex + 1} out of ${teamSortedScores.length} teams`;
+				} else {
+					text = '';
+				}
+
 				break;
 			}
 			default: {
