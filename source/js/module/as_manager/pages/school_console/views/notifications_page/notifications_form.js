@@ -214,6 +214,15 @@ const NotificationsForm = React.createClass({
 						>
 							Club has been activated
 						</FormField>
+						<FormField
+							valueReader		= {this.valueReader}
+							valueWriter		= {this.valueWriter}
+							classNames 		= "mWideSingleLine"
+							type 			= "checkbox"
+							field 			= "CLUB_PARTICIPATION_INVITE"
+						>
+							Send notifications when club invitation received
+						</FormField>
 						<h3>Invites management</h3>
 						<FormField
 							valueReader		= {this.valueReader}
