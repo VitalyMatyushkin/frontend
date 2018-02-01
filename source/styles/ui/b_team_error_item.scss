@@ -1,4 +1,16 @@
+.bTeamErrorItemContainer {
+  height: 50px;
+}
+
 .bTeamErrorItem {
+  position: absolute;
+
+  width: 458px;
+  padding-top: 13px;
+
   color: #ea5a00;
   text-align: center;
+
+  left: -3px;
+  top: 0;
 }

@@ -11,11 +11,10 @@ export class ErrorItem extends React.Component<ErrorItemProps, {}> {
     render() {
         return (
             <tr>
-                <th scope="row">
-                    { this.props.number }
-                </th>
-                <td className="bTeamErrorItem col-md-8">
-                    {this.props.errorText}
+                <td className="col-md-8" style={{position: 'relative', height: '50px'}}>
+                    <div className='bTeamErrorItem'>
+	                    {this.props.errorText}
+                    </div>
                 </td>
                 <td className="col-md-4">
                 </td>
