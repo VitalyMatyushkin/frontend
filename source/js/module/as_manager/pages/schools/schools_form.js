@@ -18,7 +18,7 @@ const SchoolForm = React.createClass({
 	componentWillMount: function () {
 		this.getDefaultBinding().clear();
 
-		if(this.props.isSuperAdmin) {
+		if(!this.props.isSuperAdmin) {
 			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
 				this.activeSchoolInfo = school;
 			});
