@@ -73,6 +73,19 @@ const SystemAdminSchoolForm = React.createClass({
 		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(this.getDefaultBinding().toJS('availableRoles'));
 		this.props.onSubmit(data);
 	},
+	//inverting the values to not change the field names on the server
+	valueReader: function(value) {
+		switch (value) {
+			case true:	return false;
+			case false:	return true;
+		}
+	},
+	valueWriter: function(value) {
+		switch (value) {
+			case false: return true;
+			case true:	return false;
+		}
+	},
 	render: function () {
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
@@ -146,32 +159,40 @@ const SystemAdminSchoolForm = React.createClass({
 						Enable push notification
 					</FormField>
 					<FormField
+						valueReader = { this.valueReader }
+						valueWriter = { this.valueWriter }
 						classNames 	= "mWideSingleLine"
 						type 		= "checkbox"
 						field 		= "isClubsEnabled"
 					>
-						Enable clubs
+						Disable clubs
 					</FormField>
 					<FormField
+						valueReader = { this.valueReader }
+						valueWriter = { this.valueWriter }
 						classNames 	= "mWideSingleLine"
 						type 		= "checkbox"
 						field 		= "canPublishWebSite"
 					>
-						Enable publish web site
+						Disable publish web site
 					</FormField>
 					<FormField
+						valueReader = { this.valueReader }
+						valueWriter = { this.valueWriter }
 						classNames 	= "mWideSingleLine"
 						type 		= "checkbox"
 						field 		= "canAcceptStaffRoles"
 					>
-						Enable accept staff roles
+						Disable accept staff roles
 					</FormField>
 					<FormField
+						valueReader = { this.valueReader }
+						valueWriter = { this.valueWriter }
 						classNames 	= "mWideSingleLine"
 						type 		= "checkbox"
 						field 		= "isFavoriteSportsEnabled"
 					>
-						Enable favorite sports in limited school version
+						Disable favorite sports in limited school version
 					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
