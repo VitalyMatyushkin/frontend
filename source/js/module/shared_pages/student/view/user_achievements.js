@@ -113,20 +113,31 @@ const UserAchievements = React.createClass({
                 return memo;
             }, Immutable.List());
 
-            return dates.count() !== 0 ? dates.sort().map((datetime, dateTimeIndex) => {
-                const date = new Date(datetime);
-                const monthNames = [ "January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December" ];
+            return dates.count() !== 0 ? dates.sort((t1, t2) => {
+            	    if(t1 > t2) {
+            	    	return -1;
+	                } else if(t1 < t2) {
+            	    	return 1;
+	                } else {
+            	    	return 0;
+	                }
+	            })
+	            .map((datetime, dateTimeIndex) => {
+	                const date = new Date(datetime);
+	                const monthNames = [ "January", "February", "March", "April", "May", "June",
+	                        "July", "August", "September", "October", "November", "December" ];
 
-                return <div key={dateTimeIndex} className="bAchievementsDate">
-                    <div className="eAchievementsDate_date">
-                        {date.getDate() + ' ' +
-                        monthNames[date.getMonth()] + ' ' +
-                        date.getFullYear()}
-                    </div>
-                    <div className="eChallengeDate_list">{self.getEvents(datetime, dataFrom)}</div>
-                </div>;
-            }).toArray() : <div>Student hasn't achieved a goal yet!</div>;
+	                return <div key={dateTimeIndex} className="bAchievementsDate">
+	                    <div className="eAchievementsDate_date">
+	                        {date.getDate() + ' ' +
+	                        monthNames[date.getMonth()] + ' ' +
+	                        date.getFullYear()}
+	                    </div>
+	                    <div className="eChallengeDate_list">
+		                    {self.getEvents(datetime, dataFrom)}
+	                    </div>
+	                </div>;
+                }).toArray() : <div>Student hasn't achieved a goal yet!</div>;
         }
     },
     render:function(){
