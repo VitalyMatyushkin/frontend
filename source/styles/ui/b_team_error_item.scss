@@ -1,5 +1,7 @@
-.bTeamErrorItemContainer {
-  height: 50px;
+.NoHover {
+  &:hover {
+    background-color: white!important;
+  }
 }
 
 .bTeamErrorItem {
