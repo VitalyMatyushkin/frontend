@@ -7,6 +7,7 @@ import {MemberSchoolStep} from './member_school_step';
 import {TermsAndConditionsStep} from './terms_and_conditions_step';
 import {FinishPermissionsStep} from '../finish_permissions_step';
 import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
+import * as propz from 'propz';
 
 interface SchoolData {
 	schoolId: string
@@ -73,12 +74,8 @@ export const StaffRegister = (React as any).createClass({
 	},
 
 	isSchoolWithoutUsers: function (school): boolean {
-		const rolesExistence  = school.stats.rolesExistence;
-		let result = false;
-		for (const key in rolesExistence) {
-			result = result || rolesExistence[key];
-		}
-		return !result;
+		const rolesExistence = propz.get(school, ['stats', 'roleExistence', 'staff'], true);
+		return !rolesExistence;
 	},
 
 	renderTitle: function (): React.ReactNode {
