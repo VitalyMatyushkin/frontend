@@ -74,7 +74,7 @@ export const StaffRegister = (React as any).createClass({
 	},
 
 	isSchoolWithoutUsers: function (school): boolean {
-		const rolesExistence = propz.get(school, ['stats', 'roleExistence', 'staff'], true);
+		const rolesExistence = propz.get(school, ['stats', 'rolesExistence', 'staff'], true);
 		return !rolesExistence;
 	},
 
