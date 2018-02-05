@@ -134,6 +134,7 @@ const SchoolForm = React.createClass({
 							field 		= "name"
 							id 			= "school_name"
 							validation 	= "required"
+							isDisabled 	= { !this.props.isSuperAdmin }
 						>
 							Name
 						</FormField>
