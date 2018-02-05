@@ -64,15 +64,16 @@ export const StaffRegister = (React as any).createClass({
 			binding.sub('schoolField').set('schoolId', data.schoolId);
 		}
 
-		this.addToHistory();
 		if (this.isSchoolWithoutUsers(binding.toJS('school'))) { //The first member of school PE staff? check from server
+			this.addToHistory();
 			binding.set('registerStep', STEP_STAFF.MEMBER_OF_SCHOOL);
 			binding.set('role', undefined);
 		} else {
 			if (binding.toJS('school').kind === 'SchoolUnion') {
 				binding.set('role', STAFF_ROLES.ADMIN.value);
-				binding.set('registerStep', STEP_STAFF.FINISH);
+				binding.set('isFinish', true);
 			} else {
+				this.addToHistory();
 				binding.set('registerStep', STEP_STAFF.STAFF_ROLE_STEP);
 			}
 			binding.set('subscriptionOption', undefined);
