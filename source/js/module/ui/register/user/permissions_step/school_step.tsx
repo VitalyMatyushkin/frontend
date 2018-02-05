@@ -6,6 +6,7 @@ import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item
 import {TYPE_USER} from './register_user_type';
 import * as PostcodeSelector from 'module/ui/postcode_selector/postcode_selector';
 import * as GeoSearchHelper from 'module/helpers/geo_search_helper';
+import {SchoolListItem} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -95,6 +96,7 @@ export const SchoolStep = (React as any).createClass({
 					serviceFullData	= { this.getSchoolService() }
 					onSelect		= { this.handleSelectSchool }
 					defaultItem		= { this.props.defaultSchool }
+					customListItem	= { SchoolListItem }
 					validation 	    = "required"
 				>
 					School
