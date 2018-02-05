@@ -16,10 +16,6 @@ const STEP_STUDENT = {
 	REGISTER_TYPE: {
 		key: 'REGISTER_TYPE',
 		title: 'Choose register type'
-	},
-	FINISH: {
-		key: 'FINISH',
-		title: 'Selecting permissions is complete'
 	}
 };
 
@@ -38,20 +34,22 @@ export const StudentRegister = (React as any).createClass({
 	},
 
 	componentWillMount: function () {
-		this.getDefaultBinding().set('isSync', true);
-		this.getDefaultBinding().set('role', 'STUDENT');
+		const binding = this.getDefaultBinding();
+		binding.set('isSync', true);
+		binding.set('role', 'STUDENT');
+		binding.set('isFinish', false);
 	},
 
 	setRegisterType: function (type: string): void {
 		if (type !== '') {
 			const binding = this.getDefaultBinding();
 
-			this.addToHistory();
 			binding.set('registerType', type);
 			if (type === TYPE_REGISTER.INDIVIDUAL.type) {
 				this.getSSTSchool();
-				binding.set('registerStep', STEP_STUDENT.FINISH);
+				binding.set('isFinish', true);
 			} else {
+				this.addToHistory();
 				binding.set('registerStep', STEP_STUDENT.SCHOOL);
 			}
 			binding.set('school', undefined);
@@ -87,8 +85,7 @@ export const StudentRegister = (React as any).createClass({
 		if (typeof school !== "undefined") {
 			binding.set('school', school);
 		}
-		this.addToHistory();
-		binding.set('registerStep', STEP_STUDENT.FINISH);
+		binding.set('isFinish', true);
 	},
 
 	renderTitle: function (): React.ReactNode {
@@ -148,14 +145,6 @@ export const StudentRegister = (React as any).createClass({
 					/>
 				);
 				break;
-			case STEP_STUDENT.FINISH.key:
-				currentView = (
-					<FinishPermissionsStep
-						binding             = {binding}
-						handleClickBack     = {this.handleClickBack}
-					/>
-				);
-				break;
 		}
 
 		if (binding.get('isSync')) {
@@ -163,6 +152,15 @@ export const StudentRegister = (React as any).createClass({
 				<div className="bRegistrationPermissionsStep">
 					{this.renderTitle()}
 					{currentView}
+					{
+						binding.get('isFinish') ?
+							<FinishPermissionsStep
+								binding             = {binding}
+								handleClickBack     = {() => {binding.set('isFinish', false)}}
+							/>
+							:
+							null
+					}
 				</div>
 			);
 		} else {

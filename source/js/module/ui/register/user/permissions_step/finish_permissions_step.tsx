@@ -3,6 +3,7 @@ import * as Morearty from 'morearty';
 import {TYPE_USER} from './register_user_type';
 import {TYPE_REGISTER} from './register_type_step';
 import {SUBSCRIPTION_OPTIONS} from './staff_register/member_school_step';
+import {ConfirmPopup} from 'module/ui/confirm_popup';
 
 interface PostData {
 	preset:     string
@@ -96,21 +97,15 @@ export const FinishPermissionsStep = (React as any).createClass({
 		);
 	},
 
-	handleClickFinish: function (): void {
+	handleClickOk: function (): void {
 		const dataToPost = this.getPostData();
 		(window as any).Server.profileRequests.post(dataToPost)
 			.then(() => {
 				//copy of old finish function
-				(window as any).simpleAlert(
-					'Welcome to Squad In Touch!\nThank you for registering your account with us!',
-					'Ok',
-					() => {
-						let subdomains = document.location.host.split('.');
-						subdomains[0] = subdomains[0] !== 'admin' ? 'app' : subdomains[0];
-						const domain = subdomains.join(".");
-						window.location.href = `//${domain}/#settings/general`;
-					}
-				)
+				let subdomains = document.location.host.split('.');
+				subdomains[0] = subdomains[0] !== 'admin' ? 'app' : subdomains[0];
+				const domain = subdomains.join(".");
+				window.location.href = `//${domain}/#settings/general`;
 			});
 	},
 
@@ -156,18 +151,20 @@ export const FinishPermissionsStep = (React as any).createClass({
 		}
 
 		return (
-			<div className="bRegistrationMain">
-				<div className="bFinishSubtitle">
-					You see the data that you selected in the previous steps.
-					You can go <span>back</span> and change them.
-					If all is correct, click <span>finish</span>.
-				</div>
-				{result}
-				<div className="bRegistrationControlButtons">
-					<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
-					<button className="bButton" onClick={() => this.handleClickFinish()}>Finish</button>
-				</div>
-			</div>
+			<ConfirmPopup
+				okButtonText				= "Ок"
+				cancelButtonText			= "Back"
+				handleClickOkButton			= { () => this.handleClickOk() }
+				handleClickCancelButton		= { () => this.props.handleClickBack() }
+				customStyle					= 'ePopup'
+			>
+		        <div className="bFinishSubtitle">
+		            You see the data that you selected in the previous steps.
+		            You can go <span>Back</span> and change them.
+		            If all is correct, click <span>Oк</span>.
+		        </div>
+		        {result}
+			</ConfirmPopup>
 		);
 	}
 });

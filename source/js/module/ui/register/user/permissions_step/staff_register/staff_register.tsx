@@ -30,10 +30,6 @@ const STEP_STAFF = {
 	STAFF_ROLE_STEP: {
 		key: 'STAFF_ROLE_STEP',
 		title: ''
-	},
-	FINISH: {
-		key: 'FINISH',
-		title: 'Selecting permissions is complete'
 	}
 };
 
@@ -53,6 +49,10 @@ export const StaffRegister = (React as any).createClass({
 			registerStep: STEP_STAFF.SCHOOL,
 			historyStep: []
 		});
+	},
+
+	componentWillMount: function () {
+		this.getDefaultBinding().set('isFinish', false)
 	},
 
 	handleChangeSchool: function (data: SchoolData, school: School): void {
@@ -88,9 +88,8 @@ export const StaffRegister = (React as any).createClass({
 	setRole: function (role: string): void {
 		if (role !== '') {
 			const binding = this.getDefaultBinding();
-			this.addToHistory();
 			binding.set('role', role);
-			binding.set('registerStep', STEP_STAFF.FINISH);
+			binding.set('isFinish', true);
 		}
 	},
 
@@ -98,17 +97,16 @@ export const StaffRegister = (React as any).createClass({
 		if (type !== '') {
 			const binding = this.getDefaultBinding();
 
-			this.addToHistory();
+			// this.addToHistory();
 			binding.set('role', 'ADMIN');
 			binding.set('subscriptionOption', type);
 			// binding.set('registerStep', STEP_STAFF.TERMS_AND_CONDITIONS); //until we add conditions
-			binding.set('registerStep', STEP_STAFF.FINISH);
+			binding.set('isFinish', true);
 		}
 	},
 
 	handleTermsAndConditions: function (): void {
-		this.addToHistory();
-		this.getDefaultBinding().set('registerStep', STEP_STAFF.FINISH);
+		this.getDefaultBinding().set('isFinish', true);
 	},
 
 	addToHistory: function (): void {
@@ -182,20 +180,21 @@ export const StaffRegister = (React as any).createClass({
 					/>
 				);
 				break;
-			case STEP_STAFF.FINISH.key:
-				currentView = (
-					<FinishPermissionsStep
-						binding             = {binding}
-						handleClickBack     = {this.handleClickBack}
-					/>
-				);
-				break;
 		}
 
 		return (
 			<div className="bRegistrationPermissionsStep">
 				{this.renderTitle()}
 				{currentView}
+				{
+					binding.get('isFinish') ?
+						<FinishPermissionsStep
+							binding             = {binding}
+							handleClickBack     = {() => {binding.set('isFinish', false)}}
+						/>
+						:
+						null
+				}
 			</div>
 		);
 	}

@@ -186,9 +186,8 @@ const RegisterUserPage = React.createClass({
 
         switch (currentStep) {
             case 'account':         return <div className="eStepComplete" style={{width:20+'px'}}></div>;
-            case 'verification':    return <div className="eStepComplete" style={{width:113+'px'}}></div>;
-            case 'permissions':     return <div className="eStepComplete" style={{width:208+'px'}}></div>;
-            case 'finish':          return <div className="eStepComplete" style={{width:320+'px'}}></div>;
+            case 'verification':    return <div className="eStepComplete" style={{width:160+'px'}}></div>;
+            case 'permissions':     return <div className="eStepComplete" style={{width:320+'px'}}></div>;
         }
     },
 

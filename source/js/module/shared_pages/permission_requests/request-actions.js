@@ -179,6 +179,15 @@ class RequestActionsClass {
 				break;
 		}
 	}
+
+	getDetails(item) {
+		const   commentText = item.requestedPermission.comment ? item.requestedPermission.comment: '',
+				trialText   = item.requestedPermission.details && item.requestedPermission.details.trial ? 'Trial' : '',
+				solePeTeacherText = item.requestedPermission.details && item.requestedPermission.details.solePeTeacher ? 'Sole PE teacher' : '';
+
+		return `${commentText}\n${trialText}\n${solePeTeacherText}`;
+	}
+
 	setColumns(){
 		this.columns = [
 			{
@@ -280,7 +289,12 @@ class RequestActionsClass {
 				text:'Details',
 				isSorted:true,
 				cell:{
-					dataField:'requestedPermission.comment'
+					// dataField:'requestedPermission.comment'
+					dataField:'requestedPermission',
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getDetails.bind(this)
+					}
 				},
 				filter:{
 					type:'string'

@@ -67,7 +67,12 @@ export class RegisterTypeStep extends React.Component<RegisterTypeStepProps, Reg
 				</div>
 				<div className="bRegistrationControlButtons">
 					<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
-					<button className="bButton" onClick={() => this.props.setRegisterType(this.state.selectedOption)}>Next</button>
+					{
+						this.state.selectedOption === TYPE_REGISTER.INDIVIDUAL.type && this.props.mode === 'STUDENT' ?
+							<button className="bButton" onClick={() => this.props.setRegisterType(this.state.selectedOption)}>Finish</button>
+							:
+							<button className="bButton" onClick={() => this.props.setRegisterType(this.state.selectedOption)}>Next</button>
+					}
 				</div>
 			</div>
 		);

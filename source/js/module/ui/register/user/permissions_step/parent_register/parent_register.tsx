@@ -26,10 +26,6 @@ const STEP_PARENT = {
 	REGISTER_TYPE: {
 		key: 'REGISTER_TYPE',
 		title: 'Choose register type'
-	},
-	FINISH: {
-		key: 'FINISH',
-		title: 'Selecting permissions is complete'
 	}
 };
 
@@ -43,8 +39,10 @@ export const ParentRegister = (React as any).createClass({
 	},
 
 	componentWillMount: function () {
-		this.getDefaultBinding().set('isSync', true);
-		this.getDefaultBinding().set('role', 'PARENT');
+		const binding = this.getDefaultBinding();
+		binding.set('isSync', true);
+		binding.set('role', 'PARENT');
+		binding.set('isFinish', false);
 	},
 
 	setRegisterType: function (type: string): void {
@@ -64,7 +62,7 @@ export const ParentRegister = (React as any).createClass({
 	},
 
 	handleChangeSchool: function (data: SchoolData, school: School): void {
-		const   binding	 = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.sub('schoolField').set(Immutable.fromJS(data));
 		if (typeof school !== "undefined") {
@@ -106,8 +104,7 @@ export const ParentRegister = (React as any).createClass({
 	setChild: function (data): void {
 		const binding = this.getDefaultBinding();
 		binding.sub('childFields').set(Immutable.fromJS(data));
-		this.addToHistory();
-		binding.set('registerStep', STEP_PARENT.FINISH);
+		binding.set('isFinish', true);
 	},
 
 	addToHistory: function (): void {
@@ -169,14 +166,6 @@ export const ParentRegister = (React as any).createClass({
 					/>
 				);
 				break;
-			case STEP_PARENT.FINISH.key:
-				currentView = (
-					<FinishPermissionsStep
-						binding             = {binding}
-						handleClickBack     = {this.handleClickBack}
-					/>
-				);
-				break;
 		}
 
 		if (binding.get('isSync')) {
@@ -184,6 +173,15 @@ export const ParentRegister = (React as any).createClass({
 				<div className="bRegistrationPermissionsStep">
 					{this.renderTitle()}
 					{currentView}
+					{
+						binding.get('isFinish') ?
+							<FinishPermissionsStep
+								binding             = {binding}
+								handleClickBack     = {() => {binding.set('isFinish', false)}}
+							/>
+							:
+							null
+					}
 				</div>
 			);
 		} else {
