@@ -2,14 +2,15 @@
  * Created by Anatoly on 09.09.2016.
  */
 
-const 	{DataLoader} 		= require('module/ui/grid/data-loader'),
-		React 			= require('react'),
-		Morearty 		= require('morearty'),
-		Lazy 			= require('lazy.js'),
-		{GridModel}		= require('module/ui/grid/grid-model'),
-		RoleHelper 		= require('module/helpers/role_helper'),
-		SessionHelper 	= require('module/helpers/session_helper'),
-		propz 			= require('propz');
+const 	{DataLoader}        = require('module/ui/grid/data-loader'),
+		React 			    = require('react'),
+		Morearty 		    = require('morearty'),
+		Lazy 			    = require('lazy.js'),
+		{GridModel}		    = require('module/ui/grid/grid-model'),
+		RoleHelper 		    = require('module/helpers/role_helper'),
+		SessionHelper 	    = require('module/helpers/session_helper'),
+		{ConfirmMessage}    = require('module/as_admin/pages/admin_schools/new_user_requests/confirm_message'),
+		propz 			    = require('propz');
 
 /**
  * RequestActions
@@ -90,29 +91,7 @@ class RequestActionsClass {
 		return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	}
 	getConfirmMessage(email, phone) {
-		return (
-			<div>
-				<h2> Please Read Carefully! </h2>
-				
-				<p className="eSimpleAlert_text">We use reasonable measures to check the identity of each User
-	registering with Squad In Touch. We require
-	that each User provides a valid mobile phone number and email address so we check their validity via
-	confirmation codes.</p>
-				
-				<p className="eSimpleAlert_text">The Mobile phone and email address the User has verified is as
-	follows:
-					<p className="eSimpleAlert_mail">{email}</p>
-					<p className="eSimpleAlert_phone">{phone}</p>
-				</p>
-				
-				<p className="eSimpleAlert_text">Notwithstanding mobile phone and email address verification, it is the
-					responsibility of the School to
-					satisfy that the User’s identity has been verified prior to accepting a role request.
-					If you are not completely satisfied the User is genuine, please complete additional checks before
-					granting
-					them any permissions in the system or simply decline a role request.</p>
-			</div>
-		);
+		return <ConfirmMessage email = {email} phone = {phone}/>;
 	}
 	getActions(item){
 		let actionList;
@@ -125,58 +104,66 @@ class RequestActionsClass {
 		
 		return actionList;
 	}
-	_getQuickEditActionFunctions(itemId, action){
-		const 	prId 		= itemId,
-				binding 	= this.getDefaultBinding().sub('data'),
-				currentPr 	= this.getCurrentPermission(prId, binding.toJS()),
-				schoolId 	= currentPr ? currentPr.requestedPermission.schoolId : '',
-				email 		= currentPr.requester.email,
-				phone 		= currentPr.requester.phone;
-		
-		let confirmMsg;
-		
-		switch (action){
-			case 'Accept':
-				window.confirmAlert(
-					this.getConfirmMessage(email, phone),
-					"Ok",
-					"Cancel",
-					() => {
-						if (currentPr.requestedPermission.preset === "PARENT") {
-							document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
-						} else if(currentPr.requestedPermission.preset === "STUDENT") {
-							document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
-						} else {
-							// This component used on manager side and on admin side.
-							// For manager and for admin we have different service lists, with different routes, but with same route names.
-							// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
-							// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
-							// So, for manager schoolId is required, for admin isn't required.
-							window.Server.statusPermissionRequest.put({schoolId: schoolId, prId: prId}, {status: 'ACCEPTED'})
-							.then(_ => this.refresh());
-						}
-					},
-					() => {}
-				);
-				break;
-			case 'Decline':
-				window.confirmAlert(
-					"Are you sure you want to decline?",
-					"Ok",
-					"Cancel",
-					() => {
-						// Pls look up at previous comment
-						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'})
-						.then(_ => this.refresh());
-					},
-					() => {}
-				);
-				break;
-			case 'Accept and merge':
-				document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
-				break;
-			default :
-				break;
+	_getQuickEditActionFunctions(itemId, action) {
+		// TODO Temporary solution for refactoring time
+		if(typeof this.props.handleAction !== 'undefined') {
+			this.props.handleAction(itemId, action).then(() => {
+				this.refresh();
+			});
+		} else {
+			const 	prId 		= itemId,
+					binding 	= this.getDefaultBinding().sub('data'),
+					currentPr 	= this.getCurrentPermission(prId, binding.toJS()),
+					schoolId 	= currentPr ? currentPr.requestedPermission.schoolId : '',
+					email 		= currentPr.requester.email,
+					phone 		= currentPr.requester.phone;
+
+			switch (action){
+				case 'Accept':
+					window.confirmAlert(
+						this.getConfirmMessage(email, phone),
+						"Ok",
+						"Cancel",
+						() => {
+							if (currentPr.requestedPermission.preset === "PARENT") {
+								document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
+							} else if(currentPr.requestedPermission.preset === "STUDENT") {
+								document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
+							} else {
+								// This component used on manager side and on admin side.
+								// For manager and for admin we have different service lists, with different routes, but with same route names.
+								// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+								// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+								// So, for manager schoolId is required, for admin isn't required.
+								window.Server.statusPermissionRequest.put(
+									{schoolId: schoolId, prId: prId},
+									{status: 'ACCEPTED'}
+									)
+									.then(() => this.refresh());
+							}
+						},
+						() => {}
+					);
+					break;
+				case 'Decline':
+					window.confirmAlert(
+						"Are you sure you want to decline?",
+						"Ok",
+						"Cancel",
+						() => {
+							// Pls look up at previous comment
+							window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'})
+								.then(_ => this.refresh());
+						},
+						() => {}
+					);
+					break;
+				case 'Accept and merge':
+					document.location.hash = `${document.location.hash}/merge-student?permissionId=${prId}&schoolId=${schoolId}`;
+					break;
+				default :
+					break;
+			}
 		}
 	}
 	setColumns(){
@@ -360,12 +347,8 @@ class RequestActionsClass {
 		
 		return this;
 	}
-	getDataLoadedHandle(data){
-		const binding = this.getDefaultBinding();
-		
-		return function(data){
-			binding.set('data', this.grid.table.data);
-		};
+	getDataLoadedHandle(){
+		return () => this.getDefaultBinding().set('data', this.grid.table.data);
 	}
 	
 	
