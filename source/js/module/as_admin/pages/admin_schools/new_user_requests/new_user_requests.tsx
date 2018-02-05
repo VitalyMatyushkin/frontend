@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
 import * as BPromise from 'bluebird';
 
@@ -6,10 +7,19 @@ import * as Lazy from 'lazy.js';
 
 import * as PermissionRequestList from 'module/shared_pages/permission_requests/request-list';
 import {ConfirmMessage} from "module/as_admin/pages/admin_schools/new_user_requests/confirm_message";
+import {SchoolLimitsPopup} from "module/as_admin/pages/admin_schools/new_user_requests/school_limits_popup";
 
 export const NewUserRequests = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-
+	componentWillMount() {
+		this.getDefaultBinding().set('isShowSchoolLimitsPopup', false);
+		this.getDefaultBinding().set('schoolLimitsPopup', Immutable.fromJS(
+			{
+				isSync: false,
+				schoolLimitsForm: {}
+			}
+		));
+	},
 	getCurrentPermission(id, permissions) {
 		return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
@@ -24,6 +34,7 @@ export const NewUserRequests = (React as any).createClass({
 					email 		= currentPr.requester.email,
 					phone 		= currentPr.requester.phone;
 
+			const isThereAnyAdminsInSchool: any = true;
 			switch (action){
 				case 'Accept':
 					window.confirmAlert(
@@ -31,21 +42,44 @@ export const NewUserRequests = (React as any).createClass({
 						"Ok",
 						"Cancel",
 						() => {
-							if (currentPr.requestedPermission.preset === "PARENT") {
-								document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
-							} else if(currentPr.requestedPermission.preset === "STUDENT") {
-								document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
-							} else {
-								// This component used on manager side and on admin side.
-								// For manager and for admin we have different service lists, with different routes, but with same route names.
-								// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
-								// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
-								// So, for manager schoolId is required, for admin isn't required.
-								window.Server.statusPermissionRequest.put(
-									{schoolId: schoolId, prId: prId},
-									{status: 'ACCEPTED'}
-									)
-									.then(() => resolve(true));
+							switch (true) {
+								case currentPr.requestedPermission.preset === "PARENT": {
+									document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`;
+									break;
+								}
+								case currentPr.requestedPermission.preset === "STUDENT": {
+									document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`;
+									break;
+								}
+								case currentPr.requestedPermission.preset === "ADMIN" && isThereAnyAdminsInSchool: {
+									// This component used on manager side and on admin side.
+									// For manager and for admin we have different service lists, with different routes, but with same route names.
+									// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+									// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+									// So, for manager schoolId is required, for admin isn't required.
+									window.Server.statusPermissionRequest.put(
+										{schoolId: schoolId, prId: prId},
+										{status: 'ACCEPTED'}
+										)
+										.then(() => {
+											this.getDefaultBinding().set('schoolLimitsPopup.schoolId', schoolId);
+											this.getDefaultBinding().set('isShowSchoolLimitsPopup', true);
+										});
+									break;
+								}
+								default: {
+									// This component used on manager side and on admin side.
+									// For manager and for admin we have different service lists, with different routes, but with same route names.
+									// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+									// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+									// So, for manager schoolId is required, for admin isn't required.
+									window.Server.statusPermissionRequest.put(
+										{schoolId: schoolId, prId: prId},
+										{status: 'ACCEPTED'}
+										)
+										.then(() => resolve(true));
+									break;
+								}
 							}
 						},
 						() => {}
@@ -76,12 +110,27 @@ export const NewUserRequests = (React as any).createClass({
 			}
 		});
 	},
+	renderSchoolLimitsPopup() {
+		if(this.getDefaultBinding().toJS('isShowSchoolLimitsPopup')) {
+			return (
+				<SchoolLimitsPopup
+					binding = {this.getDefaultBinding().sub('schoolLimitsPopup')}
+					schoolId = {this.getDefaultBinding().toJS('schoolLimitsPopup.schoolId')}
+				/>
+			)
+		} else {
+			return true;
+		}
+	},
 	render() {
 		return (
-			<PermissionRequestList
-				binding = {this.getDefaultBinding()}
-				handleAction = {(itemId, action) => this.handleAction(itemId, action)}
-			/>
+			<div>
+				<PermissionRequestList
+					binding = {this.getDefaultBinding()}
+					handleAction = {(itemId, action) => this.handleAction(itemId, action)}
+				/>
+				{this.renderSchoolLimitsPopup()}
+			</div>
 		);
 	}
 });
