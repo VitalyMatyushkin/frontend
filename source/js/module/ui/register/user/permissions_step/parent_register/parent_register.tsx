@@ -64,9 +64,9 @@ export const ParentRegister = (React as any).createClass({
 	handleChangeSchool: function (data: SchoolData, school: School): void {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('schoolField').set(Immutable.fromJS(data));
 		if (typeof school !== "undefined") {
 			binding.set('school', school);
+			binding.sub('schoolField').set('schoolId', data.schoolId);
 		}
 		this.addToHistory();
 		binding.set('registerStep', STEP_PARENT.CHILD_STEP);

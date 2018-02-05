@@ -3,6 +3,7 @@ import * as Morearty from 'morearty';
 import * as Immutable from 'immutable';
 import {SchoolStep} from '../school_step';
 import {StaffRoleStep} from './staff_role_step';
+import {STAFF_ROLES} from './staff_role_step';
 import {MemberSchoolStep} from './member_school_step';
 import {TermsAndConditionsStep} from './terms_and_conditions_step';
 import {FinishPermissionsStep} from '../finish_permissions_step';
@@ -58,9 +59,9 @@ export const StaffRegister = (React as any).createClass({
 	handleChangeSchool: function (data: SchoolData, school: School): void {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('schoolField').set(Immutable.fromJS(data));
 		if (typeof school !== "undefined") {
 			binding.set('school', school);
+			binding.sub('schoolField').set('schoolId', data.schoolId);
 		}
 
 		this.addToHistory();
@@ -68,7 +69,12 @@ export const StaffRegister = (React as any).createClass({
 			binding.set('registerStep', STEP_STAFF.MEMBER_OF_SCHOOL);
 			binding.set('role', undefined);
 		} else {
-			binding.set('registerStep', STEP_STAFF.STAFF_ROLE_STEP);
+			if (binding.toJS('school').kind === 'SchoolUnion') {
+				binding.set('role', STAFF_ROLES.ADMIN.value);
+				binding.set('registerStep', STEP_STAFF.FINISH);
+			} else {
+				binding.set('registerStep', STEP_STAFF.STAFF_ROLE_STEP);
+			}
 			binding.set('subscriptionOption', undefined);
 		}
 	},
