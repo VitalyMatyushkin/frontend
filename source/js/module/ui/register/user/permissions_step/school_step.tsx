@@ -6,7 +6,9 @@ import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item
 import {TYPE_USER} from './register_user_type';
 import * as PostcodeSelector from 'module/ui/postcode_selector/postcode_selector';
 import * as GeoSearchHelper from 'module/helpers/geo_search_helper';
+import {ServiceList} from "module/core/service_list/service_list";
 import {SchoolListItem} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
+import * as BPromise from 'bluebird';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -16,6 +18,9 @@ export const SchoolStep = (React as any).createClass({
 		return (schoolName) => {
 			const filter: any = {
 				filter: {
+				    view: {
+				        type: 'id_name_pic'
+                    },
 					where: {
 						name: {
 							like: schoolName,
@@ -54,12 +59,15 @@ export const SchoolStep = (React as any).createClass({
 		};
 	},
 
-	handleSelectSchool: function(schoolId: string, schoolData: School): void {
-		this.selectedSchool = schoolData;
+	handleSelectSchool: function(schoolId: string, schoolData: { id: string, name: string, pic: string}): void {
+	    // sorry for that. This is not very wise. But short :)
+        this.selectedSchoolPromise = (window.Server as ServiceList).publicSchool.get({schoolId: schoolData.id});
 	},
 
 	onSubmit: function (data): void {
-		this.props.handleChangeSchool(data, this.selectedSchool);
+	    BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
+            this.props.handleChangeSchool(data, selectedSchoolData);
+        });
 	},
 
 	handleSelectPostcode: function(id: string, postcode): void {
