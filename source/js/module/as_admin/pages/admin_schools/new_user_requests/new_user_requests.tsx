@@ -3,15 +3,17 @@ import * as Immutable from 'immutable';
 import * as Morearty from 'morearty';
 import * as BPromise from 'bluebird';
 
-import * as Lazy from 'lazy.js';
-
 import * as PermissionRequestList from 'module/shared_pages/permission_requests/request-list';
 import {ConfirmMessage} from "module/as_admin/pages/admin_schools/new_user_requests/confirm_message";
 import {SchoolLimitsPopup} from "module/as_admin/pages/admin_schools/new_user_requests/school_limits_popup";
 
 export const NewUserRequests = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	resolveFuncForHandleActionPromise: undefined,
 	componentWillMount() {
+		this.initSchoolLimitsPopupData();
+	},
+	initSchoolLimitsPopupData() {
 		this.getDefaultBinding().set('isShowSchoolLimitsPopup', false);
 		this.getDefaultBinding().set('schoolLimitsPopup', Immutable.fromJS(
 			{
@@ -20,19 +22,20 @@ export const NewUserRequests = (React as any).createClass({
 			}
 		));
 	},
-	getCurrentPermission(id, permissions) {
-		return Lazy(permissions).find(permission => permission.id && permission.id === id);
+	getPermissionById(id, permissions) {
+		return permissions.find(permission => permission.id === id);
 	},
 	handleAction(itemId, action): BPromise<any> {
 		const self = this;
 
 		return new BPromise(resolve => {
-			const 	prId 		= itemId,
-					binding 	= self.getDefaultBinding().sub('data'),
-					currentPr 	= self.getCurrentPermission(prId, binding.toJS()),
-					schoolId 	= currentPr ? currentPr.requestedPermission.schoolId : '',
-					email 		= currentPr.requester.email,
-					phone 		= currentPr.requester.phone;
+			const prId = itemId;
+			const binding = self.getDefaultBinding().sub('data');
+			const currentPr = self.getPermissionById(prId, binding.toJS());
+			console.log(currentPr);
+			const schoolId = currentPr ? currentPr.requestedPermission.schoolId : '';
+			const email = currentPr.requester.email;
+			const phone = currentPr.requester.phone;
 
 			const isThereAnyAdminsInSchool: any = true;
 			switch (action){
@@ -64,6 +67,8 @@ export const NewUserRequests = (React as any).createClass({
 										.then(() => {
 											this.getDefaultBinding().set('schoolLimitsPopup.schoolId', schoolId);
 											this.getDefaultBinding().set('isShowSchoolLimitsPopup', true);
+
+											this.resolveFuncForHandleActionPromise = resolve;
 										});
 									break;
 								}
@@ -110,12 +115,21 @@ export const NewUserRequests = (React as any).createClass({
 			}
 		});
 	},
+	handleSchoolLimitsSuccessSubmit() {
+		if(typeof this.resolveFuncForHandleActionPromise !== 'undefined') {
+			this.resolveFuncForHandleActionPromise(true);
+			this.resolveFuncForHandleActionPromise = undefined;
+
+			this.initSchoolLimitsPopupData();
+		}
+	},
 	renderSchoolLimitsPopup() {
 		if(this.getDefaultBinding().toJS('isShowSchoolLimitsPopup')) {
 			return (
 				<SchoolLimitsPopup
 					binding = {this.getDefaultBinding().sub('schoolLimitsPopup')}
 					schoolId = {this.getDefaultBinding().toJS('schoolLimitsPopup.schoolId')}
+					handleSuccessSubmit = {() => this.handleSchoolLimitsSuccessSubmit()}
 				/>
 			)
 		} else {

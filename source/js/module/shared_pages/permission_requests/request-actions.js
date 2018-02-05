@@ -347,11 +347,13 @@ class RequestActionsClass {
 		
 		return this;
 	}
-	getDataLoadedHandle(){
-		return () => this.getDefaultBinding().set('data', this.grid.table.data);
+	getDataLoadedHandle(data){
+		const binding = this.getDefaultBinding();
+
+		return function(data){
+			binding.set('data', this.grid.table.data);
+		};
 	}
-	
-	
 }
 
 module.exports = RequestActionsClass;

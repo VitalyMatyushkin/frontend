@@ -1,4 +1,5 @@
 import * as React from "react"
+import * as Immutable from 'immutable'
 import * as Morearty from 'morearty'
 
 import * as Form from 'module/ui/form/form'
@@ -12,7 +13,17 @@ export const SchoolLimitsForm = (React as any).createClass({
 	propTypes: {
 		onSubmit: (React as any).PropTypes.func
 	},
-	//inverting the values to not change the field names on the server
+	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+
+		const serverRoles = binding.toJS('form.allowedPermissionPresets');
+		let availableRoles = RolesHelper.convertRolesFromServerToClient(serverRoles);
+		if(typeof availableRoles === 'undefined') {
+			availableRoles = [];
+		}
+
+		binding.set('availableRoles', Immutable.fromJS(availableRoles));
+	},
 	valueReader(value) {
 		switch (value) {
 			case true:	return false;
@@ -25,10 +36,26 @@ export const SchoolLimitsForm = (React as any).createClass({
 			case true:	return false;
 		}
 	},
+	getSelectedRoles: function () {
+		return this.getDefaultBinding().toJS('availableRoles');
+	},
+	handleSelectRole: function (role) {
+		const binding = this.getDefaultBinding();
+		const roles = binding.toJS('availableRoles');
+		const roleIndex = roles.findIndex(_r => _r.id === role.id);
+
+		if(roleIndex !== -1) {
+			roles.splice(roleIndex, 1);
+		} else {
+			roles.push(role);
+		}
+
+		binding.set('availableRoles', Immutable.fromJS(roles));
+	},
 	render: function () {
 		return (
 			<Form
-				name 			= { this.props.title }
+				name 			= { 'School Limits' }
 				binding 		= { this.getDefaultBinding().sub('form') }
 				onSubmit 		= { this.props.onSubmit }
 				submitOnEnter 	= { false }
@@ -75,8 +102,8 @@ export const SchoolLimitsForm = (React as any).createClass({
 					</div>
 					<MultiselectDropdown
 						items			= { RolesHelper.getRoles() }
-						selectedItems	= { () => {} }
-						handleClickItem	= { () => {} }
+						selectedItems	= { this.getSelectedRoles() }
+						handleClickItem	= { role => this.handleSelectRole(role) }
 						extraStyle		= 'mSmallWide'
 					/>
 				</div>
