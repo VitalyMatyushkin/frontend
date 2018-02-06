@@ -28,7 +28,6 @@ pipeline {
                     dir('/home/squad/stage1/frontend2') {
                         unstash 'web'
                     }
-                
                 }
             }
         }
