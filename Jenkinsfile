@@ -11,6 +11,7 @@ pipeline {
         stage('Speak') {
             steps {
                 print 'DEBUG: params are = ' + params
+                sh 'printenv'
             }
         }
     }
