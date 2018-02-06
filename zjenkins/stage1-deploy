@@ -12,8 +12,10 @@ pipeline {
 
         stage('deploy-stage1') {
             agent { label 'stage1-deploy' }
-            dir('/home/squad/stage1/frontend2') {
-                unstash 'web'
+            steps {
+                dir('/home/squad/stage1/frontend2') {
+                    unstash 'web'
+                }
             }
         }
 
