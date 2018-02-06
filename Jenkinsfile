@@ -10,7 +10,7 @@ pipeline {
 
         stage('Speak') {
             steps {
-                print 'DEBUG: parameter isFoo = ' + params.isFoo
+                print 'DEBUG: params are = ' + params
             }
         }
     }
