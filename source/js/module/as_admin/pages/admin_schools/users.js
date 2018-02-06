@@ -6,11 +6,10 @@ const 	React 									= require('react'),
 		Immutable 								= require('immutable'),
 		RouterView 								= require('module/core/router'),
 		Route 									= require('module/core/route'),
-		{SubMenu} 								= require('module/ui/menu/sub_menu'),
-		{SVG} 									= require('module/ui/svg');
+		{SubMenu} 								= require('module/ui/menu/sub_menu');
 
 const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_user_list/admin_users_list'),
-		AdminRequestsComponent 					= require('module/shared_pages/permission_requests/request-list'),
+		{NewUserRequests}      					= require('module/as_admin/pages/admin_schools/new_user_requests/new_user_requests'),
 		AdminArchiveComponent 					= require('module/shared_pages/permission_requests/request-archive'),
 		AdminPermissionAcceptComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
 		AdminPermissionAcceptStudentComponent	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
@@ -112,7 +111,7 @@ const OneSchoolPage = React.createClass({
 						<Route
 							path 				= "/users/admin_views/requests"
 							binding 			= { binding.sub('schools') }
-							component 			= { AdminRequestsComponent }
+							component 			= { NewUserRequests }
 						/>
 						<Route
 							path 				= "/users/admin_views/archive"
