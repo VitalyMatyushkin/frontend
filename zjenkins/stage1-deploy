@@ -10,7 +10,7 @@ pipeline {
             }
         }
 
-        stage('deploy-stage1') {
+        stage('deploy') {
             agent { label 'stage1-deploy' }
             steps {
                 dir('/home/squad/stage1/frontend2') {
