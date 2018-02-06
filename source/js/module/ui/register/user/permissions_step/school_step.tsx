@@ -70,14 +70,14 @@ export const SchoolStep = (React as any).createClass({
 	},
 
 	handleSelectSchool: function(schoolId: string, schoolData: { id: string, name: string, pic: string}): void {
-	    // sorry for that. This is not very wise. But short :)
-        this.selectedSchoolPromise = (window.Server as ServiceList).publicSchool.get({schoolId: schoolData.id});
+		// sorry for that. This is not very wise. But short :)
+		this.selectedSchoolPromise = (window.Server as ServiceList).publicSchool.get({schoolId: schoolData.id});
 	},
 
 	onSubmit: function (data): void {
-	    BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
-            this.props.handleChangeSchool(data, selectedSchoolData);
-        });
+		BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
+			this.props.handleChangeSchool(data, selectedSchoolData);
+		});
 	},
 
 	handleSelectPostcode: function(id: string, postcode): void {
@@ -118,14 +118,14 @@ export const SchoolStep = (React as any).createClass({
 					/>
 				</div>
 				<FormField
-					key             = {this.schoolFieldKey}
+					key				= {this.schoolFieldKey}
 					type			= "autocomplete"
 					field			= "schoolId"
 					serviceFullData	= { this.getSchoolService() }
 					onSelect		= { this.handleSelectSchool }
 					defaultItem		= { this.defaultSchool }
 					customListItem	= { SchoolListItem }
-					validation 	    = "required"
+					validation		= "required"
 				>
 					School
 				</FormField>
