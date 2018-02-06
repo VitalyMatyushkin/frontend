@@ -18,17 +18,21 @@ const SystemAdminSchoolForm = React.createClass({
 		title: 		React.PropTypes.string.isRequired,
 		onSubmit: 	React.PropTypes.func
 	},
+	//share form and multiselect binding, because multiselect don't include in form
+	//and change multiselect call re-render form
 	componentWillMount: function () {
-		const   binding = this.getDefaultBinding(),
-				serverRoles = binding.toJS('allowedPermissionPresets');
+		const 	binding 			= this.getDefaultBinding(),
+				formBinding 		= binding.sub('form'),
+				multiSelectBinding 	= binding.sub('multiSelect'),
+				serverRoles 		= formBinding.toJS('allowedPermissionPresets');
 
 		// if it need
 		this.setDefaultPublicSiteAccess();
-
-		binding.set('availableRoles', Immutable.fromJS(RolesHelper.convertRolesFromServerToClient(serverRoles)));
-		let roles = binding.toJS('availableRoles');
+		
+		multiSelectBinding.set('availableRoles', Immutable.fromJS(RolesHelper.convertRolesFromServerToClient(serverRoles)));
+		let roles = multiSelectBinding.toJS('availableRoles');
 		if(typeof roles === 'undefined') {
-			binding.set('availableRoles', Immutable.fromJS([]));
+			multiSelectBinding.set('availableRoles', Immutable.fromJS([]));
 		}
 	},
 	getPublicSiteAccessTypes: function() {
@@ -44,33 +48,39 @@ const SystemAdminSchoolForm = React.createClass({
 	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
-		const binding = this.getDefaultBinding();
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form');
 
-		if(typeof binding.toJS('publicSite.status') === 'undefined') {
-			binding.set(
+		if(typeof formBinding.toJS('publicSite.status') === 'undefined') {
+			formBinding.set(
 				'publicSite.status',
 				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE)
 			);
 		}
 	},
 	getSelectedRoles: function () {
-		return this.getDefaultBinding().toJS('availableRoles');
+		const 	binding 			= this.getDefaultBinding(),
+				multiSelectBinding 	= binding.sub('multiSelect');
+		return multiSelectBinding.toJS('availableRoles');
 	},
 	handleSelectRole: function (role) {
-		const   binding     = this.getDefaultBinding(),
-				roles       = binding.toJS('availableRoles'),
-				roleIndex   = roles.findIndex(_r => _r.id === role.id);
+		const 	binding 			= this.getDefaultBinding(),
+				multiSelectBinding 	= binding.sub('multiSelect'),
+				roles 				= multiSelectBinding.toJS('availableRoles'),
+				roleIndex 			= roles.findIndex(_r => _r.id === role.id);
 
 		if(roleIndex !== -1) {
 			roles.splice(roleIndex, 1);
 		} else {
 			roles.push(role);
 		}
-
-		binding.set('availableRoles', Immutable.fromJS(roles));
+		
+		multiSelectBinding.set('availableRoles', Immutable.fromJS(roles));
 	},
 	onSubmit: function (data) {
-		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(this.getDefaultBinding().toJS('availableRoles'));
+		const 	binding 			= this.getDefaultBinding(),
+				multiSelectBinding 	= binding.sub('multiSelect');
+		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(multiSelectBinding.toJS('availableRoles'));
 		this.props.onSubmit(data);
 	},
 	//inverting the values to not change the field names on the server
@@ -89,19 +99,20 @@ const SystemAdminSchoolForm = React.createClass({
 	render: function () {
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
+				formBinding				= binding.sub('form'),
 				statusActive 			= !rootBinding.get('userRules.activeSchoolId'),
-				passActive 				= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-				passBigscreenActive 	= binding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
+				passActive 				= formBinding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				passBigscreenActive 	= formBinding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
 				yesNoOptions 			= [
 					{ text: 'Yes',	value: true },
 					{ text: 'No',	value: false }
 				],
-				postcode 				= binding.toJS('postcode');
+				postcode 				= formBinding.toJS('postcode');
 
 		return (
 			<Form
 				name 			= { this.props.title }
-				binding 		= { this.getDefaultBinding() }
+				binding 		= { formBinding }
 				service 		= "i/schools/domains"
 				onSubmit 		= { this.onSubmit }
 				submitOnEnter 	= { false }
