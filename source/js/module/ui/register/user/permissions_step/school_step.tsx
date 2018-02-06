@@ -12,6 +12,16 @@ import * as BPromise from 'bluebird';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.schoolFieldKey = this.generateSchoolInputKey();
+		this.defaultSchool = this.props.defaultSchool;
+	},
+
+	generateSchoolInputKey: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+
 	getSchoolService: function() {
 		const postcode = this.getDefaultBinding().toJS('postcode');
 
@@ -72,14 +82,24 @@ export const SchoolStep = (React as any).createClass({
 
 	handleSelectPostcode: function(id: string, postcode): void {
 		this.getDefaultBinding().set('postcode', postcode);
+		this.clearSchoolField();
 	},
+
+	clearSchoolField: function () {
+		this.getDefaultBinding().meta().set('schoolId.value', undefined);
+		this.schoolFieldKey = this.generateSchoolInputKey();
+		this.defaultSchool = undefined;
+	},
+
 	handleEscapePostcode: function(): void {
 		this.getDefaultBinding().set('postcode', undefined);
+		this.clearSchoolField();
 	},
 
 	render: function() {
 		const binding = this.getDefaultBinding();
-
+		console.log(binding.toJS());
+		console.log(binding.meta().toJS());
 		return (
 			<Form
 				binding         = {binding}
@@ -99,11 +119,12 @@ export const SchoolStep = (React as any).createClass({
 					/>
 				</div>
 				<FormField
+					key             = {this.schoolFieldKey}
 					type			= "autocomplete"
 					field			= "schoolId"
 					serviceFullData	= { this.getSchoolService() }
 					onSelect		= { this.handleSelectSchool }
-					defaultItem		= { this.props.defaultSchool }
+					defaultItem		= { this.defaultSchool }
 					customListItem	= { SchoolListItem }
 					validation 	    = "required"
 				>

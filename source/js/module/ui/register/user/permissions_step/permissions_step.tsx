@@ -23,8 +23,8 @@ export const PermissionsStep = (React as any).createClass({
 	},
 
 	render: function()  {
-		const   binding     = this.getDefaultBinding(),
-				userType    = binding.get('userType');
+		const	binding		= this.getDefaultBinding(),
+				userType	= binding.get('userType');
 
 		let currentView = null;
 

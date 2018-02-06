@@ -13,19 +13,19 @@ interface StaffRoleStepState {
 }
 
 interface AllowedPermission {
-	ADMIN:      boolean
-	MANAGER:    boolean
-	TEACHER:    boolean
-	COACH:      boolean
-	STUDENT:    boolean
-	PARENT:	    boolean
+	ADMIN:		boolean
+	MANAGER:	boolean
+	TEACHER:	boolean
+	COACH:		boolean
+	STUDENT:	boolean
+	PARENT:	boolean
 }
 
 export const STAFF_ROLES = {
-	ADMIN:      {displayText:'I\'m school administrator', value: 'ADMIN'},
-	MANAGER:    {displayText:'I\'m school manager', value: 'MANAGER'},
-	TEACHER:    {displayText:'I\'m school PE teacher', value: 'TEACHER'},
-	COACH:      {displayText:'I\'m a coach', value: 'COACH'}
+	ADMIN:		{displayText:'I\'m a school administrator', value: 'ADMIN'},
+	MANAGER:	{displayText:'I\'m a school manager', value: 'MANAGER'},
+	TEACHER:	{displayText:'I\'m a school PE teacher', value: 'TEACHER'},
+	COACH:		{displayText:'I\'m a coach', value: 'COACH'}
 };
 
 export class StaffRoleStep extends React.Component<StaffRoleStepProps, StaffRoleStepState> {

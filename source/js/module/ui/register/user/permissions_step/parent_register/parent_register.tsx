@@ -21,7 +21,7 @@ const STEP_PARENT = {
 	},
 	CHILD_STEP: {
 		key: 'CHILD_STEP',
-		title: 'Enter the child\'s name'
+		title: 'Enter your child\'s name'
 	},
 	REGISTER_TYPE: {
 		key: 'REGISTER_TYPE',
