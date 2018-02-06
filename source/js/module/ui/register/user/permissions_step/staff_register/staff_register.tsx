@@ -35,12 +35,12 @@ const STEP_STAFF = {
 };
 
 const SCHOOL_UNION_AVAILABLE_ROLES = {
-	ADMIN:      true,
-	MANAGER:    false,
-	TEACHER:    false,
-	COACH:      false,
-	STUDENT:    false,
-	PARENT:	    false
+	ADMIN:		true,
+	MANAGER:	false,
+	TEACHER:	false,
+	COACH:		false,
+	STUDENT:	false,
+	PARENT:		false
 };
 
 export const StaffRegister = (React as any).createClass({
@@ -86,7 +86,7 @@ export const StaffRegister = (React as any).createClass({
 	},
 
 	renderTitle: function (): React.ReactNode {
-		const   binding     = this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				currentStep = binding.get('registerStep');
 
 		return currentStep.title !== '' ? <div className="bRegistrationTitlePermissionsStep">{currentStep.title}</div> : null;
@@ -126,7 +126,7 @@ export const StaffRegister = (React as any).createClass({
 	},
 
 	handleClickBack: function (): void {
-		const   binding     = this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				historyStep = binding.toJS('historyStep');
 
 		if (historyStep.length === 0) {

@@ -57,8 +57,8 @@ export const StudentRegister = (React as any).createClass({
 	},
 
 	getSSTSchool: function() {
-		const   binding     = this.getDefaultBinding(),
-				schoolName  = 'Squad In Touch Sports Stars Team';
+		const   binding		= this.getDefaultBinding(),
+				schoolName	= 'Squad In Touch Sports Stars Team';
 		binding.set('isSync', false);
 		(window as any).Server.publicSchools.get(
 			{
@@ -89,14 +89,14 @@ export const StudentRegister = (React as any).createClass({
 	},
 
 	renderTitle: function (): React.ReactNode {
-		const   binding     = this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				currentStep = binding.get('registerStep');
 
 		return <div className="bRegistrationTitlePermissionsStep">{currentStep.title}</div>
 	},
 
 	addToHistory: function (): void {
-		const   binding     = this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				currentStep = binding.get('registerStep'),
 				historyStep = binding.toJS('historyStep');
 
@@ -118,7 +118,7 @@ export const StudentRegister = (React as any).createClass({
 	},
 
 	render: function ()  {
-		const   binding     = this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				currentStep = binding.get('registerStep');
 
 		let currentView = null;
@@ -127,21 +127,21 @@ export const StudentRegister = (React as any).createClass({
 			case STEP_STUDENT.REGISTER_TYPE.key:
 				currentView = (
 					<RegisterTypeStep
-						defaultType     = {binding.get('registerType')}
-						mode            = {binding.toJS('userType')}
-						setRegisterType = {this.setRegisterType}
-						handleClickBack = {this.handleClickBack}
+						defaultType		= {binding.get('registerType')}
+						mode			= {binding.toJS('userType')}
+						setRegisterType	= {this.setRegisterType}
+						handleClickBack	= {this.handleClickBack}
 					/>
 				);
 				break;
 			case STEP_STUDENT.SCHOOL.key:
 				currentView = (
 					<SchoolStep
-						mode                = {binding.toJS('userType')}
-						binding             = {binding.sub('schoolField')}
-						defaultSchool       = {binding.toJS('school')}
-						handleChangeSchool  = {this.handleChangeSchool}
-						handleClickBack     = {this.handleClickBack}
+						mode				= {binding.toJS('userType')}
+						binding				= {binding.sub('schoolField')}
+						defaultSchool		= {binding.toJS('school')}
+						handleChangeSchool	= {this.handleChangeSchool}
+						handleClickBack		= {this.handleClickBack}
 					/>
 				);
 				break;

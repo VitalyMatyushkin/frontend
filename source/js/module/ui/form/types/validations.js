@@ -164,6 +164,10 @@ var validationsSet = {
 					return 'Please enter your name';
 				case 'Surname':
 					return 'Please enter your surname';
+				case 'Child’s name':
+					return 'Please enter your child’s name';
+				case 'Child’s surname':
+					return 'Please enter your child’s surname';
 				case 'Email':
 					return 'Please enter a valid email address';
 				case 'Phone':

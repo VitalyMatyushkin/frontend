@@ -6,18 +6,18 @@ import {SUBSCRIPTION_OPTIONS} from './staff_register/member_school_step';
 import {ConfirmPopup} from 'module/ui/confirm_popup';
 
 interface PostData {
-	preset:     string
-	schoolId:   string
-	details?:    any
-	comment?:    string
+	preset:		string
+	schoolId:	string
+	details?:	any
+	comment?:	string
 }
 
 export const FinishPermissionsStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	renderStaffFields: function (): React.ReactNode {
-		const   binding     = this.getDefaultBinding(),
-				schoolName  = binding.toJS('school').name;
+		const	binding		= this.getDefaultBinding(),
+				schoolName	= binding.toJS('school').name;
 		return (
 			<div className = "eTextWrapper">
 				<div className = "eText">
@@ -134,8 +134,8 @@ export const FinishPermissionsStep = (React as any).createClass({
 	},
 
 	render: function() {
-		const   binding     = this.getDefaultBinding(),
-				userType    = binding.toJS('userType');
+		const	binding		= this.getDefaultBinding(),
+				userType	= binding.toJS('userType');
 
 		let result;
 		switch (userType) {
@@ -152,18 +152,18 @@ export const FinishPermissionsStep = (React as any).createClass({
 
 		return (
 			<ConfirmPopup
-				okButtonText				= "Ок"
+				okButtonText				= "Finish"
 				cancelButtonText			= "Back"
 				handleClickOkButton			= { () => this.handleClickOk() }
 				handleClickCancelButton		= { () => this.props.handleClickBack() }
 				customStyle					= 'ePopup'
 			>
-		        <div className="bFinishSubtitle">
-		            You see the data that you selected in the previous steps.
-		            You can go <span>Back</span> and change them.
-		            If all is correct, click <span>Oк</span>.
-		        </div>
-		        {result}
+				<div className="bFinishSubtitle">
+					You see the data that you selected in the previous steps.
+					You can go <span>Back</span> and change them.
+					If all is correct, click <span>Finish</span>.
+				</div>
+				{result}
 			</ConfirmPopup>
 		);
 	}

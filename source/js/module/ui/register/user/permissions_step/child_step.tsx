@@ -13,13 +13,13 @@ export const ChildStep = (React as any).createClass({
 		const binding = this.getDefaultBinding();
 		return (
 			<Form
-				binding={binding}
-				onSubmit={this.onSubmit}
-				onCancel={this.props.handleClickBack}
-				rejectButtonText='Back'
+				binding				= {binding}
+				onSubmit			= {this.onSubmit}
+				onCancel			= {this.props.handleClickBack}
+				rejectButtonText	= 'Back'
 			>
-				<FormField type="text" field="firstName" validation="required text">Name</FormField>
-				<FormField type="text" field="lastName" validation="required text">Surname</FormField>
+				<FormField type="text" field="firstName" validation="required text">Child’s name</FormField>
+				<FormField type="text" field="lastName" validation="required text">Child’s surname</FormField>
 			</Form>
 		);
 	}

@@ -12,6 +12,16 @@ import * as BPromise from 'bluebird';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.schoolFieldKey = this.generateSchoolInputKey();
+		this.defaultSchool = this.props.defaultSchool;
+	},
+
+	generateSchoolInputKey: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
+
 	getSchoolService: function() {
 		const postcode = this.getDefaultBinding().toJS('postcode');
 
@@ -60,21 +70,30 @@ export const SchoolStep = (React as any).createClass({
 	},
 
 	handleSelectSchool: function(schoolId: string, schoolData: { id: string, name: string, pic: string}): void {
-	    // sorry for that. This is not very wise. But short :)
-        this.selectedSchoolPromise = (window.Server as ServiceList).publicSchool.get({schoolId: schoolData.id});
+		// sorry for that. This is not very wise. But short :)
+		this.selectedSchoolPromise = (window.Server as ServiceList).publicSchool.get({schoolId: schoolData.id});
 	},
 
 	onSubmit: function (data): void {
-	    BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
-            this.props.handleChangeSchool(data, selectedSchoolData);
-        });
+		BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
+			this.props.handleChangeSchool(data, selectedSchoolData);
+		});
 	},
 
 	handleSelectPostcode: function(id: string, postcode): void {
 		this.getDefaultBinding().set('postcode', postcode);
+		this.clearSchoolField();
 	},
+
+	clearSchoolField: function () {
+		this.getDefaultBinding().meta().set('schoolId.value', undefined);
+		this.schoolFieldKey = this.generateSchoolInputKey();
+		this.defaultSchool = undefined;
+	},
+
 	handleEscapePostcode: function(): void {
 		this.getDefaultBinding().set('postcode', undefined);
+		this.clearSchoolField();
 	},
 
 	render: function() {
@@ -99,13 +118,14 @@ export const SchoolStep = (React as any).createClass({
 					/>
 				</div>
 				<FormField
+					key				= {this.schoolFieldKey}
 					type			= "autocomplete"
 					field			= "schoolId"
 					serviceFullData	= { this.getSchoolService() }
 					onSelect		= { this.handleSelectSchool }
-					defaultItem		= { this.props.defaultSchool }
+					defaultItem		= { this.defaultSchool }
 					customListItem	= { SchoolListItem }
-					validation 	    = "required"
+					validation		= "required"
 				>
 					School
 				</FormField>

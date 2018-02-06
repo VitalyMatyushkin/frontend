@@ -14,8 +14,8 @@ interface RegisterTypeStepState {
 export const TYPE_REGISTER = {
 	SCHOOL: {
 		type: 'SCHOOL',
-		studentText: 'My school invited me to sign up with Squad In Touch',
-		parentText: 'My child’s school invited me to sign up with Squad In Touch'
+		studentText: 'My school invited me to sign up to Squad In Touch',
+		parentText: 'My child’s school invited me to sign up to Squad In Touch'
 	},
 	INDIVIDUAL: {
 		type: 'INDIVIDUAL',
