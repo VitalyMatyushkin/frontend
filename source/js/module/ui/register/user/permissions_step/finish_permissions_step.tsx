@@ -161,7 +161,7 @@ export const FinishPermissionsStep = (React as any).createClass({
 				<div className="bFinishSubtitle">
 					You see the data that you selected in the previous steps.
 					You can go <span>Back</span> and change them.
-					If all is correct, click <span>Oк</span>.
+					If all is correct, click <span>Finish</span>.
 				</div>
 				{result}
 			</ConfirmPopup>
