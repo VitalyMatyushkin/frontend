@@ -1,17 +1,3 @@
-node('node') {
-
-    stage('Build') {
-        print 'build..'
-    }
-
-    stage('Debug') {
-        print 'debug..'
-    }
-
-}
-
-
-/*
 pipeline {
     agent { label 'node' }
 
@@ -41,17 +27,12 @@ pipeline {
 
 
         stage('Deploy-Stage1') {
-            agent { label 'stage1-deploy' }
-
-            when {
-                expression { params.SCENARIO == 'build-deploy-stage1' }
-            }
-            steps {
-                print 'deploying..'
+            if(params.SCENARIO == 'build-deploy-stage1') {
+                node('stage1-deploy') {
+                    print 'on stage1!'
+                }
             }
         }
 
     }
 }
-
-*/
