@@ -25,7 +25,10 @@ pipeline {
             steps {
                 node('stage1-deploy') {
                     print 'on stage1!'
-                    unstash 'web'
+                    dir('/home/squad/stage1/frontend2') {
+                        unstash 'web'
+                    }
+                
                 }
             }
         }
