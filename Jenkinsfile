@@ -27,9 +27,11 @@ pipeline {
 
 
         stage('Deploy-Stage1') {
-            if(params.SCENARIO == 'build-deploy-stage1') {
-                node('stage1-deploy') {
-                    print 'on stage1!'
+            steps {
+                if(params.SCENARIO == 'build-deploy-stage1') {
+                    node('stage1-deploy') {
+                        print 'on stage1!'
+                    }
                 }
             }
         }
