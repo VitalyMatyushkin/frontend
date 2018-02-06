@@ -416,6 +416,14 @@ const Head = React.createClass({
 
 		return result;
 	},
+	logout:function(){
+		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
+				sessionKey 		= SessionHelper.getSessionId(globalBinding.sub('userData'));
+		
+		window.Server.sessionKey.delete({ key: sessionKey }).then(() => {
+			window.location.hash = 'logout';
+		});
+	},
 	render: function() {
 		const	binding = this.getDefaultBinding(),
 				loginSession = SessionHelper.getLoginSession(binding.sub('userData')),
@@ -448,7 +456,7 @@ const Head = React.createClass({
 								</div>:
 								<div className="bTopMenu mRight">
 									<div className="bRoleList mLogout">
-										<a href="/#logout" className="eTopMenu_item">Log Out</a>
+										<a onClick = { this.logout } className="eTopMenu_item">Log Out</a>
 									</div>
 									<div className="eTopMenu_photo">
 										<Avatar pic={binding.get('userData.userInfo.avatar')} minValue={50} />

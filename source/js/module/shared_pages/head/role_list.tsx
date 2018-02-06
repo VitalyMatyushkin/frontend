@@ -136,7 +136,12 @@ const RoleList = (React as any).createClass({
 		binding.set('listOpen', Immutable.fromJS(false));
 	},
 	logout:function(){
-		window.location.hash = 'logout';
+		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
+				sessionKey 		= SessionHelper.getSessionId(globalBinding.sub('userData'));
+
+		(window as any).Server.sessionKey.delete({ key: sessionKey }).then(() => {
+			window.location.hash = 'logout';
+		});
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
