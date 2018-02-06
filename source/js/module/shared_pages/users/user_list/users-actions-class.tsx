@@ -9,6 +9,7 @@ import {GridModel}  from  'module/ui/grid/grid-model'
 
 import {CSVExportButton} from 'module/shared_pages/users/user_list/buttons/csv_export_button'
 import * as CSVExportConsts	from 'module/ui/grid/csv_export/consts'
+import * as UserConsts from 'module/helpers/consts/user'
 import * as CSVExportController from 'module/ui/grid/csv_export/csv_export_controller'
 
 import * as RoleHelper from 'module/helpers/role_helper'
@@ -51,35 +52,42 @@ export class UsersActionsClass {
 			return self.props.customActionList.slice();
 		} else {
 			return typeof self.props.blockService !== "undefined" ?
-				['View', 'Block', 'Unblock', 'Add Role', 'Revoke All Roles']:
-				['View', 'Add Role', 'Revoke All Roles'];
+				['View', 'Block', 'Unblock', 'Add Role']:
+				['View', 'Add Role'];
 		}
 	}
 	
 	getActions(item) {
-		const 	self 			= this,
-				activeSchoolId 	= self.activeSchoolId,
-				actionList 		= self.getActionList();
+		const 	self 					= this,
+				activeSchoolId 			= self.activeSchoolId,
+				actionList 				= self.getActionList();
+
+		let isActionListChange = false;
 
 		if(self.props.canAcceptStaffRoles) {
-			item.permissions.filter(p => p.preset != 'STUDENT').forEach(p => {
+			item.permissions.forEach(permission => {
 				let action = 'Revoke the role ';
-				if(p.preset === 'PARENT') {
-					action += `of ${p.student.firstName} ${p.student.lastName} parent`;
+				if(permission.preset === 'PARENT') {
+					action += `of ${permission.student.firstName} ${permission.student.lastName} parent`;
 				} else {
-					action += p.preset;
+					action += permission.preset;
 
 					if(!activeSchoolId) {
-						action +=' for ' + p.school.name;
+						action +=' for ' + permission.school.name;
 					}
 				}
-
-				actionList.push({
-					text: action,
-					key: 'revoke',
-					id: p.id
-				});
+				if (permission.status !== UserConsts.PERMISSION_STATUS.REMOVED) {
+					actionList.push({
+						text: 	action,
+						key: 	'revoke',
+						id: 	permission.id
+					});
+					isActionListChange = true;
+				}
 			});
+		}
+		if (isActionListChange) {
+			actionList.push('Revoke All Roles');
 		}
 
 		return actionList;
