@@ -12,19 +12,11 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                //sh 'npm install'
-                //sh 'npm run deploy'
-                print 'build..'
+                sh 'npm install'
+                sh 'npm run deploy'
+                stash name: 'web' includes: 'build/*, dist/*, docs/*, images/*, Fonts/*, fonts/*, favicon.ico, index.html, VERSION.txt, cookies_policy_v1.0.docx'
             }
         }
-
-        stage('Debug') {
-            steps {
-                print 'DEBUG: params are = ' + params
-                sh 'printenv'
-            }
-        }
-
 
         stage('Deploy-Stage1') {
             when {
@@ -33,6 +25,7 @@ pipeline {
             steps {
                 node('stage1-deploy') {
                     print 'on stage1!'
+                    unstash 'web'
                 }
             }
         }
