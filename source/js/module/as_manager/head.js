@@ -8,6 +8,7 @@ const	Logo			= require('module/as_manager/head/logo'),
 		SchoolHelper	= require('module/helpers/school_helper'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
+		BPromise 		= require('bluebird'),
 		RoleHelper		= require('module/helpers/role_helper'),
 		SessionHelper	= require('module/helpers/session_helper'),
 		{Avatar} 		= require('module/ui/avatar/avatar'),
@@ -420,7 +421,7 @@ const Head = React.createClass({
 		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
 				sessionKey 		= SessionHelper.getSessionId(globalBinding.sub('userData'));
 		
-		window.Server.sessionKey.delete({ key: sessionKey }).then(() => {
+		window.Server.sessionKey.delete({ key: sessionKey }).finally(() => {
 			window.location.hash = 'logout';
 		});
 	},
