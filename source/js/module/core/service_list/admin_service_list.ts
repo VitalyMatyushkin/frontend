@@ -33,6 +33,7 @@ export class AdminServiceList {
 	schools: Service;
 	schoolsCount: Service;
 	school: Service;
+	publicSchool: Service;
 	publicSchools: Service;
 
 	schoolSports: Service<Sport[], Sport, any>;
@@ -137,6 +138,7 @@ export class AdminServiceList {
 		this.schools = new Service('/superadmin/schools', binding);
 		this.schoolsCount = new Service('/superadmin/schools/count', binding);
 		this.school = new Service('/superadmin/schools/{schoolId}', binding);
+		this.publicSchool = new Service('/public/schools/{schoolId}', binding);
 		this.publicSchools = new Service('/public/schools', binding);
 
 		this.schoolSports = new Service<Sport[], Sport, any>('/superadmin/schools/{schoolId}/sports', binding);

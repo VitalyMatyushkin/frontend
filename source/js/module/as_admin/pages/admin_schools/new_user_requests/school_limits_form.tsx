@@ -59,6 +59,8 @@ export const SchoolLimitsForm = (React as any).createClass({
 				binding 		= { this.getDefaultBinding().sub('form') }
 				onSubmit 		= { this.props.onSubmit }
 				submitOnEnter 	= { false }
+				hideCancelButton= { true }
+				defaultButton   = { 'Save' }
 			>
 				<FormField
 					valueReader = { this.valueReader }
