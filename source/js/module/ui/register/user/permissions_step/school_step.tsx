@@ -98,8 +98,7 @@ export const SchoolStep = (React as any).createClass({
 
 	render: function() {
 		const binding = this.getDefaultBinding();
-		console.log(binding.toJS());
-		console.log(binding.meta().toJS());
+
 		return (
 			<Form
 				binding         = {binding}
