@@ -7,5 +7,11 @@ pipeline {
                 sh 'npm run deploy'
             }
         }
+
+        stage('Speak') {
+            steps {
+                print 'DEBUG: parameter isFoo = ' + params.isFoo
+            }
+        }
     }
 }
