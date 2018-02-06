@@ -1,3 +1,18 @@
+node {
+    agent { label 'node' }
+
+    stage('Build') {
+        print 'build..'
+    }
+
+    stage('Debug') {
+        print 'debug..'
+    }
+
+}
+
+
+/*
 pipeline {
     agent { label 'node' }
 
@@ -12,8 +27,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                //sh 'npm install'
                 //sh 'npm run deploy'
+                print 'build..'
             }
         }
 
@@ -24,18 +40,19 @@ pipeline {
             }
         }
 
-        if(params.SCENARIO == 'build-deploy-stage1') {
-            stage('Deploy-Stage1') {
-                        agent { label 'stage1-deploy' }
 
-                        when {
-                            expression { params.SCENARIO == 'build-deploy-stage1' }
-                        }
-                        steps {
-                            print 'deploying..'
-                        }
-                    }
+        stage('Deploy-Stage1') {
+            agent { label 'stage1-deploy' }
+
+            when {
+                expression { params.SCENARIO == 'build-deploy-stage1' }
+            }
+            steps {
+                print 'deploying..'
+            }
         }
 
     }
 }
+
+*/
