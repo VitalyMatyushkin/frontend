@@ -24,15 +24,18 @@ pipeline {
             }
         }
 
-        stage('Deploy-Stage1') {
-            agent { label 'stage1-deploy' }
+        if(params.SCENARIO == 'build-deploy-stage1') {
+            stage('Deploy-Stage1') {
+                        agent { label 'stage1-deploy' }
 
-            when {
-                expression { params.SCENARIO == 'build-deploy-stage1' }
-            }
-            steps {
-                print 'deploying..'
-            }
+                        when {
+                            expression { params.SCENARIO == 'build-deploy-stage1' }
+                        }
+                        steps {
+                            print 'deploying..'
+                        }
+                    }
         }
+
     }
 }
