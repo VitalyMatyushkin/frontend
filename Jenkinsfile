@@ -1,5 +1,4 @@
-node {
-    agent { label 'node' }
+node('node') {
 
     stage('Build') {
         print 'build..'
