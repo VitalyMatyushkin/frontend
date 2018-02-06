@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm run deploy'
-                stash name: 'web', includes: 'build/*, dist/*, docs/*, images/*, Fonts/*, fonts/*, favicon.ico, index.html, VERSION.txt, cookies_policy_v1.0.docx'
+                stash name: 'web', includes: 'build/**, dist/**, docs/**, images/**, Fonts/**, fonts/**, favicon.ico, index.html, VERSION.txt, cookies_policy_v1.0.docx'
             }
         }
 
