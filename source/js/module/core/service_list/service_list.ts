@@ -16,6 +16,10 @@ export class ServiceList {
 	roles: Service<Role[], Role, any>;
 	_become: Service;
 
+	//sessions
+	sessions: Service;
+	sessionKey: Service;
+
 	// password
 	passwordsResetRequest: Service;
 	passwordsReset: Service;
@@ -327,6 +331,10 @@ export class ServiceList {
 		this._login = new Service('/i/login', binding);
 		this.roles = new Service<Role[], Role, any>('/i/roles', binding);
 		this._become = new Service('/i/roles/{roleName}/become', binding);
+
+		//sessions
+		this.sessions = new Service('/i/sessions', binding);
+		this.sessionKey = new Service('/i/sessions/{key}', binding);
 
 		// password
 		this.passwordsResetRequest = new Service('/public/passwords/resetRequest', binding);
