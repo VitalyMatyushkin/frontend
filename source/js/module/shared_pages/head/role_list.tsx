@@ -5,6 +5,7 @@
 import * as React from 'react';
 import * as	Morearty from 'morearty';
 import * as	Immutable from 'immutable';
+import * as BPromise from 'bluebird';
 
 import {If} from 'module/ui/if/if'
 import * as	classNames from 'classnames';
@@ -136,10 +137,16 @@ const RoleList = (React as any).createClass({
 		binding.set('listOpen', Immutable.fromJS(false));
 	},
 	logout:function(){
-		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
-				sessionKey 		= SessionHelper.getSessionId(globalBinding.sub('userData'));
+		const 	globalBinding 		= this.getMoreartyContext().getBinding(),
+				roleSession 		= SessionHelper.getRoleSession(globalBinding.sub('userData')),
+				roleSessionKey 		= roleSession.id,
+				loginSession 		= SessionHelper.getLoginSession(globalBinding.sub('userData')),
+				loginSessionKey 	= loginSession.id;
 
-		(window as any).Server.sessionKey.delete({ key: sessionKey }).then(() => {
+		const 	deleteRoleSessionPromise 	= (window as any).Server.sessionKey.delete({ key: roleSessionKey }),
+				deleteLoginSessionPromise 	= (window as any).Server.sessionKey.delete({ key: loginSessionKey });
+
+		BPromise.all([deleteRoleSessionPromise, deleteLoginSessionPromise]).then(() => {
 			window.location.hash = 'logout';
 		});
 	},
