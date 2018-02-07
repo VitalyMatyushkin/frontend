@@ -1,0 +1,23 @@
+pipeline {
+    agent { label 'node' }
+
+    stages {
+        stage('build') {
+            steps {
+                sh 'npm install'
+                sh 'npm run deploy'
+                stash name: 'web', includes: 'build/**, dist/**, docs/**, images/**, Fonts/**, fonts/**, favicon.ico, index.html, VERSION.txt, cookies_policy_v1.0.docx'
+            }
+        }
+
+        stage('deploy') {
+            agent { label 'stage1-deploy' }
+            steps {
+                dir('/home/squad/stage1/frontend2') {
+                    unstash 'web'
+                }
+            }
+        }
+
+    }
+}
