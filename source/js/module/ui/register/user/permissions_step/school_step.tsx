@@ -55,6 +55,13 @@ export const SchoolStep = (React as any).createClass({
 					filter.filter.where.kind = { $in:["School"] };
 					break;
 				default:
+					filter.filter.where.$or = [
+						{'allowedPermissionPresets.ADMIN':     { $ne: false }},
+						{'allowedPermissionPresets.MANAGER':   { $ne: false }},
+						{'allowedPermissionPresets.TEACHER':   { $ne: false }},
+						{'allowedPermissionPresets.COACH':     { $ne: false }}
+					];
+					filter.filter.where.stats = {rolesExistence: {staff: false}};
 					filter.filter.where.kind = { $in:["School","SchoolUnion"] };
 					break;
 			}
