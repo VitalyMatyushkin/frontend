@@ -81,7 +81,7 @@ export const ClubMainInfoEdit = (React as any).createClass({
 			binding.set('clubsForm.isRequiredErrorDays', true);
 		} else {
 			binding.set('clubsForm.isRequiredErrorDays', false);
-			ClubsHelper.convertClientToServerFormData(
+			const submitData = ClubsHelper.convertClientToServerFormData(
 				data,
 				this.getDefaultBinding().toJS('clubsForm')
 			);
@@ -90,7 +90,7 @@ export const ClubMainInfoEdit = (React as any).createClass({
 					schoolId:	this.props.activeSchoolId,
 					clubId:		this.props.clubId
 				},
-				data
+				submitData
 			).then(() => ClubsHelper.redirectToClubListPage());
 		}
 	},

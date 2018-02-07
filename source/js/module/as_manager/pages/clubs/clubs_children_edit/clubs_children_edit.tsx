@@ -55,6 +55,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 						schoolId:	this.props.activeSchoolId,
 						clubId:		clubId
 					}
+
 				);
 			})
 			.then(_club => {
@@ -73,6 +74,8 @@ export const ClubChildrenEdit = (React as any).createClass({
 					{
 						schoolId:	this.props.activeSchoolId,
 						clubId:		clubId
+					},{
+						filter: { limit: 100 }
 					}
 				);
 			})
@@ -244,6 +247,8 @@ export const ClubChildrenEdit = (React as any).createClass({
 			{
 				schoolId:	this.props.activeSchoolId,
 				clubId:		this.props.clubId
+			},{
+				filter: { limit: 100 }
 			}
 		).then(participants => {
 			this.getDefaultBinding().set('prevParticipants', Immutable.fromJS(participants));
