@@ -469,6 +469,14 @@ select::-ms-expand {
   margin-top: 10px;
 }
 
+.eForm_disabled {
+  pointer-events: none;
+
+  .eForm_savePanel {
+    pointer-events: auto;
+  }
+}
+
 .eForm_field {
   .eCombobox_input  {
     &.mMembersOfStaff {

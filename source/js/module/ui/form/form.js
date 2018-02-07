@@ -40,6 +40,7 @@ const Form = React.createClass({
 		formTitleClass: 	React.PropTypes.string,
 		submitOnEnter: 		React.PropTypes.bool, 	//submitting the form by pressing the Enter key
 		hideCancelButton: 	React.PropTypes.bool,
+		hideSubmitButton: 	React.PropTypes.bool,
 		submitButtonId:		React.PropTypes.string,	// html id of submit button
 		cancelButtonId:		React.PropTypes.string 	// html id of cancel button
 	},
@@ -304,9 +305,11 @@ const Form = React.createClass({
 								{this.props.rejectButtonText ? this.props.rejectButtonText : 'Cancel'}
 							</button>
 						</If>
-						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
-							{binding.meta().get('buttonText')}
-						</button>
+						<If condition={!this.props.hideSubmitButton}>
+							<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
+								{binding.meta().get('buttonText')}
+							</button>
+						</If>
 					</div>
 				</div>
 			</div>

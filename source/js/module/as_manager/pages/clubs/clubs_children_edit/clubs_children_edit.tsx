@@ -282,16 +282,20 @@ export const ClubChildrenEdit = (React as any).createClass({
 		}
 	},
 	render() {
-		const binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding(),
+				isActiveClub = binding.toJS('club.status') === 'ACTIVE';
 
 		let clubForm = null;
 		if(binding.toJS('isSync')) {
 			return (
-				<div className='bClubChildrenManagerWrapper'>
+				<div className={`bClubChildrenManagerWrapper ${isActiveClub ? 'bClubChildrenManagerWrapper_disabled' : ''}`}>
 					<Header/>
-					<ClubsChildrenBookingActionArea
-						handleSendMessages = { () => this.handleSendMessages() }
-					/>
+					{!isActiveClub ?
+						<ClubsChildrenBookingActionArea
+							handleSendMessages={() => this.handleSendMessages()}
+						/>
+						: null
+					}
 					<TeamManager
 						key				= { this.getDefaultBinding().toJS('managerComponentKey') }
 						isNonTeamSport	= { true }
@@ -304,13 +308,16 @@ export const ClubChildrenEdit = (React as any).createClass({
 						playerChoosersTabsModel = { this.playerChoosersTabsModel }
 						actions					= { this.teamManagerActions }
 					/>
-					<div className="eClubChildrenManagerWrapper_footer">
-						<Button
-							text				= "Save"
-							onClick				= { this.handleClickSubmitButton }
-							extraStyleClasses	= { this.getSaveButtonStyleClass() }
-						/>
-					</div>
+					{!isActiveClub ?
+						<div className="eClubChildrenManagerWrapper_footer">
+							<Button
+								text				= "Save"
+								onClick				= { this.handleClickSubmitButton }
+								extraStyleClasses	= { this.getSaveButtonStyleClass() }
+							/>
+						</div>
+						: null
+					}
 				</div>
 			);
 		} else {

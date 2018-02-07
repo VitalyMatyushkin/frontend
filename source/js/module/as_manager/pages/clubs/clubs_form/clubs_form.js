@@ -280,7 +280,8 @@ const ClubsForm = React.createClass({
 
 		let form = null;
 		
-		const isRequiredError = Boolean(binding.toJS('isRequiredErrorDays'));
+		const   isRequiredError = Boolean(binding.toJS('isRequiredErrorDays')),
+				isActiveClub = !!binding.sub('form') && binding.sub('form').toJS('status') === 'ACTIVE';
 
 		if(binding.toJS('isSync')) {
 			form = (
@@ -293,6 +294,8 @@ const ClubsForm = React.createClass({
 						cancelButtonId	= 'club_cancel'
 						submitOnEnter 	= { false }
 						id 				= 'club_form'
+						formStyleClass  = { isActiveClub ? 'eForm_disabled' : ''}
+						hideSubmitButton= { isActiveClub }
 					>
 						<FormColumn
 							key			= 'column_1'
