@@ -104,7 +104,7 @@ export class SessionsModel {
             },
             {
                 text:'Created at',
-                isSorted: false,
+                isSorted: true,
                 cell:{
                     dataField:'createdAt',
                     type:'custom',
@@ -118,7 +118,7 @@ export class SessionsModel {
             },
             {
                 text:'Expire at',
-                isSorted:false,
+                isSorted: true,
                 cell:{
                     dataField:'expireAt',
                     type:'custom',
