@@ -39,7 +39,8 @@ export const NewUserRequests = (React as any).createClass({
 			const email = currentPr.requester.email;
 			const phone = currentPr.requester.phone;
 
-			const isSolePETeacher = propz.get(currentPr, ['requestedPermission', 'details',' solePeTeacher'], undefined);
+			// const isSolePETeacher = propz.get(currentPr, ['requestedPermission', 'details',' solePeTeacher'], undefined); I do not understand the reason, but it does not work
+			const isSolePETeacher = currentPr.requestedPermission.details ? currentPr.requestedPermission.details.solePeTeacher : false;
 
 			(window.Server as AdminServiceList).publicSchool.get({schoolId: schoolId}).then(schoolData => {
 				const isThereAnyAdminsInSchool = propz.get(schoolData, ['stats', 'rolesExistence', 'staff'], undefined);
@@ -70,6 +71,7 @@ export const NewUserRequests = (React as any).createClass({
 											)
 											.then(() => {
 												this.getDefaultBinding().set('schoolLimitsPopup.schoolId', schoolId);
+												this.getDefaultBinding().set('schoolLimitsPopup.isSolePETeacher', isSolePETeacher);
 												this.getDefaultBinding().set('isShowSchoolLimitsPopup', true);
 
 												this.resolveFuncForHandleActionPromise = resolve;
@@ -129,6 +131,7 @@ export const NewUserRequests = (React as any).createClass({
 				<SchoolLimitsPopup
 					binding = {this.getDefaultBinding().sub('schoolLimitsPopup')}
 					schoolId = {this.getDefaultBinding().toJS('schoolLimitsPopup.schoolId')}
+					isSolePETeacher = {this.getDefaultBinding().get('schoolLimitsPopup.isSolePETeacher')}
 					handleSuccessSubmit = {() => this.handleSchoolLimitsSuccessSubmit()}
 				/>
 			)

@@ -11,6 +11,7 @@ export const SchoolLimitsPopup = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		schoolId: (React as any).PropTypes.string.isRequired,
+		isSolePETeacher: (React as any).PropTypes.bool.isRequired,
 		handleSuccessSubmit: (React as any).PropTypes.func.isRequired
 	},
 	componentWillMount() {
@@ -36,6 +37,7 @@ export const SchoolLimitsPopup = (React as any).createClass({
 			return (
 				<SchoolLimitsForm
 					binding = { this.getDefaultBinding().sub('schoolLimitsForm') }
+					isSolePETeacher = { this.props.isSolePETeacher }
 					onSubmit = { data => this.handleSubmit(data) }
 				/>
 			);

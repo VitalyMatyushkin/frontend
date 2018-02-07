@@ -40,4 +40,12 @@ export class RolesHelper {
 
 		return result;
 	}
+
+	static getAvailableRolesForSchoolBySolePETeacher () {
+		return {ADMIN: false, MANAGER: false, STUDENT: true, COACH: false, PARENT: true, TEACHER: false}
+	}
+
+	static getAvailableRolesForSchoolByAdmin () {
+		return {ADMIN: true, MANAGER: true, STUDENT: true, COACH: true, PARENT: true, TEACHER: true}
+	}
 }

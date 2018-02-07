@@ -11,12 +11,26 @@ import * as MultiselectDropdown from 'module/ui/multiselect-dropdown/multiselect
 export const SchoolLimitsForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSubmit: (React as any).PropTypes.func
+		onSubmit: (React as any).PropTypes.func,
+		isSolePETeacher: (React as any).PropTypes.bool
 	},
 	componentWillMount: function () {
 		const binding = this.getDefaultBinding();
 
-		const serverRoles = binding.toJS('form.allowedPermissionPresets');
+		let serverRoles;
+		if (this.props.isSolePETeacher) {
+			serverRoles = RolesHelper.getAvailableRolesForSchoolBySolePETeacher();
+			binding.sub('form').set('isClubsEnabled', false);
+			binding.sub('form').set('canPublishWebSite', false);
+			binding.sub('form').set('canAcceptStaffRoles', false);
+			binding.sub('form').set('isFavoriteSportsEnabled', false);
+		} else {
+			serverRoles = RolesHelper.getAvailableRolesForSchoolByAdmin();
+			binding.sub('form').set('isClubsEnabled', true);
+			binding.sub('form').set('canPublishWebSite', true);
+			binding.sub('form').set('canAcceptStaffRoles', true);
+			binding.sub('form').set('isFavoriteSportsEnabled', true);
+		}
 		let availableRoles = RolesHelper.convertRolesFromServerToClient(serverRoles);
 		if(typeof availableRoles === 'undefined') {
 			availableRoles = [];
