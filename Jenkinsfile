@@ -1,6 +1,5 @@
 // will be removed in future releases in favour of zjenkins dir
 
-
 pipeline {
     agent { label 'node' }
     stages {
