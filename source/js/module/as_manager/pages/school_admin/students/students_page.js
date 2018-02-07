@@ -11,6 +11,9 @@ const 	RouterView 				= require('module/core/router'),
 
 const StudentPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	//The function, which will call when user click on <Row> in Grid
 	handleClick: function(studentId) {
 		document.location.hash = 'school_admin/students/stats?id=' + studentId;
@@ -38,14 +41,15 @@ const StudentPage = React.createClass({
 					component	={ StudentsEditComponent }
 				/>
 				<Route
-					path		="/school_admin/students/merge"
-					binding		={ binding.sub('studentMerge') }
-					component	={ StudentsMergeComponent }
+					path="/school_admin/students/merge"
+					binding={binding.sub('studentMerge')}
+					component={StudentsMergeComponent}
 				/>
 				<Route
-					path		="/school_admin/students/stats"
-					binding		={ binding.sub('studentStats') }
-					component	={ StudentStatsComponent }
+					path="/school_admin/students/stats"
+					binding={binding.sub('studentStats')}
+					component={StudentStatsComponent}
+					activeSchoolId={this.props.activeSchoolId}
 				/>
 			</RouterView>
 		)

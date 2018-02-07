@@ -8,24 +8,29 @@ import * as	Immutable from 'immutable';
 import {AchievementSportSelect} from './achievement_sport_select';
 import {AchievementTable} from './achievement_table';
 import {AchievementActions}	from './achievement_actions';
-import {SVG} from 'module/ui/svg';
+import * as Loader from 'module/ui/loader';
 import {titleToFilterResultType} from './achievement_helper';
 import {ChildrenEvents} from './children_events';
 import 'styles/pages/event/b_achievement.scss';
 
 export const AchievementAllChildren = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		schoolId: (React as any).PropTypes.string,
+		children: (React as any).PropTypes.bool.isRequired,
+		type: (React as any).PropTypes.string.isRequired
+	},
 	componentWillMount:function(){
 		const 	binding 	= this.getDefaultBinding(),
 				children	= this.props.children,
 				ids			= children && children.map(ch => ch.id);
 		
-		AchievementActions.getAllChildrenSports(binding, ids);
+		AchievementActions.getAllChildrenSports(binding, ids, this.props.type);
 		binding.sub('currentAchievementSport').addListener(eventDescriptor => {
 			if (typeof eventDescriptor.getCurrentValue() !== 'undefined') {
 				const sportId = eventDescriptor.getCurrentValue().toJS().id;
 				binding.set('showChildEvents', false);
-				AchievementActions.getChildrenAchievements(binding, ids, sportId);
+				AchievementActions.getChildrenAchievements(binding, ids, sportId, this.props.type);
 			}
 		});
 	},
@@ -80,7 +85,7 @@ export const AchievementAllChildren = (React as any).createClass({
 					activeSchoolId 	= { activeSchoolId }
 					childId			= { childId }
 					loadEvents		= { page =>
-						AchievementActions.getChildTeamEvents(page,  childId, sportId, result)
+						AchievementActions.getChildTeamEvents(page, this.props.schoolId, childId, sportId, result, this.props.type)
 					}
 				/>
 			);
@@ -114,7 +119,7 @@ export const AchievementAllChildren = (React as any).createClass({
 		} else {
 			return(
 				<div className="eAchievementMessage">
-					<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
+					<Loader condition={true}/>
 				</div>
 			);
 		}

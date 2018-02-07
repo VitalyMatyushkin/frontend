@@ -28,6 +28,7 @@ const ParentChildAchievement = React.createClass({
 						activeChildId	= {binding.get('activeChildId')}
 						children		= {binding.toJS('children')}
 						binding			= {binding.sub('oneChildAchievements')}
+						type            = {'PARENT'}
 					/>
 				</If>
 			</div>

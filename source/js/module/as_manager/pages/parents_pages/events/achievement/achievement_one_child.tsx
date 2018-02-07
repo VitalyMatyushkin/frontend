@@ -7,26 +7,34 @@ import * as	Immutable from 'immutable';
 import {AchievementSportSelect} from './achievement_sport_select';
 import {AchievementTable} from './achievement_table';
 import {AchievementActions}	from './achievement_actions';
-import {SVG} from 'module/ui/svg';
+import * as Loader from 'module/ui/loader';
 import {titleToFilterResultType} from './achievement_helper';
 import {ChildrenEvents} from './children_events';
 import 'styles/pages/event/b_achievement.scss';
 
 export const AchievementOneChild = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		schoolId: (React as any).PropTypes.string,
+		activeChildId: (React as any).PropTypes.string.isRequired,
+		children: (React as any).PropTypes.array.isRequired,
+		type: (React as any).PropTypes.string.isRequired
+	},
 	componentWillMount:function(){
 		const binding = this.getDefaultBinding();
 		
 		this.activeChildId = this.props.activeChildId;
-		AchievementActions.getChildSports(binding, this.activeChildId);
-		
+
 		binding.sub('currentAchievementSport').addListener(eventDescriptor => {
 			if (typeof eventDescriptor.getCurrentValue() !== 'undefined') {
 				const sportId = eventDescriptor.getCurrentValue().toJS().id;
+
 				binding.set('showChildEvents', false);
-				AchievementActions.getChildAchievements(binding, this.activeChildId, sportId);
+				AchievementActions.getChildAchievements(binding, this.props.schoolId, this.activeChildId, sportId, this.props.type);
 			}
 		});
+
+		AchievementActions.getChildSports(binding, this.props.schoolId, this.activeChildId, this.props.type);
 	},
 	
 	componentWillUnmount:function() {
@@ -39,7 +47,7 @@ export const AchievementOneChild = (React as any).createClass({
 		if (newProps.activeChildId !== this.activeChildId) {
 			this.activeChildId = newProps.activeChildId;
 			binding.set('showChildEvents', false);
-			AchievementActions.getChildSports(binding, newProps.activeChildId);
+			AchievementActions.getChildSports(binding, this.props.schoolId, newProps.activeChildId, this.props.type);
 		}
 	},
 	
@@ -55,9 +63,9 @@ export const AchievementOneChild = (React as any).createClass({
 		if (typeof binding.toJS('childAchievement') !== 'undefined') {
 			return (
 				<AchievementTable
-					achievement	={ binding.toJS('childAchievement') }
-					children	={ this.props.children }
-					showEvents	={ this.showEvents }
+					achievement={binding.toJS('childAchievement')}
+					children={this.props.children}
+					showEvents={this.showEvents}
 				/>
 			);
 		} else {
@@ -88,7 +96,7 @@ export const AchievementOneChild = (React as any).createClass({
 					activeSchoolId 	= { activeSchoolId }
 					childId			= { childId }
 					loadEvents		= { page =>
-						AchievementActions.getChildTeamEvents(page,  childId, sportId, result)
+						AchievementActions.getChildTeamEvents(page, this.props.schoolId, childId, sportId, result, this.props.type)
 					}
 				/>
 			);
@@ -122,7 +130,7 @@ export const AchievementOneChild = (React as any).createClass({
 		} else {
 			return(
 				<div className="eAchievementMessage">
-					<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
+					<Loader condition={true}/>
 				</div>
 			);
 		}

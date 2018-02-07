@@ -90,9 +90,9 @@ const EventView = React.createClass({
 				const ids = children.map(c => c.id);
 
 				binding.atomically()
-					.set('children',		Immutable.fromJS(children))
-					.set('childrenIds',		Immutable.fromJS(ids))
-					.set('isChildrenSync',	true)
+					.set('children', Immutable.fromJS(children))
+					.set('childrenIds', Immutable.fromJS(ids))
+					.set('isChildrenSync', true)
 					.commit();
 
 				return true;

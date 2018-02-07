@@ -15,6 +15,9 @@ const 	RouterView 					= require('module/core/router'),
 
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	componentWillMount: function() {
 		const 	self 			= this,
 				globalBinding 	= self.getMoreartyContext().getBinding(),
@@ -124,7 +127,9 @@ const OneSchoolPage = React.createClass({
 
 						<Route path="/school_admin/students /school_admin/students/:mode"
 							   binding={binding.sub('students')}
-							   component={AdminStudentsPageComponent}/>
+							   component={AdminStudentsPageComponent}
+							   activeSchoolId={this.props.activeSchoolId}
+						/>
 
 						<Route path="/school_admin/forms /school_admin/forms/:mode"
 							   binding={binding.sub('classes')}

@@ -77,6 +77,9 @@ export class ServiceList {
 	schoolStudentsCount: Service;
 	schoolStudent: Service;
 	schoolStudentParents: Service;
+	schoolStudentSports: Service<Sport[], Sport, any>;
+	schoolStudentAchievements: Service;
+	schoolStudentTeamEvents: Service
 	schoolStudentEvents: Service;
 	schoolStudentMerge: Service;
 
@@ -269,6 +272,9 @@ export class ServiceList {
 	// Student
 	studentSchoolEventsCount: Service;
 	studentSchoolEventsDates: Service;
+	studentSports: Service<Sport[], Sport, any>;
+	studentAchievements: Service;
+	studentTeamEvents: Service;
 	studentSchoolEvents: Service;
 	studentSchoolEvent: Service;
 	studentEventReportAvailability: Service;
@@ -394,6 +400,9 @@ export class ServiceList {
 		this.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 		this.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
 		this.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
+		this.schoolStudentSports = new Service<Sport[], Sport, any>('/i/schools/{schoolId}/student/{studentId}/sports', binding);
+		this.schoolStudentAchievements = new Service('/i/schools/{schoolId}/student/{studentId}/achievements', binding);
+		this.schoolStudentTeamEvents = new Service('/i/schools/{schoolId}/student/{studentId}/teamSports/{sportId}/teamEvents', binding);
 		this.schoolStudentMerge = new Service('/i/schools/{schoolId}/students/{studentId}/merge', binding);
 
 		// forms
@@ -589,6 +598,10 @@ export class ServiceList {
 		this.studentSchoolEvents = new Service('/i/events', binding);
 		this.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
 		this.studentEventReportAvailability = new Service('/i/events/{eventId}/messages/report', binding);
+
+		this.studentAchievements = new Service('/i/student/achievements', binding);
+		this.studentSports = new Service<Sport[], Sport, any>('/i/student/sports', binding);
+		this.studentTeamEvents = new Service('/i/student/teamSports/{sportId}/teamEvents', binding);
 
 		// Students -> Messages
 		this.studentMessages			= new Service('/i/events/messages', binding);

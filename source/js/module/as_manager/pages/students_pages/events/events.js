@@ -6,9 +6,9 @@ const	React						= require('react'),
 		Route						= require('module/core/route'),
 		{SubMenu}					= require('module/ui/menu/sub_menu'),
 
-		EventsFixturesComponent		= require('./events_fixtures'),
-		EventsCalendarComponent		= require('./events_calendar'),
-		EventsAchievementComponent	= require('./events_achievement');
+		EventsFixturesComponent		    = require('./events_fixtures'),
+		EventsCalendarComponent		    = require('./events_calendar'),
+		{EventsAchievementComponent}    = require('./events_achievement');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],

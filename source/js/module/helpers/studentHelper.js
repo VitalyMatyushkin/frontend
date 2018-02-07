@@ -1,5 +1,4 @@
-const	Lazy			= require('lazy.js'),
-		Promise 		= require('bluebird'),
+const	Promise 		= require('bluebird'),
 		EventHelper		= require('module/helpers/eventHelper');
 
 const StudentHelper = {
