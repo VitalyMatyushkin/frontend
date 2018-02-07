@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Morearty from 'morearty';
 import * as Timezone from 'moment-timezone';
+import * as propz from 'propz';
 
 
 import 'styles/pages/b_notification_item.scss';
@@ -83,7 +84,7 @@ export const NotificationItem = (React as any).createClass({
                         <div className = "eTextKey">User Id</div>
                         <div className = "eTextValue">{currentNotification.userId}</div>
 						<div className = "eTextKey">User Email</div>
-						<div className = "eTextValue">{currentNotification.user.email}</div>
+						<div className = "eTextValue">{propz.get(currentNotification, ['user', 'email'], undefined)}</div>
                         <div className = "eTextKey">Status</div>
                         <div className = "eTextValue">{currentNotification.status}</div>
                         <div className = "eTextKey">Delivery Status</div>
