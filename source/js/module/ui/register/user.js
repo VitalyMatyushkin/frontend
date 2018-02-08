@@ -7,8 +7,8 @@ const   AccountForm         = require('module/ui/register/user/account_step'),
         $                   = require('jquery'),
         Morearty            = require('morearty'),
 	    propz				= require('propz'),
-        SessionHelper		= require('module/helpers/session_helper');
-
+        SessionHelper		= require('module/helpers/session_helper'),
+		Loader              = require('module/ui/loader');
 // TODO: remove jquery
 
 const RegisterUserPage = React.createClass({
@@ -33,6 +33,8 @@ const RegisterUserPage = React.createClass({
     componentWillMount: function () {
         const self = this,
               mainTitle = 'Sign up for Squad In Touch';
+
+	    this.getDefaultBinding().set('isSync',true);
 
         self.steps = [
             {
@@ -103,6 +105,8 @@ const RegisterUserPage = React.createClass({
             const   service         = window.Server._login,
                     serveBinding    = service.binding;
 
+	        binding.set('isSync', false);
+
             service.post(
                 {
                     email:      binding.get('formFields').email,
@@ -131,6 +135,7 @@ const RegisterUserPage = React.createClass({
                         binding.atomically()
                             .set('account',         Immutable.fromJS(activeSession))
                             .set('registerStep',    step)
+                            .set('isSync',    true)
                             .commit();
                     }
                 });
@@ -364,7 +369,8 @@ const RegisterUserPage = React.createClass({
     render: function () {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
-                currentStep = binding.get('registerStep');
+                currentStep = 'permissions';
+                // currentStep = binding.get('registerStep');
 
         let currentView = null;
 
@@ -408,13 +414,21 @@ const RegisterUserPage = React.createClass({
         }
 
         return (
-            <div>
-                {self.renderMainTitle()}
-                <div className="bRegistration">
-                    {self.renderSteps()}
-                    {currentView}
-                </div>
-            </div>
+	        <div>
+		        {self.renderMainTitle()}
+		        <div className="bRegistration">
+			        {self.renderSteps()}
+			        {binding.get('isSync') ?
+				        <div>
+					        {currentView}
+				        </div>
+				        :
+				        <div className="bRegistration_loaderWrapper">
+				            <Loader/>
+				        </div>
+			        }
+		        </div>
+	        </div>
         )
     }
 });

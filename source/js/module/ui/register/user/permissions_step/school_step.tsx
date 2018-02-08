@@ -9,12 +9,14 @@ import * as GeoSearchHelper from 'module/helpers/geo_search_helper';
 import {ServiceList} from "module/core/service_list/service_list";
 import {SchoolListItem} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
 import * as BPromise from 'bluebird';
+import * as Loader from 'module/ui/loader';
 
 export const SchoolStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		this.schoolFieldKey = this.generateSchoolInputKey();
 		this.defaultSchool = this.props.defaultSchool;
+		this.getDefaultBinding().set('isSync', true);
 	},
 
 	generateSchoolInputKey: function() {
@@ -61,7 +63,7 @@ export const SchoolStep = (React as any).createClass({
 						{'allowedPermissionPresets.TEACHER':   { $ne: false }},
 						{'allowedPermissionPresets.COACH':     { $ne: false }}
 					];
-					filter.filter.where.stats = {rolesExistence: {staff: false}};
+					filter.filter.where.canAcceptStaffRoles = { $ne: false };
 					filter.filter.where.kind = { $in:["School","SchoolUnion"] };
 					break;
 			}
@@ -82,7 +84,9 @@ export const SchoolStep = (React as any).createClass({
 	},
 
 	onSubmit: function (data): void {
+		this.getDefaultBinding().set('isSync', false);
 		BPromise.resolve(this.selectedSchoolPromise).then( selectedSchoolData => {
+			this.getDefaultBinding().set('isSync', true);
 			this.props.handleChangeSchool(data, selectedSchoolData);
 		});
 	},
@@ -106,37 +110,43 @@ export const SchoolStep = (React as any).createClass({
 	render: function() {
 		const binding = this.getDefaultBinding();
 
-		return (
-			<Form
-				binding         = {binding}
-				onSubmit        = {this.onSubmit}
-				onCancel        = {this.props.handleClickBack}
-				rejectButtonText= 'Back'
-			>
-				<div className="eForm_field">
-					<div className="eForm_fieldName">
-						Postcode
-					</div>
-					<PostcodeSelector
-						currentPostcode			= {binding.toJS('postcode')}
-						handleSelectPostcode	= {this.handleSelectPostcode}
-						handleEscapePostcode	= {this.handleEscapePostcode}
-						extraCssStyle 			= {'mInline mRightMargin mWidth250'}
-					/>
-				</div>
-				<FormField
-					key				= {this.schoolFieldKey}
-					type			= "autocomplete"
-					field			= "schoolId"
-					serviceFullData	= { this.getSchoolService() }
-					onSelect		= { this.handleSelectSchool }
-					defaultItem		= { this.defaultSchool }
-					customListItem	= { SchoolListItem }
-					validation		= "required"
+		if (this.getDefaultBinding().get('isSync')) {
+			return (
+				<Form
+					binding={binding}
+					onSubmit={this.onSubmit}
+					onCancel={this.props.handleClickBack}
+					rejectButtonText='Back'
 				>
-					School
-				</FormField>
-			</Form>
-		);
+					<div className="eForm_field">
+						<div className="eForm_fieldName">
+							Postcode
+						</div>
+						<PostcodeSelector
+							currentPostcode={binding.toJS('postcode')}
+							handleSelectPostcode={this.handleSelectPostcode}
+							handleEscapePostcode={this.handleEscapePostcode}
+							extraCssStyle={'mInline mRightMargin mWidth250'}
+						/>
+					</div>
+					<FormField
+						key={this.schoolFieldKey}
+						type="autocomplete"
+						field="schoolId"
+						serviceFullData={this.getSchoolService()}
+						onSelect={this.handleSelectSchool}
+						defaultItem={this.defaultSchool}
+						customListItem={SchoolListItem}
+						validation="required"
+					>
+						School
+					</FormField>
+				</Form>
+			);
+		} else {
+			return (
+				<Loader/>
+			);
+		}
 	}
 });

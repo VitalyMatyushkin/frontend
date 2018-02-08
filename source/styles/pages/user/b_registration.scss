@@ -11,6 +11,11 @@ $chooserIconSize: 35px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
+  .bRegistration_loaderWrapper{
+    width: 460px;
+    margin-left: 40px;
+  }
 }
 
 .eRegistration_annotation {

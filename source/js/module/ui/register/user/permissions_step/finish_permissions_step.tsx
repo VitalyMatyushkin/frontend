@@ -4,6 +4,7 @@ import {TYPE_USER} from './register_user_type';
 import {TYPE_REGISTER} from './register_type_step';
 import {SUBSCRIPTION_OPTIONS} from './staff_register/member_school_step';
 import {ConfirmPopup} from 'module/ui/confirm_popup';
+import * as Loader from 'module/ui/loader';
 
 interface PostData {
 	preset:		string
@@ -14,6 +15,10 @@ interface PostData {
 
 export const FinishPermissionsStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+
+	componentWillMount: function () {
+		this.getDefaultBinding().set('isSyncFinish', true);
+	},
 
 	renderStaffFields: function (): React.ReactNode {
 		const	binding		= this.getDefaultBinding(),
@@ -99,8 +104,10 @@ export const FinishPermissionsStep = (React as any).createClass({
 
 	handleClickOk: function (): void {
 		const dataToPost = this.getPostData();
+		this.getDefaultBinding().set('isSyncFinish', false);
 		(window as any).Server.profileRequests.post(dataToPost)
 			.then(() => {
+				this.getDefaultBinding().set('isSyncFinish', true);
 				//copy of old finish function
 				let subdomains = document.location.host.split('.');
 				subdomains[0] = subdomains[0] !== 'admin' ? 'app' : subdomains[0];
@@ -135,7 +142,8 @@ export const FinishPermissionsStep = (React as any).createClass({
 
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
-				userType	= binding.toJS('userType');
+				userType	= binding.toJS('userType'),
+				isSync      = binding.get('isSyncFinish');
 
 		let result;
 		switch (userType) {
@@ -152,18 +160,25 @@ export const FinishPermissionsStep = (React as any).createClass({
 
 		return (
 			<ConfirmPopup
-				okButtonText				= "Finish"
-				cancelButtonText			= "Back"
-				handleClickOkButton			= { () => this.handleClickOk() }
-				handleClickCancelButton		= { () => this.props.handleClickBack() }
-				customStyle					= 'ePopup'
+				okButtonText="Finish"
+				cancelButtonText="Back"
+				handleClickOkButton={() => this.handleClickOk()}
+				handleClickCancelButton={() => this.props.handleClickBack()}
+				customStyle='ePopup'
+				isShowButtons={isSync}
 			>
-				<div className="bFinishSubtitle">
-					You see the data that you selected in the previous steps.
-					You can go <span>Back</span> and change them.
-					If all is correct, click <span>Finish</span>.
-				</div>
-				{result}
+				{isSync ?
+					<div>
+						<div className="bFinishSubtitle">
+							You see the data that you selected in the previous steps.
+							You can go <span>Back</span> and change them.
+							If all is correct, click <span>Finish</span>.
+						</div>
+						{result}
+					</div>
+					:
+					<Loader/>
+				}
 			</ConfirmPopup>
 		);
 	}
