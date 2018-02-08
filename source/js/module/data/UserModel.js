@@ -22,6 +22,7 @@ const UserModel = function(userData, userModelParams){
 	self.permissions = userData.permissions;
 	self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData, statusPermission);
+    self.details = um.getDetails(userData, statusPermission);
     self.roleArray = um.getRoleArray(userData, statusPermission);
     self.school = um.getSchool(userData, statusPermission);
 	self.schoolArray = um.getSchoolArray(userData, statusPermission);
@@ -51,11 +52,29 @@ UserModel.getRoles = function(user, statusPermission){
 		</ul>
 	);
 };
-
+UserModel.getDetails = function(user, statusPermission){
+	return (
+		<ul>
+			{
+				this.getDetailsArray(user, statusPermission).map( (role, i) => <li key={i}>{role}</li> )
+			}
+		</ul>
+	);
+};
 UserModel.getRoleArray = function (user, statusPermission) {
 	let res = [];
 	if(user && user.permissions) {
 		res = UserModel.filterPermission(user.permissions, statusPermission).map(item => item.preset);
+	}
+
+	return res;
+};
+UserModel.getDetailsArray = function (user, statusPermission) {
+	let res = [];
+	if(user && user.permissions) {
+		res = UserModel.filterPermission(user.permissions, statusPermission).map(item =>
+			item.details.isSolePeTeacher ? 'Sole PE Teacher' : ''
+		);
 	}
 
 	return res;

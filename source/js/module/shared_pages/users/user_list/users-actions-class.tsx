@@ -326,6 +326,12 @@ export class UsersActionsClass {
 				}
 			},
 			{
+				text:'Details',
+				cell:{
+					dataField:'details'
+				}
+			},
+			{
 				text:'Status',
 				hidden:true,
 				cell:{
