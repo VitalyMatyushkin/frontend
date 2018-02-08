@@ -75,9 +75,7 @@ export const ChildrenEvents = (React as any).createClass({
 					hasMore		= { this.state.hasMore }
 					loader		= { <Loader/> }
 				>
-					<div className="container">
-						{ this.renderEvents() }
-					</div>
+					{ this.renderEvents() }
 				</InfiniteScroll>
 			);
 		}

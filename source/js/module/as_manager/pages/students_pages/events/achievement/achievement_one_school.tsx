@@ -4,7 +4,7 @@ import * as Immutable from 'immutable'
 import * as Loader from 'module/ui/loader';
 import * as StudentHelper from 'module/helpers/studentHelper'
 
-import {AchievementOneChild} from "module/as_manager/pages/parents_pages/events/achievement/achievement_one_child";
+import * as AchievementStatisticView from "module/as_manager/pages/students_pages/events/achievement/view/achievement-statistic-view";
 
 export const AchievementOneSchool = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -18,13 +18,14 @@ export const AchievementOneSchool = (React as any).createClass({
 		const binding = this.getDefaultBinding();
 
 		const schoolId = binding.get('activeSchoolId');
-		binding.set('studentProfile', undefined);
+		binding.set('achievementStatisticView', Immutable.fromJS({}));
+		binding.set('achievementStatisticView.achievements', undefined);
 
 		if(!schoolId) {
 			document.location.hash = 'events/calendar/all';
 		} else if(schoolId && schoolId !=='all') {
 			StudentHelper.getStudentProfile(schoolId)
-				.then(studentProfile => binding.set('studentProfile', Immutable.fromJS(studentProfile)));
+				.then(achievements => binding.set('achievementStatisticView.achievements', Immutable.fromJS(achievements)));
 		}
 	},
 	render() {
@@ -36,16 +37,12 @@ export const AchievementOneSchool = (React as any).createClass({
 			this.activeSchoolId = binding.get('activeSchoolId');
 		}
 		
-		const studentProfile = binding.toJS('studentProfile');
-		if(typeof studentProfile !== 'undefined') {
+		const achievements = binding.toJS('achievementStatisticView.achievements');
+		if(typeof achievements !== 'undefined') {
 			return (
-				<AchievementOneChild
-					schoolId={this.activeSchoolId}
-					activeChildId={studentProfile.id}
-					children={[studentProfile]}
-					binding={binding.sub('achievementOneSchool')}
-					type={'STUDENT'}
-				/>
+				<AchievementStatisticView
+					activeSchoolId = {this.activeSchoolId}
+					binding={binding.sub('achievementStatisticView')}/>
 			);
 		} else {
 			return (

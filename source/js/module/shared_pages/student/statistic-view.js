@@ -3,7 +3,6 @@
  */
 const   AboutMe             = require('module/shared_pages/student/view/about_me'),
 		UserName            = require('module/shared_pages/student/view/user_name'),
-		UserAchievements    = require("module/shared_pages/student/view/user_achievements"),
 		UserFixtures        = require('module/shared_pages/student/view/user_fixtures'),
 		TeamStats           = require('module/shared_pages/student/view/team_stats'),
 		Loader       		= require('module/ui/loader'),
@@ -11,8 +10,22 @@ const   AboutMe             = require('module/shared_pages/student/view/about_me
 		React               = require('react'),
         Morearty            = require('morearty');
 
+import {AchievementOneChild} from 'module/as_manager/pages/parents_pages/events/achievement/achievement_one_child'
+
+const propz = require('propz');
+
 const StatisticView = React.createClass({
     mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired,
+		type: React.PropTypes.string.isRequired
+	},
+	getStudentId: function() {
+		return propz.get(this.getStudentProfile(), ['id']);
+	},
+	getStudentProfile: function() {
+		return this.getDefaultBinding().toJS('achievements');
+	},
     render: function () {
         const 	binding			= this.getDefaultBinding(),
 				achievements	= binding.sub('achievements'),
@@ -33,7 +46,13 @@ const StatisticView = React.createClass({
 							<div className="bUserFullInfo mDates">
 								<div className="eUserFullInfo_block">
 									<h3>Personal Achievements: {achievements.get('numOfGamesScoredIn')}</h3>
-									<UserAchievements binding={achievements}/>
+									<AchievementOneChild
+										schoolId={this.props.activeSchoolId}
+										activeChildId={this.getStudentId()}
+										children={[this.getStudentProfile()]}
+										binding={binding.sub('achievementOneChild')}
+										type={this.props.type}
+									/>
 								</div>
 							</div>
 							<div className="bUserFullInfo mDates">
@@ -51,4 +70,5 @@ const StatisticView = React.createClass({
         )
     }
 });
+
 module.exports = StatisticView;

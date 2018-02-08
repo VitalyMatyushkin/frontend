@@ -113,15 +113,9 @@ export const AchievementOneChild = (React as any).createClass({
 			if (typeof binding.toJS('currentAchievementSport') !== 'undefined') {
 				return (
 					<div className="eAchievementTable_body">
-						<div className="container">
-							<div className="row">
-								<div className="col-md-12">
-									{this.renderSportSelector()}
-									{this.renderAchievementTable()}
-									{this.renderEvents()}
-								</div>
-							</div>
-						</div>
+						{this.renderSportSelector()}
+						{this.renderAchievementTable()}
+						{this.renderEvents()}
 					</div>
 				)
 			} else {
@@ -129,8 +123,8 @@ export const AchievementOneChild = (React as any).createClass({
 			}
 		} else {
 			return(
-				<div className="eAchievementMessage">
-					<Loader condition={true}/>
+				<div className='bLoaderWrapper'>
+					<Loader condition={ true }/>
 				</div>
 			);
 		}

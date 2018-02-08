@@ -7,7 +7,7 @@ const	React						= require('react'),
 		{If}						= require('module/ui/if/if'),
 
 		{AchievementAllChildren}	= require('./achievement/achievements_all_children'),
-		{AchievementOneChild}		= require('./achievement/achievement_one_child');
+		{AchievementOneChildWrapper}= require('./achievement/achievement_one_child_wrapper');
 
 const ParentChildAchievement = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -24,12 +24,7 @@ const ParentChildAchievement = React.createClass({
 					/>
 				</If>
 				<If condition={binding.get('activeChildId') !== 'all'}>
-					<AchievementOneChild
-						activeChildId	= {binding.get('activeChildId')}
-						children		= {binding.toJS('children')}
-						binding			= {binding.sub('oneChildAchievements')}
-						type            = {'PARENT'}
-					/>
+					<AchievementOneChildWrapper binding = {this.getDefaultBinding()}/>
 				</If>
 			</div>
 		)

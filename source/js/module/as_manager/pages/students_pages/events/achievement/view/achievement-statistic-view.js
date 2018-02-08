@@ -12,8 +12,21 @@ const	AboutMe				= require('./about_me'),
 		React				= require('react'),
 		Morearty			= require('morearty');
 
+import {AchievementOneChild} from 'module/as_manager/pages/parents_pages/events/achievement/achievement_one_child'
+
+const propz = require('propz');
+
 const AchievementStatisticView = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string
+	},
+	getStudentId: function() {
+		return propz.get(this.getStudentProfile(), ['id']);
+	},
+	getStudentProfile: function() {
+		return this.getDefaultBinding().toJS('achievements');
+	},
 	render: function () {
 		var binding = this.getDefaultBinding(),
 			achievements = binding.sub('achievements'),
@@ -33,7 +46,13 @@ const AchievementStatisticView = React.createClass({
 							<div className="bUserFullInfo mDates">
 								<div className="eUserFullInfo_block">
 									<h3>Personal Achievements: {achievements.get('numOfGamesScoredIn')}</h3>
-									<UserAchievements binding={achievements}/>
+									<AchievementOneChild
+										schoolId={this.props.activeSchoolId}
+										activeChildId={this.getStudentId()}
+										children={[this.getStudentProfile()]}
+										binding={binding.sub('achievementOneChild')}
+										type={'STUDENT'}
+									/>
 								</div>
 							</div>
 							<div className="bUserFullInfo mDates">

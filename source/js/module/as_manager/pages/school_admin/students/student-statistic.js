@@ -1,54 +1,51 @@
-import * as StudentHelper from "../../../../helpers/studentHelper";
-import * as Loader from 'module/ui/loader';
+const   StatsView 			= require('module/shared_pages/student/statistic-view'),
+		StudentHelper       = require('module/helpers/studentHelper'),
+		React               = require('react'),
+		Morearty            = require('morearty'),
+		Immutable           = require('immutable');
 
-const React = require('react');
-const Morearty = require('morearty');
-const Immutable = require('immutable');
-
-
-const {AchievementOneChild} = require('module/as_manager/pages/parents_pages/events/achievement/achievement_one_child');
+const Loader = require('module/ui/loader');
 
 const StudentStatistic = React.createClass({
-    mixins: [Morearty.Mixin],
+	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
-    componentWillMount: function () {
-        const 	binding         = this.getDefaultBinding(),
-                globalBinding   = this.getMoreartyContext().getBinding();
+	componentWillMount: function () {
+		const 	binding         = this.getDefaultBinding(),
+				globalBinding   = this.getMoreartyContext().getBinding();
 
-        this.studentId = globalBinding.get('routing.parameters.id');
-        if(!this.studentId) {
-            document.location.hash = 'events/calendar';
-        }
-	    binding.clear();
+		const   studentId   = globalBinding.get('routing.parameters.id'),
+				schoolId    = globalBinding.get('userRules.activeSchoolId');
 
-	    StudentHelper._getStudent(this.studentId, this.props.activeSchoolId)
-		    .then(studentProfile => binding.set('studentProfile', Immutable.fromJS(studentProfile)));
-    },
-    render: function () {
-        const binding = this.getDefaultBinding();
+		if(!studentId) {
+			document.location.hash = 'events/calendar';
+		}
+		binding.clear();
 
-	    const studentProfile = binding.toJS('studentProfile');
-	    if(typeof studentProfile !== 'undefined') {
-	    	console.log(studentProfile);
-		    return (
-			    <AchievementOneChild
-				    schoolId={this.props.activeSchoolId}
-				    activeChildId={this.studentId}
-				    children={[studentProfile]}
-				    binding={binding.sub('studentAchievements')}
-				    type={'STUFF'}
-			    />
-		    );
-	    } else {
-		    return (
-		    	<div className="eAchievementMessage">
-			        <Loader condition={true}/>
-		        </div>
-		    );
-	    }
-    }
+		binding.set('isSync', false);
+		StudentHelper.getStudentDataForPersonalStudentPage(studentId, schoolId)
+			.then(studentData => {
+				studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
+				studentData.numOfGamesWon = studentData.gamesWon.length;
+				studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
+
+				binding.set('achievements', Immutable.fromJS(studentData));
+				binding.set('isSync', true);
+			});
+	},
+	render: function () {
+		const binding = this.getDefaultBinding();
+
+		if(binding.toJS('isSync')) {
+			return <StatsView binding={binding} activeSchoolId={this.props.activeSchoolId} type={'STUFF'}/>;
+		} else {
+			return (
+				<div className='bLoaderWrapper'>
+					<Loader condition={ true }/>
+				</div>
+			);
+		}
+	}
 });
-
 module.exports = StudentStatistic;

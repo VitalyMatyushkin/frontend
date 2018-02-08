@@ -131,7 +131,7 @@ const StudentHelper = {
 		}
 	},
 	_getStudent: function(studentId, schoolId) {
-		if(schoolId) {
+		if(typeof schoolId !== 'undefined') {
 			return window.Server.schoolStudent.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
 			return window.Server.child.get( {childId: studentId} );
