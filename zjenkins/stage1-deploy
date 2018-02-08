@@ -13,7 +13,7 @@ pipeline {
         stage('deploy') {
             agent { label 'stage1-deploy' }
             steps {
-                dir('/home/squad/stage1/frontend2') {
+                dir('/home/squad/stage1/frontend') {
                     unstash 'web'
                 }
             }
