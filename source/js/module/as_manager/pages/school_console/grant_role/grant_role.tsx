@@ -11,6 +11,14 @@ import {ServiceList} from "module/core/service_list/service_list";
 
 export const GrantRole = (React as any).createClass({
 	mixins:[Morearty.Mixin],
+	propTypes: {
+		userIdsBinding: (React as any).PropTypes.object.isRequired,
+		activeSchoolInfo: (React as any).PropTypes.object.isRequired,
+		userPermissionsBinding: (React as any).PropTypes.object.isRequired,
+		onSuccess: (React as any).PropTypes.func,
+		handleClickCancel: (React as any).PropTypes.func.isRequired,
+		canAcceptStaffRoles: (React as any).PropTypes.bool,
+	},
 	componentWillMount() {
 		const ids = this.props.userIdsBinding.toJS();
 
@@ -216,7 +224,15 @@ export const GrantRole = (React as any).createClass({
 
 		let currentRoles = [];
 
-		const roleListForSchool = roleList.filter(role => availableRoles[role.id.toUpperCase()]);
+		console.log(availableRoles);
+		const roleListForSchool = roleList.filter(role => {
+			return (
+				availableRoles[role.id.toUpperCase()] &&
+				this.props.canAcceptStaffRoles ?
+					true:
+					role.id.toUpperCase() === 'PARENT' || role.id.toUpperCase() === 'STUDENT'
+			);
+		});
 
 		// user roles for active school
 		if (Array.isArray(currentPermissions)) {

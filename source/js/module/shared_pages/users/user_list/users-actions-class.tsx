@@ -64,9 +64,18 @@ export class UsersActionsClass {
 
 		let isActionListChange = false;
 
-		if(self.props.canAcceptStaffRoles) {
-			item.permissions.forEach(permission => {
+		item.permissions.forEach(permission => {
+			if (
+				permission.status !== UserConsts.PERMISSION_STATUS.REMOVED &&
+				(
+					// so if user can't accept staff roles then he can manage only PARENT and STUDENT roles
+					self.props.canAcceptStaffRoles ?
+						true :
+						permission.preset === 'PARENT' || permission.preset === 'STUDENT'
+				)
+			) {
 				let action = 'Revoke the role ';
+
 				if(permission.preset === 'PARENT') {
 					action += `of ${permission.student.firstName} ${permission.student.lastName} parent`;
 				} else {
@@ -76,17 +85,16 @@ export class UsersActionsClass {
 						action +=' for ' + permission.school.name;
 					}
 				}
-				if (permission.status !== UserConsts.PERMISSION_STATUS.REMOVED) {
-					actionList.push({
-						text: 	action,
-						key: 	'revoke',
-						id: 	permission.id
-					});
-					isActionListChange = true;
-				}
-			});
-		}
-		if (isActionListChange) {
+
+				actionList.push({
+					text: 	action,
+					key: 	'revoke',
+					id: 	permission.id
+				});
+				isActionListChange = true;
+			}
+		});
+		if (isActionListChange && self.props.canAcceptStaffRoles) {
 			actionList.push('Revoke All Roles');
 		}
 
