@@ -63,7 +63,6 @@ export const SchoolStep = (React as any).createClass({
 						{'allowedPermissionPresets.TEACHER':   { $ne: false }},
 						{'allowedPermissionPresets.COACH':     { $ne: false }}
 					];
-					filter.filter.where.canAcceptStaffRoles = { $ne: false };
 					filter.filter.where.kind = { $in:["School","SchoolUnion"] };
 					break;
 			}
