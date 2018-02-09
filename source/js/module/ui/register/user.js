@@ -369,8 +369,7 @@ const RegisterUserPage = React.createClass({
     render: function () {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
-                currentStep = 'permissions';
-                // currentStep = binding.get('registerStep');
+                currentStep = binding.get('registerStep');
 
         let currentView = null;
 
