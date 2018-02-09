@@ -31,12 +31,13 @@ declare global {
 		simpleAlert: any;
 		confirmAlert: any;
 		sliderAlert: any;
-		apiBase: any;
-		apiImg: any;
+		apiBase: string;
+		apiImg: string;
 		logLevel: any;
 		timezone: any;
 	}
 }
+
 
 // adding some undoubtedly required features form ES6
 es6PonyFill();
@@ -65,10 +66,10 @@ window.apiImg = api.img;
 const URL_FOR_CHECK = api.main + "/public/schools?filter=%7B%22limit%22%3A1%7D&{}";
 
 loaderUtils.sendGetRequestToHttpUrl(URL_FOR_CHECK)
-.then(
-	response => console.log(`Fulfilled: ${URL_FOR_CHECK}`),
-	error => console.log(`Rejected: ${URL_FOR_CHECK} \nResponse: ${error.response} \nStatus: ${error.code}`)
-);
+    .then(
+        response => console.log(`Fulfilled: ${URL_FOR_CHECK}`),
+        error => console.log(`Rejected: ${URL_FOR_CHECK} \nResponse: ${error.response} \nStatus: ${error.code}`)
+    );
 
 window.logLevel	= log; //Make this global for usage
 
