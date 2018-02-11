@@ -20,7 +20,7 @@ export const TYPE_REGISTER = {
 	INDIVIDUAL: {
 		type: 'INDIVIDUAL',
 		studentText: 'I would like to sign up as an individual student to be a member of Squad In Touch Sports Stars Team',
-		parentText: 'I would like to sign up as an individual parent\tto get in touch with Squad In Touch Sports Stars Team'
+		parentText: 'I would like to sign up as an individual parent to join the Squad In Touch Sports Star Team'
 	}
 };
 

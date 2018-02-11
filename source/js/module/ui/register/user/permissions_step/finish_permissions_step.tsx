@@ -29,12 +29,6 @@ export const FinishPermissionsStep = (React as any).createClass({
 					<div className = "eTextKey">School</div>
 					<div className = "eTextValue">{schoolName}</div>
 				</div>
-				{ typeof binding.toJS('role') !== 'undefined' ?
-					<div className = "eText">
-						<div className = "eTextKey">Role</div>
-						<div className = "eTextValue">{binding.toJS('role')}</div>
-					</div> : null
-				}
 				{ typeof binding.toJS('subscriptionOption') !== 'undefined' ?
 					<div className = "eText">
 						<div className = "eTextKey">Subscription</div>
@@ -49,13 +43,13 @@ export const FinishPermissionsStep = (React as any).createClass({
 		let subscriptionText;
 		switch (option) {
 			case SUBSCRIPTION_OPTIONS.FULL:
-				subscriptionText = `I'm  ${schoolName} official and I would like to sign up my school for full subscription`;
+				subscriptionText = `I’m a school official for ${schoolName} and I would like to sign my school up to the full subscription`;
 				break;
 			case SUBSCRIPTION_OPTIONS.TRIAL:
-				subscriptionText = `I'm  ${schoolName}  official and I would like to sign up my school for 30 days trial subscription for free`;
+				subscriptionText = `I’m a school official for ${schoolName} and I would like to sign up for the 30 days free trial`;
 				break;
 			case SUBSCRIPTION_OPTIONS.FREE:
-				subscriptionText = `I'm  ${schoolName} and I would like to sign up with Squad In Touch as a sole PE teacher for free`;
+				subscriptionText = `I’m a PE teacher for ${schoolName} and I would like to sign up as a sole PE teacher for free`;
 				break;
 		}
 

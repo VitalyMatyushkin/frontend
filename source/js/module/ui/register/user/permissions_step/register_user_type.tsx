@@ -43,7 +43,7 @@ export class RegisterUserType extends React.Component<RegisterUserTypeProps, Reg
 							    checked     = {this.state.selectedOption === TYPE_USER.STAFF}
 							    onChange    = {this.handleOptionChange.bind(this)}
 							/>
-							<label htmlFor={`radio_${TYPE_USER.STAFF}`}>I’m a member of a school staff</label>
+							<label htmlFor={`radio_${TYPE_USER.STAFF}`}>I’m a member of staff within my school</label>
 						</div>
 
 						<div>
@@ -67,7 +67,7 @@ export class RegisterUserType extends React.Component<RegisterUserTypeProps, Reg
 								checked     = {this.state.selectedOption === TYPE_USER.STUDENT}
 								onChange    = {this.handleOptionChange.bind(this)}
 							/>
-							<label htmlFor={`radio_${TYPE_USER.STUDENT}`}>I’m a student and keen on sports</label>
+							<label htmlFor={`radio_${TYPE_USER.STUDENT}`}>I’m a senior student and I’m a keen sports player</label>
 						</div>
 					</div>
 					<div className="bRegistrationControlButtons">
