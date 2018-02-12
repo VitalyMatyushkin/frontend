@@ -146,9 +146,9 @@ const RoleList = (React as any).createClass({
 		const 	deleteRoleSessionPromise 	= (window as any).Server.sessionKey.delete({ key: roleSessionKey }),
 				deleteLoginSessionPromise 	= (window as any).Server.sessionKey.delete({ key: loginSessionKey });
 
-		BPromise.all([deleteRoleSessionPromise, deleteLoginSessionPromise]).finally(() => {
-			window.location.hash = 'logout';
-		});
+		BPromise.resolve(deleteRoleSessionPromise)
+			.then( () => BPromise.resolve(deleteLoginSessionPromise))
+			.finally( () => window.location.hash = 'logout');
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
