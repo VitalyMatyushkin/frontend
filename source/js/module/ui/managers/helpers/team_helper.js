@@ -1130,7 +1130,7 @@ function getPlayers(schoolId, event) {
 			}
 		});
 	} else {
-		players = event.individualPlayers;
+		players = event.individualsData;
 	}
 
 	return players.filter(p => p.schoolId === schoolId);
