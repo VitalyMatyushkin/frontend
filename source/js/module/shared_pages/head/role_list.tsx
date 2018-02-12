@@ -143,12 +143,11 @@ const RoleList = (React as any).createClass({
 				loginSession 		= SessionHelper.getLoginSession(globalBinding.sub('userData')),
 				loginSessionKey 	= loginSession.id;
 
-		const 	deleteRoleSessionPromise 	= (window as any).Server.sessionKey.delete({ key: roleSessionKey }),
-				deleteLoginSessionPromise 	= (window as any).Server.sessionKey.delete({ key: loginSessionKey });
-
-		BPromise.resolve(deleteRoleSessionPromise)
-			.then( () => BPromise.resolve(deleteLoginSessionPromise))
-			.finally( () => window.location.hash = 'logout');
+		(window as any).Server.sessionKey.delete({ key: loginSessionKey })
+			.finally( () => (window as any).Server.sessionKey.delete({ key: roleSessionKey })
+				.finally(() => {
+				window.location.hash = 'logout';
+			}));
 	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
