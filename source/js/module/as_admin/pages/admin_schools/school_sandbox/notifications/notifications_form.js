@@ -25,8 +25,27 @@ const NotificationsForm = React.createClass({
 
 		window.Server.schoolNotifications.get({ schoolId }).then(notifications => {
 			binding.set('form', Immutable.fromJS(notifications));
+			this.setGameTeamUpdated(notifications);
 			binding.set('isSync', true);
 		});
+	},
+	setGameTeamUpdated: function (notifications) {
+		const	eventTeamUpdated =	notifications.EVENT_TEAM_PLAYER_ADDED === 'AUTO' &&
+		notifications.EVENT_TEAM_PLAYER_UPDATED  === 'AUTO' &&
+		notifications.EVENT_TEAM_PLAYER_REMOVED  === 'AUTO' &&
+		notifications.EVENT_INDIVIDUAL_PLAYER_ADDED  === 'AUTO' &&
+		notifications.EVENT_INDIVIDUAL_PLAYER_REMOVED  === 'AUTO'
+			? 'AUTO' : 'DISABLED';
+		this.getDefaultBinding().set('form.EVENT_TEAM_UPDATED', eventTeamUpdated);
+	},
+	handleClickSubmit: function (data) {
+		data.EVENT_TEAM_PLAYER_ADDED = data.EVENT_TEAM_UPDATED;
+		data.EVENT_TEAM_PLAYER_UPDATED = data.EVENT_TEAM_UPDATED;
+		data.EVENT_TEAM_PLAYER_REMOVED = data.EVENT_TEAM_UPDATED;
+		data.EVENT_INDIVIDUAL_PLAYER_ADDED = data.EVENT_TEAM_UPDATED;
+		data.EVENT_INDIVIDUAL_PLAYER_REMOVED = data.EVENT_TEAM_UPDATED;
+
+		this.props.onSubmit(data);
 	},
 	componentWillUnmount: function () {
 		this.getDefaultBinding().clear();
@@ -52,7 +71,7 @@ const NotificationsForm = React.createClass({
 				<Form
 					name={"Notifications settings"}
 					binding={binding.sub('form')}
-					onSubmit={this.props.onSubmit}
+					onSubmit={this.handleClickSubmit}
 					submitOnEnter={false}
 				>
 					<FormColumn customStyle={'mTwoColumns'}>
@@ -147,45 +166,9 @@ const NotificationsForm = React.createClass({
 							valueWriter={this.valueWriter}
 							classNames="mWideSingleLine"
 							type="checkbox"
-							field="EVENT_TEAM_PLAYER_ADDED"
+							field="EVENT_TEAM_UPDATED"
 						>
-							Game team member has been added
-						</FormField>
-						<FormField
-							valueReader={this.valueReader}
-							valueWriter={this.valueWriter}
-							classNames="mWideSingleLine"
-							type="checkbox"
-							field="EVENT_TEAM_PLAYER_UPDATED"
-						>
-							Game team member has been updated
-						</FormField>
-						<FormField
-							valueReader={this.valueReader}
-							valueWriter={this.valueWriter}
-							classNames="mWideSingleLine"
-							type="checkbox"
-							field="EVENT_TEAM_PLAYER_REMOVED"
-						>
-							Game team member has been removed
-						</FormField>
-						<FormField
-							valueReader={this.valueReader}
-							valueWriter={this.valueWriter}
-							classNames="mWideSingleLine"
-							type="checkbox"
-							field="EVENT_INDIVIDUAL_PLAYER_ADDED"
-						>
-							Game individual member has been added
-						</FormField>
-						<FormField
-							valueReader={this.valueReader}
-							valueWriter={this.valueWriter}
-							classNames="mWideSingleLine"
-							type="checkbox"
-							field="EVENT_INDIVIDUAL_PLAYER_REMOVED"
-						>
-							Game individual member has been removed
+							Game team has been updated
 						</FormField>
 						<FormField
 							valueReader={this.valueReader}
