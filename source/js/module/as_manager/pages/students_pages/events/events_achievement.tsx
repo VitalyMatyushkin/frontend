@@ -7,6 +7,14 @@ import {AchievementOneSchool} from './achievement/achievement_one_school'
 
 export const EventsAchievementComponent = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount() {
+		const binding = this.getDefaultBinding();
+		const schoolIdList = binding.toJS('schoolIds');
+
+		const activeSchoolId = schoolIdList[0];
+		window.location.hash = `events/achievement/${activeSchoolId}`;
+		binding.set('activeSchoolId', activeSchoolId);
+	},
 	render() {
 		const binding = this.getDefaultBinding();
 
@@ -19,6 +27,6 @@ export const EventsAchievementComponent = (React as any).createClass({
 					<AchievementOneSchool binding={binding}/>
 				</If>
 			</div>
-		)
+		);
 	}
-})
+});

@@ -65,6 +65,7 @@ const EventView = React.createClass({
 				key: sch.id
 			});
 		});
+
 		if (school.length > 1) {
 			menuItems.push({
 				icon: 'icon_office',
@@ -73,6 +74,7 @@ const EventView = React.createClass({
 				key: 'all'
 			});
 		}
+
 		binding.set('itemsBinding', Immutable.fromJS(menuItems));
 	},
 	getSchool: function () {
@@ -94,6 +96,7 @@ const EventView = React.createClass({
 	render: function () {
 		const 	binding 		= this.getDefaultBinding(),
 				rootBinging 	= this.getMoreartyContext().getBinding();
+
 		return <div className="bParentsPage">
 			<SubMenu items={this.menuItems}
 					binding={{
