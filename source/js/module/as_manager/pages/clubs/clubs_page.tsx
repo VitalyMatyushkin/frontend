@@ -1,25 +1,25 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
-		Route		= require('module/core/route'),
-		RouterView	= require('module/core/router');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
+import * as Route from 'module/core/route'
+import * as RouterView from 'module/core/router'
 
-const	{ClubList}	= require("module/as_manager/pages/clubs/club_list/club_list"),
-		{ClubsAdd}  = require("module/as_manager/pages/clubs/clubs_add"),
-		ClubsEdit = require("module/as_manager/pages/clubs/clubs_edit");
+import {ClubList} from "module/as_manager/pages/clubs/club_list/club_list"
+import {ClubAdd} from "module/as_manager/pages/clubs/club_add"
+import {ClubEdit} from "module/as_manager/pages/clubs/club_edit"
 
-const ClubsPage = React.createClass({
+export const ClubsPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId: (React as any).PropTypes.string.isRequired
 	},
-	getDefaultState: function () {
+	getDefaultState() {
 		return Immutable.fromJS({
 			clubList: {},
-			clubsAdd: {
+			clubAdd: {
 				clubsForm: {}
 			},
-			clubsEdit: {
+			clubEdit: {
 				clubsEditRouting: {},
 				subMenuItems: {},
 				clubsMainInfoEdit: {
@@ -32,7 +32,7 @@ const ClubsPage = React.createClass({
 			clubsRouting: {}
 		});
 	},
-	render: function() {
+	render() {
 		const	binding			= this.getDefaultBinding(),
 				globalBinding	= this.getMoreartyContext().getBinding();
 
@@ -50,21 +50,18 @@ const ClubsPage = React.createClass({
 
 				<Route
 					path			= "/clubs/add"
-					binding			= { binding.sub('clubsAdd') }
+					binding			= { binding.sub('clubAdd') }
 					activeSchoolId	= { this.props.activeSchoolId }
-					component		= { ClubsAdd }
+					component		= { ClubAdd }
 				/>
 
 				<Route
 					path			= "/clubs/editMainInfo /clubs/editChildren"
-					binding			= { binding.sub('clubsEdit') }
+					binding			= { binding.sub('clubEdit') }
 					activeSchoolId	= { this.props.activeSchoolId }
-					component		= { ClubsEdit }
+					component		= { ClubEdit }
 				/>
 			</RouterView>
 		)
 	}
 });
-
-
-module.exports = ClubsPage;

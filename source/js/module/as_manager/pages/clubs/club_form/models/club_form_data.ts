@@ -1,11 +1,11 @@
 export interface ClubFormData {
-	description: string | undefined
+	description?: string
 	duration: string
-	maxParticipants: string
+	maxParticipants: string | number
 	name: string
 	ownerId: string
-	price: string | undefined
-	priceType: string | undefined
+	price?: string
+	priceType?: string
 	sportId: string
 	venue: { placeId: string}
 }

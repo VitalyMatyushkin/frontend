@@ -1,27 +1,27 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const	RouterView	= require('module/core/router'),
-		Route		= require('module/core/route'),
-		{SubMenu}	= require('module/ui/menu/sub_menu');
+import * as RouterView from 'module/core/router'
+import * as Route from 'module/core/route'
+import {SubMenu} from 'module/ui/menu/sub_menu'
 
-const	{ClubMainInfoEdit}                = require('module/as_manager/pages/clubs/clubs_main_info_edit'),
-		{ClubChildrenEdit}				= require('module/as_manager/pages/clubs/clubs_children_edit/clubs_children_edit'),
-		{ClubsChildrenBookingWrapper}	= require("module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_wrapper"),
-		ActivateClub					= require('module/as_manager/pages/clubs/activate_club/activate_club');
+import {ClubMainInfoEdit} from 'module/as_manager/pages/clubs/club_main_info_edit'
+import {ClubChildrenEdit} from 'module/as_manager/pages/clubs/club_children_edit/club_children_edit'
+import {ClubChildrenBookingWrapper} from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_wrapper"
+import {ActivateClub} from 'module/as_manager/pages/clubs/activate_club/activate_club'
 
-const	LoaderStyle			= require('styles/ui/loader.scss');
+import 'styles/ui/loader.scss'
 
-const ClubEditPage = React.createClass({
+export const ClubEdit = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId: (React as any).PropTypes.string.isRequired
 	},
-	componentWillMount:function() {
+	componentWillMount() {
 		this.createAndSetMenuItems();
 	},
-	createAndSetMenuItems: function () {
+	createAndSetMenuItems() {
 		const binding = this.getDefaultBinding();
 
 		const clubId = this.getCurrentClubId();
@@ -103,7 +103,7 @@ const ClubEditPage = React.createClass({
 							path			= "/clubs/booking"
 							binding			= { binding.sub('clubsBooking') }
 							activeSchoolId	= { this.props.activeSchoolId }
-							component		= { ClubsChildrenBookingWrapper }
+							component		= { ClubChildrenBookingWrapper }
 							clubId			= { clubId }
 						/>
 					</RouterView>
@@ -112,5 +112,3 @@ const ClubEditPage = React.createClass({
 		);
 	}
 });
-
-module.exports = ClubEditPage;

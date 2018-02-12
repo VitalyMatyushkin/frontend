@@ -6,8 +6,8 @@ import * as  Promise from 'bluebird'
 
 import {TeamManager} from 'module/ui/managers/team_manager/team_manager'
 import {Button} from 'module/ui/button/button'
-import * as Header from 'module/as_manager/pages/clubs/clubs_children_edit/header'
-import * as  Error from 'module/ui/managers/models/error'
+import {ClubsChildrenEditHeader} from 'module/as_manager/pages/clubs/club_children_edit/club_children_edit_header'
+import * as Error from 'module/ui/managers/models/error'
 import * as Loader from 'module/ui/loader'
 
 import * as TeamHelper from 'module/ui/managers/helpers/team_helper'
@@ -294,10 +294,11 @@ export const ClubChildrenEdit = (React as any).createClass({
 		if(binding.toJS('isSync')) {
 			return (
 				<div className={`bClubChildrenManagerWrapper ${isActiveClub ? 'bClubChildrenManagerWrapper_disabled' : ''}`}>
-					<Header/>
-					{!isActiveClub ?
+					<ClubsChildrenEditHeader/>
+					{
+						!isActiveClub ?
 						<ClubsChildrenBookingActionArea
-							handleSendMessages={() => this.handleSendMessages()}
+							handleSendMessages = { () => this.handleSendMessages() }
 						/>
 						: null
 					}

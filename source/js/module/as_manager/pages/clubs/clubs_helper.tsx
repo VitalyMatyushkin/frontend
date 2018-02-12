@@ -1,8 +1,9 @@
-const ClubsConst = require('module/helpers/consts/clubs');
-const EventConsts = require('module/helpers/consts/events');
+import * as ClubsConst from 'module/helpers/consts/clubs'
+import * as EventConsts from 'module/helpers/consts/events'
+import {WeekDay} from "module/as_manager/pages/clubs/club_form/club_form";
 
-const ClubsHeper = {
-	redirectToClubListPage: function () {
+export const ClubsHelper = {
+	redirectToClubListPage() {
 		document.location.hash = 'clubs/clubList';
 	},
 
@@ -12,7 +13,7 @@ const ClubsHeper = {
 	 * @param clubsFormPageData - additional data from club form
 	 * @returns {{} & any}
 	 */
-	convertClientToServerFormData: function(data, clubsFormPageData) {
+	convertClientToServerFormData(data, clubsFormPageData) {
 		const cpData = Object.assign({}, data);
 
 		cpData.maxParticipants = Number(cpData.maxParticipants);
@@ -37,7 +38,7 @@ const ClubsHeper = {
 
 		return cpData;
 	},
-	getWeekDays: function () {
+	getWeekDays(): WeekDay[] {
 		return [
 			{id:'MONDAY', value: 'Monday'},
 			{id:'TUESDAY', value: 'Tuesday'},
@@ -48,7 +49,7 @@ const ClubsHeper = {
 			{id:'SUNDAY', value: 'Sunday'}
 		];
 	},
-	convertWeekDaysFromServerToClient: function (weekDays) {
+	convertWeekDaysFromServerToClient(weekDays: WeekDay[]): WeekDay[] {
 		const allDays = this.getWeekDays();
 
 		let clientWeekDays = [];
@@ -61,9 +62,7 @@ const ClubsHeper = {
 
 		return clientWeekDays;
 	},
-	convertWeekDaysFromClientToServer: function (weekDays) {
+	convertWeekDaysFromClientToServer(weekDays: WeekDay[]): string[] {
 		return weekDays.map(d => d.id);
 	}
 };
-
-module.exports = ClubsHeper;

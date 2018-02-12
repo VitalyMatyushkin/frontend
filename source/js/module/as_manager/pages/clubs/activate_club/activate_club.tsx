@@ -1,25 +1,25 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
-		propz		= require('propz');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from'immutable'
+import * as propz from'propz'
 
-const	{Button}	= require('module/ui/button/button'),
-		Loader		= require('module/ui/loader');
+import {Button}	from 'module/ui/button/button'
+import * as Loader from 'module/ui/loader'
 
-const	ActiveClubHelper	= require('module/as_manager/pages/clubs/activate_club/active_club_helper'),
-		{ClubsActions}		= require('module/as_manager/pages/clubs/clubs_actions');
+import {ActiveClubHelper} from 'module/as_manager/pages/clubs/activate_club/active_club_helper'
+import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
 
-const	LoaderStyle			= require('styles/ui/loader.scss'),
-		ActivateClubStyle	= require('styles/ui/b_activate_club.scss'),
-		PageContentStyle	= require('styles/pages/b_page_content.scss');
+const LoaderStyle = require('styles/ui/loader.scss');
+const ActivateClubStyle	= require('styles/ui/b_activate_club.scss');
+const PageContentStyle	= require('styles/pages/b_page_content.scss');
 
-const ActivateClub = React.createClass({
+export const ActivateClub = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		clubId:			React.PropTypes.string.isRequired
+		activeSchoolId:	(React as any).PropTypes.string.isRequired,
+		clubId:			(React as any).PropTypes.string.isRequired
 	},
-	componentWillMount: function () {
+	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
 		const clubId = this.props.clubId;
@@ -34,10 +34,10 @@ const ActivateClub = React.createClass({
 				});
 		}
 	},
-	componentWillUnmount: function () {
+	componentWillUnmount() {
 		this.getDefaultBinding().clear();
 	},
-	handleClickActivateButton: function () {
+	handleClickActivateButton() {
 		const binding = this.getDefaultBinding();
 
 		binding.set('isSync', false);
@@ -46,14 +46,15 @@ const ActivateClub = React.createClass({
 			.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
 			.then(club => {
 				window.simpleAlert('The club has been activated successfully.');
+
 				binding.set('club', Immutable.fromJS(club));
 				binding.set('isSync', true);
 			});
 	},
-	render: function() {
+	render() {
 		const binding = this.getDefaultBinding();
 		const isSync = binding.toJS('isSync');
-		const clubStatus = propz.get(binding.toJS('club'), ['status']);
+		const clubStatus = propz.get(binding.toJS('club'), ['status'], undefined);
 
 		let content = null;
 		switch(true) {
@@ -72,10 +73,10 @@ const ActivateClub = React.createClass({
 								Activate club
 							</h2>
 							<p>
-								{ActiveClubHelper.TEXT.DRAFT_TEXT[0]}
+								{ActiveClubHelper.DRAFT_TEXT[0]}
 							</p>
 							<p>
-								{ActiveClubHelper.TEXT.DRAFT_TEXT[1]}
+								{ActiveClubHelper.DRAFT_TEXT[1]}
 							</p>
 							<Button
 								text	= "Activate Club"
@@ -93,10 +94,10 @@ const ActivateClub = React.createClass({
 								Activate club
 							</h2>
 							<p>
-								{ActiveClubHelper.TEXT.ACTIVE_TEXT[0]}
+								{ActiveClubHelper.ACTIVE_TEXT[0]}
 							</p>
 							<p>
-								{ActiveClubHelper.TEXT.ACTIVE_TEXT[1]}
+								{ActiveClubHelper.ACTIVE_TEXT[1]}
 							</p>
 						</div>
 					</div>
@@ -107,5 +108,3 @@ const ActivateClub = React.createClass({
 		return content;
 	}
 });
-
-module.exports = ActivateClub;

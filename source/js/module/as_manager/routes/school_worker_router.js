@@ -12,7 +12,7 @@ const	React							= require('react'),
 		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
 		SchoolPageComponent				= require('module/as_manager/pages/schools/schools_page'),
 		EventsComponent					= require('module/as_manager/pages/events/events'),
-		ClubComponent					= require('module/as_manager/pages/clubs/clubs_page'),
+		{ClubsPage}					= require('module/as_manager/pages/clubs/clubs_page'),
 		EventComponent					= require('../pages/event/event_page'),
 		SchoolGalleryRoutesComponent	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
 		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
@@ -20,7 +20,7 @@ const	React							= require('react'),
 		UserViewComponent				= require('module/shared_pages/users/user_view'),
 		DemoViewComponent				= require('module/shared_pages/demo_slider/demo_slider'),
 		MessagesComponent				= require('module/as_manager/pages/messages/messages'),
-		{ SupportedBrowsers }			= require('module/shared_pages/supported_browsers/supported_browsers');
+		{SupportedBrowsers}			= require('module/shared_pages/supported_browsers/supported_browsers');
 
 /**
  * It's a router for all school workers:
@@ -66,7 +66,7 @@ const SchoolWorkerRouter = React.createClass({
 				<Route	path			= "/clubs /clubs/:subPage /clubs/:mode"
 						binding			= { binding.sub('clubsPage') }
 						activeSchoolId	= { this.activeSchoolId }
-						component		= { ClubComponent }
+						component		= { ClubsPage }
 				/>
 
 				<Route	path		= "/school-albums /school-albums/:mode/:albumId /school-albums/:albumId/:mode/:photoId"

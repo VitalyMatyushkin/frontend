@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as Morearty from 'morearty'
 
-import * as ClubForm from 'module/as_manager/pages/clubs/clubs_form/clubs_form'
-import * as ClubsHelper from 'module/as_manager/pages/clubs/clubs_helper'
+import {ClubForm} from 'module/as_manager/pages/clubs/club_form/club_form'
+import {ClubsHelper} from 'module/as_manager/pages/clubs/clubs_helper'
 import {ServiceList} from "module/core/service_list/service_list";
-import {ClubFormData} from "module/as_manager/pages/clubs/clubs_form/models/club_form_data";
+import {ClubFormData} from "module/as_manager/pages/clubs/club_form/models/club_form_data";
 
-export const ClubsAdd = (React as any).createClass({
+export const ClubAdd = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	componentWillMount() {

@@ -9,4 +9,5 @@ export interface Permission {
 	schoolId: string
 	schoolIds: string[]
 	status: string
+	comment?: string
 } 

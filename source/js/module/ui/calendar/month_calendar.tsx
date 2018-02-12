@@ -33,7 +33,7 @@ interface MonthCalendarProps {
 	selectedDate?:		any			// Date to be considered as selected (highlighted)
 	onNextMonthClick?:	() => void	// Function to be called when user hit `next` in MonthYearSelector
 	onPrevMonthClick?:	() => void	// Function to be called when user hit `prev` in MonthYearSelector
-	onDateClick?:		() => void	// Function to be called when user hit any date panel. Function will receive one argument - date
+	onDateClick?:		(date: any) => void	// Function to be called when user hit any date panel. Function will receive one argument - date
 	eventsData?:		any			// Immutable map where keys are stringified dates (2016-1-9) and values are booleans, where true mean that date have events
 	customStyle?:		string
 }

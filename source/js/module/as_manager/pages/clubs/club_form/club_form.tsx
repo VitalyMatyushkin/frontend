@@ -1,39 +1,59 @@
-const	React		= require('react'),
-		Immutable	= require('immutable'),
-		propz		= require('propz'),
-		Morearty	= require('morearty');
+import * as React from 'react'
+import * as Immutable from 'immutable'
+import * as propz from 'propz'
+import * as Morearty from 'morearty'
 
-const	Form					= require('module/ui/form/form'),
-		FormField				= require('module/ui/form/form_field'),
-		FormColumn				= require('module/ui/form/form_column'),
-		Ages					= require('module/as_manager/pages/clubs/clubs_form/components/ages'),
-		DateSelector			= require('module/ui/date_selector/date_selector'),
-		FullTimeInput			= require('module/ui/full_time_input/full_time_input'),
-		GenderSelectorWrapper	= require('module/as_manager/pages/events/manager/event_form/components/gender_selector/gender_selector_wrapper'),
-		MultiselectDropdown		= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
-		Personal				= require('module/as_manager/pages/event/view/details/details_components/personal/personal'),
-		Loader					= require('module/ui/loader'),
-		{MonthCalendar}			= require('module/ui/calendar/month_calendar');
+import * as Form from 'module/ui/form/form'
+import * as FormField from 'module/ui/form/form_field'
+import * as FormColumn from 'module/ui/form/form_column'
+import {Ages} from 'module/as_manager/pages/clubs/club_form/components/ages'
+import * as FullTimeInput from 'module/ui/full_time_input/full_time_input'
+import * as GenderSelectorWrapper from 'module/as_manager/pages/events/manager/event_form/components/gender_selector/gender_selector_wrapper'
+import * as MultiselectDropdown from 'module/ui/multiselect-dropdown/multiselect_dropdown'
+import * as Personal from 'module/as_manager/pages/event/view/details/details_components/personal/personal'
+import * as Loader from 'module/ui/loader'
+import {MonthCalendar} from 'module/ui/calendar/month_calendar'
 
-const	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		GenderHelper	= require('module/helpers/gender_helper'),
-		ClubsHelper		= require('module/as_manager/pages/clubs/clubs_helper'),
-		CurrencySymbol	= require('module/data/currancy_symbol'),
-		Consts			= require('module/as_manager/pages/event/view/details/details_components/consts'),
-		ClubsConst		= require('module/helpers/consts/clubs');
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper'
+import * as GenderHelper from 'module/helpers/gender_helper'
+import {ClubsHelper} from 'module/as_manager/pages/clubs/clubs_helper'
+import * as CurrencySymbol from 'module/data/currancy_symbol'
+import * as Consts from 'module/as_manager/pages/event/view/details/details_components/consts'
+import * as ClubsConst from 'module/helpers/consts/clubs'
 
-const   {ClubsActions}  = require('module/as_manager/pages/clubs/clubs_actions');
+import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
+import {Sport} from "module/models/sport/sport";
+import {Place} from "module/models/place/place";
+import {Profile} from "module/models/profile/profile";
+import {Permission} from "module/models/permission/permission";
 
 const LoaderStyle = require('styles/ui/loader.scss');
 
-const ClubsForm = React.createClass({
+export interface WeekDay {
+	id: string
+	value: string
+}
+
+export interface AgeItem {
+	id: string
+	value: string
+}
+
+export interface StaffProfile extends Profile {
+	userId?: string
+	permissionId?: string
+
+	permissions?: Permission[]
+}
+
+export const ClubForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title:			React.PropTypes.string.isRequired,
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		onFormSubmit:	React.PropTypes.func.isRequired
+		title:			(React as any).PropTypes.string.isRequired,
+		activeSchoolId:	(React as any).PropTypes.string.isRequired,
+		onFormSubmit:	(React as any).PropTypes.func.isRequired
 	},
-	componentWillMount: function () {
+	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
 		binding.toJS('isSync', false);
@@ -84,15 +104,15 @@ const ClubsForm = React.createClass({
 			binding.set('isSync', true);
 		});
 	},
-	componentWillUnmount: function () {
+	componentWillUnmount() {
 		this.getDefaultBinding().clear();
 	},
-	isShowPriceNumberField: function () {
+	isShowPriceNumberField() {
 		const metaPriceTypeField = this.getDefaultBinding().sub('form').meta().toJS('priceType');
 
-		return propz.get(metaPriceTypeField, ['value']) !== ClubsConst.PRICING.FREE;
+		return propz.get(metaPriceTypeField, ['value'], undefined) !== ClubsConst.PRICING.FREE;
 	},
-	getDateObjectFromTime: function () {
+	getDateObjectFromTime() {
 		const binding = this.getDefaultBinding();
 
 		const	timeString = binding.toJS('time'),
@@ -100,19 +120,13 @@ const ClubsForm = React.createClass({
 
 		return dateObject;
 	},
-	getWeekDays: function () {
+	getWeekDays(): WeekDay[] {
 		return ClubsHelper.getWeekDays();
 	},
-	getSelectedWeekDays: function () {
+	getSelectedWeekDays() {
 		return this.getDefaultBinding().toJS('days');
 	},
-	handleChangeStartDate: function (date) {
-		this.getDefaultBinding().set('startDate', Immutable.fromJS(date));
-	},
-	handleChangeFinishDate: function (date) {
-		this.getDefaultBinding().set('finishDate', Immutable.fromJS(date));
-	},
-	handleSelectWeekDay: function (day) {
+	handleSelectWeekDay(day: WeekDay) {
 		const binding = this.getDefaultBinding();
 
 		const days = binding.toJS('days');
@@ -127,7 +141,7 @@ const ClubsForm = React.createClass({
 
 		binding.set('days', Immutable.fromJS(days));
 	},
-	handleChangeHour: function(hour) {
+	handleChangeHour(hour: number) {
 		const binding = this.getDefaultBinding();
 
 		const	timeString = binding.toJS('time'),
@@ -137,7 +151,7 @@ const ClubsForm = React.createClass({
 
 		binding.set('time', dateObject.toISOString());
 	},
-	handleChangeMinutes: function(minute) {
+	handleChangeMinutes(minute: number) {
 		const binding = this.getDefaultBinding();
 
 		const	timeString = binding.toJS('time'),
@@ -147,12 +161,12 @@ const ClubsForm = React.createClass({
 
 		binding.set('time', dateObject.toISOString());
 	},
-	handleChangePriceType: function () {
+	handleChangePriceType() {
 		if(!this.isShowPriceNumberField()) {
 			this.getDefaultBinding().sub('form').meta().set('price.value', 0);
 		}
 	},
-	handleClickAgeItem: function(ageItem) {
+	handleClickAgeItem(ageItem: AgeItem) {
 		const ages = this.getDefaultBinding().toJS('ages');
 
 		const foundAgeIndex = ages.findIndex(a => a === ageItem.id);
@@ -165,10 +179,10 @@ const ClubsForm = React.createClass({
 
 		this.getDefaultBinding().set('ages', Immutable.fromJS(ages));
 	},
-	handleChangeGender: function (gender) {
+	handleChangeGender(gender: 'mixed'|'femaleOnly'|'maleOnly') {
 		this.getDefaultBinding().set('gender', Immutable.fromJS(gender));
 	},
-	handleChangeSport: function (sportId, sport) {
+	handleChangeSport(sportId: string, sport: Sport) {
 		this.getDefaultBinding().set(
 			'sport',
 			Immutable.fromJS(sport)
@@ -185,21 +199,21 @@ const ClubsForm = React.createClass({
 			)
 		);
 	},
-	handleChangeVenue: function (venueId, venue) {
+	handleChangeVenue(venueId: string, venue: Place) {
 		this.getDefaultBinding().set(
 			'venue',
 			Immutable.fromJS(venue)
 		);
 	},
-	getCoaches: function() {
+	getCoaches() {
 		const staff = this.getDefaultBinding().toJS('staff');
 		return staff.filter(s => s.staffRole === Consts.STAFF_ROLES.COACH);
 	},
-	getMembersOfStaff: function() {
+	getMembersOfStaff() {
 		const staff = this.getDefaultBinding().toJS('staff');
 		return staff.filter(s => s.staffRole === Consts.STAFF_ROLES.MEMBER_OF_STAFF);
 	},
-	getCoachPermissionFromUser: function(user) {
+	getCoachPermissionFromUser(user: StaffProfile) {
 		const permissions =  user.permissions.filter(p =>
 			(p.preset === 'COACH' || p.preset === 'TEACHER') &&
 			p.schoolId === this.props.activeSchoolId &&
@@ -208,7 +222,7 @@ const ClubsForm = React.createClass({
 		
 		return permissions.length !== 0 ? permissions[0] : {};
 	},
-	getMembersOfStaffPermissionFromUser: function(user) {
+	getMembersOfStaffPermissionFromUser(user: StaffProfile) {
 		const permissions =  user.permissions.filter(p =>
 			p.schoolId === this.props.activeSchoolId &&
 			p.status === 'ACTIVE'
@@ -217,7 +231,7 @@ const ClubsForm = React.createClass({
 		//TODO What if user has more then one active roles for current school?
 		return permissions[0];
 	},
-	handleChangeCoaches: function(user) {
+	handleChangeCoaches(user: StaffProfile) {
 		const updStaff = this.getDefaultBinding().toJS('staff');
 		
 		const permission = this.getCoachPermissionFromUser(user);
@@ -237,7 +251,7 @@ const ClubsForm = React.createClass({
 			);
 		}
 	},
-	handleChangeMembersOfStaff: function(user) {
+	handleChangeMembersOfStaff(user: StaffProfile) {
 		const updStaff = this.getDefaultBinding().toJS('staff');
 		
 		const permission = this.getMembersOfStaffPermissionFromUser(user);
@@ -255,7 +269,7 @@ const ClubsForm = React.createClass({
 			Immutable.fromJS(updStaff)
 		);
 	},
-	handleDeletePersonal: function(user) {
+	handleDeletePersonal(user: StaffProfile) {
 		let updStaff = this.getDefaultBinding().toJS('staff');
 		
 		const foundStaffIndex = updStaff.findIndex(staff => staff.userId === user.userId && staff.permissionId === user.permissionId);
@@ -267,7 +281,7 @@ const ClubsForm = React.createClass({
 		);
 	},
 	
-	render: function() {
+	render() {
 		const 	binding = this.getDefaultBinding(),
 				venue = binding.toJS('form.venue'),
 				defaultVenue =  typeof venue !== 'undefined' ? 	{id: venue.placeId, name:venue.placeName} : undefined;
@@ -490,5 +504,3 @@ const ClubsForm = React.createClass({
 		return form;
 	}
 });
-
-module.exports = ClubsForm;

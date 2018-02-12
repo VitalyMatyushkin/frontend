@@ -2,17 +2,17 @@ import * as React from 'react'
 import * as Morearty from 'morearty'
 import * as Immutable from 'immutable'
 
-import * as ClubForm from 'module/as_manager/pages/clubs/clubs_form/clubs_form'
+import {ClubForm} from 'module/as_manager/pages/clubs/club_form/club_form'
 import * as Loader  from 'module/ui/loader'
 
 import * as ClubConsts from 'module/helpers/consts/clubs'
 import * as EventConsts from 'module/helpers/consts/events'
-import * as ClubsHelper from 'module/as_manager/pages/clubs/clubs_helper'
+import {ClubsHelper} from 'module/as_manager/pages/clubs/clubs_helper'
 
 import {ServiceList} from "module/core/service_list/service_list";
-import {ClubFormData} from "module/as_manager/pages/clubs/clubs_form/models/club_form_data";
+import {ClubFormData} from "module/as_manager/pages/clubs/club_form/models/club_form_data";
 
-const LoaderStyle = require('styles/ui/loader.scss');
+import 'styles/ui/loader.scss'
 
 export const ClubMainInfoEdit = (React as any).createClass({
 	mixins: [Morearty.Mixin],

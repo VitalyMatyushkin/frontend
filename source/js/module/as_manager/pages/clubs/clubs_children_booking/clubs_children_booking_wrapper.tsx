@@ -10,7 +10,7 @@ import * as Loader from 'module/ui/loader';
 
 const ClubsChildrenBookingWrapperStyle = require('styles/ui/b_clubs_children_booking_wrapper/b_clubs_children_booking_wrapper.scss');
 
-export const ClubsChildrenBookingWrapper = (React as any).createClass({
+export const ClubChildrenBookingWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	ClubsChildrenBookingActions: new ClubsChildrenBookingActions(),
