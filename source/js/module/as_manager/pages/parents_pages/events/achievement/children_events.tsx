@@ -75,7 +75,9 @@ export const ChildrenEvents = (React as any).createClass({
 					hasMore		= { this.state.hasMore }
 					loader		= { <Loader/> }
 				>
-					{ this.renderEvents() }
+					<div className="bAchievement_eventWrapper">
+						{ this.renderEvents() }
+					</div>
 				</InfiniteScroll>
 			);
 		}

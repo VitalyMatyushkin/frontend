@@ -273,9 +273,12 @@ $border: solid 1px #c2c2c2;
 .eAchievement_in {
   display: flex;
 }
+.bAchievement_eventWrapper{
+  display: flex;
+  flex-wrap: wrap;
+}
 .bAchievement_event{
   width: 46%;
-  height: 155px;
   display: inline-block;
   margin: 1%;
   padding: 1%;
@@ -310,6 +313,7 @@ $border: solid 1px #c2c2c2;
   text-align: center;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 110px;
 }
 .eAchievement_rival{
