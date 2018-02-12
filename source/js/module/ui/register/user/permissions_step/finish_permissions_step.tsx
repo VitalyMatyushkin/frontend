@@ -5,6 +5,7 @@ import {TYPE_REGISTER} from './register_type_step';
 import {SUBSCRIPTION_OPTIONS} from './staff_register/member_school_step';
 import {ConfirmPopup} from 'module/ui/confirm_popup';
 import * as Loader from 'module/ui/loader';
+import * as propz from 'propz';
 
 interface PostData {
 	preset:		string
@@ -29,6 +30,12 @@ export const FinishPermissionsStep = (React as any).createClass({
 					<div className = "eTextKey">School</div>
 					<div className = "eTextValue">{schoolName}</div>
 				</div>
+				{ typeof binding.toJS('role') !== 'undefined' && !this.isSchoolWithoutUsers(binding.toJS('school')) ?
+					<div className = "eText">
+						<div className = "eTextKey">Role</div>
+						<div className = "eTextValue">{binding.toJS('role')}</div>
+					</div> : null
+				}
 				{ typeof binding.toJS('subscriptionOption') !== 'undefined' ?
 					<div className = "eText">
 						<div className = "eTextKey">Subscription</div>
@@ -37,6 +44,11 @@ export const FinishPermissionsStep = (React as any).createClass({
 				}
 			</div>
 		);
+	},
+
+	isSchoolWithoutUsers: function (school): boolean {
+		const rolesExistence = propz.get(school, ['stats', 'rolesExistence', 'staff'], true);
+		return !rolesExistence;
 	},
 
 	getSubscriptionText: function (option: string, schoolName: string): string {
@@ -164,7 +176,7 @@ export const FinishPermissionsStep = (React as any).createClass({
 				{isSync ?
 					<div>
 						<div className="bFinishSubtitle">
-							You see the data that you selected in the previous steps.
+							You see the data that you selected in the previous steps.<br/>
 							You can go <span>Back</span> and change them.
 							If all is correct, click <span>Finish</span>.
 						</div>

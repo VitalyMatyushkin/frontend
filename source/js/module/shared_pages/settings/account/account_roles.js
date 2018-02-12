@@ -73,7 +73,7 @@ const AccountRoles = React.createClass({
 				<div className="bDataList">
 					<Loader condition={!isSync} />
 					<If condition={isSync}>
-						<div className="eDataList_listItemText">You don't have any roles right now. Please request one on tab <a href="#settings/requests">Requests</a>
+						<div className="eDataList_listItemText">You don't have any roles right now. Please request one via the <a href="#settings/requests">Requests</a> tab
 						</div>
 					</If>
 				</div>
