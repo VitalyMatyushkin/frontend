@@ -21,6 +21,7 @@ const ParentChildAchievement = React.createClass({
 					<AchievementAllChildren
 						children	= {binding.toJS('children')}
 						binding		= {binding.sub('allChildrenAchievements')}
+						type        = {'PARENT'}
 					/>
 				</If>
 				<If condition={binding.get('activeChildId') !== 'all'}>

@@ -5,32 +5,34 @@
 import * as	React from 'react';
 import * as	Morearty from 'morearty';
 import * as	Immutable from 'immutable';
-import {AchievementSportSelect} from './achievement_sport_select';
-import {AchievementTable} from './achievement_table';
-import {AchievementActions}	from './achievement_actions';
+
 import * as Loader from 'module/ui/loader';
-import {titleToFilterResultType} from './achievement_helper';
+
+import {AchievementSportSelect} from './achievement_sport_select';
+import {AchievementAllSchoolTable} from "module/as_manager/pages/parents_pages/events/achievement/achievement_all_school_table";
+import {AchievementActions}	from './achievement_actions';
 import {ChildrenEvents} from './children_events';
+
+import {titleToFilterResultType} from './achievement_helper';
+
 import 'styles/pages/event/b_achievement.scss';
 
-export const AchievementAllChildren = (React as any).createClass({
+export const AchievementAllSchools = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		schoolId: (React as any).PropTypes.string,
-		children: (React as any).PropTypes.bool.isRequired,
-		type: (React as any).PropTypes.string.isRequired
+		student:(React as any).PropTypes.object.isRequired,
+		schools: (React as any).PropTypes.array.isRequired
 	},
-	componentWillMount:function(){
-		const 	binding 	= this.getDefaultBinding(),
-				children	= this.props.children,
-				ids			= children && children.map(ch => ch.id);
+	componentWillMount:function() {
+		const binding = this.getDefaultBinding();
+		const schoolIds = this.props.schools.map(ch => ch.id);
 		
-		AchievementActions.getAllChildrenSports(binding, ids, this.props.type);
+		AchievementActions.getAllSchoolsChildSports(binding, schoolIds);
 		binding.sub('currentAchievementSport').addListener(eventDescriptor => {
 			if (typeof eventDescriptor.getCurrentValue() !== 'undefined') {
 				const sportId = eventDescriptor.getCurrentValue().toJS().id;
 				binding.set('showChildEvents', false);
-				AchievementActions.getChildrenAchievements(binding, ids, sportId, this.props.type);
+				AchievementActions.getAllSchoolsChildAchievements(binding, schoolIds, sportId);
 			}
 		});
 	},
@@ -49,12 +51,12 @@ export const AchievementAllChildren = (React as any).createClass({
 
 	renderAchievementTable: function(): React.ReactNode | null {
 		const binding = this.getDefaultBinding();
-		if (typeof binding.toJS('childrenAchievement') !== 'undefined') {
+		if (typeof binding.toJS('childAchievement') !== 'undefined') {
 			return (
-				<AchievementTable
-					achievement	= { binding.toJS('childrenAchievement') }
-					children	= { this.props.children }
-					showEvents	= { this.showEvents }
+				<AchievementAllSchoolTable
+					schools={this.props.schools}
+					achievements={binding.toJS('childAchievement')}
+					showEvents={this.showEvents}
 				/>
 			);
 		} else {
@@ -62,11 +64,12 @@ export const AchievementAllChildren = (React as any).createClass({
 		}
 	},
 	
-	showEvents: function(title: string, childId: string): void {
+	showEvents: function(title: string, childId: string, schoolId: string): void {
 		const 	binding = this.getDefaultBinding();
 		binding.set('showChildEvents', true);
 		binding.set('typeChildEvents', Immutable.fromJS(title));
 		binding.set('childIdForEvents', Immutable.fromJS(childId));
+		binding.set('schoolIdForEvents', Immutable.fromJS(schoolId));
 	},
 	
 	renderEvents: function(): React.ReactNode | null {
@@ -74,7 +77,8 @@ export const AchievementAllChildren = (React as any).createClass({
 				rootBinding 	= this.getMoreartyContext().getBinding(),
 				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
 				typeChildEvents	= binding.toJS('typeChildEvents'),
-				childId			= binding.toJS('childIdForEvents'),
+				schoolId        = binding.toJS('schoolIdForEvents'),
+				childId         = binding.toJS('childIdForEvents'),
 				sportId 		= binding.toJS('currentAchievementSport').id,
 				result 			= titleToFilterResultType[typeChildEvents];
 		
@@ -84,9 +88,9 @@ export const AchievementAllChildren = (React as any).createClass({
 					key				= { `${childId}_${sportId}_${result}` }
 					activeSchoolId 	= { activeSchoolId }
 					childId			= { childId }
-					loadEvents		= { page =>
-						{return AchievementActions.getChildTeamEvents(page, this.props.schoolId, childId, sportId, result, this.props.type)}
-					}
+					loadEvents		= { page => {
+						return AchievementActions.getChildTeamEvents(page, schoolId, childId, sportId, result, 'STUDENT')
+					}}
 				/>
 			);
 		} else {

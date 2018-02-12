@@ -41,7 +41,7 @@ export const AchievementOneSchool = (React as any).createClass({
 		if(typeof achievements !== 'undefined') {
 			return (
 				<AchievementStatisticView
-					activeSchoolId = {this.activeSchoolId}
+					activeSchoolId={this.activeSchoolId}
 					binding={binding.sub('achievementStatisticView')}/>
 			);
 		} else {

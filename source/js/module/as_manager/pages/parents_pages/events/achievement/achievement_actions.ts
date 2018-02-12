@@ -12,14 +12,14 @@ const eventsCountOnPage = 20;
 const eventsCountLimit = 20;
 
 export class AchievementActions {
-	static getChildSports(binding, schoolId: string,childId: string, type: 'STUFF'|'PARENT'|'STUDENT') {
+	static getChildSports(binding, schoolId: string,childId: string, type: 'STUFF'|'PARENT'|'STUDENT'): BPromise<Sport[]> {
 		const setSports = (sports: Sport[]) => {
 			const uniqueSports = (Lazy(sports) as any).uniq('id').toArray();
 			binding.set('achievementSports', Immutable.fromJS(uniqueSports));
 			binding.set('currentAchievementSport', Immutable.fromJS(uniqueSports[0]));
 			binding.set('isSyncAchievementSports', true);
 
-			return true;
+			return BPromise.resolve(sports);
 		};
 
 
@@ -65,12 +65,17 @@ export class AchievementActions {
 		}
 	}
 	
-	static getChildAchievements(binding, schoolId: string, childId: string, sportId: string, type: 'STUFF'|'PARENT'|'STUDENT') {
+	static getChildAchievements(
+		binding,
+		schoolId: string,
+		childId: string,
+		sportId: string,
+		type: 'STUFF'|'PARENT'|'STUDENT'
+	): BPromise<any[]> {
 		const setAchievements = (achievements) => {
-			binding
-				.atomically()
-				.set('childAchievement', Immutable.fromJS(achievements))
-				.commit();
+			binding.set('childAchievement', Immutable.fromJS(achievements));
+
+			return BPromise.resolve(achievements);
 		};
 
 		switch(type) {
@@ -84,10 +89,8 @@ export class AchievementActions {
 					}
 				};
 
-				(window.Server as ServiceList).schoolStudentAchievements.get({schoolId, studentId: childId}, filterAchievements)
+				return (window.Server as ServiceList).schoolStudentAchievements.get({schoolId, studentId: childId}, filterAchievements)
 					.then(achievement => setAchievements(achievement));
-
-				break;
 			}
 			case 'PARENT': {
 				const filterAchievements = {
@@ -99,9 +102,8 @@ export class AchievementActions {
 					}
 				};
 
-				(window.Server as ServiceList).childAchievements.get({childId: childId}, filterAchievements)
+				return (window.Server as ServiceList).childAchievements.get({childId: childId}, filterAchievements)
 					.then(achievement => setAchievements(achievement));
-				break;
 			}
 			case 'STUDENT': {
 				const filterAchievements = {
@@ -114,14 +116,36 @@ export class AchievementActions {
 					}
 				};
 
-				(window.Server as ServiceList).studentAchievements.get(filterAchievements)
+				return (window.Server as ServiceList).studentAchievements.get(filterAchievements)
 					.then(achievement => setAchievements(achievement));
-				break;
 			}
 		}
 	}
+
+	static getAllSchoolsChildAchievements(binding, schoolIds: string[], sportId: string,) {
+		const setAchievements = (achievements) => {
+			binding.set('childAchievement', Immutable.fromJS(achievements));
+
+			console.log(achievements);
+
+			return achievements;
+		};
+
+		const filterAchievements = {
+			filter: {
+				where: {
+					sportId: sportId,
+					schoolIdList: schoolIds
+				},
+				limit: 1000
+			}
+		};
+
+		return (window.Server as ServiceList).studentAchievements.get(filterAchievements)
+			.then(achievement => setAchievements(achievement));
+	}
 	
-	static getAllChildrenSports(binding, childrenIds: string[], type: 'STUFF'|'PARENT'|'STUDENT') {
+	static getAllChildrenSports(binding, childrenIds: string[], type: 'STUFF'|'PARENT'|'STUDENT'): BPromise<Sport[]> {
 		const filterSport = {
 			filter: {
 				where: {
@@ -132,7 +156,33 @@ export class AchievementActions {
 			}
 		};
 		
-		(window.Server as ServiceList).childrenSports.get(filterSport)
+		return (window.Server as ServiceList).childrenSports.get(filterSport)
+			.then(sports => {
+				const uniqueSports = (Lazy(sports) as any).uniq('id').toArray();
+
+				binding
+					.atomically()
+					.set('achievementSports', Immutable.fromJS(uniqueSports))
+					.set('currentAchievementSport', Immutable.fromJS(uniqueSports[0]))
+					.set('isSyncAchievementSports', true)
+					.commit();
+
+				return BPromise.resolve(sports);
+			});
+	}
+
+	static getAllSchoolsChildSports(binding, schoolIds: string[]): BPromise<Sport[]> {
+		const filterSport = {
+			filter: {
+				where: {
+					typeOfPlayers: 'TEAM',
+					schoolIdList: schoolIds
+				},
+				limit: 10000
+			}
+		};
+
+		return (window.Server as ServiceList).studentSports.get(filterSport)
 			.then(sports => {
 				const uniqueSports = (Lazy(sports) as any).uniq('id').toArray();
 				binding
@@ -141,10 +191,17 @@ export class AchievementActions {
 					.set('currentAchievementSport', Immutable.fromJS(uniqueSports[0]))
 					.set('isSyncAchievementSports', true)
 					.commit();
+
+				return BPromise.resolve(sports);
 			});
 	}
 	
-	static getChildrenAchievements(binding, childrenIds: string[], sportId: string, type: 'STUFF'|'PARENT'|'STUDENT') {
+	static getChildrenAchievements(
+		binding,
+		childrenIds: string[],
+		sportId: string,
+		type: 'STUFF'|'PARENT'|'STUDENT'
+	): BPromise<any> {
 		const filterAchievements = {
 			filter: {
 				where: {
@@ -155,16 +212,22 @@ export class AchievementActions {
 			}
 		};
 		
-		(window.Server as ServiceList).childrenAchievements.get(filterAchievements)
+		return (window.Server as ServiceList).childrenAchievements.get(filterAchievements)
 			.then(achievement => {
-				binding
-					.atomically()
-					.set('childrenAchievement', Immutable.fromJS(achievement))
-					.commit();
+				binding.set('childrenAchievement', Immutable.fromJS(achievement));
+
+				return BPromise.resolve(achievement);
 			});
 	}
 	
-	static getChildTeamEvents(page: number, schoolId: string, childId: string, sportId: string, result: string, type: 'STUFF'|'PARENT'|'STUDENT') {
+	static getChildTeamEvents(
+		page: number,
+		schoolId: string,
+		childId: string,
+		sportId: string,
+		result: string,
+		type: 'STUFF'|'PARENT'|'STUDENT'
+	): BPromise<any[]> {
 		switch(type) {
 			case 'STUFF': {
 				const filterEvents = {
@@ -178,7 +241,10 @@ export class AchievementActions {
 					}
 				};
 
-				return (window.Server as ServiceList).schoolStudentTeamEvents.get({schoolId, studentId: childId, sportId}, filterEvents);
+				return (window.Server as ServiceList).schoolStudentTeamEvents.get(
+					{schoolId, studentId: childId, sportId},
+					filterEvents
+				);
 			}
 			case 'PARENT': {
 				const filterEvents = {
@@ -192,7 +258,10 @@ export class AchievementActions {
 					}
 				};
 
-				return (window.Server as ServiceList).childTeamEvents.get({childId, sportId}, filterEvents);
+				return (window.Server as ServiceList).childTeamEvents.get(
+					{childId, sportId},
+					filterEvents
+				);
 			}
 			case 'STUDENT': {
 				const filterEvents = {
@@ -207,7 +276,10 @@ export class AchievementActions {
 					}
 				};
 
-				return (window.Server as ServiceList).studentTeamEvents.get({sportId}, filterEvents);
+				return (window.Server as ServiceList).studentTeamEvents.get(
+					{sportId},
+					filterEvents
+				);
 			}
 		}
 	}
