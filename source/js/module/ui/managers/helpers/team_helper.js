@@ -1010,14 +1010,28 @@ function getCountPoints(event, teamBundleName, order) {
 			dataBundle				= teamBundles[teamBundleName];
 			break;
 		case 'individualsData':
-			scoreBundleName			= 'individualScore';
-			resultIdFieldName		= 'userId';
-			dataBundleIdFieldName	= 'userId';
-			dataBundle				= event.individualsData;
+			// hack for 1x1 sport
+			// sometimes players was added to event after event was closed
+			// in this case we have situasion when teamBundleName is wrong
+			if(event.results.individualScore.length === 0 && this.isOneOnOneSport(event)) {
+				scoreBundleName			= 'schoolScore';
+				resultIdFieldName		= 'schoolId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				= teamBundles['schoolsData'];
+			} else {
+				scoreBundleName			= 'individualScore';
+				resultIdFieldName		= 'userId';
+				dataBundleIdFieldName	= 'userId';
+				dataBundle				= event.individualsData;
+			}
 			break;
 	}
 
-	const scoreData = event.results[scoreBundleName].find(r => typeof dataBundle[order] !== "undefined" && r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
+	const scoreData = event.results[scoreBundleName].find(r =>
+		typeof dataBundle[order] !== "undefined" &&
+		r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]
+	);
+
 	let points = 0;
 	if(typeof scoreData !== 'undefined') {
 		points = scoreData.score;
