@@ -11,12 +11,7 @@ export class ClubsChildrenEditHeader extends React.Component<{}, {}> {
 				<h2>
 					Edit children
 				</h2>
-				<p>
-					{ClubChildrenEditHelper[0]}
-				</p>
-				<p>
-					{ClubChildrenEditHelper[1]}
-				</p>
+				{ ClubChildrenEditHelper.TEXT.map(text => <p>{text}</p>) }
 			</div>
 		);
 	}
