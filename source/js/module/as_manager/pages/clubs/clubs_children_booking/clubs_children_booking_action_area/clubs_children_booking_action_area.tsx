@@ -11,7 +11,7 @@ export class ClubsChildrenBookingActionArea extends React.Component<ClubsChildre
 		return (
 			<div className = 'bClubsChildrenBookingActionsArea'>
 				<Button
-					text    = { 'Send messages' }
+					text    = { 'Send booking forms' }
 					onClick = { () => this.props.handleSendMessages() }
 				/>
 			</div>
