@@ -25,7 +25,7 @@ export const SchoolLimitsPopup = (React as any).createClass({
 	},
 	handleSubmit(data) {
 		const dataToSubmit = Object.assign({}, data);
-		dataToSubmit.availableRoles = RolesHelper.convertRolesFromClientToServer(
+		dataToSubmit.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(
 			this.getDefaultBinding().toJS('schoolLimitsForm.availableRoles')
 		);
 
