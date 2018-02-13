@@ -231,18 +231,17 @@ const RegisterUserPage = React.createClass({
         binding.set('isSync', false);
 
         window.Server.confirmUser.post( {token: emailCode} ).then(data => {
+	        binding.set('isSync', true);
             if(data.confirmed) {
-                verificationBinding.set('email',        Immutable.fromJS(true));
-                binding.atomically()
-                    .set('isSync',                      true)
-                    .set('isErrorEmailVerification',    false)
-                    .commit();
+                verificationBinding.set('email', true);
+                binding.set('isErrorEmailVerification', false);
 
                 verificationBinding.toJS('sms') && self.setStepFunction('permissions');
             } else {
                 binding.set('isErrorEmailVerification', true);
             }
         }).catch(() => {
+	        binding.set('isSync', true);
             binding.set('isErrorEmailVerification', true);
         });
     },
@@ -254,18 +253,17 @@ const RegisterUserPage = React.createClass({
         binding.set('isSync', false);
 
         window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
+	        binding.set('isSync', true);
             if(data.confirmed) {
                 verificationBinding.set('sms', true);
-                binding.atomically()
-                    .set('isSync',                      true)
-                    .set('isErrorPhoneVerification',    false)
-                    .commit();
+                binding.set('isErrorPhoneVerification', false);
 
                 verificationBinding.toJS('email') && self.setStepFunction('permissions');
             } else {
                 binding.set('isErrorPhoneVerification', true);
             }
         }).catch(() => {
+            binding.set('isSync', true);
             binding.set('isErrorPhoneVerification', true);
         });
     },
