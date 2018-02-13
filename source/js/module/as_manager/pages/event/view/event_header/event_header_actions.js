@@ -16,13 +16,12 @@ function downloadPdf(schoolId, eventId, event) {
 	 * with proper link. Not very clever solution, but..
 	 *
 	 * Also, there is only one template available, so handling that case too
+	 * Upd 13/02/2018: Now generate all types of events
 	 */
-	if(event.eventType === "EXTERNAL_SCHOOLS" && event.sport.players === 'TEAM') {
-		const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
-		window.open(url);
-	} else {
-		window.simpleAlert('Sorry, there is no pdf template for this kind of event');
-	}
+	
+	const url = window.apiBase + `/i/schools/${schoolId}/events/${eventId}/pdf`;
+	window.open(url);
+	
 }
 function downloadCSV(schoolId, event) {
 	let players = TeamHelper.getPlayers(schoolId, event);
