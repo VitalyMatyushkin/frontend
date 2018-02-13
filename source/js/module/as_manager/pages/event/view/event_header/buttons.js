@@ -121,6 +121,7 @@ const Buttons = React.createClass({
 
 		if(
 			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			this.props.activeSchoolId === this.props.event.inviterSchoolId &&
 			this.props.isUserSchoolWorker
 		) {
 			actionList.push({id: 'delete_event', text: 'Delete Event'});
@@ -180,6 +181,7 @@ const Buttons = React.createClass({
 
 		return (
 			this.props.isUserSchoolWorker &&
+			this.props.activeSchoolId === event.inviterSchoolId &&
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
 			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED &&
