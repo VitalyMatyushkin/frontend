@@ -141,7 +141,18 @@ const AddPermissionRequest = React.createClass({
 					/* this param was added later, so it is undefined on some schools. Default value is true.
 					 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
 					 */
-					availableForRegistration: { $ne: false }
+					availableForRegistration: { $ne: false },
+					/*
+						at least one role should be available
+					 */
+					$or: [
+						{'allowedPermissionPresets.ADMIN':		{ $ne: false }},
+						{'allowedPermissionPresets.MANAGER':	{ $ne: false }},
+						{'allowedPermissionPresets.TEACHER':	{ $ne: false }},
+						{'allowedPermissionPresets.COACH':		{ $ne: false }},
+						{'allowedPermissionPresets.STUDENT':	{ $ne: false }},
+						{'allowedPermissionPresets.PARENT':		{ $ne: false }}
+					]
 				},
 				limit: 20
 			}
