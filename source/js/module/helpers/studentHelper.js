@@ -239,19 +239,26 @@ const StudentHelper = {
 				age: this._calculateAge(student.birthday)
 			};
 
-			return window.Server.profilePermissions.get();
+			return window.Server.profilePermissions.get( {filter: {limit: 100}} );
 		}).then(permisions => {
-			permisions.forEach(permision => {
-				if (permision.schoolId === schoolId) {
+			for(let i = 0; i < permisions.length; i++) {
+				const permision = permisions[i];
+
+				if (permision.schoolId === schoolId && permision.preset === 'STUDENT') {
 					if (typeof permision.details !== 'undefined') {
-						studentData.classData = typeof permision.details.formId !== 'undefined' ? permision.details.formId : null;
-						studentData.houseData = typeof permision.details.houseId !== 'undefined' ? permision.details.houseId : null;
+						studentData.classData = typeof permision.details.formId !== 'undefined' ?
+							permision.details.formId :
+							null;
+						studentData.houseData = typeof permision.details.houseId !== 'undefined' ?
+							permision.details.houseId :
+							null;
 					} else {
 						studentData.classData = null;
 						studentData.houseData = null;
 					}
+					break;
 				}
-			});
+			}
 
 			if (studentData.classData !== null) {
 				window.Server.publicSchoolForm.get({schoolId: schoolId, formId: studentData.classData}).then(classData => {
