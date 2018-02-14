@@ -149,11 +149,13 @@ const InviteView = React.createClass({
 	getLinkText: function(isShowComments){
 		return isShowComments ? 'Hide chat' : 'Chat';
 	},
-	getStatusText: function(isArchive, accepted){
+	getStatusText: function(isAccepted, isRejected, isEventCanceled){
 		switch (true) {
-			case isArchive && accepted:
+			case isEventCanceled:
+				return 'Canceled';
+			case isAccepted:
 				return 'Accepted';
-			case isArchive && !accepted:
+			case isRejected:
 				return 'Declined';
 			default:
 				return '';
@@ -222,7 +224,9 @@ const InviteView = React.createClass({
 				ages 			= binding.get('event.ages'),
 				gender 			= binding.get('event.gender'),
 				message 		= binding.get('message') || '',
-				accepted 		= binding.get('status') === 'ACCEPTED',
+				isAccepted 		= binding.get('status') === 'ACCEPTED',
+				isRejected 		= binding.get('status') === 'REJECTED',
+				isEventCanceled = binding.get('event.status') === 'CANCELED',
 				eventDate 		= (new Date(binding.get('event.startTime'))),
 				startDate 		= DateHelper.getDateStringFromDateObject(eventDate),
 				hours 			= this.addZeroToFirst(eventDate.getHours()),
@@ -256,8 +260,8 @@ const InviteView = React.createClass({
 								<div>
 									<div className="eInvite_message">
 										{isArchive ?
-											<span className={ 'm' + this.getStatusText(isArchive, accepted) }>
-												{ this.getStatusText(isArchive, accepted) }
+											<span className={ 'm' + this.getStatusText(isAccepted, isRejected, isEventCanceled) }>
+												{ this.getStatusText(isAccepted, isRejected, isEventCanceled) }
 											</span>
 											: null}
 									</div>
