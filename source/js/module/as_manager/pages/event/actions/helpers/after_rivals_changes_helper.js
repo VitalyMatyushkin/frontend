@@ -21,7 +21,7 @@ const AfterRivalsChangesHelper = {
 		return  initName !== name;
 	},
 	getCommitPlayersForIndividualEvent: function(event, binding, order) {
-		if(event.sport.multiparty) {
+		if(TeamHelper.isNewEvent(event)) {
 			return this.getTeamPlayersByOrder(order, binding);
 		} else {
 			if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
@@ -35,7 +35,7 @@ const AfterRivalsChangesHelper = {
 		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.___teamManagerBinding.teamStudents`);
 	},
 	getInitPlayersForIndividualEvent: function(event, binding, order) {
-		if(event.sport.multiparty) {
+		if(TeamHelper.isNewEvent(event)) {
 			return this.getInitialTeamPlayersByOrder(order, binding);
 		} else {
 			if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {

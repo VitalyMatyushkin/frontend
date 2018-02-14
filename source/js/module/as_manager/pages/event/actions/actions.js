@@ -70,7 +70,7 @@ function commitIndividualPlayerChanges(activeSchoolId, binding) {
 	const	eventId = event.id;
 	let		players, initialPlayers;
 
-	if(event.sport.multiparty) {
+	if(TeamHelper.isNewEvent(event)) {
 		const selectedRivalIndex = binding.toJS('selectedRivalIndex');
 
 		players			= AfterRivalsChangesHelper.getCommitPlayersForIndividualEvent(event, binding, selectedRivalIndex);
