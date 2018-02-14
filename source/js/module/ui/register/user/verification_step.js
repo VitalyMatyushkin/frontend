@@ -113,6 +113,9 @@ const VerificationStep = React.createClass({
             <div className="eRegistration_verification">
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Email Verification Code</span>
+                    <div className={ this.getErrorEmailVerificationTextClassName() }>
+                        <span className="verify_error">Incorrect email code. Please try again.</span>
+                    </div>
                     <input className    = 'eRegistration_input'
                            ref          = 'emailCodeField'
                            value        = { this.state.emailCode }
@@ -142,11 +145,11 @@ const VerificationStep = React.createClass({
                         </a><br/>
                     </div>
                 </If>
-                <div className={ this.getErrorEmailVerificationTextClassName() }>
-                    <span className="verify_error">An error occurred please try again</span>
-                </div>
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Phone Verification Code</span>
+	                <div className={ this.getErrorPhoneVerificationTextClassName() }>
+		                <span className="verify_error">Incorrect phone code. Please try again.</span>
+	                </div>
                     <input  className   = 'eRegistration_input'
                             value       = { this.state.phoneCode }
                             placeholder = { this.props.isPhoneVerified ? 'Phone was verified' : 'Phone code' }
@@ -162,9 +165,6 @@ const VerificationStep = React.createClass({
                         <SVG icon="icon_check" classes="bButton_svg_check" />
                     </span>
                 </label>
-                <div className={ this.getErrorPhoneVerificationTextClassName() }>
-                    <span className="verify_error">An error occurred please try again</span>
-                </div>
                 <If condition={!this.props.isPhoneVerified}>
                     <div className="eRegisterMessage">
                         We have sent your verification sms to <b>{ this.props.phone }</b><br/>

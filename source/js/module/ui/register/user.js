@@ -365,9 +365,9 @@ const RegisterUserPage = React.createClass({
         return this.getDefaultBinding().set('isResentPhonePopupOpen', !this.isResentPhonePopupOpen());
     },
     render: function () {
-        const   self        = this,
-                binding     = self.getDefaultBinding(),
-                currentStep = binding.get('registerStep');
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				currentStep = binding.get('registerStep');
 
         let currentView = null;
 
