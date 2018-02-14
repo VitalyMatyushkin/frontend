@@ -72,9 +72,15 @@ UserModel.getRoleArray = function (user, statusPermission) {
 UserModel.getDetailsArray = function (user, statusPermission) {
 	let res = [];
 	if(user && user.permissions) {
-		res = UserModel.filterPermission(user.permissions, statusPermission).map(item =>
-			item.details.isSolePeTeacher ? 'Sole PE Teacher' : ''
-		);
+		res = UserModel.filterPermission(user.permissions, statusPermission).map(item => {
+			let result = '';
+			if (item.details.isSolePeTeacher) {
+				result = 'Sole PE Teacher';
+			} else if (item.details.isTrial) {
+				result = 'Trial';
+			}
+			return result;
+		});
 	}
 
 	return res;
