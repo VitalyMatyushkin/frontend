@@ -373,7 +373,7 @@ export const ClubForm = (React as any).createClass({
 								field		= 'priceType'
 								type		= 'dropdown'
 								options		= { ClubsConst.PRICING_ARRAY }
-								onSelect	= { this.handleChangePriceType }
+								onSelect	= { this.handleChangePriceType() }
 							>
 								Price Type
 							</FormField>
