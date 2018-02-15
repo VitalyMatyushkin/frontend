@@ -40,12 +40,12 @@ interface Achievement {
 
 const clickableColumn = ['playedCount', 'wonCount', 'drewCount', 'lostCount'];
 
-export const AchievementTable = (React as any).createClass({
-	renderHead: function(titles: string[]): React.ReactNode {
+export class AchievementTable extends React.Component<AchievementTableProps, {}> {
+	renderHead(titles: string[]): React.ReactNode {
 		const columns = titles.map( (title, i) => {
 			return <th key={title + i}>{title}</th>;
 		});
-		
+
 		return (
 			<thead>
 			<tr>
@@ -54,9 +54,9 @@ export const AchievementTable = (React as any).createClass({
 			</tr>
 			</thead>
 		);
-	},
-	
-	renderBody: function(titles: string[], achievementData: Achievement[]): React.ReactNode {
+	}
+
+	renderBody(titles: string[], achievementData: Achievement[]): React.ReactNode {
 		const rows = achievementData.filter(rowObj => rowObj.playedCount !== 0).map( (rowObj, i) => {
 			const child = this.props.children.find(c => c.id === rowObj.userId);
 			rowObj.name = `${child.firstName} ${child.lastName}`;
@@ -75,15 +75,15 @@ export const AchievementTable = (React as any).createClass({
 				</tr>
 			);
 		});
-		
+
 		return (<tbody>{rows}</tbody>);
-	},
-	
-	render: function(){
-		const	achievement			= this.props.achievement,
-				titles				= ['name', 'wonCount', 'drewCount', 'lostCount', 'playedCount'],
-				displayTitles		= ['Name', 'Won', 'Drew', 'Lost', 'Played'];
-		
+	}
+
+	render() {
+		const	achievement     = this.props.achievement,
+				titles          = ['name', 'wonCount', 'drewCount', 'lostCount', 'playedCount'],
+				displayTitles   = ['Name', 'Won', 'Drew', 'Lost', 'Played'];
+
 		return (
 			<div className="eAchievement_scoreTableWrapper">
 				<div className="table-responsive">
@@ -95,4 +95,4 @@ export const AchievementTable = (React as any).createClass({
 			</div>
 		);
 	}
-});
+};

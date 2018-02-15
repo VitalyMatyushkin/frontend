@@ -74,8 +74,6 @@ export const AchievementAllSchools = (React as any).createClass({
 	
 	renderEvents: function(): React.ReactNode | null {
 		const 	binding 		= this.getDefaultBinding(),
-				rootBinding 	= this.getMoreartyContext().getBinding(),
-				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
 				typeChildEvents	= binding.toJS('typeChildEvents'),
 				schoolId        = binding.toJS('schoolIdForEvents'),
 				childId         = binding.toJS('childIdForEvents'),
@@ -86,7 +84,7 @@ export const AchievementAllSchools = (React as any).createClass({
 			return (
 				<ChildrenEvents
 					key				= { `${childId}_${sportId}_${result}` }
-					activeSchoolId 	= { activeSchoolId }
+					activeSchoolId 	= { schoolId }
 					childId			= { childId }
 					loadEvents		= { page => {
 						return AchievementActions.getChildTeamEvents(page, schoolId, childId, sportId, result, 'STUDENT')

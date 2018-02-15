@@ -71,21 +71,22 @@ export const AchievementAllChildren = (React as any).createClass({
 	
 	renderEvents: function(): React.ReactNode | null {
 		const 	binding 		= this.getDefaultBinding(),
-				rootBinding 	= this.getMoreartyContext().getBinding(),
-				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
 				typeChildEvents	= binding.toJS('typeChildEvents'),
 				childId			= binding.toJS('childIdForEvents'),
 				sportId 		= binding.toJS('currentAchievementSport').id,
 				result 			= titleToFilterResultType[typeChildEvents];
-		
+
 		if (binding.toJS('showChildEvents')) {
+			const currentChild = this.props.children.find(child => child.id === childId);
+			const schoolId = currentChild.schoolId;
+
 			return (
 				<ChildrenEvents
 					key				= { `${childId}_${sportId}_${result}` }
-					activeSchoolId 	= { activeSchoolId }
+					activeSchoolId 	= { this.props.schoolId }
 					childId			= { childId }
 					loadEvents		= { page =>
-						{return AchievementActions.getChildTeamEvents(page, this.props.schoolId, childId, sportId, result, this.props.type)}
+						{return AchievementActions.getChildTeamEvents(page, schoolId, childId, sportId, result, this.props.type)}
 					}
 				/>
 			);
