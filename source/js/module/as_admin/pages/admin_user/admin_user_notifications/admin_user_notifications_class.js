@@ -1,6 +1,8 @@
 /**
  * Created by Woland on 03.05.2017.
  */
+import {DateHelper} from "../../../../helpers/date_helper";
+
 const 	{DataLoader} 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty 		= require('morearty'),
@@ -81,7 +83,10 @@ class AdminUserNotificationsClass {
 				text:'Created at',
 				cell:{
 					dataField:'createdAt',
-					type: 'date'
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getCreatedAt.bind(this)
+					}
 				},
 				filter:{
 					type:'between-date'
@@ -89,7 +94,11 @@ class AdminUserNotificationsClass {
 			}
 		];
 	}
-	
+
+	getCreatedAt(item) {
+		return DateHelper.getDateLongTimeString(new Date(item.createdAt));
+	}
+
 	getDataLoadedHandle(){
 		const binding = this.getDefaultBinding();
 		

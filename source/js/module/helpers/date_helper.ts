@@ -58,6 +58,11 @@ export const DateHelper = {
 		return strDateTime;
 	},
 
+	getDateLongTimeString: function(dateTime: Date): string {
+		const strDateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm:ss');
+		return strDateTime;
+	},
+
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
 	toLocal:function(str: string): string {
 		return this.getDateStringFromDateObject(new Date(str));
