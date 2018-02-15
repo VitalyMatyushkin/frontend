@@ -981,9 +981,11 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 	}
 }
 
-function getCountPoints(event, teamBundleName, order) {
+function getCountPoints(event, teamBundleName, _order) {
 	const	self		= this,
 			teamBundles	= self.getTeamBundles(event);
+
+	let order = _order;
 
 	let	scoreBundleName,
 		resultIdFieldName,
@@ -1018,6 +1020,13 @@ function getCountPoints(event, teamBundleName, order) {
 				resultIdFieldName		= 'schoolId';
 				dataBundleIdFieldName	= 'id';
 				dataBundle				= teamBundles['schoolsData'];
+
+				// sometimes we need to correct order too
+				if(event.individualsData.length !== 0) {
+					const currentPlayer = event.individualsData[0];
+
+					order = dataBundle.findIndex(data => data.id === currentPlayer.schoolId);
+				}
 			} else {
 				scoreBundleName			= 'individualScore';
 				resultIdFieldName		= 'userId';

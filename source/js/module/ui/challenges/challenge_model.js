@@ -98,16 +98,16 @@ ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSc
 			event.inviterSchoolId = undefined;
 			event.inviterSchool = undefined;
 		}
-		const   points1 = TeamHelper.callFunctionForLeftContext(
-					activeSchoolId,
-					event,
-					TeamHelper.getCountPoints.bind(TeamHelper, event)
-				),
-				points2 = TeamHelper.callFunctionForRightContext(
-					activeSchoolId,
-					event,
-					TeamHelper.getCountPoints.bind(TeamHelper, event)
-				);
+		const points1 = TeamHelper.callFunctionForLeftContext(
+				activeSchoolId,
+				event,
+				TeamHelper.getCountPoints.bind(TeamHelper, event)
+			),
+			points2 = TeamHelper.callFunctionForRightContext(
+				activeSchoolId,
+				event,
+				TeamHelper.getCountPoints.bind(TeamHelper, event)
+			);
 
 		let result1, result2;
 		if (SportHelper.isCricket(event.sport.name)) {
