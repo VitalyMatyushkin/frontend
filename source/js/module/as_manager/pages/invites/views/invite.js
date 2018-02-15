@@ -24,7 +24,8 @@ const InviteView = React.createClass({
 	activeSchoolId: undefined,
 	propTypes: {
 		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']).isRequired,
-		onDecline	: React.PropTypes.func
+		onDecline	: React.PropTypes.func,
+		onCancel	: React.PropTypes.func
 	},
 
 	componentWillMount: function() {
@@ -149,9 +150,9 @@ const InviteView = React.createClass({
 	getLinkText: function(isShowComments){
 		return isShowComments ? 'Hide chat' : 'Chat';
 	},
-	getStatusText: function(isAccepted, isRejected, isEventCanceled){
+	getStatusText: function(isAccepted, isRejected, isEventCanceled, isInviteCanceled){
 		switch (true) {
-			case isEventCanceled:
+			case isEventCanceled || isInviteCanceled:
 				return 'Canceled';
 			case isAccepted:
 				return 'Accepted';
@@ -206,38 +207,39 @@ const InviteView = React.createClass({
 		}
 	},
 	render: function() {
-		const	binding			= this.getDefaultBinding(),
-				inviteId		= binding.get('id'),
-				inviterSchool 	= binding.toJS('inviterSchool'),
-				invitedSchool 	= binding.toJS('invitedSchool'),
-				invitedSchools 	= binding.toJS('event.invitedSchools'),
-				rival			= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
-				inviteClasses 	= classNames({
+		const	binding				= this.getDefaultBinding(),
+				inviteId			= binding.get('id'),
+				inviterSchool 		= binding.toJS('inviterSchool'),
+				invitedSchool 		= binding.toJS('invitedSchool'),
+				invitedSchools 		= binding.toJS('event.invitedSchools'),
+				rival				= this.getRivalSchool(inviterSchool, invitedSchool, this.activeSchoolId),
+				inviteClasses 		= classNames({
 					bInvite: true,
 					mNotRedeemed: !binding.get('redeemed')
 				}),
-				isInbox 		= this.props.type === 'inbox',
-				isOutBox 		= this.props.type === 'outbox',
-				isArchive 		= binding.get('status') !== "NOT_READY",
-				schoolPicture 	= this.getParticipantEmblem(inviterSchool, rival),
-				sport 			= binding.get('sport.name'),
-				ages 			= binding.get('event.ages'),
-				gender 			= binding.get('event.gender'),
-				message 		= binding.get('message') || '',
-				isAccepted 		= binding.get('status') === 'ACCEPTED',
-				isRejected 		= binding.get('status') === 'REJECTED',
-				isEventCanceled = binding.get('event.status') === 'CANCELED',
-				eventDate 		= (new Date(binding.get('event.startTime'))),
-				startDate 		= DateHelper.getDateStringFromDateObject(eventDate),
-				hours 			= this.addZeroToFirst(eventDate.getHours()),
-				minutes 		= this.addZeroToFirst(eventDate.getMinutes()),
-				point 			= binding.toJS('event.venue.postcodeData.point'),
-				venue 			= binding.toJS('event.venue'),
-				teamData 		= binding.toJS('event.teamsData'),
-				toggleLink		= Boolean(binding.sub('inviteComments').toJS('expandedComments')),
-				typeBinding		= binding.toJS('isConfirmPopupType') ? binding.toJS('isConfirmPopupType') : '',
-				isConfirmPopup 	= binding.toJS('isConfirmPopup') ? binding.toJS('isConfirmPopup') : false,
-				venueArea 		= venue.postcodeId ? <Map point={point} />
+				isInbox 			= this.props.type === 'inbox',
+				isOutBox 			= this.props.type === 'outbox',
+				isArchive 			= binding.get('status') !== "NOT_READY",
+				schoolPicture 		= this.getParticipantEmblem(inviterSchool, rival),
+				sport 				= binding.get('sport.name'),
+				ages 				= binding.get('event.ages'),
+				gender 				= binding.get('event.gender'),
+				message 			= binding.get('message') || '',
+				isAccepted 			= binding.get('status') === 'ACCEPTED',
+				isRejected 			= binding.get('status') === 'REJECTED',
+				isEventCanceled 	= binding.get('event.status') === 'CANCELED',
+				isInviteCanceled 	= binding.get('status') === 'CANCELED',
+				eventDate 			= (new Date(binding.get('event.startTime'))),
+				startDate 			= DateHelper.getDateStringFromDateObject(eventDate),
+				hours 				= this.addZeroToFirst(eventDate.getHours()),
+				minutes 			= this.addZeroToFirst(eventDate.getMinutes()),
+				point 				= binding.toJS('event.venue.postcodeData.point'),
+				venue 				= binding.toJS('event.venue'),
+				teamData 			= binding.toJS('event.teamsData'),
+				toggleLink			= Boolean(binding.sub('inviteComments').toJS('expandedComments')),
+				typeBinding			= binding.toJS('isConfirmPopupType') ? binding.toJS('isConfirmPopupType') : '',
+				isConfirmPopup 		= binding.toJS('isConfirmPopup') ? binding.toJS('isConfirmPopup') : false,
+				venueArea 			= venue.postcodeId ? <Map point={point} />
 									: <span className="eInvite_venue">Venue to be defined</span>;
 									
 		return (
@@ -260,8 +262,8 @@ const InviteView = React.createClass({
 								<div>
 									<div className="eInvite_message">
 										{isArchive ?
-											<span className={ 'm' + this.getStatusText(isAccepted, isRejected, isEventCanceled) }>
-												{ this.getStatusText(isAccepted, isRejected, isEventCanceled) }
+											<span className={ 'm' + this.getStatusText(isAccepted, isRejected, isEventCanceled, isInviteCanceled) }>
+												{ this.getStatusText(isAccepted, isRejected, isEventCanceled, isInviteCanceled) }
 											</span>
 											: null}
 									</div>
@@ -289,7 +291,7 @@ const InviteView = React.createClass({
 										isConfirmPopup	= {isConfirmPopup}
 										inviteId		= {inviteId}
 										onClosePopup	= {this.closePopup}
-										onDecline		= {this.props.onDecline}
+										onDecline		= {typeBinding === 'cancel' ? this.props.onCancel : this.props.onDecline}
 										commentText		= ''
 				/>
 			</div>

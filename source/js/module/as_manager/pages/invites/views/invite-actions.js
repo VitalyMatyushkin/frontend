@@ -68,6 +68,27 @@ const InviteActions = {
 				}
 			)
 		});
+	},
+	
+	cancelInvite: function (schoolId, inviteId, binding, commentText) {
+		return window.Server.cancelSchoolInvite.post({
+			schoolId: schoolId,
+			inviteId: inviteId
+		})
+		.then(() => {
+			const	invites = binding.toJS('models'),
+					newList = invites.filter(i => i.id !== inviteId);
+			
+			binding.set('models', Immutable.fromJS(newList));
+			return window.Server.schoolInviteComments.post(
+				{
+					schoolId: schoolId,
+					inviteId: inviteId
+				}, {
+					text: "Cancel by opponent. " + commentText
+				}
+			)
+		});
 	}
 };
 

@@ -198,6 +198,7 @@ export class ServiceList {
 	schoolArchiveInvites		: Service;
 	acceptSchoolInvite			: Service;
 	declineSchoolInvite			: Service;
+	cancelSchoolInvite			: Service;
 	schoolInviteComments		: Service;
 	schoolInviteCommentsCount	: Service;
 	inviteInboxCount			: Service;
@@ -521,6 +522,7 @@ export class ServiceList {
 		this.schoolArchiveInvites		= new Service('/i/schools/{schoolId}/invites/archive', binding);
 		this.acceptSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
 		this.declineSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
+		this.cancelSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/cancel', binding);
 		this.schoolInviteComments		= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments', binding);
 		this.schoolInviteCommentsCount	= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments/count', binding);
 		this.inviteInboxCount			= new Service('/i/schools/{schoolId}/invites/inbox/count', binding);

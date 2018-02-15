@@ -68,10 +68,11 @@ const InviteList = React.createClass({
 
 				return (
 					<Invite
-						key={reactKey}
-						type={this.props.type}
-						binding={inviteBinding}
-						onDecline={this.onDecline}
+						key 		= { reactKey }
+						type 		= { this.props.type }
+						binding 	= { inviteBinding }
+						onDecline 	= { this.onDecline }
+						onCancel  	= { this.onCancel }
 					/>
 				);
 			})
@@ -84,6 +85,15 @@ const InviteList = React.createClass({
 		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
 		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText).then(() => {
+			rootBinding.set('isInvitesCountNeedUpdate', true);
+		});
+	},
+	onCancel:function (inviteId, commentText) {
+		const binding = this.getDefaultBinding();
+		const rootBinding = this.getMoreartyContext().getBinding();
+		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+		
+		inviteActions.cancelInvite(activeSchoolId, inviteId, binding, commentText).then(() => {
 			rootBinding.set('isInvitesCountNeedUpdate', true);
 		});
 	},
