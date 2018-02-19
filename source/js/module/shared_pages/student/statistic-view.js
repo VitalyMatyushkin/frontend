@@ -49,7 +49,7 @@ const StatisticView = React.createClass({
 									<AchievementOneChild
 										schoolId={this.props.activeSchoolId}
 										activeChildId={this.getStudentId()}
-										children={[this.getStudentProfile()]}
+										child={this.getStudentProfile()}
 										binding={binding.sub('achievementOneChild')}
 										type={this.props.type}
 									/>

@@ -1,6 +1,7 @@
 /**
  * Created by Anatoly on 17.03.2016.
  */
+
 import * as	React from 'react';
 import * as	Morearty from 'morearty';
 import * as	Immutable from 'immutable';
@@ -17,7 +18,7 @@ export const AchievementOneChild = (React as any).createClass({
 	propTypes: {
 		schoolId: (React as any).PropTypes.string,
 		activeChildId: (React as any).PropTypes.string.isRequired,
-		children: (React as any).PropTypes.array.isRequired,
+		child: (React as any).PropTypes.array.isRequired,
 		type: (React as any).PropTypes.string.isRequired
 	},
 	componentWillMount:function(){
@@ -64,7 +65,7 @@ export const AchievementOneChild = (React as any).createClass({
 			return (
 				<AchievementTable
 					achievement={binding.toJS('childAchievement')}
-					children={this.props.children}
+					children={[this.props.child]}
 					showEvents={this.showEvents}
 				/>
 			);
@@ -73,17 +74,18 @@ export const AchievementOneChild = (React as any).createClass({
 		}
 	},
 	
-	showEvents: function(title: string, childId: string): void {
-		const 	binding = this.getDefaultBinding();
+	showEvents: function(title: string): void {
+		const binding = this.getDefaultBinding();
+
 		binding.set('showChildEvents', true);
 		binding.set('typeChildEvents', Immutable.fromJS(title));
-		binding.set('childIdForEvents', Immutable.fromJS(childId));
 	},
 	
 	renderEvents: function(): React.ReactNode | null {
 		const 	binding 		= this.getDefaultBinding(),
 				typeChildEvents	= binding.toJS('typeChildEvents'),
-				childId			= binding.toJS('childIdForEvents'),
+				childId			= this.props.child.id,
+				schoolId        = this.props.child.schoolId,
 				sportId 		= binding.toJS('currentAchievementSport').id,
 				result 			= titleToFilterResultType[typeChildEvents];
 		
@@ -91,10 +93,10 @@ export const AchievementOneChild = (React as any).createClass({
 			return (
 				<ChildrenEvents
 					key				= { `${childId}_${sportId}_${result}` }
-					activeSchoolId 	= { this.props.schoolId }
+					activeSchoolId 	= { schoolId }
 					childId			= { childId }
 					loadEvents		= { page =>
-						AchievementActions.getChildTeamEvents(page, this.props.schoolId, childId, sportId, result, this.props.type)
+						AchievementActions.getChildTeamEvents(page, schoolId, childId, sportId, result, this.props.type)
 					}
 				/>
 			);

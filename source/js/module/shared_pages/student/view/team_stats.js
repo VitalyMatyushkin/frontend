@@ -51,7 +51,6 @@ const TeamStats = React.createClass({
 
 		const 	role 		= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
 				isParent 	= role === "PARENT";
-		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
 
 		let eventsByDate;
 
@@ -74,7 +73,10 @@ const TeamStats = React.createClass({
                             id={'challenge-' + event.id}
                     >
 					<h4>{event.name}</h4>
-					<EventRivals event={event} activeSchoolId={activeSchoolId} />
+					<EventRivals
+						event={event}
+						activeSchoolId={self.getDefaultBinding().toJS('schoolId')}
+					/>
 					{/*<div className="eAchievement_com_container">
                         <div className="eChallenge_comments">
                             {comment}

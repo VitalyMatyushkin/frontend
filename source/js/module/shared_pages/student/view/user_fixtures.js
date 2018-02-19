@@ -59,13 +59,7 @@ const UserFixtures = React.createClass({
         }).count();
     },
     getEvents: function (date,theData) {
-		const   self 		= this,
-				binding 	= self.getDefaultBinding(),
-				rootBinding = self.getMoreartyContext().getBinding();
-
-		const 	role 		= SessionHelper.getRoleFromSession(rootBinding.sub('userData')),
-				isParent 	= role === "PARENT";
-		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
+		const self = this;
 
         let eventsByDate;
         if(theData && theData.schoolEvent) {
@@ -92,7 +86,10 @@ const UserFixtures = React.createClass({
 						<Sport name={sportName} />
 						<span>{sportName}</span>
 					</div>
-					<GameType event={event} activeSchoolId={activeSchoolId} />
+					<GameType
+						event={event}
+						activeSchoolId={self.getDefaultBinding().toJS('schoolId')}
+					/>
 					<div className="eChallenge_type">{event.name}</div>
 					<div className="eChallenge_type">
                         {EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}
