@@ -1,46 +1,62 @@
-const	React							= require('react'),
-		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
-		debounce						= require('debounce');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as debounce from 'debounce';
 
 // Main components
-const	classNames						= require('classnames'),
-		Promise							= require('bluebird'),
-		propz							= require('propz'),
-		{If}							= require('../../../ui/if/if'),
-		Loader							= require('../../../ui/loader'),
-		{Button}						= require('module/ui/button/button');
+import * as classNames from 'classnames';
+import * as Promise from 'bluebird';
+import * as propz from 'propz';
+import {If} from '../../../ui/if/if';
+import * as Loader from '../../../ui/loader';
+import {Button} from 'module/ui/button/button';
 
 // Special components
-const	Manager							= require('../../../ui/managers/manager'),
-		EventForm						= require('./manager/event_form/event_form'),
-		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup');
+import * as Manager from '../../../ui/managers/manager';
+import {EventForm} from './manager/event_form/event_form';
+import {SavingPlayerChangesPopup} from './saving_player_changes_popup/saving_player_changes_popup';
 
 // Helpers
-const	SavingEventHelper					= require('../../../helpers/saving_event_helper'),
-		EventConsts							= require('../../../helpers/consts/events'),
-		EventHelper							= require('../../../helpers/eventHelper'),
-		LocalEventHelper					= require('module/as_manager/pages/events/eventHelper'),
-		TeamHelper							= require('../../../ui/managers/helpers/team_helper'),
-		RivalsHelper						= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
-		SavingPlayerChangesPopupHelper		= require('./saving_player_changes_popup/helper'),
-		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
-		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
-		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
+import * as SavingEventHelper from '../../../helpers/saving_event_helper';
+import * as EventConsts from '../../../helpers/consts/events';
+import * as EventHelper from '../../../helpers/eventHelper';
+import {LocalEventHelper} from 'module/as_manager/pages/events/eventHelper';
+import * as TeamHelper from '../../../ui/managers/helpers/team_helper';
+import * as RivalsHelper from 'module/ui/managers/rival_chooser/helpers/rivals_helper';
+import {SavingPlayerChangesPopupHelper} from './saving_player_changes_popup/helper';
+import {ManagerTypes} from 'module/ui/managers/helpers/manager_types';
+import {PlayerChoosersTabsModelFactory} from 'module/helpers/player_choosers_tabs_models_factory';
+import {TeamManagerActions} from 'module/helpers/actions/team_manager_actions';
+import {Event} from './events';
 
-const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
+import {EVENT_FORM_MODE} from 'module/as_manager/pages/events/manager/event_form/consts/consts';
 
-const	EventFormActions				= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
+import {EventFormActions} from 'module/as_manager/pages/events/manager/event_form/event_form_actions';
 
 // Styles
-const	ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
+import '../../../../../styles/pages/events/b_events_manager.scss';
 
-const EventManager = React.createClass({
+interface EventManagerProps {
+	activeSchoolId: string
+}
+
+interface EventBody {
+	gender:					string
+	// invited
+	// convert client event type const to server event type const
+	eventType:				string
+	ages:					string[]
+	sportId:				string
+	startTime:				string
+	endTime:				string
+	startRegistrationTime:	string
+	endRegistrationTime:	string
+	invitedSchoolIds?:      string[]
+	houses?:                any
+}
+
+export const EventManager = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-
-	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
-	},
 
 	listeners: [],
 	onDebounceChangeSaveButtonState: undefined,
@@ -50,8 +66,7 @@ const EventManager = React.createClass({
 	 * Function check manager data and set corresponding value to isControlButtonActive
 	 */
 	changeSaveButtonState: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		binding.set('isSaveButtonActive', this.isSaveButtonActive());
 	},
@@ -96,8 +111,7 @@ const EventManager = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		LocalEventHelper.setParamsFromUrl(this);
 		this.initPlayerChoosersTabsModel();
@@ -107,7 +121,7 @@ const EventManager = React.createClass({
 			.then(() => {
 				switch (this.mode) {
 					case EventHelper.EVENT_CREATION_MODE.COPY:
-						return LocalEventHelper.setEvent(this, this.eventId, EventFormConsts.EVENT_FORM_MODE.SCHOOL);
+						return LocalEventHelper.setEvent(this, this.eventId, EVENT_FORM_MODE.SCHOOL);
 					case EventHelper.EVENT_CREATION_MODE.ANOTHER:
 						return LocalEventHelper.setDateFromEventByEventId(this, this.eventId);
 					default:
@@ -130,15 +144,15 @@ const EventManager = React.createClass({
 		// create debounce decorator for changeControlButtonState func
 		this.onDebounceChangeSaveButtonState = debounce(this.changeSaveButtonState, 200);
 	},
-	initPlayerChoosersTabsModel: function () {
+	initPlayerChoosersTabsModel: function (): void {
 		this.playerChoosersTabsModel = PlayerChoosersTabsModelFactory.createTabsModelByManagerType(
 			ManagerTypes.Default
 		);
 	},
-	initTeamManagerActions: function () {
+	initTeamManagerActions: function (): void {
 		this.teamManagerActions = new TeamManagerActions( {schoolId: this.props.activeSchoolId} );
 	},
-	isShowAddTeamButton: function() {
+	isShowAddTeamButton: function(): boolean {
 		const	binding	= this.getDefaultBinding();
 
 		const	event	= binding.toJS('model'),
@@ -147,7 +161,7 @@ const EventManager = React.createClass({
 
 		return TeamHelper.isInternalEventForTeamSport(event) && sport.multiparty;
 	},
-	setDefaultStateForActiveSchoolRivalsForInterSchoolEvent: function() {
+	setDefaultStateForActiveSchoolRivalsForInterSchoolEvent: function(): void {
 		const binding = this.getDefaultBinding();
 
 		const rivals = binding.toJS('rivals');
@@ -170,65 +184,65 @@ const EventManager = React.createClass({
 
 		binding.set('rivals', Immutable.fromJS(updRivals));
 	},
-	setEvent: function(eventId) {
+	setEvent: function(eventId: string): Promise<any> {
 		const binding = this.getDefaultBinding();
 
 		let event;
 
 		// TODO check inter-schools case
-		return window.Server.schoolEvent.get({
+		return (window as any).Server.schoolEvent.get({
 			schoolId	: this.props.activeSchoolId,
 			eventId		: eventId
 		})
-		.then(_event => {
-			event = _event;
+			.then(_event => {
+				event = _event;
 
-			return TeamHelper.getSchoolsArrayWithFullDataByEvent(event);
-		})
-		.then(schoolsData => {
-			// Schools data need for rival helper
-			event.schoolsData = schoolsData;
+				return TeamHelper.getSchoolsArrayWithFullDataByEvent(event);
+			})
+			.then(schoolsData => {
+				// Schools data need for rival helper
+				event.schoolsData = schoolsData;
 
-			delete event.status;
-			// It's a convertation event data to EventForm component format,
-			// because event
-			event.gender = this.convertServerGenderConstToClient(event);
-			event.type = this.convertServerEventTypeConstToClient(event);
+				delete event.status;
+				// It's a convertation event data to EventForm component format,
+				// because event
+				event.gender = this.convertServerGenderConstToClient(event);
+				event.type = this.convertServerEventTypeConstToClient(event);
 
-			// TODO need reviver for postcode on server side
-			const postcodeId = propz.get(event, ['venue', 'postcodeData', '_id']);
-			if(typeof postcodeId !== 'undefined') {
-				event.venue.postcodeData.id = postcodeId;
-			}
-			if (event.venue.venueType === "TBD") {
-				event.venue.postcodeData = {
-					id: "TBD",
-					postcode: "TBD"
+				// TODO need reviver for postcode on server side
+				const postcodeId = propz.get(event, ['venue', 'postcodeData', '_id'], undefined);
+				if(typeof postcodeId !== 'undefined') {
+					event.venue.postcodeData.id = postcodeId;
 				}
-			}
-			const rivals = this.getRivals(event);
-			binding.atomically()
-				.set('isSubmitProcessing',				false)
-				.set('isSavingChangesModePopupOpen',	false)
-				.set('model',							Immutable.fromJS(event))
-				.set('model.sportModel',				Immutable.fromJS(event.sport))
-				.set('rivals',							Immutable.fromJS(rivals))
-				.set('error',							Immutable.fromJS([
-					{
-						isError: false,
-						text: ""
-					},
-					{
-						isError: false,
-						text: ""
+				if (event.venue.venueType === "TBD") {
+					event.venue.postcodeData = {
+						id: "TBD",
+						postcode: "TBD"
 					}
-				]))
-				.commit();
+				}
+				const rivals = this.getRivals(event);
+				binding.atomically()
+					.set('isSubmitProcessing',				false)
+					.set('isSavingChangesModePopupOpen',	false)
+					.set('model',							Immutable.fromJS(event))
+					.set('model.sportModel',				Immutable.fromJS(event.sport))
+					.set('rivals',							Immutable.fromJS(rivals))
+					.set('error',							Immutable.fromJS([
+						{
+							isError: false,
+							text: ""
+						},
+						{
+							isError: false,
+							text: ""
+						}
+					]))
+					.commit();
 
-			return true;
-		});
+				return true;
+			});
 	},
-	convertServerGenderConstToClient: function(event) {
+	convertServerGenderConstToClient: function(event: Event): string {
 		switch (event.gender) {
 			case EventConsts.EVENT_GENDERS_SERVER.FEMALE_ONLY:
 				return EventConsts.EVENT_GENDERS.FEMALE_ONLY;
@@ -236,23 +250,22 @@ const EventManager = React.createClass({
 				return EventConsts.EVENT_GENDERS.MALE_ONLY;
 			case EventConsts.EVENT_GENDERS_SERVER.MIXED:
 				return EventConsts.EVENT_GENDERS.MIXED;
-		};
+		}
 	},
-	convertServerEventTypeConstToClient: function(event) {
+	convertServerEventTypeConstToClient: function(event: Event) {
 		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
 	},
-	setSchoolInfo: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	setSchoolInfo: function(): Promise<any> {
+		const binding	= this.getDefaultBinding();
 
 		let schoolData;
 		//get school data
-		return window.Server.school.get(this.props.activeSchoolId)
+		return (window as any).Server.school.get(this.props.activeSchoolId)
 			.then(_schoolData => {
 				schoolData = _schoolData;
 
 				// get forms data
-				return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
+				return (window as any).Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
 			})
 			.then(forms => {
 				schoolData.forms = forms;
@@ -271,19 +284,18 @@ const EventManager = React.createClass({
 			});
 	},
 	componentWillUnmount: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		this.listeners.forEach(l => binding.removeListener(l));
 		binding.clear();
 	},
-	addListeners: function() {
+	addListeners: function(): void {
 		this.addListenerForTeamManager();
 		if(this.mode === 'copy') {
 			this.addListenersForEventManagerBase();
 		}
 	},
-	addListenerForTeamManager: function() {
+	addListenerForTeamManager: function(): void {
 		const binding = this.getDefaultBinding();
 
 		this.listeners.push(
@@ -298,7 +310,7 @@ const EventManager = React.createClass({
 				})
 		);
 	},
-	addListenersForEventManagerBase: function() {
+	addListenersForEventManagerBase: function(): void {
 		const binding = this.getDefaultBinding();
 
 		this.listeners.push(binding.sub('model.sportId').addListener(() => this.clearRivalsBinding()));
@@ -306,7 +318,7 @@ const EventManager = React.createClass({
 		this.listeners.push(binding.sub('model.ages').addListener(() => this.clearRivalsBinding()));
 		this.listeners.push(binding.sub('model.type').addListener(() => this.clearRivalsBinding()));
 	},
-	clearRivalsBinding: function() {
+	clearRivalsBinding: function(): void {
 		const	binding	= this.getDefaultBinding(),
 				step	= binding.get('step');
 
@@ -324,10 +336,9 @@ const EventManager = React.createClass({
 			binding.set('rivals', Immutable.fromJS(rivals));
 		}
 	},
-	onSelectDate: function (newDate) {
+	onSelectDate: function (newDate: Date): void {
 		// TODO Why do we store date in ISO format?
-		const	self = this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		// just copy new date
 		// because we don't want modify arg
@@ -335,7 +346,7 @@ const EventManager = React.createClass({
 
 		// default start time values
 		let		hours			= 10,
-				minute			= 0;
+			minute			= 0;
 		const	currStartDate	= binding.toJS('model.startTime');
 		// get start time values(hours and minutes) from current start time if current start time isn't undefined
 		if (
@@ -358,15 +369,14 @@ const EventManager = React.createClass({
 			.set('model.endRegistrationTime',	newDateCopy.toISOString())
 			.commit();
 	},
-	toNext: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+	toNext: function (): void {
+		const binding = this.getDefaultBinding();
 
 		binding.update('step', function (step) {
 			return step + 1;
 		});
 	},
-	toBack: function () {
+	toBack: function (): void {
 		const binding = this.getDefaultBinding();
 		binding.set('step', 1);
 
@@ -375,7 +385,7 @@ const EventManager = React.createClass({
 			this.setDefaultStateForActiveSchoolRivalsForInterSchoolEvent();
 		}
 	},
-	changeRivalFocusToErrorForm: function() {
+	changeRivalFocusToErrorForm: function(): void {
 		const binding = this.getDefaultBinding();
 
 		let incorrectRivalIndex = -1;
@@ -396,7 +406,7 @@ const EventManager = React.createClass({
 				.commit();
 		}
 	},
-	isSaveButtonActive: function() {
+	isSaveButtonActive: function(): boolean {
 		const binding = this.getDefaultBinding();
 
 		if(
@@ -409,9 +419,8 @@ const EventManager = React.createClass({
 			return false;
 		}
 	},
-	handleClickFinishButton: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	handleClickFinishButton: function (): void {
+		const binding	= this.getDefaultBinding();
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
@@ -422,26 +431,26 @@ const EventManager = React.createClass({
 
 			switch (true) {
 				case (
-						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
+					TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
+					!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers, this.props.activeSchoolId) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
+					TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
+					SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers, this.props.activeSchoolId) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
+					TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
+					SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers, this.props.activeSchoolId) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
+					TeamHelper.isTeamDataCorrect(validationData) && TeamHelper.isTeamSport(event) &&
+					!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers, this.props.activeSchoolId) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers, this.props.activeSchoolId)
 				):
 					binding.set('isSubmitProcessing', true);
 					this.submit();
@@ -453,7 +462,7 @@ const EventManager = React.createClass({
 				// If teams data isn't correct
 				case !TeamHelper.isTeamDataCorrect(validationData):
 					// So, let's show form with incorrect data
-					self.changeRivalFocusToErrorForm();
+					this.changeRivalFocusToErrorForm();
 					break;
 			}
 		}
@@ -462,8 +471,7 @@ const EventManager = React.createClass({
 		return this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 	},
 	submit: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
 		const eventModel = binding.toJS('model');
 
@@ -471,17 +479,17 @@ const EventManager = React.createClass({
 
 		switch (true) {
 			case TeamHelper.isNonTeamSport(eventModel):
-				return self.submitEvent()
+				return this.submitEvent()
 					.then( _event => {
 						savedEvent = _event;
 
 						const	activeSchoolId	= this.props.activeSchoolId,
-								teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
+							teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
 
 						return TeamHelper.addIndividualPlayersToEvent(activeSchoolId, savedEvent, teamWrapper);
 					})
-					.then( () => self.activateEvent(savedEvent) )
-					.then( () => self._afterEventCreation(savedEvent) );
+					.then( () => this.activateEvent(savedEvent) )
+					.then( () => this._afterEventCreation(savedEvent) );
 			case TeamHelper.isTeamSport(eventModel):
 				const	activeSchoolId	= this.props.activeSchoolId,
 						rivals			= binding.toJS(`rivals`),
@@ -489,7 +497,7 @@ const EventManager = React.createClass({
 						teamWrapper		= binding.toJS(`teamModeView.teamWrapper`);
 
 				return SavingEventHelper.processSavingChangesMode(activeSchoolId, rivals, model, teamWrapper)
-					.then( () => self.submitEvent() )
+					.then( () => this.submitEvent() )
 					.then( _event => {
 						savedEvent = _event;
 
@@ -497,23 +505,22 @@ const EventManager = React.createClass({
 
 						return Promise.all( TeamHelper.addTeamsToEvent(activeSchoolId, savedEvent.id, teams) );
 					})
-					.then( () => self.activateEvent(savedEvent) )
-					.then( () => self._afterEventCreation(savedEvent) );
+					.then( () => this.activateEvent(savedEvent) )
+					.then( () => this._afterEventCreation(savedEvent) );
 		}
 	},
-	activateEvent: function(event) {
-		return window.Server.schoolEventActivate.post({
+	activateEvent: function(event: Event): Promise<any> {
+		return (window as any).Server.schoolEventActivate.post({
 			schoolId:	this.props.activeSchoolId,
 			eventId:	event.id
 		});
 	},
-	submitEvent: function() {
-		const	self	= this,
-				binding = self.getDefaultBinding();
+	submitEvent: function(): Promise<any> {
+		const binding = this.getDefaultBinding();
 
 		const model = binding.toJS('model');
 
-		const body = {
+		const body: EventBody = {
 			gender:					TeamHelper.convertGenderToServerValue(model.gender),
 			// invited
 			// convert client event type const to server event type const
@@ -526,7 +533,7 @@ const EventManager = React.createClass({
 			endRegistrationTime:	model.endRegistrationTime
 		};
 
-		self.setVenueToBody(body);
+		this.setVenueToBody(body);
 
 		const rivals = binding.toJS('rivals');
 		switch (model.type) {
@@ -548,14 +555,13 @@ const EventManager = React.createClass({
 				break;
 		}
 
-		return window.Server.events.post(
+		return (window as any).Server.events.post(
 			this.props.activeSchoolId,
 			body
 		);
 	},
-	setVenueToBody: function(body) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	setVenueToBody: function(body): void {
+		const binding = this.getDefaultBinding();
 
 		const modelVenue = binding.toJS('model.venue');
 		body.venue = {
@@ -571,9 +577,8 @@ const EventManager = React.createClass({
 	 * 2) Redirect to event page
 	 * @private
 	 */
-	_afterEventCreation: function(event) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	_afterEventCreation: function(event: Event): boolean {
+		const binding	= this.getDefaultBinding();
 
 		document.location.hash = 'event/' + event.id + '?tab=gallery&new=true';
 		binding.clear();
@@ -581,15 +586,14 @@ const EventManager = React.createClass({
 
 		return true;
 	},
-	renderStepButtons: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
+	renderStepButtons: function(): React.ReactNode {
+		const binding		= this.getDefaultBinding();
 
 		const step = binding.get('step');
 
 		switch(step) {
 			case 1: {
-				const isDisabled = !self._isStepComplete(1),
+				const isDisabled = !this._isStepComplete(1),
 					continueButtonClassName = classNames({
 						mWidth: true,
 						mDisable: isDisabled
@@ -631,13 +635,12 @@ const EventManager = React.createClass({
 			}
 		}
 	},
-	_isStepComplete: function(step) {
-		const	self			= this;
+	_isStepComplete: function(step: number): boolean {
 		let		isStepComplete	= false;
 
 		switch (step) {
 			case 1:
-				isStepComplete = self._isFirstStepIsComplete();
+				isStepComplete = this._isFirstStepIsComplete();
 				break;
 			case 2:
 				isStepComplete = true;
@@ -646,29 +649,27 @@ const EventManager = React.createClass({
 
 		return isStepComplete;
 	},
-	_isFirstStepIsComplete: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
+	_isFirstStepIsComplete: function(): boolean {
+		const binding = this.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')				!== 'undefined' &&
-				binding.get('model.startTime') 						!== null &&
-				binding.get('model.startTime') 						!== '' &&
-				typeof binding.toJS('model.sportId')				!== 'undefined' &&
-				binding.toJS('model.sportId')						!== '' &&
-				typeof binding.toJS('model.gender')					!== 'undefined' &&
-				binding.toJS('model.gender')						!== '' &&
-				binding.toJS('model.gender')						!== 'not-selected-gender' &&
-				typeof binding.toJS('model.type')					!== 'undefined' &&
-				binding.toJS('model.type')							!== '' &&
-				typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&
-				typeof binding.toJS('model.venue.postcodeData.id')	!== 'undefined' &&
-				self.isAllRivalsSelected()
+			typeof binding.get('model.startTime')				!== 'undefined' &&
+			binding.get('model.startTime') 						!== null &&
+			binding.get('model.startTime') 						!== '' &&
+			typeof binding.toJS('model.sportId')				!== 'undefined' &&
+			binding.toJS('model.sportId')						!== '' &&
+			typeof binding.toJS('model.gender')					!== 'undefined' &&
+			binding.toJS('model.gender')						!== '' &&
+			binding.toJS('model.gender')						!== 'not-selected-gender' &&
+			typeof binding.toJS('model.type')					!== 'undefined' &&
+			binding.toJS('model.type')							!== '' &&
+			typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&
+			typeof binding.toJS('model.venue.postcodeData.id')	!== 'undefined' &&
+			this.isAllRivalsSelected()
 		);
 	},
-	isAllRivalsSelected: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
+	isAllRivalsSelected: function(): boolean {
+		const binding			= this.getDefaultBinding();
 		let		isStepComplete	= false;
 
 		switch (binding.toJS('model.type')) {
@@ -685,30 +686,30 @@ const EventManager = React.createClass({
 
 		return isStepComplete;
 	},
-	showSavingChangesModePopup: function() {
+	showSavingChangesModePopup: function(): void {
 		this.getDefaultBinding().set('isSavingChangesModePopupOpen', true);
 	},
-	checkSaveButtonState: function() {
+	checkSaveButtonState: function(): void {
 		const binding = this.getDefaultBinding();
 
 		if(binding.toJS('isSaveButtonActive') !== this.isSaveButtonActive()) {
 			typeof this.onDebounceChangeSaveButtonState !== 'undefined' && this.onDebounceChangeSaveButtonState();
 		}
 	},
-	renderEventManagerBase: function() {
+	renderEventManagerBase: function(): React.ReactNode {
 		const	binding				= this.getDefaultBinding(),
 				isEventManagerSync	= binding.get('isEventManagerSync');
 
 		const	commonBinding	= {
-				default				: binding,
-				calendar			: this.getBinding('calendar')
-			};
+			default				: binding,
+			calendar			: this.getBinding('calendar')
+		};
 
 		if(isEventManagerSync) {
 			return (
 				<EventForm	binding			= { commonBinding }
-							activeSchoolId	= { this.props.activeSchoolId }
-							isCopyMode		= { this.isCopyMode }
+				              activeSchoolId	= { this.props.activeSchoolId }
+				              isCopyMode		= { this.isCopyMode }
 				/>
 			);
 		} else {
@@ -717,15 +718,15 @@ const EventManager = React.createClass({
 			);
 		}
 	},
-	renderManager: function() {
+	renderManager: function(): React.ReactNode {
 		const	binding	= this.getDefaultBinding(),
 				event	= binding.toJS('model');
 
 		const managerBinding	= {
-				default	: binding,
-				rivals	: binding.sub('rivals'),
-				error	: binding.sub('error')
-			};
+			default	: binding,
+			rivals	: binding.sub('rivals'),
+			error	: binding.sub('error')
+		};
 
 		return (
 			<Manager
@@ -745,9 +746,9 @@ const EventManager = React.createClass({
 				step				= binding.toJS('step');
 
 		const	bManagerClasses	= classNames({
-					bManager			: step === 1,
-					bTeamManagerWrapper : step === 2
-				});
+			bManager			: step === 1,
+			bTeamManagerWrapper : step === 2
+		});
 
 		if(step === 2) {
 			// check control button state
@@ -777,5 +778,3 @@ const EventManager = React.createClass({
 		);
 	}
 });
-
-module.exports = EventManager;

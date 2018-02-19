@@ -1,48 +1,69 @@
-const	React					= require('react'),
-		Immutable				= require('immutable'),
-		Morearty				= require('morearty'),
-		propz					= require('propz');
+import * as	React from 'react';
+import * as	Immutable from 'immutable';
+import * as	Morearty from 'morearty';
+import * as	propz from 'propz';
 
-const	EventFormActions		= require('../../event_form_actions'),
-		{If}					= require('../../../../../../../ui/if/if'),
-		GenderHelper			= require('module/helpers/gender_helper'),
-		SchoolHelper 			= require('module/helpers/school_helper'),
-		{Autocomplete}			= require('../../../../../../../ui/autocomplete2/OldAutocompleteWrapper');
+import {EventFormActions} from '../../event_form_actions';
+import {If} from '../../../../../../../ui/if/if';
+import * as	GenderHelper from 'module/helpers/gender_helper';
+import * as	SchoolHelper from 'module/helpers/school_helper';
+import {Autocomplete} from '../../../../../../../ui/autocomplete2/OldAutocompleteWrapper';
 
 // Helpers
-const	RivalsHelper			= require('module/ui/managers/rival_chooser/helpers/rivals_helper');
+import * as	RivalsHelper from 'module/ui/managers/rival_chooser/helpers/rivals_helper';
 
-const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
+import {EVENT_FORM_MODE} from 'module/as_manager/pages/events/manager/event_form/consts/consts';
 
 // Styles
-const	InputWrapperStyles		= require('../../../../../../../../../styles/ui/b_input_wrapper.scss'),
-		InputLabelStyles		= require('../../../../../../../../../styles/ui/b_input_label.scss'),
-		SmallCheckboxBlockStyle	= require('../../../../../../../../../styles/ui/b_small_checkbox_block.scss');
+import '../../../../../../../../../styles/ui/b_input_wrapper.scss';
+import '../../../../../../../../../styles/ui/b_input_label.scss';
+import '../../../../../../../../../styles/ui/b_small_checkbox_block.scss';
 
-const SportSelector = React.createClass({
+interface SportSelectorProps {
+	activeSchoolId:	string
+	mode:			string
+}
+
+export interface Sport {
+	createdAt:	                string
+	description:	            string
+	discipline:                 any[]
+	field:                      any
+	genders:                    any
+	id:	                        string
+	individualResultsAvailable: boolean
+	isFavorite:                 boolean
+	multiparty:                 boolean
+	name:                       string
+	performance:                any[]
+	players:	                string
+	points:                     any
+	scoring:	                string
+	updatedAt:	                string
+}
+
+export const SportSelector = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		mode:			React.PropTypes.string.isRequired
-	},
+
 	componentWillMount: function() {
 		const 	isSchoolHaveFavoriteSports 	= this.isSchoolHaveFavoriteSports(),
 				binding						= this.getDefaultBinding();
-		
+
 		binding.atomically()
 			.set('isShowAllSports',				!isSchoolHaveFavoriteSports )
 			.set('isSchoolHaveFavoriteSports',	isSchoolHaveFavoriteSports)
 			.set('eventFormSportSelectorKey',	Immutable.fromJS(this.getRandomString()))
 			.commit();
-		
+
 		this.setIsFavoriteSportsEnabled();
 	},
 
-	getRandomString: function() {
+	getRandomString: function(): number {
 		// just current date in timestamp view
 		return + new Date();
 	},
-	isOnlyFavoriteSports: function() {
+
+	isOnlyFavoriteSports: function(): boolean {
 		const	binding						= this.getDefaultBinding(),
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
 				isFavoriteSportsEnabled		= binding.get('isFavoriteSportsEnabled');
@@ -56,17 +77,19 @@ const SportSelector = React.createClass({
 				return true;
 		}
 	},
-	setIsFavoriteSportsEnabled: function() {
+	setIsFavoriteSportsEnabled: function(): void {
 		SchoolHelper.loadActiveSchoolInfo(this).then(schoolData => {
 			this.getDefaultBinding().set('isFavoriteSportsEnabled', schoolData.isFavoriteSportsEnabled);
 		});
 	},
-	isSchoolHaveFavoriteSports: function() {
+
+	isSchoolHaveFavoriteSports: function(): boolean {
 		const sports = this.getDefaultBinding().toJS('sports');
 
 		return sports.filter(s => s.isFavorite).length > 0;
 	},
-	handleChangeCompleteSport: function (id, sport) {
+
+	handleChangeCompleteSport: function (id: string, sport: Sport): void {
 		const	binding		= this.getDefaultBinding(),
 				eventType	= binding.toJS('model.type');
 		let		rivals		= binding.toJS('rivals');
@@ -96,17 +119,18 @@ const SportSelector = React.createClass({
 			.set('rivals',				Immutable.fromJS(rivals))
 			.commit();
 	},
-	getDefaultRivalsForInterSchoolsEvent: function () {
+
+	getDefaultRivalsForInterSchoolsEvent: function (): string[] {
 		let rivals;
 
 		switch (this.props.mode) {
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+			case EVENT_FORM_MODE.SCHOOL: {
 				const schoolInfo = this.getDefaultBinding().toJS('schoolInfo');
 
 				rivals = RivalsHelper.getDefaultRivalsForInterSchoolsEvent(schoolInfo);
 				break;
 			}
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+			case EVENT_FORM_MODE.SCHOOL_UNION: {
 				rivals = [];
 				break;
 			}
@@ -114,11 +138,12 @@ const SportSelector = React.createClass({
 
 		return rivals;
 	},
-	handleChangeShowAllSports: function() {
+
+	handleChangeShowAllSports: function(): void {
 		const binding = this.getDefaultBinding();
 
 		const	isShowAllSports	= binding.get('isShowAllSports'),
-				currentSport	= binding.toJS('model.sportModel');
+			currentSport	= binding.toJS('model.sportModel');
 
 		// so, if isShowAllSports was true, now it's false
 		// and it means that we should clear sportId if that sport isn't favorite.
@@ -135,11 +160,10 @@ const SportSelector = React.createClass({
 	},
 
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding	= this.getDefaultBinding();
 
 		const	event						= binding.toJS('model'),
-				sport						= propz.get(event, ['sportModel']),
+				sport						= propz.get(event, ['sportModel'], undefined),
 				isShowAllSports				= event.isShowAllSports,
 				isSchoolHaveFavoriteSports	= binding.get('isSchoolHaveFavoriteSports'),
 				eventFormSportSelectorKey	= binding.get('eventFormSportSelectorKey'),
@@ -180,5 +204,3 @@ const SportSelector = React.createClass({
 		);
 	}
 });
-
-module.exports = SportSelector;

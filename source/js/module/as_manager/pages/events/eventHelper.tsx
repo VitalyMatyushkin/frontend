@@ -1,24 +1,27 @@
-const TeamHelper = require('module/ui/managers/helpers/team_helper');
-const propz = require('propz');
-const Immutable = require('immutable');
-const EventConsts = require('module/helpers/consts/events');
-const ViewModeConsts = require('module/ui/view_selector/consts/view_mode_consts');
-const ManagerWrapperHelper = require('../event/view/manager_wrapper/manager_wrapper_helper');
-const NewManagerWrapperHelper = require('../event/view/manager_wrapper/new_manager_wrapper_helper');
-const RivalManager = require('module/as_manager/pages/event/view/rivals/helpers/rival_manager');
-const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper';
+import * as propz from 'propz';
+import * as Immutable from 'immutable';
+import * as EventConsts from 'module/helpers/consts/events';
+import * as ViewModeConsts from 'module/ui/view_selector/consts/view_mode_consts';
+import * as ManagerWrapperHelper from '../event/view/manager_wrapper/manager_wrapper_helper';
+import * as NewManagerWrapperHelper from '../event/view/manager_wrapper/new_manager_wrapper_helper';
+import * as RivalManager from 'module/as_manager/pages/event/view/rivals/helpers/rival_manager';
+import {EVENT_FORM_MODE} from 'module/as_manager/pages/events/manager/event_form/consts/consts';
+import {Event} from './events';
 
-const EventHelper = {
+export const LocalEventHelper = {
 	clientEventTypeToServerClientTypeMapping: {
 		'inter-schools':	'EXTERNAL_SCHOOLS',
 		'houses':			'INTERNAL_HOUSES',
 		'internal':			'INTERNAL_TEAMS'
 	},
+
 	serverEventTypeToClientEventTypeMapping: {
 		'EXTERNAL_SCHOOLS':	'inter-schools',
 		'INTERNAL_HOUSES':	'houses',
 		'INTERNAL_TEAMS':	'internal'
 	},
+
 	distanceItems: [
 		{id: 'UNLIMITED', text:'Unlimited'},
 		{id: '10M', value: 10, text: '10 miles'},
@@ -27,22 +30,24 @@ const EventHelper = {
 		{id: '40M', value: 40, text: '40 miles'},
 		{id: '50M', value: 50, text: '50 miles'}
 	],
-	setParamsFromUrl: function(self) {
-		const rootBinding = self.getMoreartyContext().getBinding();
 
-		self.mode = rootBinding.get('routing.parameters.mode');
-		if(typeof self.mode !== 'undefined') {
-			self.eventId = rootBinding.get('routing.parameters.eventId');
+	setParamsFromUrl: function(eventManagerContext): void {
+		const rootBinding = eventManagerContext.getMoreartyContext().getBinding();
+
+		eventManagerContext.mode = rootBinding.get('routing.parameters.mode');
+		if(typeof eventManagerContext.mode !== 'undefined') {
+			eventManagerContext.eventId = rootBinding.get('routing.parameters.eventId');
 		}
 	},
-	setEvent: function(self, eventId, schoolType) {
-		const binding = self.getDefaultBinding();
+
+	setEvent: function(eventManagerContext, eventId: string, schoolType: string): Promise<any> {
+		const binding = eventManagerContext.getDefaultBinding();
 
 		let event;
 
 		// TODO check inter-schools case
-		return window.Server.schoolEvent.get({
-			schoolId	: self.props.activeSchoolId,
+		return (window as any).Server.schoolEvent.get({
+			schoolId	: eventManagerContext.props.activeSchoolId,
 			eventId		: eventId
 		})
 			.then(_event => {
@@ -61,7 +66,7 @@ const EventHelper = {
 				event.type = this.convertServerEventTypeConstToClient(event);
 
 				// TODO need reviver for postcode on server side
-				const postcodeId = propz.get(event, ['venue', 'postcodeData', '_id']);
+				const postcodeId = propz.get(event, ['venue', 'postcodeData', '_id'], undefined);
 				if(typeof postcodeId !== 'undefined') {
 					event.venue.postcodeData.id = postcodeId;
 				}
@@ -71,7 +76,7 @@ const EventHelper = {
 						postcode: "TBD"
 					}
 				}
-				const rivals = this.getRivals(self, event, schoolType);
+				const rivals = this.getRivals(eventManagerContext, event, schoolType);
 				binding.atomically()
 					.set('isSubmitProcessing',				false)
 					.set('isSavingChangesModePopupOpen',	false)
@@ -93,29 +98,30 @@ const EventHelper = {
 				return true;
 			});
 	},
-	getRivals: function(self, event, schoolType) {
+
+	getRivals: function(eventManagerContext, event: Event, schoolType: string): any[] {
 		let rivals;
 		if(TeamHelper.isNewEvent(event)) {
 			let filteredRivals = [];
 
 			RivalManager.getRivalsByEvent(
-				self.props.activeSchoolId,
+				eventManagerContext.props.activeSchoolId,
 				event,
 				ViewModeConsts.VIEW_MODE.TABLE_VIEW
 			)
-			.forEach(rival => {
-				if(rival.school.id === self.props.activeSchoolId) {
-					filteredRivals.push(rival);
-				} else if(
-					filteredRivals.findIndex(_rival => _rival.school.id === rival.school.id) === -1
-				) {
-					filteredRivals.push(rival);
-				}
-			});
+				.forEach(rival => {
+					if(rival.school.id === eventManagerContext.props.activeSchoolId) {
+						filteredRivals.push(rival);
+					} else if(
+						filteredRivals.findIndex(_rival => _rival.school.id === rival.school.id) === -1
+					) {
+						filteredRivals.push(rival);
+					}
+				});
 
 			rivals = NewManagerWrapperHelper.getRivals(event, filteredRivals);
 		} else {
-			rivals = ManagerWrapperHelper.getRivals(self.props.activeSchoolId, event, true);
+			rivals = ManagerWrapperHelper.getRivals(eventManagerContext.props.activeSchoolId, event, true);
 			if(TeamHelper.isNonTeamSport(event)) {
 				rivals.forEach(rival => {
 					rival.players.forEach(p => {
@@ -125,24 +131,25 @@ const EventHelper = {
 			}
 		}
 
-		if(schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION) {
-			rivals = rivals.filter(r => r.school.id !== self.props.activeSchoolId);
+		if(schoolType === EVENT_FORM_MODE.SCHOOL_UNION) {
+			rivals = rivals.filter(r => r.school.id !== eventManagerContext.props.activeSchoolId);
 		}
 
 		return rivals;
 	},
+
 	/**
 	 * Get event from server by eventId and set date from this event to event form.
 	 * It needs for 'another' creation mode - when user create event by click "add another event" button.
 	 */
-	setDateFromEventByEventId:function (self, eventId) {
-		return window.Server.schoolEvent.get(
+	setDateFromEventByEventId:function (eventManagerContext, eventId: string) {
+		return (window as any).Server.schoolEvent.get(
 			{
-				schoolId	: self.props.activeSchoolId,
+				schoolId	: eventManagerContext.props.activeSchoolId,
 				eventId		: eventId
 			}
 		).then(event => {
-			self.getDefaultBinding().set(
+			eventManagerContext.getDefaultBinding().set(
 				'model.startTime',
 				Immutable.fromJS(event.startTime)
 			);
@@ -150,7 +157,8 @@ const EventHelper = {
 			return true;
 		});
 	},
-	convertServerGenderConstToClient: function(event) {
+
+	convertServerGenderConstToClient: function(event: Event) {
 		switch (event.gender) {
 			case EventConsts.EVENT_GENDERS_SERVER.FEMALE_ONLY:
 				return EventConsts.EVENT_GENDERS.FEMALE_ONLY;
@@ -160,9 +168,8 @@ const EventHelper = {
 				return EventConsts.EVENT_GENDERS.MIXED;
 		}
 	},
-	convertServerEventTypeConstToClient: function(event) {
-		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+
+	convertServerEventTypeConstToClient: function(event: Event) {
+		return this.serverEventTypeToClientEventTypeMapping[event.eventType];
 	}
 };
-
-module.exports = EventHelper;

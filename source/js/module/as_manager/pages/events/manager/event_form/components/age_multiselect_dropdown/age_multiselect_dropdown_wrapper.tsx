@@ -1,33 +1,36 @@
-const	React						= require('react'),
-		Morearty					= require('morearty'),
-		Immutable					= require('immutable'),
-		propz 						= require('propz');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as MultiselectDropdown from 'module/ui/multiselect-dropdown/multiselect_dropdown';
+import * as MultiselectDropdownHelper from 'module/ui/multiselect-dropdown/multiselect_dropdown_helper';
 
-const	MultiselectDropdown			= require('module/ui/multiselect-dropdown/multiselect_dropdown');
+interface Age {
+	id:     string
+	value:  string
+}
 
-const	MultiselectDropdownHelper	= require('module/ui/multiselect-dropdown/multiselect_dropdown_helper');
-
-
-const AgeMultiselectDropdownWrapper = React.createClass({
+export const AgeMultiselectDropdownWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
-	getAgeGroupNaming: function() {
+	getAgeGroupNaming: function(): string {
 		return this.getDefaultBinding().toJS('schoolInfo.ageGroupsNaming');
 	},
-	getAges: function() {
+
+	getAges: function(): Age[] {
 		return MultiselectDropdownHelper.getAgeArray(
 			this.getDefaultBinding().toJS('availableAges'),
 			this.getAgeGroupNaming()
 		);
 	},
-	getSelectedAges: function() {
+
+	getSelectedAges: function(): Age[] {
 		return MultiselectDropdownHelper.getAgeArray(
 			this.getDefaultBinding().toJS('model.ages'),
 			this.getAgeGroupNaming()
 		);
 	},
 
-	handleClickAgeItem: function(ageItem) {
+	handleClickAgeItem: function(ageItem: Age): void {
 		const ages = this.getDefaultBinding().toJS('model.ages');
 
 		const foundAgeIndex = ages.findIndex(a => a === ageItem.id);
@@ -51,5 +54,3 @@ const AgeMultiselectDropdownWrapper = React.createClass({
 		);
 	}
 });
-
-module.exports = AgeMultiselectDropdownWrapper;

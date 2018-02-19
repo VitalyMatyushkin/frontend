@@ -1,52 +1,77 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		{Autocomplete}		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		{HouseListItem}		= require('module/ui/autocomplete2/custom_list_items/house_list_item/house_list_item'),
-		SquareCrossButton	= require('module/ui/square_cross_button');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper';
+import {Autocomplete} from 'module/ui/autocomplete2/OldAutocompleteWrapper';
+import {HouseListItem} from 'module/ui/autocomplete2/custom_list_items/house_list_item/house_list_item';
+import * as SquareCrossButton from 'module/ui/square_cross_button';
 
-const HousesManager = React.createClass({
+interface HousesManagerProps {
+	activeSchoolId: string
+}
+
+interface House {
+	colors:         string[]
+	createdAt:      string
+	description:    string
+	id:             string
+	name:           string
+	status:         string
+	statusUpdateBy: any
+}
+
+export const HousesManager = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId : React.PropTypes.string.isRequired
-	},
-	houseService: function(houseName) {
+
+	houseService: function(houseName: string): Promise<House> {
 		const	binding		= this.getDefaultBinding(),
-				rivals		= binding.toJS('rivals');
+			rivals		= binding.toJS('rivals');
 
-		const	filter = {
-			where: {
-				name: {
-					like: houseName,
-					options: 'i'
-				}
-			},
-			order:'name ASC'
-		};
-
+		let filter;
 		const nin = rivals.map(r => r.id);
+
 		if(nin.length !== 0) {
-			filter.where.id = {
-				$nin: nin
+			filter = {
+				where: {
+					name: {
+						like: houseName,
+						options: 'i'
+					},
+					id: {
+						$nin: nin
+					}
+				},
+				order:'name ASC'
+			}
+		} else {
+			filter = {
+				where: {
+					name: {
+						like: houseName,
+						options: 'i'
+					}
+				},
+				order:'name ASC'
 			};
 		}
 
-		return window.Server.schoolHouses.get(
+		return (window as any).Server.schoolHouses.get(
 			{
 				schoolId:	this.props.activeSchoolId,
 				filter:		filter
 			}
 		);
 	},
-	onSelectRival: function (order, id, model) {
+
+	onSelectRival: function (order: string, id: string, model: House): void {
 		const binding = this.getDefaultBinding();
 
 		if(typeof id !== 'undefined' && typeof model !== 'undefined') {
 			binding.set(`rivals.${order}`, Immutable.fromJS(model));
 		}
 	},
-	onClickRemoveHouseButton: function(rivalIndex) {
+
+	onClickRemoveHouseButton: function(rivalIndex: number): void {
 		const	binding	= this.getDefaultBinding();
 		let		rivals	= binding.toJS('rivals');
 
@@ -54,11 +79,12 @@ const HousesManager = React.createClass({
 
 		binding.set('rivals', Immutable.fromJS(rivals));
 	},
+
 	render: function() {
 		const	binding	= this.getDefaultBinding(),
-				event	= binding.toJS('model'),
-				sport	= event.sportModel,
-				rivals	= binding.toJS('rivals');
+			event	= binding.toJS('model'),
+			sport	= event.sportModel,
+			rivals	= binding.toJS('rivals');
 
 		const choosers = rivals.map((rival, rivalIndex) => {
 			return (
@@ -116,5 +142,3 @@ const HousesManager = React.createClass({
 		);
 	}
 });
-
-module.exports = HousesManager;

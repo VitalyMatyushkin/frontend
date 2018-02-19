@@ -11,8 +11,8 @@ const	React							= require('react'),
 
 		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
 		SchoolPageComponent				= require('module/as_manager/pages/schools/schools_page'),
-		EventsComponent					= require('module/as_manager/pages/events/events'),
-		{ClubsPage}					= require('module/as_manager/pages/clubs/clubs_page'),
+		{Events}				        = require('module/as_manager/pages/events/events'),
+		{ClubsPage}					    = require('module/as_manager/pages/clubs/clubs_page'),
 		EventComponent					= require('../pages/event/event_page'),
 		SchoolGalleryRoutesComponent	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
 		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
@@ -45,7 +45,6 @@ const SchoolWorkerRouter = React.createClass({
 				<Route	path		= "/school_admin/:subPage /school_admin/:subPage/:mode"
 						binding		= {binding.sub('activeSchool')}
 						component	= {AdminSchoolPageComponent}
-					    activeSchoolId = {this.activeSchoolId}
 				/>
 
 				<Route	path		= "/schools /schools/:subPage"
@@ -55,7 +54,7 @@ const SchoolWorkerRouter = React.createClass({
 
 				<Route	path		= "/events /events/:subPage"
 						binding		= {binding.sub('events')}
-						component	= {EventsComponent}
+						component	= {Events}
 				/>
 
 				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"

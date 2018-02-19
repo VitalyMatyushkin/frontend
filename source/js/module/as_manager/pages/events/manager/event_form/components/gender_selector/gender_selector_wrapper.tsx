@@ -1,42 +1,49 @@
-const	React				= require('react'),
-		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
-		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel'),
-		EventConsts			= require('../../../../../../../helpers/consts/events');
+import * as React from 'react';
+import * as RadioButtonCustom from '../../../../../../../ui/radio_button_custom/radio_button_custom';
+import * as ControlPanel from '../../../../../../../ui/control_panel/control_panel';
+import * as EventConsts from '../../../../../../../helpers/consts/events';
+import * as classNames from 'classnames';
+import {Sport} from 'module/as_manager/pages/events/manager/event_form/components/sport_selector/sport_selector';
 
-const	classNames			= require('classnames');
+interface GenderSelectorWrapperProps {
+	gender:             string
+	sport:              any
+	handleChangeGender: (gender: string) => void
+	extraStyle:         string
+}
 
-const GenderSelectorWrapper = React.createClass({
-	CUSTOM_CSS_STYLE:	"mGenderSelector",
-	BOYS_TEXT:			"BOYS",
-	GIRLS_TEXT:			"GIRLS",
-	RADIO_BUTTON_IDS :	{
-		"BOYS_RADIOBUTTON":		"BOYS_RADIOBUTTON",
-		"GIRLS_RADIOBUTTON":	"GIRLS_RADIOBUTTON"
-	},
-	propTypes: {
-		gender:				React.PropTypes.string,
-		sport:				React.PropTypes.object,
-		handleChangeGender:	React.PropTypes.func.isRequired,
-		extraStyle:			React.PropTypes.string
-	},
-	getRadioButtonIdArray: function() {
+export class GenderSelectorWrapper extends React.Component<GenderSelectorWrapperProps, {}> {
+	readonly BOYS_TEXT = "BOYS";
+	readonly GIRLS_TEXT = "GIRLS";
+	readonly RADIO_BUTTON_IDS = {
+		"BOYS_RADIOBUTTON": "BOYS_RADIOBUTTON",
+		"GIRLS_RADIOBUTTON": "GIRLS_RADIOBUTTON"
+	};
+
+	constructor(props) {
+		super(props);
+	}
+
+	getRadioButtonIdArray(): string[] {
 		const ids = [];
 
-		for(let key in this.RADIO_BUTTON_IDS) {
+		for (let key in this.RADIO_BUTTON_IDS) {
 			ids.push(this.RADIO_BUTTON_IDS[key]);
 		}
 
 		return ids;
-	},
-	isCheckedById: function(radiobuttonId) {
-		switch(radiobuttonId) {
+	}
+
+	isCheckedById(radiobuttonId: string): boolean {
+		switch (radiobuttonId) {
 			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
 				return this.isBoysChecked();
 			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
 				return this.isGirlsChecked();
 		}
-	},
-	isBoysChecked: function() {
+	}
+
+	isBoysChecked(): boolean {
 		const gender = this.props.gender;
 
 		switch (gender) {
@@ -49,8 +56,9 @@ const GenderSelectorWrapper = React.createClass({
 			default:
 				return false;
 		}
-	},
-	isGirlsChecked: function() {
+	}
+
+	isGirlsChecked(): boolean {
 		const gender = this.props.gender;
 
 		switch (gender) {
@@ -63,57 +71,63 @@ const GenderSelectorWrapper = React.createClass({
 			default:
 				return false;
 		}
-	},
-	isDisabledById: function(radiobuttonId) {
-		switch(radiobuttonId) {
+	}
+
+	isDisabledById(radiobuttonId: string): boolean {
+		switch (radiobuttonId) {
 			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
 				return this.isBoysDisabled();
 			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
 				return this.isGirlsDisabled();
 		}
-	},
-	isBoysDisabled: function() {
-		const sportModel = this.props.sport;
+	}
 
-		if(sportModel) {
+	isBoysDisabled(): boolean {
+		const sportModel = this.props.sport;
+		if (sportModel) {
 			const genders = sportModel.genders;
 
 			return !(genders.maleOnly || genders.mixed);
 		} else {
 			return true;
 		}
-	},
-	isGirlsDisabled: function() {
+	}
+
+	isGirlsDisabled(): boolean {
 		const sportModel = this.props.sport;
 
-		if(sportModel) {
+		if (sportModel) {
 			const genders = sportModel.genders;
 
 			return !(genders.femaleOnly || genders.mixed);
 		} else {
 			return true;
 		}
-	},
-	getTextById: function(radiobuttonId) {
-		switch(radiobuttonId) {
+	}
+
+	getTextById(radiobuttonId: string): string {
+		switch (radiobuttonId) {
 			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
 				return this.getBoysText();
 			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
 				return this.getGirlsText();
 		}
-	},
-	getBoysText: function() {
-		return this.BOYS_TEXT; 
-	},
-	getGirlsText: function() {
+	}
+
+	getBoysText(): string {
+		return this.BOYS_TEXT;
+	}
+
+	getGirlsText(): string {
 		return this.GIRLS_TEXT;
-	},
-	handleClick: function(radiobuttonId) {
+	}
+
+	handleClick(radiobuttonId: string): void {
 		const sportModel = this.props.sport;
 
-		if(sportModel) {
-			const	genders			= sportModel.genders,
-					currentGender	= this.props.gender;
+		if (sportModel) {
+			const genders = sportModel.genders,
+				currentGender = this.props.gender;
 
 			switch (true) {
 				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && !this.isBoysDisabled() && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.FEMALE_ONLY:
@@ -142,27 +156,28 @@ const GenderSelectorWrapper = React.createClass({
 					break;
 			}
 		}
-	},
-	getRadiobuttonArray: function() {
+	}
+
+	getRadiobuttonArray(): React.ReactNode {
 		return this.getRadioButtonIdArray().map(radiobuttonId => {
 			return (
-				<RadioButtonCustom	isChecked	= { this.isCheckedById(radiobuttonId) }
-									isDisabled	= { this.isDisabledById(radiobuttonId) }
-									text		= { this.getTextById(radiobuttonId) }
-									onClick		= { this.handleClick.bind(null, radiobuttonId) }
-									customCSS	= { classNames("mGenderSelector", this.props.extraStyle) }
+				<RadioButtonCustom
+					isChecked={this.isCheckedById(radiobuttonId)}
+					isDisabled={this.isDisabledById(radiobuttonId)}
+					text={this.getTextById(radiobuttonId)}
+					onClick={this.handleClick.bind(this, radiobuttonId)}
+					customCSS={classNames("mGenderSelector", this.props.extraStyle)}
 				/>
 			);
 		});
-	},
-	render: function() {
+	}
+
+	render() {
 		return (
 			<ControlPanel
-				controlArray	= { this.getRadiobuttonArray() }
-				extraStyle		= { this.props.extraStyle }
+				controlArray={this.getRadiobuttonArray()}
+				extraStyle={this.props.extraStyle}
 			/>
 		);
 	}
-});
-
-module.exports = GenderSelectorWrapper;
+}

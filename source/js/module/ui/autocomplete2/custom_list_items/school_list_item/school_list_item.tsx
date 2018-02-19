@@ -15,6 +15,11 @@ export interface School {
 	domain:							string
 	id:								string
 	kind:							string
+	forms: {
+		age: number
+		id: string
+		name: string
+	}[]
 	name:							string
 	pic:							string
 	postcode:						any

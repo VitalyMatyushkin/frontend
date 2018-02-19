@@ -1,25 +1,27 @@
-const	React							= require('react'),
-		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
 
-		{ConfirmPopup}					= require('module/ui/confirm_popup'),
-		TeamSaveModePanel				= require('../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
-		ManagerConsts					= require('../../../../ui/managers/helpers/manager_consts'),
-		EventHelper						= require('module/helpers/eventHelper'),
-		TeamHelper						= require('module/ui/managers/helpers/team_helper'),
-		SavingPlayerChangesPopupHelper	= require('./helper'),
+import {ConfirmPopup} from 'module/ui/confirm_popup';
+import * as TeamSaveModePanel from '../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel';
+import * as ManagerConsts from '../../../../ui/managers/helpers/manager_consts';
+import * as EventHelper from 'module/helpers/eventHelper';
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper';
+import {SavingPlayerChangesPopupHelper} from './helper';
+import {TeamWrapper} from './helper';
+import {Event} from '../events';
 
-		ManagerStyles					= require('../../../../../../styles/pages/events/b_events_manager.scss');
+import '../../../../../../styles/pages/events/b_events_manager.scss';
 
-const SavingPlayerChangesPopup = React.createClass({
+interface SavingPlayerChangesPopupProps {
+	activeSchoolId:	string
+	submit:			() => void
+}
+
+export const SavingPlayerChangesPopup = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		submit:			React.PropTypes.func.isRequired
-	},
-
-	getOriginalTeamName: function(teamWrappers, order) {
+	getOriginalTeamName: function(teamWrappers: TeamWrapper[], order: number) {
 		switch (true) {
 			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[order]):
 				return teamWrappers[order].teamName.name;
@@ -28,7 +30,7 @@ const SavingPlayerChangesPopup = React.createClass({
 		}
 	},
 
-	getViewMode: function(order, teamWrappers) {
+	getViewMode: function(order: number, teamWrappers: TeamWrapper[]) {
 		switch (true) {
 			case SavingPlayerChangesPopupHelper.isTeamChangedByTeamWrapper(teamWrappers[order]) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeamByTeamWrapper(teamWrappers[order]):
 				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
@@ -53,13 +55,14 @@ const SavingPlayerChangesPopup = React.createClass({
 		this.getDefaultBinding().set('teamModeView.teamWrapper', Immutable.fromJS(teamWrappers));
 	},
 
-	handleClickSavingPlayerChangesModeRadioButton: function(teamWrapperIndex, currentMode) {
+	handleClickSavingPlayerChangesModeRadioButton: function(teamWrapperIndex: number, currentMode: string) {
 		this.getDefaultBinding().set(
 			`teamModeView.teamWrapper.${teamWrapperIndex}.savingChangesMode`,
 			Immutable.fromJS(currentMode)
 		);
 	},
-	handleChangeTeamName: function(teamWrapperIndex, name) {
+
+	handleChangeTeamName: function(teamWrapperIndex: number, name: string) {
 		const self = this;
 
 		self.getDefaultBinding().set(
@@ -68,7 +71,7 @@ const SavingPlayerChangesPopup = React.createClass({
 		);
 	},
 
-	renderSavingPlayerChangesPopupBody: function(event) {
+	renderSavingPlayerChangesPopupBody: function(event: Event): React.ReactNode {
 		const activeSchoolId = this.props.activeSchoolId;
 
 		const savingPlayerChangesModePanels = [];
@@ -153,6 +156,7 @@ const SavingPlayerChangesPopup = React.createClass({
 			</div>
 		);
 	},
+
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -177,5 +181,3 @@ const SavingPlayerChangesPopup = React.createClass({
 		}
 	}
 });
-
-module.exports = SavingPlayerChangesPopup;

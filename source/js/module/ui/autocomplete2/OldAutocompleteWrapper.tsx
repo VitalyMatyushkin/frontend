@@ -2,9 +2,9 @@ import * as React    	from 'react';
 import {ComboBox2}		from'module/ui/autocomplete2/ComboBox2';
 
 interface AutocompleteProps {
-	serverField:		string,
+	serverField?:		string,
 	serviceFullData?:	(text: string) => any,
-	serviceFilter?:		(text: string) => any,
+	serviceFilter?:		any,
 	onSelect?:			(id: string, element: any) => void,
 	onBlur?:			() => void,
 	onInput?:			() => void,

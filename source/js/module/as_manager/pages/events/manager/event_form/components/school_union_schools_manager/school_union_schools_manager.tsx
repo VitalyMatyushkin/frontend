@@ -1,27 +1,28 @@
-const	React					= require('react'),
-		Morearty				= require('morearty'),
-		Immutable				= require('immutable'),
-		propz					= require('propz'),
-		InterSchoolsRivalModel	= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model'),
-		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
-		GeoSearchHelper			= require('module/helpers/geo_search_helper'),
-		{Autocomplete}			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		{SchoolListItem}		= require('module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		SquareCrossButton		= require('module/ui/square_cross_button');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as propz from 'propz';
+import * as InterSchoolsRivalModel from 'module/ui/managers/rival_chooser/models/inter_schools_rival_model';
+import * as TeamHelper from 'module/ui/managers/helpers/team_helper';
+import * as GeoSearchHelper from 'module/helpers/geo_search_helper';
+import {Autocomplete} from 'module/ui/autocomplete2/OldAutocompleteWrapper';
+import {SchoolListItem} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
+import * as SquareCrossButton from 'module/ui/square_cross_button';
 
-const SchoolUnionSchoolsManager = React.createClass({
+interface SchoolUnionSchoolsManagerProps {
+	activeSchoolId: string
+}
+
+export const SchoolUnionSchoolsManager = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
-	},
+
 	/**
 	 * School filtering service
 	 * @param schoolName
 	 * @returns {*}
 	 */
-	schoolService: function(schoolName) {
+	schoolService: function(schoolName: string): Promise<any> {
 		const	binding					= this.getDefaultBinding();
-
 		const	activeSchool			= binding.toJS('schoolInfo');
 		const	activeSchoolPostcode	= activeSchool.postcode;
 		const	rivals					= binding.toJS('rivals');
@@ -40,7 +41,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 		}
 
 		let schools;
-		return window.Server.schoolUnionSchools.get(filter)
+		return (window as any).Server.schoolUnionSchools.get(filter)
 			.then(_schools => {
 				schools = _schools;
 
@@ -54,7 +55,9 @@ const SchoolUnionSchoolsManager = React.createClass({
 				return schools;
 			});
 	},
-	getMainSchoolFilter: function(rivals, schoolName) {
+
+	getMainSchoolFilter: function(rivals, schoolName: string): any {
+		console.log(rivals);
 		return {
 			filter: {
 				where: {
@@ -67,7 +70,8 @@ const SchoolUnionSchoolsManager = React.createClass({
 			}
 		};
 	},
-	getTBDSchool: function() {
+
+	getTBDSchool: function(): Promise<any> {
 		const filter = {
 			filter: {
 				where: {
@@ -75,9 +79,10 @@ const SchoolUnionSchoolsManager = React.createClass({
 				}
 			}
 		};
-		return window.Server.publicSchools.get(filter);
+		return (window as any).Server.publicSchools.get(filter);
 	},
-	getElementTitle: function(item) {
+
+	getElementTitle: function(item): string {
 		let name = '';
 
 		if(typeof item.school !== 'undefined') {
@@ -86,7 +91,8 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return name;
 	},
-	onSelectInterSchoolsRival: function (order, id, model) {
+
+	onSelectInterSchoolsRival: function (order: string, id: string, model: string): void {
 		const binding = this.getDefaultBinding();
 
 		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
@@ -94,14 +100,17 @@ const SchoolUnionSchoolsManager = React.createClass({
 			binding.set(`rivals.${order}`, Immutable.fromJS(rival));
 		}
 	},
-	onSelectInviterSchoolRival: function (id, model) {
+
+	onSelectInviterSchoolRival: function (id: string, model): void {
 		const rival = new InterSchoolsRivalModel(model);
 		this.getDefaultBinding().set('inviterSchool', Immutable.fromJS(rival));
 	},
-	onClickRemoveInviterSchool: function() {
+
+	onClickRemoveInviterSchool: function(): void {
 		this.getDefaultBinding().set('inviterSchool', undefined);
 	},
-	onClickRemoveRivalSchool: function(rivalIndex) {
+
+	onClickRemoveRivalSchool: function(rivalIndex: number): void {
 		const	binding	= this.getDefaultBinding();
 		let		rivals	= binding.toJS('rivals');
 
@@ -109,16 +118,18 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		binding.set('rivals', Immutable.fromJS(rivals));
 	},
-	isActiveSchoolRival: function(rival) {
-		const schoolId = propz.get(rival, ['school', 'id']);
+
+	isActiveSchoolRival: function(rival): boolean {
+		const schoolId = propz.get(rival, ['school', 'id'], undefined);
 
 		return typeof schoolId !== 'undefined' && schoolId === this.props.activeSchoolId;
 	},
-	renderSelectedSchools: function() {
+
+	renderSelectedSchools: function(): React.ReactNode {
 		const	binding	= this.getDefaultBinding();
 
 		const	event	= binding.toJS('model'),
-				rivals	= binding.toJS('rivals');
+			rivals	= binding.toJS('rivals');
 
 		// for simplify input array creation in render
 		const inputs = rivals
@@ -144,12 +155,13 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return inputs;
 	},
-	renderEmptySchoolInput: function() {
+
+	renderEmptySchoolInput: function(): React.ReactNode {
 		const	binding	= this.getDefaultBinding();
 
 		const	event	= binding.toJS('model'),
-				sport	= event.sportModel,
-				rivals	= binding.toJS('rivals');
+			sport	= event.sportModel,
+			rivals	= binding.toJS('rivals');
 
 		// for simplify input array creation in render
 		const inputs = [];
@@ -182,6 +194,7 @@ const SchoolUnionSchoolsManager = React.createClass({
 
 		return inputs;
 	},
+
 	render: function() {
 		let choosers = [];
 		choosers = choosers.concat(this.renderSelectedSchools());
@@ -197,5 +210,3 @@ const SchoolUnionSchoolsManager = React.createClass({
 		);
 	}
 });
-
-module.exports = SchoolUnionSchoolsManager;

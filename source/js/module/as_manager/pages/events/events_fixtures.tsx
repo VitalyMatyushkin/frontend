@@ -2,17 +2,18 @@
  * Created by Anatoly on 22.09.2016.
  */
 
-const   React		= require('react'),
-        Morearty	= require('morearty');
+import * as	React from 'react';
+import * as	Morearty from 'morearty';
 
-const	{MonthYearSelector}	= require('module/ui/calendar/month_year_selector'),
-    	{MODE_FIXTURES}		= require('module/ui/fixtures/fixtures_helper'),
-		Fixtures			= require('module/ui/fixtures/fixtures');
+import {MonthYearSelector} from 'module/ui/calendar/month_year_selector';
+import {MODE_FIXTURES} from 'module/ui/fixtures/fixtures_helper';
+import * as	Fixtures from 'module/ui/fixtures/fixtures';
 
-const	FixturesStyles	= require('./../../../../../styles/ui/bFixtures.scss');
+import './../../../../../styles/ui/bFixtures.scss';
 
-const EventFixtures = React.createClass({
+export const EventFixtures = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+
 	componentWillMount: function () {
 		const 	binding = this.getDefaultBinding(),
 				bindingCalendar = this.getBinding('calendar'),
@@ -22,14 +23,17 @@ const EventFixtures = React.createClass({
 		this.activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 		binding.set('dateCalendar', currentDate);
 	},
-	onClickChallenge: function (eventId) {
+
+	onClickChallenge: function (eventId: string): void {
 		document.location.hash = 'event/' + eventId;
 	},
-	onMonthClick: function (date) {
+
+	onMonthClick: function (date: string): void {
 		const binding = this.getDefaultBinding();
 		binding.set('dateCalendar', date);
 	},
-    render: function () {
+
+	render: function () {
 		const 	activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				binding			= this.getDefaultBinding();
 
@@ -40,14 +44,12 @@ const EventFixtures = React.createClass({
 					onMonthClick	= { date => this.onMonthClick(date) }
 				/>
 				<Fixtures
-					mode			= {MODE_FIXTURES.ADMIN}
-					date			= {binding.get('dateCalendar')}
-					activeSchoolId	= {activeSchoolId}
-					onClick			= {this.onClickChallenge}
+					mode			= { MODE_FIXTURES.ADMIN }
+					date			= { binding.get('dateCalendar') }
+					activeSchoolId	= { activeSchoolId }
+					onClick			= { this.onClickChallenge }
 				/>
 			</div>
 		);
 	}
 });
-
-module.exports = EventFixtures;

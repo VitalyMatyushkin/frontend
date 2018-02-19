@@ -1,48 +1,51 @@
 // Main components
-const	React							= require('react'),
-		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
-		propz							= require('propz'),
-	{If}							= require('../../../../../ui/if/if');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as propz from 'propz';
+import {If} from '../../../../../ui/if/if';
 
 // EventForm React components
-const	DateSelectorWrapper				= require('./components/date_selector/date_selector_wrapper'),
-		GenderSelectorWrapper			= require('./components/gender_selector/gender_selector_wrapper'),
-		GameTypeSelectorWrapper			= require('./components/game_type_selector/game_type_selector_wrapper'),
-		AgeMultiselectDropdownWrapper	= require('./components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
-		SportSelectorWrapper			= require('./components/sport_selector/sport_selector'),
-		TimeInputWrapper				= require('../time_input_wrapper'),
-		{EventVenue}					= require('../event_venue'),
-		SchoolUnionSchoolsManager		= require('module/as_manager/pages/events/manager/event_form/components/school_union_schools_manager/school_union_schools_manager'),
-		SchoolsManager					= require('module/as_manager/pages/events/manager/event_form/components/schools_manager/schools_manager'),
-		HousesManager					= require('module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager');
+import {DateSelectorWrapper} from './components/date_selector/date_selector_wrapper';
+import {GenderSelectorWrapper} from './components/gender_selector/gender_selector_wrapper';
+import {GameTypeSelectorWrapper} from './components/game_type_selector/game_type_selector_wrapper';
+import {AgeMultiselectDropdownWrapper} from './components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper';
+import {SportSelector} from './components/sport_selector/sport_selector';
+import {TimeInputWrapper} from '../time_input_wrapper';
+import {EventVenue} from '../event_venue';
+import {SchoolUnionSchoolsManager} from 'module/as_manager/pages/events/manager/event_form/components/school_union_schools_manager/school_union_schools_manager';
+import {SchoolsManager} from 'module/as_manager/pages/events/manager/event_form/components/schools_manager/schools_manager';
+import {HousesManager} from 'module/as_manager/pages/events/manager/event_form/components/houses_manager/houses_manager';
 
 // Helpers
-const	EventHelper						= require('../../eventHelper'),
-		RandomHelper					= require('module/helpers/random_helper');
+import {LocalEventHelper} from '../../eventHelper';
+import * as RandomHelper from 'module/helpers/random_helper';
 
-const	EventFormConsts					= require('module/as_manager/pages/events/manager/event_form/consts/consts');
+import {EVENT_FORM_MODE} from 'module/as_manager/pages/events/manager/event_form/consts/consts';
 
 // Styles
-const	InputWrapperStyles				= require('../../../../../../../styles/ui/b_input_wrapper.scss'),
-		InputLabelStyles				= require('../../../../../../../styles/ui/b_input_label.scss'),
-		TextInputStyles					= require('../../../../../../../styles/ui/b_text_input.scss'),
-		DropdownStyles					= require('../../../../../../../styles/ui/b_dropdown.scss'),
-		HouseAutocompleteStyle			= require('../../../../../../../styles/ui/b_house_autocomplete_wrapper.scss'),
-		SmallCheckboxBlockStyle			= require('../../../../../../../styles/ui/b_small_checkbox_block.scss');
+import '../../../../../../../styles/ui/b_input_wrapper.scss';
+import '../../../../../../../styles/ui/b_input_label.scss';
+import '../../../../../../../styles/ui/b_text_input.scss';
+import '../../../../../../../styles/ui/b_dropdown.scss';
+import '../../../../../../../styles/ui/b_house_autocomplete_wrapper.scss';
+import '../../../../../../../styles/ui/b_small_checkbox_block.scss';
 
-const EventForm = React.createClass({
+interface EventFormProps {
+	activeSchoolId:	string
+	mode:			string
+	isCopyMode:		boolean
+}
+
+export const EventForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		mode:			React.PropTypes.string.isRequired,
-		isCopyMode:		React.PropTypes.bool
-	},
+
 	getDefaultProps: function(){
 		return {
-			mode: EventFormConsts.EVENT_FORM_MODE.SCHOOL
+			mode: EVENT_FORM_MODE.SCHOOL
 		};
 	},
+
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
@@ -51,7 +54,8 @@ const EventForm = React.createClass({
 			Immutable.fromJS(RandomHelper.getRandomString())
 		);
 	},
-	getMainSchoolFilter: function(rivals, schoolName) {
+
+	getMainSchoolFilter: function(rivals, schoolName: string): any {
 		return {
 			filter: {
 				where: {
@@ -64,6 +68,7 @@ const EventForm = React.createClass({
 			}
 		};
 	},
+
 	getOpponentSchoolInfoArray: function() {
 		const binding = this.getDefaultBinding();
 
@@ -76,7 +81,8 @@ const EventForm = React.createClass({
 
 		return schools;
 	},
-	handleChangeFartherThan: function (eventDescriptor) {
+
+	handleChangeFartherThan: function (eventDescriptor): void {
 		const	binding	= this.getDefaultBinding(),
 				rivals	= binding.toJS('rivals');
 
@@ -86,35 +92,34 @@ const EventForm = React.createClass({
 			.set('fartherThen',					eventDescriptor.target.value)
 			.commit();
 	},
-	changeCompleteAges: function (selections) {
-		const binding = this.getDefaultBinding();
 
-		binding.set('model.ages', Immutable.fromJS(selections));
-	},
-	handleChangeGender: function (gender) {
+	handleChangeGender: function (gender: string): void {
 		const binding = this.getDefaultBinding();
 
 		binding.set('model.gender', Immutable.fromJS(gender));
 	},
-	getFartherThenItems: function () {
-		return EventHelper.distanceItems.map(item => {
+
+	getFartherThenItems: function (): React.ReactNode {
+		return LocalEventHelper.distanceItems.map(item => {
 			return (
 				<option	value	= { item.id }
-						key		= { item.id }
+				           key		= { item.id }
 				>
 					{item.text}
 				</option>
 			);
 		});
 	},
-	isShowDistanceSelector: function() {
+
+	isShowDistanceSelector: function(): boolean {
 		const	binding			= this.getDefaultBinding(),
-				type			= binding.get('model.type'),
-				activeSchool	= binding.toJS('schoolInfo'),
-				postcode		= activeSchool.postcode;
+			type			= binding.get('model.type'),
+			activeSchool	= binding.toJS('schoolInfo'),
+			postcode		= activeSchool.postcode;
 
 		return type === 'inter-schools' && typeof postcode !== 'undefined';
 	},
+
 	getSport: function () {
 		const binding = this.getDefaultBinding();
 
@@ -122,11 +127,12 @@ const EventForm = React.createClass({
 			binding.toJS('model.sportModel') :
 			binding.toJS('model.sport');
 	},
-	renderSchoolManager: function () {
+
+	renderSchoolManager: function (): React.ReactNode {
 		let result;
 
 		switch (this.props.mode) {
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+			case EVENT_FORM_MODE.SCHOOL: {
 				result = (
 					<SchoolsManager
 						binding			= { this.getDefaultBinding() }
@@ -135,7 +141,7 @@ const EventForm = React.createClass({
 				);
 				break;
 			}
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+			case EVENT_FORM_MODE.SCHOOL_UNION: {
 				result = (
 					<SchoolUnionSchoolsManager
 						binding			= { this.getDefaultBinding() }
@@ -148,11 +154,12 @@ const EventForm = React.createClass({
 
 		return result;
 	},
-	renderGameTypeSelector: function () {
+
+	renderGameTypeSelector: function (): React.ReactNode | null {
 		let result;
 
 		switch (this.props.mode) {
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+			case EVENT_FORM_MODE.SCHOOL: {
 				result = (
 					<div className="bInputWrapper">
 						<div className="bInputLabel">
@@ -163,7 +170,7 @@ const EventForm = React.createClass({
 				);
 				break;
 			}
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+			case EVENT_FORM_MODE.SCHOOL_UNION: {
 				result = null;
 				break;
 			}
@@ -171,11 +178,12 @@ const EventForm = React.createClass({
 
 		return result;
 	},
-	renderAgeMultiselectDropdownWrapper: function () {
+
+	renderAgeMultiselectDropdownWrapper: function (): React.ReactNode | null {
 		let result;
 
-		switch (EventFormConsts.EVENT_FORM_MODE.SCHOOL) {
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL: {
+		switch (EVENT_FORM_MODE.SCHOOL) {
+			case EVENT_FORM_MODE.SCHOOL: {
 				result = (
 					<div className="bInputWrapper">
 						<div className="bInputLabel">
@@ -186,7 +194,7 @@ const EventForm = React.createClass({
 				);
 				break;
 			}
-			case EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION: {
+			case EVENT_FORM_MODE.SCHOOL_UNION: {
 				result = null;
 				break;
 			}
@@ -194,14 +202,15 @@ const EventForm = React.createClass({
 
 		return result;
 	},
+
 	render: function() {
-		const	self = this,
-				binding = self.getDefaultBinding();
+		const	binding = this.getDefaultBinding();
 
 		const	event						= binding.toJS('model'),
-				fartherThen					= binding.get('fartherThen'),
-				type						= event.type,
-				opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
+			gender                      = binding.toJS('model.gender'),
+			fartherThen					= binding.get('fartherThen'),
+			type						= event.type,
+			opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
 
 		return(
 			<div className="eManager_base">
@@ -218,7 +227,7 @@ const EventForm = React.createClass({
 					</div>
 					<TimeInputWrapper binding={binding.sub('model.endTime')}/>
 				</div>
-				<SportSelectorWrapper
+				<SportSelector
 					binding			= { binding }
 					activeSchoolId	= { this.props.activeSchoolId }
 					mode			= { this.props.mode }
@@ -228,9 +237,10 @@ const EventForm = React.createClass({
 						Genders
 					</div>
 					<GenderSelectorWrapper
-						gender				= { binding.toJS('model.gender') }
+						gender				= { gender }
 						sport				= { this.getSport() }
 						handleChangeGender	= { this.handleChangeGender }
+						extraStyle          = ''
 					/>
 				</div>
 				{ this.renderAgeMultiselectDropdownWrapper() }
@@ -244,11 +254,11 @@ const EventForm = React.createClass({
 							Maximum distance
 						</div>
 						<select	className		= "bDropdown"
-								defaultValue	= {EventHelper.distanceItems[0].id}
-								value			= {fartherThen}
-								onChange		= {self.handleChangeFartherThan}
+						           defaultValue	= {LocalEventHelper.distanceItems[0].id}
+						           value			= {fartherThen}
+						           onChange		= {this.handleChangeFartherThan}
 						>
-							{self.getFartherThenItems()}
+							{this.getFartherThenItems()}
 						</select>
 					</div>
 				</If>
@@ -266,15 +276,14 @@ const EventForm = React.createClass({
 						activeSchoolId	= { this.props.activeSchoolId }
 					/>
 				</If>
-				<EventVenue	binding					= { binding }
-							eventType				= { binding.toJS('model.type') }
-							activeSchoolInfo		= { binding.toJS('schoolInfo') }
-							opponentSchoolInfoArray	= { opponentSchoolInfoArray }
-							isCopyMode				= { this.props.isCopyMode }
+				<EventVenue
+					binding					= { binding }
+					eventType				= { binding.toJS('model.type') }
+					activeSchoolInfo		= { binding.toJS('schoolInfo') }
+					opponentSchoolInfoArray	= { opponentSchoolInfoArray }
+					isCopyMode				= { this.props.isCopyMode }
 				/>
 			</div>
 		);
 	}
 });
-
-module.exports = EventForm;

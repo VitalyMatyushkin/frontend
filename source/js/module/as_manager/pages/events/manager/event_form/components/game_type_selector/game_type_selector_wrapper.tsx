@@ -1,11 +1,11 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		RivalsHelper		= require('module/ui/managers/rival_chooser/helpers/rivals_helper'),
-		RadioButtonCustom	= require('../../../../../../../ui/radio_button_custom/radio_button_custom'),
-		ControlPanel		= require('../../../../../../../ui/control_panel/control_panel');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as RivalsHelper from 'module/ui/managers/rival_chooser/helpers/rivals_helper';
+import * as RadioButtonCustom from '../../../../../../../ui/radio_button_custom/radio_button_custom';
+import * as ControlPanel from '../../../../../../../ui/control_panel/control_panel';
 
-const GameTypeSelectorWrapper = React.createClass({
+export const GameTypeSelectorWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	CUSTOM_CSS_RADIO_BUTTON_STYLE:		"mGenderSelector",
@@ -24,7 +24,8 @@ const GameTypeSelectorWrapper = React.createClass({
 		"HOUSES_RADIO_BUTTON":			"HOUSES_RADIO_BUTTON",
 		"INTERNAL_RADIO_BUTTON":		"INTERNAL_RADIO_BUTTON"
 	},
-	getRadioButtonIdArray: function() {
+
+	getRadioButtonIdArray: function(): string[] {
 		const ids = [];
 
 		for(let key in this.RADIO_BUTTON_IDS) {
@@ -34,26 +35,27 @@ const GameTypeSelectorWrapper = React.createClass({
 		return ids;
 	},
 
-	isCheckedById: function(radioButtonId) {
+	isCheckedById: function(radioButtonId: string): boolean {
 		switch (radioButtonId) {
 			case this.RADIO_BUTTON_IDS.INTER_SCHOOLS_RADIO_BUTTON:
-				return this.iInterSchoolsChecked();
+				return this.isInterSchoolsChecked();
 			case this.RADIO_BUTTON_IDS.HOUSES_RADIO_BUTTON:
 				return this.isHousesChecked();
 			case this.RADIO_BUTTON_IDS.INTERNAL_RADIO_BUTTON:
 				return this.isInternalChecked();
 		}
 	},
-	iInterSchoolsChecked: function() {
+	isInterSchoolsChecked: function(): boolean {
 		return this.getDefaultBinding().toJS('model.type') === 'inter-schools';
 	},
-	isHousesChecked: function() {
+	isHousesChecked: function(): boolean {
 		return this.getDefaultBinding().toJS('model.type') === 'houses';
 	},
-	isInternalChecked: function() {
+	isInternalChecked: function(): boolean {
 		return this.getDefaultBinding().toJS('model.type') === 'internal';
 	},
-	getTextById: function(radioButtonId) {
+
+	getTextById: function(radioButtonId: string): string {
 		switch (radioButtonId) {
 			case this.RADIO_BUTTON_IDS.INTER_SCHOOLS_RADIO_BUTTON:
 				return this.RADIO_BUTTON_TEXT.INTER_SCHOOLS_RADIO_BUTTON;
@@ -64,7 +66,7 @@ const GameTypeSelectorWrapper = React.createClass({
 		}
 	},
 
-	handleClick: function(radioButtonId) {
+	handleClick: function(radioButtonId: string): void {
 		const binding = this.getDefaultBinding();
 
 		let rivals;
@@ -98,13 +100,14 @@ const GameTypeSelectorWrapper = React.createClass({
 			.set('autocomplete',	Immutable.Map())
 			.commit();
 	},
-	getRadioButtonArray: function() {
+
+	getRadioButtonArray: function(): React.ReactNode {
 		return this.getRadioButtonIdArray().map(radioButtonId => {
 			return (
 				<RadioButtonCustom	isChecked	= { this.isCheckedById(radioButtonId) }
-									text		= { this.getTextById(radioButtonId) }
-									onClick		= { this.handleClick.bind(null, radioButtonId) }
-									customCSS	= { this.CUSTOM_CSS_RADIO_BUTTON_STYLE }
+				                      text		= { this.getTextById(radioButtonId) }
+				                      onClick		= { this.handleClick.bind(null, radioButtonId) }
+				                      customCSS	= { this.CUSTOM_CSS_RADIO_BUTTON_STYLE }
 				/>
 			);
 		});
@@ -116,5 +119,3 @@ const GameTypeSelectorWrapper = React.createClass({
 		);
 	}
 });
-
-module.exports = GameTypeSelectorWrapper;

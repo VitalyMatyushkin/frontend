@@ -1,0 +1,4 @@
+export const EVENT_FORM_MODE = {
+	'SCHOOL': 'SCHOOL',
+	'SCHOOL_UNION'	: 'SCHOOL_UNION'
+};

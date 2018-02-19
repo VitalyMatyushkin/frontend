@@ -1,7 +1,7 @@
 const	ManagerConsts					= require('./../ui/managers/helpers/manager_consts'),
 		TeamHelper						= require('./../ui/managers/helpers/team_helper'),
 		EventHelper						= require('./eventHelper'),
-		SavingPlayerChangesPopupHelper	= require('module/as_manager/pages/events/saving_player_changes_popup/helper'),
+		{SavingPlayerChangesPopupHelper}= require('module/as_manager/pages/events/saving_player_changes_popup/helper'),
 		Promise							= require('bluebird');
 
 function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
