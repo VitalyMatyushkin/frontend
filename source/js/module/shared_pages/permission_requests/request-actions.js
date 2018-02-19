@@ -276,8 +276,8 @@ class RequestActionsClass {
 				text:'Details',
 				isSorted:true,
 				cell:{
-					// dataField:'requestedPermission.comment'
-					dataField:'requestedPermission',
+					dataField:'requestedPermission.comment',
+					// dataField:'requestedPermission',
 					type:'custom',
 					typeOptions:{
 						parseFunction: this.getDetails.bind(this)
