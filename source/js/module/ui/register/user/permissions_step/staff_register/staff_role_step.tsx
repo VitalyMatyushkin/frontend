@@ -71,7 +71,7 @@ export class StaffRoleStep extends React.Component<StaffRoleStepProps, StaffRole
 					{this.renderRolesOptions()}
 					<div className="bRegistrationControlButtons">
 						<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
-						<button className="bButton" onClick={() => this.props.setRole(this.state.selectedOption)}>Continue</button>
+						<button className="bButton" onClick={() => this.props.setRole(this.state.selectedOption)}>Finish</button>
 					</div>
 				</div>
 			</div>

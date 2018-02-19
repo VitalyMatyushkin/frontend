@@ -21,93 +21,6 @@ export const FinishPermissionsStep = (React as any).createClass({
 		this.getDefaultBinding().set('isSyncFinish', true);
 	},
 
-	renderStaffFields: function (): React.ReactNode {
-		const	binding		= this.getDefaultBinding(),
-				schoolName	= binding.toJS('school').name;
-		return (
-			<div className = "eTextWrapper">
-				<div className = "eText">
-					<div className = "eTextKey">School</div>
-					<div className = "eTextValue">{schoolName}</div>
-				</div>
-				{ typeof binding.toJS('role') !== 'undefined' && !this.isSchoolWithoutUsers(binding.toJS('school')) ?
-					<div className = "eText">
-						<div className = "eTextKey">Role</div>
-						<div className = "eTextValue">{binding.toJS('role')}</div>
-					</div> : null
-				}
-				{ typeof binding.toJS('subscriptionOption') !== 'undefined' ?
-					<div className = "eText">
-						<div className = "eTextKey">Subscription</div>
-						<div className = "eTextValue">{this.getSubscriptionText(binding.toJS('subscriptionOption'), schoolName)}</div>
-					</div> : null
-				}
-			</div>
-		);
-	},
-
-	isSchoolWithoutUsers: function (school): boolean {
-		const rolesExistence = propz.get(school, ['stats', 'rolesExistence', 'staff'], true);
-		return !rolesExistence;
-	},
-
-	getSubscriptionText: function (option: string, schoolName: string): string {
-		let subscriptionText;
-		switch (option) {
-			case SUBSCRIPTION_OPTIONS.FULL:
-				subscriptionText = `I’m a school official for ${schoolName} and I would like to sign my school up to the full subscription`;
-				break;
-			case SUBSCRIPTION_OPTIONS.TRIAL:
-				subscriptionText = `I’m a school official for ${schoolName} and I would like to sign up for the 30 days free trial`;
-				break;
-			case SUBSCRIPTION_OPTIONS.FREE:
-				subscriptionText = `I’m a PE teacher for ${schoolName} and I would like to sign up as a sole PE teacher for free`;
-				break;
-		}
-
-		return subscriptionText;
-	},
-
-	renderStudentFields: function (): React.ReactNode {
-		const binding = this.getDefaultBinding();
-		return (
-			<div className = "eTextWrapper">
-				<div className = "eText">
-					<div className = "eTextKey">Registration type</div>
-					<div className = "eTextValue">{TYPE_REGISTER[binding.toJS('registerType')].studentText}</div>
-				</div>
-				{ typeof binding.toJS('school') !== 'undefined' ?
-					<div className = "eText">
-						<div className = "eTextKey">School</div>
-						<div className = "eTextValue">{binding.toJS('school').name}</div>
-					</div> : null
-				}
-			</div>
-		);
-	},
-
-	renderParentFields: function (): React.ReactNode {
-		const binding = this.getDefaultBinding();
-		return (
-			<div className = "eTextWrapper">
-				<div className = "eText">
-					<div className = "eTextKey">Registration type</div>
-					<div className = "eTextValue">{TYPE_REGISTER[binding.toJS('registerType')].parentText}</div>
-				</div>
-				{ typeof binding.toJS('school') !== 'undefined' ?
-					<div className = "eText">
-						<div className = "eTextKey">School</div>
-						<div className = "eTextValue">{binding.toJS('school').name}</div>
-					</div> : null
-				}
-				<div className = "eText">
-					<div className = "eTextKey">Child</div>
-					<div className = "eTextValue">{`${binding.toJS('childFields').firstName} ${binding.toJS('childFields').lastName}`}</div>
-				</div>
-			</div>
-		);
-	},
-
 	handleClickOk: function (): void {
 		const dataToPost = this.getPostData();
 		this.getDefaultBinding().set('isSyncFinish', false);
@@ -151,22 +64,9 @@ export const FinishPermissionsStep = (React as any).createClass({
 				userType	= binding.toJS('userType'),
 				isSync      = binding.get('isSyncFinish');
 
-		let result;
-		switch (userType) {
-			case TYPE_USER.STAFF:
-				result = this.renderStaffFields();
-				break;
-			case TYPE_USER.STUDENT:
-				result = this.renderStudentFields();
-				break;
-			case TYPE_USER.PARENT:
-				result = this.renderParentFields();
-				break;
-		}
-
 		return (
 			<ConfirmPopup
-				okButtonText="Finish"
+				okButtonText="Send"
 				cancelButtonText="Back"
 				handleClickOkButton={() => this.handleClickOk()}
 				handleClickCancelButton={() => this.props.handleClickBack()}
@@ -176,11 +76,12 @@ export const FinishPermissionsStep = (React as any).createClass({
 				{isSync ?
 					<div>
 						<div className="bFinishSubtitle">
-							You see the data that you selected in the previous steps.<br/>
-							You can go <span>Back</span> and change them.
-							If all is correct, click <span>Finish</span>.
+							Role request confirmation
 						</div>
-						{result}
+						<div className="bFinishBody">
+							You are going to send a role request to join {binding.toJS('school').name}<br/>
+							Are you sure?
+						</div>
 					</div>
 					:
 					<Loader/>

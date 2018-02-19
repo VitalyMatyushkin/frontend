@@ -17,6 +17,7 @@ export const ChildStep = (React as any).createClass({
 				onSubmit			= {this.onSubmit}
 				onCancel			= {this.props.handleClickBack}
 				rejectButtonText	= 'Back'
+				defaultButton       = 'Finish'
 			>
 				<FormField type="text" field="firstName" validation="required text">Child’s name</FormField>
 				<FormField type="text" field="lastName" validation="required text">Child’s surname</FormField>

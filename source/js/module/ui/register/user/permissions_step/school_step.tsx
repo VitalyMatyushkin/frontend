@@ -116,6 +116,7 @@ export const SchoolStep = (React as any).createClass({
 					onSubmit={this.onSubmit}
 					onCancel={this.props.handleClickBack}
 					rejectButtonText='Back'
+					defaultButton={this.props.mode === TYPE_USER.STUDENT ? 'Finish' : 'Continue'}
 				>
 					<div className="eForm_field">
 						<div className="eForm_fieldName">

@@ -77,7 +77,7 @@ export class MemberSchoolStep extends React.Component< MemberSchoolStepProps,  M
 					</div>
 					<div className="bRegistrationControlButtons">
 						<button className="bButton mCancel" onClick={() => this.props.handleClickBack()}>Back</button>
-						<button className="bButton" onClick={() => this.props.setOptions(this.state.selectedOption)}>Continue</button>
+						<button className="bButton" onClick={() => this.props.setOptions(this.state.selectedOption)}>Finish</button>
 					</div>
 				</div>
 			</div>

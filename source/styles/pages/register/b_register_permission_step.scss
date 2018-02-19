@@ -40,13 +40,21 @@
 
       .bFinishSubtitle {
         color: #333132;
-        font-size: 18px;
+        font-size: 25px;
         text-align: center;
+        font-weight: bold;
+        margin-bottom: 25px;
 
         span {
           font-weight: bold;
           color: #007abf;
         }
+      }
+
+      .bFinishBody {
+        text-align: center;
+        max-width: 600px;
+        line-height: 20px;
       }
 
       .eConfirmPopup_footer {
