@@ -38,7 +38,7 @@ const ModerationPage = React.createClass({
 			}
 		).then(() => {
 			window.simpleAlert(
-				'Moderation settings has been saved',
+				'Moderation settings have been saved',
 				'Ok',
 				() => {}
 			);

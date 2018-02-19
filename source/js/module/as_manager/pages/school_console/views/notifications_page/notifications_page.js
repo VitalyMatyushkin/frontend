@@ -24,7 +24,7 @@ const NotificationsPage = React.createClass({
 
 		window.Server.schoolNotifications.put(SchoolHelper.getActiveSchoolId(this), patchedData).then( () => {
 			window.simpleAlert(
-				`Notifications settings has been saved`,
+				`Notifications settings have been saved`,
 				'Ok',
 				() => {}
 			);
