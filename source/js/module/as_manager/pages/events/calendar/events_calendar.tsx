@@ -103,19 +103,11 @@ export const EventsCalendar = (React as any).createClass({
 
 	render: function(){
 		const	binding						= this.getDefaultBinding(),
-			activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-			sliderWasOpened				= this.getMoreartyContext().getBinding().get('sliderHelpAlert.wasOpened'),
-			isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
-			isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
-			selectedDateEvents			= binding.toJS('selectedDateEventsData.events'),
-			showSlider	 				= binding.get('isSyncSlider') && binding.get('webIntroEnabled');
+				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
+				isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
+				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
 
-		if (showSlider && !sliderWasOpened) {
-			(window as any).sliderAlert(
-				binding.get('webIntroEnabled'),
-				binding.get('webIntroShowTimes')
-			);
-		}
 		return (
 			<div className="bEvents">
 				<div className="eEvents_container">

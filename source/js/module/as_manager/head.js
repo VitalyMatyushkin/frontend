@@ -167,23 +167,19 @@ const Head = React.createClass({
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
-				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.MANAGER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
-				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.TEACHER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
-				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.COACH && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
-				menuItems.push(this.getDemoMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.PARENT && kindSchool === 'School':
 				return this.getMainMenuItemsForParent();
@@ -387,15 +383,6 @@ const Head = React.createClass({
 			name	: 'Help',
 			key		: 'Help'
 		};
-	},
-	getDemoMenuItem: function()  {
-		return {
-			href: '/#demo',
-			name: 'Demo',
-			key: 'Demo',
-			authorization: true,
-			routes: ['/Demo']
-		}
 	},
 	createTopMenu: function() {
 		const binding = this.getDefaultBinding();

@@ -58,6 +58,66 @@
 
 }
 
+.eTopMenu_drop{
+  color: $textColor;
+  display: inline-block;
+  padding: 25px 8px 0;
+  position: relative;
+  margin-left: 10px;
+
+  .eArrow{
+    background: url(/images/down.png) no-repeat center top;
+    left: -16px;
+    top: 30px;
+    position: absolute;
+    height: 100%;
+    width: 25px;
+  }
+
+  .eTopMenu_dropItems{
+    position: absolute;
+    left: -10px;
+    display: block;
+    z-index: -1000;
+    opacity: 0;
+    transition: z-index 0.2s, opacity 0.2s ease-in-out;
+    background-color: #ffffff;
+    border: solid 1px #d2d2d2;
+    border-radius: 7px;
+    width: 105px;
+    text-align: left;
+  }
+
+  &.mActive, &:hover{
+    color: $textColor;
+    text-decoration: none;
+  }
+
+  .eTopMenu_dropItem_options{
+    color: $textColor;
+    display: inline-block;
+    padding: 15px 8px 0;
+    position: relative;
+    border-bottom: solid 1px #d2d2d2;
+
+    &:hover {
+      background: #fafafa;
+    }
+
+    &.mActive, &:hover{
+      color: $textColor;
+      text-decoration: none;
+    }
+  }
+}
+
+.mOpen {
+  .eTopMenu_dropItems {
+    z-index: 1000;
+    opacity: 1;
+  }
+}
+
 .bTopMenu.mRight .eTopMenu_item .bIcon{
   margin-right: 0;
 }
