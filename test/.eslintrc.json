@@ -1,0 +1,64 @@
+/**
+ * Created by wert on 16.11.16.
+ */
+
+{
+
+    "parser": "babel-eslint",
+	"parserOptions": {
+		"ecmaVersion": 6,
+        "ecmaFeatures": {
+          "jsx":              true,
+          "blockBindings":    true,
+          "templateStrings":  true,
+          "arrowFunctions":   true,
+		  "classes":          true
+      }
+	},
+
+	"rules": {
+		"comma-dangle":             [2, "never"],
+		"no-cond-assign":           2,
+		"no-constant-condition":    2,
+		"no-dupe-args":             2,
+		"no-dupe-keys":             2,
+		"no-duplicate-case":        2,
+		"no-empty":                 2,
+		"no-func-assign":           2,
+		"no-inner-declarations":    2,
+		"no-unreachable":           2,
+		"no-delete-var":            2,
+		"no-undef":                 2
+		//    "no-unused-vars":           1   // produces a lot of errors. Will be turned on later
+	},
+	"globals": {  // global variables allowed by 'no-undef' rule. true is read-write for var, false is read-only
+		"require":      false,
+		"module":       true,
+		"Map":          true,         // this is really Map component, which overrides ES6 Map
+		"Promise":      true,          // hardly used with bluebird
+		"requirejs":    true,
+		"onmessage":    true,   // for worker
+		"google":       true,
+		// emulating env: browser
+		// so, we can't remove global 'self' from browser env. Thats why we will just enumarate all allowed globals here:
+		"console":          true,
+		"window":           true,
+		"document":         true,
+		"alert":            true,
+		"confirm":          true,
+		"setTimeout":       true,
+		"clearTimeout":     true,
+		"setInterval":      true,
+		"clearInterval":    true,
+		"FormData":         true,
+		"postMessage":      true,
+		"XMLHttpRequest":   true,
+		"MouseEvent":       true,
+        "describe":         true,
+        "it":               true
+	},
+	"env": {
+      // we don't use browser env here. This is because some entries like "self" considered okay in browser env.
+      // So I just declared all commonly used vars above.
+	}
+}

@@ -8,6 +8,7 @@
     "@types/bluebird": "^3.5.19",
     "@types/react": "^16.0.19",
     "@types/react-dom": "^16.0.2",
+    "axios": "^0.17.1",
     "bluebird": "^3.4.1",
     "bootstrap-sass": "^3.3.7",
     "bowser": "^1.7.2",
@@ -32,6 +33,9 @@
     "react-maskedinput": "^4.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/chai-subset": "^1.3.1",
+    "@types/mocha": "^2.2.48",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
@@ -49,7 +53,8 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-react": "^6.3.13",
-    "chai": "^3.3.0",
+    "chai": "^3.5.0",
+    "chai-subset": "^1.6.0",
     "chromedriver": "^2.31.0",
     "css-loader": "^0.28.5",
     "debug-loader": "0.0.1",
@@ -70,6 +75,14 @@
     "gulp-using": "^0.1.1",
     "html-webpack-plugin": "^2.30.0",
     "json-loader": "^0.5.7",
+    "karma": "^2.0.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.9",
+    "mocha": "^5.0.1",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.5",
     "postcss-scss": "^1.0.2",
@@ -91,7 +104,8 @@
     "deploy": "gulp deploy",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "clean-deploy": "rm -rf ./node_modules && npm install && npm run deploy",
-    "file-stats": "find ./source -type f | sed 's/.*\\.//' | sort | uniq -c"
+    "file-stats": "find ./source -type f | sed 's/.*\\.//' | sort | uniq -c",
+    "unit-test-watch": "./node_modules/karma/bin/karma start"
   },
   "repository": {
     "type": "git",

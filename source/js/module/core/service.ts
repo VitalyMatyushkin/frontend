@@ -127,9 +127,10 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 			if(isDataOnly) {
 				return response as GetDataType | PostDataType | DeleteDataType;
 			} else {
-				response.data =  response.data as GetDataType | PostDataType | DeleteDataType;
+			    const anyResponse = response as any;
+				anyResponse.data =  anyResponse.data as GetDataType | PostDataType | DeleteDataType;
 
-				return response;
+				return anyResponse;
 			}
 		});
 	}
