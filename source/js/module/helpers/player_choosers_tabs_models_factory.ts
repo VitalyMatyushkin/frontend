@@ -19,16 +19,12 @@ export const PlayerChoosersTabsModelFactory = {
 			case ManagerTypes.ChildrenBooking: {
 				const tabs = [
 					new PlayerChoosersTabModel({
-						type: TabTypes.ChildrenBookingAllChildrenTab,
-						text: 'All Children'
-					}),
-					new PlayerChoosersTabModel({
 						type: TabTypes.ChildrenBookingBookedChildrenTab,
 						text: 'Children Booking'
 					}),
 				];
 
-				tabsModel = new PlayerChoosersTabsModel( { tabs: tabs, isShowTabs: true } );
+				tabsModel = new PlayerChoosersTabsModel( { tabs: tabs, isShowTabs: false } );
 
 				break;
 			}

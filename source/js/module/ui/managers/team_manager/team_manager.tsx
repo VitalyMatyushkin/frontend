@@ -43,9 +43,9 @@ export const TeamManager = (React as any).createClass({
 	componentWillMount() {
 		const binding = this.getDefaultBinding();
 
+		this.initSelectedTabId();
 		this.searchAndSetStudents('', binding);
 		this.initTeamValues();
-		this.initSelectedTabId();
 
 		this.listeners.push(binding.sub('filter').addListener(() => {
 			this.isActive() && this.searchAndSetStudents(this.currentSearchText, binding);

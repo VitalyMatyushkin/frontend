@@ -8,6 +8,7 @@ import * as Loader from 'module/ui/loader'
 
 import {ActiveClubHelper} from 'module/as_manager/pages/clubs/activate_club/active_club_helper'
 import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
+import {ActivateClubConfirmAlert} from "module/as_manager/pages/clubs/activate_club/activate_club_confirm_alert";
 
 const LoaderStyle = require('styles/ui/loader.scss');
 const ActivateClubStyle	= require('styles/ui/b_activate_club.scss');
@@ -29,9 +30,16 @@ export const ActivateClub = (React as any).createClass({
 			ClubsActions
 				.getClub(this.props.activeSchoolId, clubId)
 				.then(club => {
-					binding.set('isSync', true);
 					binding.set('club', Immutable.fromJS(club));
-				});
+
+					return ClubsActions.getAcceptableUsers(this.props.activeSchoolId, this.props.clubId);
+				})
+				.then(users => {
+					binding.set('clubAcceptableUsers', Immutable.fromJS(users));
+					binding.set('isSync', true);
+
+					return true;
+				})
 		}
 	},
 	componentWillUnmount() {
@@ -40,16 +48,24 @@ export const ActivateClub = (React as any).createClass({
 	handleClickActivateButton() {
 		const binding = this.getDefaultBinding();
 
-		binding.set('isSync', false);
-		ClubsActions
-			.activateClub(this.props.activeSchoolId, this.props.clubId)
-			.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
-			.then(club => {
-				window.simpleAlert('The club has been activated successfully.');
+		(window as any).confirmAlert(
+			<ActivateClubConfirmAlert club={binding.toJS('club')} clubAcceptableUsers={binding.toJS('clubAcceptableUsers')}/>,
+			"Ok",
+			"Cancel",
+			() => {
+				binding.set('isSync', false);
 
-				binding.set('club', Immutable.fromJS(club));
-				binding.set('isSync', true);
-			});
+				ClubsActions
+					.activateClub(this.props.activeSchoolId, this.props.clubId)
+					.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
+					.then(club => {
+						window.simpleAlert('The club has been activated successfully.');
+
+						binding.set('club', Immutable.fromJS(club));
+						binding.set('isSync', true);
+					});
+			}
+		);
 	},
 	render() {
 		const binding = this.getDefaultBinding();

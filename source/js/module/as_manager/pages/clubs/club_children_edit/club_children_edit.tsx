@@ -19,6 +19,7 @@ import {ClubsChildrenBookingActionArea} from 'module/as_manager/pages/clubs/club
 import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
 import {ServiceList} from "module/core/service_list/service_list";
 import {Sport} from "module/models/sport/sport";
+import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup_wrapper";
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
 const	ClubcChildrenWrapperStyle	= require('styles/pages/b_club_children_manager_wrapper.scss');
@@ -101,6 +102,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 						this.getTeamManagerDefaultState(school, club, sport, participants)
 					)
 				);
+				binding.set('isShowNotificationListPopup', false);
 				binding.set('isSync', true);
 				this.validate();
 				this.addListeners();
@@ -261,21 +263,34 @@ export const ClubChildrenEdit = (React as any).createClass({
 		this.getDefaultBinding().set('isSync', true);
 		window.simpleAlert('The pupils have been added successfully.');
 	},
-	handleSendMessages() {
+	handleClickSubmitBookingForms() {
 		this.getDefaultBinding().set('isSync', false);
+		this.getDefaultBinding().set('isShowNotificationListPopup', true);
+
+	},
+	handleClickSubmitBookingFormsOnPopup(users) {
 		return (window.Server as ServiceList).schoolClubSendMessages.post(
 			{
 				schoolId:	this.props.activeSchoolId,
 				clubId:		this.props.clubId
 			},
-			{}
+			{
+				participants: users.map(user => {
+					return {userId: user.userId, permissionId: user.permissionId}
+				})
+			}
 		).then(() => {
 			window.simpleAlert('Messages has been send successfully.');
 
 			this.setNewManagerComponentKey();
-
 			this.getDefaultBinding().set('isSync', true);
+			this.getDefaultBinding().set('isShowNotificationListPopup', false);
 		});
+
+	},
+	handleClickCancelButtonOnPopup() {
+		this.getDefaultBinding().set('isSync', true);
+		this.getDefaultBinding().set('isShowNotificationListPopup', false);
 	},
 	handleClickSubmitButton() {
 		if(this.isSaveButtonEnable()) {
@@ -286,52 +301,82 @@ export const ClubChildrenEdit = (React as any).createClass({
 				.then(() => this.doAfterSaveActions());
 		}
 	},
-	render() {
-		const   binding = this.getDefaultBinding(),
-				isActiveClub = binding.toJS('club.status') === 'ACTIVE';
-
-		let clubForm = null;
-		if(binding.toJS('isSync')) {
+	renderNotificationListPopup() {
+		if(this.getDefaultBinding().toJS('isShowNotificationListPopup')) {
 			return (
-				<div className={`bClubChildrenManagerWrapper ${isActiveClub ? 'bClubChildrenManagerWrapper_disabled' : ''}`}>
-					<ClubsChildrenEditHeader/>
-					{
-						!isActiveClub ?
-						<ClubsChildrenBookingActionArea
-							handleSendMessages = { () => this.handleSendMessages() }
-						/>
-						: null
-					}
-					<TeamManager
-						key				= { this.getDefaultBinding().toJS('managerComponentKey') }
-						isNonTeamSport	= { true }
-						binding			= {
-							{
-								default:	binding.sub('teamManager'),
-								error:		binding.sub('error')
-							}
-						}
-						playerChoosersTabsModel = { this.playerChoosersTabsModel }
-						actions					= { this.teamManagerActions }
-					/>
-					{!isActiveClub ?
-						<div className="eClubChildrenManagerWrapper_footer">
-							<Button
-								text				= "Save"
-								onClick				= { this.handleClickSubmitButton }
-								extraStyleClasses	= { this.getSaveButtonStyleClass() }
-							/>
-						</div>
-						: null
-					}
-				</div>
+				<ClubChildrenEditNotificationListPopupWrapper
+					binding={this.getDefaultBinding().sub('clubChildrenEditNotificationListPopupData')}
+					clubId={this.props.clubId}
+					schoolId={this.props.activeSchoolId}
+					handleClickSubmitButton={(users) => this.handleClickSubmitBookingFormsOnPopup(users)}
+					handleClickCancelButton={() => this.handleClickCancelButtonOnPopup()}
+				/>
 			);
 		} else {
-			clubForm = (
-				<div className='bLoaderWrapper'>
-					<Loader condition={true}/>
-				</div>
-			);
+			return null;
+		}
+	},
+	render() {
+		const binding = this.getDefaultBinding();
+		const isActiveClub = binding.toJS('club.status') === 'ACTIVE';
+
+		let clubForm = null;
+
+		switch (true) {
+			case !binding.toJS('isSync') && binding.toJS('isShowNotificationListPopup'): {
+				clubForm = (
+					<div className='bLoaderWrapper'>
+						<Loader condition={true}/>
+						{this.renderNotificationListPopup()}
+					</div>
+				);
+				break;
+			}
+			case binding.toJS('isSync'): {
+				clubForm = (
+					<div className={`bClubChildrenManagerWrapper ${isActiveClub ? 'bClubChildrenManagerWrapper_disabled' : ''}`}>
+						<ClubsChildrenEditHeader/>
+						{
+							!isActiveClub ?
+								<ClubsChildrenBookingActionArea
+									handleSendMessages = { () => this.handleClickSubmitBookingForms() }
+								/>
+								: null
+						}
+						<TeamManager
+							key				= { this.getDefaultBinding().toJS('managerComponentKey') }
+							isNonTeamSport	= { true }
+							binding			= {
+								{
+									default:	binding.sub('teamManager'),
+									error:		binding.sub('error')
+								}
+							}
+							playerChoosersTabsModel = { this.playerChoosersTabsModel }
+							actions					= { this.teamManagerActions }
+						/>
+						{!isActiveClub ?
+							<div className="eClubChildrenManagerWrapper_footer">
+								<Button
+									text				= "Save"
+									onClick				= { this.handleClickSubmitButton }
+									extraStyleClasses	= { this.getSaveButtonStyleClass() }
+								/>
+							</div>
+							: null
+						}
+					</div>
+				);
+				break;
+			}
+			default: {
+				clubForm = (
+					<div className='bLoaderWrapper'>
+						<Loader condition={true}/>
+					</div>
+				);
+				break;
+			}
 		}
 
 		return clubForm;

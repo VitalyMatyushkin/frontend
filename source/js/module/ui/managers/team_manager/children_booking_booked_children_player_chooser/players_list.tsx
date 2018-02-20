@@ -11,7 +11,7 @@ export interface PlayerListProps {
 export class PlayersList extends React.Component<PlayerListProps, {}> {
 	render() {
 		return (
-			<div className="ePlayerChooser_playerList mChildrenBookingBookedChildren">
+			<div className="ePlayerChooser_playerList">
 				<table className="table table-hover">
 					<PlayerListHeader/>
 					<tbody>

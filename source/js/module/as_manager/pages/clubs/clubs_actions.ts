@@ -78,5 +78,8 @@ export const ClubsActions = {
 
 			return (window.Server as ServiceList).schoolPlaces.get({schoolId: schoolId}, filter);
 		};
+	},
+	getAcceptableUsers(schoolId, clubId) {
+		return (window.Server as ServiceList).schoolClubAcceptableUsers.get({schoolId, clubId});
 	}
 };

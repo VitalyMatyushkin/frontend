@@ -19,6 +19,31 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
 		});
 	}
 
+	getMessageStatus() {
+		let messageStatus = '';
+
+		const player = this.props.player;
+
+		const serverValueMessageStatus = player.messageStatus;
+		switch (true) {
+			case (
+				serverValueMessageStatus === 'NOT_SENT' &&
+				(typeof player.parents === 'undefined' || player.parents.length === 0)
+			): {
+
+				messageStatus = 'N/A';
+				break;
+			}
+			case typeof player.messageStatus !== 'undefined': {
+				messageStatus = ClubsChildrenBookingHelper.getClientMessageStatusValueByServerValue(player.messageStatus);
+				break;
+			}
+		}
+
+
+		return messageStatus;
+	}
+
 	handleClickPlayer() {
 		this.setState({
 			isSelected: !this.state.isSelected
@@ -30,36 +55,29 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
 	render() {
 		const player = this.props.player;
 		const formName = typeof player.form !== 'undefined' ? player.form.name : '';
-		const houseName = typeof player.house !== 'undefined' ? player.house.name : '';
 		const parents = typeof player.parents !== 'undefined' ? player.parents.join(',') : '';
-		const messageStatus = typeof player.messageStatus !== 'undefined' ?
-			ClubsChildrenBookingHelper.getClientMessageStatusValueByServerValue(player.messageStatus) :
-			'';
 
 		const style = classNames({
-			bBookedChildrenPlayer:	true,
-			mSelected:				this.state.isSelected
+			bBookedChildrenPlayer: true,
+			mSelected: this.state.isSelected
 		});
 
 		return (
 			<tr
-				onClick     = { () => this.handleClickPlayer() }
-				className   = { style }
+				onClick={() => this.handleClickPlayer()}
+				className={style}
 			>
-				<td className="col-md-3">
+				<td className="col-md-4">
 					{`${player.firstName} ${player.lastName}`}
 				</td>
 				<td className="col-md-2">
 					{ formName }
 				</td>
-				<td className="col-md-2">
-					{ houseName }
-				</td>
 				<td className="col-md-3">
 					{ parents }
 				</td>
-				<td className="col-md-2">
-					{ messageStatus }
+				<td className="col-md-3">
+					{ this.getMessageStatus() }
 				</td>
 			</tr>
 		);
