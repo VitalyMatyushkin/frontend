@@ -27,7 +27,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	binding: any;
 	requiredParams: any[];
 
-	constructor(url: string, binding: object) {
+	constructor(url: string, binding?: object) {
 		this.url = url;
 		this.binding = binding;
 
