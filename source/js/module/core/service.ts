@@ -8,6 +8,20 @@ const baseUrl = () => (window as any).apiBase;
 
 type MethodType = 'GET' | 'PUT' | 'POST' | 'HEAD' | 'DELETE';
 
+interface ActiveSession {
+	id?: string,
+	role?: string,
+	userId?: string,
+	adminId?: string
+	expireAt?: string
+	verified?: {
+		personal: boolean
+		email: boolean
+		sms: boolean
+	}
+}
+
+
 export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
 	url:  string;
 	binding: any;
@@ -78,10 +92,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 
 		let url = this.url;
 
-
-		const activeSession = typeof this.binding !== 'undefined' ?
-			SessionHelper.getActiveSession(this.binding) :
-			undefined;
+		const activeSession = this.getActiveSession();
 
 		if (this.requiredParams) {
 			url = url.replace(/\{(.*?)\}/g, function(match, param) {
@@ -133,6 +144,14 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 				return anyResponse;
 			}
 		});
+	}
+
+	private getActiveSession(): ActiveSession | undefined {
+		if(typeof this.binding !== 'undefined') {
+			const result = SessionHelper.getActiveSession(this.binding);
+			console.log('getActiveSession result is: ' + JSON.stringify(result, null, 2));
+			return result as ActiveSession;
+		}
 	}
 
 	private getPreparedDataForCallService(options?: any, data?: object): { data?: object, options?: object} {
