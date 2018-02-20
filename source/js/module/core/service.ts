@@ -135,7 +135,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 		});
 	}
 
-	getPreparedDataForCallService(options?: any, data?: object): { data?: object, options?: object} {
+	private getPreparedDataForCallService(options?: any, data?: object): { data?: object, options?: object} {
 		const preparedData = {
 			data:       undefined,
 			options:    undefined
@@ -177,7 +177,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 		return preparedData;
 	}
 
-	showError() {
+	private showError() {
 		log.error(`Service ${this.url} expects params: ${this.requiredParams}`);
 	}
 
@@ -185,7 +185,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	 * Function returns headers object from agr data from function _callService
 	 * @param data
 	 */
-	static getHeaders(data: object) {
+	private static getHeaders(data: object) {
 		const headers = propz.get(data, ['options', 'headers'], undefined);
 
 		return typeof headers !== 'undefined' ? headers : '';
@@ -196,13 +196,13 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	 * If isDataOnly is undefined then functions returns true by default
 	 * @param data
 	 */
-	static getIsDataOnlyFlag(data: object) {
+	private static getIsDataOnlyFlag(data: object) {
 		const isDataOnly = propz.get(data, ['options', 'isDataOnly'], undefined);
 
 		return typeof isDataOnly !== 'undefined' ? isDataOnly : true;
 	}
 
-	static removeOptions(data: any) {
+	private static removeOptions(data: any) {
 		const options = propz.get(data, ['options'], undefined);
 
 		if(typeof options !== 'undefined') {
@@ -216,7 +216,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	 * @param sources
 	 * @returns {string}
 	 */
-	static getFilter(sources: object[]) {
+	private static getFilter(sources: object[]) {
 		let filter = '';
 
 		if(typeof sources !== 'undefined') {
@@ -242,7 +242,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	 * @returns {Array} array of extracted params
 	 * @private
 	 */
-	static extractUrlParams(url: string) {
+	private static extractUrlParams(url: string) {
 		const copyUrl = String(url);
 		const urlParams = [];
 
