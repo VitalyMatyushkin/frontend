@@ -20,15 +20,34 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 		binding.set('isSync', false);
 		ClubsActions.getAcceptableUsers(this.props.schoolId, this.props.clubId)
 			.then(users => {
-				const filteredUsers = users.filter(user => user.messageStatus === 'PENDING' || user.messageStatus === 'NOT_SENT')
-					.map(user => {
-						user.checked = true;
-						user.userId = user.id;
+				const filteredUsers = users.filter(user =>
+						(user.messageStatus === 'PENDING' || user.messageStatus === 'NOT_SENT') &&
+						typeof user.parents !== 'undefined' &&
+						user.parents.length > 0
+					);
 
-						return user;
+				const parents = [];
+				filteredUsers.forEach(user => user.parents.forEach(_parent => {
+					const parent = Object.assign({}, _parent);
+					parent.extra = {
+						type: 'PARENT',
+						parentOf: {
+							userId: user.id,
+							permissionId: user.permissionId,
+							firstName: user.firstName,
+							lastName: user.lastName
+						}
+					};
+
+					parents.push(parent)
+				}));
+				let preparedParentArray = parents.map(parent => {
+						parent.checked = true;
+
+						return parent;
 					});
 
-				binding.set('clubAcceptableUsers', Immutable.fromJS(filteredUsers));
+				binding.set('parents', Immutable.fromJS(preparedParentArray));
 				binding.set('isSync', true);
 
 				return true;
@@ -40,19 +59,19 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 	handleClickUserActivityCheckbox(userId: string, permissionId: string) {
 		const binding = this.getDefaultBinding();
 
-		const clubAcceptableUsers = binding.toJS('clubAcceptableUsers');
-		const currentUserIndex = clubAcceptableUsers.findIndex(user =>
-			user.userId === userId && user.permissionId === permissionId
+		const parents = binding.toJS('parents');
+		const currentUserIndex = parents.findIndex(parent =>
+			parent.userId === userId && parent.permissionId === permissionId
 		);
-		clubAcceptableUsers[currentUserIndex].checked = !clubAcceptableUsers[currentUserIndex].checked;
+		parents[currentUserIndex].checked = !parents[currentUserIndex].checked;
 
-		binding.set('clubAcceptableUsers', Immutable.fromJS(clubAcceptableUsers));
+		binding.set('parents', Immutable.fromJS(parents));
 	},
 	handleClickSubmitButton() {
 		const binding = this.getDefaultBinding();
 
-		const clubAcceptableUsers = binding.toJS('clubAcceptableUsers');
-		const usersToSubmit = clubAcceptableUsers.filter(user => user.checked === true);
+		const parents = binding.toJS('parents');
+		const usersToSubmit = parents.filter(parent => parent.checked === true);
 
 		this.props.handleClickSubmitButton(usersToSubmit);
 	},
@@ -60,7 +79,7 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 		if(this.getDefaultBinding().toJS('isSync')) {
 			return (
 				<ClubChildrenEditNotificationListPopup
-					users={this.getDefaultBinding().toJS('clubAcceptableUsers')}
+					users={this.getDefaultBinding().toJS('parents')}
 					handleClickUserActivityCheckbox={(userId: string, permissionId: string) => this.handleClickUserActivityCheckbox(userId, permissionId)}
 					handleClickSubmitButton={() => this.handleClickSubmitButton()}
 					handleClickCancelButton={this.props.handleClickCancelButton}

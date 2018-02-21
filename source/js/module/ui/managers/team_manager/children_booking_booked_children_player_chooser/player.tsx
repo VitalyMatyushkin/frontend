@@ -44,6 +44,19 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
 		return messageStatus;
 	}
 
+	getParents() {
+		let parentsString = '';
+
+		const player = this.props.player;
+		if(typeof player.parents !== 'undefined' && this.props.player.parents.length > 0) {
+			const parentNames = player.parents.map(parent => `${parent.firstName} ${parent.lastName}`);
+
+			parentsString = parentNames.join(',');
+		}
+
+		return parentsString;
+	}
+
 	handleClickPlayer() {
 		this.setState({
 			isSelected: !this.state.isSelected
@@ -55,7 +68,7 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
 	render() {
 		const player = this.props.player;
 		const formName = typeof player.form !== 'undefined' ? player.form.name : '';
-		const parents = typeof player.parents !== 'undefined' ? player.parents.join(',') : '';
+		const parents = this.getParents();
 
 		const style = classNames({
 			bBookedChildrenPlayer: true,
