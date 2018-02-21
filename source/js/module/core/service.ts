@@ -3,6 +3,7 @@ import * as propz from 'propz';
 import * as SessionHelper from 'module/helpers/session_helper';
 import {AJAX} from 'module/core/AJAX';
 import * as BPromise from 'bluebird';
+import {urlParameterParser} from "module/core/service/url_parameter_parser";
 
 const baseUrl = () => (window as any).apiBase;
 
@@ -23,16 +24,16 @@ interface ActiveSession {
 
 
 export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
-	url:  string;
+	private url:  string;
+	private requiredParams: any[];
 	binding: any;
-	requiredParams: any[];
 
 	constructor(url: string, binding?: object) {
 		this.url = url;
 		this.binding = binding;
 
 		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
-		const urlParams = Service.extractUrlParams(url);
+		const urlParams = urlParameterParser(url);
 		this.requiredParams = urlParams.length === 0 ? undefined : urlParams;
 	}
 
@@ -250,33 +251,5 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 		}
 
 		return filter;
-	}
-
-	/**
-	 * Extracts params enclosed in curly braces from given string.
-	 * Example:
-	 * 		/users/{id}/friends/{friend_id}  -> [id, friend_id]
-	 * 		/users -> []
-	 * @param url string which contains params in curly braces like '/user/{id}'
-	 * @returns {Array} array of extracted params
-	 * @private
-	 */
-	private static extractUrlParams(url: string) {
-		const copyUrl = String(url);
-		const urlParams = [];
-
-		if (copyUrl.indexOf('{') !== -1) {
-			// TODO WTF??
-			copyUrl.replace(/\{(.*?)\}/g,(match, param) => {
-					if(urlParams.indexOf(param) === -1) {
-						urlParams.push(param);
-					}
-
-					return '';
-				}
-			);
-		}
-
-		return urlParams;
 	}
 }
