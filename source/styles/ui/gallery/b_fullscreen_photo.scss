@@ -7,7 +7,7 @@
   width: 100%;
   height: 100%;
   background-color: #303030;
-  z-index: 1001;
+  z-index: 98;
 }
 
 .eFullScreenPhoto_closeCross {
@@ -39,12 +39,22 @@
   min-width: 500px;
   min-height: 500px;
 
-  z-index: 1002;
+  z-index: 99;
 
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
   background-color: #fff;
+
+  .bLoader {
+    align-items: center;
+
+    .bIcon {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
 }
 
 .eFullScreenPhoto_photo {

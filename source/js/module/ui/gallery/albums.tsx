@@ -12,6 +12,7 @@ import {AlbumCreateComponent} from "module/ui/gallery/album/album_create";
 import {AlbumViewComponent} from "module/ui/gallery/album/album_view";
 import {PhotoEditComponent} from "module/ui/gallery/photo/photo_edit";
 import {PhotoAddComponent} from "module/ui/gallery/photo/photo_add";
+import {AddAnonymousIcon} from "module/ui/gallery/add_anonumous_icon";
 
 /**
  * The base component for routing the functions of the gallery.
@@ -74,6 +75,12 @@ export const AlbumRoutes = (React as any).createClass({
 					service 	= { this.props.service }
 					binding 	= { binding }
 					component 	= { PhotoEditComponent }
+				/>
+				<Route
+					path 		= { "/" + this.props.basePath + "/:albumId/photo-add-icon/:photoId" }
+					service 	= { this.props.service }
+					binding 	= { binding }
+					component 	= { AddAnonymousIcon }
 				/>
 			</RouterView>
 		);
