@@ -52,19 +52,29 @@ export class StudentListModel {
 	}
 	
 	getActions(){
-		return ['Merge'];
+		return ['Edit', 'Merge'];
 	}
 	
 	getQuickEditAction(itemId, action){
 		const actionKey = action;
 		//For future extension, maybe will appear new actions
 		switch (actionKey){
+			case 'Edit':
+				this.getEditFunction(itemId);
+				break;
 			case 'Merge':
 				this.getMergeFunction(itemId);
 				break;
 			default :
 				break;
 		}
+	}
+
+	getEditFunction(studentId) {
+		const 	globalBinding 	= this.getMoreartyContext().getBinding(),
+				schoolId 		= globalBinding.get('routing.pathParameters.0');
+
+		document.location.hash = `school_sandbox/${schoolId}/students/edit/${studentId}`;
 	}
 	
 	getMergeFunction(studentId){
