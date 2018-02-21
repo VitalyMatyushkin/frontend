@@ -20,3 +20,15 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+@media screen and (max-width: 768px) {
+  .bClubChildrenManagerWrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .eClubChildrenManagerWrapper_header {
+    width: 575px;
+    margin: 0 auto;
+  }
+}
