@@ -11,14 +11,32 @@ chai.use(chaiSubset);
 
 const expect = chai.expect;
 
-describe('service', () => {
+describe.only('service', () => {
 	it('should be creatable without params', () => {
 		const service = new Service('/i/login');
+		expect(service.requiredParams).to.be.undefined;	// to be empty array in future
 	});
 
 	it('should be creatable with one param', () => {
 		const service = new Service('/public/schools/{schoolId}');
+		expect(service.requiredParams).to.containSubset(['schoolId']);
 	});
 
-	it('should be creatable with multiple params');
+	it('should be creatable with multiple params', () => {
+		const service = new Service('/public/schools/{schoolId}/forms/{formId}');
+		expect(service.requiredParams).to.containSubset(['schoolId', 'formId']);
+	});
+
+	it('should be able to perform GET request to service without params in url', async () => {
+		(window as any).apiBase = 'http://api.stage1.squadintouch.com';
+		const service = new Service('/public/schools');
+		const getSchoolsResponse = await service.get();
+		expect(getSchoolsResponse).to.be.an('array');
+
+
+		// debugger;
+
+
+		delete (window as any).apiBase;
+	});
 });

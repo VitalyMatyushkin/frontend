@@ -24,9 +24,9 @@ interface ActiveSession {
 
 
 export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
-	private url:  string;
-	private requiredParams: any[];
-	binding: any;
+	readonly url:  string;
+	readonly requiredParams?: string[];
+	readonly binding: any;
 
 	constructor(url: string, binding?: object) {
 		this.url = url;
@@ -150,7 +150,6 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	private getActiveSession(): ActiveSession | undefined {
 		if(typeof this.binding !== 'undefined') {
 			const result = SessionHelper.getActiveSession(this.binding);
-			console.log('getActiveSession result is: ' + JSON.stringify(result, null, 2));
 			return result as ActiveSession;
 		}
 	}
