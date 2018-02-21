@@ -122,34 +122,7 @@ function changePhotoPreset(role, binding, schoolId, eventId, photoId, preset) {
 				accessPreset: preset
 			}
 		).then(() => {
-			binding.set('isUploading', false);
-			return getPhotosForEvent(role, binding, schoolId, eventId);
-		});
-}
-
-function changePhotoUrl(role, binding, schoolId, eventId, photoId, picUrl) {
-	let service;
-
-	switch (role) {
-		case RoleHelper.USER_ROLES.PARENT:
-			service = window.Server.childEventPhoto;
-			break;
-		default:
-			service = window.Server.schoolEventPhoto;
-			break;
-	}
-
-	return service.put(
-			{
-				schoolId:	schoolId,
-				eventId:	eventId,
-				photoId:	photoId
-			},
-			{
-				picUrl: picUrl
-			}
-		).then(() => {
-			binding.set('isUploading', false);
+			binding.set('isUploading', false)
 			return getPhotosForEvent(role, binding, schoolId, eventId);
 		});
 }
@@ -157,4 +130,3 @@ function changePhotoUrl(role, binding, schoolId, eventId, photoId, picUrl) {
 module.exports.addPhotoToEvent		= addPhotoToEvent;
 module.exports.deletePhotoFromEvent	= deletePhotoFromEvent;
 module.exports.changePhotoPreset	= changePhotoPreset;
-module.exports.changePhotoUrl	    = changePhotoUrl;

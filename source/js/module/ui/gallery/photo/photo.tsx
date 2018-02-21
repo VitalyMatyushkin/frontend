@@ -74,15 +74,6 @@ export const Photo = (React as any).createClass({
 		document.location.hash = `${mainPath}/${this.albumId}/photo-edit/${this.photoId}`;
 		e.stopPropagation();
 	},
-
-	onClickAddIcon: function(e): void {
-		const path: string[] = window.location.hash.replace('#', '').split('/');
-		path.splice(path.length-2, 2);
-		const mainPath: string = path.join('/');
-
-		document.location.hash = `${mainPath}/${this.albumId}/photo-add-icon/${this.photoId}`;
-		e.stopPropagation();
-	},
 	
 	onClickDeletePhoto: function(e): void {
 		(window as any).confirmAlert(
@@ -145,7 +136,6 @@ export const Photo = (React as any).createClass({
 					</span>
 					}
 					<span onClick={e => this.onClickEditPhoto(e)} className="bTooltip" id="editPhoto_button" data-description="Edit Photo"><SVG icon="icon_edit"/></span>
-					<span onClick={e => this.onClickAddIcon(e)} className="bTooltip" id="addIcon_button" data-description="Add anonymous icon"><SVG icon="icon_smile"/></span>
 					<span onClick={e => this.onClickDeletePhoto(e)} className="bTooltip" id="deletePhoto_button" data-description="Delete Photo"><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 				</div>
 				<span className='eAlbumPhoto_photoTitle' id="photo_title">{binding.get('description')}</span>

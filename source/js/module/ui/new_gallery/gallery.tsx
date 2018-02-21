@@ -12,7 +12,6 @@ export interface GalleryProps {
     photos:							Photo[],
     handleChangeAddPhotoButton:		() => void,
     handleChangeAccessPreset:		(id: string, preset: string) => void,
-	handleChangePicUrl:             (id: string, picUrl: string) => void,
     handleClickDeletePhoto:			() => void,
     accessMode:						string,
     isUserCanUploadPhotos:			boolean,
@@ -86,10 +85,6 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
         this.props.handleChangeAccessPreset(id, preset);
     }
 
-	handleChangePicUrl(id: string, picUrl: string) {
-		this.props.handleChangePicUrl(id, picUrl);
-	}
-
     handleClickPrevPhoto() {
         const currentPhotoIndex = this.getCurrentPhotoIndex();
 
@@ -153,7 +148,6 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
                     handleClickClose			= { this.handleClickCloseFullScreenPhoto.bind(this) }
                     currentAccessPreset			= { currentPhoto.accessPreset }
                     handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
-                    handleChangePicUrl	        = { this.handleChangePicUrl.bind(this, currentPhoto.id)  }
                     accessMode					= { this.props.accessMode }
                 />
             );

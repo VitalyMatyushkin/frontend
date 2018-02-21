@@ -2,9 +2,7 @@ const	React				= require('react'),
 
 		AccessPresetPanel		= require('./access_preset_panel'),
 		AccessPresetsConsts		= require('./../../helpers/consts/event_photos'),
-		GalleryAccessPresets	= require('./../../helpers/consts/gallery'),
-		BPromise	            = require('bluebird'),
-		{AnonymousIcon}         = require('module/ui/gallery/anonymous_icon/anonymous_icon');
+		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const FullscreenPhoto = React.createClass({
 	propTypes: {
@@ -17,14 +15,12 @@ const FullscreenPhoto = React.createClass({
 		handleClickClose:			React.PropTypes.func.isRequired,
 		currentAccessPreset:		React.PropTypes.string.isRequired,
 		handleChangeAccessPreset:	React.PropTypes.func.isRequired,
-		handleChangePicUrl:	        React.PropTypes.func.isRequired,
 		accessMode:					React.PropTypes.string.isRequired
 	},
 	getInitialState: function() {
 		return {
 			windowWidth:	window.innerWidth,
-			windowHeight:	window.innerHeight,
-			addIconMode:    false
+			windowHeight:	window.innerHeight
 		};
 	},
 	componentDidMount: function() {
@@ -101,9 +97,6 @@ const FullscreenPhoto = React.createClass({
 			);
 		}
 	},
-	renderAddAnonymousIconButton: function () {
-		return <button className="bButton" onClick={() => this.setState({addIconMode: true})}>Add anonymous icon</button>;
-	},
 	renderSideContainer: function(sideContainerStyle) {
 		if(this.props.isShowSideContainer) {
 			return (
@@ -111,81 +104,53 @@ const FullscreenPhoto = React.createClass({
 						style		= { sideContainerStyle }
 				>
 					{ this.renderAccessPanelMode() }
-					{ this.renderAddAnonymousIconButton()}
 				</div>
 			);
 		} else {
 			return null;
 		}
 	},
-	getUrlPhoto() {
-		return BPromise.resolve(this.props.url);
-	},
-	handleSaveClick(file) {
-		window.Server.images.upload(file)
-			.then( picUrl => {
-				return this.props.handleChangePicUrl(picUrl)
-			})
-			.then(() => this.setState({addIconMode: false}));
-	},
 	render: function() {
-			const src = window.Server.images.getResizedToHeightUrl(this.props.url, 800),
-				width = this.state.windowWidth * 0.8,
-				height = this.state.windowHeight * 0.8,
-				topOffset = height * 0.5,
-				leftOffset = width * 0.5;
+		const	src			= window.Server.images.getResizedToHeightUrl(this.props.url, 800),
+				width		= this.state.windowWidth * 0.8,
+				height		= this.state.windowHeight * 0.8,
+				topOffset	= height * 0.5,
+				leftOffset	= width * 0.5;
 
-			const photoContainerStyle = {
-					marginTop: -topOffset,
-					marginLeft: -leftOffset,
-					width: width,
-					height: height
-				},
-				photoStyle = {
-					height: height,
-					backgroundImage: `url(${src})`
-				},
-				sideContainerStyle = {
-					height: height - 10 // 10px - it is a left padding
-				},
-				arrowStyle = {
-					height: height
-				};
-		if (!this.state.addIconMode) {
-			return (
-				<div className='bFullScreenPhoto'
-				     onClick={this.handleClickClose}
+		const photoContainerStyle	= {
+			marginTop:			-topOffset,
+			marginLeft:			-leftOffset,
+			width:				width,
+			height:				height
+		},
+		photoStyle = {
+			height:				height,
+			backgroundImage:	`url(${src})`
+		},
+		sideContainerStyle = {
+			height: height - 10 // 10px - it is a left padding
+		},
+		arrowStyle = {
+			height: height
+		};
+
+		return (
+			<div	className	= 'bFullScreenPhoto'
+					onClick		= { this.handleClickClose }
+			>
+				<div	className	= 'eAlbumFullscreenList_cross'
+						onClick		= { this.handleClickClose }
 				>
-					<div className='eAlbumFullscreenList_cross'
-					     onClick={this.handleClickClose}
-					>
-					</div>
-					<div className="eFullScreenPhoto_photoContainer"
-					     onClick={this.handleClickPhoto}
-					     style={photoContainerStyle}
-					>
-						{this.renderPhoto(photoStyle, arrowStyle)}
-						{this.renderSideContainer(sideContainerStyle)}
-					</div>
 				</div>
-			);
-		} else {
-			return (
-				<div className='bFullScreenPhoto'>
-					<div className="eFullScreenPhoto_photoContainer"
-					     style={photoContainerStyle}
-					>
-						<AnonymousIcon
-							handleSaveClick     = {(file) => this.handleSaveClick(file)}
-							handleCancelClick   = {() => this.setState({addIconMode: false})}
-							getUrlPhoto         = {this.getUrlPhoto}
-							widthImgContainer   = {width}
-							heightImgContainer  = {height-135}
-						/>
-					</div>
+				<div	className	= "eFullScreenPhoto_photoContainer"
+						onClick		= { this.handleClickPhoto }
+						style		= { photoContainerStyle }
+				>
+					{ this.renderPhoto(photoStyle, arrowStyle) }
+					{ this.renderSideContainer(sideContainerStyle) }
 				</div>
-			);
-		}
+			</div>
+		);
 	}
 });
 
