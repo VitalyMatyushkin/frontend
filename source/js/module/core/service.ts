@@ -43,7 +43,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	constructor(url: string, binding?: object, ajax?: IAjax) {
 		this.url = url;
 		this.binding = binding;
-		this.ajax = new AxiosAjax();
+		this.ajax = typeof ajax === 'undefined' ? new AxiosAjax() : ajax;
 
 		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
 		this.requiredParams = urlParameterParser(url);
