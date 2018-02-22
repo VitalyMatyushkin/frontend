@@ -1,8 +1,9 @@
-const 	webpack				= require("webpack"),
-		path				= require('path'),
-		ExtractTextPlugin	= require('extract-text-webpack-plugin'),
-		HtmlWebpackPlugin	= require('html-webpack-plugin'),
-		autoprefixer		= require('autoprefixer');
+const 	webpack					= require("webpack"),
+		path					= require('path'),
+		ExtractTextPlugin		= require('extract-text-webpack-plugin'),
+		HtmlWebpackPlugin		= require('html-webpack-plugin'),
+		BundleAnalyzerPlugin	= require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+		autoprefixer			= require('autoprefixer');
 
 const babelPluginsList = [
 	"transform-es2015-arrow-functions",     // allowing arrow functions
@@ -102,6 +103,7 @@ module.exports = {
 			//mangle:		false,	// I'm not sure if mangling can be enabled safely. So disabling it for a while
 			//sourceMap:	true
 		//}),
+		// new BundleAnalyzerPlugin(), /* uncomment to watch stats */
 		new ExtractTextPlugin({
 			filename: 'styles.css',
 			allChunks: true
