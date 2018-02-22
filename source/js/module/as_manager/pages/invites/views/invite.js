@@ -153,7 +153,7 @@ const InviteView = React.createClass({
 	getStatusText: function(isAccepted, isRejected, isEventCanceled, isInviteCanceled){
 		switch (true) {
 			case isEventCanceled || isInviteCanceled:
-				return 'Canceled';
+				return 'Cancelled';
 			case isAccepted:
 				return 'Accepted';
 			case isRejected:
