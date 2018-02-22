@@ -1,14 +1,15 @@
 import * as log from 'loglevel';
 import * as propz from 'propz';
 import * as SessionHelper from 'module/helpers/session_helper';
-import {AJAX} from 'module/core/AJAX';
 import * as BPromise from 'bluebird';
 import {urlParameterParser} from "module/core/service/url_parameter_parser";
 import {FlatObject} from "module/core/flat_object";
+import {IAjax} from "module/core/ajax/ajax";
+import {AxiosAjax} from "module/core/ajax/axios-ajax";
 
 const baseUrl = () => (window as any).apiBase;
 
-type MethodType = 'GET' | 'PUT' | 'POST' | 'HEAD' | 'DELETE';
+type MethodType = 'get' | 'put' | 'post' | 'head' | 'delete';
 
 interface ActiveSession {
 	id?: string,
@@ -34,12 +35,15 @@ interface Data {
 
 export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
 	readonly url:  string;
-	readonly requiredParams: string[];
 	readonly binding: any;
+	readonly ajax: IAjax;
+	readonly requiredParams: string[];
 
-	constructor(url: string, binding?: object) {
+
+	constructor(url: string, binding?: object, ajax?: IAjax) {
 		this.url = url;
 		this.binding = binding;
+		this.ajax = new AxiosAjax();
 
 		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
 		this.requiredParams = urlParameterParser(url);
@@ -54,31 +58,31 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	get(options?: object, data?: Data): BPromise<GetDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('GET', preparedData.options, preparedData.data) as BPromise<GetDataType>;
+		return this.callService('get', preparedData.options, preparedData.data) as BPromise<GetDataType>;
 	}
 
 	post(options?: object, data?: Data): BPromise<PostDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('POST', preparedData.options, preparedData.data) as BPromise<PostDataType>;
+		return this.callService('post', preparedData.options, preparedData.data) as BPromise<PostDataType>;
 	}
 
 	put(options?: object, data?: Data): BPromise<PostDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('PUT', preparedData.options, preparedData.data) as BPromise<PostDataType>;
+		return this.callService('put', preparedData.options, preparedData.data) as BPromise<PostDataType>;
 	}
 
 	delete(options?: object, data?: Data): BPromise<DeleteDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('DELETE', preparedData.options, preparedData.data) as BPromise<DeleteDataType>;
+		return this.callService('delete', preparedData.options, preparedData.data) as BPromise<DeleteDataType>;
 	}
 
 	head(options?: object, data?: Data): BPromise<GetDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
-		return this.callService('HEAD', preparedData.options, preparedData.data) as BPromise<GetDataType>;
+		return this.callService('head', preparedData.options, preparedData.data) as BPromise<GetDataType>;
 	}
 
 	/**
@@ -99,20 +103,25 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 
 		delete dataCopy['options'];
 
-		// remove cases when we put filter to requestParams
-		const	jsonFilter		= Service.getFilter([requestParams, dataCopy]),
-				activeSession	= this.getActiveSession();
-
 		let url = this.url;
 
 		if (this.requiredParams.length > 0) {
 			url = url.replace(/\{(.*?)\}/g, (match, param) => requestParams[param]);
 		}
 
+		const activeSession	= this.getActiveSession();
+
+		// remove cases when we put filter to requestParams
+		const	jsonFilter		= Service.getFilter([requestParams, dataCopy]);
+
 		const filterKey ='filter';
 
-		const	strFilter			= filterKey +'=' + encodeURIComponent(JSON.stringify(jsonFilter)),
-				strFilterToAppend	= url.indexOf('?') !== -1 ? '&' + strFilter : '?' + strFilter;
+		let strFilterToAppend = '';
+
+		if(jsonFilter) {
+			const strFilter = filterKey +'=' + encodeURIComponent(JSON.stringify(jsonFilter));
+			strFilterToAppend = url.indexOf('?') !== -1 ? '&' + strFilter : '?' + strFilter;
+		}
 
 		if (typeof requestParams === 'object' && requestParams !== null) {
 			delete requestParams[filterKey];
@@ -132,26 +141,18 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 			finalHeaders[headerName] = activeSession.id;
 		}
 
-
-		return AJAX(
-			{
-				url:			baseUrl() + url + strFilterToAppend,
-				type:			type,
-				crossDomain:	true,
-				data:			JSON.stringify(dataCopy),
-				dataType:		'json',
-				contentType:	'application/json',
-				headers:		finalHeaders
-			},
-			isDataOnly
-		).then(response => {
+		return this.ajax.request({
+			url:			baseUrl() + url + strFilterToAppend,
+			method:			type,
+			data:			dataCopy,
+			headers:		finalHeaders
+		}).then( result => {
 			if(isDataOnly) {
-				return response as GetDataType | PostDataType | DeleteDataType;
+				return result.data as GetDataType | PostDataType | DeleteDataType;
 			} else {
-			    const anyResponse = response as any;
-				anyResponse.data =  anyResponse.data as GetDataType | PostDataType | DeleteDataType;
-
-				return anyResponse;
+				const anyResult = result as any;
+				anyResult.data = anyResult.data as GetDataType | PostDataType | DeleteDataType;
+				return anyResult;
 			}
 		});
 	}

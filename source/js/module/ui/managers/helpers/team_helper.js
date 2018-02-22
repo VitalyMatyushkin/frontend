@@ -130,7 +130,7 @@ function changeIndividualPlayers(schoolId, eventId, newPlayers, playersToRemove,
 				remove: playersToRemove
 			}
 		).then(response => {
-			return response.xhr.getResponseHeader('action-descriptor-id');
+			return response.headers['action-descriptor-id'];
 		});
 	} else {
 		result = Promise.resolve(undefined);
@@ -257,7 +257,7 @@ function changeTeamPlayers (schoolId, eventId, teamId, newPlayers, playerChanges
 					remove: playersToRemove
 				}
 			).then(response => {
-				return response.xhr.getResponseHeader('action-descriptor-id');
+				return response.headers['action-descriptor-id'];
 			});
 		}
 	} else {
@@ -1382,7 +1382,7 @@ function addTeamsToEvent(schoolId, eventId, teams, notificationMode = 'AUTO') {
 			},
 			team
 		).then(response => {
-			const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
+			const actionDescriptorId = response.headers['action-descriptor-id'];
 
 			return {
 				team: response.data,
