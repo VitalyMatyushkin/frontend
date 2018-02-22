@@ -7,6 +7,8 @@ import * as BPromise from 'bluebird'
 import {Team} from './team/team'
 import {PlayerChoosers} from 'module/ui/managers/team_manager/player_choosers/player_choosers'
 
+import 'styles/ui/b_team_manager.scss';
+
 export const TeamManager = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
@@ -390,7 +392,7 @@ export const TeamManager = (React as any).createClass({
 		const binding = this.getDefaultBinding();
 
 		return (
-			<div>
+			<div className='bTeamManager'>
 				<Team
 					isNonTeamSport					= { this.props.isNonTeamSport }
 					players							= { binding.toJS('teamStudents') }

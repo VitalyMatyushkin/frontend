@@ -6,36 +6,30 @@ const	React 					= require('react'),
 		RouterView 				= require('module/core/router'),
 		Route 					= require('module/core/route'),
 		{StudentsList}			= require('module/as_admin/pages/admin_schools/school_sandbox/students/students-list'),
-		StudentAddComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_add'),
-		StudentMergeComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_merge'),
-		{SVG}					= require('module/ui/svg');
+		{StudentEdit} 	        = require('module/as_admin/pages/admin_schools/school_sandbox/students/student_edit'),
+		StudentMergeComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/students/student_merge');
 
 const StudentsPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	createNewStudent: function(){
-		document.location.hash = document.location.hash +'/add';
-	},
 	render: function() {
-		const 	binding 		= this.getDefaultBinding(),
-				subBinding 		= binding.sub('studentsRouting'),
-				globalBinding 	= this.getMoreartyContext().getBinding(),
-				addButton 		= <div className="addButtonShort" onClick={this.createNewStudent}><SVG icon="icon_add_student" /></div>;
+		const binding = this.getDefaultBinding();
+		const globalBinding = this.getMoreartyContext().getBinding();
 
 		return (
-			<RouterView routes={ subBinding.sub('routing') } binding={globalBinding}>
+			<RouterView routes={ binding.sub('studentsRouting') } binding={globalBinding}>
 				<Route
 					path 		= "/school_sandbox/:schoolId/students"
-					binding 	= { subBinding.sub('studentList') }
+					binding 	= { binding.sub('studentList') }
 					component 	= { StudentsList }
 				/>
 				<Route
-					path 		= "/school_sandbox/:schoolId/students/add"
-					binding 	= { subBinding }
-					component 	= { StudentAddComponent }
+					path 		= "/school_sandbox/:schoolId/students/edit/:studentId"
+					binding 	= { binding.sub('studentEdit') }
+					component 	= { StudentEdit }
 				/>
 				<Route
 					path 		= "/school_sandbox/:schoolId/students/merge/:studentId"
-					binding 	= { subBinding }
+					binding 	= { binding.sub('studentMerge') }
 					component 	= { StudentMergeComponent }
 				/>
 			</RouterView>

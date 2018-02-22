@@ -33,26 +33,37 @@ export class HelpItem extends React.Component<HelpItemProps, HelpItemState> {
 		e.preventDefault();
 		const isOpen = this.state.isOpen;
 		this.setState({isOpen: !isOpen});
-		console.log(this.state.isOpen);
+	}
+
+	onBlur(e): void {
+		/**in IE11 onBlur is triggered faster than onClick, and onClick not triggered */
+		setTimeout(() => {
+			this.setState({isOpen: false});
+		}, 100);
+
+		e.stopPropagation();
 	}
 	
 	render() {
 		return (
-			<a className={classNames("eTopMenu_drop", {mOpen:this.state.isOpen})} onClick={(e) => this.handleClickHelp(e)}>
-				<div className="eArrow"/>
-				{this.props.name}
-				<div className="eTopMenu_dropItems">
-					<a className={"eTopMenu_dropItem_options"} onClick={(e) => this.handleClickUserGuide(e)}>
+			<div className={classNames("eTopMenu_drop", {mOpen:this.state.isOpen})} tabIndex={-1} onBlur={(e) => this.onBlur(e)}
+			>
+				<div className="eTopMenu_dropName" onClick={(e) => this.handleClickHelp(e)}>
+					<div className="eArrow"/>
+					{this.props.name}
+				</div>
+				<div className="eTopMenu_dropItems" >
+					<div className={"eTopMenu_dropItem_options"} onClick={(e) => this.handleClickUserGuide(e)}>
 						User Guide
 						<form id='formUserId' method='post' target='_blank' action='http://docs.squadintouch.com/faq'>
 							<input type='hidden' name='userId' value={this.props.userId} />
 						</form>
-					</a>
-					<a className={"eTopMenu_dropItem_options"} onClick={(e) => this.handleClickDemo(e)}>
+					</div>
+					<div className={"eTopMenu_dropItem_options"} onClick={(e) => this.handleClickDemo(e)}>
 						Quick Start Demo
-					</a>
+					</div>
 				</div>
-			</a>
+			</div>
 		);
 	}
 }

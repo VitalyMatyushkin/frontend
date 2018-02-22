@@ -2,3 +2,10 @@
   width: 600px;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 768px) {
+  .bActivateClub {
+    width: 575px;
+    margin: 0 auto;
+  }
+}

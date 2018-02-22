@@ -41,6 +41,7 @@ const EventGallery = React.createClass({
 							accessMode					= { this.getGalleryAccessPreset(userRole) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(userRole, binding, schoolId, eventId, photoId) }
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }
+							handleChangePicUrl         	= { (photoId, picUrl) => Actions.changePhotoUrl(userRole, binding, schoolId, eventId, photoId, picUrl) }
 							photos						= { photos }
 							isLoading					= { isLoading }
 							isUploadingPhoto 			= { isUploadingPhoto }

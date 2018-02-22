@@ -13,7 +13,6 @@
 
   &.mChildrenBooking {
     width: 700px;
-
   }
 }
 
@@ -63,5 +62,13 @@
   background: $blueColor url("/images/arrows_l.png") no-repeat center;
   &:hover {
     background-color: $lightBlue;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bPlayerChooser {
+    &.mChildrenBooking {
+      width: 500px;
+    }
   }
 }

@@ -2,8 +2,8 @@
 @import "../../!mixins";
 
 .bTeam {
-  width:        456px;
-  height:       322px;
+  width: 456px;
+  height: 322px;
 
   border-top:   solid 1px #c2c2c2;
   border-left:  solid 1px #c2c2c2;
@@ -66,6 +66,12 @@
   font-size: 14px;
   color: #FF0000;
   display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .bTeam {
+    width: 225px;
+  }
 }
 
 @media screen and (max-width:1130px) {

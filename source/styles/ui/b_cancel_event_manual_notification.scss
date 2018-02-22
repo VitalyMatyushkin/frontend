@@ -1,5 +1,4 @@
 .bCancelEventManualNotification {
-
 }
 
 .eCancelEventManualNotification_header {
@@ -8,6 +7,12 @@
 
 .eCancelEventManualNotification_userList {
   margin-bottom: 20px;
+  padding-top: 10px;
+  padding-right: 10px;
+
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .eCancelEventManualNotification_user {

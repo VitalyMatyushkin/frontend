@@ -3,3 +3,9 @@
   padding-top: 50px;
   width: 1000px;
 }
+
+@media screen and (max-width: 768px) {
+  .bPageContent {
+    width: 768px;
+  }
+}
