@@ -48,7 +48,7 @@ export interface FullResult {
 export function AJAX(configDetails: ConfigDetails, dataOnly: boolean): BPromise<FullResult | object | string> {
     return new BPromise((resolve, reject, onCancel) => {
         configDetails.error = (jqXHR, textStatus, errorThrown) => {
-            const errorToReturn             = new Error('Http non-2xx status. Considered an error in current AJAX implementation');
+            const errorToReturn             = new Error(`Http non-2xx status. Considered an error in current AJAX implementation`);
             errorToReturn['xhr']            = jqXHR;
             errorToReturn['textStatus']     = textStatus;
             errorToReturn['errorThrown']    = errorThrown;
@@ -70,14 +70,4 @@ export function AJAX(configDetails: ConfigDetails, dataOnly: boolean): BPromise<
 
         onCancel(() => request.abort());
     });
-}
-
-
-export function AJAX2(configDetails: ConfigDetails, dataOnly: boolean): BPromise<any> {
-    const result = axios({
-        method: configDetails.type,
-        url:    configDetails.url
-    });
-
-    return BPromise.resolve(result);
 }

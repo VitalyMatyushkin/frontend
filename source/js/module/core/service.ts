@@ -25,7 +25,7 @@ interface ActiveSession {
 
 export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any> {
 	readonly url:  string;
-	readonly requiredParams?: string[];
+	readonly requiredParams: string[];
 	readonly binding: any;
 
 	constructor(url: string, binding?: object) {
@@ -33,10 +33,15 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 		this.binding = binding;
 
 		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
-		const urlParams = urlParameterParser(url);
-		this.requiredParams = urlParams.length === 0 ? undefined : urlParams;
+		this.requiredParams = urlParameterParser(url);
 	}
 
+	/**
+	 *
+	 * @param {object} options is either value of the only param if url is parametrized, or object with params, or data if there is no params
+	 * @param {object} data
+	 * @return {Bluebird<GetDataType>}
+	 */
 	get(options?: object, data?: object): BPromise<GetDataType> {
 		const preparedData = this.getPreparedDataForCallService(options, data);
 
@@ -95,7 +100,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 
 		const activeSession = this.getActiveSession();
 
-		if (this.requiredParams) {
+		if (this.requiredParams.length > 0) {
 			url = url.replace(/\{(.*?)\}/g, function(match, param) {
 				return requestParams[param];
 			});
@@ -160,7 +165,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 			options:    undefined
 		};
 
-		const isParamsRequired = typeof this.requiredParams !== 'undefined';
+		const isParamsRequired = this.requiredParams.length > 0;
 
 		switch (true) {
 			case isParamsRequired && !options && !data: {
@@ -180,7 +185,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
                 break;
             }
 
-			case typeof this.requiredParams !== 'undefined'  && typeof options === 'object': {
+			case isParamsRequired  && typeof options === 'object': {
 				preparedData.options = options;
                 preparedData.data = data;
 				break;
