@@ -90,7 +90,7 @@ export const StudentEdit = (React as any).createClass({
 
 		return window.Server.schoolStudent.put({schoolId, studentId}, data)
 			.then(() => {
-				document.location.hash = `school_sandbox/${this.getStudentIdFromUrl()}/students`;
+				document.location.hash = `school_sandbox/${this.getSchoolIdFromUrl()}/students`;
 				
 				return true;
 			});
