@@ -93,7 +93,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 	 * @returns {*}
 	 * @private
 	 */
-	callService(type: MethodType, requestParams: object, data?: Data): BPromise<GetDataType | PostDataType | DeleteDataType> {
+	private callService(type: MethodType, requestParams: object, data?: Data): BPromise<GetDataType | PostDataType | DeleteDataType> {
 		// copy data because we will change it
 		const dataCopy = { ...data };
 
