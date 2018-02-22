@@ -19,7 +19,7 @@ const	Manager					            = require('./../../../../../ui/managers/manager'),
 
 const	Actions								= require('../../actions/actions'),
 		EventHeaderActions                  = require('module/as_manager/pages/event/view/event_header/event_header_actions'),
-		SavingPlayerChangesPopup			= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		{SavingPlayerChangesPopup}			= require('../../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		EventConsts							= require('module/helpers/consts/events'),
 		SavingEventHelper					= require('../../../../../helpers/saving_event_helper'),
 		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
@@ -449,15 +449,15 @@ const ManagerWrapper = React.createClass({
 
 		return (
 			<div className="bTeamManagerWrapper">
-				{ this.renderManager() }
-				{ this.renderSavePlayerChangesManager() }
+				{ this.renderManager()}
+				{ this.renderSavePlayerChangesManager()}
 				<div className="eTeamManagerWrapper_footer">
 					<Button
 						text				= "Cancel"
 						onClick				= { this.handleClickCancelButton }
 						extraStyleClasses	= { "mCancel" }
 					/>
-					{ this.renderSaveButton() }
+					{ this.renderSaveButton()}
 				</div>
 				<SavingPlayerChangesPopup
 					binding	= { binding.sub('teamManagerWrapper.default') }

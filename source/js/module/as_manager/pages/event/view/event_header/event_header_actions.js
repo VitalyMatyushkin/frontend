@@ -87,7 +87,7 @@ function cancelEvent(schoolId, eventId, notificationMode, binding) {
 		)
 		.then(response => {
 			if(notificationMode === 'MANUAL') {
-				const actionDescriptorId = response.xhr.getResponseHeader('action-descriptor-id');
+				const actionDescriptorId = response.headers['action-descriptor-id'];
 
 				return window.Server.actionDescriptor.get({actionDescriptorId: actionDescriptorId}).then(actionDescriptor => {
 					actionDescriptor.affectedUserList = convertAffectedUsersToClient(actionDescriptor.affectedUserList);

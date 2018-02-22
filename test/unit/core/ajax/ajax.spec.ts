@@ -4,8 +4,8 @@
 
 /** Any valid ajax implementation should pass that tests */
 
-import {AxiosAjax as Ajax} from '../../../source/js/module/core/ajax/axios-ajax';
-import {CancelError} from '../../../source/js/module/core/ajax/ajax';
+import {AxiosAjax as Ajax} from '../../../../source/js/module/core/ajax/axios-ajax';
+import {CancelError} from '../../../../source/js/module/core/ajax/ajax';
 import * as chai from 'chai';
 
 import chaiSubset = require("chai-subset");	// yes, I know. This is crap import. But chai-subset typings are work only this way

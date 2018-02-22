@@ -85,7 +85,7 @@ export const ActionDescriptorItem = (React as any).createClass({
 		
 		binding.set('isSync', false);
 		
-		(window.Server as ServiceList).actionDescriptor.get({adId: actionDescriptorId,})
+		(window.Server as ServiceList).actionDescriptor.get({adId: actionDescriptorId})
 			.then((actionDescriptor: ActionDescriptor[]) => {
 				binding.set('isSync', true);
 				binding.set('actionDescriptor', Immutable.fromJS(actionDescriptor));
