@@ -92,4 +92,8 @@ describe('service', () => {
 		delete (window as any).apiBase;
 	});
 
+	it('should process queries with "filter"');
+	it('should set usid/asid headers');
+	it('should set "App-Signature" header');
+
 });
