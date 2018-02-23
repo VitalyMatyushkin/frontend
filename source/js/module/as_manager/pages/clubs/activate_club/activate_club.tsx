@@ -31,16 +31,15 @@ export const ActivateClub = (React as any).createClass({
 				.getClub(this.props.activeSchoolId, clubId)
 				.then(club => {
 					binding.set('club', Immutable.fromJS(club));
+
+					return ClubsActions.getAcceptableUsers(this.props.activeSchoolId, this.props.clubId);
+				})
+				.then(users => {
+					binding.set('clubAcceptableUsers', Immutable.fromJS(users));
 					binding.set('isSync', true);
 
-					// return ClubsActions.getAcceptableUsers(this.props.activeSchoolId, this.props.clubId);
+					return true;
 				});
-				// .then(users => {
-				// 	binding.set('clubAcceptableUsers', Immutable.fromJS(users));
-				// 	binding.set('isSync', true);
-				//
-				// 	return true;
-				// });
 		}
 	},
 	componentWillUnmount() {
