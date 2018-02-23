@@ -1,5 +1,5 @@
 .bAlbum {
-  padding: 10px 10px;
+  max-width: 1140px;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -11,7 +11,8 @@
 }
 
 .eAlbum_title{
-  margin-bottom: 0;
+  margin-bottom: 20px;
+  font-size: 25px;
 }
 
 .bAlbums_list {

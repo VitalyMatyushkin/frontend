@@ -3,14 +3,14 @@ import * as React from 'react';
 import * as Morearty from 'morearty';
 import {SVG} from 'module/ui/svg';
 
-interface AlbumProps {
-	basePath: string
-	onDelete: () => void
-}
-
 export const Album = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	
+
+	propTypes: {
+		basePath: (React as any).PropTypes.string.isRequired,
+		onDelete: (React as any).PropTypes.func.isRequired
+	},
+
     getDefaultProps: function() {
         return {
             basePath: 'notFound'

@@ -1,55 +1,80 @@
 import * as React from 'react';
-import * as Immutable from 'immutable';
-import * as Morearty from 'morearty';
-import * as Form from 'module/ui/form/form';
-import * as FormColumn from 'module/ui/form/form_column';
-import * as FormField from 'module/ui/form/form_field';
-import {PhotoEditCrop} from './photo_edit_crop';
 
 interface PhotoData {
+	id:             string
+	name:           string
 	description: 	string
+	picUrl:         string
 	ownerId:		string
 }
 
-export const PhotoEditComponent = (React as any).createClass({
-	mixins: [Morearty.Mixin],
-	componentWillMount: function() {
-		const 	binding		= this.getDefaultBinding(),
-				rootBinding = this.getMoreartyContext().getBinding(),
-				params 		= rootBinding.toJS('routing.pathParameters'),
-				albumId 	= params && params.length ? params[params.length-3] : null,
-				photoId 	= params && params.length ? params[params.length-1] : null;
-		
-		this.albumId = albumId;
-		this.photoId = photoId;
-		this.service = this.props.service;
-		binding.clear();
-		
-		this.service.photo.get(this.albumId, this.photoId).then( data => {
-			binding.set(Immutable.fromJS(data));
-		});
-	},
-	
-	onFormSubmit: function(data: PhotoData): void {
-		this.service.photo.put(this.albumId, this.photoId, data).then( () => {
-			//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
-			window.history.back();
-		});
-	},
-	
-	render: function() {
-		const 	binding = this.getDefaultBinding(),
-				picUrl = typeof binding.toJS('picUrl') !== 'undefined' ? binding.toJS('picUrl') : '';
-		
-		//Disable crop on picture editing http://tracker.squadintouch.com/issues/2603
-		{/**return picUrl !== '' ? <PhotoEditCrop src={picUrl} albumId={this.albumId} service={this.service}/> : null;*/}
-		
-		return (
-			<Form formStyleClass="mNarrow" name="Edit photo" onSubmit={() => this.onFormSubmit()} binding={binding} >
-				<FormColumn>
-					<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
-				</FormColumn>
-			</Form>
-		);
+interface PhotoEditComponentProps {
+	photoData: PhotoData,
+	albumId: string
+	onSubmit: (PhotoData) => void
+}
+
+interface PhotoEditComponentState {
+	name: string
+	description: string
+}
+
+export class PhotoEditComponent extends React.Component<PhotoEditComponentProps, PhotoEditComponentState> {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: this.props.photoData.name,
+			description: this.props.photoData.description
+		};
 	}
-});
+
+	handleChange(e): void {
+		if (e.target.name === 'name') {
+			this.setState({name: e.target.value});
+		} else {
+			this.setState({description: e.target.value});
+		}
+	}
+
+	submitData(e): void {
+		if (e.target.name === 'name') {
+			this.props.onSubmit({name: this.state.name});
+		} else {
+			this.props.onSubmit({description: this.state.description});
+		}
+	}
+
+	render() {
+		return (
+			<div className="bForm">
+				<div className="eForm_field">
+					<div className="eForm_fieldName">
+						Name
+					</div>
+					<div className="eForm_fieldSet">
+						<input
+							type        = "text"
+							name        = "name"
+							value       = {this.state.name}
+							onChange    = {(e) => this.handleChange(e)}
+							onBlur      = {(e) => this.submitData(e)}
+						/>
+					</div>
+				</div>
+				<div className="eForm_field">
+					<div className="eForm_fieldName">
+						Description
+					</div>
+					<div className="eForm_fieldSet">
+						<textarea
+							name        = "description"
+							value       = {this.state.description}
+							onChange    = {(e) => this.handleChange(e)}
+							onBlur      = {(e) => this.submitData(e)}
+						/>
+					</div>
+				</div>
+			</div>
+		)
+	}
+}

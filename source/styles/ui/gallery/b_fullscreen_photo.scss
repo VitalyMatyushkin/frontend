@@ -28,7 +28,6 @@
 
 .eFullScreenPhoto_photoContainer {
   cursor: default;
-
   position: fixed;
   top: 50%;
   left: 50%;
@@ -52,6 +51,39 @@
     .bIcon {
       width: 70px;
       height: 70px;
+    }
+  }
+
+  .bEditPhotoPanel {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    padding-right: 10px;
+
+    span {
+      margin: 0 10px
+    }
+    .bIcon {
+      width: 40px;
+      height: 40px;
+      color: #303030;
+      cursor: pointer;
+
+      &:hover {
+        color: #1e1e1e;
+      }
+    }
+  }
+
+  .bForm {
+    padding-right: 10px;
+    .eForm_fieldName {
+      text-align: left;
+    }
+
+    textarea {
+      width: 100%;
+      min-width: 100%;
     }
   }
 

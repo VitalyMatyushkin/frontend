@@ -8,12 +8,15 @@ import * as FullScreenPhoto         from './fullscreen_photo';
 import * as GalleryAccessPresets    from './../../helpers/consts/gallery';
 
 export interface GalleryProps {
-    currentUserId:					string,
+    mode:                           string,
+	albumId?:                       string
+    currentUserId?:					string,
     photos:							Photo[],
-    handleChangeAddPhotoButton:		() => void,
-    handleChangeAccessPreset:		(id: string, preset: string) => void,
-	handleChangePicUrl:             (id: string, picUrl: string) => void,
-    handleClickDeletePhoto:			() => void,
+    handleChangeAddPhotoButton?:	() => void,
+    handleChangeAccessPreset?:		(id: string, preset: string) => void,
+	handleChangePicData:            (id: string, picUrl: string) => void,
+    handleClickDeletePhoto:			(id: string) => void,
+	handleChangeCover?:			    (picUrl: string) => void,
     accessMode:						string,
     isUserCanUploadPhotos:			boolean,
     isLoading:						boolean,
@@ -32,7 +35,6 @@ interface Photo {
 }
 
 export class Gallery extends React.Component<GalleryProps, GalleryState> {
-
     readonly PREVIEW_MODE = "PREVIEW_MODE";
     readonly FULLSCREEN_MODE = "FULLSCREEN_MODE";
 
@@ -86,8 +88,8 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
         this.props.handleChangeAccessPreset(id, preset);
     }
 
-	handleChangePicUrl(id: string, picUrl: string) {
-		this.props.handleChangePicUrl(id, picUrl);
+	handleChangePicData(id: string, picData) {
+		this.props.handleChangePicData(id, picData);
 	}
 
     handleClickPrevPhoto() {
@@ -144,17 +146,18 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
             const currentPhoto = this.props.photos.find(p => p.id === this.state.currentFullScreenPhotoId);
             return (
                 <FullScreenPhoto
-                    id							= { currentPhoto.id }
-                    url							= { currentPhoto.picUrl }
+                    photoData                   = { currentPhoto }
+                    albumId                     = { this.props.albumId }
                     isShowArrowButtons			= { this.isShowArrowButtons() }
                     isShowSideContainer			= { this.isShowSideContainer(currentPhoto)}
                     handleClickPrevPhoto		= { this.handleClickPrevPhoto.bind(this) }
                     handleClickNextPhoto		= { this.handleClickNextPhoto.bind(this) }
                     handleClickClose			= { this.handleClickCloseFullScreenPhoto.bind(this) }
-                    currentAccessPreset			= { currentPhoto.accessPreset }
                     handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
-                    handleChangePicUrl	        = { this.handleChangePicUrl.bind(this, currentPhoto.id)  }
+                    handleChangePicData	        = { this.handleChangePicData.bind(this, currentPhoto.id)  }
+                    handleChangeCover	        = { this.props.handleChangeCover  }
                     accessMode					= { this.props.accessMode }
+                    mode                        = { this.props.mode }
                 />
             );
         } else {

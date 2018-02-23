@@ -1,14 +1,11 @@
-
+import {If} from 'module/ui/if/if';
 import * as React from 'react';
 import * as Immutable from 'immutable';
 import * as SessionHelper from 'module/helpers/session_helper';
 import * as Morearty from 'morearty';
-import {FullScreenList} from '../photo/fullscreen_list';
-import {PhotoList} from '../photo/photo_list';
 import {SubMenu} from 'module/ui/menu/sub_menu';
-import {If} from 'module/ui/if/if';
-import {PhotoItem} from '../photo/photo_item';
-
+import {SchoolGallery} from './school_gallery';
+import * as Loader from 'module/ui/loader';
 
 export const AlbumViewComponent = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -16,24 +13,7 @@ export const AlbumViewComponent = (React as any).createClass({
 	getMergeStrategy: function() {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
-	
-	getDefaultState: function() {
-		return Immutable.fromJS({
-			album: {
-				photos: []
-			},
-			sync: false,
-            isUploading:false,
-			fullScreen: false
-		});
-	},
-	
-	getInitialState: function() {
-		return {
-			lastClickedId: 0
-		};
-	},
-	
+
 	componentWillMount: function() {
 		const 	rootBinding = this.getMoreartyContext().getBinding(),
 				binding 	= this.getDefaultBinding(),
@@ -42,7 +22,9 @@ export const AlbumViewComponent = (React as any).createClass({
 				userId 		= SessionHelper.getUserIdFromSession(
 					rootBinding.sub('userData')
 				);
-		
+
+		binding.set('sync', false);
+		this.albumId = albumId;
 		this.props.service.album.get(albumId)
 		.then((res) => {
 			const isOwner = (userId == res.ownerId);
@@ -68,32 +50,25 @@ export const AlbumViewComponent = (React as any).createClass({
 				.atomically()
 				.set('albumSubMenu', Immutable.fromJS(this.menuItems))
 				.set('album', Immutable.fromJS(res))
+				.commit();
+
+			return this.props.service.photos.get(albumId,{filter:{limit: 100}})
+		})
+		.then((photo) =>{
+			binding
+				.atomically()
+				.set('photos', Immutable.fromJS(photo))
 				.set('sync', true)
 				.commit();
+
 		});
 	},
 
-	onPhotoClick: function(photo: PhotoItem): void {
-		const 	binding 	= this.getDefaultBinding(),
-				fullScreen 	= binding.get('fullScreen'),
-				id 			= photo.id;
-
-		this.setState({lastClickedId: id});
-		if (!fullScreen) {
-			binding.set('fullScreen', true);
-		}
-	},
-
-	onCloseFullScreen: function(): void {
-		this.getDefaultBinding().set('fullScreen', false);
-	},
-
 	render: function() {
-		const binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding();
 
 		return (
 			<div>
-				<div>
 				<SubMenu binding={{ default: binding.sub('albumsRouting'), itemsBinding: binding.sub('albumSubMenu') }} />
 					<If condition={binding.get('sync')}>
 						<div>
@@ -103,25 +78,13 @@ export const AlbumViewComponent = (React as any).createClass({
 							</div>
 						<div className="bAlbum">
 							<h2 className="eAlbum_title">{binding.get('album.name')}</h2>
-							<PhotoList
-								binding		={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
-								onPhotoClick={this.onPhotoClick}
-								service		={this.props.service}
-							/>
+							<SchoolGallery service={this.props.service} binding={binding} albumId={this.albumId}/>
 						</div>
 						</div>
 					</If>
 					<If condition={!binding.get('sync')}>
-						<span>loading...</span>
+						<Loader/>
 					</If>
-					<If condition={binding.get('fullScreen')}>
-						<FullScreenList
-							onClose		= {this.onCloseFullScreen}
-							photos		= {binding.toJS('album.photos')}
-							startPhoto	= {this.state.lastClickedId}
-						/>
-					</If>
-				</div>
 			</div>
 		);
 	}

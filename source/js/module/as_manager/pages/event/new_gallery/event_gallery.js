@@ -37,11 +37,12 @@ const EventGallery = React.createClass({
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
-				<Gallery	currentUserId				= { MoreartyHelper.getLoggedInUserId(this) }
+				<Gallery    mode                        = 'EVENT'
+							currentUserId				= { MoreartyHelper.getLoggedInUserId(this) }
 							accessMode					= { this.getGalleryAccessPreset(userRole) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(userRole, binding, schoolId, eventId, photoId) }
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }
-							handleChangePicUrl         	= { (photoId, picUrl) => Actions.changePhotoUrl(userRole, binding, schoolId, eventId, photoId, picUrl) }
+							handleChangePicData        	= { (photoId, picData) => Actions.changePicData(userRole, binding, schoolId, eventId, photoId, picData) }
 							photos						= { photos }
 							isLoading					= { isLoading }
 							isUploadingPhoto 			= { isUploadingPhoto }
