@@ -93,7 +93,8 @@ const PermissionAcceptPage = React.createClass({
 						like: fromName,
 						options:'i'
 					}
-				}
+				},
+				limit: 100
 			}
 		});
 	},
@@ -113,7 +114,8 @@ const PermissionAcceptPage = React.createClass({
 						like: houseName,
 						options:'i'
 					}
-				}
+				},
+				limit: 100
 			}
 		});
 	},
