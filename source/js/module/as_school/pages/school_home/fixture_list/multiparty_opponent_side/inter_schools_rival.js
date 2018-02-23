@@ -22,7 +22,7 @@ const InterSchoolsRival = React.createClass({
 	render: function() {
 		const	event			= this.props.event,
 				activeSchoolId	= this.props.activeSchoolId,
-				challengeModel	= new ChallengeModel(event, activeSchoolId);
+				challengeModel	= new ChallengeModel(event, activeSchoolId, undefined, true);
 
 		const	rivalLogoStyle	= {
 					backgroundImage: 'url(' + challengeModel.rivals[0].schoolPic + ')'

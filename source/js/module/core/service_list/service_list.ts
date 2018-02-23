@@ -134,6 +134,7 @@ export class ServiceList {
 	eventCancel: Service;
 	schoolEventChangeOpponent: Service;
 	schoolEvent: Service;
+	schoolEventSettings: Service;
 	schoolEventGroup: Service;
 	schoolEventInvites: Service;
 	schoolEventDetails: Service;
@@ -457,6 +458,7 @@ export class ServiceList {
 		this.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		this.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		this.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+		this.schoolEventSettings = new Service('/i/schools/{schoolId}/events/{eventId}/settings', binding);
 		this.schoolEventGroup = new Service('/i/schools/{schoolId}/events/{eventId}/rgroup', binding);
 		this.schoolEventInvites = new Service('/i/schools/{schoolId}/events/{eventId}/invites', binding);
 		this.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);

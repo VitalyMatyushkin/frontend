@@ -58,7 +58,7 @@ const FixtureItemTwoTeamOpponentSide = React.createClass({
 	render: function() {
 		const	event				= this.props.event,
 				activeSchoolId		= this.props.activeSchoolId,
-				challengeModel		= new ChallengeModel(event, activeSchoolId),
+				challengeModel		= new ChallengeModel(event, activeSchoolId, undefined, true),
 				isAwaitingOpponent	= event.status === 'INVITES_SENT',
 				score				= SportHelper.isCricket(challengeModel.sport) ? challengeModel.textResult : challengeModel.score,
 				scoreText			= SportHelper.isCricket(challengeModel.sport) ? '' : 'Score';

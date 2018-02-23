@@ -1,13 +1,15 @@
-const	React			= require('react');
-const   propz   		= require('propz');
+const	React   = require('react');
+const   propz   = require('propz');
 
-const	ActionList		= require('../../../../../ui/action_list/action_list');
+const	ActionList  = require('../../../../../ui/action_list/action_list');
 
-const	EventHelper		= require('module/helpers/eventHelper'),
-		TeamHelper 		= require('../../../../../ui/managers/helpers/team_helper'),
-		LinkStyles 		= require('styles/pages/event/b_event_eLink_cancel_event.scss');
+const	EventHelper = require('module/helpers/eventHelper'),
+		TeamHelper  = require('../../../../../ui/managers/helpers/team_helper');
 
-const EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
+const	EventButtonsWrapperStyles   = require('styles/ui/b_event_buttons_wrapper.scss'),
+		LinkStyles                  = require('styles/pages/event/b_event_eLink_cancel_event.scss');
+
+const   EventFormConsts = require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 /**
  * This component displays the buttons "Close event", "Change score", "Save", "Cancel".
@@ -29,6 +31,7 @@ const Buttons = React.createClass({
 		handleClickCancelEventButtonOnActionList: React.PropTypes.func.isRequired,
 		handleClickCancelEventAndEditNotificationListButtonOnActionList: React.PropTypes.func.isRequired,
 
+		handleChangeIsDisplayResultsOnPublic			: React.PropTypes.func.isRequired,
 		handleClickCloseEvent							: React.PropTypes.func.isRequired,
 		handleClickDownloadPdf							: React.PropTypes.func.isRequired,
 		onReportAvailabilityEvent						: React.PropTypes.func.isRequired,
@@ -312,6 +315,38 @@ const Buttons = React.createClass({
 				break;
 		}
 	},
+	renderIsDisplayResultsOnPublicCheckbox: function () {
+		let checkbox = null;
+
+		if(EventHelper.isInterSchoolsEvent(this.props.event)) {
+			const settings = this.props.event.settings;
+
+			const currentSettings = settings.find(settings => settings.schoolId === this.props.activeSchoolId);
+			let isDisplayResultsOnPublic = true;
+			if(typeof currentSettings !== 'undefined') {
+				isDisplayResultsOnPublic = currentSettings.isDisplayResultsOnPublic;
+			}
+
+			checkbox = (
+				<div className="bSmallCheckboxBlock">
+					<div className="eForm_fieldInput mInline">
+						<input
+							className   = "eSwitch"
+							type		= "checkbox"
+							checked		= { isDisplayResultsOnPublic }
+							onChange	= { this.props.handleChangeIsDisplayResultsOnPublic }
+						/>
+						<label/>
+					</div>
+					<div className="eSmallCheckboxBlock_label">
+						Display Results On Public Site
+					</div>
+				</div>
+			);
+		}
+
+		return checkbox;
+	},
 	/**
 	 * The function render's "Cancel" and "Save" buttons after clicking "Change score" button
 	 * Buttons for close event or for change score.
@@ -319,16 +354,23 @@ const Buttons = React.createClass({
 	 */
 	renderChangeScoreEventButtonsContainer: function() {
 		return (
-			<div className="bEventButtons">
-				<div	className	= "bButton mCancel mMarginRight"
-				        onClick		= {this.props.onClickCloseCancel}
-				>
-					Cancel
+			<div className='bEventButtonsWrapper'>
+				<div className="bEventButtons">
+					<div
+						className = "bButton mCancel mMarginRight"
+				        onClick = {this.props.onClickCloseCancel}
+					>
+						Cancel
+					</div>
+					<div
+						className = "bButton"
+				        onClick = {this.props.onClickOk}
+					>
+						Save
+					</div>
 				</div>
-				<div	className	= "bButton"
-				        onClick		= {this.props.onClickOk}
-				>
-					Save
+				<div className='eEventButtonsWrapper_underlineBlock'>
+					{this.renderIsDisplayResultsOnPublicCheckbox()}
 				</div>
 			</div>
 		);

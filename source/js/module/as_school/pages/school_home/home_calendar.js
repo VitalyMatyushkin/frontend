@@ -78,6 +78,7 @@ const HomeCalender = React.createClass({
 								isDaySelected	= {true}
 								events			= {isSelectedDateEventsInSync ? selectedDateEvents.toJS() : {}}
 								onClick			= {this.handleClickEvent}
+								isPublicSite    = {true}
 							/>
 						</div>
 					</div>

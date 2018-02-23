@@ -256,6 +256,8 @@ const Event = React.createClass({
 			this.fixEventResultsData(eventData);
 
 			this.setPlayersFromEventToBinding(eventData);
+			// !!Function upd args
+			this.initIsDisplayResultsOnPublic(eventData);
 			binding.atomically()
 				.set('model',								Immutable.fromJS(eventData))
 				.set('gallery.photos',						Immutable.fromJS(photos))
@@ -744,6 +746,19 @@ const Event = React.createClass({
 			this.setNonTeamPlayersToBinding(event);
 		} else {
 			this.setTeamPlayersFromEventToBinding(event);
+		}
+	},
+	initIsDisplayResultsOnPublic: function(event) {
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			const settings = event.settings;
+
+			const currentSettingsIndex = settings.findIndex(settings => settings.schoolId === this.props.activeSchoolId);
+			if(currentSettingsIndex === -1) {
+				settings.push({
+					schoolId: this.props.activeSchoolId,
+					isDisplayResultsOnPublic: true
+				});
+			}
 		}
 	},
 	setNonTeamPlayersToBinding: function(event) {

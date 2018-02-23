@@ -236,6 +236,16 @@ const EventHeaderWrapper = React.createClass({
 
 		EventHeaderActions.commitUsersToActionDescriptorChanges(actionDescriptor.id, actionDescriptor.affectedUserList);
 	},
+	handleChangeIsDisplayResultsOnPublic: function () {
+		const updSettings = this.getDefaultBinding().toJS('model.settings');
+
+		const currentSettingsIndex = updSettings.findIndex(settings => settings.schoolId === this.props.activeSchoolId);
+		if(currentSettingsIndex !== -1) {
+			updSettings[currentSettingsIndex].isDisplayResultsOnPublic = !updSettings[currentSettingsIndex].isDisplayResultsOnPublic;
+		}
+
+		this.getDefaultBinding().set('model.settings', Immutable.fromJS(updSettings));
+	},
 	handleClickCancelButtonOnCancelEventPopup: function () {
 		this.getDefaultBinding().set('isOpenCancelEventPopupPopup', false);
 	},
@@ -292,6 +302,7 @@ const EventHeaderWrapper = React.createClass({
 				handleClickCancelEventButtonOnActionList = { this.handleClickCancelEventButtonOnActionList }
 				handleClickCancelEventAndEditNotificationListButtonOnActionList = { this.handleClickCancelEventAndEditNotificationListButtonOnActionList }
 
+				handleChangeIsDisplayResultsOnPublic	    = { this.handleChangeIsDisplayResultsOnPublic }
 				handleClickCommitButtonOnCancelEventPopup	= { this.handleClickCommitButtonOnCancelEventPopup }
 				handleClickUserActivityCheckbox				= { this.handleClickUserActivityCheckbox }
 				handleClickCheckboxMode						= { this.handleClickCheckboxMode }

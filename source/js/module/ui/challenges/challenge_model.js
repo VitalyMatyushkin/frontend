@@ -37,7 +37,7 @@ const   {DateHelper}			= require('module/helpers/date_helper'),
 
 const CRICKET_WICKETS = 10;
 
-const ChallengeModel = function(event, activeSchoolId, activeSchoolKind) {
+const ChallengeModel = function(event, activeSchoolId, activeSchoolKind, isPublicSite) {
 	this.id 		= event.id;
     this.name 		= this._getName(event, activeSchoolId);
 	this.dateUTC	= event.startTime;
@@ -56,7 +56,7 @@ const ChallengeModel = function(event, activeSchoolId, activeSchoolKind) {
 
     this.rivals 	= this._getRivals(event, activeSchoolId, activeSchoolKind);
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
-		this.scoreAr = this._getScoreAr(event, activeSchoolId, activeSchoolKind);
+		this.scoreAr = this._getScoreAr(event, activeSchoolId, activeSchoolKind, isPublicSite);
 		this.score = this._getScore(event, activeSchoolId, activeSchoolKind);
 		this.textResult = this._getTextResult(event, activeSchoolId, activeSchoolKind);
 	}
@@ -89,7 +89,7 @@ ChallengeModel.prototype._getRivals = function(event, activeSchoolId, activeScho
     return rivals;
 };
 
-ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSchoolKind) {
+ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSchoolKind, isPublicSite) {
 	if(this.isFinished) {
 		const event = Object.assign({}, _event);
 
@@ -116,6 +116,18 @@ ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSc
 		} else {
 			result1 = TeamHelper.convertPoints(points1, this.sportPointsType).str;
 			result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
+		}
+
+		// check settings
+		const settings = event.settings.find(s => s.schoolId === activeSchoolId);
+		if(typeof settings !== 'undefined' && !settings.isDisplayResultsOnPublic && typeof isPublicSite === 'boolean' && isPublicSite) {
+			if(result1 === result2) {
+				result1 = "Draw";
+				result2 = "Draw";
+			} else {
+				result1 = result1 > result2 ? 'Win': 'Lost';
+				result2 = result2 > result1 ? 'Win': 'Lost';
+			}
 		}
 
 		return [result1, result2];

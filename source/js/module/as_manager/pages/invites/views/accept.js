@@ -7,7 +7,7 @@ const	Promise							= require('bluebird'),
 		classNames						= require('classnames'),
 		{Button}						= require('../../../../ui/button/button');
 
-const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+const	{SavingPlayerChangesPopup}		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		Manager							= require('../../../../ui/managers/manager');
 
 const	EventHelper							= require('module/helpers/eventHelper'),
@@ -15,7 +15,7 @@ const	EventHelper							= require('module/helpers/eventHelper'),
 		SavingEventHelper					= require('../../../../helpers/saving_event_helper'),
 		{ ManagerTypes }					= require('module/ui/managers/helpers/manager_types'),
 		{ PlayerChoosersTabsModelFactory }	= require('module/helpers/player_choosers_tabs_models_factory'),
-		SavingPlayerChangesPopupHelper		= require('../../events/saving_player_changes_popup/helper'),
+		{ SavingPlayerChangesPopupHelper }		= require('../../events/saving_player_changes_popup/helper'),
 		{ TeamManagerActions }				= require('module/helpers/actions/team_manager_actions');
 
 const	InterSchoolsRivalModel			= require('module/ui/managers/rival_chooser/models/inter_schools_rival_model');

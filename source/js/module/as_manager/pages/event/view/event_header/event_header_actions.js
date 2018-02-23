@@ -441,24 +441,38 @@ function isResultItemChanged(resultItem) {
  * And update result and status
  * Also got event editing page to GENERAL mode
  */
-function doActionsAfterCloseEvent(activeSchoolId, event, binding){
-
+function doActionsAfterCloseEvent(activeSchoolId, event, binding) {
 	// Get updated event from server, and update some data in binding.
 	// 1) Set new results, it's important, because server results contain id's of each result point and event component
 	// detect's old result points by these features. If result point doesn't have id, then it's new result point.
 	// 2) Set new event status.
-	return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
-		.then(updEvent => {
-			binding
-				.atomically()
-				.set('model.results',	Immutable.fromJS(updEvent.results))
-				.set('model.status',	Immutable.fromJS(updEvent.status))
-				.set('mode',			Immutable.fromJS('general'))
-				.commit();
+	const setSchoolEvent = () => {
+		return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
+			.then(updEvent => {
+				binding
+					.atomically()
+					.set('model.results',	Immutable.fromJS(updEvent.results))
+					.set('model.status',	Immutable.fromJS(updEvent.status))
+					.set('mode',			Immutable.fromJS('general'))
+					.commit();
 
-			// yep i'm always true
-			return true;
+				// yep i'm always true
+				return true;
+			});
+	};
+
+	const settings = binding.toJS('model.settings');
+	const currentSettings = settings.find(s => s.schoolId === activeSchoolId);
+	if(typeof currentSettings !== 'undefined') {
+		return window.Server.schoolEventSettings.put(
+			{ schoolId: activeSchoolId, eventId: event.id },
+			{ isDisplayResultsOnPublic: currentSettings.isDisplayResultsOnPublic }
+		).then(() => {
+			return setSchoolEvent();
 		});
+	} else {
+		return setSchoolEvent();
+	}
 }
 
 /**

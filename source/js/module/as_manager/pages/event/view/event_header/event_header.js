@@ -54,6 +54,7 @@ const EventHeader = React.createClass({
 		handleClickCancelEventButton:                     React.PropTypes.func.isRequired,
 		handleClickCancelEventAndEditNotificationList:    React.PropTypes.func.isRequired,
 
+		handleChangeIsDisplayResultsOnPublic:   	React.PropTypes.func.isRequired,
 		handleClickCancelButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
 		handleClickCommitButtonOnCancelEventPopup:	React.PropTypes.func.isRequired,
 		handleClickCheckboxMode:					React.PropTypes.func.isRequired,
@@ -317,6 +318,7 @@ const EventHeader = React.createClass({
 							handleClickCancelEventButtonOnActionList = { this.props.handleClickCancelEventButtonOnActionList }
 							handleClickCancelEventAndEditNotificationListButtonOnActionList = { this.props.handleClickCancelEventAndEditNotificationListButtonOnActionList }
 
+							handleChangeIsDisplayResultsOnPublic = {this.props.handleChangeIsDisplayResultsOnPublic}
 							handleClickCloseEvent = { this.props.handleClickCloseEvent }
 							handleClickDownloadPdf = { this.props.handleClickDownloadPdf }
 							handleClickDownloadCSV = { this.props.handleClickDownloadCSV }
