@@ -1,4 +1,5 @@
 const PLATFORM_CLIENT_ARRAY = [
+	'Web',
 	'iOS',
 	'Android',
 	'Other'
@@ -20,12 +21,14 @@ const PLATFORM_CLIENT_ARRAY = [
 // ];
 
 const PLATFORM_SERVER_TO_CLIENT_MAP = {
+	'WEB':		'Web',
 	'IOS':		'iOS',
 	'ANDROID':	'Android',
 	'OTHER':	'Other'
 };
 
 const PLATFORM_CLIENT_TO_SERVER_MAP = {
+	'WEB':		'Web',
 	'iOS':		'IOS',
 	'Android':	'ANDROID',
 	'Other':	'OTHER'
