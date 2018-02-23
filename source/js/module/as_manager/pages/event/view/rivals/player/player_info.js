@@ -3,6 +3,7 @@ const 	React 		= require('react'),
 
 const PlayerInfo = React.createClass({
 	propTypes: {
+		event :       React.PropTypes.object.isRequired,
 		playerIndex	: React.PropTypes.number.isRequired,
 		player		: React.PropTypes.object.isRequired,
 		playerPlace : React.PropTypes.number,
@@ -42,6 +43,19 @@ const PlayerInfo = React.createClass({
 		
 		return medal;
 	},
+	getPosition() {
+		let position = null;
+
+		const player = this.props.player;
+		if(typeof player.positionId !== 'undefined') {
+			position = <span className='ePlayer_positionTitle'>{this.getPositionNameById(player.positionId).toLowerCase()}</span>;
+		}
+
+		return position;
+	},
+	getPositionNameById(positionId) {
+		return this.props.event.sport.field.positions.find(p => p._id === positionId).name;
+	},
 	render: function() {
 		const	playerIndex	= this.props.playerIndex,
 				player		= this.props.player;
@@ -52,6 +66,7 @@ const PlayerInfo = React.createClass({
 				<span>{`${playerIndex + 1}. `}</span>
 				<span>{player.firstName}</span>
 				<span>{player.lastName}</span>
+				{this.getPosition()}
 			</div>
 		);
 	}

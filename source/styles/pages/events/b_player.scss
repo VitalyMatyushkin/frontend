@@ -116,10 +116,16 @@
     margin-right: 5px;
   }
 }
+
+.ePlayer_positionTitle {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
 .ePlayer_medal {
   position: absolute;
 
-  right: 0px;
+  right: 0;
 
   width: 30px;
   height: 30px;

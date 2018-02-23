@@ -447,7 +447,7 @@ const EventTeamsView = React.createClass({
 		return players.map((player, playerIndex) => {
 			
 			const positionName = typeof player.positionId !== 'undefined' ?
-				`(${this.getPositionNameById(event, player.positionId)})` :
+				this.getPositionNameById(event, player.positionId) :
 				'';
 
 			return (
@@ -456,7 +456,7 @@ const EventTeamsView = React.createClass({
 						<span>{`${playerIndex + 1}. `}</span>
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
-						<span>{positionName}</span>
+						<span className='ePlayer_positionTitle'>{positionName.toLowerCase()}</span>
 					</span>
 					<If condition = {Boolean(player.isCaptain)}>
 						<span className="ePlayer_star">

@@ -45,6 +45,7 @@ const Player = React.createClass({
 		return (
 			<div className={eventPlayerCss}>
 				<PlayerInfo
+					event       = {event}
 					playerIndex	= {playerIndex}
 					player		= {player}
 					playerPlace = {playerPlace}
