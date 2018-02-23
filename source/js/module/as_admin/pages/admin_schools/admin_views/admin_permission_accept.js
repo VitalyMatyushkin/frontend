@@ -43,6 +43,7 @@ const PermissionAcceptPage = React.createClass({
 		// It's auto generated key for house input.
 		// It exists because we must have opportunity to reset state of this component by hand.
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
+		binding.set('formInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.set('prId', prId);
 		binding.set('schoolId', schoolId);
 		binding.set('errorAddChild', false);
@@ -69,6 +70,18 @@ const PermissionAcceptPage = React.createClass({
 	generatePostcodeInputKey: function() {
 		// just current date in timestamp view
 		return + new Date();
+	},
+	getFormIds: function () {
+		const binding = this.getDefaultBinding();
+
+		const formIds = [];
+
+		const formId = binding.get('formId');
+		if(typeof formId !== 'undefined') {
+			formIds.push(formId);
+		}
+
+		return formIds;
 	},
 	getHouseIds: function() {
 		const binding = this.getDefaultBinding();
@@ -127,25 +140,17 @@ const PermissionAcceptPage = React.createClass({
 	serviceStudentsFilter: function(name) {
 		const	binding		= this.getDefaultBinding();
 
-		const	formIdArray	= [binding.get('formId')];
 		let		filter;
 		
 		if (name === '') {
 			filter = {
 				limit: 100,
-				where: {
-					formId: {
-						$in: formIdArray
-					}
-				}
+				where: {}
 			}
 		} else {
 			filter = {
 				limit: 100,
 				where: {
-					formId: {
-						$in: formIdArray
-					},
 					$or: [
 						{
 							firstName: {
@@ -162,6 +167,11 @@ const PermissionAcceptPage = React.createClass({
 					]
 				}
 			}
+		}
+
+		const formIdArray	= this.getFormIds();
+		if(formIdArray.length !== 0) {
+			filter.where.formId = { $in: formIdArray };
 		}
 
 		// house Id is optional so it can be empty array
@@ -212,6 +222,12 @@ const PermissionAcceptPage = React.createClass({
 			}
 		});
 	},
+	onClickDeselectForm: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.set('formId', undefined);
+		binding.set('formInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
+	},
 	onClickDeselectHouse: function() {
 		const binding = this.getDefaultBinding();
 
@@ -237,45 +253,47 @@ const PermissionAcceptPage = React.createClass({
 
 						<div className='eForm_field'>
 							<Autocomplete
+								key				= { binding.toJS('formInputKey') }
 								serviceFilter	= { this.serviceFormFilter }
 								serverField		= 'name'
 								onSelect		= { this.onSelectForm }
 								placeholder		= 'Form'
+								extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
+							/>
+							<SquareCrossButton
+								handleClick = {this.onClickDeselectForm}
 							/>
 						</div>
 
-						<If condition={typeof binding.get('formId') !== 'undefined'}>
-							<div className='eForm_field'>
-								<Autocomplete
-									key				= { binding.toJS('houseInputKey') }
-									serviceFilter	= { this.serviceHouseFilter }
-									serverField		= 'name'
-									onSelect		= { this.onSelectHouse}
-									placeholder		= 'House'
-									extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
-								/>
-								<SquareCrossButton
-									handleClick={this.onClickDeselectHouse}
-								/>
-							</div>
-						</If>
+						<div className='eForm_field'>
+							<Autocomplete
+								key				= { binding.toJS('houseInputKey') }
+								serviceFilter	= { this.serviceHouseFilter }
+								serverField		= 'name'
+								onSelect		= { this.onSelectHouse}
+								placeholder		= 'House'
+								extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
+							/>
+							<SquareCrossButton
+								handleClick = {this.onClickDeselectHouse}
+							/>
+						</div>
 
-						<If condition={typeof binding.get('formId') !== 'undefined'}>
-							<div className='eForm_field'>
-								{
-									errorAddChild &&
-									<span className="verify_error">{ ERROR_ADD_CHILD_TEXT }</span>
-								}
-								<Autocomplete
-									serviceFilter	= { this.serviceStudentsFilter}
-									serverField		= 'name'
-									onSelect		= { this.onSelectStudent }
-									placeholder		= 'Student name'
-								/>
-							</div>
-						</If>
+						<div className='eForm_field'>
+							{
+								errorAddChild &&
+								<span className="verify_error">{ ERROR_ADD_CHILD_TEXT }</span>
+							}
+							<Autocomplete
+								serviceFilter	= { this.serviceStudentsFilter}
+								serverField		= 'name'
+								onSelect		= { this.onSelectStudent }
+								placeholder		= 'Student name'
+								extraCssStyle	= { 'mWidth350' }
+							/>
+						</div>
 
-						<If condition={typeof binding.get('formId') !== 'undefined' && typeof binding.get('studentId') !== 'undefined'}>
+						<If condition={typeof binding.get('studentId') !== 'undefined'}>
 							<div
 								className	= "bButton"
 								onClick		= { this.onAcceptPermission }
