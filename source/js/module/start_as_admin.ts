@@ -7,8 +7,8 @@ import * as ApplicationView from 'module/as_admin/application';
 import {SimpleAlertFactory} from './helpers/simple_alert_factory';
 import {ConfirmAlertFactory} from './helpers/confirm_alert_factory';
 
-import * as userDataInstance from 'module/data/user_data';
-import * as userRulesInstance from 'module/data/user_rules';
+import {UserDataInstance} from 'module/data/user_data';
+import {UserRulesInstance} from 'module/data/user_rules';
 import {authController} from 'module/core/auth_controller';
 import {AdminServiceList} from 'module/core/service_list/admin_service_list';
 
@@ -18,8 +18,8 @@ export function asAdmin() {
 // Creating Morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
-			userData: userDataInstance.getDefaultState(),
-			userRules: userRulesInstance.getDefaultState(),
+			userData: UserDataInstance.getDefaultState(),
+			userRules: UserRulesInstance.getDefaultState(),
 			notificationAlertData: {
 				isOpen:					false,
 
@@ -110,12 +110,12 @@ export function asAdmin() {
 
 	window.Server = new AdminServiceList(binding.sub('userData'));
 
-	userDataInstance.checkAndGetValidSessions()
+	UserDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
 			binding.set('userData', Immutable.fromJS(sessions));
 
-			userDataInstance.setBinding(binding.sub('userData'));
-			userRulesInstance.setBinding(binding.sub('userRules'));
+			UserDataInstance.setBinding(binding.sub('userData'));
+			UserRulesInstance.setBinding(binding.sub('userRules'));
 
 			authController
 				.initialize({

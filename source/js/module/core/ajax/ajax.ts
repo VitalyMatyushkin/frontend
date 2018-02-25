@@ -18,7 +18,7 @@ export interface AjaxRequest {
 	method:		'get' | 'post' | 'put' | 'delete' | 'head'
 	headers?:	FlatObject,
 	urlParams?:	FlatObject,
-	data?:		string | FlatObject | File | Blob
+	data?:		string | object | File | Blob | FormData
 }
 
 export class CancelError extends Error {

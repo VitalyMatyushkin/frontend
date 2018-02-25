@@ -147,6 +147,16 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 			data:			dataCopy,
 			headers:		finalHeaders
 		}).then( result => {
+
+			/* this piece of shit required during refactoring process. I just dropped global ajax handlers which
+			 * was used here for ages, but right now there is no good place for this handler as I'm just start
+			 * cleaning this spaghetti out.
+			 * This global handlers should be removed very soon.
+			 */
+			if(result.status === 401 && typeof (window as any).onDeAuth === 'function') {
+				(window as any).onDeAuth(401);
+			}
+
 			if(isDataOnly) {
 				return result.data as GetDataType | PostDataType | DeleteDataType;
 			} else {
@@ -154,7 +164,7 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 				anyResult.data = anyResult.data as GetDataType | PostDataType | DeleteDataType;
 				return anyResult;
 			}
-		});
+		})
 	}
 
 	private getActiveSession(): ActiveSession | undefined {

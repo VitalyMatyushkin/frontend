@@ -15,7 +15,7 @@ interface ConfigDetails {
     crossDomain?: boolean,
     data?: object | string | [any],
     dataType?: 'xml' | 'html' | 'script' | 'json' | 'jsonp' | 'text',
-    contentType?: string,
+    contentType?: string | boolean,
     beforeSend?: (xhr: XMLHttpRequest) => void,
     error?: (xhr: XMLHttpRequest, textStatus: string, errorThrown: any) => void,
     success?: (data: any, textStatus: string, xhr: XMLHttpRequest) => void,
@@ -45,7 +45,7 @@ export interface FullResult {
  *  Promise semantics.
  * @returns {Promise}
  */
-export function AJAX(configDetails: ConfigDetails, dataOnly: boolean): BPromise<FullResult | object | string> {
+export function AJAX(configDetails: ConfigDetails, dataOnly: boolean = false): BPromise<FullResult | object | string> {
     return new BPromise((resolve, reject, onCancel) => {
         configDetails.error = (jqXHR, textStatus, errorThrown) => {
             const errorToReturn             = new Error(`Http non-2xx status. Considered an error in current AJAX implementation`);

@@ -3,7 +3,6 @@
  */
 
 import * as BPromise from 'bluebird';
-import * as $ from 'jquery';
 import * as log from 'loglevel';
 import * as loaderUtils from './module/helpers/loader_utils';
 import * as storage from './module/helpers/storage';

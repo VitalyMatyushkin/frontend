@@ -4,7 +4,7 @@ const 	Form 		= require('module/ui/form/form'),
 		React 		= require('react');
 
 /** First registration step where user input email, password, firstname and lastname */
-const RegiseterUserForm = React.createClass({
+const RegisterUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AccountForm',
 	propTypes: {
@@ -12,13 +12,12 @@ const RegiseterUserForm = React.createClass({
         onError: React.PropTypes.func
 	},
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		/* phone field have `text` type to be compatable with any phone. Validation was: validation="required phone server" */
 		return (
-				<Form updateBinding={true} service="i/register" binding={binding} onSuccess={self.props.onSuccess}
-							onError={self.props.onError}>
+				<Form updateBinding={true} service="i/register" binding={binding} onSuccess={this.props.onSuccess}
+							onError={this.props.onError}>
 					{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
 					<FormField type="text" field="firstName" validation="required text">Name</FormField>
 					<FormField type="text" field="lastName" validation="required text">Surname</FormField>
@@ -40,4 +39,4 @@ const RegiseterUserForm = React.createClass({
 });
 
 
-module.exports = RegiseterUserForm;
+module.exports = RegisterUserForm;
