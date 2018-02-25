@@ -1,6 +1,6 @@
 import {Service} from 'module/core/service';
 
-import {ImageService} from "module/core/services/ImageService";
+import * as ImageService from "module/core/services/ImageService";
 
 import {Role} from "module/models/role/role";
 import {Sport} from "module/models/sport/sport";

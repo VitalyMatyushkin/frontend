@@ -16,11 +16,7 @@ const   React       = require('react'),
 		{If}		= require('module/ui/if/if'),
 		Morearty	= require('morearty'),
 		SessionHelper	= require('module/helpers/session_helper'),
-        $           = require('jquery'),
-		{AxiosAjax}	= require('module/core/ajax/axios-ajax');
-
-
-const Ajax = new AxiosAjax();
+        $           = require('jquery');
 
 // TODO: do something with all this
 
@@ -109,8 +105,9 @@ const Form = React.createClass({
 	 * @private
 	 */
 	_setDefaultValues: function () {
-		const	binding	= this.getDefaultBinding(),
-				fields	= this.getFormFields();
+		var self = this,
+			binding = self.getDefaultBinding(),
+			fields = self.getFormFields();
 
 		fields.forEach(child => {
 			const field = child.props.field;
@@ -128,20 +125,20 @@ const Form = React.createClass({
 		else
 			window.history.back();
 	},
-	tryToSubmit:       function () {
+	tryToSubmit: function () {
 		const self = this;
-		const binding = this.getDefaultBinding();
+		const binding = self.getDefaultBinding();
 		const token = SessionHelper.getUserIdFromSession(
-			this.getMoreartyContext().getBinding().sub('userData')
+			self.getMoreartyContext().getBinding().sub('userData')
 		);
-		const fields = this.getFormFields();
+		const fields = self.getFormFields();
 		const metaToPost = binding.meta().sub('____metaToPost____');
 		const typeOfService = typeof self.props.service;
 
 		let hereIsError = false,
 			dataToPost = {};
 
-		if (this.busy === true) {
+		if (self.busy === true) {
 			return false;
 		}
 
@@ -161,14 +158,14 @@ const Form = React.createClass({
 
 		dataToPost = metaToPost.toJS();
 		metaToPost.clear();
-		binding.removeListener(this.listener);
+		binding.removeListener(self.listener);
 
 		//TODO: not taken into account the presence of columns
 		React.Children.forEach(this.props.children, function (child) {
 			if (child.props.onPrePost !== undefined) {
 				dataToPost[child.props.field] = child.props.onPrePost(dataToPost[child.props.field]);
 			}
-		}.bind(this));
+		}.bind(self));
 
 		//TODO: Заменить dataToPost на Merge данных из statePath
 		//TODO: WTF??
@@ -178,85 +175,59 @@ const Form = React.createClass({
 		if (hereIsError === false) {
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
-			if (typeof this.props.onSubmit === 'function') {
-				return this.props.onSubmit(dataToPost);
+			if (typeof self.props.onSubmit === 'function') {
+				return self.props.onSubmit(dataToPost);
 			}
 
-			if (typeof this.props.onPreSubmit === 'function') {
-				dataToPost = this.props.onPreSubmit(dataToPost);
+			if (typeof self.props.onPreSubmit === 'function') {
+				dataToPost = self.props.onPreSubmit(dataToPost);
 			}
 
-			this.busy = true;
+			self.busy = true;
 
-			this.postedData = dataToPost;
+			self.postedData = dataToPost;
 
 			// TODO: Зарефакторить эту кашицу
 			if (['object', 'function'].indexOf(typeOfService) !== -1) {
-				const userService = typeOfService === 'object' ? this.props.service.post.bind(this.props.service) : this.props.service;
-				userService(dataToPost).then(this._onServiceSuccess, this._onServiceError);
+				const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
+				userService(dataToPost).then(self._onServiceSucces, self._onServiceError); // React told we don't need .bind()
 			} else {
-				const type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
-				const url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) : (window.apiBase + '/' + self.props.service);
-
-				// actually this shouldn't be here. Moreover this 'else' also should not exist :)
-				// but I'm not ready to fix this shit now, so I'm just fixing it a bit.
-				// guessing both session key and session type here to put in request
-				const	userDataBinding = this.getMoreartyContext().getBinding().sub('userData'),
-						activeSession = SessionHelper.getActiveSession(userDataBinding);
-
-				const headers = {};
-
-				switch (true) {
-					case typeof activeSession !== 'undefined' && typeof activeSession.adminId !== 'undefined':
-						headers['asid'] = activeSession.id;
-						break;
-					case typeof activeSession !== 'undefined' && typeof activeSession.userId !== 'undefined':
-						headers['usid'] = activeSession.id;
-						break;
-				}
-
-				Ajax
-					.request({
-						url: url,
-						method: type === 'PUT' ? 'put' : 'post',
-						data: dataToPost,
-						headers: headers
-					})
-					.then(
-						response => this._onServiceSuccess(response),
-						err => this._onServiceError(err)
-					);
+				var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
+				var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) : (window.apiBase + '/' + self.props.service);
+				$.ajax({
+					url: url,
+					type: type,
+					crossDomain: true,
+					dataType: 'json',
+					contentType: 'application/json',
+					data: JSON.stringify(dataToPost),
+					error: self._onServiceError,
+					success: self._onServiceSucces
+				});
 			}
 
 		}
 	},
-	_onServiceSuccess: function (response) {
-		const data = response.data;
-		/* this piece of shit required during refactoring process. I just dropped global ajax handlers which
-			 * was used here for ages, but right now there is no good place for this handler as I'm just start
-			 * cleaning this spaghetti out.
-			 * This global handlers should be removed very soon.
-			 */
-		if(response.status === 401 && typeof window.onDeAuth === 'function') {
-			window.onDeAuth(401);
+	_onServiceSucces: function (data) {
+		var self = this;
+
+		self.busy = false;
+		self.buttonText = self.defaultButton;
+
+		if (self.props.updateBinding === true) {
+			self.getDefaultBinding().set(self.postedData);
 		}
 
-		this.busy = false;
-		this.buttonText = this.defaultButton;
-
-		if (this.props.updateBinding === true) {
-			this.getDefaultBinding().set(this.postedData);
-		}
-
-		if (this.props.onSuccess) {
-			this.props.onSuccess(data);
+		if (self.props.onSuccess) {
+			self.props.onSuccess(data);
 		}
 	},
-	_onServiceError:   function(data) {
-		this.busy = false;
-		this.buttonText = this.defaultButton;
-		if (this.props.onError) {
-			this.props.onError(data);
+	_onServiceError: function(data) {
+		var self = this;
+		self.busy = false;
+		self.buttonText = self.defaultButton;
+		if (self.props.onError) {
+			self.props.onError(data);
 		}
 	},
 

@@ -2,37 +2,29 @@
  * Created by wert on 26.02.16.
  */
 
+const {AJAX} = require('module/core/AJAX');
 
-import  {AxiosAjax} from "module/core/ajax/axios-ajax";
-import {IAjax} from "module/core/ajax/ajax";
-import * as BPromise from 'bluebird';
-
-
-export class ImageService {
-	readonly endpoint: string;
-	readonly ajax: IAjax;
-	private readonly uploadUrl: string;
-
-
-	constructor(endpoint: string, ajax: IAjax = new AxiosAjax()) {
+class ImageService {
+	constructor(endpoint) {
 		this.endpoint   = endpoint;
-		this.uploadUrl  = endpoint + '/images';
-		this.ajax		= ajax;
+		this.__uploadUrl  = endpoint + '/images';
 	}
 
 	/** Will upload file to storage and return it's url*/
-	upload(file: any): BPromise<string> {		// TODO: file type ???
+	upload(file){		// TODO: file type ???
 		const fd = new FormData();
 		fd.append('image', file);
-		return this.ajax.request({
-			method:			'post',
-			url:			this.uploadUrl,
-			data:           fd
+		return AJAX({
+			type:           'POST',
+			url:            this.__uploadUrl,
+			data:           fd,
+			processData:    false,
+			contentType:    false
 		})
 			.then( success => this.__getOriginalUrlByKey(success.data.key));
 	}
 
-	private __getOriginalUrlByKey(key) {
+	__getOriginalUrlByKey(key) {
 		return this.endpoint + '/images/' + key;
 	}
 
@@ -49,3 +41,6 @@ export class ImageService {
 	}
 
 }
+
+
+module.exports = ImageService;

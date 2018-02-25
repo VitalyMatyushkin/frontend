@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import * as Morearty from 'morearty';
@@ -10,8 +11,8 @@ import * as ApplicationView from 'module/as_manager/application';
 import {SimpleAlertFactory} from 'module/helpers/simple_alert_factory';
 import {ConfirmAlertFactory} from 'module/helpers/confirm_alert_factory';
 import {SliderAlertFactory} from 'module/helpers/slider_alert_factory';
-import {UserDataInstance} from 'module/data/user_data';
-import {UserRulesInstance} from 'module/data/user_rules';
+import * as userDataInstance from 'module/data/user_data';
+import * as userRulesInstance from 'module/data/user_rules';
 
 import * as initTawkTo  from 'module/tawk_to/tawk_to';
 
@@ -20,8 +21,8 @@ export function asApp() {
 
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
-			userData:	UserDataInstance.getDefaultState(),
-			userRules:	UserRulesInstance.getDefaultState(),
+			userData:	userDataInstance.getDefaultState(),
+			userRules:	userRulesInstance.getDefaultState(),
 			notificationAlertData: {
 				isOpen:					false,
 
@@ -126,12 +127,12 @@ export function asApp() {
 
 	window.Server = new ServiceList(binding.sub('userData'));
 
-	UserDataInstance.checkAndGetValidSessions()
+	userDataInstance.checkAndGetValidSessions()
 		.then(sessions => {
 			binding.set('userData', Immutable.fromJS(sessions));
 
-			UserDataInstance.setBinding(binding.sub('userData'));
-			UserRulesInstance.setBinding(binding.sub('userRules'));
+			userDataInstance.setBinding(binding.sub('userData'));
+			userRulesInstance.setBinding(binding.sub('userRules'));
 
 			window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 			window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));

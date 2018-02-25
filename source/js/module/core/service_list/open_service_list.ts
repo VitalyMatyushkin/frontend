@@ -1,5 +1,5 @@
 import {Service} from 'module/core/service';
-import {ImageService} from 'module/core/services/ImageService';
+import * as ImageService from 'module/core/services/ImageService';
 
 /** Collection of services to reach REST API from server */
 export class OpenServiceList {

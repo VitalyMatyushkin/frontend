@@ -6,7 +6,7 @@ import {TYPE_REGISTER} from '../register_type_step';
 import {SchoolStep} from '../school_step';
 import {ChildStep} from '../child_step';
 import {FinishPermissionsStep} from '../finish_permissions_step';
-import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item';
+import {School} from 'module/ui/autocomplete2/custom_list_items/school_list_item/school_list_item.tsx';
 import * as Loader from 'module/ui/loader';
 
 interface SchoolData {
