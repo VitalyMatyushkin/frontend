@@ -64,13 +64,13 @@
       margin: 0 10px
     }
     .bIcon {
-      width: 40px;
-      height: 40px;
-      color: #303030;
+      width: 30px;
+      height: 30px;
+      color: #8c8c8c;
       cursor: pointer;
 
       &:hover {
-        color: #1e1e1e;
+        color: #c2c2c2;
       }
     }
   }
@@ -93,6 +93,15 @@
   position: relative;
   width: 100%;
   background: #1e1e1e center no-repeat;
+
+  .bLoader {
+    height: 100%;
+
+    .bIcon {
+      width: 120px;
+      height: 120px;
+    }
+  }
 }
 
 .eFullScreenPhoto_arrowLeft {

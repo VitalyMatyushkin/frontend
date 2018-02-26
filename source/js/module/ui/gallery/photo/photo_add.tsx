@@ -62,7 +62,6 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 					() => {
 						//TODO: one need to use router here, but currently our router is kind of shit and unable to perform that kind of ops
 						window.history.back();
-						window.location.reload();
 					}
 				);
 			});

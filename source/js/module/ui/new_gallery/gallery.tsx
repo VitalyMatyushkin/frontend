@@ -4,22 +4,22 @@
 
 import * as React                   from 'react';
 import * as PhotoStrip              from './photo_strip';
+import {PhotoGrid}                  from './photo_grid';
 import * as FullScreenPhoto         from './fullscreen_photo';
 import * as GalleryAccessPresets    from './../../helpers/consts/gallery';
 
 export interface GalleryProps {
-    mode:                           string,
+    mode:                           string
 	albumId?:                       string
-    currentUserId?:					string,
-    photos:							Photo[],
-    handleChangeAddPhotoButton?:	() => void,
-    handleChangeAccessPreset?:		(id: string, preset: string) => void,
-	handleChangePicData:            (id: string, picUrl: string) => void,
-    handleClickDeletePhoto:			(id: string) => void,
-	handleChangeCover?:			    (picUrl: string) => void,
-    accessMode:						string,
-    isUserCanUploadPhotos:			boolean,
-    isLoading:						boolean,
+    currentUserId?:					string
+    photos:							Photo[]
+    handleChangeAddPhotoButton?:	() => void
+    handleChangeAccessPreset?:		(id: string, preset: string) => void
+	handleChangePicData:            (id: string, picUrl: string) => void
+    handleClickDeletePhoto:			(id: string) => void
+    accessMode:						string
+    isUserCanUploadPhotos:			boolean
+    isLoading:						boolean
     isUploadingPhoto:				boolean
 }
 
@@ -70,14 +70,14 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
         return this.props.photos.findIndex(p => p.id === this.state.currentFullScreenPhotoId);
     }
 
-    handleClickPhoto(id: string) {
+    handleClickPhoto(id: string): void {
         this.setState({
             mode: this.FULLSCREEN_MODE,
             currentFullScreenPhotoId: id
         });
     }
 
-    handleClickCloseFullScreenPhoto() {
+    handleClickCloseFullScreenPhoto(): void {
         this.setState({
             mode: this.PREVIEW_MODE,
             currentFullScreenPhotoId: undefined
@@ -85,11 +85,15 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
     }
 
     handleChangeAccessPreset(id: string, preset: string) {
-        this.props.handleChangeAccessPreset(id, preset);
+	    return  this.props.handleChangeAccessPreset(id, preset);
     }
 
 	handleChangePicData(id: string, picData) {
-		this.props.handleChangePicData(id, picData);
+		return this.props.handleChangePicData(id, picData);
+	}
+
+	handleClickDeletePhoto(id: string) {
+		return this.props.handleClickDeletePhoto(id);
 	}
 
     handleClickPrevPhoto() {
@@ -119,15 +123,26 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
     }
 
     renderPhotos() {
-        return (
-            <PhotoStrip
-                photos                  = { this.props.photos }
-                handleClickDeletePhoto  = { this.props.handleClickDeletePhoto }
-                handleClickPhoto        = { this.handleClickPhoto.bind(this) }
-                accessMode              = { this.props.accessMode }
-                isUploadingPhoto        = { this.props.isUploadingPhoto }
-            />
-        );
+	    if (this.props.mode === 'EVENT') {
+		    return (
+			    <PhotoStrip
+				    photos={this.props.photos}
+				    handleClickDeletePhoto={this.props.handleClickDeletePhoto}
+				    handleClickPhoto={this.handleClickPhoto.bind(this)}
+				    accessMode={this.props.accessMode}
+				    isUploadingPhoto={this.props.isUploadingPhoto}
+			    />
+		    )
+	    } else {
+		    return (
+			    <PhotoGrid
+				    photos={this.props.photos}
+				    handleClickDeletePhoto={this.props.handleClickDeletePhoto}
+				    handleClickPhoto={this.handleClickPhoto.bind(this)}
+				    isUploadingPhoto={this.props.isUploadingPhoto}
+			    />
+		    )
+	    }
     }
 
     renderAddPhotoButton() {
@@ -150,12 +165,13 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
                     albumId                     = { this.props.albumId }
                     isShowArrowButtons			= { this.isShowArrowButtons() }
                     isShowSideContainer			= { this.isShowSideContainer(currentPhoto)}
+                    isUploadingPhoto            = { this.props.isUploadingPhoto }
                     handleClickPrevPhoto		= { this.handleClickPrevPhoto.bind(this) }
                     handleClickNextPhoto		= { this.handleClickNextPhoto.bind(this) }
                     handleClickClose			= { this.handleClickCloseFullScreenPhoto.bind(this) }
+                    handleClickDeletePhoto      = { this.handleClickDeletePhoto.bind(this, currentPhoto.id)}
                     handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
                     handleChangePicData	        = { this.handleChangePicData.bind(this, currentPhoto.id)  }
-                    handleChangeCover	        = { this.props.handleChangeCover  }
                     accessMode					= { this.props.accessMode }
                     mode                        = { this.props.mode }
                 />

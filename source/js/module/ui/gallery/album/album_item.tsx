@@ -1,71 +1,58 @@
-
+import * as Immutable from 'immutable';
 import * as React from 'react';
 import * as Morearty from 'morearty';
-import {SVG} from 'module/ui/svg';
+import {SchoolGallery} from './school_gallery';
+import * as Loader from 'module/ui/loader';
 
 export const Album = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
-	propTypes: {
-		basePath: (React as any).PropTypes.string.isRequired,
-		onDelete: (React as any).PropTypes.func.isRequired
-	},
+	componentWillMount: function () {
+		const   schoolId = this.props.activeSchoolId,
+				binding = this.getDefaultBinding();
 
-    getDefaultProps: function() {
-        return {
-            basePath: 'notFound'
-        };
-    },
-	
-	onClickAlbum: function(e): void {
-		const 	binding 	= this.getDefaultBinding(),
-                album 		= binding.toJS();
+		(window as any).Server.school.get(schoolId).then(school => {
+			if(school.defaultAlbumId)
+				return (window as any).Server.schoolAlbum.get({schoolId, albumId:school.defaultAlbumId});
+			else{
+				console.error('school.defaultAlbumId is undefined');
+				return null;
+			}
+		}).then(album => {
+			binding.set('defaultAlbum', Immutable.fromJS(album));
 
-        document.location.hash = this.props.basePath + '/view/' + album.id;
-		e.stopPropagation();
-	},
-	onClickEditAlbum: function(e): void {
-		const 	binding 	= this.getDefaultBinding(),
-				album 		= binding.toJS();
+			return this.props.service.photos.get(album.id,{filter:{limit: 100}})
+		})
+		.then((photo) =>{
+			binding
+				.atomically()
+				.set('photos', Immutable.fromJS(photo))
+				.set('sync', true)
+				.commit();
 
-        document.location.hash = this.props.basePath + '/edit/' + album.id;
-		e.stopPropagation();
-	},
-	onClickDeleteAlbum: function(e): void {
-		const 	binding 	= this.getDefaultBinding(),
-				album 		= binding.toJS();
-
-		(window as any).confirmAlert(
-			"Delete this album?",
-			"Ok",
-			"Cancel",
-			() => this.props.onDelete && this.props.onDelete(album),
-			() => {}
-		);
-		e.stopPropagation();
+		});
 	},
 	render: function() {
-		const 	binding = this.getDefaultBinding(),
-				a 		= binding.toJS(),
-				name 	= a ? a.name : '',
-				cover 	= a && a.coverUrl ? (window as any).Server.images.getResizedToBoxUrl(a.coverUrl, 200, 200) : '/images/no-image.jpg',
-				styles 	= { backgroundImage: 'url(' + cover + ')'};
+		const binding = this.getDefaultBinding();
 
-		return (
-				<div onClick={e => this.onClickAlbum(e)} className='eAlbum' style={styles}>
-					<div className="eAlbumActions">
-						<span>{/*<SVG icon="icon_photo"/>*/}</span>
-						<span>{/*<SVG icon="icon_comments"/>*/}</span>
-						<span ></span>
-						<span onClick={e => this.onClickEditAlbum(e)} id="editAlbum_button" className="bTooltip" data-description="Edit Album"><SVG
-							icon="icon_edit"/></span>
-						<span onClick={e => this.onClickDeleteAlbum(e)} id="deleteAlbum_button" className="bTooltip" data-description="Delete Album"><SVG
-							classes="ePhotoDelete" icon="icon_delete"/></span>
+		if (binding.get('sync')) {
+			return (
+				<div>
+					<div className="eSchoolMaster_wrap">
+						<h1 className="eSchoolMaster_title">Gallery <span>{binding.toJS('photos').length}</span></h1>
+						<div className="eSchoolMaster_button">
+							<button className="bButton" onClick={() => window.location.href = `/#${this.props.basePath}/view/${binding.toJS('defaultAlbum').id}/add`}>Add photo</button>
+						</div>
 					</div>
-					<div className="eAlbumInfo">
-						<span className='eAlbumTitle'>{name}</span>
+					<div className="bAlbum">
+						<SchoolGallery binding={binding} service={this.props.service}/>
 					</div>
 				</div>
-		);
+			);
+		} else {
+			return (
+				<Loader/>
+			);
+		}
 	}
 });

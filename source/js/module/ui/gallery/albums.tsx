@@ -7,9 +7,6 @@ import * as Route from 'module/core/route';
 import * as Morearty from 'morearty';
 import * as React from 'react';
 
-import {AlbumEditComponent} from "module/ui/gallery/album/album_edit";
-import {AlbumCreateComponent} from "module/ui/gallery/album/album_create";
-import {AlbumViewComponent} from "module/ui/gallery/album/album_view";
 import {PhotoEditComponent} from "module/ui/gallery/photo/photo_edit";
 import {PhotoAddComponent} from "module/ui/gallery/photo/photo_add";
 import {AddAnonymousIcon} from "module/ui/gallery/add_anonumous_icon";
@@ -46,24 +43,6 @@ export const AlbumRoutes = (React as any).createClass({
 				routes 	= { this.getMoreartyContext().getBinding() }
 				binding = { this.getMoreartyContext().getBinding() }
 			>
-				<Route
-					path 		= { "/" + this.props.basePath + "/edit/:albumId" }
-					binding 	= { binding }
-					service 	= { this.props.service }
-					component 	= { AlbumEditComponent }
-				/>
-				<Route
-					path 		= { "/" + this.props.basePath + "/create" }
-					binding 	= { binding }
-					service 	= { this.props.service }
-					component 	= { AlbumCreateComponent }
-				/>
-				<Route
-					path 		= { "/" + this.props.basePath + "/view/:albumId" }
-					binding 	= { binding }
-					service 	= { this.props.service }
-					component 	= { AlbumViewComponent }
-				/>
 				<Route
 					path 		= { "/" + this.props.basePath + "/view/:albumId/add" }
 					binding 	= { binding }
