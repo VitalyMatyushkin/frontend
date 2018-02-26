@@ -27,12 +27,14 @@ const Rivals = React.createClass({
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isShowControlButtons:					React.PropTypes.bool,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
-		handleClickRemoveTeamButton:			React.PropTypes.func
+		handleClickRemoveTeamButton:			React.PropTypes.func,
+		isPublicSite:                           React.PropTypes.bool
 	},
 	listeners: [],
 	getDefaultProps: function(){
 		return {
-			isShowControlButtons: true
+			isShowControlButtons: true,
+			isPublicSite: false
 		};
 	},
 	componentWillUnmount: function() {
@@ -517,6 +519,7 @@ const Rivals = React.createClass({
 							onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
 							handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 							handleClickRemoveTeamButton				= { this.props.handleClickRemoveTeamButton }
+							isPublicSite                            = { this.props.isPublicSite }
 						/>
 					);
 				}
@@ -534,6 +537,7 @@ const Rivals = React.createClass({
 							onChangeIndividualScoreAvailable		= { this.onChangeIndividualScoreAvailable }
 							handleClickOpponentSchoolManagerButton	= { this.props.handleClickOpponentSchoolManagerButton }
 							handleClickRemoveTeamButton				= { this.props.handleClickRemoveTeamButton }
+							isPublicSite                            = { this.props.isPublicSite }
 						/>
 					);
 				}

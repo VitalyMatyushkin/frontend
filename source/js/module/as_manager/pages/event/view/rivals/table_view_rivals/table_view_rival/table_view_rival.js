@@ -26,7 +26,8 @@ const TableViewRival = React.createClass({
 		onChangeIndividualScoreAvailable:	React.PropTypes.func.isRequired,
 		isLast:								React.PropTypes.bool.isRequired,
 		rivalInfoOptions:					React.PropTypes.object,
-		isShowControlButtons:				React.PropTypes.bool
+		isShowControlButtons:				React.PropTypes.bool,
+		isPublicSite:                       React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -140,6 +141,7 @@ const TableViewRival = React.createClass({
 					activeSchoolId	= { this.props.activeSchoolId }
 					options			= { this.props.rivalInfoOptions }
 					isLast			= { this.props.isLast }
+					isPublicSite    = { this.props.isPublicSite }
 				/>
 				{ this.renderPlayersBlock() }
 			</div>

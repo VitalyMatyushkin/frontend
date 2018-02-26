@@ -57,7 +57,7 @@ const ChallengeModel = function(event, activeSchoolId, activeSchoolKind, isPubli
     this.rivals 	= this._getRivals(event, activeSchoolId, activeSchoolKind);
     if (this.sportPointsType !== 'PRESENCE_ONLY') {
 		this.scoreAr = this._getScoreAr(event, activeSchoolId, activeSchoolKind, isPublicSite);
-		this.score = this._getScore(event, activeSchoolId, activeSchoolKind);
+		this.score = this._getScore(event, activeSchoolId, activeSchoolKind, isPublicSite);
 		this.textResult = this._getTextResult(event, activeSchoolId, activeSchoolKind);
 	}
 };
@@ -87,6 +87,10 @@ ChallengeModel.prototype._getRivals = function(event, activeSchoolId, activeScho
 	}
 
     return rivals;
+};
+
+ChallengeModel.prototype._getSettings = function(event, activeSchoolId) {
+	return event.settings.find(s => s.schoolId === activeSchoolId);
 };
 
 ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSchoolKind, isPublicSite) {
@@ -119,7 +123,7 @@ ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSc
 		}
 
 		// check settings
-		const settings = event.settings.find(s => s.schoolId === activeSchoolId);
+		const settings = this._getSettings(event, activeSchoolId);
 		if(typeof settings !== 'undefined' && !settings.isDisplayResultsOnPublic && typeof isPublicSite === 'boolean' && isPublicSite) {
 			if(result1 === result2) {
 				result1 = "Draw";
@@ -136,7 +140,10 @@ ChallengeModel.prototype._getScoreAr = function(_event, activeSchoolId, activeSc
 	}
 };
 
-ChallengeModel.prototype._getScore = function(event, activeSchoolId) {
+ChallengeModel.prototype._getScore = function(event, activeSchoolId, activeSchoolKind, isPublicSite) {
+	const settings = this._getSettings(event, activeSchoolId);
+	let isDisplayResultsOnPublic = typeof settings !== 'undefined' ? settings.isDisplayResultsOnPublic : true;
+
 	switch (true) {
 		// Always empty for SchoolUnion and multiparty
 		case (
@@ -166,6 +173,14 @@ ChallengeModel.prototype._getScore = function(event, activeSchoolId) {
 			this.isIndividualSport
 		): {
 			return '';
+		}
+		case (
+			this.isFinished &&
+			!this.isIndividualSport &&
+			typeof isPublicSite === 'boolean' && isPublicSite &&
+			!isDisplayResultsOnPublic
+		): {
+			return this.scoreAr[0];
 		}
 		case (
 			this.isFinished &&

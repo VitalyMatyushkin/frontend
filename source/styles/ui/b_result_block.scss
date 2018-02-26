@@ -1,0 +1,23 @@
+@import '../!variables';
+@import '../!mixins';
+@import '../bootstrap-custom';
+
+.bResultBlock {
+  @include make-row();
+  margin-bottom: 20px;
+}
+
+.eResultBlock_resultColumn {
+  @extend .col-md-10;
+
+  @include make-md-column-offset(1);
+}
+
+.eResultBlock_result {
+  border: $mainBorder;
+  padding: 15px;
+
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}

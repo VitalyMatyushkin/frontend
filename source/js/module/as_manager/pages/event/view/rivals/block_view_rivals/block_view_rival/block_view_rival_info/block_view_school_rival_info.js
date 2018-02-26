@@ -20,7 +20,16 @@ const BlockViewSchoolRivalInfo = React.createClass({
 		mode:									React.PropTypes.string.isRequired,
 		onChangeScore:							React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
-		options:								React.PropTypes.object
+		options:								React.PropTypes.object,
+		isPublicSite:                           React.PropTypes.bool.isRequired
+	},
+	getSettings: function () {
+		return this.props.event.settings.find(s => s.schoolId === this.props.activeSchoolId);
+	},
+	isDisplayResultsOnPublic: function () {
+		const settings = this.getSettings();
+
+		return typeof settings !== 'undefined' ? settings.isDisplayResultsOnPublic : true;
 	},
 	getRivalName: function() {
 		const	teamName	= this.getTeamName(),
@@ -171,6 +180,8 @@ const BlockViewSchoolRivalInfo = React.createClass({
 
 		let xmlScore = null;
 		if(
+			// Doesn't show scores if it's a public site and isDisplayResultsOnPublic === false
+			(this.props.isPublicSite ? this.isDisplayResultsOnPublic() : true) &&
 			(isTeamSport || isOneOnOneSport) &&
 			(isFinishedEvent || isClosingMode)
 		) {

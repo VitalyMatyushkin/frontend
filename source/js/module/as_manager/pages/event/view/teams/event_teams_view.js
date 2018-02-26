@@ -21,7 +21,8 @@ const EventTeamsView = React.createClass({
 	AWAITING_OPPONENT:		'Awaiting opponent...',
 	propTypes: {
 		activeSchoolId	: React.PropTypes.string,
-		customCss		: React.PropTypes.string
+		customCss		: React.PropTypes.string,
+		isPublicSite    : React.PropTypes.boolean
 	},
 	getPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);

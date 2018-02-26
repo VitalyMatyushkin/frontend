@@ -21,7 +21,8 @@ const TableViewSchoolRivalInfo = React.createClass({
 		onChangeScore:							React.PropTypes.func.isRequired,
 		activeSchoolId:							React.PropTypes.string.isRequired,
 		isLast:									React.PropTypes.bool.isRequired,
-		options:								React.PropTypes.object
+		options:								React.PropTypes.object,
+		isPublicSite:                           React.PropTypes.bool.isRequired
 	},
 	getOrder: function() {
 		return this.props.rivalIndex + 1;
@@ -77,6 +78,7 @@ const TableViewSchoolRivalInfo = React.createClass({
 					event			= { this.props.event }
 					mode			= { this.props.mode }
 					onChangeScore	= { this.props.onChangeScore }
+					isPublicSite    = { this.props.isPublicSite }
 				/>
 				<Actions
 					rival	= { this.props.rival }

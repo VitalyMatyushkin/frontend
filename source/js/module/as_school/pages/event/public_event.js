@@ -19,7 +19,6 @@ const EventFormConsts = require('module/as_manager/pages/events/manager/event_fo
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
-
 	propTypes: {
 		activeSchoolId:	React.PropTypes.string.isRequired
 	},
@@ -144,6 +143,7 @@ const PublicEvent = React.createClass({
 						handleClickOpponentSchoolManagerButton	= { () => {} }
 						isShowControlButtons					= { false }
 						schoolType								= { EventFormConsts.EVENT_FORM_MODE.SCHOOL }
+					    isPublicSite                            = { true }
 				/>
 			);
 		} else {
@@ -164,9 +164,10 @@ const PublicEvent = React.createClass({
 			return (
 				<div className="bPublicEvent">
 					<PublicEventHeaderSchool
-						event			= { event }
-						viewMode 		= { viewMode }
-						onClickViewMode = { this.onClickViewMode }
+						activeSchoolId={this.props.activeSchoolId}
+						event={event}
+						viewMode={viewMode}
+						onClickViewMode={this.onClickViewMode}
 					/>
 					<FixtureListItem
 						event			= { event }

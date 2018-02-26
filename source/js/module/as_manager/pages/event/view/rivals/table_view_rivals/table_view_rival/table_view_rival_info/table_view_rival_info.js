@@ -14,7 +14,8 @@ const TableViewRivalInfo = React.createClass({
 		onChangeScore:	React.PropTypes.func.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		isLast:			React.PropTypes.bool.isRequired,
-		options:		React.PropTypes.object
+		options:		React.PropTypes.object,
+		isPublicSite:   React.PropTypes.bool.isRequired
 	},
 	render: function() {
 		switch (true) {
@@ -30,6 +31,7 @@ const TableViewRivalInfo = React.createClass({
 						onChangeScore	= { this.props.onChangeScore }
 						isLast			= { this.props.isLast }
 						options			= { this.props.options }
+						isPublicSite    = { this.props.isPublicSite }
 					/>
 				);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']:

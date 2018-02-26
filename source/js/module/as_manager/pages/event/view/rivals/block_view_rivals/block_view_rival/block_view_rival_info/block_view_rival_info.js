@@ -11,7 +11,8 @@ const BlockViewRivalInfo = React.createClass({
 		mode:			React.PropTypes.string.isRequired,
 		onChangeScore:	React.PropTypes.func.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
-		options:		React.PropTypes.object
+		options:		React.PropTypes.object,
+		isPublicSite:   React.PropTypes.bool.isRequired
 	},
 	render: function() {
 		switch (true) {
@@ -24,6 +25,7 @@ const BlockViewRivalInfo = React.createClass({
 							mode			= { this.props.mode }
 							onChangeScore	= { this.props.onChangeScore }
 							options			= { this.props.options }
+							isPublicSite    = { this.props.isPublicSite }
 						/>
 					);
 			case this.props.event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
