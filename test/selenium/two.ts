@@ -2,38 +2,10 @@
  * Created by wert on 26.02.2018
  */
 
-import * as WebDriverChrome	from 'selenium-webdriver/chrome';
-import * as WebDriverFirefox from 'selenium-webdriver/firefox';
-import * as chai from 'chai';
-import * as chromedriver from 'chromedriver';
-import * as	geckodriver from 'geckodriver';
 
+import {DriverFactory} from "./tools/driver_factory";
 import {Builder, By, Key, until} from 'selenium-webdriver';
-
-const expect = chai.expect;
-
-
-// simple factory to provide correct and tuned drivers
-class DriverFactory {
-	static getChromeDriver() {
-		const 	service = new WebDriverChrome.ServiceBuilder(chromedriver.path).build(),
-			options = new WebDriverChrome.Options();
-
-		return WebDriverChrome.Driver.createSession(options, service);
-	}
-
-	static getFirefoxDriver() {
-		const	service = new WebDriverFirefox.ServiceBuilder(geckodriver.path).build(),
-			options	= new WebDriverFirefox.Options();
-
-		return WebDriverFirefox.Driver.createSession(options, service);
-	}
-
-	static getDriver(){
-		return this.getChromeDriver();
-		// return this.getFirefoxDriver();
-	}
-}
+import {expect} from 'chai';
 
 
 
