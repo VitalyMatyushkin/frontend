@@ -4,11 +4,12 @@ const	React						= require('react'),
 		RoleHelper 					= require('module/helpers/role_helper'),
 		TeamHelper                  = require('module/ui/managers/helpers/team_helper'),
 		MessageConsts				= require('module/ui/message_list/message/const/message_consts'),
-		MessageListActions			= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
-		MessageListActionsParents	= require('module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		PlayerStatusTable			= require('module/ui/player_status_table/player_status_table'),
 		Loader						= require('module/ui/loader'),
 		ParentalConsentTabStyle		= require('../../../../../../../styles/ui/b_parental_consent_tab/b_parental_consent_tab.scss');
+
+import {MessageListActions} from 'module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'
+import {MessageListActions as MessageListActionsParents} from 'module/as_manager/pages/parents_pages/messages/message_list_wrapper/message_list_actions/message_list_actions';
 
 const ParentalConsentTab = React.createClass({
 	mixins: [Morearty.Mixin],
