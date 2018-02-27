@@ -15,6 +15,6 @@ export class RegisterPage {
 		this.fullUrl = baseUrl + this.pagePath;
 	}
 
-	
+
 
 }

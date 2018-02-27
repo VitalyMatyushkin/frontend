@@ -4,7 +4,7 @@ const 	Form 		= require('module/ui/form/form'),
 		React 		= require('react');
 
 /** First registration step where user input email, password, firstname and lastname */
-const RegiseterUserForm = React.createClass({
+const RegisterUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AccountForm',
 	propTypes: {
@@ -12,32 +12,27 @@ const RegiseterUserForm = React.createClass({
         onError: React.PropTypes.func
 	},
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		/* phone field have `text` type to be compatable with any phone. Validation was: validation="required phone server" */
 		return (
-				<Form updateBinding={true} service="i/register" binding={binding} onSuccess={self.props.onSuccess}
-							onError={self.props.onError}>
-					{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
-					<FormField type="text" field="firstName" validation="required text">Name</FormField>
-					<FormField type="text" field="lastName" validation="required text">Surname</FormField>
-					<FormField type="text" field="email" validation="required email server"
-							   errorClassName="eForm_errorMsgRight">Email</FormField>
-					<FormField type="phone" field="phone" validation="required phone server" errorClassName="eForm_errorMsgRight">
-											Mobile phone</FormField>
-					<FormField type="confirmText" textType="password" field="password"
-										 validation="required password">Password</FormField>
+			<Form updateBinding={true} service="i/register" binding={binding} onSuccess={this.props.onSuccess}
+						onError={this.props.onError}>
+				{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
+				<FormField type="text" field="firstName" validation="required text" id="register_firstName">Name</FormField>
+				<FormField type="text" field="lastName" validation="required text" id="register_lastName">Surname</FormField>
+				<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight" id="register_email">Email</FormField>
+				<FormField type="phone" field="phone" validation="required phone server" errorClassName="eForm_errorMsgRight" id="register_phone">Mobile phone</FormField>
+				<FormField type="confirmText" textType="password" field="password" validation="required password" id="register_password">Password</FormField>
 
-					<div className="eRegisterMessage">Having trouble signing up? <a
-							href="mailto:support@squadintouch.com?subject=Registration">Email
-						us</a></div>
-					<FormField type="terms" field="terms" validation="termsAndConditions"/>
+				<div className="eRegisterMessage">Having trouble signing up? <a
+						href="mailto:support@squadintouch.com?subject=Registration">Email
+					us</a></div>
+				<FormField type="terms" field="terms" validation="termsAndConditions"/>
 
-				</Form>
+			</Form>
 		)
 	}
 });
 
 
-module.exports = RegiseterUserForm;
+module.exports = RegisterUserForm;
