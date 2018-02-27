@@ -276,7 +276,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 			},
 			{
 				participants: users.map(user => {
-					return {userId: user.userId, permissionId: user.permissionId}
+					return {userId: user.userId, permissionId: user.permissionId, childId: user.extra.parentOf.userId}
 				})
 			}
 		).then(() => {
