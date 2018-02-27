@@ -11,10 +11,10 @@ const	React					= require('react'),
 		VerifyRoute				= require('module/core/routes/verify_route'),
 
 		EventComponent			= require('../pages/students_pages/event/event_page'),
-		StudentEventsComponent	= require("./../pages/students_pages/events/events"),
-		MessagesComponent		= require('module/as_manager/pages/students_pages/messages/messages'),
+		StudentEventsComponent	= require('./../pages/students_pages/events/events'),
+		{Messages}      		= require('module/as_manager/pages/students_pages/messages/messages'),
 
-		{ SupportedBrowsers }	= require('module/shared_pages/supported_browsers/supported_browsers');;
+		{ SupportedBrowsers }	= require('module/shared_pages/supported_browsers/supported_browsers');
 
 /**
  * It's a router for user with student role.
@@ -42,13 +42,13 @@ const StudentRouter = React.createClass({
 				/>
 
 				<Route
-					path		= "/events/calendar/:schoolId /events/fixtures/:schoolId /events/achievement/:schoolId"
+					path		= '/events/calendar/:schoolId /events/fixtures/:schoolId /events/achievement/:schoolId'
 					binding		= {binding.sub('events')}
 					component	= {StudentEventsComponent}
 				/>
 
 				<Route
-					path		= "/event /event/:eventId"
+					path		= '/event /event/:eventId'
 					binding		= {binding.sub('events')}
 					component	= {EventComponent}
 				/>
@@ -56,11 +56,11 @@ const StudentRouter = React.createClass({
 				<Route
 					path		= '/messages /messages/:subPage'
 				 	binding		= { binding.sub('messages') }
-					component	= { MessagesComponent }
+					component	= { Messages }
 				/>
 
 				<Route
-					path		= "/supported_browsers"
+					path		= '/supported_browsers'
 					binding		= {binding.sub('supported_browsers')}
 					component	= {SupportedBrowsers}
 				/>

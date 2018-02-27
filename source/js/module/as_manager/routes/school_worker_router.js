@@ -19,7 +19,7 @@ const	React							= require('react'),
 		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
 		UserViewComponent				= require('module/shared_pages/users/user_view'),
 		DemoViewComponent				= require('module/shared_pages/demo_slider/demo_slider'),
-		MessagesComponent				= require('module/as_manager/pages/messages/messages'),
+		{Messages}				= require('module/as_manager/pages/messages/messages'),
 		{SupportedBrowsers}			= require('module/shared_pages/supported_browsers/supported_browsers');
 
 /**
@@ -80,7 +80,7 @@ const SchoolWorkerRouter = React.createClass({
 
 				<Route	path		= '/messages /messages/:subPage'
 						binding		= {binding.sub('messages')}
-						component	= {MessagesComponent}
+						component	= {Messages}
 				/>
 
 				<Route	path		= "/school_console /school_console/:filter /school_console/:inviteId/:mode"

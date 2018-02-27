@@ -1,19 +1,23 @@
-const MessageConsts = require('module/ui/message_list/message/const/message_consts');
+import * as BPromise from "bluebird";
+import {ServiceList} from "module/core/service_list/service_list"
 
-const MessagesServerRequests = {
+import * as MessageConsts from 'module/ui/message_list/message/const/message_consts'
+import {Message} from "module/models/messages/message";
+
+export const MessagesServerRequests = {
 	messagesCountOnPage: 5,
 	messageCountLimit: 5,
-	loadInboxMessages: function(userType) {
+	loadInboxMessages(userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT): BPromise<Message[]>{
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageInbox.get({
+				return (window.Server as ServiceList).childMessageInbox.get({
 					filter: {
 						limit: 1000
 					},
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentInboxMessages.get({
+				return (window.Server as ServiceList).studentInboxMessages.get({
 					filter: {
 						limit: 1000,
 						where: { allMessageTypes: true }
@@ -22,10 +26,13 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	loadInboxMessagesByPage: function(page, userType) {
+	loadInboxMessagesByPage(
+		page: number,
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT
+	): BPromise<Message[]> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageInbox.get({
+				return (window.Server as ServiceList).childMessageInbox.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit
@@ -33,7 +40,7 @@ const MessagesServerRequests = {
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentInboxMessages.get({
+				return (window.Server as ServiceList).studentInboxMessages.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit,
@@ -43,17 +50,17 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	loadOutboxMessages: function(userType) {
+	loadOutboxMessages(userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT): BPromise<Message[]> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageOutbox.get({
+				return (window.Server as ServiceList).childMessageOutbox.get({
 					filter: {
 						limit: 1000
 					},
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentOutboxMessages.get({
+				return (window.Server as ServiceList).studentOutboxMessages.get({
 					filter: {
 						limit: 1000,
 						where: { allMessageTypes: true }
@@ -62,10 +69,13 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	loadOutboxMessagesByPage: function(page, userType) {
+	loadOutboxMessagesByPage(
+		page: number,
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT
+	): BPromise<Message[]> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageOutbox.get({
+				return (window.Server as ServiceList).childMessageOutbox.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit
@@ -73,7 +83,7 @@ const MessagesServerRequests = {
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentOutboxMessages.get({
+				return (window.Server as ServiceList).studentOutboxMessages.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit,
@@ -83,10 +93,10 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	loadArchiveMessages: function(userType) {
+	loadArchiveMessages(userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT): BPromise<Message[]> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageArchive.get({
+				return (window.Server as ServiceList).childMessageArchive.get({
 					filter: {
 						limit: 1000,
 						where: { allMessageTypes: true }
@@ -94,7 +104,7 @@ const MessagesServerRequests = {
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentArchiveMessages.get({
+				return (window.Server as ServiceList).studentArchiveMessages.get({
 					filter: {
 						limit: 1000,
 						where: { allMessageTypes: true }
@@ -103,10 +113,13 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	loadArchiveMessagesByPage: function(page, userType) {
+	loadArchiveMessagesByPage(
+		page: number,
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT
+	): BPromise<Message[]> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageArchive.get({
+				return (window.Server as ServiceList).childMessageArchive.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit,
@@ -115,7 +128,7 @@ const MessagesServerRequests = {
 					order: 'updatedAt DESC'
 				});
 			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentArchiveMessages.get({
+				return (window.Server as ServiceList).studentArchiveMessages.get({
 					filter: {
 						skip: this.messagesCountOnPage * (page - 1),
 						limit: this.messageCountLimit,
@@ -125,47 +138,52 @@ const MessagesServerRequests = {
 				});
 		}
 	},
-	acceptInvitationMessage: function(userType, messageId) {
+	acceptInvitationMessage(
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT,
+		messageId: string
+	): BPromise<any> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageAccept.post(
-					{
-						messageId: messageId
-					}
-				);
-			case MessageConsts.USER_TYPE.STUDENT:
-				return window.Server.studentArchiveMessages.get({
-					filter: {
-						limit: 1000
-					},
-					order: 'updatedAt DESC'
-				});
-		}
-	},
-	acceptClubParticipantInvitationMessage: function(userType, messageId) {
-		switch (userType) {
-			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childClubMessageAccept.post(
+				return (window.Server as ServiceList).childMessageAccept.post(
 					{
 						messageId: messageId
 					}
 				);
 		}
 	},
-	declineInvitationMessage: function(userType, messageId) {
+	acceptClubParticipantInvitationMessage(
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT,
+		messageId: string
+	): BPromise<any> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childMessageReject.post(
+				return (window.Server as ServiceList).childClubMessageAccept.post(
 					{
 						messageId: messageId
 					}
 				);
 		}
 	},
-	declineClubParticipantInvitationMessage: function(userType, messageId) {
+	declineInvitationMessage(
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT,
+		messageId: string
+	): BPromise<any> {
 		switch (userType) {
 			case MessageConsts.USER_TYPE.PARENT:
-				return window.Server.childClubMessageReject.post(
+				return (window.Server as ServiceList).childMessageReject.post(
+					{
+						messageId: messageId
+					}
+				);
+		}
+	},
+	declineClubParticipantInvitationMessage(
+		userType: MessageConsts.USER_TYPE.PARENT | MessageConsts.USER_TYPE.STUDENT,
+		messageId: string
+	): BPromise<any> {
+		switch (userType) {
+			case MessageConsts.USER_TYPE.PARENT:
+				return (window.Server as ServiceList).childClubMessageReject.post(
 					{
 						messageId: messageId
 					}
@@ -173,5 +191,3 @@ const MessagesServerRequests = {
 		}
 	}
 };
-
-module.exports = MessagesServerRequests;

@@ -8,6 +8,7 @@ import {Permission} from "module/models/permission/permission";
 import {Club} from "module/models/club/club";
 import {Place} from "module/models/place/place";
 import {Profile} from "module/models/profile/profile";
+import {Message} from "module/models/messages/message";
 
 /** Collection of services to reach REST API from server */
 export class ServiceList {
@@ -210,12 +211,12 @@ export class ServiceList {
 	// it's some invitation message
 	schoolEventsInvitationMessages	: Service;
 	// it's school worker inbox
-	schoolEventsMessages			: Service;
+	schoolEventsMessages			: Service<Message[], Message, any>;
 	schoolEventsMessagesCount		: Service;
-	schoolEventsMessagesInbox		: Service;
+	schoolEventsMessagesInbox		: Service<Message[], Message, any>;
 	schoolEventsMessagesInboxCount  : Service;
-	schoolEventsMessagesOutbox		: Service;
-	schoolEventsMessagesArchive		: Service;
+	schoolEventsMessagesOutbox		: Service<Message[], Message, any>;
+	schoolEventsMessagesArchive		: Service<Message[], Message, any>;
 
 	sendInvitationMessagesForEvent	: Service;
 	doGotItActionForEventMessage	: Service;
@@ -519,11 +520,11 @@ export class ServiceList {
 		// invites
 		this.schoolInvites				= new Service('/i/schools/{schoolId}/invites', binding);
 		this.schoolInvite 				= new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
-		this.schoolInboxInvites 			= new Service('/i/schools/{schoolId}/invites/inbox', binding);
+		this.schoolInboxInvites 		= new Service('/i/schools/{schoolId}/invites/inbox', binding);
 		this.schoolOutboxInvites 		= new Service('/i/schools/{schoolId}/invites/outbox', binding);
 		this.schoolArchiveInvites		= new Service('/i/schools/{schoolId}/invites/archive', binding);
 		this.acceptSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
-		this.declineSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
+		this.declineSchoolInvite		= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
 		this.cancelSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/cancel', binding);
 		this.schoolInviteComments		= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments', binding);
 		this.schoolInviteCommentsCount	= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments/count', binding);
@@ -535,12 +536,12 @@ export class ServiceList {
 		// it's some invitation message
 		this.schoolEventsInvitationMessages	= new Service('/i/schools/{schoolId}/events/messages/invite', binding);
 		// it's school worker inbox
-		this.schoolEventsMessages			= new Service('/i/schools/{schoolId}/events/messages', binding);
+		this.schoolEventsMessages			= new Service<Message[], Message, any>('/i/schools/{schoolId}/events/messages', binding);
 		this.schoolEventsMessagesCount		= new Service('/i/schools/{schoolId}/events/messages/count', binding);
-		this.schoolEventsMessagesInbox		= new Service('/i/schools/{schoolId}/events/messages/inbox', binding);
+		this.schoolEventsMessagesInbox		= new Service<Message[], Message, any>('/i/schools/{schoolId}/events/messages/inbox', binding);
 		this.schoolEventsMessagesInboxCount = new Service('/i/schools/{schoolId}/events/messages/inbox/count', binding);
-		this.schoolEventsMessagesOutbox		= new Service('/i/schools/{schoolId}/events/messages/outbox', binding);
-		this.schoolEventsMessagesArchive		= new Service('/i/schools/{schoolId}/events/messages/archive', binding);
+		this.schoolEventsMessagesOutbox		= new Service<Message[], Message, any>('/i/schools/{schoolId}/events/messages/outbox', binding);
+		this.schoolEventsMessagesArchive	= new Service<Message[], Message, any>('/i/schools/{schoolId}/events/messages/archive', binding);
 
 		this.sendInvitationMessagesForEvent	= new Service('/i/schools/{schoolId}/events/{eventId}/players/messages/invite', binding);
 		this.doGotItActionForEventMessage	= new Service('/i/schools/{schoolId}/events/messages/{messageId}/gotit', binding);

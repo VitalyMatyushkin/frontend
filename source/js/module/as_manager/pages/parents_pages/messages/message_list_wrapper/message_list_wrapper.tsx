@@ -1,19 +1,18 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+import * as  React from 'react'
+import * as  Morearty from 'morearty'
+import * as  Immutable from 'immutable'
 
-const	Lazy		= require('lazy.js');
+import * as  MessageList from 'module/ui/message_list/message_list'
+import * as MessageConsts from "module/ui/message_list/message/const/message_consts";
 
-const	MessageList		= require('module/ui/message_list/message_list');
-
-const MessageListWrapper = React.createClass({
+export const MessageListWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		messageType:	React.PropTypes.string.isRequired,
-		actions:		React.PropTypes.object.isRequired,
-		userType:		React.PropTypes.string.isRequired
+		messageType: (React as any).PropTypes.string.isRequired,
+		actions: (React as any).PropTypes.object.isRequired,
+		userType: (React as any).PropTypes.string.isRequired
 	},
-	componentWillMount: function() {
+	componentWillMount() {
 		//load user->load messages->load templates
 		const binding = this.getDefaultBinding();
 
@@ -29,13 +28,27 @@ const MessageListWrapper = React.createClass({
 			})
 			.then(() => this.props.actions.setSync(binding, true));
 	},
-	getTemplatesFromBinding: function(binding) {
+	getTemplatesFromBinding(binding) {
 		return binding.toJS('template');
 	},
-	triggerMsgCountUpdater: function () {
+	triggerMsgCountUpdater() {
 		this.getMoreartyContext().getBinding().set('isMessagesCountNeedUpdate', true);
 	},
-	onAction: function (messageId, messageKind, actionType, templateData) {
+	onAction(
+		messageId: string,
+		messageKind: (
+			MessageConsts.MESSAGE_KIND.REFUSAL |
+			MessageConsts.MESSAGE_KIND.AVAILABILITY |
+			MessageConsts.MESSAGE_KIND.INVITATION |
+			MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE
+		),
+		actionType: (
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT
+		),
+		templateData: any
+	) {
 		this.props.actions.onAction(
 			this.getDefaultBinding(),
 			this.props.userType,
@@ -46,14 +59,14 @@ const MessageListWrapper = React.createClass({
 			templateData
 		).then(() => this.triggerMsgCountUpdater());
 	},
-	onClickShowComments: function(messageId){
+	onClickShowComments(messageId: string) {
 		this.props.actions.onClickShowComments(
 			this.getDefaultBinding(),
 			this.props.userType,
 			messageId
 		);
 	},
-	onClickSubmitComment: function(newCommentText, replyComment, messageId){
+	onClickSubmitComment(newCommentText: string, replyComment: {id: string}, messageId: string){
 		this.props.actions.onClickSubmitComment(
 			this.getDefaultBinding(),
 			this.props.userType,
@@ -62,14 +75,14 @@ const MessageListWrapper = React.createClass({
 			messageId
 		);
 	},
-	checkComments: function(messageId){
+	checkComments(messageId: string) {
 		this.props.actions.checkComments(
 			this.getDefaultBinding(),
 			this.props.userType,
 			messageId
 		);
 	},
-	render: function() {
+	render() {
 		let content = null;
 
 		const binding = this.getDefaultBinding();
@@ -97,5 +110,3 @@ const MessageListWrapper = React.createClass({
 		return content;
 	}
 });
-
-module.exports = MessageListWrapper;
