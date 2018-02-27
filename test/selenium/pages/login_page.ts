@@ -2,16 +2,11 @@
  * Created by wert on 26.02.2018
  */
 
-/**
- * Created by root on 02.06.17.
- */
+import {By, WebDriver, WebElement} from 'selenium-webdriver';
 
-import {By} from 'selenium-webdriver';
-import * as BPromise from 'bluebird';
+export class LoginPage {
 
-class LoginPage{
-
-	readonly driver: any;
+	readonly driver: WebDriver;
 	readonly pagePath: string = '/#login';
 	readonly fullUrl: string;
 
@@ -19,55 +14,63 @@ class LoginPage{
 	private inputPassLocator = By.id('login_password');
 	private submitLoginLocator = By.id('login_submit');
 
+	private tryAgainButtonLocator = By.id('tryAgain_button');
+	private signUpButtonLocator = By.id('signUp_button');
 
-	constructor(driver: any, baseUrl: string){
+
+	constructor(driver: WebDriver, baseUrl: string){
 		this.driver = driver;
 		this.fullUrl = baseUrl + this.pagePath;
 	}
 
-	async visit(): Promise<String> {
+	async visit(): Promise<string> {
 		await this.driver.get(this.fullUrl);
 		const currentUrl = await this.driver.getCurrentUrl();
 
 		if(currentUrl === this.fullUrl) {
-			return BPromise.resolve(this.fullUrl);
+			return this.fullUrl;
 		} else {
-			return BPromise.reject(new Error(`url not found: ${this.fullUrl}`))
+			throw new Error(`url not found: ${this.fullUrl}`);
 		}
 	}
 
-	async setEmail(email){
-		const inputEmail = await this.driver.findElement(this.inputEmailLocator);
-		await OftenUsed.characterByCharacter(this.driver,  inputEmail, email);
-		return Promise.resolve(true);
+	async isOnPage() {
+		const currentUrl = await this.driver.getCurrentUrl();
+		return currentUrl === this.fullUrl;
 	}
 
-	async setPass(password){
-		const inputPass = await this.driver.findElement(this.inputPassLocator);
-		await OftenUsed.characterByCharacter(this.driver,  inputPass, password);
-		return Promise.resolve(true);
+	async setEmail(email: string){
+		const emailInput: WebElement = await this.driver.findElement(this.inputEmailLocator);
+		await emailInput.sendKeys(email);
+	}
+
+	async setPass(password: string){
+		const passwordInput: WebElement = await this.driver.findElement(this.inputPassLocator);
+		await passwordInput.sendKeys(password);
 	}
 
 	async clickSubmit(){
-		await this.driver.findElement(this.submitLoginLocator).click();
-		return Promise.resolve(true);
+		const submitButton: WebElement = await this.driver.findElement(this.submitLoginLocator);
+		await submitButton.click();
 	}
 
-	async login(email, pass){
+	async login(email: string, pass: string){
 		await this.visit();
 		await this.setEmail(email);
 		await this.setPass(pass);
-		return await this.clickSubmit();
+		return this.clickSubmit();
 	}
 
-	static async loginAndSelectRole(driver, email, pass, role){
-		const loginPage = new LoginPage(driver);
-		const calendarPage = new CalendarPage(driver);
-		await loginPage.login(email, pass);
-		await calendarPage.checkSelectRolePage();
-		await calendarPage.switchRole(role);
-		return await calendarPage.checkCalendarPage();
+	/** I don't think following parts should be part of login page, but right now it is.
+	 *  I believe we will fix it in frontend in favor of Scene -> Page -> Components approach
+	 */
+
+	async clickTryAgain() {
+		return this.driver.findElement(this.tryAgainButtonLocator).click();
 	}
+
+	async clickSignUp() {
+		return this.driver.findElement(this.signUpButtonLocator).click();
+	}
+
 }
-
-module.exports = LoginPage;

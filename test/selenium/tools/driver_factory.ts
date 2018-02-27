@@ -1,5 +1,6 @@
 import * as WebDriverChrome from "selenium-webdriver/chrome";
 import * as WebDriverFirefox from "selenium-webdriver/firefox";
+import {WebDriver} from 'selenium-webdriver';
 import * as chromedriver from 'chromedriver';
 import * as	geckodriver from 'geckodriver';
 
@@ -12,19 +13,19 @@ export class DriverFactory {
 
 	static getChromeDriver() {
 		const 	service = new WebDriverChrome.ServiceBuilder(chromedriver.path).build(),
-			options = new WebDriverChrome.Options();
+				options = new WebDriverChrome.Options();
 
 		return WebDriverChrome.Driver.createSession(options, service);
 	}
 
 	static getFirefoxDriver() {
 		const	service = new WebDriverFirefox.ServiceBuilder(geckodriver.path).build(),
-			options	= new WebDriverFirefox.Options();
+				options	= new WebDriverFirefox.Options();
 
 		return WebDriverFirefox.Driver.createSession(options, service);
 	}
 
-	static getDriver(){
+	static getDriver(): WebDriver {
 		return this.getChromeDriver();
 	}
 }
