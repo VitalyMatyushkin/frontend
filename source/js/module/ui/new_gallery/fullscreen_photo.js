@@ -237,7 +237,7 @@ const FullscreenPhoto = React.createClass({
 					>
 						<AnonymousIcon
 							handleSaveClick     = {(file) => this.handleSaveClick(file)}
-							handleCancelClick   = {() => this.setState({addIconMode: false})}
+							handleCancelClick   = {() => this.setState({addIconMode: false, isLoad: false})}
 							getUrlPhoto         = {() => BPromise.resolve(this.props.photoData.picUrl)}
 							widthImgContainer   = {width}
 							heightImgContainer  = {height-135}
