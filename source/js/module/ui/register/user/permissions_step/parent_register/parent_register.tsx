@@ -58,6 +58,7 @@ export const ParentRegister = (React as any).createClass({
 				binding.set('registerStep', STEP_PARENT.SCHOOL);
 			}
 			binding.set('school', undefined);
+			binding.set('childFields', undefined);
 		}
 	},
 
