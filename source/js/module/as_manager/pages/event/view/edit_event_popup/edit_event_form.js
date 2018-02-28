@@ -9,8 +9,7 @@ const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 		{EventVenue}		= require('../../../events/manager/event_venue');
 
 // Helpers
-const	EventHelper			= require('../../../events/eventHelper');
-
+const	{LocalEventHelper}  = require('module/as_manager/pages/events/eventHelper');
 const	EventFormConsts		= require('module/as_manager/pages/events/manager/event_form/consts/consts');
 
 // Styles
@@ -158,7 +157,7 @@ const EditEventForm = React.createClass({
 					<EventVenue
 						binding					= {binding}
 						eventType				= {
-							EventHelper.serverEventTypeToClientEventTypeMapping[ binding.toJS('model.eventType') ]
+							LocalEventHelper.serverEventTypeToClientEventTypeMapping[ binding.toJS('model.eventType') ]
 						}
 						activeSchoolInfo		= {this.getActiveSchoolInfo()}
 						opponentSchoolInfoArray	= {this.getOpponentSchoolInfoArray()}
