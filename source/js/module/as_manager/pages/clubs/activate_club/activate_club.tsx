@@ -26,20 +26,16 @@ export const ActivateClub = (React as any).createClass({
 		const clubId = this.props.clubId;
 
 		binding.set('isSync', false);
+		binding.set('isClubAcceptableUsersLoading', false);
 		if (typeof clubId !== 'undefined') {
 			ClubsActions
 				.getClub(this.props.activeSchoolId, clubId)
 				.then(club => {
 					binding.set('club', Immutable.fromJS(club));
-
-					return ClubsActions.getAcceptableUsers(this.props.activeSchoolId, this.props.clubId);
-				})
-				.then(users => {
-					binding.set('clubAcceptableUsers', Immutable.fromJS(users));
 					binding.set('isSync', true);
 
 					return true;
-				});
+				})
 		}
 	},
 	componentWillUnmount() {
@@ -47,25 +43,32 @@ export const ActivateClub = (React as any).createClass({
 	},
 	handleClickActivateButton() {
 		const binding = this.getDefaultBinding();
+		binding.set('isClubAcceptableUsersLoading', true);
 
-		(window as any).confirmAlert(
-			<ActivateClubConfirmAlert club={binding.toJS('club')} clubAcceptableUsers={binding.toJS('clubAcceptableUsers')}/>,
-			"Ok",
-			"Cancel",
-			() => {
-				binding.set('isSync', false);
+		ClubsActions.getAcceptableUsers(this.props.activeSchoolId, this.props.clubId).then(users => {
+			binding.set('clubAcceptableUsers', Immutable.fromJS(users));
+			binding.set('isClubAcceptableUsersLoading', false);
 
-				ClubsActions
-					.activateClub(this.props.activeSchoolId, this.props.clubId)
-					.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
-					.then(club => {
-						window.simpleAlert('The club has been activated successfully.');
+			(window as any).confirmAlert(
+				<ActivateClubConfirmAlert club={binding.toJS('club')} clubAcceptableUsers={binding.toJS('clubAcceptableUsers')}/>,
+				"Ok",
+				"Cancel",
+				() => {
+					binding.set('isSync', false);
 
-						binding.set('club', Immutable.fromJS(club));
-						binding.set('isSync', true);
-					});
-			}
-		);
+					ClubsActions
+						.activateClub(this.props.activeSchoolId, this.props.clubId)
+						.then(() => ClubsActions.getClub(this.props.activeSchoolId, this.props.clubId))
+						.then(club => {
+							window.simpleAlert('The club has been activated successfully.');
+
+							binding.set('club', Immutable.fromJS(club));
+							binding.set('isSync', true);
+							binding.set('isClubAcceptableUsersLoading', false);
+						});
+				}
+			);
+		});
 	},
 	render() {
 		const binding = this.getDefaultBinding();
@@ -95,8 +98,9 @@ export const ActivateClub = (React as any).createClass({
 								{ActiveClubHelper.DRAFT_TEXT[1]}
 							</p>
 							<Button
-								text	= "Activate Club"
-								onClick	= { this.handleClickActivateButton }
+								text="Activate Club"
+								onClick={this.handleClickActivateButton}
+								isLoading={binding.toJS('isClubAcceptableUsersLoading')}
 							/>
 						</div>
 					</div>

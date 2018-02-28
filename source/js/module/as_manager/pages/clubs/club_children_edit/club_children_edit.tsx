@@ -110,9 +110,9 @@ export const ClubChildrenEdit = (React as any).createClass({
 		}
 	},
 	componentWillUnmount() {
-		this.getDefaultBinding().clear();
-
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+
+		this.getDefaultBinding().clear();
 	},
 	addListeners() {
 		this.listeners.push(
