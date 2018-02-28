@@ -8,6 +8,17 @@
   height: 100%;
   background-color: #303030;
   z-index: 98;
+  display: flex;
+  justify-content: center;
+
+  .bLoader {
+    align-items: center;
+
+    .bIcon {
+      width: 70px;
+      height: 70px;
+    }
+  }
 }
 
 .eFullScreenPhoto_closeCross {
@@ -45,20 +56,16 @@
   background-position: center center;
   background-color: #fff;
 
-  .bLoader {
-    align-items: center;
-
-    .bIcon {
-      width: 70px;
-      height: 70px;
-    }
+  .bAnonymousIconHeaderText {
+    margin-top: 15px;
+    padding-right: 10px;
+    text-align: center;
   }
 
   .bEditPhotoPanel {
     display: flex;
     justify-content: center;
     margin: 15px 0;
-    padding-right: 10px;
 
     span {
       margin: 0 10px
@@ -73,6 +80,24 @@
         color: #c2c2c2;
       }
     }
+
+    .mDisable {
+      pointer-events: none;
+
+      .bIcon {
+        color: #fff;
+      }
+
+    }
+  }
+
+  .bAnonymousIconMainButtonWrapper {
+    margin: 10px auto;
+    text-align: center;
+
+    button {
+      margin: 0 5px;
+    }
   }
 
   .bForm {
@@ -86,13 +111,36 @@
       min-width: 100%;
     }
   }
+}
 
+.eFullScreenPhoto_photoContainer.isLoading {
+  .eFullScreenPhoto_sideContainer {
+    pointer-events: none;
+  }
+  .eFullScreenPhoto_photo {
+    .konvajs-content {
+      opacity: 0;
+      position: absolute !important;
+    }
+    .bLoader {
+      display: flex;
+      position: absolute;
+    }
+  }
 }
 
 .eFullScreenPhoto_photo {
   position: relative;
   width: 100%;
   background: #1e1e1e center no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .bLoader {
+    display: none;
+  }
 
   .bLoader {
     height: 100%;
@@ -133,6 +181,7 @@
 }
 
 .eFullScreenPhoto_sideContainer {
-  width: 300px;
+  width: 280px;
+  min-width: 280px;
   padding: 10px 0 0 10px;
 }

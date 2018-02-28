@@ -232,17 +232,14 @@ const FullscreenPhoto = React.createClass({
 		} else {
 			return (
 				<div className='bFullScreenPhoto'>
-					<div className="eFullScreenPhoto_photoContainer"
-					     style={photoContainerStyle}
-					>
-						<AnonymousIcon
-							handleSaveClick     = {(file) => this.handleSaveClick(file)}
-							handleCancelClick   = {() => this.setState({addIconMode: false, isLoad: false})}
-							getUrlPhoto         = {() => BPromise.resolve(this.props.photoData.picUrl)}
-							widthImgContainer   = {width}
-							heightImgContainer  = {height-135}
-						/>
-					</div>
+					<AnonymousIcon
+						handleSaveClick     = {(file) => this.handleSaveClick(file)}
+						handleCancelClick   = {() => this.setState({addIconMode: false, isLoad: false})}
+						getUrlPhoto         = {() => BPromise.resolve(this.props.photoData.picUrl)}
+						photoContainerStyle = {photoContainerStyle}
+						widthImgContainer   = {width-280}
+						heightImgContainer  = {height}
+					/>
 				</div>
 			);
 		}

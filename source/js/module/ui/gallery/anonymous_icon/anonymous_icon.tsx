@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Stage, Layer, Group, Circle, Image } from 'react-konva';
 import 'styles/ui/gallery/b_anonymous_icon.scss';
 import * as Loader from 'module/ui/loader';
+import {SVG} from 'module/ui/svg';
 
 interface AnonymousIconProps {
 	getUrlPhoto: () => Promise<string>
@@ -9,6 +10,7 @@ interface AnonymousIconProps {
 	handleCancelClick: () => void
 	widthImgContainer?: number
 	heightImgContainer?: number
+	photoContainerStyle?: any
 }
 
 interface AnonymousIconState {
@@ -16,6 +18,9 @@ interface AnonymousIconState {
 	loadImage: HTMLImageElement
 	activeIconIndex: number
 	icons: Icon[]
+	imgWidth: number
+	imgHeight: number
+	isLoading: boolean
 }
 
 interface Icon {
@@ -43,7 +48,10 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 			isSync: false,
 			loadImage: null,
 			icons: [],
-			activeIconIndex: -1
+			activeIconIndex: -1,
+			imgWidth: 0,
+			imgHeight: 0,
+			isLoading: false
 		};
 	}
 
@@ -54,7 +62,27 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 			image.onload = () => {
 				// setState will redraw layer
 				// because "image" property is changed
-				this.setState({loadImage: image, isSync: true});
+				const   containerRatio = this.props.widthImgContainer/ this.props.heightImgContainer,
+						ratioImg = image.width / image.height;
+
+				let imgWidth, imgHeight;
+				if (containerRatio < ratioImg) {
+						imgWidth = this.props.widthImgContainer;
+						imgHeight = 1 / ratioImg * this.props.widthImgContainer;
+				} else {
+					imgHeight = this.props.heightImgContainer;
+					imgWidth = ratioImg * this.props.heightImgContainer;
+				}
+				this.setState({loadImage: image, isSync: true, imgWidth, imgHeight});
+			};
+			image.onerror = e => {
+				if (e.xhr.status === 413) {
+					window.simpleAlert(
+						'Too large photo size',
+						'Ok',
+						() => this.props.handleCancelClick()
+					)
+				}
 			};
 			image.src = picUrl;
 		});
@@ -78,7 +106,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 				icons,
 				activeIconIndex: icons.length-1
 			})
-		}
+		};
 	}
 
 	deleteAnonymousIcon(): void {
@@ -92,40 +120,49 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	handleSaveClick(): void {
-		this.setState({
-			activeIconIndex: -1
-		});
 		window.confirmAlert(
 			"You can not reverse the changes after saving. Are you sure?",
 			"Ok",
 			"Cancel",
 			() => {
-				const file = this.dataURItoBlob(this.stageRef.getStage().toDataURL());
-				this.props.handleSaveClick(file);
+				this.setState({isLoading: true});
+				const   scale = this.state.loadImage.width/this.state.imgWidth,
+						icons = this.state.icons;
+				icons.forEach(icon => {
+					icon.width *= scale;
+					icon.height *= scale;
+					icon.x *= scale;
+					icon.y *= scale;
+				});
+				this.setState({
+					activeIconIndex: -1,
+					imgWidth: this.state.loadImage.width,
+					imgHeight: this.state.loadImage.height,
+					icons
+				});
+				setTimeout(() => {
+				const file = this.dataURLtoBlob(this.stageRef.getStage().toDataURL({mimeType: 'image/jpeg'}));
+				this.props.handleSaveClick(file)
+					}, 1500)
 			},
 			() => {}
 		);
 
 	}
 
-	dataURItoBlob(dataURI): Blob {
-		// convert base64 to raw binary data held in a string
-		// doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-		const byteString = atob(dataURI.split(',')[1]);
+	dataURLtoBlob(dataUrl): Blob {
+		const 	arrayFromDataUrl	= dataUrl.split(','),
+				mimeType 			= arrayFromDataUrl[0].match(/:(.*?);/)[1], //mime type: image/jpeg
+				stringFromDataUrl	= window.atob(arrayFromDataUrl[1]); //function decodes a string of data which has been encoded using base-64 encoding
 
-		// separate out the mime component
-		const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		let 	stringFromDataUrlLength		= stringFromDataUrl.length,
+				u8arr 						= new (window as any).Uint8Array(stringFromDataUrlLength);
 
-		// write the bytes of the string to an ArrayBuffer
-		const ab = new ArrayBuffer(byteString.length);
-		const ia = new Uint8Array(ab);
-		for (let i = 0; i < byteString.length; i++) {
-			ia[i] = byteString.charCodeAt(i);
+		while (stringFromDataUrlLength--) {
+			u8arr[stringFromDataUrlLength] = stringFromDataUrl.charCodeAt(stringFromDataUrlLength);
 		}
 
-		//New Code
-		return new Blob([ab], {type: mimeString});
-
+		return new (window as any).Blob([u8arr], {type:mimeType});
 	}
 
 	handleDragEndIcon(e, index: number): void {
@@ -247,37 +284,33 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		};
 	}
 
-	getImgWrapperStyle() {
-		return {width: this.props.widthImgContainer ? (this.props.widthImgContainer > this.state.loadImage.width ? this.state.loadImage.width : this.props.widthImgContainer) : 'auto',
-			height: this.props.heightImgContainer ? this.props.heightImgContainer : 'auto'};
+	getPhotoStyle() {
+		return {height: this.props.heightImgContainer};
+	}
+
+	onClickImage(e) {
+		console.log(e.target);
+		if (e.target.attrs.id === 'coverImg') {
+			this.setState({
+				activeIconIndex: -1
+			})
+		}
 	}
 
 	render() {
 		if (this.state.isSync) {
 			return (
-				<div className="bAnonymous_icon_wrapper ">
-					<div className="bAnonymousIconHeaderText">
-						Click on "Add icon" to add an icon.
-						Select the added icon and drag it to the desired location.<br/>
-						You can add an unlimited number of icons.<br/>
-						In order to delete the icon, select the desired one and click "Delete icon".
-					</div>
-					<div className="bAnonymousIconControlButtonWrapper">
-						<button className="bButton" onClick={() => this.addAnonymousIcon()}>Add icon</button>
-						<button
-							className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "eDelete_button"}`}
-							onClick={() => this.deleteAnonymousIcon()}
-						>
-							Delete icon
-						</button>
-					</div>
-					<div className="bAnonymousIconImg" style={this.getImgWrapperStyle()}
+				<div className={`eFullScreenPhoto_photoContainer ${this.state.isLoading ? "isLoading" : ""}`}
+				     style={this.props.photoContainerStyle}
+				>
+					<div	className	= 'eFullScreenPhoto_photo'
+					        style		= {this.getPhotoStyle() }
 					>
-						<Stage width={this.state.loadImage.width} height={this.state.loadImage.height} ref={node => {
+						<Stage width={this.state.imgWidth} height={this.state.imgHeight} ref={node => {
 							this.stageRef = node}}
 						>
 							<Layer>
-								<Image image={this.state.loadImage} />
+								<Image id="coverImg" onClick={e => this.onClickImage(e)} image={this.state.loadImage} width={this.state.imgWidth} height={this.state.imgHeight}/>
 								{
 									this.state.icons.map((icon, index) => {
 										return (
@@ -302,13 +335,23 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 								}
 							</Layer>
 						</Stage>
+						<Loader/>
 					</div>
-					<div className="bAnonymousIconMainButtonWrapper">
-						<button className="bButton" onClick={() => {
-							this.handleSaveClick()
-						}}>Save
-						</button>
-						<button className="bButton mCancel" onClick={() => this.props.handleCancelClick()}>Cancel</button>
+					<div className='eFullScreenPhoto_sideContainer'  style={{heigth: this.props.heightImgContainer-10}}>
+						<div className="bAnonymousIconHeaderText">
+							Click on "Add icon" to add an icon.
+							Select the added icon and drag it to the desired location.<br/>
+							You can add an unlimited number of icons.<br/>
+							In order to delete the icon, select the desired one and click "Delete icon".
+						</div>
+						<div className="bEditPhotoPanel">
+							<span onClick={() => this.addAnonymousIcon()} className="bTooltip" data-description="Add anonymous icon"><SVG icon="icon_anonymous_icon"/></span>
+							<span onClick={() => this.deleteAnonymousIcon()} className={`bTooltip ${this.state.activeIconIndex === -1 ? "mDisable" : ""}`} data-description="Delete anonymous icon"><SVG icon="icon_anonymous_icon"/></span>
+						</div>
+						<div className="bAnonymousIconMainButtonWrapper">
+							<button className="bButton" onClick={() => {this.handleSaveClick()}}>Save</button>
+							<button className="bButton mCancel" onClick={() => this.props.handleCancelClick()}>Cancel</button>
+						</div>
 					</div>
 				</div>
 			);
