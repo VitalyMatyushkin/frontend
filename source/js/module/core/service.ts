@@ -154,6 +154,22 @@ export class Service<GetDataType = any, PostDataType = any, DeleteDataType = any
 				anyResult.data = anyResult.data as GetDataType | PostDataType | DeleteDataType;
 				return anyResult;
 			}
+		}).catch( err => {
+			/* sorry guys
+			 * this part of auth manipulation should not be here. But right now refactoring of new auth, new services and
+			 * all new shiny staff not ready. So, I'm just putting this code here with hope that it will be removed in
+			 * very near future
+			 */
+			const optHttpStatus = propz.get(err, ['response', 'status'], undefined);
+			if(optHttpStatus === 401) {
+				// perform deauth
+				this.binding.sub('sessions').clear();
+				setTimeout(() => {			// holy, holy, holy crap
+					window.location.reload();		// I'm doing this because by default login page is in "select role" state
+				}, 2000)						// some time required for all binding listeners to do their job
+			}
+
+			throw err;
 		});
 	}
 

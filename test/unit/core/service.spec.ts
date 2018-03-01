@@ -14,7 +14,8 @@ const expect = chai.expect;
 describe('service', () => {
 	it('should be creatable without params', () => {
 		const service = new Service('/i/login');
-		expect(service.requiredParams).to.be.undefined;	// to be empty array in future
+		expect(service.requiredParams).to.be.an('array');
+		expect(service.requiredParams).to.be.lengthOf(0);
 	});
 
 	it('should be creatable with one param', () => {
