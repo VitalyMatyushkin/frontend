@@ -189,11 +189,11 @@ const FullscreenPhoto = React.createClass({
 			});
 	},
 	render: function() {
-			const src = window.Server.images.getResizedToHeightUrl(this.props.photoData.picUrl, 800),
-				width = this.state.windowWidth * 0.8,
-				height = this.state.windowHeight * 0.8,
-				topOffset = height * 0.5,
-				leftOffset = width * 0.5;
+			const   src = this.props.photoData.picUrl,
+					width = Math.floor(this.state.windowWidth * 0.8),
+					height = Math.floor(this.state.windowHeight * 0.8),
+					topOffset = height * 0.5,
+					leftOffset = width * 0.5;
 
 			const photoContainerStyle = {
 					marginTop: -topOffset,

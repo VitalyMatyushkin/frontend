@@ -2,15 +2,14 @@ import * as React from 'react';
 import { Stage, Layer, Group, Circle, Image } from 'react-konva';
 import 'styles/ui/gallery/b_anonymous_icon.scss';
 import * as Loader from 'module/ui/loader';
-import {SVG} from 'module/ui/svg';
 
 interface AnonymousIconProps {
 	getUrlPhoto: () => Promise<string>
 	handleSaveClick: (file: any) => void
 	handleCancelClick: () => void
-	widthImgContainer?: number
-	heightImgContainer?: number
-	photoContainerStyle?: any
+	widthImgContainer: number
+	heightImgContainer: number
+	photoContainerStyle: any
 }
 
 interface AnonymousIconState {
@@ -38,7 +37,7 @@ interface Icon {
 }
 
 export class AnonymousIcon extends React.Component<AnonymousIconProps, AnonymousIconState> {
-	readonly widthIcon = 30;
+	readonly widthIcon = 50;
 	readonly anchorRadius = 5;
 	stageRef: any;
 
@@ -55,6 +54,13 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		};
 	}
 
+	componentWillUpdate(nextProps, nextState) {
+		if (nextProps.widthImgContainer !== this.props.widthImgContainer || nextProps.heightImgContainer !== this.props.heightImgContainer) {
+			const {imgWidth, imgHeight} = this.getImgParameters(this.state.loadImage, nextProps.widthImgContainer, nextProps.heightImgContainer)
+			this.setState({imgWidth, imgHeight});
+		}
+	}
+
 	componentDidMount() {
 		this.props.getUrlPhoto().then(picUrl => {
 			const image = new (window as any).Image();
@@ -62,17 +68,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 			image.onload = () => {
 				// setState will redraw layer
 				// because "image" property is changed
-				const   containerRatio = this.props.widthImgContainer/ this.props.heightImgContainer,
-						ratioImg = image.width / image.height;
-
-				let imgWidth, imgHeight;
-				if (containerRatio < ratioImg) {
-						imgWidth = this.props.widthImgContainer;
-						imgHeight = 1 / ratioImg * this.props.widthImgContainer;
-				} else {
-					imgHeight = this.props.heightImgContainer;
-					imgWidth = ratioImg * this.props.heightImgContainer;
-				}
+				const {imgWidth, imgHeight} = this.getImgParameters(image, this.props.widthImgContainer, this.props.heightImgContainer);
 				this.setState({loadImage: image, isSync: true, imgWidth, imgHeight});
 			};
 			image.onerror = e => {
@@ -88,6 +84,22 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		});
 	}
 
+	getImgParameters(image, widthImgContainer, heightImgContainer) {
+		const   containerRatio = widthImgContainer/ heightImgContainer,
+				ratioImg = image.width / image.height;
+
+			let imgWidth, imgHeight;
+			if (containerRatio < ratioImg) {
+				imgWidth = widthImgContainer;
+				imgHeight = Math.floor(1 / ratioImg * widthImgContainer);
+			} else {
+				imgHeight = heightImgContainer;
+				imgWidth = Math.floor(ratioImg * heightImgContainer);
+			}
+
+			return {imgWidth, imgHeight};
+	}
+
 	addAnonymousIcon(): void {
 		const   image = new (window as any).Image(),
 				icons = this.state.icons;
@@ -96,11 +108,13 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		image.onload = () => {
 			// setState will redraw layer
 			// because "image" property is changed
-			const anchors = [   {name: 'topLeft', x: this.anchorRadius, y: this.anchorRadius},
-								{name: 'topRight', x:  this.widthIcon+this.anchorRadius, y: this.anchorRadius},
-								{name: 'bottomRight', x:  this.widthIcon+this.anchorRadius, y:  this.widthIcon+this.anchorRadius},
-								{name: 'bottomLeft', x: this.anchorRadius, y:  this.widthIcon+this.anchorRadius}];
-			icons.push({img: image, x: this.anchorRadius, y: this.anchorRadius, width: this.widthIcon, height: this.widthIcon, active: false, anchors: anchors});
+			const   iconX = this.state.imgWidth/2 - this.widthIcon,
+					iconY = this.state.imgHeight/2 - this.widthIcon,
+					anchors = [ {name: 'topLeft', x: iconX, y: iconY},
+								{name: 'topRight', x:  this.widthIcon+iconX, y: iconY},
+								{name: 'bottomRight', x:  this.widthIcon+iconX, y:  this.widthIcon+iconY},
+								{name: 'bottomLeft', x: iconX, y:  this.widthIcon+iconY}];
+			icons.push({img: image, x: iconX, y: iconY, width: this.widthIcon, height: this.widthIcon, active: false, anchors: anchors});
 			this.setState({
 				isSync: true,
 				icons,
@@ -141,7 +155,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 					icons
 				});
 				setTimeout(() => {
-				const file = this.dataURLtoBlob(this.stageRef.getStage().toDataURL({mimeType: 'image/jpeg'}));
+				const file = this.dataURLtoBlob(this.stageRef.getStage().toDataURL({mimeType: 'image/jpeg', quality: 1}));
 				this.props.handleSaveClick(file)
 					}, 1500)
 			},
@@ -202,7 +216,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	updateAnchor(e, name: string, index: number): void {
-		const   anchorX = e.target.x() < this.anchorRadius ? this.anchorRadius : (e.target.x() > this.state.loadImage.width - this.anchorRadius ? this.state.loadImage.width - this.anchorRadius : e.target.x()),
+		const   anchorX = e.target.x() < 0 ? 0 : (e.target.x() > this.state.imgWidth ? this.state.imgWidth : e.target.x()),
 				icons = this.state.icons,
 				currentIcon = this.state.icons[index];
 
@@ -261,7 +275,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	checkYCoordinate(y: number): boolean {
-		return 	y < this.anchorRadius ? false : y <= this.state.loadImage.height - this.anchorRadius;
+		return 	y < 0 ? false : y <= this.state.imgHeight;
 
 	}
 
@@ -272,24 +286,30 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		})
 	}
 
-	dragBoundFunc (pos: {x: number, y: number}, icon: Icon) {
+	dragBoundFunc (pos: {x: number, y: number}, icon: Icon, index) {
 		//You can not drag the icon outside the image
-		const   width = this.state.loadImage.width - icon.width - this.anchorRadius,
-				height = this.state.loadImage.height - icon.height - this.anchorRadius,
-				newY = pos.y < this.anchorRadius ? this.anchorRadius : (pos.y > height ? height : pos.y),
-				newX = pos.x < this.anchorRadius ? this.anchorRadius : (pos.x > width ? width : pos.x);
-		return {
-			x: newX,
-			y: newY
-		};
+		if (this.state.activeIconIndex === index) {
+			const   width = this.state.imgWidth - icon.width,
+					height = this.state.imgHeight - icon.height,
+					newY = pos.y < 0 ? 0 : (pos.y > height ? height : pos.y),
+					newX = pos.x < 0 ? 0 : (pos.x > width ? width : pos.x);
+			return {
+				x: newX,
+				y: newY
+			};
+		} else {
+			return {
+				x: icon.x,
+				y: icon.y
+			};
+		}
 	}
 
 	getPhotoStyle() {
 		return {height: this.props.heightImgContainer};
 	}
 
-	onClickImage(e) {
-		console.log(e.target);
+	onClickImage(e): void {
 		if (e.target.attrs.id === 'coverImg') {
 			this.setState({
 				activeIconIndex: -1
@@ -325,7 +345,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 													y={icon.y}
 													onClick={() => this.setActive(index)}
 													draggable={true}
-													dragBoundFunc = {pos => this.dragBoundFunc(pos, icon)}
+													dragBoundFunc = {pos => this.dragBoundFunc(pos, icon, index)}
 													onDragMove={(e) => this.handleDragEndIcon(e, index)}
 												/>
 												{this.state.activeIconIndex === index ? this.renderAnchors(icon, index) : null}
@@ -344,9 +364,9 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 							You can add an unlimited number of icons.<br/>
 							In order to delete the icon, select the desired one and click "Delete icon".
 						</div>
-						<div className="bEditPhotoPanel">
-							<span onClick={() => this.addAnonymousIcon()} className="bTooltip" data-description="Add anonymous icon"><SVG icon="icon_anonymous_icon"/></span>
-							<span onClick={() => this.deleteAnonymousIcon()} className={`bTooltip ${this.state.activeIconIndex === -1 ? "mDisable" : ""}`} data-description="Delete anonymous icon"><SVG icon="icon_anonymous_icon"/></span>
+						<div className="bAnonymousIconControlButtonWrapper">
+							<button className="bButton" onClick={() => this.addAnonymousIcon()}>Add icon</button>
+							<button className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "mCancel"}`} onClick={() => this.deleteAnonymousIcon()}>Delete icon</button>
 						</div>
 						<div className="bAnonymousIconMainButtonWrapper">
 							<button className="bButton" onClick={() => {this.handleSaveClick()}}>Save</button>

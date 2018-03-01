@@ -94,9 +94,30 @@
   .bAnonymousIconMainButtonWrapper {
     margin: 10px auto;
     text-align: center;
+    position: absolute;
+    bottom: 0;
+    padding-right: 15px;
+    width: 280px;
+    button {
+      width: 100px;
+      margin: 0 5px;
+      padding: 0;
+    }
+  }
+
+  .bAnonymousIconControlButtonWrapper {
+    margin: 10px auto;
+    text-align: center;
+
 
     button {
+      width: 100px;
       margin: 0 5px;
+      padding: 0;
+    }
+
+    .bButton.mDisable {
+      pointer-events: none;
     }
   }
 
@@ -126,6 +147,12 @@
       display: flex;
       position: absolute;
     }
+  }
+  .bButton {
+    background: #ffffff;
+    border: solid 1px #d2d2d2;
+    color: #8c8c8c;
+    cursor: default;
   }
 }
 
