@@ -13,11 +13,11 @@ export interface CancelEventManualNotificationProps {
 export class CancelEventManualNotification extends React.Component<CancelEventManualNotificationProps, {}> {
 	render() {
 		return (
-			<div className = 'bCancelEventManualNotification'>
+			<div className='bCancelEventManualNotification'>
 				<CancelEventManualNotificationHeader/>
 				<CancelEventManualNotificationUserList
-					users = {this.props.users}
-					handleClickUserActivityCheckbox = { this.props.handleClickUserActivityCheckbox }
+					users={this.props.users}
+					handleClickUserActivityCheckbox={this.props.handleClickUserActivityCheckbox}
 				/>
 			</div>
 		);

@@ -20,6 +20,7 @@ import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
 import {ServiceList} from "module/core/service_list/service_list";
 import {Sport} from "module/models/sport/sport";
 import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup_wrapper";
+import {Item} from "module/ui/checkbox_list/models/item";
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
 const	ClubcChildrenWrapperStyle	= require('styles/pages/b_club_children_manager_wrapper.scss');
@@ -268,17 +269,21 @@ export const ClubChildrenEdit = (React as any).createClass({
 		this.getDefaultBinding().set('isShowNotificationListPopup', true);
 
 	},
-	handleClickSubmitBookingFormsOnPopup(users) {
+	handleClickSubmitBookingFormsOnPopup(listItems: Item[]) {
+		const preparedUsers = [];
+		listItems.forEach(item => {
+			item.extraItems.forEach(extraItem => {
+				preparedUsers.push({
+					userId: extraItem.additionalData.userId,
+					permissionId: extraItem.additionalData.permissionId,
+					childId: item.additionalData.userId
+				});
+			});
+		});
+
 		return (window.Server as ServiceList).schoolClubSendMessages.post(
-			{
-				schoolId:	this.props.activeSchoolId,
-				clubId:		this.props.clubId
-			},
-			{
-				participants: users.map(user => {
-					return {userId: user.userId, permissionId: user.permissionId, childId: user.extra.parentOf.userId}
-				})
-			}
+			{ schoolId: this.props.activeSchoolId, clubId: this.props.clubId },
+			{ participants: preparedUsers }
 		).then(() => {
 			window.simpleAlert('Messages has been send successfully.');
 
@@ -308,7 +313,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 					binding={this.getDefaultBinding().sub('clubChildrenEditNotificationListPopupData')}
 					clubId={this.props.clubId}
 					schoolId={this.props.activeSchoolId}
-					handleClickSubmitButton={(users) => this.handleClickSubmitBookingFormsOnPopup(users)}
+					handleClickSubmitButton={(listItems: Item) => this.handleClickSubmitBookingFormsOnPopup(listItems)}
 					handleClickCancelButton={() => this.handleClickCancelButtonOnPopup()}
 				/>
 			);
