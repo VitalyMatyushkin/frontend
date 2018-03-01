@@ -38,9 +38,9 @@ const TabItemDetails = React.createClass({
     _onSubmit:function(data){
         const binding = this.getDefaultBinding();
 
-        data.countOneTimeIosSessions = Number(data.countOneTimeIosSessions);
-        data.countOneTimeAndroidSessions = Number(data.countOneTimeAndroidSessions);
-        data.countOneTimeWebSessions = Number(data.countOneTimeWebSessions);
+	    data.countOneTimeIosSessions = data.countOneTimeIosSessions ? Number(data.countOneTimeIosSessions) : undefined;
+	    data.countOneTimeAndroidSessions = data.countOneTimeAndroidSessions ? Number(data.countOneTimeAndroidSessions) : undefined;
+	    data.countOneTimeWebSessions = data.countOneTimeWebSessions ? Number(data.countOneTimeWebSessions) : undefined;
 
 		const promises = [];
 
@@ -111,7 +111,7 @@ const TabItemDetails = React.createClass({
                         <FormField type="phone" field="phone" validation="server" onPrePost={this.getPhone}>Mobile phone</FormField>
 						<FormField type="checkbox" field="verification.status.email">Email verified</FormField>
 						<FormField type="checkbox" field="verification.status.sms">Phone verified</FormField>
-	                    <FormField type="number" field="countOneTimeIosSessions">Count one time Ios sessions</FormField>
+	                    <FormField type="number" field="countOneTimeIosSessions">Count one time iOS sessions</FormField>
 	                    <FormField type="number" field="countOneTimeAndroidSessions">Count one time Android sessions</FormField>
 	                    <FormField type="number" field="countOneTimeWebSessions">Count one time Web sessions</FormField>
                     </FormColumn>

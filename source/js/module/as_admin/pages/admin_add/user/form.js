@@ -24,9 +24,9 @@ const UserForm = React.createClass({
 		return Promise.resolve(gendersArray);
 	},
 	_onSubmit:function(data){
-		data.countOneTimeIosSessions = Number(data.countOneTimeIosSessions);
-		data.countOneTimeAndroidSessions = Number(data.countOneTimeAndroidSessions);
-		data.countOneTimeWebSessions = Number(data.countOneTimeWebSessions);
+		data.countOneTimeIosSessions = data.countOneTimeIosSessions ? Number(data.countOneTimeIosSessions) : undefined;
+		data.countOneTimeAndroidSessions = data.countOneTimeAndroidSessions ? Number(data.countOneTimeAndroidSessions) : undefined;
+		data.countOneTimeWebSessions = data.countOneTimeWebSessions ? Number(data.countOneTimeWebSessions) : undefined;
 
 		data.verified = {email:true, personal:true, phone:true};
 
@@ -43,7 +43,7 @@ const UserForm = React.createClass({
                 <FormField type="phone" field="phone" validation="required phone server">Phone</FormField>
 				<FormField type="confirmText" field="email" validation="required email server" >Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
-				<FormField type="number" field="countOneTimeIosSessions">Count one time Ios sessions</FormField>
+				<FormField type="number" field="countOneTimeIosSessions">Count one time iOS sessions</FormField>
 				<FormField type="number" field="countOneTimeAndroidSessions">Count one time Android sessions</FormField>
 				<FormField type="number" field="countOneTimeWebSessions">Count one time Web sessions</FormField>
 			</Form>
