@@ -4,7 +4,8 @@
 
 const 	objectAssign 			= require('./object_assign'),
 		setMethodArrayFind 		= require('./array_find'),
-		setMethodArrayFindIndex = require('./array_findIndex');
+		setMethodArrayFindIndex = require('./array_findIndex'),
+		BPromise				= require('bluebird');
 
 /* Some cool ES6 methods here which undoubtedly should be part of JS. */
 const ES6_Best_Parts_Adder = function(){
@@ -24,6 +25,11 @@ const ES6_Best_Parts_Adder = function(){
 	if (!Array.prototype.findIndex) {
 		console.info('Polyfilling Array.prototype.findIndex');
 		setMethodArrayFindIndex();
+	}
+
+	if(!window.Promise) {
+		console.info('Polyfilling promises with bluebird');
+		window.Promise = BPromise;
 	}
 };
 
