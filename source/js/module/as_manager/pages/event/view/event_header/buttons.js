@@ -115,6 +115,7 @@ const Buttons = React.createClass({
 		const inviteStatus = propz.get(invite, ['status']);
 		if(
 			inviteStatus !== EventHelper.EVENT_STATUS.REJECTED &&
+			this.props.event.status !== "CANCELED" &&
 			this.props.isUserSchoolWorker &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL
 		) {
@@ -267,6 +268,7 @@ const Buttons = React.createClass({
 			this.props.isUserSchoolWorker &&
 			this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL &&
 			this.props.event.status !== "REJECTED" &&
+			this.props.event.status !== "CANCELED" &&
 			inviteStatus !== "REJECTED"
 		);
 	},

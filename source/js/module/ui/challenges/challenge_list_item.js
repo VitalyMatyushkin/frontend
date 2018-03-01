@@ -39,7 +39,7 @@ const ChallengeListItem = React.createClass({
 		switch (true) {
 			case isCancelled:
 				if (this.props.isUserSchoolWorker) {
-					eventResult = <span>Cancelled <a onClick={ () => {this.props.onClickDeleteEvent(event.id)}}>(X)</a></span>;
+					eventResult = <span>Cancelled</span>;
 				} else {
 					eventResult = 'Cancelled';
 				}
@@ -72,7 +72,7 @@ const ChallengeListItem = React.createClass({
 		// TODO: actually it shouldn't be here. Click event should be triggered on any event and dispatched on
 		// TODO: top levels of hierarchy. But this is faster solution.
 		const handler = () => {
-			if(!isCancelled) this.onClick(event.id)
+			this.onClick(event.id);
 		};
 
 		return (
