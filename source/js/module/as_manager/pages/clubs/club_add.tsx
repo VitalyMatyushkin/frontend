@@ -29,7 +29,7 @@ export const ClubAdd = (React as any).createClass({
 			(window.Server as ServiceList).schoolClubs.post(
 				this.props.activeSchoolId,
 				serverFormData
-			).then(() => ClubsHelper.redirectToClubListPage());
+			).then(newClub => ClubsHelper.redirectToClubStudentEditPage(newClub.id));
 		}
 	},
 	render() {

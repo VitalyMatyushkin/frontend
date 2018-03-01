@@ -7,6 +7,10 @@ export const ClubsHelper = {
 		document.location.hash = 'clubs/clubList';
 	},
 
+	redirectToClubStudentEditPage(clubId) {
+		document.location.hash = 'clubs/editChildren?id=' + clubId;
+	},
+
 	/**
 	 * Function converts data from club form and some additional data to server type form
 	 * @param data - main data from club form
