@@ -22,7 +22,7 @@ const EventTeamsView = React.createClass({
 	propTypes: {
 		activeSchoolId	: React.PropTypes.string,
 		customCss		: React.PropTypes.string,
-		isPublicSite    : React.PropTypes.boolean
+		isPublicSite    : React.PropTypes.bool
 	},
 	getPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
