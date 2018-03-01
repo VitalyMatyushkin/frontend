@@ -1,40 +1,69 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		MessageListActions	= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
-		MessageList			= require('module/ui/message_list/message_list'),
-		RandomHelper		= require('module/helpers/random_helper'),
-		MessageConsts		= require('module/ui/message_list/message/const/message_consts');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
-const MessageListWrapper = React.createClass({
+import {MessageListActions} from 'module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'
+import * as MessageList from 'module/ui/message_list/message_list'
+
+import * as RandomHelper from 'module/helpers/random_helper'
+import * as MessageConsts from 'module/ui/message_list/message/const/message_consts'
+import {ServiceList} from "module/core/service_list/service_list";
+
+export const MessageListWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		messageType:	React.PropTypes.string.isRequired
+		activeSchoolId:	(React as any).PropTypes.string.isRequired,
+		messageType: (React as any).PropTypes.string.isRequired
 	},
-	componentWillMount: function() {
+	componentWillMount() {
 		this.setSync(false);
-		window.Server.profile.get().then(user => {
+		(window.Server as ServiceList).profile.get().then(user => {
 			this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
 			this.getDefaultBinding().set('loggedUser',		Immutable.fromJS(user));
 			
 			this.setSync(true);
 		});
 	},
-	triggerMsgCountUpdater: function () {
+	triggerMsgCountUpdater () {
 		this.getMoreartyContext().getBinding().set('isMessagesCountNeedUpdate', true);
 	},
-	reloadMessageList: function() {
+	reloadMessageList() {
 		this.getDefaultBinding().set('messagesListKey',	RandomHelper.getRandomString());
 	},
-	setSync: function(value) {
+	setSync(value: boolean) {
 		this.getDefaultBinding().set('isSync', value);
 	},
-	onAction: function(messageId, messageKind, actionType) {
+	onAction(
+		messageId: string,
+		messageKind: (
+			MessageConsts.MESSAGE_KIND.REFUSAL |
+			MessageConsts.MESSAGE_KIND.AVAILABILITY |
+			MessageConsts.MESSAGE_KIND.INVITATION |
+			MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE
+		),
+		actionType: (
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT
+		)
+	) {
 		this.onActionByMessageKindAndActionType(messageId, messageKind, actionType)
 			.then(() => this.triggerMsgCountUpdater());
 	},
-	onActionByMessageKindAndActionType: function(messageId, messageKind, actionType) {
+	onActionByMessageKindAndActionType(
+		messageId: string,
+		messageKind: (
+			MessageConsts.MESSAGE_KIND.REFUSAL |
+			MessageConsts.MESSAGE_KIND.AVAILABILITY |
+			MessageConsts.MESSAGE_KIND.INVITATION |
+			MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE
+		),
+		actionType: (
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT
+		)
+	) {
 		switch (messageKind) {
 			case MessageConsts.MESSAGE_KIND.REFUSAL:
 				return this.onActionForRefusalMessageByActionType(messageId, actionType);
@@ -42,7 +71,14 @@ const MessageListWrapper = React.createClass({
 				return this.onActionForReportMessageByActionType(messageId, actionType);
 		}
 	},
-	onActionForRefusalMessageByActionType: function(messageId, actionType) {
+	onActionForRefusalMessageByActionType(
+		messageId: string,
+		actionType: (
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.DECLINE |
+			MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT
+		)
+	) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
 				return MessageListActions.gotItRefusalMessage(
@@ -55,7 +91,7 @@ const MessageListWrapper = React.createClass({
 				});
 		}
 	},
-	onActionForReportMessageByActionType: function(messageId, actionType) {
+	onActionForReportMessageByActionType(messageId: string, actionType: string) {
 		switch (actionType) {
 			case MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.GOT_IT:
 				return MessageListActions.gotItReportMessage(
@@ -68,7 +104,7 @@ const MessageListWrapper = React.createClass({
 				});
 		}
 	},
-	onClickShowComments: function(messageId){
+	onClickShowComments(messageId: string) {
 		const 	binding			= this.getDefaultBinding(),
 				messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId),
 				isShowComments 	= Boolean(binding.toJS(`messages.${messageIndex}.isShowComments`));
@@ -79,7 +115,7 @@ const MessageListWrapper = React.createClass({
 			.commit();
 		
 		if (!isShowComments) {
-			window.Server.schoolEventMessageComments.get({
+			(window.Server as ServiceList).schoolEventMessageComments.get({
 				schoolId: this.props.activeSchoolId,
 				messageId
 			}).then(
@@ -93,18 +129,18 @@ const MessageListWrapper = React.createClass({
 			);
 		}
 	},
-	onClickSubmitComment: function(newCommentText, replyComment, messageId){
+	onClickSubmitComment(newCommentText: string, replyComment: any, messageId: string) {
 		const 	binding 		= this.getDefaultBinding(),
 				messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId);
 		
-		const postData = {
+		const postData:{text: string, replyToCommentId?: string} = {
 			text: newCommentText
 		};
 		if(typeof replyComment !== 'undefined') {
 			postData.replyToCommentId = replyComment.id;
 		}
 		
-		return window.Server.schoolEventMessageComments.post(
+		return (window.Server as ServiceList).schoolEventMessageComments.post(
 			{
 				schoolId: this.props.activeSchoolId,
 				messageId: messageId
@@ -123,11 +159,11 @@ const MessageListWrapper = React.createClass({
 				.commit();
 		});
 	},
-	checkComments: function(messageId) {
+	checkComments(messageId: string) {
 		const 	binding 		= this.getDefaultBinding(),
 				messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId);
 		
-		return window.Server.schoolEventMessageCommentsCount.get({
+		return (window.Server as ServiceList).schoolEventMessageCommentsCount.get({
 			schoolId:	this.props.activeSchoolId,
 			messageId: messageId
 		})
@@ -139,13 +175,13 @@ const MessageListWrapper = React.createClass({
 			return true;
 		})
 	},
-	setComments: function(messageId){
+	setComments(messageId: string) {
 		const 	binding 		= this.getDefaultBinding(),
 				messageIndex 	= binding.toJS('messages').findIndex(message => message.id === messageId);
 		
-		return window.Server.schoolEventMessageComments.get(
+		return (window.Server as ServiceList).schoolEventMessageComments.get(
 			{
-				schoolId	: this.props.activeSchoolId,
+				schoolId: this.props.activeSchoolId,
 				messageId: messageId
 			}, {
 				filter: {
@@ -162,12 +198,12 @@ const MessageListWrapper = React.createClass({
 			return true;
 		});
 	},
-	render: function() {
+	render() {
 		let content = null;
 
 		const binding = this.getDefaultBinding();
 
-		if( Boolean(binding.toJS('isSync')) ) {
+		if(Boolean(binding.toJS('isSync'))) {
 			content = (
 				<MessageList
 					key						= { binding.toJS('messagesListKey') }
@@ -187,5 +223,3 @@ const MessageListWrapper = React.createClass({
 		return content;
 	}
 });
-
-module.exports = MessageListWrapper;

@@ -8,6 +8,17 @@
   height: 100%;
   background-color: #303030;
   z-index: 98;
+  display: flex;
+  justify-content: center;
+
+  .bLoader {
+    align-items: center;
+
+    .bIcon {
+      width: 70px;
+      height: 70px;
+    }
+  }
 }
 
 .eFullScreenPhoto_closeCross {
@@ -45,33 +56,68 @@
   background-position: center center;
   background-color: #fff;
 
-  .bLoader {
-    align-items: center;
-
-    .bIcon {
-      width: 70px;
-      height: 70px;
-    }
+  .bAnonymousIconHeaderText {
+    margin-top: 15px;
+    padding-right: 10px;
+    text-align: center;
   }
 
   .bEditPhotoPanel {
     display: flex;
     justify-content: center;
     margin: 15px 0;
-    padding-right: 10px;
 
     span {
       margin: 0 10px
     }
     .bIcon {
-      width: 40px;
-      height: 40px;
-      color: #303030;
+      width: 30px;
+      height: 30px;
+      color: #8c8c8c;
       cursor: pointer;
 
       &:hover {
-        color: #1e1e1e;
+        color: #c2c2c2;
       }
+    }
+
+    .mDisable {
+      pointer-events: none;
+
+      .bIcon {
+        color: #fff;
+      }
+
+    }
+  }
+
+  .bAnonymousIconMainButtonWrapper {
+    margin: 10px auto;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    padding-right: 15px;
+    width: 280px;
+    button {
+      width: 100px;
+      margin: 0 5px;
+      padding: 0;
+    }
+  }
+
+  .bAnonymousIconControlButtonWrapper {
+    margin: 10px auto;
+    text-align: center;
+
+
+    button {
+      width: 100px;
+      margin: 0 5px;
+      padding: 0;
+    }
+
+    .bButton.mDisable {
+      pointer-events: none;
     }
   }
 
@@ -86,13 +132,51 @@
       min-width: 100%;
     }
   }
+}
 
+.eFullScreenPhoto_photoContainer.isLoading {
+  .eFullScreenPhoto_sideContainer {
+    pointer-events: none;
+  }
+  .eFullScreenPhoto_photo {
+    .konvajs-content {
+      opacity: 0;
+      position: absolute !important;
+    }
+    .bLoader {
+      display: flex;
+      position: absolute;
+    }
+  }
+  .bButton {
+    background: #ffffff;
+    border: solid 1px #d2d2d2;
+    color: #8c8c8c;
+    cursor: default;
+  }
 }
 
 .eFullScreenPhoto_photo {
   position: relative;
   width: 100%;
   background: #1e1e1e center no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .bLoader {
+    display: none;
+  }
+
+  .bLoader {
+    height: 100%;
+
+    .bIcon {
+      width: 120px;
+      height: 120px;
+    }
+  }
 }
 
 .eFullScreenPhoto_arrowLeft {
@@ -124,6 +208,7 @@
 }
 
 .eFullScreenPhoto_sideContainer {
-  width: 300px;
+  width: 280px;
+  min-width: 280px;
   padding: 10px 0 0 10px;
 }

@@ -28,7 +28,7 @@ const PLATFORM_SERVER_TO_CLIENT_MAP = {
 };
 
 const PLATFORM_CLIENT_TO_SERVER_MAP = {
-	'WEB':		'Web',
+	'Web':		'WEB',
 	'iOS':		'IOS',
 	'Android':	'ANDROID',
 	'Other':	'OTHER'

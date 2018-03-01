@@ -4,9 +4,12 @@ const	React					= require('react');
 // react components 
 const	TableViewRival			= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/table_view_rival'),
 		Header					= require('module/as_manager/pages/event/view/rivals/table_view_rivals/table_view_rival/header');
+const {ResultBlock}  = require('module/as_manager/pages/event/view/rivals/result_block/result_block');
 
 // helpers
-const	RivalInfoOptionsHelper	= require('module/as_manager/pages/event/view/rivals/helpers/rival_info_options_helper');
+const RivalInfoOptionsHelper = require('module/as_manager/pages/event/view/rivals/helpers/rival_info_options_helper');
+const TeamHelper = require('module/ui/managers/helpers/team_helper');
+const EventHelper = require('module/helpers/eventHelper');
 
 // styles
 const	TableRivalsStyle		= require('../../../../../../../../styles/ui/b_table_view_rivals/b_table_view_rivals.scss');
@@ -28,7 +31,32 @@ const TableViewRivals = React.createClass({
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
 		handleClickOpponentSchoolManagerButton:	React.PropTypes.func,
-		handleClickRemoveTeamButton:			React.PropTypes.func
+		handleClickRemoveTeamButton:			React.PropTypes.func,
+		isPublicSite:                           React.PropTypes.bool.isRequired
+	},
+	getSettings: function () {
+		return this.props.event.settings.find(s => s.schoolId === this.props.activeSchoolId);
+	},
+	renderResultBlock: function () {
+		const settings = this.getSettings();
+		let isDisplayResultsOnPublic = typeof settings !== 'undefined' ? settings.isDisplayResultsOnPublic : true;
+
+		if(
+			this.props.isPublicSite &&
+			TeamHelper.isInterSchoolsEventForTeamSport(this.props.event) &&
+			!EventHelper.isNotFinishedEvent(this.props.event) &&
+			!isDisplayResultsOnPublic
+		) {
+			return (
+				<ResultBlock
+					rivals={this.props.rivals}
+					event={this.props.event}
+					activeSchoolId={this.props.activeSchoolId}
+				/>
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function() {
 		const	rivalsData	= this.props.rivals,
@@ -72,11 +100,17 @@ const TableViewRivals = React.createClass({
 					isShowControlButtons					= { this.props.isShowControlButtons }
 					activeSchoolId							= { this.props.activeSchoolId }
 					isLast									= { rivalIndex === rivalsData.length - 1 }
+					isPublicSite                            = { this.props.isPublicSite }
 				/>
 			);
 		}));
 
-		return <div className="bTableViewRivals"> { rivals } </div>;
+		return (
+			<div className="bTableViewRivals">
+				{ this.renderResultBlock() }
+				{ rivals }
+			</div>
+		);
 	}
 });
 

@@ -7,8 +7,9 @@ interface AnonymousIconProps {
 	getUrlPhoto: () => Promise<string>
 	handleSaveClick: (file: any) => void
 	handleCancelClick: () => void
-	widthImgContainer?: number
-	heightImgContainer?: number
+	widthImgContainer: number
+	heightImgContainer: number
+	photoContainerStyle: any
 }
 
 interface AnonymousIconState {
@@ -16,6 +17,9 @@ interface AnonymousIconState {
 	loadImage: HTMLImageElement
 	activeIconIndex: number
 	icons: Icon[]
+	imgWidth: number
+	imgHeight: number
+	isLoading: boolean
 }
 
 interface Icon {
@@ -33,7 +37,7 @@ interface Icon {
 }
 
 export class AnonymousIcon extends React.Component<AnonymousIconProps, AnonymousIconState> {
-	readonly widthIcon = 30;
+	readonly widthIcon = 50;
 	readonly anchorRadius = 5;
 	stageRef: any;
 
@@ -43,8 +47,18 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 			isSync: false,
 			loadImage: null,
 			icons: [],
-			activeIconIndex: -1
+			activeIconIndex: -1,
+			imgWidth: 0,
+			imgHeight: 0,
+			isLoading: false
 		};
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if (nextProps.widthImgContainer !== this.props.widthImgContainer || nextProps.heightImgContainer !== this.props.heightImgContainer) {
+			const {imgWidth, imgHeight} = this.getImgParameters(this.state.loadImage, nextProps.widthImgContainer, nextProps.heightImgContainer)
+			this.setState({imgWidth, imgHeight});
+		}
 	}
 
 	componentDidMount() {
@@ -54,10 +68,36 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 			image.onload = () => {
 				// setState will redraw layer
 				// because "image" property is changed
-				this.setState({loadImage: image, isSync: true});
+				const {imgWidth, imgHeight} = this.getImgParameters(image, this.props.widthImgContainer, this.props.heightImgContainer);
+				this.setState({loadImage: image, isSync: true, imgWidth, imgHeight});
+			};
+			image.onerror = e => {
+				if (e.xhr.status === 413) {
+					window.simpleAlert(
+						'Too large photo size',
+						'Ok',
+						() => this.props.handleCancelClick()
+					)
+				}
 			};
 			image.src = picUrl;
 		});
+	}
+
+	getImgParameters(image, widthImgContainer, heightImgContainer) {
+		const   containerRatio = widthImgContainer/ heightImgContainer,
+				ratioImg = image.width / image.height;
+
+			let imgWidth, imgHeight;
+			if (containerRatio < ratioImg) {
+				imgWidth = widthImgContainer;
+				imgHeight = Math.floor(1 / ratioImg * widthImgContainer);
+			} else {
+				imgHeight = heightImgContainer;
+				imgWidth = Math.floor(ratioImg * heightImgContainer);
+			}
+
+			return {imgWidth, imgHeight};
 	}
 
 	addAnonymousIcon(): void {
@@ -68,17 +108,19 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		image.onload = () => {
 			// setState will redraw layer
 			// because "image" property is changed
-			const anchors = [   {name: 'topLeft', x: this.anchorRadius, y: this.anchorRadius},
-								{name: 'topRight', x:  this.widthIcon+this.anchorRadius, y: this.anchorRadius},
-								{name: 'bottomRight', x:  this.widthIcon+this.anchorRadius, y:  this.widthIcon+this.anchorRadius},
-								{name: 'bottomLeft', x: this.anchorRadius, y:  this.widthIcon+this.anchorRadius}];
-			icons.push({img: image, x: this.anchorRadius, y: this.anchorRadius, width: this.widthIcon, height: this.widthIcon, active: false, anchors: anchors});
+			const   iconX = this.state.imgWidth/2 - this.widthIcon,
+					iconY = this.state.imgHeight/2 - this.widthIcon,
+					anchors = [ {name: 'topLeft', x: iconX, y: iconY},
+								{name: 'topRight', x:  this.widthIcon+iconX, y: iconY},
+								{name: 'bottomRight', x:  this.widthIcon+iconX, y:  this.widthIcon+iconY},
+								{name: 'bottomLeft', x: iconX, y:  this.widthIcon+iconY}];
+			icons.push({img: image, x: iconX, y: iconY, width: this.widthIcon, height: this.widthIcon, active: false, anchors: anchors});
 			this.setState({
 				isSync: true,
 				icons,
 				activeIconIndex: icons.length-1
 			})
-		}
+		};
 	}
 
 	deleteAnonymousIcon(): void {
@@ -92,40 +134,49 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	handleSaveClick(): void {
-		this.setState({
-			activeIconIndex: -1
-		});
 		window.confirmAlert(
 			"You can not reverse the changes after saving. Are you sure?",
 			"Ok",
 			"Cancel",
 			() => {
-				const file = this.dataURItoBlob(this.stageRef.getStage().toDataURL());
-				this.props.handleSaveClick(file);
+				this.setState({isLoading: true});
+				const   scale = this.state.loadImage.width/this.state.imgWidth,
+						icons = this.state.icons;
+				icons.forEach(icon => {
+					icon.width *= scale;
+					icon.height *= scale;
+					icon.x *= scale;
+					icon.y *= scale;
+				});
+				this.setState({
+					activeIconIndex: -1,
+					imgWidth: this.state.loadImage.width,
+					imgHeight: this.state.loadImage.height,
+					icons
+				});
+				setTimeout(() => {
+				const file = this.dataURLtoBlob(this.stageRef.getStage().toDataURL({mimeType: 'image/jpeg', quality: 1}));
+				this.props.handleSaveClick(file)
+					}, 1500)
 			},
 			() => {}
 		);
 
 	}
 
-	dataURItoBlob(dataURI): Blob {
-		// convert base64 to raw binary data held in a string
-		// doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-		const byteString = atob(dataURI.split(',')[1]);
+	dataURLtoBlob(dataUrl): Blob {
+		const 	arrayFromDataUrl	= dataUrl.split(','),
+				mimeType 			= arrayFromDataUrl[0].match(/:(.*?);/)[1], //mime type: image/jpeg
+				stringFromDataUrl	= window.atob(arrayFromDataUrl[1]); //function decodes a string of data which has been encoded using base-64 encoding
 
-		// separate out the mime component
-		const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		let 	stringFromDataUrlLength		= stringFromDataUrl.length,
+				u8arr 						= new (window as any).Uint8Array(stringFromDataUrlLength);
 
-		// write the bytes of the string to an ArrayBuffer
-		const ab = new ArrayBuffer(byteString.length);
-		const ia = new Uint8Array(ab);
-		for (let i = 0; i < byteString.length; i++) {
-			ia[i] = byteString.charCodeAt(i);
+		while (stringFromDataUrlLength--) {
+			u8arr[stringFromDataUrlLength] = stringFromDataUrl.charCodeAt(stringFromDataUrlLength);
 		}
 
-		//New Code
-		return new Blob([ab], {type: mimeString});
-
+		return new (window as any).Blob([u8arr], {type:mimeType});
 	}
 
 	handleDragEndIcon(e, index: number): void {
@@ -165,7 +216,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	updateAnchor(e, name: string, index: number): void {
-		const   anchorX = e.target.x() < this.anchorRadius ? this.anchorRadius : (e.target.x() > this.state.loadImage.width - this.anchorRadius ? this.state.loadImage.width - this.anchorRadius : e.target.x()),
+		const   anchorX = e.target.x() < 0 ? 0 : (e.target.x() > this.state.imgWidth ? this.state.imgWidth : e.target.x()),
 				icons = this.state.icons,
 				currentIcon = this.state.icons[index];
 
@@ -224,7 +275,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	checkYCoordinate(y: number): boolean {
-		return 	y < this.anchorRadius ? false : y <= this.state.loadImage.height - this.anchorRadius;
+		return 	y < 0 ? false : y <= this.state.imgHeight;
 
 	}
 
@@ -235,49 +286,51 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		})
 	}
 
-	dragBoundFunc (pos: {x: number, y: number}, icon: Icon) {
+	dragBoundFunc (pos: {x: number, y: number}, icon: Icon, index) {
 		//You can not drag the icon outside the image
-		const   width = this.state.loadImage.width - icon.width - this.anchorRadius,
-				height = this.state.loadImage.height - icon.height - this.anchorRadius,
-				newY = pos.y < this.anchorRadius ? this.anchorRadius : (pos.y > height ? height : pos.y),
-				newX = pos.x < this.anchorRadius ? this.anchorRadius : (pos.x > width ? width : pos.x);
-		return {
-			x: newX,
-			y: newY
-		};
+		if (this.state.activeIconIndex === index) {
+			const   width = this.state.imgWidth - icon.width,
+					height = this.state.imgHeight - icon.height,
+					newY = pos.y < 0 ? 0 : (pos.y > height ? height : pos.y),
+					newX = pos.x < 0 ? 0 : (pos.x > width ? width : pos.x);
+			return {
+				x: newX,
+				y: newY
+			};
+		} else {
+			return {
+				x: icon.x,
+				y: icon.y
+			};
+		}
 	}
 
-	getImgWrapperStyle() {
-		return {width: this.props.widthImgContainer ? (this.props.widthImgContainer > this.state.loadImage.width ? this.state.loadImage.width : this.props.widthImgContainer) : 'auto',
-			height: this.props.heightImgContainer ? this.props.heightImgContainer : 'auto'};
+	getPhotoStyle() {
+		return {height: this.props.heightImgContainer};
+	}
+
+	onClickImage(e): void {
+		if (e.target.attrs.id === 'coverImg') {
+			this.setState({
+				activeIconIndex: -1
+			})
+		}
 	}
 
 	render() {
 		if (this.state.isSync) {
 			return (
-				<div className="bAnonymous_icon_wrapper ">
-					<div className="bAnonymousIconHeaderText">
-						Click on "Add icon" to add an icon.
-						Select the added icon and drag it to the desired location.<br/>
-						You can add an unlimited number of icons.<br/>
-						In order to delete the icon, select the desired one and click "Delete icon".
-					</div>
-					<div className="bAnonymousIconControlButtonWrapper">
-						<button className="bButton" onClick={() => this.addAnonymousIcon()}>Add icon</button>
-						<button
-							className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "eDelete_button"}`}
-							onClick={() => this.deleteAnonymousIcon()}
-						>
-							Delete icon
-						</button>
-					</div>
-					<div className="bAnonymousIconImg" style={this.getImgWrapperStyle()}
+				<div className={`eFullScreenPhoto_photoContainer ${this.state.isLoading ? "isLoading" : ""}`}
+				     style={this.props.photoContainerStyle}
+				>
+					<div	className	= 'eFullScreenPhoto_photo'
+					        style		= {this.getPhotoStyle() }
 					>
-						<Stage width={this.state.loadImage.width} height={this.state.loadImage.height} ref={node => {
+						<Stage width={this.state.imgWidth} height={this.state.imgHeight} ref={node => {
 							this.stageRef = node}}
 						>
 							<Layer>
-								<Image image={this.state.loadImage} />
+								<Image id="coverImg" onClick={e => this.onClickImage(e)} image={this.state.loadImage} width={this.state.imgWidth} height={this.state.imgHeight}/>
 								{
 									this.state.icons.map((icon, index) => {
 										return (
@@ -292,7 +345,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 													y={icon.y}
 													onClick={() => this.setActive(index)}
 													draggable={true}
-													dragBoundFunc = {pos => this.dragBoundFunc(pos, icon)}
+													dragBoundFunc = {pos => this.dragBoundFunc(pos, icon, index)}
 													onDragMove={(e) => this.handleDragEndIcon(e, index)}
 												/>
 												{this.state.activeIconIndex === index ? this.renderAnchors(icon, index) : null}
@@ -302,13 +355,23 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 								}
 							</Layer>
 						</Stage>
+						<Loader/>
 					</div>
-					<div className="bAnonymousIconMainButtonWrapper">
-						<button className="bButton" onClick={() => {
-							this.handleSaveClick()
-						}}>Save
-						</button>
-						<button className="bButton mCancel" onClick={() => this.props.handleCancelClick()}>Cancel</button>
+					<div className='eFullScreenPhoto_sideContainer'  style={{heigth: this.props.heightImgContainer-10}}>
+						<div className="bAnonymousIconHeaderText">
+							Click on "Add icon" to add an icon.
+							Select the added icon and drag it to the desired location.<br/>
+							You can add an unlimited number of icons.<br/>
+							In order to delete the icon, select the desired one and click "Delete icon".
+						</div>
+						<div className="bAnonymousIconControlButtonWrapper">
+							<button className="bButton" onClick={() => this.addAnonymousIcon()}>Add icon</button>
+							<button className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "mCancel"}`} onClick={() => this.deleteAnonymousIcon()}>Delete icon</button>
+						</div>
+						<div className="bAnonymousIconMainButtonWrapper">
+							<button className="bButton" onClick={() => {this.handleSaveClick()}}>Save</button>
+							<button className="bButton mCancel" onClick={() => this.props.handleCancelClick()}>Cancel</button>
+						</div>
 					</div>
 				</div>
 			);

@@ -1,9 +1,16 @@
-const MessageConsts = require('module/ui/message_list/message/const/message_consts');
+import * as BPromise from 'bluebird'
+import {ServiceList} from "module/core/service_list/service_list"
 
-const MessageListActions = {
+import * as MessageConsts from 'module/ui/message_list/message/const/message_consts'
+import {Message} from "module/models/messages/message";
+
+export const MessageListActions = {
 	messagesCountOnPage: 5,
 	messageCountLimit: 5,
-	loadMessages: function(messageType, activeSchoolId) {
+	loadMessages(
+		messageType: MessageConsts.MESSAGE_TYPE.INBOX | MessageConsts.MESSAGE_TYPE.OUTBOX | MessageConsts.MESSAGE_TYPE.ARCHIVE,
+		activeSchoolId: string
+	): BPromise<Message[]> {
 		switch (messageType) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
 				return this.loadInboxMessages(activeSchoolId);
@@ -13,7 +20,11 @@ const MessageListActions = {
 				return this.loadArchiveMessages(activeSchoolId);
 		}
 	},
-	loadMessagesByPage: function (page, messageType, activeSchoolId) {
+	loadMessagesByPage(
+		page: number,
+		messageType: MessageConsts.MESSAGE_TYPE.INBOX | MessageConsts.MESSAGE_TYPE.OUTBOX | MessageConsts.MESSAGE_TYPE.ARCHIVE,
+		activeSchoolId: string
+	): BPromise<Message[]> {
 		switch (messageType) {
 			case MessageConsts.MESSAGE_TYPE.INBOX:
 				return this.loadInboxMessagesByPage(page, activeSchoolId);
@@ -23,8 +34,8 @@ const MessageListActions = {
 				return this.loadArchiveMessagesByPage(page, activeSchoolId);
 		}
 	},
-	loadInboxMessagesByPage: function(page, activeSchoolId) {
-		return window.Server.schoolEventsMessagesInbox.get(
+	loadInboxMessagesByPage(page: number, activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesInbox.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -36,8 +47,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadOutboxMessagesByPage: function(page, activeSchoolId) {
-		return window.Server.schoolEventsMessagesOutbox.get(
+	loadOutboxMessagesByPage(page: number, activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesOutbox.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -49,8 +60,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadArchiveMessagesByPage: function(page, activeSchoolId) {
-		return window.Server.schoolEventsMessagesArchive.get(
+	loadArchiveMessagesByPage(page: number, activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesArchive.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -62,8 +73,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadInboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesInbox.get(
+	loadInboxMessages(activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesInbox.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -74,8 +85,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadOutboxMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesOutbox.get(
+	loadOutboxMessages(activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesOutbox.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -85,8 +96,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadArchiveMessages: function(activeSchoolId) {
-		return window.Server.schoolEventsMessagesArchive.get(
+	loadArchiveMessages(activeSchoolId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesArchive.get(
 			{ schoolId: activeSchoolId },
 			{
 				filter: {
@@ -97,8 +108,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadParentalConsentMessagesByEventId: function(schoolId, eventId) {
-		return window.Server.schoolEventsMessages.get(
+	loadParentalConsentMessagesByEventId(schoolId: string, eventId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessages.get(
 			{ schoolId: schoolId },
 			{
 				filter:		{
@@ -111,8 +122,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadParentRoleParentalConsentMessagesByEventId: function(eventId) {
-		return window.Server.childEventMessages.get(
+	loadParentRoleParentalConsentMessagesByEventId(eventId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).childEventMessages.get(
 			{ eventId: eventId },
 			{
 				filter:		{
@@ -124,8 +135,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadParentalConsentMessagesCountByEventId: function(schoolId, eventId) {
-		return window.Server.schoolEventsMessagesCount.get(
+	loadParentalConsentMessagesCountByEventId(schoolId: string, eventId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessagesCount.get(
 			{ schoolId: schoolId },
 			{
 				filter:		{
@@ -138,8 +149,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadParentalReportsMessagesByEventId: function(schoolId, eventId) {
-		return window.Server.schoolEventsMessages.get(
+	loadParentalReportsMessagesByEventId(schoolId: string, eventId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).schoolEventsMessages.get(
 			{ schoolId: schoolId },
 			{
 				filter:		{
@@ -155,8 +166,8 @@ const MessageListActions = {
 			}
 		);
 	},
-	loadParentRoleParentalReportsMessagesByEventId: function(eventId) {
-		return window.Server.childEventMessages.get(
+	loadParentRoleParentalReportsMessagesByEventId(eventId: string): BPromise<Message[]> {
+		return (window.Server as ServiceList).childEventMessages.get(
 			{ eventId: eventId },
 			{
 				filter:		{
@@ -172,16 +183,16 @@ const MessageListActions = {
 			}
 		);
 	},
-	gotItRefusalMessage: function(activeSchoolId, messageId) {
-		return window.Server.doGotItActionForEventMessage.post(
+	gotItRefusalMessage(activeSchoolId: string, messageId: string): BPromise<any> {
+		return (window.Server as ServiceList).doGotItActionForEventMessage.post(
 			{
 				schoolId:	activeSchoolId,
 				messageId:	messageId
 			}
 		);
 	},
-	gotItReportMessage: function(activeSchoolId, messageId) {
-		return window.Server.doGotItActionForEventMessage.post(
+	gotItReportMessage(activeSchoolId: string, messageId: string): BPromise<any> {
+		return (window.Server as ServiceList).doGotItActionForEventMessage.post(
 			{
 				schoolId:	activeSchoolId,
 				messageId:	messageId
@@ -189,5 +200,3 @@ const MessageListActions = {
 		);
 	}
 };
-
-module.exports = MessageListActions;

@@ -19,27 +19,28 @@ const TabItemDetails = React.createClass({
         onCancel: React.PropTypes.func.isRequired
     },
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            userId = binding.get('userWithPermissionDetail.id'),
-            schoolId = globalBinding.get('userRules.activeSchoolId');
+        const   binding = this.getDefaultBinding(),
+	            globalBinding = this.getMoreartyContext().getBinding(),
+	            userId = binding.get('userWithPermissionDetail.id'),
+	            schoolId = globalBinding.get('userRules.activeSchoolId');
 
-        self.params = {schoolId:schoolId, userId:userId};
+	    this.params = {schoolId:schoolId, userId:userId};
 
-        window.Server.user.get(self.params).then(function (data) {
+        window.Server.user.get(this.params).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
             return data;
         });
     },
     componentWillUnmount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
         binding.clear('form');
     },
     _onSubmit:function(data){
-        const	self	= this,
-            	binding	= self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
+
+	    data.countOneTimeIosSessions = data.countOneTimeIosSessions ? Number(data.countOneTimeIosSessions) : undefined;
+	    data.countOneTimeAndroidSessions = data.countOneTimeAndroidSessions ? Number(data.countOneTimeAndroidSessions) : undefined;
+	    data.countOneTimeWebSessions = data.countOneTimeWebSessions ? Number(data.countOneTimeWebSessions) : undefined;
 
 		const promises = [];
 
@@ -47,17 +48,17 @@ const TabItemDetails = React.createClass({
 		const oldData = binding.sub('form').toJS();
 		if(oldData.verification.status.email !== data.verification.status.email) {
 			promises.push(
-				window.Server.usersForceEmailVefication.put(self.params, {status: data.verification.status.email})
+				window.Server.usersForceEmailVefication.put(this.params, {status: data.verification.status.email})
 			);
 		}
 		if(oldData.verification.status.sms !== data.verification.status.sms) {
 			promises.push(
-				window.Server.usersForcePhoneVefication.put(self.params, {status: data.verification.status.sms})
+				window.Server.usersForcePhoneVefication.put(this.params, {status: data.verification.status.sms})
 			);
 		}
 
 		promises.push(
-			window.Server.user.put(self.params,data)
+			window.Server.user.put(this.params,data)
 				.then(user => {
 					binding.set('popup',false);
 					return user;
@@ -88,7 +89,7 @@ const TabItemDetails = React.createClass({
         return gendersArray;
     },
     render:function(){
-        var binding = this.getDefaultBinding();
+        const binding = this.getDefaultBinding();
 
         return (
             <div className="bDetailsTab">
@@ -110,6 +111,9 @@ const TabItemDetails = React.createClass({
                         <FormField type="phone" field="phone" validation="server" onPrePost={this.getPhone}>Mobile phone</FormField>
 						<FormField type="checkbox" field="verification.status.email">Email verified</FormField>
 						<FormField type="checkbox" field="verification.status.sms">Phone verified</FormField>
+	                    <FormField type="number" field="countOneTimeIosSessions">Count one time iOS sessions</FormField>
+	                    <FormField type="number" field="countOneTimeAndroidSessions">Count one time Android sessions</FormField>
+	                    <FormField type="number" field="countOneTimeWebSessions">Count one time Web sessions</FormField>
                     </FormColumn>
                 </Form>
             </div>

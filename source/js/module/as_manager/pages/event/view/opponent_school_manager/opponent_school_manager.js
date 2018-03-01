@@ -5,7 +5,7 @@ const	React						= require('react'),
 		{ConfirmPopup}				= require('module/ui/confirm_popup'),
 		GeoSearchHelper				= require('../../../../../helpers/geo_search_helper'),
 		{SchoolListItem}			= require('../../../../../ui/autocomplete2/custom_list_items/school_list_item/school_list_item'),
-		EventHelper					= require('../../../events/eventHelper'),
+		{LocalEventHelper}          = require('module/as_manager/pages/events/eventHelper'),
 		{If}						= require('../../../../../ui/if/if'),
 		propz						= require('propz'),
 		EventFormConsts 			= require('module/as_manager/pages/events/manager/event_form/consts/consts'),
@@ -22,7 +22,7 @@ const OpponentSchoolManager = React.createClass({
 	},
 	componentWillMount: function() {
 		this.getDefaultBinding().atomically()
-			.set('distance',			Immutable.fromJS(EventHelper.distanceItems[0].id))
+			.set('distance',			Immutable.fromJS(LocalEventHelper.distanceItems[0].id))
 			.set('schoolSelectorKey',	Immutable.fromJS(this.getRandomString()))
 			.commit();
 	},
@@ -209,7 +209,7 @@ const OpponentSchoolManager = React.createClass({
 		return typeof this.getDefaultBinding().toJS('opponentSchoolManager.opponentSchoolInput.school') === 'undefined';
 	},
 	getDistanceItems: function() {
-		return EventHelper.distanceItems.map(item => {
+		return LocalEventHelper.distanceItems.map(item => {
 			return (
 				<option	value	= { item.id }
 						key		= { item.id }
@@ -260,7 +260,7 @@ const OpponentSchoolManager = React.createClass({
 								Maximum distance
 							</div>
 							<select	className		= "bDropdown"
-									defaultValue	= {EventHelper.distanceItems[0].id}
+									defaultValue	= {LocalEventHelper.distanceItems[0].id}
 									value			= {distance}
 									onChange		= {self.handleChangeDistance}
 							>

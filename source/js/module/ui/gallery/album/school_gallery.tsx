@@ -9,16 +9,16 @@ export const SchoolGallery = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
 	render: function() {
-		const   binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding(),
+				albumId = binding.toJS('defaultAlbum').id;
 
 		return (
 			<Gallery
 				mode='SCHOOL'
 				currentUserId           = {MoreartyHelper.getLoggedInUserId(this)}
 				accessMode              = {GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER}
-				handleClickDeletePhoto  = {photoId => ActionsGallery.deletePhotoFromEvent(this.props.service, binding, this.props.albumId, photoId)}
-				handleChangePicData     = {(photoId, model) => {ActionsGallery.changePicData(this.props.service, binding, this.props.albumId, photoId, model)}}
-				handleChangeCover       = {picUrl => ActionsGallery.changeAlbumCover(this.props.service, this.props.albumId, picUrl)}
+				handleClickDeletePhoto  = {photoId => ActionsGallery.deletePhotoFromEvent(this.props.service, binding, albumId, photoId)}
+				handleChangePicData     = {(photoId, model) => {ActionsGallery.changePicData(this.props.service, binding,albumId, photoId, model)}}
 				photos                  = {binding.toJS('photos')}
 				isLoading               = {!binding.get('isSync')}
 				isUploadingPhoto        = {binding.get('isUploading')}

@@ -17,7 +17,16 @@ const Score = React.createClass({
 		rival:			React.PropTypes.object.isRequired,
 		event:			React.PropTypes.object.isRequired,
 		mode:			React.PropTypes.string.isRequired,
-		onChangeScore:	React.PropTypes.func.isRequired
+		onChangeScore:	React.PropTypes.func.isRequired,
+		isPublicSite:   React.PropTypes.bool.isRequired
+	},
+	getSettings: function () {
+		return this.props.event.settings.find(s => s.schoolId === this.props.activeSchoolId);
+	},
+	isDisplayResultsOnPublic: function () {
+		const settings = this.getSettings();
+
+		return typeof settings !== 'undefined' ? settings.isDisplayResultsOnPublic : true;
 	},
 	getPoints: function() {
 		const	schoolResults	= this.props.event.results.schoolScore,
@@ -98,6 +107,8 @@ const Score = React.createClass({
 
 		let score = null;
 		if(
+			// Doesn't show scores if it's a public site and isDisplayResultsOnPublic === false
+			(this.props.isPublicSite ? this.isDisplayResultsOnPublic() : true) &&
 			(isTeamSport || isOneOnOneSport) &&
 			(isFinishedEvent || isClosingMode)
 		) {

@@ -13,13 +13,12 @@ const 	React 				= require('react'),
 		ViewSelectorHelper 	= require('module/ui/view_selector/helpers/view_selector_helper');
 
 const PublicEventHeaderSchool = React.createClass({
-	
 	mixins: [DateTimeMixin],
-	
 	propTypes: {
-		event: 				React.PropTypes.any.isRequired,
-		viewMode: 			React.PropTypes.oneOf(Object.keys(ViewModeConsts.VIEW_MODE)),
-		onClickViewMode:	React.PropTypes.func.isRequired
+		activeSchoolId: React.PropTypes.string.isRequired,
+		event: React.PropTypes.any.isRequired,
+		viewMode: React.PropTypes.oneOf(Object.keys(ViewModeConsts.VIEW_MODE)),
+		onClickViewMode: React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function(){
 		return {
@@ -30,10 +29,17 @@ const PublicEventHeaderSchool = React.createClass({
 		document.location.hash = 'home';
 		document.location.reload();
 	},
+	getEventName: function (event) {
+		const activeSchoolId = this.props.activeSchoolId;
+
+		return typeof this.props.activeSchoolId !== 'undefined' ?
+			event.generatedNames[activeSchoolId]:
+			event.generatedNames.official;
+	},
 	getFixtureInfo: function(event) {
 		return(
 			<div>
-				<div className="eEventHeader_field mEvent">{event.generatedNames.official}</div>
+				<div className="eEventHeader_field mEvent">{this.getEventName(event)}</div>
 				<div className="eEventHeader_field mDate">
 					{`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
 				</div>
@@ -60,20 +66,23 @@ const PublicEventHeaderSchool = React.createClass({
 		
 		return (
 			<div className="bEventHeader">
-				<div className="bEventHeader_leftSide">
-					<div className="eEventHeader_field mEvent">
-						{this.getFixtureInfo(event)}
+				<div className='eEventHeader_row'>
+					<div className="eEventHeader_leftSide">
+						<div className="eEventHeader_field mEvent">
+							{this.getFixtureInfo(event)}
+						</div>
+					</div>
+					<div className="eEventHeader_rightSide">
+						<div className="bButton mCancel" onClick={this.handleClickGoBack}>
+							Go Back
+						</div>
 					</div>
 				</div>
-				
-				<div className="bEventHeader_rightSide">
-					<div	onClick		= { this.handleClickGoBack }
-							className	= "bButton mCancel"
-					>
-						Go Back
+				<div className='eEventHeader_row'>
+					<div className='eEventHeader_leftSide'>
+						{this.renderViewModeLinks()}
 					</div>
 				</div>
-				{ this.renderViewModeLinks() }
 			</div>
 		);
 	}

@@ -3,6 +3,8 @@
  */
 
 import * as React from 'react';
+import * as classNames from 'classnames';
+import * as Loader from 'module/ui/loader';
 import '../../../../styles/ui/b_button.scss';
 
 interface ButtonProps {
@@ -12,13 +14,53 @@ interface ButtonProps {
 	onClick:			() => void			// function to be called on click
 	extraStyleClasses?:	string				// if one need to add extra styles to button.
 	isDisabled?:		boolean
+	isLoading?:         boolean
 }
 
 export class Button extends React.Component<ButtonProps> {
+	isLoading() {
+		let isLoading = false;
+
+		if(typeof this.props.isLoading !== 'undefined') {
+			isLoading = this.props.isLoading;
+		}
+
+		return isLoading;
+	}
+	getButtonClassName() {
+		return classNames('bButton', this.props.extraStyleClasses || '', { mDisable: this.isLoading() } );
+	}
+	getView() {
+		let view = null;
+		switch (true) {
+			case this.isLoading(): {
+				view = (
+					<div className='eButton_textContainer'>
+						<div className='eButton_loaderContainer'>
+							<Loader />
+						</div>
+						<div className='eButton_text'>
+							{this.props.text}
+						</div>
+					</div>
+				);
+				break;
+			}
+			default: {
+				view = (
+					<div className='eButton_textContainer'>
+						<div className='eButton_text'>
+							{this.props.text}
+						</div>
+					</div>
+				);
+				break;
+			}
+		}
+
+		return view;
+	}
 	render() {
-		const	extraStyleClasses	= this.props.extraStyleClasses || '',
-				className			= `bButton ${extraStyleClasses}`;
-		
 		let isDisabled: boolean = false;
 		if(typeof this.props.isDisabled !== 'undefined') {
 			isDisabled = this.props.isDisabled;
@@ -27,11 +69,11 @@ export class Button extends React.Component<ButtonProps> {
 		return (
 			<button
 				id			= { this.props.id }
-				className	= { className }
+				className	= { this.getButtonClassName() }
 				disabled	= { isDisabled }
 				onClick		= { () => this.props.onClick() }
 			>
-				{ this.props.text }
+				{ this.getView() }
 			</button>
 		);
 	}

@@ -9,7 +9,7 @@ const	EventForm			= require('module/as_manager/pages/events/manager/event_form/e
 
 const	EventFormActions	= require('module/as_manager/pages/events/manager/event_form/event_form_actions');
 
-const	LocalEventHelper	= require('module/as_manager/pages/events/eventHelper'),
+const	{LocalEventHelper}  = require('module/as_manager/pages/events/eventHelper'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper');
 

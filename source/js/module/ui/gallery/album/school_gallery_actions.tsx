@@ -1,4 +1,5 @@
 import * as Immutable from 'immutable';
+import * as	BPromise from 'bluebird';
 
 export class ActionsGallery {
 	static deletePhotoFromEvent(service, binding, albumId: string, photoId: string) {
@@ -22,15 +23,12 @@ export class ActionsGallery {
 				.set('photos', Immutable.fromJS(photos))
 				.set('isSync', true)
 				.commit();
+			return BPromise.resolve(photos);
 		});
 	}
 
-	static changeAlbumCover(service, albumId: string, picUrl: string) {
-		return service.photo.pin(albumId, picUrl);
-	}
-
 	static changePicData(service, binding, albumId: string, photoId: string, model) {
-		service.photo.put(albumId, photoId, model)
+		return service.photo.put(albumId, photoId, model)
 		.then(() => {
 			binding.set('isUploading', false);
 			return this.getPhotosForAlbum(service, binding, albumId);	// and reloading all photos

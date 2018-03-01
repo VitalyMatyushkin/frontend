@@ -1,4 +1,4 @@
-const EventHelper = require('../as_manager/pages/events/eventHelper');
+const {LocalEventHelper} = require('module/as_manager/pages/events/eventHelper');
 
 const MILES_TO_METERS = 1609.344;
 
@@ -24,7 +24,7 @@ const GeoSearchHelper = {
 	getGeoSchoolWithDistanceFilter: function(distance, point) {
 		const filter = this.getUnlimitedGeoSchoolFilter(point);
 
-		filter['$nearSphere']['$maxDistance'] = EventHelper.distanceItems.find(i => i.id === distance).value * MILES_TO_METERS;
+		filter['$nearSphere']['$maxDistance'] = LocalEventHelper.distanceItems.find(i => i.id === distance).value * MILES_TO_METERS;
 
 		return filter;
 	}

@@ -1,20 +1,20 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable');
+import * as  React from 'react'
+import * as  Morearty from 'morearty'
+import * as  Immutable from 'immutable'
 
-const	RouterView	= require('module/core/router'),
-		Route		= require('module/core/route'),
-		{SubMenu}	= require('module/ui/menu/sub_menu');
+import * as RouterView from 'module/core/router'
+import * as Route from 'module/core/route'
+import {SubMenu} from 'module/ui/menu/sub_menu'
 
-const	Inbox	= require('module/as_manager/pages/parents_pages/messages/inbox/inbox'),
-		Outbox	= require('module/as_manager/pages/parents_pages/messages/outbox/outbox'),
-		Archive	= require('module/as_manager/pages/parents_pages/messages/archive/archive');
+import {Inbox} from 'module/as_manager/pages/parents_pages/messages/inbox/inbox'
+import {Outbox} from 'module/as_manager/pages/parents_pages/messages/outbox/outbox'
+import {Archive} from 'module/as_manager/pages/parents_pages/messages/archive/archive'
 
-const	MessageConsts = require('module/ui/message_list/message/const/message_consts');
+import * as MessageConsts from 'module/ui/message_list/message/const/message_consts'
 
-const Messages = React.createClass({
+export const Messages = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-	getDefaultState: function () {
+	getDefaultState() {
 		return Immutable.fromJS({
 			messagesRouting:	{},
 			menuItems:			{},
@@ -32,10 +32,10 @@ const Messages = React.createClass({
 			}
 		});
 	},
-	componentWillMount: function () {
+	componentWillMount() {
 		this.initMenuItems();
 	},
-	initMenuItems: function() {
+	initMenuItems() {
 		this.menuItems = [{
 			href:	'/#messages/inbox',
 			name:	'Inbox',
@@ -52,7 +52,7 @@ const Messages = React.createClass({
 
 		this.addListeners();
 	},
-	addListeners: function() {
+	addListeners() {
 		this.addListenerToInboxMessagesCount();
 	},
 	/**
@@ -62,7 +62,7 @@ const Messages = React.createClass({
 	 * But there is no any other way to solve this problem while we don't have redux or something else from flux camp
 	 * frameworks.
 	 */
-	addListenerToInboxMessagesCount: function() {
+	addListenerToInboxMessagesCount() {
 		const binding = this.getDefaultBinding();
 
 		binding.sub('inbox.messages').addListener(descriptor => {
@@ -86,7 +86,7 @@ const Messages = React.createClass({
 			}
 		});
 	},
-	render: function () {
+	render() {
 		const	binding		= this.getDefaultBinding(),
 				rootBinging	= this.getMoreartyContext().getBinding();
 
@@ -127,5 +127,3 @@ const Messages = React.createClass({
 		);
 	}
 });
-
-module.exports = Messages;

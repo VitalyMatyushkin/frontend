@@ -9,9 +9,9 @@ const	React					= require('react'),
 
 		{ SupportedBrowsers }	= require('module/shared_pages/supported_browsers/supported_browsers'),
 
-		EventComponent			= require('../pages/parents_pages/event/event_page'),
-		ParentEventsComponent	= require('./../pages/parents_pages/events/events'),
-		MessagesComponent		= require('module/as_manager/pages/parents_pages/messages/messages');
+		EventComponent = require('../pages/parents_pages/event/event_page'),
+		ParentEventsComponent = require('./../pages/parents_pages/events/events'),
+		{Messages} = require('module/as_manager/pages/parents_pages/messages/messages');
 
 /**
  * It's a router for user with parent role.
@@ -39,7 +39,7 @@ const ParentRouter = React.createClass({
 				/>
 				<Route	path		= '/messages /messages/:subPage'
 						binding		= {binding.sub('messages')}
-						component	= {MessagesComponent}
+						component	= {Messages}
 				/>
 				<Route
 					path		= "/supported_browsers"

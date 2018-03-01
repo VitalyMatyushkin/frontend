@@ -4,7 +4,7 @@ const	React					= require('react'),
 	
 		RoleHelper 				= require('module/helpers/role_helper'),
 	
-		MessageListActions		= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
+		{MessageListActions}		= require('module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'),
 		ParentalReportsTable	= require('module/as_manager/pages/event/view/parental_report_tab/parental_reports_table'),
 		Loader					= require('module/ui/loader'),
 	

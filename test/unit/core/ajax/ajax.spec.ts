@@ -100,6 +100,32 @@ describe('ajax', () => {
 		});
 	});
 
+	/**
+	 * Personally I'm not sure if this is correct behavior. But previous ajax implementation was working this way,
+	 * so I'm just refine implementation. Turning 401 to correct resolution will lead to great refactoring of all
+	 * dependents.
+	 */
+	it('should return rejected promise on 401', async () => {
+		const ajax = new Ajax();
+
+		const resultPromise = ajax.request({
+			url:	'http://api.stage1.squadintouch.com/superadmin/users',
+			method:	'get'
+		});
+
+		resultPromise.then(
+			() => { throw new Error('This should not happened') },
+			err => {
+			expect(err).to.be.instanceof(Error);
+			expect(err).to.containSubset({
+				response: {
+					status: 401
+				}
+			});
+		});
+
+	});
+
 	/** I'm not sure how cancellation should work. Check source file for more comments */
 	xit('should be cancellable without propagating canceled error', () => {
 		const ajax = new Ajax();

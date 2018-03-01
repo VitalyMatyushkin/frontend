@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as Morearty from 'morearty'
 import * as Immutable from 'immutable'
+import * as debounce from 'debounce'
 
 import * as BPromise from 'bluebird'
 
@@ -15,6 +16,8 @@ export const TeamManager = (React as any).createClass({
 	listeners: [],
 	currentSearchRequest: undefined,
 	currentSearchText: '',
+	//debounce decorator for handleChangeSearchText func
+	onDebounceHandleChangeSearchText: undefined,
 	
 	getDefaultProps() {
 		return {
@@ -48,6 +51,7 @@ export const TeamManager = (React as any).createClass({
 		this.initSelectedTabId();
 		this.searchAndSetStudents('', binding);
 		this.initTeamValues();
+		this.initDebouncerForHandleChangeSearchText();
 
 		this.listeners.push(binding.sub('filter').addListener(() => {
 			this.isActive() && this.searchAndSetStudents(this.currentSearchText, binding);
@@ -83,6 +87,9 @@ export const TeamManager = (React as any).createClass({
 	componentWillUnmount() {
 		this.removeListeners();
 		this.cancelCurrentSearchRequest();
+	},
+	initDebouncerForHandleChangeSearchText() {
+		this.onDebounceHandleChangeSearchText = debounce(this.handleChangeSearchText, 200, false);
 	},
 	initSelectedTabId () {
 		this.getDefaultBinding().set('selectedTabId', this.props.playerChoosersTabsModel.tabs[0].id);
@@ -408,7 +415,7 @@ export const TeamManager = (React as any).createClass({
 				<PlayerChoosers
 					selectedTabId				= { binding.toJS('selectedTabId') }
 					students					= { binding.toJS('foundStudents') }
-					handleChangeSearchText		= { this.handleChangeSearchText }
+					handleChangeSearchText		= { (text) => this.onDebounceHandleChangeSearchText(text) }
 					handleClickTab				= { this.handleClickTab }
 					handleClickStudent			= { this.handleClickStudent }
 					handleClickAddTeamButton	= { this.handleClickAddStudentButton }

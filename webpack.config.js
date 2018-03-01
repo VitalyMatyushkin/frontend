@@ -13,6 +13,7 @@ const babelPluginsList = [
 	"transform-es2015-classes",				// allow class syntax
 	"transform-class-properties",
 	"transform-es2015-parameters",			// transforming default values
+	"transform-es2015-spread",
 	"transform-es2015-shorthand-properties",
 	"transform-object-rest-spread",
 	"transform-es2015-destructuring",

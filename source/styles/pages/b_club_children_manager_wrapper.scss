@@ -1,6 +1,8 @@
 .bClubChildrenManagerWrapper {
   margin: 0 auto;
   padding-top: 50px;
+
+  max-width: 1160px;
 }
 
 .bClubChildrenManagerWrapper_disabled {
@@ -21,8 +23,10 @@
     margin-bottom: 20px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .bClubChildrenManagerWrapper {
+    width: 768px;
+
     padding-left: 20px;
     padding-right: 20px;
   }

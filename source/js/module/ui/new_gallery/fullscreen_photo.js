@@ -8,6 +8,7 @@ const	React				= require('react'),
 		{rotateImage}           = require('module/ui/gallery/rotateModel'),
 		{PhotoEditComponent}    = require('module/ui/gallery/photo/photo_edit'),
 		{SVG}                   = require('module/ui/svg'),
+		Loader                  = require('module/ui/loader'),
 		{AnonymousIcon}         = require('module/ui/gallery/anonymous_icon/anonymous_icon');
 
 const ANGLE = {
@@ -26,14 +27,15 @@ const FullscreenPhoto = React.createClass({
 		handleClickClose:			React.PropTypes.func.isRequired,
 		handleChangeAccessPreset:	React.PropTypes.func.isRequired,
 		handleChangePicData:	    React.PropTypes.func.isRequired,
-		handleChangeCover:	        React.PropTypes.func.isRequired,
+		handleClickDeletePhoto:	    React.PropTypes.func.isRequired,
 		accessMode:					React.PropTypes.string.isRequired
 	},
 	getInitialState: function() {
 		return {
 			windowWidth:	window.innerWidth,
 			windowHeight:	window.innerHeight,
-			addIconMode:    false
+			addIconMode:    false,
+			isLoad:         false
 		};
 	},
 	componentDidMount: function() {
@@ -99,6 +101,7 @@ const FullscreenPhoto = React.createClass({
 							style		= { arrowStyle }
 					>
 					</div>
+					{this.state.isLoad ? <Loader/> : null}
 				</div>
 			);
 		} else {
@@ -113,12 +116,10 @@ const FullscreenPhoto = React.createClass({
 	renderEditPhotoPanel: function () {
 		return (
 			<div className="bEditPhotoPanel">
-				<span onClick={() => this.setState({addIconMode: true})} className="bTooltip" id="addIcon_button" data-description="Add anonymous icon"><SVG icon="icon_smile"/></span>
+				<span onClick={() => this.setState({addIconMode: true, isLoad: true})} className="bTooltip" id="addIcon_button" data-description="Add anonymous icon"><SVG icon="icon_anonymous_icon"/></span>
 				<span onClick={e => this.onRotatePhoto(e, ANGLE.LEFT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to left"><SVG icon="icon_rotate_left"/></span>
 				<span onClick={e => this.onRotatePhoto(e, ANGLE.RIGHT)} className="bTooltip" id="albumLeftRotate_button" data-description="Rotate photo to right"><SVG icon="icon_rotate_right"/></span>
-
-				{this.props.mode === 'SCHOOL' ?	<span onClick={e => this.onClickPinPhoto(e)} className="bTooltip" id="albumCover_button" data-description="Set Album Cover"><SVG icon="icon_pin"/></span>
-					: null}
+				<span onClick={e => this.handleClickDeletePhoto(e)} className="bTooltip" id="albumCover_button" data-description="Delete photo"><SVG icon="icon_trash_photo"/></span>
 			</div>
 		);
 	},
@@ -148,16 +149,21 @@ const FullscreenPhoto = React.createClass({
 			.then( picUrl => {
 				return this.props.handleChangePicData({picUrl})
 			})
-			.then(() => this.setState({addIconMode: false}));
+			.then(() => this.setState({addIconMode: false, isLoad: false}));
 	},
-	onClickPinPhoto(e) {
-		this.props.handleChangeCover(this.props.photoData.picUrl).then(() => {
-			window.simpleAlert(
-				'Album cover is changed!',
-				'Ok',
-				() => {}
-			);
-		});
+	handleClickDeletePhoto(e) {
+		this.setState({isLoad: true});
+		window.simpleAlert(
+			'The photo will be deleted! Are you sure?',
+			'Ok',
+			() => {
+				this.props.handleClickDeletePhoto()
+				.then(() => {
+					this.setState({isLoad: false});
+					this.props.handleClickClose();
+				});
+			}
+		);
 		e.stopPropagation();
 	},
 	onRotatePhoto(e, angle) {
@@ -171,6 +177,7 @@ const FullscreenPhoto = React.createClass({
 		e.stopPropagation();
 	},
 	rotatePhoto(angle) {
+		this.setState({isLoad: true});
 		return rotateImage(this.props.photoData.picUrl, angle)
 			.then((data) => {
 				const file = CropImageHelper.dataURLtoFile(data);
@@ -178,14 +185,15 @@ const FullscreenPhoto = React.createClass({
 					.then( picUrl => {
 						return this.props.handleChangePicData({picUrl})
 					})
+					.then(() => this.setState({isLoad: false}))
 			});
 	},
 	render: function() {
-			const src = window.Server.images.getResizedToHeightUrl(this.props.photoData.picUrl, 800),
-				width = this.state.windowWidth * 0.8,
-				height = this.state.windowHeight * 0.8,
-				topOffset = height * 0.5,
-				leftOffset = width * 0.5;
+			const   src = this.props.photoData.picUrl,
+					width = Math.floor(this.state.windowWidth * 0.8),
+					height = Math.floor(this.state.windowHeight * 0.8),
+					topOffset = height * 0.5,
+					leftOffset = width * 0.5;
 
 			const photoContainerStyle = {
 					marginTop: -topOffset,
@@ -224,17 +232,14 @@ const FullscreenPhoto = React.createClass({
 		} else {
 			return (
 				<div className='bFullScreenPhoto'>
-					<div className="eFullScreenPhoto_photoContainer"
-					     style={photoContainerStyle}
-					>
-						<AnonymousIcon
-							handleSaveClick     = {(file) => this.handleSaveClick(file)}
-							handleCancelClick   = {() => this.setState({addIconMode: false})}
-							getUrlPhoto         = {() => BPromise.resolve(this.props.photoData.picUrl)}
-							widthImgContainer   = {width}
-							heightImgContainer  = {height-135}
-						/>
-					</div>
+					<AnonymousIcon
+						handleSaveClick     = {(file) => this.handleSaveClick(file)}
+						handleCancelClick   = {() => this.setState({addIconMode: false, isLoad: false})}
+						getUrlPhoto         = {() => BPromise.resolve(this.props.photoData.picUrl)}
+						photoContainerStyle = {photoContainerStyle}
+						widthImgContainer   = {width-280}
+						heightImgContainer  = {height}
+					/>
 				</div>
 			);
 		}

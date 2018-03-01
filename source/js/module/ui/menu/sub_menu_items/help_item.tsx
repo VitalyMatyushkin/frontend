@@ -20,11 +20,13 @@ export class HelpItem extends React.Component<HelpItemProps, HelpItemState> {
 	}
 
 	handleClickUserGuide(e): void {
+		this.setState({isOpen: false});
 		e.preventDefault();
 		(document.getElementById('formUserId') as any).submit();
 	}
 
 	handleClickDemo(e): void {
+		this.setState({isOpen: false});
 		e.preventDefault();
 		window.location.hash = '/demo';
 	}

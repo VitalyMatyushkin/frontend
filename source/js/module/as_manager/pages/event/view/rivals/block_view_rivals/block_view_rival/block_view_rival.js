@@ -23,7 +23,8 @@ const BlockViewRival = React.createClass({
 		onClickEditTeam:						React.PropTypes.func.isRequired,
 		onChangeIndividualScoreAvailable:		React.PropTypes.func.isRequired,
 		rivalInfoOptions:						React.PropTypes.object,
-		isShowControlButtons:					React.PropTypes.bool
+		isShowControlButtons:					React.PropTypes.bool,
+		isPublicSite:                           React.PropTypes.bool.isRequired
 	},
 	onChangeRivalInfoScore: function(scoreBundleName, scoreData) {
 		this.props.onChangeScore(
@@ -86,6 +87,7 @@ const BlockViewRival = React.createClass({
 						onChangeScore	= { this.onChangeRivalInfoScore }
 						activeSchoolId	= { this.props.activeSchoolId }
 						options			= { this.props.rivalInfoOptions }
+						isPublicSite    = { this.props.isPublicSite }
 					/>
 				);
 			}
