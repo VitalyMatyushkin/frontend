@@ -119,6 +119,12 @@
     .bButton.mDisable {
       pointer-events: none;
     }
+
+    .bButton.mDelete {
+      background: #ffffff;
+      border: solid 1px #333132;
+      color: #333132;
+    }
   }
 
   .bForm {
@@ -140,8 +146,8 @@
   }
   .eFullScreenPhoto_photo {
     .konvajs-content {
-      opacity: 0;
       position: absolute !important;
+      opacity: 0;
     }
     .bLoader {
       display: flex;

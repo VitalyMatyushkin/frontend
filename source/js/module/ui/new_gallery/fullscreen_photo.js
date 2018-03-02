@@ -178,7 +178,11 @@ const FullscreenPhoto = React.createClass({
 	},
 	rotatePhoto(angle) {
 		this.setState({isLoad: true});
-		return rotateImage(this.props.photoData.picUrl, angle)
+		return window.Server.images.getOriginalUrlByImgServerUrl(`${this.props.photoData.picUrl}?direct_url=true`)
+			.then((data) => {
+				const picUrl = `${data.data.url}?t=${Date.now()+(Math.random() + 1).toString(36).substring(2)}`;
+				return rotateImage(picUrl, angle);
+			})
 			.then((data) => {
 				const file = CropImageHelper.dataURLtoFile(data);
 				window.Server.images.upload(file)
