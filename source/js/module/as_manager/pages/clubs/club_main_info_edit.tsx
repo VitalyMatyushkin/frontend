@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as propz from 'propz'
 import * as Morearty from 'morearty'
 import * as Immutable from 'immutable'
 
@@ -76,6 +77,8 @@ export const ClubMainInfoEdit = (React as any).createClass({
 			this.getDefaultBinding().toJS('clubsForm.days') :
 			[];
 
+		const isNeedRedirect = propz.get(data, ['isNeedRedirect'], true);
+
 		//week days is required
 		if (formDataDays.length === 0) {
 			binding.set('clubsForm.isRequiredErrorDays', true);
@@ -91,7 +94,15 @@ export const ClubMainInfoEdit = (React as any).createClass({
 					clubId:		this.props.clubId
 				},
 				submitData
-			).then(() => ClubsHelper.redirectToClubListPage());
+			).then(
+				//() =>
+				() => {
+					if (isNeedRedirect) {
+						binding.set('clubsForm.isFormAlreadySend', true);
+						ClubsHelper.redirectToClubListPage();
+					}
+				}
+			);
 		}
 	},
 	render() {
