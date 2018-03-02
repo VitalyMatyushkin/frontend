@@ -52,11 +52,11 @@ var validationsSet = {
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
 		if(value){
-			if(!DateHelper.isValidDateTime(value)){
+			if(DateHelper.isValidDateTime(value) === false){
 				return 'Incorrect date!';
 			}
 
-			const date = new Date(value);
+			const date = DateHelper.parseValidDateTime(value);
 
 			if(date <= minValue){
 				return 'Date should be > "01/01/1900"';

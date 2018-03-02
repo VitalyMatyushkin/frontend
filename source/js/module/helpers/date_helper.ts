@@ -53,9 +53,13 @@ export const DateHelper = {
 		return `${date}, ${time}`;
 	},
 
+	/**
+	 * return date in format "DD.MM.YYYY/HH:mm"
+	 * @param {Date} dateTime
+	 * @return {string}
+	 */
 	getDateShortTimeString: function(dateTime: Date): string {
-		const strDateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm');
-		return strDateTime;
+		return Moment(dateTime).format('DD.MM.YYYY/HH:mm');
 	},
 
 	getDateLongTimeString: function(dateTime: Date): string {
@@ -70,7 +74,8 @@ export const DateHelper = {
 
 	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
 	toLocalDateTime:function(str: string): string {
-		return this.getDateShortTimeString(new Date(str));
+		const date = this.parseValidDateTime(str);
+		return this.getDateShortTimeString(date);
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
@@ -100,6 +105,11 @@ export const DateHelper = {
 		return isoStr;
 	},
 
+	/**
+	 * Converts date from this format: "dd.mm.yyyy/hh:mm" to this "yyyy-mm-dd hh:mm"
+	 * @param {string} dotString
+	 * @return {string}
+	 */
 	toIsoDateTime: function(dotString: string): string {
 		const dateTimeParts = dotString ? dotString.split('/'):[],
 				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
@@ -107,6 +117,7 @@ export const DateHelper = {
 
 				//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
 				isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
+
 		return isoStr;
 	},
 
@@ -125,27 +136,24 @@ export const DateHelper = {
 		return false;
 	},
 
+	/**
+	 * I'm not sure about all formats acceptable here, but at least it takes values with format "YYYY-MM-DD HH:mm"
+	 * @param {string} value
+	 * @return {boolean}
+	 */
 	isValidDateTime:function(value: string): boolean {
-		let result = false;
 		if (value.indexOf('T') !== -1){
 			value = Moment(value).format('YYYY-MM-DD HH:mm');
 		}
-		if(Date.parse(value)){
-			const 	date 		= new Date(value),
-					valueArray 	= value.split(' '),
-					dateArray 	= valueArray[0].split('-'),
-					timeArray 	= valueArray[1].split(':'),
-					minutes 	= Number(timeArray[1]),
-					hour 		= Number(timeArray[0]), //because string hours and minutes 00, which return getHours() and getMinutes() not equal 0
-					day 		= parseInt(dateArray[2]),
-					month 		= parseInt(dateArray[1]),
-					year 		= parseInt(dateArray[0]);
-			//getUTC return month starting 0, so we decrease month
-			result = date.getFullYear() === year && date.getMonth() === (month - 1) && date.getDate() === day && date.getHours() === hour && date.getMinutes() === minutes;
-		}
 
-		return result;
+		const momentResult = Moment(value, 'YYYY-MM-DD HH:mm', true).isValid();
+		return momentResult;
 	},
+
+	parseValidDateTime: function(value: string): Date {
+		return Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
+	},
+
 
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
