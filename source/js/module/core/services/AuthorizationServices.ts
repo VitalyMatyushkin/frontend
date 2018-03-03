@@ -45,11 +45,7 @@ export const AuthorizationServices ={
 								"personal":	profile.verification.status.personal
 								}
 							));
-							return (window.Server as ServiceList).roles.get();
-						}).then((roles: Role[]) => {
-							if(roles && roles.length == 1) {
-								return AuthorizationServices.become(roles[0].name);
-							}
+							return true;
 						});
 					}
 				

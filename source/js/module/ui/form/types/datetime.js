@@ -1,6 +1,6 @@
-const 	MaskedInput = require('module/ui/masked_input'),
+const 	MaskedInput		= require('module/ui/masked_input'),
 		{DateHelper} 	= require('module/helpers/date_helper'),
-		React 		= require('react');
+		React 			= require('react');
 
 const MASKED_INPUT_DATETIME = '__.__.____/__:__';
 
@@ -55,7 +55,7 @@ const MaskedDateTime =  React.createClass({
 	handleBlur: function(e) {
 		let value = e.target.value;
 
-    if(!value || value === MASKED_INPUT_DATETIME){
+    	if(!value || value === MASKED_INPUT_DATETIME){
 			value = this.setDefaultValue();
 			this.setState({dateTime:value});
 		}

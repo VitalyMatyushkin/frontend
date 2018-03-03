@@ -110,10 +110,39 @@ export const ClubChildrenEdit = (React as any).createClass({
 			});
 		}
 	},
-	componentWillUnmount() {
-		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	isParticipantListChange: function(){
+		const 	prevParticipants 	= this.getDefaultBinding().toJS('prevParticipants'),
+				currentParticipants = this.getDefaultBinding().toJS('teamManager.teamStudents'),
+				isLengthEqual 		= prevParticipants.length === currentParticipants.length;
 
-		this.getDefaultBinding().clear();
+		const isAllParticipantsEqual = prevParticipants.every(prevParticipant => {
+			return currentParticipants.some(currentParticipants => {
+				return prevParticipant.id === currentParticipants.id && prevParticipant.permissionId === currentParticipants.permissionId
+			})
+		});
+		return !isLengthEqual || !isAllParticipantsEqual;
+	},
+	componentWillUnmount() {
+
+
+		const isParticipantListChange = this.isParticipantListChange();
+
+		if (isParticipantListChange) {
+			window.confirmAlert(
+				`Do you want to save the changes?`,
+				"Ok",
+				"Cancel",
+				() => {
+					this.saveChildren();
+					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+					this.getDefaultBinding().clear();
+				},
+				() => {
+					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+					this.getDefaultBinding().clear();
+				}
+			);
+		}
 	},
 	addListeners() {
 		this.listeners.push(

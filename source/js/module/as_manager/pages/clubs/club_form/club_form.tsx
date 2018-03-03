@@ -104,8 +104,62 @@ export const ClubForm = (React as any).createClass({
 			binding.set('isSync', true);
 		});
 	},
+	/**
+	 * When the user leaves the tab with the form, it is checked whether the fields changed their default values.
+	 * If changed and if the user has not yet sent them to the server, a dialog box will be called,
+	 * which will ask about saving the changes.
+	 */
 	componentWillUnmount() {
-		this.getDefaultBinding().clear();
+		const 	binding 			= this.getDefaultBinding(),
+				bindingFormData 	= binding.sub('form').meta().get().toJS(),
+				isFormAlreadySend 	= typeof binding.toJS('isFormAlreadySend') !== 'undefined' ? binding.toJS('isFormAlreadySend') : false;
+
+		if(isFormAlreadySend){
+			binding.clear();
+		} else {
+			let isFormChange = false;
+
+			for (let key in bindingFormData) {
+				switch (key){
+					case 'buttonText':
+						break;
+					case 'venue':
+						if (bindingFormData['venue']['placeId'].defaultValue !== bindingFormData['venue']['placeId'].value){
+							isFormChange = true;
+						}
+						break;
+					default:
+						if (bindingFormData[key].defaultValue !== bindingFormData[key].value){
+							isFormChange = true;
+						}
+						break;
+				}
+			}
+
+			if (isFormChange){
+				let dataToSubmit = {};
+				for (let key in bindingFormData) {
+					if (key === 'venue') {
+						propz.set(dataToSubmit, ['venue', 'placeId'], bindingFormData['venue']['placeId'].value);
+					} else {
+						dataToSubmit[key] = bindingFormData[key].value;
+					}
+				}
+				window.confirmAlert(
+					`Do you want to save the changes?`,
+					"Ok",
+					"Cancel",
+					() => {
+						propz.set(dataToSubmit, ['isNeedRedirect'], false);
+						this.props.onFormSubmit(dataToSubmit);
+						binding.clear();
+					},
+					() => {
+						binding.clear();
+					}
+				);
+			}
+		}
 	},
 	isShowPriceNumberField() {
 		const metaPriceTypeField = this.getDefaultBinding().sub('form').meta().toJS('priceType');

@@ -62,9 +62,15 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	}
 
 	componentDidMount() {
-		this.props.getUrlPhoto().then(picUrl => {
-			const image = new (window as any).Image();
+		this.props.getUrlPhoto()
+			.then(imgServerUrl => {
+				return (window as any).Server.images.getOriginalUrlByImgServerUrl(`${imgServerUrl}?direct_url=true`)
+			})
+			.then(data => {
+			const picUrl = `${data.data.url}?t=${Date.now()+(Math.random() + 1).toString(36).substring(2)}`,
+			image = new (window as any).Image();
 			image.crossOrigin = 'anonymous';
+			image.src = picUrl;
 			image.onload = () => {
 				// setState will redraw layer
 				// because "image" property is changed
@@ -80,7 +86,6 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 					)
 				}
 			};
-			image.src = picUrl;
 		});
 	}
 
@@ -103,8 +108,8 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 	addAnonymousIcon(): void {
 		const   image = new (window as any).Image(),
 				icons = this.state.icons;
-		image.src = '/images/smile.png';
 		image.crossOrigin = 'anonymous';
+		image.src = '/images/smile.png';
 		image.onload = () => {
 			// setState will redraw layer
 			// because "image" property is changed
@@ -366,7 +371,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 						</div>
 						<div className="bAnonymousIconControlButtonWrapper">
 							<button className="bButton" onClick={() => this.addAnonymousIcon()}>Add icon</button>
-							<button className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "mCancel"}`} onClick={() => this.deleteAnonymousIcon()}>Delete icon</button>
+							<button className={`bButton ${this.state.activeIconIndex === -1 ? "mDisable" : "mDelete"}`} onClick={() => this.deleteAnonymousIcon()}>Delete icon</button>
 						</div>
 						<div className="bAnonymousIconMainButtonWrapper">
 							<button className="bButton" onClick={() => {this.handleSaveClick()}}>Save</button>

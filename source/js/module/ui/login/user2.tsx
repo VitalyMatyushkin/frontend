@@ -37,7 +37,8 @@ const LoginUserPage2 = (React as any).createClass({
 		this.formName = domain === 'admin' ? 'Administrator Login' : 'default';
 
 		let promise = true;
-		if(this.isAuthorized()) {
+
+		if(this.isAuthorized() && !this.isOnRole()) {
 			promise = this.setPermissions();
 		}
 
@@ -77,9 +78,10 @@ const LoginUserPage2 = (React as any).createClass({
 				const roleList = this.getRoleListByPermissionList(permissions);
 				let promise;
 				if(roleList.length == 0) {
-					promise =  AuthorizationServices.become('NOBODY');
+					promise = AuthorizationServices.become('NOBODY');
 				} else if(roleList.length == 1) {
-					promise =  AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
+					console.log('setPermissions');
+					promise = AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
 				} else {
 					promise = true;
 				}
@@ -89,6 +91,11 @@ const LoginUserPage2 = (React as any).createClass({
 	},
 	isAuthorized: function() {
 		return typeof SessionHelper.getUserIdFromSession(
+			this.getDefaultBinding()
+		) !== 'undefined';
+	},
+	isOnRole: function() {
+		return typeof SessionHelper.getRoleFromSession(
 			this.getDefaultBinding()
 		) !== 'undefined';
 	},

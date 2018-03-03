@@ -40,6 +40,13 @@ class ImageService {
 		return `${origUrl}?sizing=minvalue&value=${minValue}`;
 	}
 
+	getOriginalUrlByImgServerUrl(url){
+		return AJAX({
+			type: "GET",
+			url: url
+		})
+	}
+
 }
 
 

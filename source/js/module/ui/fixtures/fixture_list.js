@@ -63,7 +63,12 @@ const FixtureList = React.createClass({
                     .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, this.props.activeSchoolId)))
                     .then(_events => {
                         let events = this.state.events;
-                        events = events.concat(_events);
+						_events.forEach(event => {
+							const isEventAlreadyInState = events.some(eventState => eventState.id === event.id);
+							if (!isEventAlreadyInState) {
+								events.push(event);
+							}
+						});
                         this.setState({
                             events: events,
                             hasMore: _events.length !== 0
