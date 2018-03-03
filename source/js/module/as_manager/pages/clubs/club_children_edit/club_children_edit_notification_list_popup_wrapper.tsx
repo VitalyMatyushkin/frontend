@@ -49,7 +49,7 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 				permissionId: child.permissionId
 			},
 			extraItems: this.getExtraItemsByParents(child.parents),
-			checked: true
+			checked: child.messageStatus !== 'PENDING'
 		};
 	},
 	getExtraItemsByParents(parents): ExtraItem[] {
