@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as Immutable from 'immutable'
 import * as Morearty from 'morearty'
 
-import {ClubChildrenEditNotificationListPopup} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup";
+import {ClubChildrenEditNotificationListPopup} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup/club_children_edit_notification_list_popup";
 import {ClubsActions} from "module/as_manager/pages/clubs/clubs_actions";
 
 import 'styles/ui/b_cancel_event_manual_notification.scss';
@@ -85,7 +85,8 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 		if(this.getDefaultBinding().toJS('isSync')) {
 			return (
 				<ClubChildrenEditNotificationListPopup
-					listItems={this.getDefaultBinding().toJS('itemsArray')}
+					listItems={[]}
+					// listItems={this.getDefaultBinding().toJS('itemsArray')}
 					handleClickItemCheckbox={(id: string) => this.handleClickItemCheckbox(id)}
 					handleClickSubmitButton={() => this.handleClickSubmitButton()}
 					handleClickCancelButton={this.props.handleClickCancelButton}

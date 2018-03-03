@@ -19,7 +19,7 @@ import {ClubsChildrenBookingActionArea} from 'module/as_manager/pages/clubs/club
 import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
 import {ServiceList} from "module/core/service_list/service_list";
 import {Sport} from "module/models/sport/sport";
-import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup_wrapper";
+import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup/club_children_edit_notification_list_popup_wrapper";
 import {Item} from "module/ui/checkbox_list/models/item";
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
