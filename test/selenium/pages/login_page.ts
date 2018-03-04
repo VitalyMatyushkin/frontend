@@ -3,12 +3,10 @@
  */
 
 import {By, WebDriver, WebElement} from 'selenium-webdriver';
+import {Page} from "./page";
 
-export class LoginPage {
-
-	readonly driver: WebDriver;
-	readonly pagePath: string = '/#login';
-	readonly fullUrl: string;
+export class LoginPage extends Page {
+	static readonly pagePath: string = '/#login';
 
 	private inputEmailLocator = By.id('login_email');
 	private inputPassLocator = By.id('login_password');
@@ -19,24 +17,7 @@ export class LoginPage {
 
 
 	constructor(driver: WebDriver, baseUrl: string){
-		this.driver = driver;
-		this.fullUrl = baseUrl + this.pagePath;
-	}
-
-	async visit(): Promise<string> {
-		await this.driver.get(this.fullUrl);
-		const currentUrl = await this.driver.getCurrentUrl();
-
-		if(currentUrl === this.fullUrl) {
-			return this.fullUrl;
-		} else {
-			throw new Error(`url not found: ${this.fullUrl}`);
-		}
-	}
-
-	async isOnPage() {
-		const currentUrl = await this.driver.getCurrentUrl();
-		return currentUrl === this.fullUrl;
+		super(driver, baseUrl, LoginPage.pagePath);
 	}
 
 	async setEmail(email: string){

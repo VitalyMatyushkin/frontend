@@ -8,7 +8,7 @@ import {LoginPage} from "../../pages/superadmin/login_page";
 import {UsersPage} from "../../pages/superadmin/users_page";
 import {Credentials} from "../../credentials";
 
-describe.only('Superadmin Login page', () => {
+describe('Superadmin Login page', () => {
 
 	let driver;
 
@@ -20,9 +20,9 @@ describe.only('Superadmin Login page', () => {
 	before( async () => {
 		driver = DriverFactory.getDriver();
 		await driver.manage().timeouts().implicitlyWait(10000);
-		//https://stackoverflow.com/questions/22871976/selenium-get-value-of-current-implicit-wait
-		// sorry, bro there is no easy way to read implicit wait time
-		// driver.manage()
+
+		const timeouts = await driver.manage().getTimeouts();
+		console.log('got timeouts: ' + JSON.stringify(timeouts));
 	});
 
 	it('should login to squadintouch superadmin website', async () => {

@@ -14,19 +14,42 @@ export class Page {
 		this.fullUrl = baseUrl + pagePath;
 	}
 
+	async getImplicitWaitTimeout(): Promise<number> {
+		// there is no this method on typings, but in js it really exists. Check sources
+		const {implicit, pageLoad, script} = await (this.driver.manage() as any).getTimeouts();
+		return implicit;
+	}
+
 	/**
 	 * check whether browser is on this page.
 	 * This page determined by `fillUrl` property.
 	 * Check performed in Selenium way: it performs check multiple times during some waiting time.
-	 * If during this time browser not redirected to given page check will be failed.
+	 * If during this time browser not redirected to given page false will be returned.
+	 * If you need to throw exception see {Page.waitToBeOnPage}
 	 * @param optTimeout optional explicit timeout to wait for
 	 * @return {Promise<boolean>}
 	 */
 	async isOnPage(optTimeout?: number): Promise<boolean> {
+		const timeout = optTimeout ? optTimeout : await this.getImplicitWaitTimeout();
+
 		return this.driver.wait(async () => {
 			const currentUrl = await this.driver.getCurrentUrl();
 			return currentUrl === this.fullUrl;
-		}, optTimeout);
+		}, timeout).then( () => true, () => false);
+	}
+
+	/**
+	 * Check whether browser is on page. If during timeout browser will not visit given page timeout exception will be thrown
+	 * @param {number} optTimeout
+	 * @return {Promise<void>}
+	 */
+	async waitToBeOnPage(optTimeout?: number): Promise<void> {
+		const timeout = optTimeout ? optTimeout : await this.getImplicitWaitTimeout();
+
+		return this.driver.wait(async () => {
+			const currentUrl = await this.driver.getCurrentUrl();
+			return currentUrl === this.fullUrl;
+		}, timeout).then( () => void 0);
 	}
 
 	/**

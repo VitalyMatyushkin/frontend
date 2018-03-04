@@ -26,12 +26,12 @@ describe('Login page', () => {
 		await loginPage.clickSubmit();
 	});
 
-	it('should allow to perform incorrect login 10 times', async () => {
+	it('should allow to perform incorrect login 5 times', async () => {
 		/* just trying to login 10 times with incorrect email/pass and clicking "Try again" */
 		const loginPage = new LoginPage(driver, baseUrl);
 		await loginPage.visit();
 
-		for(let i = 0; i < 10; i++) {
+		for(let i = 0; i < 5; i++) {
 			await loginPage.setEmail('invalid_email@fakemail.squadintouch.com');
 			await loginPage.setPass('111111Ab');
 			await loginPage.clickSubmit();
