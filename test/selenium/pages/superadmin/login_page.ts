@@ -14,7 +14,7 @@ export class LoginPage extends Page {
 	private submitLoginLocator = By.id('login_submit');
 
 	private tryAgainButtonLocator = By.id('tryAgain_button');
-	private signUpButtonLocator = By.id('singUp_button');
+	private signUpButtonLocator = By.id('signUp_button');
 
 	constructor(driver: WebDriver, baseUrl: string) {
 		super(driver, baseUrl, LoginPage.pagePath);
@@ -42,8 +42,25 @@ export class LoginPage extends Page {
 		return this.clickSubmit();
 	}
 
-	// async isAuthorizationFailed(): Promise<boolean> {
-	// 	this.
-	// }
+	async clickTryAgain() {
+		const tryAgainButton: WebElement = this.driver.findElement(this.tryAgainButtonLocator);
+		await tryAgainButton.click();
+	}
+
+	async isAuthorizationFailed(): Promise<boolean> {
+		try {
+			const	tryAgainButtonPromise	= this.driver.findElement(this.tryAgainButtonLocator),
+					signUpButtonPromise		= this.driver.findElement(this.signUpButtonLocator);
+
+			await Promise.all([tryAgainButtonPromise, signUpButtonPromise]);
+			return true;
+		} catch (e){
+			return false;
+		}
+
+
+
+
+	}
 
 }

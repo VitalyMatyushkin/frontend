@@ -7,10 +7,11 @@ import {DriverFactory} from "../../tools/driver_factory";
 import {LoginPage} from "../../pages/superadmin/login_page";
 import {UsersPage} from "../../pages/superadmin/users_page";
 import {Credentials} from "../../credentials";
+import {WebDriver} from 'selenium-webdriver';
 
 describe('Superadmin Login page', () => {
 
-	let driver;
+	let driver: WebDriver;
 
 	const	baseUrl		= Credentials.superadminBaseUrl,
 			login		= Credentials.superadmin.login,
@@ -19,10 +20,7 @@ describe('Superadmin Login page', () => {
 
 	before( async () => {
 		driver = DriverFactory.getDriver();
-		await driver.manage().timeouts().implicitlyWait(10000);
-
-		const timeouts = await driver.manage().getTimeouts();
-		console.log('got timeouts: ' + JSON.stringify(timeouts));
+		await driver.manage().timeouts().implicitlyWait(15000);
 	});
 
 	it('should login to squadintouch superadmin website', async () => {
@@ -39,6 +37,18 @@ describe('Superadmin Login page', () => {
 	});
 
 	it('should not pass incorrect login', async () => {
+		const loginPage	= new LoginPage(driver, baseUrl);
+
+		await loginPage.visit();
+		await loginPage.setEmail('random_main@fakemail.squadintouch.com');
+		await loginPage.setPass('111111Ab');
+		await loginPage.clickSubmit();
+
+		const isAuthFailed = await loginPage.isAuthorizationFailed();
+		expect(isAuthFailed).to.be.true;
+	});
+
+	it('should be able to retry login in case of mistake', async () => {
 		const	loginPage	= new LoginPage(driver, baseUrl),
 				usersPage	= new UsersPage(driver, baseUrl);
 
@@ -47,22 +57,18 @@ describe('Superadmin Login page', () => {
 		await loginPage.setPass('111111Ab');
 		await loginPage.clickSubmit();
 
-		const isOnUsersPage = await usersPage.isOnPage();
-		expect(isOnUsersPage).to.be.false;
-	});
+		const isAuthFailed = await loginPage.isAuthorizationFailed();
+		expect(isAuthFailed).to.be.true;
 
-	// it('should allow to perform incorrect login 10 times', async () => {
-	// 	/* just trying to login 10 times with incorrect email/pass and clicking "Try again" */
-	// 	const loginPage = new LoginPage(driver, baseUrl);
-	// 	await loginPage.visit();
-	//
-	// 	for(let i = 0; i < 10; i++) {
-	// 		await loginPage.setEmail('invalid_email@fakemail.squadintouch.com');
-	// 		await loginPage.setPass('111111Ab');
-	// 		await loginPage.clickSubmit();
-	// 		await loginPage.clickTryAgain();
-	// 	}
-	// });
+		await loginPage.clickTryAgain();
+		await loginPage.setEmail(login);
+		await loginPage.setPass(password);
+		await loginPage.clickSubmit();
+
+		const isOnUsersPage = await usersPage.isOnPage();
+		expect(isOnUsersPage).to.be.true;
+
+	});
 
 
 	after( async () => {
