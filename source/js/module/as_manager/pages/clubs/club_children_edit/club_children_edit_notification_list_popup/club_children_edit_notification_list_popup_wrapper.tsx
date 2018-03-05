@@ -85,8 +85,7 @@ export const ClubChildrenEditNotificationListPopupWrapper = (React as any).creat
 		if(this.getDefaultBinding().toJS('isSync')) {
 			return (
 				<ClubChildrenEditNotificationListPopup
-					listItems={[]}
-					// listItems={this.getDefaultBinding().toJS('itemsArray')}
+					listItems={this.getDefaultBinding().toJS('itemsArray')}
 					handleClickItemCheckbox={(id: string) => this.handleClickItemCheckbox(id)}
 					handleClickSubmitButton={() => this.handleClickSubmitButton()}
 					handleClickCancelButton={this.props.handleClickCancelButton}
