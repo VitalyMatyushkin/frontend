@@ -8,9 +8,14 @@ import {Page} from "../page";
 export class UsersPage extends Page {
 	static readonly pagePath: string = '/#users/users';
 
+	private addUserButtonLocator = By.id('addUser_button');
+
 	constructor(driver: WebDriver, baseUrl: string) {
 		super(driver, baseUrl, UsersPage.pagePath);
 	}
 
+	clickAddUser() {
+		return this.driver.findElement(this.addUserButtonLocator).click();
+	}
 
 }

@@ -26,12 +26,10 @@ const TypeRadio = React.createClass({
 
 	},
 	render: function() {
-		const self = this;
-
-		self.bindToAutcomplete();
+		this.bindToAutcomplete();
 
 		return (
-			<RadioGroup sourcePromise={self.props.sourcePromise} binding={self.getDefaultBinding().sub('radio')} id={self.props.id}/>
+			<RadioGroup sourcePromise={this.props.sourcePromise} binding={this.getDefaultBinding().sub('radio')} id={this.props.id}/>
 		);
 	}
 });
