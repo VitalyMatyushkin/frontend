@@ -33,8 +33,8 @@ describe.only('superadmin users page', () => {
 		await userCreatePage.waitToBeOnPage();
 		await userCreatePage.setFirstName('John');
 		await userCreatePage.setLastName('TheTester');
-
-
+		await userCreatePage.setGender('MALE');
+		await userCreatePage.setPhone('+79039806797');
 
 		await userCreatePage.clickSubmit();
 	});

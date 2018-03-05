@@ -72,7 +72,7 @@ const RadioGroup = React.createClass({
 
 		if(binding.get('responseData')){
 			return binding.get('responseData').map( (dataBlock, index) => {
-				const inputHtmlId = htmlId ? htmlId + index : undefined;
+				const inputHtmlId = htmlId ? `${htmlId}_${index}` : undefined;
 				return (
 					<label key={index} onClick={() => { this.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label">
 						<input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id} id={inputHtmlId}/>
