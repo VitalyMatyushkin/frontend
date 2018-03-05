@@ -4,6 +4,14 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 		Morearty    = require('morearty'),
 		helper		= require('module/helpers/loader_utils');
 
+/**
+ * Note:
+ * seems like this input is completely broken. It seems like works, but during selenium tests it loses symbols.
+ * I think this is because of cursor position manipulations.
+ * Anyway I fix selenium-side with `slowTyper` function (yes, it performs input very very gently).
+ * But this component should be used with care.
+ */
+
 const TypePhone =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
     propTypes: {
