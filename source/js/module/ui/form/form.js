@@ -23,26 +23,27 @@ const   React       = require('react'),
 const Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSubmit: 			React.PropTypes.func,
-		onSuccess: 			React.PropTypes.func,
-		onError: 			React.PropTypes.func,
-		onCancel: 			React.PropTypes.func,
-		name: 				React.PropTypes.string,
-		defaultButton: 		React.PropTypes.string, // It should be name as defaultButtonText, stupid
-		rejectButtonText:   React.PropTypes.string,
-		loadingButton: 		React.PropTypes.string,
-		updateBinding: 		React.PropTypes.bool,
+		onSubmit: 			        React.PropTypes.func,
+		onSuccess: 			        React.PropTypes.func,
+		onError: 			        React.PropTypes.func,
+		onCancel: 			        React.PropTypes.func,
+		name: 				        React.PropTypes.string,
+		defaultButton: 		        React.PropTypes.string, // It should be name as defaultButtonText, stupid
+		rejectButtonText:           React.PropTypes.string,
+		loadingButton: 		        React.PropTypes.string,
+		updateBinding: 		        React.PropTypes.bool,
 		// False by default, if true, then browser doesn't save data for this field.
 		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
-		autoupdateOff: 		React.PropTypes.bool,
-		formStyleClass: 	React.PropTypes.string,
-		formButtonsClass: 	React.PropTypes.string,
-		formTitleClass: 	React.PropTypes.string,
-		submitOnEnter: 		React.PropTypes.bool, 	//submitting the form by pressing the Enter key
-		hideCancelButton: 	React.PropTypes.bool,
-		hideSubmitButton: 	React.PropTypes.bool,
-		submitButtonId:		React.PropTypes.string,	// html id of submit button
-		cancelButtonId:		React.PropTypes.string 	// html id of cancel button
+		autoupdateOff: 		        React.PropTypes.bool,
+		formStyleClass: 	        React.PropTypes.string,
+		formButtonsClass: 	        React.PropTypes.string,
+		formTitleClass: 	        React.PropTypes.string,
+		submitOnEnter: 		        React.PropTypes.bool, 	//submitting the form by pressing the Enter key
+		hideCancelButton: 	        React.PropTypes.bool,
+		hideSubmitButton: 	        React.PropTypes.bool,
+		submitButtonId:		        React.PropTypes.string,	// html id of submit button
+		cancelButtonId:		        React.PropTypes.string, 	// html id of cancel button
+		handleComponentDidMount:    React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		return {
@@ -67,6 +68,9 @@ const Form = React.createClass({
 		self._setDefaultValues();
 		binding.meta().set('buttonText', self.defaultButton);
 		self.busy = false;
+	},
+	componentDidMount: function () {
+		typeof this.props.handleComponentDidMount !== 'undefined' && this.props.handleComponentDidMount();
 	},
 
 	/**

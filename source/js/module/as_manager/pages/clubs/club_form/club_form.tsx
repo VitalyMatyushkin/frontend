@@ -111,7 +111,8 @@ export const ClubForm = (React as any).createClass({
 	 */
 	componentWillUnmount() {
 		const 	binding 			= this.getDefaultBinding(),
-				bindingFormData 	= binding.sub('form').meta().get().toJS(),
+				initStateOfForm 	= binding.toJS('initStateOfForm'),
+				currentStateOfForm 	= binding.sub('form').meta().get().toJS(),
 				isFormAlreadySend 	= typeof binding.toJS('isFormAlreadySend') !== 'undefined' ? binding.toJS('isFormAlreadySend') : false;
 
 		if(isFormAlreadySend){
@@ -119,17 +120,17 @@ export const ClubForm = (React as any).createClass({
 		} else {
 			let isFormChange = false;
 
-			for (let key in bindingFormData) {
+			for (let key in currentStateOfForm) {
 				switch (key){
 					case 'buttonText':
 						break;
 					case 'venue':
-						if (bindingFormData['venue']['placeId'].defaultValue !== bindingFormData['venue']['placeId'].value){
+						if (initStateOfForm['venue']['placeId'].value !== currentStateOfForm['venue']['placeId'].value){
 							isFormChange = true;
 						}
 						break;
 					default:
-						if (bindingFormData[key].defaultValue !== bindingFormData[key].value){
+						if (initStateOfForm[key].defaultValue !== currentStateOfForm[key].value){
 							isFormChange = true;
 						}
 						break;
@@ -138,11 +139,11 @@ export const ClubForm = (React as any).createClass({
 
 			if (isFormChange){
 				let dataToSubmit = {};
-				for (let key in bindingFormData) {
+				for (let key in currentStateOfForm) {
 					if (key === 'venue') {
-						propz.set(dataToSubmit, ['venue', 'placeId'], bindingFormData['venue']['placeId'].value);
+						propz.set(dataToSubmit, ['venue', 'placeId'], currentStateOfForm['venue']['placeId'].value);
 					} else {
-						dataToSubmit[key] = bindingFormData[key].value;
+						dataToSubmit[key] = currentStateOfForm[key].value;
 					}
 				}
 				window.confirmAlert(
@@ -160,6 +161,12 @@ export const ClubForm = (React as any).createClass({
 				);
 			}
 		}
+	},
+	saveInitStateOfForm() {
+		const binding = this.getDefaultBinding();
+		const bindingFormData = binding.sub('form').meta().get().toJS();
+
+		binding.set('initStateOfForm', Immutable.fromJS(bindingFormData));
 	},
 	isShowPriceNumberField() {
 		const metaPriceTypeField = this.getDefaultBinding().sub('form').meta().toJS('priceType');
@@ -179,6 +186,9 @@ export const ClubForm = (React as any).createClass({
 	},
 	getSelectedWeekDays() {
 		return this.getDefaultBinding().toJS('days');
+	},
+	handleFormComponentDidMount() {
+		this.saveInitStateOfForm();
 	},
 	handleSelectWeekDay(day: WeekDay) {
 		const binding = this.getDefaultBinding();
@@ -364,6 +374,7 @@ export const ClubForm = (React as any).createClass({
 						id 				= 'club_form'
 						formStyleClass  = { isActiveClub ? 'eForm_disabled' : ''}
 						hideSubmitButton= { isActiveClub }
+						handleComponentDidMount={() => this.handleFormComponentDidMount()}
 					>
 						<FormColumn
 							key			= 'column_1'

@@ -110,7 +110,24 @@ export const ClubChildrenEdit = (React as any).createClass({
 			});
 		}
 	},
-	isParticipantListChange: function(){
+	componentWillUnmount() {
+		const isParticipantListChange = this.isParticipantListChange();
+
+		if (isParticipantListChange) {
+			window.confirmAlert(
+				`Do you want to save the changes?`,
+				"Ok",
+				"Cancel",
+				() => this.saveChildren().then(() => this.removeListenersAndClearBinding()),
+				() => this.removeListenersAndClearBinding()
+			);
+		}
+	},
+	removeListenersAndClearBinding() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+		this.getDefaultBinding().clear();
+	},
+	isParticipantListChange() {
 		const 	prevParticipants 	= this.getDefaultBinding().toJS('prevParticipants'),
 				currentParticipants = this.getDefaultBinding().toJS('teamManager.teamStudents'),
 				isLengthEqual 		= prevParticipants.length === currentParticipants.length;
@@ -121,28 +138,6 @@ export const ClubChildrenEdit = (React as any).createClass({
 			})
 		});
 		return !isLengthEqual || !isAllParticipantsEqual;
-	},
-	componentWillUnmount() {
-
-
-		const isParticipantListChange = this.isParticipantListChange();
-
-		if (isParticipantListChange) {
-			window.confirmAlert(
-				`Do you want to save the changes?`,
-				"Ok",
-				"Cancel",
-				() => {
-					this.saveChildren();
-					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
-					this.getDefaultBinding().clear();
-				},
-				() => {
-					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
-					this.getDefaultBinding().clear();
-				}
-			);
-		}
 	},
 	addListeners() {
 		this.listeners.push(
