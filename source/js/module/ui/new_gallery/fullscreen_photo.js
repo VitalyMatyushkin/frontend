@@ -88,7 +88,7 @@ const FullscreenPhoto = React.createClass({
 	renderPhoto: function(photoStyle, arrowStyle) {
 		if(this.props.isShowArrowButtons) {
 			return (
-				<div	className	= 'eFullScreenPhoto_photo'
+				<div	className	= 'eFullScreenPhoto_photo bMain_photo'
 						style		= { photoStyle }
 				>
 					<div	className	= "eFullScreenPhoto_arrowLeft"
@@ -101,7 +101,7 @@ const FullscreenPhoto = React.createClass({
 							style		= { arrowStyle }
 					>
 					</div>
-					{this.state.isLoad ? <Loader/> : null}
+					<Loader/>
 				</div>
 			);
 		} else {
@@ -228,7 +228,7 @@ const FullscreenPhoto = React.createClass({
 					     onClick={this.handleClickClose}
 					>
 					</div>
-					<div className="eFullScreenPhoto_photoContainer"
+					<div className={`eFullScreenPhoto_photoContainer ${this.state.isLoad? "isLoading" : ""}`}
 					     onClick={this.handleClickPhoto}
 					     style={photoContainerStyle}
 					>
