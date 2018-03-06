@@ -43,9 +43,9 @@ const UserForm = React.createClass({
                 <FormField type="phone" field="phone" validation="required phone server" id="phone_input">Phone</FormField>
 				<FormField type="confirmText" field="email" validation="required email server" id="email_input">Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required" id="password_input">Password</FormField>
-				<FormField type="number" field="countOneTimeIosSessions">Count one time iOS sessions</FormField>
-				<FormField type="number" field="countOneTimeAndroidSessions">Count one time Android sessions</FormField>
-				<FormField type="number" field="countOneTimeWebSessions">Count one time Web sessions</FormField>
+				<FormField type="number" field="countOneTimeIosSessions" id='maxIosSessionCount_input'>Count one time iOS sessions</FormField>
+				<FormField type="number" field="countOneTimeAndroidSessions" id="maxAndroidSessionCount_input">Count one time Android sessions</FormField>
+				<FormField type="number" field="countOneTimeWebSessions" id="maxWebSessionCount_input">Count one time Web sessions</FormField>
 			</Form>
 		)
 	}

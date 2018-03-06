@@ -76,6 +76,10 @@ export class UserCreatePage extends Page {
 		return this.driver.findElement(this.passwordConfirmInputLocator).sendKeys(password);
 	}
 
+	setMaxIosSessionCount(n: number) {
+
+	}
+
 	clickSubmit() {
 		return this.driver.findElement(this.submitButtonLocator).click();
 	}

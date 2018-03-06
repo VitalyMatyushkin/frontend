@@ -46,6 +46,8 @@ describe.only('superadmin users page', () => {
 		await userCreatePage.setPasswordConfirmation(userPassword);
 
 		await userCreatePage.clickSubmit();
+
+		true;
 	});
 
 
