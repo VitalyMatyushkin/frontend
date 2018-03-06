@@ -27,6 +27,6 @@ export function getDefaultPassword(): string {
 }
 
 export function getRandomPhone() {
-	const suffix = '' + Date.now() + makeId(5);
+	const suffix = '' + Date.now() + makeId(5, numeric);
 	return '+7900000000000#' + suffix;
 }
