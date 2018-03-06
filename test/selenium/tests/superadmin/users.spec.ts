@@ -4,6 +4,7 @@ import {DriverFactory} from "../../tools/driver_factory";
 import {LoginPage} from "../../pages/superadmin/login_page";
 import {UsersPage} from "../../pages/superadmin/users_page";
 import {UserCreatePage} from "../../pages/superadmin/user_create_page";
+import {getRandomEmail, getDefaultPassword, getRandomPhone} from "../../tools/data_factory";
 
 /**
  * Created by wert on 04.03.2018
@@ -26,6 +27,10 @@ describe.only('superadmin users page', () => {
 				usersPage		= new UsersPage(driver, baseUrl),
 				userCreatePage	= new UserCreatePage(driver, baseUrl);
 
+		const	userEmail		= getRandomEmail(),
+				userPassword	= getDefaultPassword(),
+				userPhone		= getRandomPhone();
+
 		await loginPage.login(login, password);
 		await usersPage.waitToBeOnPage();
 		await usersPage.clickAddUser();
@@ -34,7 +39,11 @@ describe.only('superadmin users page', () => {
 		await userCreatePage.setFirstName('John');
 		await userCreatePage.setLastName('TheTester');
 		await userCreatePage.setGender('MALE');
-		await userCreatePage.setPhone('+79039806797');
+		await userCreatePage.setPhone(userPhone);
+		await userCreatePage.setEmail(userEmail);
+		await userCreatePage.setEmailConfirmation(userEmail);
+		await userCreatePage.setPassword(userPassword);
+		await userCreatePage.setPasswordConfirmation(userPassword);
 
 		await userCreatePage.clickSubmit();
 	});

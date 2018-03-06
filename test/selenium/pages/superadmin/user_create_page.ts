@@ -15,6 +15,11 @@ export class UserCreatePage extends Page {
 	private femaleGenderInputLocator	= By.id('gender_input_1');
 	private phonePrefixLocator			= By.id('select_phone_prefix');
 	private phoneInputLocator			= By.id('phone_input');
+	private emailInputLocator			= By.id('email_input');
+	private emailConfirmInputLocator	= By.id('email_input_2');
+	private passwordInputLocator		= By.id('password_input');
+	private passwordConfirmInputLocator	= By.id('password_input_2');
+
 
 	private submitButtonLocator			= By.id('createUser_submit');
 	private cancelButtonLocator			= By.id('createUser_cancel');
@@ -46,6 +51,29 @@ export class UserCreatePage extends Page {
 			await this.driver.findElement(By.css('#select_phone_prefix>option[value=\'+7\']')).click();
 			return slowTyper(this.driver, this.driver.findElement(this.phoneInputLocator), phoneBody);
 		}
+
+		if(fullPhone.startsWith('+44')) {
+			const phoneBody = fullPhone.substr('+44'.length);
+
+			await this.driver.findElement(By.css('#select_phone_prefix>option[value=\'+44\']')).click();
+			return slowTyper(this.driver, this.driver.findElement(this.phoneInputLocator), phoneBody);
+		}
+	}
+
+	setEmail(email: string) {
+		return this.driver.findElement(this.emailInputLocator).sendKeys(email);
+	}
+
+	setEmailConfirmation(email: string) {
+		return this.driver.findElement(this.emailConfirmInputLocator).sendKeys(email);
+	}
+
+	setPassword(password: string) {
+		return this.driver.findElement(this.passwordInputLocator).sendKeys(password);
+	}
+
+	setPasswordConfirmation(password: string) {
+		return this.driver.findElement(this.passwordConfirmInputLocator).sendKeys(password);
 	}
 
 	clickSubmit() {
