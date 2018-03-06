@@ -1,9 +1,9 @@
 const 	React		= require('react'),
 		Morearty	= require('morearty');
 
-const	Calendar		= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/calendar'),
-		Challenges		= require('module/ui/challenges/challenges'),
-		AddEventButton	= require('module/as_manager/pages/events/calendar/add_event_button');
+const	Calendar			= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/calendar'),
+		Challenges			= require('module/ui/challenges/challenges'),
+		{AddEventButton}	= require('module/as_manager/pages/events/calendar/add_event_button');
 
 const	CalendarActions	= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/actions');
 
