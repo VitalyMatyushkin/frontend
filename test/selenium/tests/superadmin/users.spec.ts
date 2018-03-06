@@ -45,10 +45,12 @@ describe.only('superadmin users page', () => {
 		await userCreatePage.setEmailConfirmation(userEmail);
 		await userCreatePage.setPassword(userPassword);
 		await userCreatePage.setPasswordConfirmation(userPassword);
-
 		await userCreatePage.clickSubmit();
 
 		await usersPage2.waitToBeOnPage();
+		await usersPage2.clickFilterButton();
+
+		true;
 	});
 
 

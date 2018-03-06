@@ -35,14 +35,14 @@ export class ActionPanel extends React.Component<ActionPanelProps, ActionPanelSt
         const {model} = this.props;
 
         const optTitle = !!model.title ? <h1 className="eTitle">{model.title}</h1> : null;
-        const optStrip = !!model.showStrip ? <div className="eStrip"></div> : null;
+        const optStrip = !!model.showStrip ? <div className="eStrip"/> : null;
         const optAddButton = !!model.btnAdd ? model.btnAdd : null;
         const optCsvButton = this.isShowCSVButtonExport() ? model.btnCSVExport : null;
 
         let optFilter = null;
         if(!model.hideBtnFilter) {
             optFilter = (
-                <div className="filter_btn bTooltip" data-description="Filter" onClick={e => this.toggleFilters(e)}>
+                <div className="filter_btn bTooltip" data-description="Filter" onClick={e => this.toggleFilters(e)} id="gridFilter_button">
                     <SVG icon="icon_search"/> {model.isFilterActive ? '↑' : '↓'}
                 </div>
             );
