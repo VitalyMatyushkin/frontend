@@ -16,7 +16,8 @@ export interface ClubChildrenEditNotificationListPopupProps {
 
 export class ClubChildrenEditNotificationListPopup extends React.Component<ClubChildrenEditNotificationListPopupProps, {}> {
 	isOkButtonDisabled() {
-		return this.props.listItems.length === 0;
+		return this.props.listItems.length === 0 ||
+			this.props.listItems.filter(item => item.checked).length === 0;
 	}
 	renderPopupBody() {
 		if(this.props.listItems.length === 0) {

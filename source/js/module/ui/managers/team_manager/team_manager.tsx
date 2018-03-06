@@ -401,6 +401,7 @@ export const TeamManager = (React as any).createClass({
 		return (
 			<div className='bTeamManager'>
 				<Team
+					isClubPage                      = { this.props.isClubPage }
 					isNonTeamSport					= { this.props.isNonTeamSport }
 					players							= { binding.toJS('teamStudents') }
 					positions						= { binding.toJS('positions') }

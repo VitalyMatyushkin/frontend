@@ -11,7 +11,11 @@ export class ClubsChildrenEditHeader extends React.Component<{}, {}> {
 				<h2>
 					Edit children
 				</h2>
-				{ ClubChildrenEditHelper.TEXT.map(text => <p>{text}</p>) }
+				{
+					ClubChildrenEditHelper.TEXT.map((text, index) =>
+						<p key={`cub_children_edit_header_text_${index}`}>{text}</p>
+					)
+				}
 			</div>
 		);
 	}
