@@ -17,17 +17,25 @@ const PhotoStrip = React.createClass({
 		handleClickDeletePhoto:			React.PropTypes.func,
 		handleClickPhoto:				React.PropTypes.func,
 		accessMode:						React.PropTypes.string.isRequired,
-		isUploadingPhoto:				React.PropTypes.bool
+		isUploadingPhoto:				React.PropTypes.bool,
+		isLoading:				        React.PropTypes.bool
 	},
 	getInitialState: function() {
 		return {
 			currentPhoto:0
 		};
 	},
+	componentDidUpdate(prevProps) {
+		if (prevProps.photos !== this.props.photos) {
+			const indexForScrolling = this.props.photos.length - Math.floor(LAYOUT_WIDTH/PHOTO_WIDTH);
+			this.setState({
+				currentPhoto: indexForScrolling > 0 ? indexForScrolling : 0
+			});
+		}
+	},
 	renderPhotos: function() {
-
 		const photos = this.props.photos.map( photo =>
-			<PreviewPhoto	key								= { photo.id }
+			<PreviewPhoto	 key							= { photo.id }
 							 id								= { photo.id }
 							 url							= { photo.picUrl }
 							 accessMode						= { this.props.accessMode }
@@ -36,15 +44,13 @@ const PhotoStrip = React.createClass({
 							 PhotoWidth 					= { PHOTO_WIDTH }
 			/>);
 
-
-		if (this.props.isUploadingPhoto) {
+		if (this.props.isLoading) {
 			photos.push(
 				<div className="bLoaderPreviewPhoto">
 					<Loader condition={true} />
 				</div>
 			);
 		}
-
 		return photos;
 	},
 	onLeft:function(){
@@ -67,20 +73,20 @@ const PhotoStrip = React.createClass({
 	},
 	render: function() {
 		const 	countPhotos = this.props.photos && this.props.photos.length,
-			widthStrip 	= this.props.isUploadingPhoto ? (countPhotos + 1) * PHOTO_WIDTH : countPhotos * PHOTO_WIDTH,
-			offset = this.state.currentPhoto*PHOTO_WIDTH,
-			margin = offset + LAYOUT_WIDTH <= widthStrip || offset === 0 ? -offset : LAYOUT_WIDTH - widthStrip,
-			style 		= {width:widthStrip, marginLeft:margin},
-			lBtnClasses = classNames({
-				eArrow:true,
-				mLeft:true,
-				mHidden: offset === 0
-			}),
-			rBtnClasses = classNames({
-				eArrow:true,
-				mRight:true,
-				mHidden: LAYOUT_WIDTH > widthStrip || margin !== -offset
-			});
+				widthStrip 	= this.props.isLoading ? (countPhotos + 1) * PHOTO_WIDTH : countPhotos * PHOTO_WIDTH,
+				offset = this.state.currentPhoto*PHOTO_WIDTH,
+				margin = offset + LAYOUT_WIDTH <= widthStrip || offset === 0 ? -offset : LAYOUT_WIDTH - widthStrip,
+				style 		= {width:widthStrip, marginLeft:margin},
+				lBtnClasses = classNames({
+					eArrow:true,
+					mLeft:true,
+					mHidden: offset === 0
+				}),
+				rBtnClasses = classNames({
+					eArrow:true,
+					mRight:true,
+					mHidden: LAYOUT_WIDTH > widthStrip || margin !== -offset
+				});
 
 			return (
 				<div>

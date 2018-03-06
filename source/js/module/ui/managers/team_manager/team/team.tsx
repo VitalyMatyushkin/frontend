@@ -7,6 +7,8 @@ import '../../../../../../styles/ui/mangers/b_team.scss';
 import {Position} from "./playerPositionsColumn";
 
 export interface TeamProps {
+	// TODO it's wrong way. we need a new type for team component. but time is a money.
+	isClubPage?:                     boolean
 	players:						PlayerStruct[]
 	positions:						Position[]
 	handleClickPlayer:				(playerId: string) => void
@@ -50,8 +52,23 @@ export class Team extends React.Component<TeamProps, {}> {
 		);
 	}
 
+	renderClubTableHead() {
+		return (
+			<thead>
+			<tr>
+				<th>#</th>
+				<th className='col-md-4'>Name</th>
+				<th className='col-md-4'>Form</th>
+				<th className='col-md-4'>Invitation Status</th>
+			</tr>
+			</thead>
+		);
+	}
+
 	renderTableHead() {
-		if(this.props.isNonTeamSport) {
+		if(typeof this.props.isClubPage === 'boolean' && this.props.isClubPage) {
+			return this.renderClubTableHead()
+		} else if(this.props.isNonTeamSport) {
 			return this.renderNonTeamTableHead();
 		} else {
 			return this.renderTeamTableHead();
@@ -71,6 +88,7 @@ export class Team extends React.Component<TeamProps, {}> {
 
 		playersViewArray = playersViewArray.concat(players.map((player, index) =>
 			<Player
+				isClubPage                  = {this.props.isClubPage}
 				number						= {index + 1}
 				key							= {player.id}
 				isNonTeamSport				= {this.props.isNonTeamSport}

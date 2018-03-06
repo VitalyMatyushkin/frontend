@@ -61,6 +61,7 @@ const Users = React.createClass({
 								userPermissionsBinding	= {binding.sub('groupPermissions')}
 								onSuccess			    = {this.handleSuccess}
 								handleClickCancel	    = {this.closePopup}
+								canAcceptStaffRoles 	= {this.props.canAcceptStaffRoles}
 					/>
 				</ConfirmPopup>
 			);

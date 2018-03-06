@@ -72,6 +72,12 @@
   .bTeam {
     width: 225px;
   }
+
+  .bTeamBundle {
+    .bTeam {
+      width: 300px;
+    }
+  }
 }
 
 @media screen and (max-width:1130px) {

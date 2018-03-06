@@ -379,7 +379,7 @@ const SportsForm = React.createClass({
 		data.performance.value.splice(id, 1);
 		binding.meta().set('performance', Immutable.fromJS(data.performance));
 	},
-	onSelectPlayers: function () {
+	onSelectPlayers: function (value) {
 		const 	binding 			= this.getDefaultBinding(),
 				isPresenceOnly		= binding.meta().get('pointsDisplay.value') === SportsHelpers.pointsDisplayServerToClientMap['PRESENCE_ONLY'],
 				isIndividualType 	= binding.meta().get('players.value') === 'Individual';
@@ -387,6 +387,9 @@ const SportsForm = React.createClass({
 		if (!isIndividualType && isPresenceOnly) {
 			binding.meta().set('pointsDisplay.value', 'plain');
 		}
+		binding.meta().set('players.value', value);
+
+		return value;
 	},
 	render: function() {
 		const 	self    					= this,

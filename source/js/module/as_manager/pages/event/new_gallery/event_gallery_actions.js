@@ -35,7 +35,7 @@ function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 			}
 		)
 	}).then(() => {
-		binding.set('isUploading', false)
+		binding.set('isUploading', false);
 		return getPhotosForEvent(role, binding, schoolId, eventId);	// and reloading all photos
 	});
 }

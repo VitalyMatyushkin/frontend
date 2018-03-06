@@ -131,6 +131,7 @@ export class Gallery extends React.Component<GalleryProps, GalleryState> {
 				    handleClickPhoto={this.handleClickPhoto.bind(this)}
 				    accessMode={this.props.accessMode}
 				    isUploadingPhoto={this.props.isUploadingPhoto}
+				    isLoading={this.props.isLoading}
 			    />
 		    )
 	    } else {

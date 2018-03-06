@@ -47,3 +47,9 @@
     color: #ea5a00;
   }
 }
+
+@media screen and (max-width: 1024px) {
+  .bTeamName {
+    width: 590px;
+  }
+}

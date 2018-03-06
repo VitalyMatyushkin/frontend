@@ -113,8 +113,8 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 		image.onload = () => {
 			// setState will redraw layer
 			// because "image" property is changed
-			const   iconX = this.state.imgWidth/2 - this.widthIcon,
-					iconY = this.state.imgHeight/2 - this.widthIcon,
+			const   iconX = this.state.imgWidth/2 - this.widthIcon/2,
+					iconY = this.state.imgHeight/2 - this.widthIcon/2,
 					anchors = [ {name: 'topLeft', x: iconX, y: iconY},
 								{name: 'topRight', x:  this.widthIcon+iconX, y: iconY},
 								{name: 'bottomRight', x:  this.widthIcon+iconX, y:  this.widthIcon+iconY},

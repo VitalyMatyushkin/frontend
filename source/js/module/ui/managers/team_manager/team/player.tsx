@@ -3,20 +3,25 @@ import {PlayerPositionsColumn, Position} from './playerPositionsColumn';
 import {PlayerSubColumn} from './playerSubColumn';
 import {PlayerIsCaptainColumn} from './playerIsCaptainColumn';
 import * as classNames from 'classnames';
+import {ClubsChildrenBookingHelper} from "module/as_manager/pages/clubs/clubs_children_booking/clubs_children_booking_helper/clubs_children_booking_helper";
 
 export interface PlayerStruct {
-    id:         string
-    positionId: string
-    isCaptain:  boolean
-    sub:        boolean
-    firstName:  string
-    lastName:   string
-    form?:      {
-        name:   string
-    }
+    id:             string
+    positionId:     string
+    isCaptain:      boolean
+    sub:            boolean
+    firstName:      string
+    lastName:       string
+	messageStatus?: string
+	parents?:       any[]
+    form?:          {
+                        name:   string
+                    }
 }
 
 export interface PlayerProps {
+	// TODO it's wrong way. we need a new type for team component. but time is a money.
+	isClubPage?:                 boolean
     isNonTeamSport:				boolean
     number:						number
     player:						PlayerStruct
@@ -37,6 +42,30 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
         this.state = { isSelected: false };
     }
 
+	getMessageStatus() {
+		let messageStatus = '';
+
+		const player = this.props.player;
+
+		const serverValueMessageStatus = player.messageStatus;
+		switch (true) {
+			case (
+				serverValueMessageStatus === 'NOT_SENT' &&
+				(typeof player.parents === 'undefined' || player.parents.length === 0)
+			): {
+				messageStatus = 'N/A';
+				break;
+			}
+			case typeof player.messageStatus !== 'undefined': {
+				messageStatus = ClubsChildrenBookingHelper.getClientMessageStatusValueByServerValue(player.messageStatus);
+				break;
+			}
+		}
+
+
+		return messageStatus;
+	}
+
     handlePlayerClick() {
         this.setState({
             isSelected: !this.state.isSelected
@@ -56,14 +85,27 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
         this.props.handleClickPlayerIsCaptain(this.props.player.id, isCaptain);
     }
 
+	renderInvitationStatus() {
+        if(typeof this.props.isClubPage === 'boolean' && this.props.isClubPage) {
+	        return (
+		        <td className="col-md-4">
+			        {this.getMessageStatus()}
+		        </td>
+	        );
+        } else {
+            return null;
+        }
+    }
+
     renderPositions() {
         if(this.props.isNonTeamSport) {
             return null;
         } else {
             return (
-                <PlayerPositionsColumn	positions					= {this.props.positions}
-                                          selectedPositionId			= {this.props.player.positionId}
-                                          handleChangePlayerPosition	= {newPositionId => this.handleChangePlayerPosition(newPositionId)}
+                <PlayerPositionsColumn
+	                positions					= {this.props.positions}
+                    selectedPositionId			= {this.props.player.positionId}
+                    handleChangePlayerPosition	= {newPositionId => this.handleChangePlayerPosition(newPositionId)}
                 />
             );
         }
@@ -124,6 +166,7 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
                 <td className = { playerFormClass } >
                     { player.form ? player.form.name : ""}
                 </td>
+	            { this.renderInvitationStatus() }
                 { this.renderPositions() }
                 { this.renderIsCaptain() }
                 { this.renderSub() }

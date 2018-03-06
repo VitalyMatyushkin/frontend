@@ -19,8 +19,9 @@ import {ClubsChildrenBookingActionArea} from 'module/as_manager/pages/clubs/club
 import {ClubsActions} from 'module/as_manager/pages/clubs/clubs_actions'
 import {ServiceList} from "module/core/service_list/service_list";
 import {Sport} from "module/models/sport/sport";
-import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup_wrapper";
+import {ClubChildrenEditNotificationListPopupWrapper} from "module/as_manager/pages/clubs/club_children_edit/club_children_edit_notification_list_popup/club_children_edit_notification_list_popup_wrapper";
 import {Item} from "module/ui/checkbox_list/models/item";
+import {ClubsHelper} from "module/as_manager/pages/clubs/clubs_helper";
 
 const	LoaderStyle					= require('styles/ui/loader.scss');
 const	ClubcChildrenWrapperStyle	= require('styles/pages/b_club_children_manager_wrapper.scss');
@@ -41,7 +42,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 
 		const clubId = this.props.clubId;
 
-		let club, school, participants;
+		let club, school, originParticipants, preparedParticipants;
 
 		binding.set('isSync', false);
 		if (typeof clubId !== 'undefined') {
@@ -82,9 +83,14 @@ export const ClubChildrenEdit = (React as any).createClass({
 				);
 			})
 			.then(_participants => {
-				participants = _participants;
+				originParticipants = _participants;
 
-				binding.set('prevParticipants', Immutable.fromJS(participants));
+				return ClubsActions.getAcceptableUsers(this.props.activeSchoolId, clubId);
+			})
+			.then(acceptableUsers => {
+				preparedParticipants = this.getPreparedParticipantsByAcceptableUsers(originParticipants, acceptableUsers);
+
+				binding.set('prevParticipants', Immutable.fromJS(preparedParticipants));
 				
 				const filter = { filter: { where: { isAllSports: true } } };
 
@@ -100,7 +106,7 @@ export const ClubChildrenEdit = (React as any).createClass({
 				binding.set(
 					'teamManager',
 					Immutable.fromJS(
-						this.getTeamManagerDefaultState(school, club, sport, participants)
+						this.getTeamManagerDefaultState(school, club, sport, preparedParticipants)
 					)
 				);
 				binding.set('isShowNotificationListPopup', false);
@@ -110,7 +116,26 @@ export const ClubChildrenEdit = (React as any).createClass({
 			});
 		}
 	},
-	isParticipantListChange: function(){
+	getPreparedParticipantsByAcceptableUsers(originParticipants, acceptableUsers) {
+		return originParticipants.map(participant => {
+			const preparedParticipant = Object.assign({}, participant);
+
+			const foundUser = acceptableUsers.find(user => participant.userId === user.id &&
+				participant.permissionId === user.permissionId)
+			
+			if(typeof foundUser !== 'undefined') {
+				preparedParticipant.messageStatus = foundUser.messageStatus;
+				preparedParticipant.parents = foundUser.parents;
+			}
+
+			return preparedParticipant;
+		});
+	},
+	removeListenersAndClearBinding() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+		this.getDefaultBinding().clear();
+	},
+	isParticipantListChange() {
 		const 	prevParticipants 	= this.getDefaultBinding().toJS('prevParticipants'),
 				currentParticipants = this.getDefaultBinding().toJS('teamManager.teamStudents'),
 				isLengthEqual 		= prevParticipants.length === currentParticipants.length;
@@ -121,28 +146,6 @@ export const ClubChildrenEdit = (React as any).createClass({
 			})
 		});
 		return !isLengthEqual || !isAllParticipantsEqual;
-	},
-	componentWillUnmount() {
-
-
-		const isParticipantListChange = this.isParticipantListChange();
-
-		if (isParticipantListChange) {
-			window.confirmAlert(
-				`Do you want to save the changes?`,
-				"Ok",
-				"Cancel",
-				() => {
-					this.saveChildren();
-					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
-					this.getDefaultBinding().clear();
-				},
-				() => {
-					this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
-					this.getDefaultBinding().clear();
-				}
-			);
-		}
 	},
 	addListeners() {
 		this.listeners.push(
@@ -335,6 +338,32 @@ export const ClubChildrenEdit = (React as any).createClass({
 				.then(() => this.doAfterSaveActions());
 		}
 	},
+	handleClickCancelButton() {
+		switch (true) {
+			case this.isParticipantListChange(): {
+				window.confirmAlert(
+					`Do you want to save the changes?`,
+					"Ok",
+					"Cancel",
+					() => {
+						this.saveChildren().then(() => {
+							this.removeListenersAndClearBinding();
+							ClubsHelper.redirectToClubListPage();
+						});
+					},
+					() => {
+						this.removeListenersAndClearBinding();
+						ClubsHelper.redirectToClubListPage();
+					}
+				);
+				break;
+			}
+			default: {
+				this.removeListenersAndClearBinding();
+				ClubsHelper.redirectToClubListPage();
+			}
+		}
+	},
 	renderNotificationListPopup() {
 		if(this.getDefaultBinding().toJS('isShowNotificationListPopup')) {
 			return (
@@ -388,9 +417,15 @@ export const ClubChildrenEdit = (React as any).createClass({
 							}
 							playerChoosersTabsModel = { this.playerChoosersTabsModel }
 							actions					= { this.teamManagerActions }
+							isClubPage              = { true }
 						/>
 						{!isActiveClub ?
 							<div className="eClubChildrenManagerWrapper_footer">
+								<Button
+									text				= "Cancel"
+									onClick				= { () => this.handleClickCancelButton() }
+									extraStyleClasses   = { 'mCancel mMarginRight' }
+								/>
 								<Button
 									text				= "Save"
 									onClick				= { this.handleClickSubmitButton }

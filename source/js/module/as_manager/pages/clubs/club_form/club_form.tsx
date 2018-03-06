@@ -104,67 +104,42 @@ export const ClubForm = (React as any).createClass({
 			binding.set('isSync', true);
 		});
 	},
-	/**
-	 * When the user leaves the tab with the form, it is checked whether the fields changed their default values.
-	 * If changed and if the user has not yet sent them to the server, a dialog box will be called,
-	 * which will ask about saving the changes.
-	 */
-	componentWillUnmount() {
-		const 	binding 			= this.getDefaultBinding(),
-				bindingFormData 	= binding.sub('form').meta().get().toJS(),
-				isFormAlreadySend 	= typeof binding.toJS('isFormAlreadySend') !== 'undefined' ? binding.toJS('isFormAlreadySend') : false;
+	saveInitStateOfForm() {
+		const binding = this.getDefaultBinding();
+		const bindingFormData = binding.sub('form').meta().get().toJS();
 
-		if(isFormAlreadySend){
-			binding.clear();
-		} else {
-			let isFormChange = false;
-
-			for (let key in bindingFormData) {
-				switch (key){
-					case 'buttonText':
-						break;
-					case 'venue':
-						if (bindingFormData['venue']['placeId'].defaultValue !== bindingFormData['venue']['placeId'].value){
-							isFormChange = true;
-						}
-						break;
-					default:
-						if (bindingFormData[key].defaultValue !== bindingFormData[key].value){
-							isFormChange = true;
-						}
-						break;
-				}
-			}
-
-			if (isFormChange){
-				let dataToSubmit = {};
-				for (let key in bindingFormData) {
-					if (key === 'venue') {
-						propz.set(dataToSubmit, ['venue', 'placeId'], bindingFormData['venue']['placeId'].value);
-					} else {
-						dataToSubmit[key] = bindingFormData[key].value;
-					}
-				}
-				window.confirmAlert(
-					`Do you want to save the changes?`,
-					"Ok",
-					"Cancel",
-					() => {
-						propz.set(dataToSubmit, ['isNeedRedirect'], false);
-						this.props.onFormSubmit(dataToSubmit);
-						binding.clear();
-					},
-					() => {
-						binding.clear();
-					}
-				);
-			}
-		}
+		binding.set('initStateOfForm', Immutable.fromJS(bindingFormData));
 	},
 	isShowPriceNumberField() {
 		const metaPriceTypeField = this.getDefaultBinding().sub('form').meta().toJS('priceType');
 
 		return propz.get(metaPriceTypeField, ['value'], undefined) !== ClubsConst.PRICING.FREE;
+	},
+	isFormChange() {
+		const binding = this.getDefaultBinding();
+		const initStateOfForm = binding.toJS('initStateOfForm');
+		const currentStateOfForm = binding.sub('form').meta().get().toJS();
+
+		let isFormChange = false;
+
+		for (let key in currentStateOfForm) {
+			switch (key){
+				case 'buttonText':
+					break;
+				case 'venue':
+					if (initStateOfForm['venue']['placeId'].value !== currentStateOfForm['venue']['placeId'].value){
+						isFormChange = true;
+					}
+					break;
+				default:
+					if (initStateOfForm[key].defaultValue !== currentStateOfForm[key].value){
+						isFormChange = true;
+					}
+					break;
+			}
+		}
+
+		return isFormChange;
 	},
 	getDateObjectFromTime() {
 		const binding = this.getDefaultBinding();
@@ -179,6 +154,9 @@ export const ClubForm = (React as any).createClass({
 	},
 	getSelectedWeekDays() {
 		return this.getDefaultBinding().toJS('days');
+	},
+	handleFormComponentDidMount() {
+		this.saveInitStateOfForm();
 	},
 	handleSelectWeekDay(day: WeekDay) {
 		const binding = this.getDefaultBinding();
@@ -334,7 +312,27 @@ export const ClubForm = (React as any).createClass({
 			Immutable.fromJS(updStaff)
 		);
 	},
-	
+	handleClickCancelButton() {
+		switch (true) {
+			case this.isFormChange(): {
+				window.confirmAlert(
+					'Are you sure you want to leave?',
+					"Yes, leave",
+					"No",
+					() => {
+						this.getDefaultBinding().clear();
+						ClubsHelper.redirectToClubListPage();
+					},
+					() => {}
+				);
+				break;
+			}
+			default: {
+				this.getDefaultBinding().clear();
+				ClubsHelper.redirectToClubListPage();
+			}
+		}
+	},
 	render() {
 		const 	binding = this.getDefaultBinding(),
 				venue = binding.toJS('form.venue'),
@@ -355,15 +353,17 @@ export const ClubForm = (React as any).createClass({
 			form = (
 				<div className ="container">
 					<Form
-						name			= { this.props.title }
-						onSubmit		= { this.props.onFormSubmit }
-						binding			= { binding.sub('form') }
-						submitButtonId	= 'club_submit'
-						cancelButtonId	= 'club_cancel'
-						submitOnEnter 	= { false }
-						id 				= 'club_form'
-						formStyleClass  = { isActiveClub ? 'eForm_disabled' : ''}
-						hideSubmitButton= { isActiveClub }
+						id 				        = 'club_form'
+						name			        = { this.props.title }
+						onSubmit		        = { this.props.onFormSubmit }
+						onCancel                = { () => this.handleClickCancelButton() }
+						binding			        = { binding.sub('form') }
+						submitButtonId	        = 'club_submit'
+						cancelButtonId	        = 'club_cancel'
+						submitOnEnter 	        = { false }
+						formStyleClass          = { isActiveClub ? 'eForm_disabled' : ''}
+						hideSubmitButton        = { isActiveClub }
+						handleComponentDidMount = { () => this.handleFormComponentDidMount() }
 					>
 						<FormColumn
 							key			= 'column_1'
