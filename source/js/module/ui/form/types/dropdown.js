@@ -50,9 +50,7 @@ const TypeDropDown = React.createClass({
 		if (value === NULL_STRING) {
 			binding.set('value', null);
 		} else {
-			if(
-				typeof this.props.onSelect !== 'undefined'
-			) {
+			if (typeof this.props.onSelect !== 'undefined') {
 				const result = this.props.onSelect(value);
 				if(result) {
 					this.setValue(value);
