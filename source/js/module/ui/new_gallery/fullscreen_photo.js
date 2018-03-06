@@ -149,7 +149,11 @@ const FullscreenPhoto = React.createClass({
 			.then( picUrl => {
 				return this.props.handleChangePicData({picUrl})
 			})
-			.then(() => this.setState({addIconMode: false, isLoad: false}));
+			.then(() => {
+			if (!this.props.isUploadingPhoto) {
+				this.setState({addIconMode: false, isLoad: false})
+				}
+			});
 	},
 	handleClickDeletePhoto(e) {
 		this.setState({isLoad: true});

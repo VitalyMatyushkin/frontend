@@ -28,13 +28,15 @@ interface PhotoAddComponentProps {
 }
 
 interface PhotoAddComponentState {
-	fileImage: string
+	fileImage: string,
+	imageOriginSize: any,
+	imageShowSize: any
 }
 
 export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, PhotoAddComponentState> {
 	constructor(props) {
 		super(props);
-		this.state = {fileImage: ''};
+		this.state = {fileImage: '', imageOriginSize: {width: 0, height: 0},  imageShowSize: {width: 0, height: 0}};
 	}
 	
 	onCancelButtonClick(): void {
@@ -72,6 +74,9 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 	}
 	
 	onImageLoaded(crop: PixelCrop, image: any, pixelCrop: PixelCrop): void {
+		this.setState({
+			imageShowSize: {width: image.width, height: image.height}
+		});
 		this.resizeCanvas(crop, pixelCrop);
 	}
 	
@@ -81,10 +86,13 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 		
 		(canvas as any).width = pixelCrop.width;
 		(canvas as any).height = pixelCrop.height;
-		
+
+		const   ratioX = this.state.imageOriginSize.width/this.state.imageShowSize.width,
+				ratioY = this.state.imageOriginSize.height/this.state.imageShowSize.height;
+
 		(canvas as any)
 			.getContext("2d")
-			.drawImage(imageObject, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
+			.drawImage(imageObject, pixelCrop.x*ratioX, pixelCrop.y*ratioY, pixelCrop.width*ratioX, pixelCrop.height*ratioY, 0, 0, pixelCrop.width, pixelCrop.height);
 	}
 	
 	onInputFileImageChange(event): void {
@@ -98,9 +106,14 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 		const reader = new (window as any).FileReader();
 		
 		reader.onload = (eventOnLoad) => {
-			this.setState({
-				fileImage: eventOnLoad.target.result
-			});
+			const image = new Image();
+			image.src = eventOnLoad.target.result;
+			image.onload = () => {
+				this.setState({
+					imageOriginSize: {width: image.width, height: image.height},
+					fileImage: eventOnLoad.target.result
+				});
+			};
 		};
 		
 		reader.readAsDataURL(file);
