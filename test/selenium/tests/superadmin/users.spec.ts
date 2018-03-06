@@ -25,6 +25,7 @@ describe.only('superadmin users page', () => {
 	it('should be able to add new user', async () => {
 		const	loginPage		= new LoginPage(driver, baseUrl),
 				usersPage		= new UsersPage(driver, baseUrl),
+				usersPage2		= new UsersPage(driver, baseUrl, '/#users'),	// this is because of shitty routing
 				userCreatePage	= new UserCreatePage(driver, baseUrl);
 
 		const	userEmail		= getRandomEmail(),
@@ -47,7 +48,7 @@ describe.only('superadmin users page', () => {
 
 		await userCreatePage.clickSubmit();
 
-		true;
+		await usersPage2.waitToBeOnPage();
 	});
 
 

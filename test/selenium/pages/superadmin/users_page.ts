@@ -10,8 +10,8 @@ export class UsersPage extends Page {
 
 	private addUserButtonLocator = By.id('addUser_button');
 
-	constructor(driver: WebDriver, baseUrl: string) {
-		super(driver, baseUrl, UsersPage.pagePath);
+	constructor(driver: WebDriver, baseUrl: string, pagePath: string = UsersPage.pagePath) {
+		super(driver, baseUrl, pagePath);
 	}
 
 	clickAddUser() {

@@ -9,17 +9,19 @@ import {slowTyper} from "../../tools/slow_typer";
 export class UserCreatePage extends Page {
 	static readonly pagePath: string = '/#users/admin_views/create_user';
 
-	private firstNameInputLocator		= By.id('firstname_input');
-	private lastNameInputLocator		= By.id('lastname_input');
-	private maleGenderInputLocator		= By.id('gender_input_0');
-	private femaleGenderInputLocator	= By.id('gender_input_1');
-	private phonePrefixLocator			= By.id('select_phone_prefix');
-	private phoneInputLocator			= By.id('phone_input');
-	private emailInputLocator			= By.id('email_input');
-	private emailConfirmInputLocator	= By.id('email_input_2');
-	private passwordInputLocator		= By.id('password_input');
-	private passwordConfirmInputLocator	= By.id('password_input_2');
-
+	private firstNameInputLocator				= By.id('firstname_input');
+	private lastNameInputLocator				= By.id('lastname_input');
+	private maleGenderInputLocator				= By.id('gender_input_0');
+	private femaleGenderInputLocator			= By.id('gender_input_1');
+	private phonePrefixLocator					= By.id('select_phone_prefix');
+	private phoneInputLocator					= By.id('phone_input');
+	private emailInputLocator					= By.id('email_input');
+	private emailConfirmInputLocator			= By.id('email_input_2');
+	private passwordInputLocator				= By.id('password_input');
+	private passwordConfirmInputLocator			= By.id('password_input_2');
+	private maxIosSessionCountInputLocator		= By.id('maxIosSessionCount_input');
+	private maxAndroidSessionCountInputLocator	= By.id('maxAndroidSessionCount_input');
+	private maxWebSessionCountInputLocator		= By.id('maxWebSessionCount_input');
 
 	private submitButtonLocator			= By.id('createUser_submit');
 	private cancelButtonLocator			= By.id('createUser_cancel');
@@ -77,7 +79,15 @@ export class UserCreatePage extends Page {
 	}
 
 	setMaxIosSessionCount(n: number) {
+		return this.driver.findElement(this.maxIosSessionCountInputLocator).sendKeys(n);
+	}
 
+	setMaxAndroidSessionCount(n: number) {
+		return this.driver.findElement(this.maxAndroidSessionCountInputLocator).sendKeys(n);
+	}
+
+	setMaxWebSessionCount(n: number) {
+		return this.driver.findElement(this.maxWebSessionCountInputLocator).sendKeys(n);
 	}
 
 	clickSubmit() {
