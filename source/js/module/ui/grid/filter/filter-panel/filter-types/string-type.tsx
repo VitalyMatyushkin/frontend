@@ -5,7 +5,14 @@
 import * as React from 'react';
 
 export interface FilterStringTypeProps {
-    filterField: any
+    filterField: {
+    	id: string
+    	getBadge: () => any,
+		onChange: (value: any) => any,
+		field: {
+    		text: string
+		}
+	}
 }
 
 interface FilterStringTypeState {

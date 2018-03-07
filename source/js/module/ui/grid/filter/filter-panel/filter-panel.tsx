@@ -5,9 +5,13 @@
 import {FilterField} from './filter-field';
 import {BadgeArea} from './badge-area';
 import * as	React from 'react';
+import {BadgeAreaModel} from "module/ui/grid/filter/model/badge-area-model";
 
 export interface FilterPanelProps {
-    model: any
+    model: {
+    	badgeArea: BadgeAreaModel,
+		filterFields: any[]
+	}
 }
 
 export class FilterPanel extends React.Component<FilterPanelProps, {}> {

@@ -31,41 +31,40 @@ const FormField = React.createClass({
 		return typeof error === 'string' ? error.toLowerCase() : '';
 	},
 	render: function () {
-		const 	self 	= this,
-				binding = self.getDefaultBinding(),
+		const	binding = this.getDefaultBinding(),
                 success = '&#x2713;',
                 error   = '&#x26a0;',
                 html    = {__html: binding.get('showError') ? error : success};
 
 		/* collectin all own props and adding some more additional component-specific */
-		const inputProps = Object.assign({}, self.props, {
-			name: 		self.props.children || self.props.field,
-			service: 	self.props.service,
+		const inputProps = Object.assign({}, this.props, {
+			name: 		this.props.children || this.props.field,
+			service: 	this.props.service,
 			binding: 	binding
 		});
 
 		/* creating new input with built props */
-		const inputField = React.createElement(typeList[self.props.type], inputProps);
+		const inputField = React.createElement(typeList[this.props.type], inputProps);
 
 		const fieldStyleClass = classNames('eForm_field',
-			self.props.classNames, {
+			this.props.classNames, {
 				mInvalid: binding.get('showError'),
 				mValid: binding.get('showSuccess'),
 				mInvisible: !this.props.isVisible
 			});
 		//If a specific class has been provided for styling error messages then use it
-		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName),
-			  errorIconClass = classNames("eForm_fieldValidIcon", self.props.errorClassName);
+		const errorClassName = classNames("eForm_fieldValidText", this.props.errorClassName),
+			  errorIconClass = classNames("eForm_fieldValidIcon", this.props.errorClassName);
 
 		/** props.condition === true or undefined */
-		if(self.props.condition || typeof self.props.condition === 'undefined'){
+		if(this.props.condition || typeof this.props.condition === 'undefined'){
 			binding.set('active', true);
 			return (
 				<div className={fieldStyleClass}>
-					<div className="eForm_fieldName">{self.props.children}
+					<div className="eForm_fieldName">{this.props.children}
 						<span className={errorClassName}>{this.getErrorText()}</span>
 					</div>
-					<div className={classNames("eForm_fieldSet", self.props.fieldClassName)}>
+					<div className={classNames("eForm_fieldSet", this.props.fieldClassName)}>
 						{inputField}
 						<div className={errorIconClass} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
 					</div>

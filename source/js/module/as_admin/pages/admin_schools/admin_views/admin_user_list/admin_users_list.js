@@ -21,10 +21,12 @@ const AdminUsersList = React.createClass({
 	},
 	
 	render:function(){
-		const	binding		= this.getDefaultBinding(),
-				addButton	= 	<div className="bButtonAdd bTooltip" onClick={this.adminCreateNewUser} data-description	= "Add user">
-									<SVG icon="icon_add_men" />
-								</div>;
+		const binding = this.getDefaultBinding();
+		const addButton	= (
+			<div id="addUser_button" className="bButtonAdd bTooltip" onClick={this.adminCreateNewUser} data-description="Add user">
+				<SVG icon="icon_add_men" />
+			</div>
+		);
 
 		return (
 			<UserList

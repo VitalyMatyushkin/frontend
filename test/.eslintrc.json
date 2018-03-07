@@ -55,7 +55,11 @@
 		"XMLHttpRequest":   true,
 		"MouseEvent":       true,
         "describe":         true,
-        "it":               true
+        "it":               true,
+        "before":           true,
+        "after":            true,
+        "beforeEach":       true,
+        "afterEach":        true
 	},
 	"env": {
       // we don't use browser env here. This is because some entries like "self" considered okay in browser env.

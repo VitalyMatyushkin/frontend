@@ -8,21 +8,18 @@ const 	TypeText 	= require('module/ui/form/types/text'),
 const TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		binding.addListener('defaultValue', function() {
-			var defaultValue = binding.get('defaultValue');
+		binding.addListener('defaultValue', () => {
+			const defaultValue = binding.get('defaultValue');
 
-			defaultValue && self._forceNewValue(defaultValue);
+			defaultValue && this._forceNewValue(defaultValue);
 		});
 	},
 	_forceNewValue: function(value) {
-		var self = this;
-
-		if (ReactDOM.findDOMNode(self.refs.confInput) && value) {
-			ReactDOM.findDOMNode(self.refs.confInput).value = value;
-			self.confirmValue = value;
+		if (ReactDOM.findDOMNode(this.refs.confInput) && value) {
+			ReactDOM.findDOMNode(this.refs.confInput).value = value;
+			this.confirmValue = value;
 		}
 	},
 	onSetValue: function() {
@@ -33,35 +30,31 @@ const TypeConfirmText = React.createClass({
         this.checkConfirm();
 	},
 	checkConfirm: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			error = binding.get('error');
+		const	binding	= this.getDefaultBinding(),
+				error	= binding.get('error');
 
 		// Проверку на совпадение полей делаем только в том случае, если нет других ошибок валидации
 		if (!error || error === errorText) {
 			binding.set('error', errorText);
 
-			if (self.confirmValue && binding.get('value') === self.confirmValue) {
+			if (this.confirmValue && binding.get('value') === this.confirmValue) {
                 binding.set('error', false);
-				self.hideError();
+				this.hideError();
 			}
 		}
 	},
 	render: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-			defaultValue = binding.get('defaultValue');
-
+		const confirmationInputHtmlId = this.props.id ? this.props.id + '_2' : undefined;
 		return (
 			<div className="eForm_confirmField">
 				<div className="eForm_fieldColumn">
-					<TypeText {...self.props} onSetValue={self.onSetValue} />
+					<TypeText {...this.props} onSetValue={this.onSetValue} />
 				</div>
 				<br />
 				<div className="eForm_fieldColumn">
-					<div className="eForm_fieldName eForm_fieldSmallHelp">Confirm {self.props.name.toLowerCase()}</div>
+					<div className="eForm_fieldName eForm_fieldSmallHelp">Confirm {this.props.name.toLowerCase()}</div>
 					<div className="eForm_fieldInput">
-						<input ref="confInput" type={self.props.textType || 'text'} onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
+						<input ref="confInput" type={this.props.textType || 'text'} onBlur={this.setConfirmValue} onChange={this.changeConfirmValue} id={confirmationInputHtmlId}/>
 					</div>
 				</div>
 			</div>

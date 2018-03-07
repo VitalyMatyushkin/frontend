@@ -2,22 +2,19 @@ const 	React 		= require('react'),
 		ReactDOM 	= require('react-dom'),
 		Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
-	{If}			= require('module/ui/if/if');
+		{If}		= require('module/ui/if/if');
 
 const RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
-    displayName: 'RadioGroup',
 	propTypes: {
-		sourcePromise: React.PropTypes.func,
-		onSelect: React.PropTypes.func,
-		sourceArray: React.PropTypes.array,
-		name: React.PropTypes.string,
-		id: React.PropTypes.string
+		sourcePromise:	React.PropTypes.func,
+		onSelect:		React.PropTypes.func,
+		sourceArray:	React.PropTypes.array,
+		name:			React.PropTypes.string,
+		id:				React.PropTypes.string
 	},
 	getDefaultState: function () {
-		var self = this;
-
-		self.responseData = [];
+		this.responseData = [];
 
 		return Immutable.fromJS({
 			selectedId: null,
@@ -27,45 +24,40 @@ const RadioGroup = React.createClass({
 		});
 	},
 	setDefaultId: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const 	binding		= this.getDefaultBinding(),
+				defaultId	= binding.get('defaultId');
+
 		//Using default binding because it renders appropriately
 		if (defaultId) {
-			binding.get('responseData').forEach(function(dataBlock) {
-				dataBlock.id === defaultId && self.handleSelect(defaultId);
+			binding.get('responseData').forEach( dataBlock => {
+				dataBlock.id === defaultId && this.handleSelect(defaultId);
 			});
 		}
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const binding = this.getDefaultBinding();
 
 		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultId', function() {
-			self.setDefaultId();
+		binding.addListener('defaultId', () => {
+			this.setDefaultId();
 		});
 
-		if (self.props.sourcePromise) {
-			self.props.sourcePromise().then(function(dataArray) {
+		if (this.props.sourcePromise) {
+			this.props.sourcePromise().then( dataArray => {
 				binding.set('responseData', dataArray);
-				self.setDefaultId();
+				this.setDefaultId();
 			});
 		} else {
-			binding.set('responseData', self.props.sourceArray);
-			self.setDefaultId();
+			binding.set('responseData', this.props.sourceArray);
+			this.setDefaultId();
 		}
 	},
 	handleSelect: function (newId) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			model = binding.get('responseData').filter(function (data) {
-				return data.id === newId;
-			})[0];
+		const	binding	= this.getDefaultBinding(),
+				model	= binding.get('responseData').filter( data => data.id === newId )[0];
 
-		if (self.props.onSelect) {
-			self.props.onSelect(newId, model.value);
+		if (this.props.onSelect) {
+			this.props.onSelect(newId, model.value);
 		}
 
 		binding.atomically()
@@ -74,25 +66,29 @@ const RadioGroup = React.createClass({
 			.commit();
 	},
 	renderRadioOptions: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			selectedId = binding.get('selectedId');
+		const	binding		= this.getDefaultBinding(),
+				selectedId	= binding.get('selectedId'),
+				htmlId		= this.props.id;
+
 		if(binding.get('responseData')){
-			return binding.get('responseData').map(function (dataBlock, index) {
+			return binding.get('responseData').map( (dataBlock, index) => {
+				const inputHtmlId = htmlId ? `${htmlId}_${index}` : undefined;
 				return (
-					<label key={index} onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
+					<label key={index} onClick={() => { this.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label">
+						<input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id} id={inputHtmlId}/>
+						{dataBlock.value}
+					</label>
 				);
 			});
 		}
 	},
 	render: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			radioNodes = self.renderRadioOptions();
+		const radioNodes = this.renderRadioOptions();
+
 		return (
-			<div className="bRadioGroupMy" id={self.props.id}>
-				<If condition={self.props.name !== undefined}>
-					<label className="eRadioGroupMy_label">{self.props.name}</label>
+			<div className="bRadioGroupMy" id={this.props.id}>
+				<If condition={this.props.name !== undefined}>
+					<label className="eRadioGroupMy_label">{this.props.name}</label>
 				</If>
 				{radioNodes}
 			</div>
