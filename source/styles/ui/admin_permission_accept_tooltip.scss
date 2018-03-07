@@ -1,0 +1,16 @@
+.bAdminPermissionAcceptTooltip {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.eAdminPermissionAcceptTooltip_studentList {
+  margin-top: -10px;
+}
+
+.eAdminPermissionAcceptTooltip_student {
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #007abf;
+  }
+}

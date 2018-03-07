@@ -3,8 +3,11 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		{If}				= require('module/ui/if/if'),
 		{Autocomplete} 		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		{AdminPermissionAcceptTooltipWrapper} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_tooltip_wrapper'),
 		Loader				= require('module/ui/loader'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
+
+const propz = require('propz');
 
 const	MiddleWideContainer	= require('styles/ui/b_middle_wide_container.scss');
 
@@ -17,9 +20,6 @@ const PermissionAcceptPage = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			_formAutocomplete: {},
-			_houseAutocomplete: {},
-			_studentAutocomplete: {},
 			permissionId: null,
 			comment: null,
 			schoolId: null,
@@ -44,6 +44,7 @@ const PermissionAcceptPage = React.createClass({
 		// It exists because we must have opportunity to reset state of this component by hand.
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.set('formInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
+		binding.set('studentInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.set('prId', prId);
 		binding.set('schoolId', schoolId);
 		binding.set('errorAddChild', false);
@@ -60,8 +61,9 @@ const PermissionAcceptPage = React.createClass({
 					}
 				)
 			})
-			.then(data => {
-				binding.set('comment', data.requestedPermission.comment);
+			.then(permissionRequest => {
+				binding.set('permissionRequest', permissionRequest);
+				binding.set('comment', permissionRequest.requestedPermission.comment);
 				binding.set('isSync', true);
 			});
 
@@ -83,6 +85,9 @@ const PermissionAcceptPage = React.createClass({
 
 		return formIds;
 	},
+	getFormFromSelectedStudent: function() {
+		return propz.get(this.getDefaultBinding().toJS('selectedStudent'), ['form'], undefined);
+	},
 	getHouseIds: function() {
 		const binding = this.getDefaultBinding();
 
@@ -94,6 +99,9 @@ const PermissionAcceptPage = React.createClass({
 		}
 
 		return houseIds;
+	},
+	getHouseFromSelectedStudent: function() {
+		return propz.get(this.getDefaultBinding().toJS('selectedStudent'), ['house'], undefined);
 	},
 	serviceFormFilter: function(fromName) {
 		const 	binding 	= this.getDefaultBinding(),
@@ -115,6 +123,7 @@ const PermissionAcceptPage = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.set('formId', formId);
+		this.deselectStudent();
 	},
 	serviceHouseFilter: function(houseName) {
 		const 	binding		= this.getDefaultBinding(),
@@ -136,6 +145,7 @@ const PermissionAcceptPage = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.set('houseId', houseId);
+		this.deselectStudent();
 	},
 	serviceStudentsFilter: function(name) {
 		const	binding		= this.getDefaultBinding();
@@ -197,10 +207,30 @@ const PermissionAcceptPage = React.createClass({
 			}
 		);
 	},
-	onSelectStudent: function(studentId) {
+	onSelectStudent: function(studentId, student) {
 		const binding = this.getDefaultBinding();
 
 		binding.set('studentId', studentId);
+		binding.set('selectedStudent', Immutable.fromJS(student));
+	},
+	handleDeselectStudent: function () {
+		this.deselectForm();
+		this.deselectHouse();
+		this.deselectStudent();
+	},
+	deselectStudent: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('studentId', undefined);
+		binding.set('selectedStudent', undefined);
+		binding.set('studentInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
+	},
+	handleClickStudentFromTooltip: function (student) {
+		this.deselectForm();
+		this.deselectHouse();
+		this.deselectStudent();
+		this.getDefaultBinding().set('studentId', student.id);
+		this.getDefaultBinding().set('selectedStudent', Immutable.fromJS(student));
 	},
 	onAcceptPermission: function() {
 		const	binding		= this.getDefaultBinding();
@@ -223,12 +253,20 @@ const PermissionAcceptPage = React.createClass({
 		});
 	},
 	onClickDeselectForm: function() {
+		this.deselectForm();
+		this.deselectStudent();
+	},
+	deselectForm: function () {
 		const binding = this.getDefaultBinding();
 
 		binding.set('formId', undefined);
 		binding.set('formInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 	},
 	onClickDeselectHouse: function() {
+		this.deselectHouse();
+		this.deselectStudent();
+	},
+	deselectHouse: function () {
 		const binding = this.getDefaultBinding();
 
 		binding.set('houseId', undefined);
@@ -254,6 +292,7 @@ const PermissionAcceptPage = React.createClass({
 						<div className='eForm_field'>
 							<Autocomplete
 								key				= { binding.toJS('formInputKey') }
+								defaultItem     = { this.getFormFromSelectedStudent() }
 								serviceFilter	= { this.serviceFormFilter }
 								serverField		= 'name'
 								onSelect		= { this.onSelectForm }
@@ -268,6 +307,7 @@ const PermissionAcceptPage = React.createClass({
 						<div className='eForm_field'>
 							<Autocomplete
 								key				= { binding.toJS('houseInputKey') }
+								defaultItem     = { this.getHouseFromSelectedStudent() }
 								serviceFilter	= { this.serviceHouseFilter }
 								serverField		= 'name'
 								onSelect		= { this.onSelectHouse}
@@ -285,11 +325,16 @@ const PermissionAcceptPage = React.createClass({
 								<span className="verify_error">{ ERROR_ADD_CHILD_TEXT }</span>
 							}
 							<Autocomplete
-								serviceFilter	= { this.serviceStudentsFilter}
+								key				= {binding.toJS('studentInputKey')}
+								defaultItem     = {binding.toJS('selectedStudent')}
+								serviceFilter	= {this.serviceStudentsFilter}
 								serverField		= 'name'
-								onSelect		= { this.onSelectStudent }
+								onSelect		= {this.onSelectStudent}
 								placeholder		= 'Student name'
-								extraCssStyle	= { 'mWidth350' }
+								extraCssStyle	= {'mWidth350 mInline mRightMargin'}
+							/>
+							<SquareCrossButton
+								handleClick = {this.handleDeselectStudent}
 							/>
 						</div>
 
@@ -301,6 +346,12 @@ const PermissionAcceptPage = React.createClass({
 								Accept permission
 							</div>
 						</If>
+
+						<AdminPermissionAcceptTooltipWrapper
+							binding={this.getDefaultBinding().sub('adminPermissionAcceptTooltipWrapper')}
+							permissionRequest={this.getDefaultBinding().toJS('permissionRequest')}
+							handleClickStudent={this.handleClickStudentFromTooltip}
+						/>
 					</div>
 				</div>
 			)
