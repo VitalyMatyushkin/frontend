@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as  ReactDOM from 'react-dom';
 
 interface  PhotoGridProps {
 	photos:							any[]
@@ -36,11 +37,21 @@ export class PhotoGrid extends React.Component< PhotoGridProps, PhotoGridState> 
 		window.removeEventListener('resize', this.handleResize.bind(this));
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.photos < this.props.photos ) {
+			this.scrollToPhoto(this.props.photos[this.props.photos.length-1].id);
+		}
+	}
+
 	handleResize(): void {
 		this.setState({
 			windowWidth: window.innerWidth,
 			windowHeight: window.innerHeight
 		});
+	}
+
+	scrollToPhoto(photoId) {
+		ReactDOM.findDOMNode(this.refs[photoId] as any).scrollIntoView({ behavior: 'smooth' });
 	}
 
 	renderPhotos(): React.ReactNode {
@@ -58,7 +69,7 @@ export class PhotoGrid extends React.Component< PhotoGridProps, PhotoGridState> 
 						height = width/3;
 
 				return (
-					<div className="bAlbumPhoto" style={{width, height}}>
+					<div className="bAlbumPhoto" style={{width, height}} ref={photo.id}>
 						<div className="img" style={background} onClick={() => this.props.handleClickPhoto(photo.id)}></div>
 						{typeof photo.name !== 'undefined' && photo.name !== '' ? <div className="bImg_name">{photo.name}</div> : null}
 					</div>
