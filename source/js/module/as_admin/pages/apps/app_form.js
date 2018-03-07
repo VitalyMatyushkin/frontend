@@ -23,6 +23,10 @@ const AppForm = React.createClass({
 	handleChangePlatform: function (value) {
 		this.getDefaultBinding().sub('appForm').meta().set('platform.value', value);
 	},
+	_onSubmit: function(data){
+		data.requestRatingThresholdLaunchCount = data.requestRatingThresholdLaunchCount ? Number(data.requestRatingThresholdLaunchCount) : undefined;
+		this.props.onFormSubmit(data);
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -30,7 +34,7 @@ const AppForm = React.createClass({
 			<div className ="container">
 				<Form
 					name			= { this.props.title }
-					onSubmit		= { this.props.onFormSubmit }
+					onSubmit		= { this._onSubmit }
 					binding			= { binding.sub('appForm') }
 					submitButtonId	= 'app_submit'
 				>
@@ -64,6 +68,13 @@ const AppForm = React.createClass({
 						field		= "lowerCurrentVersionText"
 					>
 						Lower Current Version Text
+					</FormField>
+					<FormField
+						type		= "number"
+						field		= "requestRatingThresholdLaunchCount"
+						validation 	= "number"
+					>
+						Request Rating Threshold Launch Count
 					</FormField>
 					<FormField
 						field		= 'platform'
