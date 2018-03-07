@@ -313,7 +313,8 @@ export class UsersActionsClass {
 					type:'email'
 				},
 				filter:{
-					type:'string'
+					type:'string',
+					id: 'userEmailFilter_input'
 				}
 			},
 			{

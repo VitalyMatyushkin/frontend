@@ -10,7 +10,7 @@ import {getRandomEmail, getDefaultPassword, getRandomPhone} from "../../tools/da
  * Created by wert on 04.03.2018
  */
 
-describe.only('superadmin users page', () => {
+describe('superadmin users page', () => {
 	let driver: WebDriver;
 
 	const	baseUrl		= Credentials.superadminBaseUrl,
@@ -49,6 +49,7 @@ describe.only('superadmin users page', () => {
 
 		await usersPage2.waitToBeOnPage();
 		await usersPage2.clickFilterButton();
+		await usersPage2.setEmailFilter(userEmail);
 
 		true;
 	});

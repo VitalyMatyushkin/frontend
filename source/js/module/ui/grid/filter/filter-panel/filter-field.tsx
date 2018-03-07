@@ -6,7 +6,12 @@ import {FilterTypeList} from './filter-types/filter-type-list';
 import * as	React from 'react';
 
 export interface FilterFieldProps {
-    model: any
+    model: {
+    	type: string,
+		field: {
+    		text: string
+		}
+	}
 }
 
 export class FilterField extends React.Component<FilterFieldProps, {}> {
