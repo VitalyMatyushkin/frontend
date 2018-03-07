@@ -442,6 +442,8 @@ const SportIcon = React.createClass({
 				icon="boccia_mini_tournament";
 				break;
 			case 	sport === 'cricket (mini tournament)' ||
+					sport === 'kwik cricket' ||
+					sport === 'kwik cricket (mt)' ||
 					sport === 'cricket (mt)':
 				icon="cricket_mini_tournament";
 				break;
