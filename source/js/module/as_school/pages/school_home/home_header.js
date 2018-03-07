@@ -3,10 +3,8 @@
  */
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
-		Superuser 	= require('module/helpers/superuser'),
-		Helpers		= require('module/helpers/storage'),
 		Morearty 	= require('morearty'),
-		Lazy 		= require('lazy.js'),
+		Loader	    = require('module/ui/loader'),
 		Slider		= require('module/ui/slider/slider');
 
 /** Array of default photos to show when there is no photos got from server side for any possible reason */
@@ -38,8 +36,10 @@ const HomeHeader = React.createClass({
 		binding.set('school', Immutable.fromJS(currentSchool));
 		// setting empty photos to show. Will use them in render
 		binding.set('___photosToShow', Immutable.fromJS([]));
-		
+		binding.set('isSync', true);
+
 		if(defaultAlbumId){
+			binding.set('isSync', false);
 			//if we have album id we do some logic here - TBC
 			//TODO: Reuse code below when photos method and view has been implemented on server
 			window.Server.publicSchoolAlbumPhotos.get({
@@ -52,6 +52,7 @@ const HomeHeader = React.createClass({
 				} else {
 					binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
 				}
+				binding.set('isSync', true);
 			});
 		} else {
 			binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
@@ -67,7 +68,7 @@ const HomeHeader = React.createClass({
 		
 		return(
 			<div className="bSchoolHeader">
-				<Slider items={photos} />
+				{this.getDefaultBinding().get('isSync') ? <Slider items={photos} /> : <Loader/>}
 			</div>
 		)
 	}

@@ -8,7 +8,7 @@ const SportHelper = {
 	 * @returns {boolean}
 	 */
 	isCricket: function(sportName){
-		const cricketNames = ['cricket', 'cricket t20', 'cricket sixes'];
+		const cricketNames = ['cricket', 'cricket t20', 'cricket sixes', 'kwick cricket'];
 
 		return cricketNames.some(cricketName => cricketName === sportName.toLowerCase());
 	},
