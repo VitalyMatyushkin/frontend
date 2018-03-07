@@ -73,11 +73,19 @@ const CSVExportController = {
 					break;
 				}
 				case 'user.firstName': {
-					csvItem.firstName = item.user.firstName;
+					csvItem.firstName = item.user.firstName ? item.user.firstName : '';
 					break;
 				}
 				case 'user.lastName': {
-					csvItem.lastName = item.user.lastName;
+					csvItem.lastName = item.user.lastName ? item.user.lastName : '';
+					break;
+				}
+				case 'user.email': {
+					csvItem.email = item.user.email ?  item.user.email : '';
+					break;
+				}
+				case 'user.permissionList': {
+					csvItem.permissionList = item.user.permissionList ? item.user.permissionList.join('; ') : '';
 					break;
 				}
 				default: {

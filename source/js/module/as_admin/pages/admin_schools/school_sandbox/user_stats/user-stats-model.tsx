@@ -4,6 +4,7 @@
 
 import {DataLoader} from 'module/ui/grid/data-loader';
 import {GridModel} from 'module/ui/grid/grid-model';
+import * as React from 'react';
 import * as Timezone from 'moment-timezone';
 import * as CSVExportConsts from 'module/ui/grid/csv_export/consts';
 import * as CSVExportController from'module/ui/grid/csv_export/csv_export_controller';
@@ -35,11 +36,17 @@ export class UserStatsModel{
 	}
 	
 	getFirstHitTime(item: any): string {
-		return item.firstHit ? Timezone.tz(item.firstHit, (<any>window).timezone).format('DD.MM.YY hh:mm:ss') : '';
+		return item.firstHit ? Timezone.tz(item.firstHit, (window as any).timezone).format('DD.MM.YY hh:mm:ss') : '';
 	}
 	
 	getLastHitTime(item: any): string {
-		return item.lastHit ? Timezone.tz(item.lastHit, (<any>window).timezone).format('DD.MM.YY hh:mm:ss'): '';
+		return item.lastHit ? Timezone.tz(item.lastHit, (window as any).timezone).format('DD.MM.YY hh:mm:ss'): '';
+	}
+
+	getPermissionList(item: any) {
+		return item.user.permissionList.map( (permissionPreset, index) => {
+			return <div key={index}>{permissionPreset}</div>
+		})
 	}
 	
 	setColumns(): void {
@@ -109,6 +116,16 @@ export class UserStatsModel{
 					type:'general'
 				}
 			},
+			{
+				text:'PermissionList',
+				cell:{
+					dataField:'user.permissionList',
+					type:'custom',
+					typeOptions: {
+						parseFunction: this.getPermissionList.bind(this)
+					}
+				}
+			}
 		];
 	}
 	
