@@ -22,7 +22,7 @@ describe('superadmin users page', () => {
 		await driver.manage().timeouts().implicitlyWait(15000);
 	});
 
-	it('should be able to add new user', async () => {
+	xit('should be able to add new user', async () => {
 		const	loginPage		= new LoginPage(driver, baseUrl),
 				usersPage		= new UsersPage(driver, baseUrl),
 				usersPage2		= new UsersPage(driver, baseUrl, '/#users'),	// this is because of shitty routing
@@ -50,8 +50,6 @@ describe('superadmin users page', () => {
 		await usersPage2.waitToBeOnPage();
 		await usersPage2.clickFilterButton();
 		await usersPage2.setEmailFilter(userEmail);
-
-		true;
 	});
 
 
