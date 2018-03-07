@@ -8,6 +8,7 @@ import {LoginPage} from "../../pages/superadmin/login_page";
 import {UsersPage} from "../../pages/superadmin/users_page";
 import {Credentials} from "../../credentials";
 import {WebDriver} from 'selenium-webdriver';
+import {getRandomEmail} from "../../tools/data_factory";
 
 describe('Superadmin Login page', () => {
 
@@ -38,9 +39,10 @@ describe('Superadmin Login page', () => {
 
 	it('should not pass incorrect login', async () => {
 		const loginPage	= new LoginPage(driver, baseUrl);
+		const email = getRandomEmail();
 
 		await loginPage.visit();
-		await loginPage.setEmail('random_main@fakemail.squadintouch.com');
+		await loginPage.setEmail(email);
 		await loginPage.setPass('111111Ab');
 		await loginPage.clickSubmit();
 

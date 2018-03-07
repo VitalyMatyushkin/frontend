@@ -22,35 +22,35 @@ describe('superadmin users page', () => {
 		await driver.manage().timeouts().implicitlyWait(15000);
 	});
 
-	xit('should be able to add new user', async () => {
-		const	loginPage		= new LoginPage(driver, baseUrl),
-				usersPage		= new UsersPage(driver, baseUrl),
-				usersPage2		= new UsersPage(driver, baseUrl, '/#users'),	// this is because of shitty routing
-				userCreatePage	= new UserCreatePage(driver, baseUrl);
-
-		const	userEmail		= getRandomEmail(),
-				userPassword	= getDefaultPassword(),
-				userPhone		= getRandomPhone();
-
-		await loginPage.login(login, password);
-		await usersPage.waitToBeOnPage();
-		await usersPage.clickAddUser();
-
-		await userCreatePage.waitToBeOnPage();
-		await userCreatePage.setFirstName('John');
-		await userCreatePage.setLastName('TheTester');
-		await userCreatePage.setGender('MALE');
-		await userCreatePage.setPhone(userPhone);
-		await userCreatePage.setEmail(userEmail);
-		await userCreatePage.setEmailConfirmation(userEmail);
-		await userCreatePage.setPassword(userPassword);
-		await userCreatePage.setPasswordConfirmation(userPassword);
-		await userCreatePage.clickSubmit();
-
-		await usersPage2.waitToBeOnPage();
-		await usersPage2.clickFilterButton();
-		await usersPage2.setEmailFilter(userEmail);
-	});
+	// xit('should be able to add new user', async () => {
+	// 	const	loginPage		= new LoginPage(driver, baseUrl),
+	// 			usersPage		= new UsersPage(driver, baseUrl),
+	// 			usersPage2		= new UsersPage(driver, baseUrl, '/#users'),	// this is because of shitty routing
+	// 			userCreatePage	= new UserCreatePage(driver, baseUrl);
+	//
+	// 	const	userEmail		= getRandomEmail(),
+	// 			userPassword	= getDefaultPassword(),
+	// 			userPhone		= getRandomPhone();
+	//
+	// 	await loginPage.login(login, password);
+	// 	await usersPage.waitToBeOnPage();
+	// 	await usersPage.clickAddUser();
+	//
+	// 	await userCreatePage.waitToBeOnPage();
+	// 	await userCreatePage.setFirstName('John');
+	// 	await userCreatePage.setLastName('TheTester');
+	// 	await userCreatePage.setGender('MALE');
+	// 	await userCreatePage.setPhone(userPhone);
+	// 	await userCreatePage.setEmail(userEmail);
+	// 	await userCreatePage.setEmailConfirmation(userEmail);
+	// 	await userCreatePage.setPassword(userPassword);
+	// 	await userCreatePage.setPasswordConfirmation(userPassword);
+	// 	await userCreatePage.clickSubmit();
+	//
+	// 	await usersPage2.waitToBeOnPage();
+	// 	await usersPage2.clickFilterButton();
+	// 	// await usersPage2.setEmailFilter(userEmail);
+	// });
 
 
 	it('should be able to edit user');

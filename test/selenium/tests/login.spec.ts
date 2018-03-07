@@ -4,8 +4,7 @@
 
 import {DriverFactory} from "../tools/driver_factory";
 import {LoginPage} from "../pages/login_page";
-
-
+import {getRandomEmail} from "../tools/data_factory";
 
 
 describe('Login page', () => {
@@ -29,10 +28,12 @@ describe('Login page', () => {
 	it('should allow to perform incorrect login 5 times', async () => {
 		/* just trying to login 10 times with incorrect email/pass and clicking "Try again" */
 		const loginPage = new LoginPage(driver, baseUrl);
+		const email = getRandomEmail();
+
 		await loginPage.visit();
 
 		for(let i = 0; i < 5; i++) {
-			await loginPage.setEmail('invalid_email@fakemail.squadintouch.com');
+			await loginPage.setEmail(email);
 			await loginPage.setPass('111111Ab');
 			await loginPage.clickSubmit();
 			await loginPage.clickTryAgain();
