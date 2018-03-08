@@ -6,26 +6,36 @@ import * as BPromise from 'bluebird'
 
 import * as Form from '../../../../../ui/form/form'
 import * as FormField from '../../../../../ui/form/form_field'
-import {Map} from '../../../../../ui/map/map2'
+import {Map, Point} from '../../../../../ui/map/map2_editable'
 import {ServiceList} from "module/core/service_list/service_list";
 
 export interface PlaceFormData {
 	name: string,
 	ownerId: string
 	postcode: string
+	point: Point
+}
+
+interface Postcode {
+	id: string
+	point: Point
+	postcode: string
+	postcodeNoSpaces: string
 }
 
 export const PlaceForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
-	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
+	DEFAULT_VENUE_POINT: { coordinates: [-0.246722, 50.832949]},
 
 	getPoint() {
-		const binding = this.getDefaultBinding();
+		const point = this.getDefaultBinding().toJS('point');
 
-		const postcode = binding.toJS('selectedPostcode');
+		return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
+	},
 
-		return typeof postcode !== 'undefined' ? postcode.point : this.DEFAULT_VENUE_POINT;
+	getNewPoint(point) {
+		this.getDefaultBinding().set('point', Immutable.fromJS(point));
 	},
 
 	postcodeService(searchText: string): BPromise<any> {
@@ -43,8 +53,14 @@ export const PlaceForm = (React as any).createClass({
 			});
 	},
 
-	onSelectPostcode(id: string, postcode: object) {
-		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode))
+	onSelectPostcode(id: string, postcode: Postcode) {
+		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode));
+		this.getDefaultBinding().set('point', Immutable.fromJS(postcode.point));
+	},
+
+	onSubmit(data) {
+		data.point = this.getDefaultBinding().toJS('point');
+		this.props.onSubmit(data);
 	},
 
 	render() {
@@ -53,7 +69,7 @@ export const PlaceForm = (React as any).createClass({
 		return (
 			<Form
 				name			= { this.props.title }
-				onSubmit		= { this.props.onSubmit }
+				onSubmit		= { this.onSubmit }
 				onCancel		= { this.props.onCancel }
 				binding			= { this.getDefaultBinding().sub('form') }
 				defaultButton	= { 'Save' }
@@ -77,7 +93,9 @@ export const PlaceForm = (React as any).createClass({
 					Postcode
 				</FormField>
 				<Map
-					point				= {this.getPoint()}
+					key                 = { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
+					point				= { this.getPoint() }
+					getNewPoint         = { this.getNewPoint }
 					customStylingClass	= "eEvents_venue_map"
 				/>
 			</Form>

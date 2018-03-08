@@ -23,7 +23,8 @@ export const PlaceAdd = (React as any).createClass({
 			this.activeSchoolId,
 			{
 				name: data.name,
-				postcodeId: data.postcode
+				postcodeId: data.postcode,
+				point: data.point
 			}
 		).then(() => PlaceHelper.redirectToPlaceListPage());
 	},
