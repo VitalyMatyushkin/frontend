@@ -6,6 +6,23 @@ import * as propz from 'propz'
 
 import {AdminPermissionAcceptTooltip} from "module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_tooltip";
 
+const stopWordsArray = [
+	'request',
+	'to',
+	'be',
+	'parent',
+	'of',
+	'optional',
+	'\\(',
+	'\\)',
+	'\\[',
+	'\\]',
+	'"',
+	'“',
+	'”',
+	'\'',
+];
+
 export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -18,7 +35,11 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 
 		let students = [];
 		binding.set('isSync', false);
-		this.searchStudentsByRegexArray(this.getRegexArray()).then(_students => {
+
+		this.searchStudentsByRegexArrayAndComment(
+			this.getRegexArray(),
+			this.getPreparedComment()
+		).then(_students => {
 			students = _students.concat(students);
 
 			if(students.length === 0) {
@@ -70,10 +91,20 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 			return cpStudent;
 		});
 	},
-	searchStudentsByRegexArray(regexArray: RegExp[]): BPromise<any[]> {
+	getPreparedComment() {
 		const permissionRequest = this.props.permissionRequest;
-		const comment = propz.get(permissionRequest, ['requestedPermission', 'comment'], undefined);
+		let comment = propz.get(permissionRequest, ['requestedPermission', 'comment'], '');
 
+		stopWordsArray.forEach(stopWord => {
+			const regexp = new RegExp(stopWord, 'ig');
+			comment = comment.replace(regexp, '');
+		});
+		comment = comment.replace(/\s{2,}/g, '');
+		comment = comment.trim();
+
+		return comment;
+	},
+	searchStudentsByRegexArrayAndComment(regexArray: RegExp[], comment): BPromise<any[]> {
 		let promises = [];
 		if(typeof comment !== 'undefined') {
 			regexArray.forEach(regex => {

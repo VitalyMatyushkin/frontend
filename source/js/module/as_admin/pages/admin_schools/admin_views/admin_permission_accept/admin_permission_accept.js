@@ -283,11 +283,11 @@ const PermissionAcceptPage = React.createClass({
 				<div className='bForm'>
 					<div className="eForm_atCenter">
 
-						<h2>{ binding.toJS('school.name') }.</h2>
+						<h2 className='eForm_header mBlack'>{ binding.toJS('school.name') }.</h2>
 
-						<h2>Accept parent permission. Please choose student.</h2>
+						<h2 className='eForm_header mBlack'>Accept parent permission. Please choose student.</h2>
 
-						<h3>Comment from parent: {comment}</h3>
+						<h3 className='eForm_header mBlack'>Comment from parent: {comment}</h3>
 
 						<div className='eForm_field'>
 							<Autocomplete

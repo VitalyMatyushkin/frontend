@@ -3,14 +3,19 @@
   margin-bottom: 20px;
 }
 
+.eAdminPermissionAcceptTooltip_header {
+  color: black!important;
+}
+
 .eAdminPermissionAcceptTooltip_studentList {
   margin-top: -10px;
 }
 
 .eAdminPermissionAcceptTooltip_student {
+  color: #007abf;
+
   &:hover {
     cursor: pointer;
     text-decoration: underline;
-    color: #007abf;
   }
 }

@@ -3,22 +3,32 @@ import * as propz from 'propz'
 
 import 'styles/ui/admin_permission_accept_tooltip.scss'
 
+export interface Student {
+	id: string
+	firstName: string
+	lastName: string
+	form?: {
+		id: string
+		name: string
+	}
+	house?: {
+		id: string
+		name: string
+	}
+}
+
 export interface AdminPermissionAcceptTooltipProps {
-	students: any[]
+	students: Student[]
 	handleClickStudent: (studentId) => void
 }
 
 export class AdminPermissionAcceptTooltip extends React.Component<AdminPermissionAcceptTooltipProps, {}> {
-	getStudentFormName(student) {
-		const formName = propz.get(student, ['form', 'name'], undefined);
-
-		return typeof formName !== 'undefined' ? formName : '';
+	getStudentFormName(student: Student): string {
+		return propz.get(student, ['form', 'name'], '');
 	}
 
-	getStudentHouseName(student) {
-		const houseName = propz.get(student, ['house', 'name'], undefined);
-
-		return typeof houseName !== 'undefined' ? houseName : '';
+	getStudentHouseName(student: Student): string {
+		return propz.get(student, ['house', 'name'], '');
 	}
 
 	renderStudentList() {
@@ -44,7 +54,7 @@ export class AdminPermissionAcceptTooltip extends React.Component<AdminPermissio
 	render() {
 		return (
 			<div className='bAdminPermissionAcceptTooltip'>
-				<h3>May be you need these students:</h3>
+				<h3 className='eAdminPermissionAcceptTooltip_header'>May be you need these students:</h3>
 				{this.renderStudentList()}
 			</div>
 		);
