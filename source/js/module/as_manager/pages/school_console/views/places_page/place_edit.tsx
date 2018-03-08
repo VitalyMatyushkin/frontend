@@ -31,7 +31,7 @@ export const PlaceEdit = (React as any).createClass({
 				placeId: this.placeId
 			}).then(_placeData => {
 				placeData = _placeData;
-
+				binding.set('point', Immutable.fromJS(_placeData.point));
 				return (window.Server as ServiceList).postCodeById.get(placeData.postcodeId);
 			}).then(postcodeData => {
 				binding.atomically()
@@ -58,7 +58,8 @@ export const PlaceEdit = (React as any).createClass({
 				placeId: this.placeId
 			}, {
 				name: data.name,
-				postcodeId: data.postcode
+				postcodeId: data.postcode,
+				point: data.point
 			}
 		).then(() => PlaceHelper.redirectToPlaceListPage());
 	},
