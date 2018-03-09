@@ -241,6 +241,9 @@ export const EventVenue = (React as any).createClass({
 				return 'AWAY';
 			case value.id === "TBD":
 				return 'TBD';
+			//places with flag isHome (school console -> venues)
+			case value.isHome === true:
+				return 'HOME';
 			default:
 				return 'CUSTOM';
 		}
@@ -270,7 +273,8 @@ export const EventVenue = (React as any).createClass({
 			name:				place.name,
 			point:				place.point,
 			postcode:			place.postcode,
-			postcodeNoSpaces:	place.postcodeNoSpaces
+			postcodeNoSpaces:	place.postcodeNoSpaces,
+			isHome: 			place.isHome
 		};
 	},
 

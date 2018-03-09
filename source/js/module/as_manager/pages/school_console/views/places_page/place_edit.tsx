@@ -36,8 +36,9 @@ export const PlaceEdit = (React as any).createClass({
 			}).then(postcodeData => {
 				binding.atomically()
 					.set('form', Immutable.fromJS({
-						name: placeData.name,
-						postcode: placeData.postcodeId
+						name: 		placeData.name,
+						postcode: 	placeData.postcodeId,
+						isHome: 	placeData.isHome
 					}))
 					.set('selectedPostcode', Immutable.fromJS(postcodeData))
 					.set('isSync', true)
@@ -57,9 +58,10 @@ export const PlaceEdit = (React as any).createClass({
 				schoolId: this.activeSchoolId,
 				placeId: this.placeId
 			}, {
-				name: data.name,
+				name: 		data.name,
 				postcodeId: data.postcode,
-				point: data.point
+				point: 		data.point,
+				isHome: 	data.isHome
 			}
 		).then(() => PlaceHelper.redirectToPlaceListPage());
 	},

@@ -13,7 +13,8 @@ export interface PlaceFormData {
 	name: string,
 	ownerId: string
 	postcode: string
-	point: Point
+	point: Point,
+	isHome: boolean
 }
 
 interface Postcode {
@@ -80,6 +81,13 @@ export const PlaceForm = (React as any).createClass({
 					validation	= 'required'
 				>
 					Place name
+				</FormField>
+				<FormField
+					classNames	= 'mSingleLine'
+					type		= 'checkbox'
+					field		= 'isHome'
+				>
+					Home place
 				</FormField>
 				<FormField
 					type			= 'autocomplete'

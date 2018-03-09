@@ -22,9 +22,10 @@ export const PlaceAdd = (React as any).createClass({
 		(window.Server as ServiceList).schoolPlaces.post(
 			this.activeSchoolId,
 			{
-				name: data.name,
-				postcodeId: data.postcode,
-				point: data.point
+				name: 			data.name,
+				postcodeId: 	data.postcode,
+				point: 			data.point,
+				isHome: 		data.isHome
 			}
 		).then(() => PlaceHelper.redirectToPlaceListPage());
 	},
