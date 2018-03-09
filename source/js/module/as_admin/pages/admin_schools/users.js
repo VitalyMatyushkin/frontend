@@ -11,7 +11,7 @@ const 	React 									= require('react'),
 const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_schools/admin_views/admin_user_list/admin_users_list'),
 		{NewUserRequests}      					= require('module/as_admin/pages/admin_schools/new_user_requests/new_user_requests'),
 		AdminArchiveComponent 					= require('module/shared_pages/permission_requests/request-archive'),
-		AdminPermissionAcceptComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept'),
+		AdminPermissionAcceptParent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_parent'),
 		AdminPermissionAcceptStudentComponent	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_student'),
 		{AdminPermissionAcceptCoach}        	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_coach/admin_permission_accept_coach'),
 		UserComponent 							= require('module/as_admin/pages/admin_add/user'),
@@ -137,7 +137,7 @@ const OneSchoolPage = React.createClass({
 						<Route
 							path 				= "/users/admin_views/requests/accept"
 							binding 			= { binding.sub('parentPermission') }
-							component 			= { AdminPermissionAcceptComponent }
+							component 			= { AdminPermissionAcceptParent }
 							afterSubmitPage 	= "/users/admin_views/requests"
 						/>
 						<Route

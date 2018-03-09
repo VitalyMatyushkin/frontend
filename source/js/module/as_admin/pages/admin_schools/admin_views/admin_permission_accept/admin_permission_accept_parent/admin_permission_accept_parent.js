@@ -3,8 +3,10 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		{If}				= require('module/ui/if/if'),
 		{Autocomplete} 		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		{AdminPermissionAcceptTooltipWrapper} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_tooltip_wrapper'),
+		{AdminPermissionAcceptParentDoubleRequestTooltip} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_parent_double_request_tooltip'),
+		{AdminPermissionAcceptTooltipWrapper} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_tooltip_wrapper'),
 		Loader				= require('module/ui/loader'),
+		RoleHelper			= require('module/helpers/role_helper'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
 
 const propz = require('propz');
@@ -13,7 +15,7 @@ const	MiddleWideContainer	= require('styles/ui/b_middle_wide_container.scss');
 
 const 	ERROR_ADD_CHILD_TEXT = 'Unable to add permission to this user. Probably this user is already a parent of this student.';
 
-const PermissionAcceptPage = React.createClass({
+const AdminPermissionAcceptParent = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		afterSubmitPage: React.PropTypes.string
@@ -54,7 +56,7 @@ const PermissionAcceptPage = React.createClass({
 			.then(data => {
 				binding.set('school', Immutable.fromJS(data));
 
-				return	window.Server.permissionRequest.get(
+				return window.Server.permissionRequest.get(
 					{
 						prId:		prId,
 						schoolId:	schoolId
@@ -62,10 +64,25 @@ const PermissionAcceptPage = React.createClass({
 				)
 			})
 			.then(permissionRequest => {
+
 				binding.set('permissionRequest', permissionRequest);
 				binding.set('comment', permissionRequest.requestedPermission.comment);
+				return window.Server.schoolUserPermissions.get(
+					{
+						schoolId: schoolId,
+						userId: permissionRequest.requesterId
+					}
+				)
+			})
+			.then(permissions => {
+				const linkedStudents = permissions
+					.filter(p => p.preset === RoleHelper.USER_ROLES.PARENT)
+					.map(p => p.studentId);
+				console.log(permissions);
+
+				binding.set('linkedStudentIds', Immutable.fromJS(linkedStudents));
 				binding.set('isSync', true);
-			});
+			})
 
 		}
 	},
@@ -272,6 +289,20 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('houseId', undefined);
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 	},
+	renderAdminPermissionAcceptParentDoubleRequestTooltip() {
+		const binding = this.getDefaultBinding();
+		const linkedStudentIds = binding.toJS('linkedStudentIds');
+		const studentId = binding.toJS('studentId');
+
+		if(linkedStudentIds.findIndex(id => id === studentId) !== -1) {
+			const selectedStudent = binding.toJS('selectedStudent');
+			const childName = `${selectedStudent.firstName} ${selectedStudent.lastName}`;
+
+			return <AdminPermissionAcceptParentDoubleRequestTooltip childName={childName}/>;
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
 				errorAddChild = binding.get('errorAddChild'),
@@ -347,6 +378,7 @@ const PermissionAcceptPage = React.createClass({
 							</div>
 						</If>
 
+						{this.renderAdminPermissionAcceptParentDoubleRequestTooltip()}
 						<AdminPermissionAcceptTooltipWrapper
 							binding={this.getDefaultBinding().sub('adminPermissionAcceptTooltipWrapper')}
 							permissionRequest={this.getDefaultBinding().toJS('permissionRequest')}
@@ -368,4 +400,4 @@ const PermissionAcceptPage = React.createClass({
 	}
 });
 
-module.exports = PermissionAcceptPage;
+module.exports = AdminPermissionAcceptParent;

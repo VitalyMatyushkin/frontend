@@ -15,7 +15,7 @@ const	React									= require('react'),
 		AdminRequestsComponent 					= require('./views/requests'),
 		ImportStudents							= require('module/as_manager/pages/school_console/views/import_students'),
 		RequestArchiveComponent					= require('./views/request_archive'),
-		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept'),
+		AdminPermissionAcceptParent			    = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_parent'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_student'),
 		{AdminPermissionAcceptCoach}        	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_coach/admin_permission_accept_coach'),
 		MergeStudentComponent 					= require('module/as_manager/pages/school_console/views/student_without_permission_merge_page/student_without_permission_merge'),
@@ -191,7 +191,7 @@ const SchoolConsole = React.createClass({
 								<Route
 									path 			= "/school_console/requests/accept"
 									binding 		= { binding.sub('parentPermission') }
-									component 		= { AdminPermissionAcceptComponent }
+									component 		= { AdminPermissionAcceptParent }
 									afterSubmitPage = "/school_console/requests"
 								/>
 								<Route

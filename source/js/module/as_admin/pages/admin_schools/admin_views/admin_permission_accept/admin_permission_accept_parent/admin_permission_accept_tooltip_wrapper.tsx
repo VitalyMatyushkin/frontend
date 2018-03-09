@@ -4,7 +4,7 @@ import * as Immutable from 'immutable'
 import * as BPromise from 'bluebird'
 import * as propz from 'propz'
 
-import {AdminPermissionAcceptTooltip} from "module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_tooltip";
+import {AdminPermissionAcceptTooltip} from "module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_tooltip";
 
 const stopWordsArray = [
 	'request',
