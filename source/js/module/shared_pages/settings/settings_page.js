@@ -1,3 +1,7 @@
+import {ServiceList} from "../../core/service_list/service_list";
+import * as RoleHelper from "../../helpers/role_helper";
+import * as UserConsts from "../../helpers/consts/user";
+
 const	RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		React							= require('react'),
@@ -35,7 +39,7 @@ const SettingsPage = React.createClass({
 			settingsRouting: {}
 		});
 	},
-	componentWillMount:function(){
+	componentWillMount:function() {
 		this.initTabs();
 	},
 	componentDidMount:function(){
@@ -137,7 +141,7 @@ const SettingsPage = React.createClass({
 						</div>
 						<div className="col-md-10 col-md-offset-1">
 							<Tabs tabListModel={self.tabListModel}
-								  onClick={self.changeActiveTab}/>
+							      onClick={self.changeActiveTab}/>
 						</div>
 					</div>
 				</div>
@@ -176,7 +180,7 @@ const SettingsPage = React.createClass({
 					</RouterView>
 				</div>
 			</div>
-		)
+		);
 	}
 });
 

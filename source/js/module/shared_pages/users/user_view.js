@@ -40,7 +40,7 @@ const UserDetail= React.createClass({
 
         //Parameters services for the super-administrator and managers
         this.params = {schoolId, userId};
-        this.superadminModel = loaderUtils.parseDomainName(document.location.hostname).model === 'admin' ? true : false;
+        this.isSuperAdmin = loaderUtils.parseDomainName(document.location.hostname).model === 'admin' ? true : false;
         binding.set('popup',false);
         binding.set('editPermission',false);
         binding.set('addRole',false);
@@ -134,20 +134,18 @@ const UserDetail= React.createClass({
                             <div>{statusRole}</div>
                             <div className="bItemDateInterval">{dateInterval}</div>
                         </div>
-						{this.superadminModel &&
-                            <div className="eDataList_listItemCell">
+	                    <div className="eDataList_listItemCell">
                             <span key={i + "edit"} id="edit_row"
                                   onClick={this.onEditPermissionClick.bind(null, role.id)}
                                   className="bLinkLike bTooltip" data-description="Edit">
                                 <SVG icon="icon_edit"/>
                             </span>
-                                <span key={i + "remove"} id="remove_row"
-                                      onClick={this.revokePermission.bind(null, role.id)}
-                                      className="bLinkLike delete_btn bTooltip" data-description="Delete">
+		                    <span key={i + "remove"} id="remove_row"
+		                          onClick={this.revokePermission.bind(null, role.id)}
+		                          className="bLinkLike delete_btn bTooltip" data-description="Delete">
                                 <SVG icon="icon_delete"/>
 			                </span>
-                            </div>
-						}
+	                    </div>
                     </div>
                 )
             });
@@ -200,9 +198,7 @@ const UserDetail= React.createClass({
                                 <div className="eDataList_listItemCell" style={{width:23+'%'}}>Child</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>Role</div>
                                 <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
-								{this.superadminModel &&
-                                    <div className="eDataList_listItemCell" style={{width: 10 + '%'}}>Actions</div>
-								}
+								<div className="eDataList_listItemCell" style={{width: 10 + '%'}}>Actions</div>
                             </div>
                             {listItems}
                         </div>
@@ -225,8 +221,9 @@ const UserDetail= React.createClass({
                     otherClass      = "bPopupPermission"
                 >
                     <EditPermission
-                        binding     = {binding}
-                        onCancel    = {this._closeEditPermissionPopup}
+                        binding      = {binding}
+                        isSuperAdmin = {this.isSuperAdmin}
+                        onCancel     = {this._closeEditPermissionPopup}
                     />
                 </Popup>
                 <Popup

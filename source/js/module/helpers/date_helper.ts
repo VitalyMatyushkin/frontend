@@ -18,6 +18,10 @@ export const DateHelper = {
 		return Moment(date).format('DD.MM.YYYY');
 	},
 
+	_getDateStringFromDateObject: function(date: Date): string {
+		return Moment(date).format('DD-MM-YYYY HH:mm');
+	},
+
 	/**
 	 * Get time string dd.mm.yyyy from date object
 	 * Use it instead date.toLocaleTimeString

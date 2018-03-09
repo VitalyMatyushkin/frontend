@@ -17,6 +17,7 @@ const 	AdminUserListComponent 					= require('module/as_admin/pages/admin_school
 		AdminRequestsComponent					= require('module/shared_pages/permission_requests/request-list'),
 		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept'),
 		AdminPermissionAcceptStudentComponent	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_student'),
+		{AdminPermissionAcceptCoach}        	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_coach/admin_permission_accept_coach'),
 		AdminArchiveComponent					= require('module/shared_pages/permission_requests/request-archive'),
 		UserComponent							= require('module/as_admin/pages/admin_add/user'),
 		SportsPageComponent						= require('module/as_admin/pages/admin_schools/sports/sports_page'),
@@ -193,6 +194,13 @@ const OneSchoolPage = React.createClass({
 							path 				= "/admin_schools/admin_views/requests/accept-student"
 							binding 			= { binding.sub('studentPermission') }
 							component 			= { AdminPermissionAcceptStudentComponent }
+							afterSubmitPage 	= "/admin_schools/admin_views/requests"
+						/>
+						<Route
+							path 				= "/admin_schools/admin_views/requests/accept-coach"
+							binding 			= { binding.sub('coachPermission') }
+							component 			= { AdminPermissionAcceptCoach }
+							isSuperAdmin        = { true }
 							afterSubmitPage 	= "/admin_schools/admin_views/requests"
 						/>
 						<Route

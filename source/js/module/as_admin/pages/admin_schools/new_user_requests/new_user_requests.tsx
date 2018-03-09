@@ -61,6 +61,10 @@ export const NewUserRequests = (React as any).createClass({
 										document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`;
 										break;
 									}
+									case currentPr.requestedPermission.preset === "COACH": {
+										document.location.hash = `${document.location.hash}/accept-coach?prId=${prId}&schoolId=${schoolId}`;
+										break;
+									}
 									case currentPr.requestedPermission.preset === "ADMIN" && (
 										!isThereAnyAdminsInSchool ||
 										isSolePETeacher

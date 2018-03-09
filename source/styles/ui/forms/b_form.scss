@@ -24,6 +24,9 @@ $labelColor:              #8c8c8c;
   &.mNarrow {
     max-width: 360px;
   }
+  &.mWidth300 {
+    width: 300px;
+  }
   &.mFitContent .eForm_atCenter {
       display: inline-block;
   }
@@ -246,6 +249,10 @@ select::-ms-expand {
   color: $labelColor;
   font-size: 1rem;
 
+  &.mNoLeftPadding {
+    padding-left: 0;
+  }
+
   &.mMarginTop {
     margin-top: 12px;
   }
@@ -271,6 +278,12 @@ select::-ms-expand {
   position: relative;
   text-align: left;
   display: inline-block;
+}
+
+.bForm.mWidth300 {
+  .eForm_atCenter {
+    width: 300px;
+  }
 }
 
 .eForm_fieldSet{

@@ -127,7 +127,9 @@ class RequestActionsClass {
 					"Ok",
 					"Cancel",
 					() => {
-						if (currentPr.requestedPermission.preset === "PARENT") {
+						if (currentPr.requestedPermission.preset === "COACH") {
+							document.location.hash = `${document.location.hash}/accept-coach?prId=${prId}&schoolId=${schoolId}`;
+						} else if (currentPr.requestedPermission.preset === "PARENT") {
 							document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
 						} else if(currentPr.requestedPermission.preset === "STUDENT") {
 							document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
@@ -137,7 +139,10 @@ class RequestActionsClass {
 							// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
 							// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
 							// So, for manager schoolId is required, for admin isn't required.
-							window.Server.statusPermissionRequest.put({schoolId: schoolId, prId: prId}, {status: 'ACCEPTED'})
+							window.Server.statusPermissionRequest.put(
+								{schoolId: schoolId, prId: prId},
+								{status: 'ACCEPTED'}
+							)
 							.then(_ => self.refresh());
 						}
 					},

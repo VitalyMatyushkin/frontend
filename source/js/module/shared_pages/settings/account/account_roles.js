@@ -5,17 +5,45 @@ const 	React 		= require('react'),
 		Morearty 	= require('morearty'),
 		Immutable 	= require('immutable'),
 		{If}		= require('module/ui/if/if'),
-		Loader 		= require('module/ui/loader');
+		Loader 		= require('module/ui/loader'),
+		{AllowedSports} = require('module/shared_pages/settings/allowed_sports/allowed_sports.tsx');
 
 const AccountRoles = React.createClass({
 	mixins:[Morearty.Mixin],
 	componentWillMount:function(){
 		const 	binding = this.getDefaultBinding();
-			binding.set('sync', false);
+
+		binding.set('sync', false);
 		window.Server.profilePermissions.get({filter:{limit:40}}).then( userPermissions => {
 				binding.set('userAccountRoles',Immutable.fromJS(userPermissions));
 				binding.set('sync', true);
 			});
+	},
+	renderActions: function (userData) {
+		switch (userData.preset) {
+			case 'STUDENT': {
+				return (
+					<div className="eDataList_listItemCell">
+					</div>
+				);
+			}
+			case 'COACH': {
+				return (
+					<div className="eDataList_listItemCell">
+						<a onClick={this.viewDetails.bind(this, userData)}>View Details</a>
+						<br/>
+						<a onClick={this.revokeRole.bind(this, userData)}>Revoke</a>
+					</div>
+				);
+			}
+			default: {
+				return (
+					<div className="eDataList_listItemCell">
+						<a onClick={this.revokeRole.bind(this, userData)}>Revoke</a>
+					</div>
+				);
+			}
+		}
 	},
 	renderUserAccountRoleList:function(data){
 		if(data !== undefined){
@@ -25,7 +53,7 @@ const AccountRoles = React.createClass({
 						<div className="eDataList_listItemCell">{userData.school !== undefined ? userData.school.name : ''}</div>
 						<div className="eDataList_listItemCell">{userData.preset}</div>
 						<div className="eDataList_listItemCell">{userData.comment !== undefined ? userData.comment : ''}</div>
-						<div className="eDataList_listItemCell">{userData.preset !== 'STUDENT' ? <a onClick={this.revokeRole.bind(this, userData)}>Revoke</a> : null}</div>
+						{this.renderActions(userData)}
 					</div>
 				)
 			});
@@ -41,7 +69,9 @@ const AccountRoles = React.createClass({
 			});
 		}
 	},
-	
+	viewDetails: function(permission){
+		window.simpleAlert(<AllowedSports permission={permission}/>);
+	},
 	render:function(){
 		const 	binding 		= this.getDefaultBinding(),
 				data 			= binding.toJS('userAccountRoles'),

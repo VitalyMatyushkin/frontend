@@ -8,6 +8,8 @@ export interface Permission {
 	school: object
 	schoolId: string
 	schoolIds: string[]
+	sportIds: string[],
+	sports: any[],
 	status: string
 	comment?: string
 } 

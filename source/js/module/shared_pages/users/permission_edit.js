@@ -7,7 +7,10 @@ const   React           = require('react'),
         Form 		    = require('module/ui/form/form'),
         FormField 	    = require('module/ui/form/form_field'),
 	    {SVG} 	        = require('module/ui/svg'),
-        {DateHelper} 	    = require('module/helpers/date_helper');
+        RoleHelper      = require('module/helpers/role_helper'),
+        {DateHelper}    = require('module/helpers/date_helper'),
+		MoreartyHelper  = require('module/helpers/morearty_helper'),
+		SportManager    = require('module/shared_pages/settings/account/helpers/sport-manager');
 
 const STATUS = {
     ACTIVE:     'ACTIVE',
@@ -19,25 +22,52 @@ const STATUS = {
 const EditPermission = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
-        onCancel: React.PropTypes.func.isRequired
+        onCancel: React.PropTypes.func.isRequired,
+	    isSuperAdmin: React.PropTypes.bool.isRequired
     },
     componentWillMount: function(){
-        const   binding         = this.getDefaultBinding(),
-                userId          = binding.get('userWithPermissionDetail.id'),
-                permissionId    = binding.get('editPermissionId');
+        const binding = this.getDefaultBinding();
 
-        binding.set('dataUploaded', false);
-        window.Server.userPermission.get({userId, permissionId})
-        .then((data) => {
-			binding.set('dataUploaded', true);
-            binding.set('formPermission',Immutable.fromJS(data));
-            return data;
-        });
+        binding.set('isSync', false);
+        this.getUserPermissionsService().get(this.getUserPermissionsServiceParams())
+	        .then(userPermission => {
+				userPermission.activatedAt = DateHelper._getDateStringFromDateObject(new Date(userPermission.activatedAt));
+
+	            if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {
+		            binding.set('sportManager', Immutable.fromJS({
+			            rivals: userPermission.sports
+		            }));
+	            }
+		        binding.set('isSync', true);
+		        binding.set('formPermission',Immutable.fromJS(userPermission));
+	            return true;
+	        });
     },
     componentWillUnmount: function(){
         const binding = this.getDefaultBinding();
+
         binding.clear('formPermission');
     },
+	getUserPermissionsServiceParams() {
+		const binding = this.getDefaultBinding();
+		const userId = binding.get('userWithPermissionDetail.id');
+		const permissionId = binding.get('editPermissionId');
+
+		if(this.props.isSuperAdmin) {
+			return {userId, permissionId};
+		} else {
+			const activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+			return {userId, schoolId: activeSchoolId, permissionId};
+		}
+	},
+	getUserPermissionsService: function () {
+		if(this.props.isSuperAdmin) {
+			return window.Server.userPermission;
+		} else {
+			return window.Server.schoolUserPermission;
+		}
+	},
     getStatus: function () {
         return [
             {
@@ -59,9 +89,7 @@ const EditPermission = React.createClass({
         ];
     },
     onSubmitPermission: function (data) {
-        const   binding = this.getDefaultBinding(),
-                userId = binding.get('userWithPermissionDetail.id'),
-                permissionId = binding.get('editPermissionId');
+        const binding = this.getDefaultBinding();
 
 		if (data.activatedAt){
             data.activatedAt = DateHelper.getFormatDateTimeUTCString(data.activatedAt);
@@ -69,21 +97,53 @@ const EditPermission = React.createClass({
 		if (data.deactivatedAt){
 			data.deactivatedAt = DateHelper.getFormatDateTimeUTCString(data.deactivatedAt);
 		}
-        window.Server.userPermission.put({userId, permissionId}, data)
-        .then((res) => {
-            binding.set('editPermission',false);
-            return res;
-        });
+		const userPermission = binding.toJS('formPermission');
+	    if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {
+		    const sports = binding.toJS('sportManager.rivals');
+		    const sportIds = sports.map(s => s.id);
+		    data.sportIds = sportIds;
+	    }
+        this.getUserPermissionsService().put(this.getUserPermissionsServiceParams(), data)
+	        .then(res => {
+	            binding.set('editPermission',false);
+	            return res;
+	        });
     },
+	renderSports() {
+		const binding = this.getDefaultBinding();
+		const userPermission = binding.toJS('formPermission');
+		
+		if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {
+			return (
+				<div className="eForm_field">
+					<div className="eForm_fieldName mNoLeftPadding">
+						Allow coach sports
+					</div>
+					<SportManager
+						binding			= { binding.sub('sportManager') }
+						schoolId		= { userPermission.schoolId }
+						serviceName 	= { 'schoolSports' }
+						extraCssStyle	= "mInline mRightMargin mWidth250"
+					/>
+				</div>
+			);
+		} else {
+			// unfortunately form can't ignore null for example in lifecycle process
+			// and try to obtain it
+			// it will fall in this case
+			// so we can't use null for this case
+			return <div/>;
+		}
+	},
     render: function() {
         const   binding = this.getDefaultBinding(),
-                dataUploaded = binding.get('dataUploaded');
+                isSync = binding.get('isSync');
 
-		if (dataUploaded) {
+		if (isSync) {
 			return (
                 <div className="bPopupEdit_container">
                     <Form
-                        formStyleClass="mNarrow"
+                        formStyleClass="mWidth300"
                         name="Edit permission"
                         binding={binding.sub('formPermission')}
                         onSubmit={this.onSubmitPermission}
@@ -91,16 +151,17 @@ const EditPermission = React.createClass({
                         onCancel={this.props.onCancel}
                     >
                         <FormField type="dropdown" field="status" options={this.getStatus()}>Status</FormField>
-                        <FormField type="datetime" field="activatedAt" validation="datetime">Activated</FormField>
-                        <FormField type="datetime" field="deactivatedAt" validation="datetime">Deactivated</FormField>
+                        <FormField type="datetime" field="activatedAt">Activated</FormField>
+                        <FormField type="datetime" field="deactivatedAt">Deactivated</FormField>
+	                    {this.renderSports()}
                     </Form>
                 </div>
 			);
 		} else {
 			return (
                 <div className="bPopupEdit_container">
-                    <div className="bForm mNarrow">
-                        <div className="eForm_atCenter" style={{width: '212px'}}>
+                    <div className="bForm mWidth300">
+                        <div className="eForm_atCenter" style={{width: '300px'}}>
                             <h2>Edit permission</h2>
                             <div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
                         </div>
@@ -110,4 +171,5 @@ const EditPermission = React.createClass({
         }
     }
 });
+
 module.exports = EditPermission;

@@ -86,14 +86,16 @@
   display: table-row;
 }
 
-.eDataList_listItemCell{
+.eDataList_listItemCell {
   box-sizing: border-box;
   display: table-cell;
   height: 38px;
   vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
-  padding: 1px 3px;
   word-wrap: break-word;
+
+  line-height: 21px;
+  padding: 5px;
 
   ul{
     li{
