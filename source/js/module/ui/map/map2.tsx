@@ -31,9 +31,10 @@ export class Map extends React.Component<MapProps, {}> {
 		const 	mapNode = this.refs['map'],
 				mapCenter = new (window as any).google.maps.LatLng(pointGoogle.lat, pointGoogle.lng),
 				mapOptions = {
-					center: mapCenter,
-					zoom: 16,
-					disableDefaultUI: true
+					center: 			mapCenter,
+					zoom: 				16,
+					disableDefaultUI: 	true,
+					zoomControl: 		true
 				};
 		this.mapView = new (window as any).google.maps.Map(mapNode, mapOptions);
 
