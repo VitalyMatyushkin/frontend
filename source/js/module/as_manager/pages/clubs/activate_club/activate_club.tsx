@@ -119,6 +119,12 @@ export const ActivateClub = (React as any).createClass({
 							<p>
 								{ActiveClubHelper.ACTIVE_TEXT[1]}
 							</p>
+							<a
+								className='eActivateClub_calendarLink'
+							    href='#events/calendar'
+							>
+								Take me to calendar
+							</a>
 						</div>
 					</div>
 				);
