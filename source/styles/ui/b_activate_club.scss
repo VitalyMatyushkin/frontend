@@ -1,6 +1,16 @@
+@import "../!variables";
+
 .bActivateClub {
   width: 600px;
   margin: 0 auto;
+}
+
+.eActivateClub_calendarLink {
+  color: $lightBlue;
+
+  &:hover{
+    text-decoration: underline;
+  }
 }
 
 @media screen and (max-width: 1024px) {
