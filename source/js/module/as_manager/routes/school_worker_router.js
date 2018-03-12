@@ -42,14 +42,16 @@ const SchoolWorkerRouter = React.createClass({
 				<LogoutRoute	binding	= {binding.sub('userData')} />
 				<SettingsRoute	binding	= {binding.sub('userData')} />
 
-				<Route	path		= "/school_admin/:subPage /school_admin/:subPage/:mode"
-						binding		= {binding.sub('activeSchool')}
-						component	= {AdminSchoolPageComponent}
+				<Route	path		    = "/school_admin/:subPage /school_admin/:subPage/:mode"
+						binding		    = {binding.sub('activeSchool')}
+						component	    = {AdminSchoolPageComponent}
+					    activeSchoolId  = {this.activeSchoolId}
+
 				/>
 
-				<Route	path		= "/schools /schools/:subPage"
-						binding		= {binding.sub('schoolsPage')}
-						component	= {SchoolPageComponent}
+				<Route	path        = "/schools /schools/:subPage"
+						binding     = {binding.sub('schoolsPage')}
+						component   = {SchoolPageComponent}
 				/>
 
 				<Route	path		= "/events /events/:subPage"
