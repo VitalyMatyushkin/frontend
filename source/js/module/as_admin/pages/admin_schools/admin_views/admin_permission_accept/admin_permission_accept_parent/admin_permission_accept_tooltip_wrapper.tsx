@@ -13,6 +13,7 @@ const stopWordsArray = [
 	'parent',
 	'of',
 	'optional',
+	'undefined',
 	'\\(',
 	'\\)',
 	'\\[',
