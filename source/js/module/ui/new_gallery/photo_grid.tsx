@@ -13,15 +13,7 @@ interface  PhotoGridState {
 	windowHeight: number
 }
 
-export class PhotoGrid extends React.Component< PhotoGridProps, PhotoGridState> {
-	constructor(props) {
-		super(props);
-		this.setState({
-			windowWidth:	window.innerWidth,
-			windowHeight:	window.innerHeight
-		});
-	}
-
+export class PhotoGrid extends React.Component<PhotoGridProps, PhotoGridState> {
 	componentWillMount() {
 		this.setState({
 			windowWidth:	window.innerWidth,
@@ -69,8 +61,13 @@ export class PhotoGrid extends React.Component< PhotoGridProps, PhotoGridState> 
 						height = width/3;
 
 				return (
-					<div className="bAlbumPhoto" style={{width, height}} ref={photo.id}>
-						<div className="img" style={background} onClick={() => this.props.handleClickPhoto(photo.id)}></div>
+					<div
+						key={photo.id}
+						className="bAlbumPhoto"
+						style={{width, height}}
+						ref={photo.id}
+					>
+						<div className="img" style={background} onClick={() => this.props.handleClickPhoto(photo.id)}/>
 						{typeof photo.name !== 'undefined' && photo.name !== '' ? <div className="bImg_name">{photo.name}</div> : null}
 					</div>
 				)
