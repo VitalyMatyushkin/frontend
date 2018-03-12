@@ -78,7 +78,6 @@ const AdminPermissionAcceptParent = React.createClass({
 				const linkedStudents = permissions
 					.filter(p => p.preset === RoleHelper.USER_ROLES.PARENT)
 					.map(p => p.studentId);
-				console.log(permissions);
 
 				binding.set('linkedStudentIds', Immutable.fromJS(linkedStudents));
 				binding.set('isSync', true);
@@ -289,7 +288,7 @@ const AdminPermissionAcceptParent = React.createClass({
 		binding.set('houseId', undefined);
 		binding.set('houseInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 	},
-	renderAdminPermissionAcceptParentDoubleRequestTooltip() {
+	renderTooltips() {
 		const binding = this.getDefaultBinding();
 		const linkedStudentIds = binding.toJS('linkedStudentIds');
 		const studentId = binding.toJS('studentId');
@@ -300,7 +299,13 @@ const AdminPermissionAcceptParent = React.createClass({
 
 			return <AdminPermissionAcceptParentDoubleRequestTooltip childName={childName}/>;
 		} else {
-			return null;
+			return (
+				<AdminPermissionAcceptTooltipWrapper
+					binding={this.getDefaultBinding().sub('adminPermissionAcceptTooltipWrapper')}
+					permissionRequest={this.getDefaultBinding().toJS('permissionRequest')}
+					handleClickStudent={this.handleClickStudentFromTooltip}
+				/>
+			);
 		}
 	},
 	render: function() {
@@ -378,12 +383,7 @@ const AdminPermissionAcceptParent = React.createClass({
 							</div>
 						</If>
 
-						{this.renderAdminPermissionAcceptParentDoubleRequestTooltip()}
-						<AdminPermissionAcceptTooltipWrapper
-							binding={this.getDefaultBinding().sub('adminPermissionAcceptTooltipWrapper')}
-							permissionRequest={this.getDefaultBinding().toJS('permissionRequest')}
-							handleClickStudent={this.handleClickStudentFromTooltip}
-						/>
+						{this.renderTooltips()}
 					</div>
 				</div>
 			)

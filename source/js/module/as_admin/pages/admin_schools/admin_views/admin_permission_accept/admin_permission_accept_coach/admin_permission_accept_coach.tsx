@@ -36,8 +36,6 @@ export const AdminPermissionAcceptCoach = (React as any).createClass({
 		binding.set('isSync', false);
 		if (typeof permissionRequestId !== 'undefined') {
 			window.Server.permissionRequest.get({prId: permissionRequestId, schoolId:schoolId}).then(permissionRequest =>{
-				console.log(permissionRequest);
-
 				binding.set('isSync', true);
 				binding.set('permissionRequest', permissionRequest);
 				binding.set('sportManager', Immutable.fromJS( {rivals: permissionRequest.sports} ));

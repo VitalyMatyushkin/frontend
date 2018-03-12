@@ -48,16 +48,23 @@ const AddPermissionRequest = React.createClass({
         }
         binding.set('rivals', Immutable.fromJS([]));
     },
-	continueButtonClick:function(model){
-		const 	binding 		= this.getDefaultBinding();
+	continueButtonClick:function(model) {
+		const binding = this.getDefaultBinding();
 
 		model.preset = model.preset.toUpperCase();
 
-		if (model.preset === RoleHelper.USER_PERMISSIONS.TEACHER || model.preset === RoleHelper.USER_PERMISSIONS.COACH)
-        	model.sportIds = binding.toJS('rivals').map(r => r.id);
+		if (
+			model.preset === RoleHelper.USER_PERMISSIONS.TEACHER ||
+			model.preset === RoleHelper.USER_PERMISSIONS.COACH
+		) {
+			model.sportIds = binding.toJS('rivals').map(r => r.id);
+		}
 
-		if(model.studentName)
-			model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
+		if(typeof model.studentName !== 'undefined') {
+			const formComment = typeof model.comment !== 'undefined' ? model.comment : '';
+
+			model.comment = `Request to be parent of [ ${model.studentName} ] \r\n ${formComment}`;
+		}
 
 		window.Server.profileRequests.post(model)
 			.then(result => {
@@ -180,75 +187,75 @@ const AddPermissionRequest = React.createClass({
 
 		return (
 			<div>
-			<Form
-				name			= "New Request"
-				updateBinding	= { true }
-				binding			= { binding.sub('form') }
-				onSubmit		= { this.continueButtonClick }
-				onCancel		= { this.props.onCancel }
-				formStyleClass	= "bGrantContainer"
-				defaultButton	= "Submit"
-			>
-				<div className="eForm_field">
-					<div className="eForm_fieldName">
-						Postcode
-					</div>
-					<PostcodeSelector
-						currentPostcode			= {binding.toJS('postcode')}
-						handleSelectPostcode	= {this.handleSelectPostcode}
-						handleEscapePostcode	= {this.handleEscapePostcode}
-						extraCssStyle 			= {'mInline mRightMargin mWidth250'}
-					/>
-				</div>
-				<FormField
-					type			= "autocomplete"
-					field			= "schoolId"
-					serviceFullData	= { this.schoolService }
-					customListItem	= { SchoolListItem }
-					placeholder 	= { 'Please select school' }
-					validation		= "required"
+				<Form
+					name			= "New Request"
+					updateBinding	= { true }
+					binding			= { binding.sub('form') }
+					onSubmit		= { this.continueButtonClick }
+					onCancel		= { this.props.onCancel }
+					formStyleClass	= "bGrantContainer"
+					defaultButton	= "Submit"
 				>
-					School
-				</FormField>
-				< FormField
-					type        = "select"
-					field        = "preset"
-					sourceArray    = {this.getRoles()}
-					placeHolder    = {this.getPlaceHolderForRoleSelect()}
-					isDisabled    = {this.isRoleSelectDisabled()}
-					validation    = "required"
-				>
-					Role
-				</FormField>
-                { this.isRoleCoachOrTeacherSelected() ?
 					<div className="eForm_field">
 						<div className="eForm_fieldName">
-							Sports
+							Postcode
 						</div>
-						<SportManager
-							binding			= { binding }
-							schoolId		= { this.getSchoolSelectedId() }
-							serviceName 	= "publicSchoolSports"
-							extraCssStyle	= "mInline mRightMargin mWidth250"
+						<PostcodeSelector
+							currentPostcode			= {binding.toJS('postcode')}
+							handleSelectPostcode	= {this.handleSelectPostcode}
+							handleEscapePostcode	= {this.handleEscapePostcode}
+							extraCssStyle 			= {'mInline mRightMargin mWidth250'}
 						/>
 					</div>
-					:
-					<div></div>
-                }
-				<FormField
-					type		= "text"
-					field		= "studentName"
-					isDisabled	= { !isParent }
-				>
-					Student
-				</FormField>
-				<FormField
-					type	= "textarea"
-					field	= "comment"
-				>
-					Comment
-				</FormField>
-			</Form>
+					<FormField
+						type			= "autocomplete"
+						field			= "schoolId"
+						serviceFullData	= { this.schoolService }
+						customListItem	= { SchoolListItem }
+						placeholder 	= { 'Please select school' }
+						validation		= "required"
+					>
+						School
+					</FormField>
+					< FormField
+						type        = "select"
+						field        = "preset"
+						sourceArray    = {this.getRoles()}
+						placeHolder    = {this.getPlaceHolderForRoleSelect()}
+						isDisabled    = {this.isRoleSelectDisabled()}
+						validation    = "required"
+					>
+						Role
+					</FormField>
+	                { this.isRoleCoachOrTeacherSelected() ?
+						<div className="eForm_field">
+							<div className="eForm_fieldName">
+								Sports
+							</div>
+							<SportManager
+								binding			= { binding }
+								schoolId		= { this.getSchoolSelectedId() }
+								serviceName 	= "publicSchoolSports"
+								extraCssStyle	= "mInline mRightMargin mWidth250"
+							/>
+						</div>
+						:
+						<div></div>
+	                }
+					<FormField
+						type		= "text"
+						field		= "studentName"
+						isDisabled	= { !isParent }
+					>
+						Student
+					</FormField>
+					<FormField
+						type	= "textarea"
+						field	= "comment"
+					>
+						Comment
+					</FormField>
+				</Form>
 			</div>
 		);
 	}
