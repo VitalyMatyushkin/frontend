@@ -48,4 +48,5 @@ const StudentStatistic = React.createClass({
 		}
 	}
 });
+
 module.exports = StudentStatistic;
