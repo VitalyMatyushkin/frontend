@@ -163,6 +163,7 @@ const FixtureList = React.createClass({
         return eventsByDate.map(event => {
             return (
 				<FixtureItem
+					key             = {event.id}
 					event			= {event}
 					activeSchoolId	= {this.props.activeSchoolId}
 					onClick			= {this.props.onClick}
@@ -186,7 +187,7 @@ const FixtureList = React.createClass({
 					pageStart	= {0}
 					loadMore	= {(page) => this.loadFixtures(page)}
 					hasMore		= {this.state.hasMore}
-					loader		= {<Loader/>}
+					loader		= {<Loader key='infinite_scroll_loader'/>}
 				>
 					<div>
 						{this.renderFixtures()}
@@ -195,7 +196,11 @@ const FixtureList = React.createClass({
 			);
 		}
 
-		return content;
+		return <div className="eChallengeDate_wrap">
+			<div className='eChallengeDate_noFixtures'>
+				No fixtures to report.
+			</div>
+		</div>;
     }
 
 });
