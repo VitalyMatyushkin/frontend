@@ -27,11 +27,12 @@ const ChallengeListItem = React.createClass({
 			this.props.onClick(eventId);
 	},
 	render: function () {
-		const 	event 			= this.props.event,
-				model			= this.props.model,
-				isCancelled		= event.status === 'CANCELED',
-				isRejected		= event.status === 'REJECTED',
-				isInvitesSent	= event.status === 'INVITES_SENT';
+		const 	event 						= this.props.event,
+				model						= this.props.model,
+				isCancelled					= event.status === 'CANCELED',
+				isRejected					= event.status === 'REJECTED',
+				isInvitesSent				= event.status === 'INVITES_SENT',
+				isCollectingInviteResponse 	= event.status === 'COLLECTING_INVITE_RESPONSE';
 
 		let eventResult;
 
@@ -52,6 +53,7 @@ const ChallengeListItem = React.createClass({
 				}
 				break;
 			case isInvitesSent:
+			case isCollectingInviteResponse:
 				eventResult = <span>Awaiting<br/>opponent</span>;
 				break;
 			case typeof model.textResult === 'undefined':
