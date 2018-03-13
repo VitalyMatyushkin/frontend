@@ -27,8 +27,16 @@ export class Button extends React.Component<ButtonProps> {
 
 		return isLoading;
 	}
+	isDisabled() {
+		let isDisabled: boolean = false;
+		if(typeof this.props.isDisabled !== 'undefined') {
+			isDisabled = this.props.isDisabled;
+		}
+
+		return isDisabled;
+	}
 	getButtonClassName() {
-		return classNames('bButton', this.props.extraStyleClasses || '', { mDisable: this.isLoading() } );
+		return classNames('bButton', this.props.extraStyleClasses || '', { mDisable: this.isLoading() || this.isDisabled()} );
 	}
 	getView() {
 		let view = null;
@@ -61,16 +69,13 @@ export class Button extends React.Component<ButtonProps> {
 		return view;
 	}
 	render() {
-		let isDisabled: boolean = false;
-		if(typeof this.props.isDisabled !== 'undefined') {
-			isDisabled = this.props.isDisabled;
-		}
+
 		
 		return (
 			<button
 				id			= { this.props.id }
 				className	= { this.getButtonClassName() }
-				disabled	= { isDisabled }
+				disabled	= { this.isDisabled() }
 				onClick		= { () => this.props.onClick() }
 			>
 				{ this.getView() }

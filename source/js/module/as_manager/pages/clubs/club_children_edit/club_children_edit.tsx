@@ -343,8 +343,8 @@ export const ClubChildrenEdit = (React as any).createClass({
 			case this.isParticipantListChange(): {
 				window.confirmAlert(
 					`Do you want to save the changes?`,
-					"Ok",
-					"Cancel",
+					"Yes",
+					"No",
 					() => {
 						this.saveChildren().then(() => {
 							this.removeListenersAndClearBinding();
