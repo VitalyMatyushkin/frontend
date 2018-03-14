@@ -198,7 +198,9 @@ const	cancelEvent								= require('styles/ui/b_cancel_event.scss');
 
 const	playerChooserStyle	= require('styles/ui/b_player_choosers/b_player_choosers.scss');
 
-// font awesome styles
+// custom font styles
+const	materialDesignIconicFont = require('../styles/material_design_iconic_font/material-design-iconic-font.scss');
+const	materialDesignIcons = require('../styles/mdi/materialdesignicons.scss');
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');
 const	customFont	= require('../styles/custom-font.scss');
 

@@ -1,0 +1,19 @@
+@import '../../../bootstrap-custom';
+
+.bDashboardButtonСol {
+  &.mCol-3 {
+    @include make-md-column(3);
+  }
+
+  &.mCol-4 {
+    @include make-md-column(4);
+  }
+
+  &.mCol-5 {
+    @include make-md-column(5);
+  }
+
+  &.mCol-6 {
+    @include make-md-column(6);
+  }
+}

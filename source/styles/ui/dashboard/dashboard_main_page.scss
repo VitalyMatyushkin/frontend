@@ -1,0 +1,18 @@
+@import '../../bootstrap-custom';
+
+.bDashboardMainPage {
+  box-sizing: border-box;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.eDashboardMainPage_mainContainer {
+  @include container-fixed();
+
+  padding: 50px;
+}
+
+.eDashboardMainPage_row {
+  @include make-row();
+}

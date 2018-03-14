@@ -10,6 +10,7 @@ const	React							= require('react'),
 		SettingsRoute					= require('module/core/routes/settings_route'),
 
 		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
+		{Dashboard}                     = require('module/as_manager/pages/dashboard/dashboard'),
 		SchoolPageComponent				= require('module/as_manager/pages/schools/schools_page'),
 		{Events}				        = require('module/as_manager/pages/events/events'),
 		{ClubsPage}					    = require('module/as_manager/pages/clubs/clubs_page'),
@@ -19,8 +20,8 @@ const	React							= require('react'),
 		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
 		UserViewComponent				= require('module/shared_pages/users/user_view'),
 		DemoViewComponent				= require('module/shared_pages/demo_slider/demo_slider'),
-		{Messages}				= require('module/as_manager/pages/messages/messages'),
-		{SupportedBrowsers}			= require('module/shared_pages/supported_browsers/supported_browsers');
+		{Messages}				        = require('module/as_manager/pages/messages/messages'),
+		{SupportedBrowsers}			    = require('module/shared_pages/supported_browsers/supported_browsers');
 
 /**
  * It's a router for all school workers:
@@ -42,11 +43,17 @@ const SchoolWorkerRouter = React.createClass({
 				<LogoutRoute	binding	= {binding.sub('userData')} />
 				<SettingsRoute	binding	= {binding.sub('userData')} />
 
-				<Route	path		    = "/school_admin/:subPage /school_admin/:subPage/:mode"
-						binding		    = {binding.sub('activeSchool')}
-						component	    = {AdminSchoolPageComponent}
-					    activeSchoolId  = {this.activeSchoolId}
+				<Route
+					path		    = "/school_admin/:subPage /school_admin/:subPage/:mode"
+					binding		    = {binding.sub('activeSchool')}
+					component	    = {AdminSchoolPageComponent}
+				    activeSchoolId  = {this.activeSchoolId}
+				/>
 
+				<Route
+					path        = "/dashboard /dashboard/:subPage"
+		            binding     = {binding.sub('dashboardPage')}
+		            component   = {Dashboard}
 				/>
 
 				<Route	path        = "/schools /schools/:subPage"

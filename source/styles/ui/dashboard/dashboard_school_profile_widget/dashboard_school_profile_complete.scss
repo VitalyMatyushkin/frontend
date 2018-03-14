@@ -1,0 +1,102 @@
+@import '../../../bootstrap-custom';
+
+.bDashboardSchoolProfileComplete {
+  @include make-row();
+}
+
+.eDashboardSchoolProfileComplete_col {
+  @include make-md-column(6);
+
+  &.mTextRight {
+    text-align: right!important;
+  }
+}
+
+.eDashboardSchoolProfileComplete_percentComplete {
+  line-height: 40px;
+  font-size: 36px;
+  font-weight: 300;
+  color: #455a64;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: .5rem;
+}
+
+.eDashboardSchoolProfileComplete_text {
+  color: #99abb4 !important;
+  line-height: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: .5rem;
+}
+
+.eDashboardSchoolProfileComplete_donutProgressBar {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: transparent;
+  box-sizing: content-box;
+  width: 80px;
+  height: 80px;
+  font-size: 18px;
+
+  margin-bottom: 0;
+  background-clip: content-box;
+  text-align: right!important;
+  background-image: linear-gradient(378deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+}
+
+.eDashboardSchoolProfileComplete_donutProgressBar:after {
+  z-index: 1;
+
+  width: 70px;
+  height: 70px;
+  margin-left: 5px;
+  margin-top: 5px;
+  line-height: 70px;
+
+  content: attr(data-label);
+  background-color: #fff;
+
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: light;
+  color: #a1a2a3;
+
+  box-sizing: border-box;
+}
+
+.eDashboardSchoolProfileComplete_donutProgressBarCircle {
+  z-index: 10;
+  width: 70px;
+  height: 70px;
+  background: #fff;
+  line-height: 70px;
+  position: absolute;
+  border-radius: 100%;
+  text-align: center;
+  margin-left: 5px;
+  margin-top: 5px;
+  left: 0px;
+  right: 0px;
+  font-size: 27px;
+  color: #a6b7bf;
+}
+
+.eDashboardSchoolProfileComplete_donutProgressBarCircle:before {
+  content: "\F009";
+
+  display: inline-block;
+  font: normal normal normal 24px/1 "Material Design Icons";
+  font-size: inherit;
+  text-rendering: auto;
+  line-height: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+
+  box-sizing: border-box;
+}
