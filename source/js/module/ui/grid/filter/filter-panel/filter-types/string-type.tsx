@@ -39,10 +39,11 @@ export class FilterStringType extends React.Component<FilterStringTypeProps, Fil
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
 				value = badge && badge.values ? badge.values[0] : '',
-				placeholder = 'Enter ' + model.field.text;
+				placeholder = 'Enter ' + model.field.text,
+				id = model.id ? model.id + '_input' : undefined;
 
 		return (
-			<input type="text" className="eFilterTypeString" id={model.id} value={value} placeholder={placeholder}
+			<input type="text" className="eFilterTypeString" id={id} value={value} placeholder={placeholder}
 				   onChange={(e) => this.onChange(e)} />
 		);
 	}

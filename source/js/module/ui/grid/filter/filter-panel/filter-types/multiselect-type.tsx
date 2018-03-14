@@ -4,10 +4,31 @@
 
 import * as React from 'react';
 import * as classNames from 'classnames';
-import * as MultiSelect from 'module/ui/multiselect-react/multiselect';
+import {Item as MultiselectItem, MultiselectReact} from 'module/ui/multiselect-react/multiselect';
+
+interface Badge {
+	values: Array<{ key: string }>
+}
+
+interface _FilterField {
+	id: string
+	typeOptions: _FilterFieldTypeOptions
+	onChange?: (items: MultiselectItem[]) => void
+	getBadge: () => Badge
+}
+
+
+interface _FilterFieldTypeOptions {
+	getDataPromise: Promise<any[]>
+	valueField: string
+	keyField: string
+	items: MultiselectItem[]
+	hideFilter: boolean
+	hideButtons: boolean
+}
 
 export interface FilterMultiSelectTypeProps {
-    filterField: any
+    filterField: _FilterField
 }
 
 interface FilterMultiSelectTypeState {
@@ -23,13 +44,13 @@ export class FilterMultiSelectType extends React.Component<FilterMultiSelectType
 		this.model.loadData();
 	}
 
-	onLoad(){
+	onLoad(): void {
 		this.setState({model:this.model});
 	}
 
-	onChange(data){
-		this.model.setSelections(data);
-		this.setState({model:this.model});
+	onChange(selections: string[]): void {
+		this.model.setSelections(selections);
+		this.setState({model: this.model});
 	}
 
 	render() {
@@ -43,41 +64,24 @@ export class FilterMultiSelectType extends React.Component<FilterMultiSelectType
 				});
 
 		return (
-			<MultiSelect items={items} selections={selections} onChange={(data) => this.onChange(data)} id={id} className={classes} />
+			<MultiselectReact items={items} selections={selections} onChange={selections => this.onChange(selections)} id={id} className={classes} />
 		);
 	}
-}
-
-interface _FilterFieldTypeOptions {
-    getDataPromise: any
-    valueField: any
-    keyField: any
-    items: any[]
-    hideFilter: boolean
-    hideButtons: boolean
-}
-
-interface _FilterField {
-    id: any
-    typeOptions: _FilterFieldTypeOptions
-    onChange?: any
-    getBadge: () => any
-
 }
 
 
 class MultiSelectModel {
 
     filterField: _FilterField;
-    getDataPromise: any;
-    valueField: any;
-    keyField: any;
-    items: any[];
+    getDataPromise: Promise<any[]>;
+    valueField: string;
+    keyField: string;
+    items: MultiselectItem[];
     hideFilter: boolean;
     hideButtons: boolean;
-    onLoad: any;
+    onLoad: () => void;
 
-    constructor(filterField){
+    constructor(filterField: _FilterField) {
         const options = filterField.typeOptions;
 
         this.filterField = filterField;
@@ -93,7 +97,7 @@ class MultiSelectModel {
 
     loadData(): void {
         this.getDataPromise && this.getDataPromise.then(data => {
-            const result = [];
+            const result: MultiselectItem[] = [];
             data && data.forEach(item => {
                 result.push({
                     key: item[this.keyField],
@@ -106,8 +110,8 @@ class MultiSelectModel {
         });
     }
 
-    setSelections(data): void{
-        const result = this.items.filter(item => data.indexOf(item.key) !== -1);
+    setSelections(selections: string[]): void {
+        const result = this.items.filter(item => selections.indexOf(item.key) !== -1);
         this.filterField.onChange(result);
     }
 

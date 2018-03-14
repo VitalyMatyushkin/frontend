@@ -2,7 +2,7 @@
  * Created by Anatoly on 24.07.2016.
  */
 
-import {FilterField} from './filter-field';
+import {FilterField, FilterFieldProps} from './filter-field';
 import {BadgeArea} from './badge-area';
 import * as	React from 'react';
 import {BadgeAreaModel} from "module/ui/grid/filter/model/badge-area-model";

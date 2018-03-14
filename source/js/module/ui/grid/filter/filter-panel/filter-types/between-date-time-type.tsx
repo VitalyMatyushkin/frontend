@@ -5,8 +5,13 @@
 import * as React from 'react';
 import * as DateTime from 'module/ui/form/types/datetime';
 
+
 export interface FilterBetweenDateTimeTypeProps {
-    filterField: any
+    filterField: {
+		id: string
+		getBadge: () => any
+		onChange?: (items: [string, string]) => void
+	}
 }
 
 interface FilterBetweenDateTimeTypeState {

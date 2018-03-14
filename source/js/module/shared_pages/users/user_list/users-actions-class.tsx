@@ -314,7 +314,7 @@ export class UsersActionsClass {
 				},
 				filter:{
 					type:'string',
-					id: 'userEmailFilter_input'
+					id: 'userEmailFilter'
 				}
 			},
 			{

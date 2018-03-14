@@ -5,9 +5,16 @@
 import * as React from 'react';
 import * as Date from 'module/ui/form/types/date';
 
+interface Badge {
+	values: Array<{ key: string }>
+}
 
 export interface FilterBetweenDateTypeProps {
-    filterField: any
+    filterField: {
+    	id: string
+		getBadge: () => Badge
+		onChange?: (items: [string, string]) => void
+	}
 }
 
 interface FilterBetweenDateTypeState {
@@ -27,7 +34,7 @@ export class FilterBetweenDateType extends React.Component<FilterBetweenDateType
 				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '',
 				values  = [value, valueTo] as [string, string];
 
-		this.setState({values:values});
+		this.setState({values: values});
 
 		model.onChange(values);
 	}

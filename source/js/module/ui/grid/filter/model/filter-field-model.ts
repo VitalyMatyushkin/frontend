@@ -67,7 +67,7 @@ export class FilterFieldModel {
         }
     }
 
-    _setStringValue(value){
+    _setStringValue(value): [any] | null {
         return value ? [value] : null;
     }
 

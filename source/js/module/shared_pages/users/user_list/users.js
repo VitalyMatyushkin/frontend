@@ -74,12 +74,8 @@ const Users = React.createClass({
 
 		if(binding.get('isShowCSVExportPopup')) {
 			return (
-				<ConfirmPopup
-					isShowButtons = { false }
-				>
-					<div
-						className = 'bCSVExportPopup'
-					>
+				<ConfirmPopup isShowButtons = { false }>
+					<div className = 'bCSVExportPopup'>
 						Loading data. It will take some time.
 					</div>
 				</ConfirmPopup>
