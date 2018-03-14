@@ -207,10 +207,10 @@ export const EventForm = (React as any).createClass({
 		const	binding = this.getDefaultBinding();
 
 		const	event						= binding.toJS('model'),
-			gender                      = binding.toJS('model.gender'),
-			fartherThen					= binding.get('fartherThen'),
-			type						= event.type,
-			opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
+				gender                      = binding.toJS('model.gender'),
+				fartherThen					= binding.get('fartherThen'),
+				type						= event.type,
+				opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
 
 		return(
 			<div className="eManager_base">

@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 export interface Point{
-	lat?: number,
+	lat?: number
 	lng?: number
+	type: string
+	coordinates: [number, number]
 }
 
 export interface MapProps{
@@ -29,7 +31,7 @@ export class Map extends React.Component<MapProps, {}> {
 	}
 	setUpMap(pointGoogle: Point): void {
 		const 	mapNode = this.refs['map'],
-				mapCenter = new (window as any).google.maps.LatLng(pointGoogle.lat, pointGoogle.lng),
+				mapCenter = new (window as any).google.maps.LatLng(pointGoogle.coordinates[1], pointGoogle.coordinates[0]),
 				mapOptions = {
 					center: 			mapCenter,
 					zoom: 				16,

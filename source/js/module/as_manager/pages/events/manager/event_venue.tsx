@@ -5,7 +5,7 @@ import * as Immutable from 'immutable'
 import * as propz from 'propz'
 import * as Promise  from 'bluebird'
 import {If} from  'module/ui/if/if'
-import {Map} from 'module/ui/map/map2'
+import {Map, Point} from 'module/ui/map/map2_editable'
 import {Autocomplete} from  'module/ui/autocomplete2/OldAutocompleteWrapper'
 import {PlaceListItem} from 'module/ui/autocomplete2/custom_list_items/place_list_item/place_list_item'
 import {PlacePopup} from './place_popup'
@@ -20,7 +20,7 @@ const	InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrappe
 export const EventVenue = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
-	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
+	DEFAULT_VENUE_POINT: { coordinates: [-0.246722, 50.832949], "lat": 50.832949, "lng": -0.246722 },
 
 	componentWillReceiveProps:function(nextProps){
 		// Listen changes of event type.
@@ -286,6 +286,8 @@ export const EventVenue = (React as any).createClass({
 		}
 
 		this.setPostcode(postcode);
+
+		this.getDefaultBinding().set('model.venue.point', Immutable.fromJS(postcode.point));
 	},
 
 	handleClickPostcodeInput(eventDescriptor) {
@@ -322,8 +324,13 @@ export const EventVenue = (React as any).createClass({
 			case typeof venuePoint !== 'undefined' && venueType === "TBD":
 				return point;
 			case typeof venuePoint !== 'undefined':
-				return venuePoint.point;
+				point = this.getDefaultBinding().toJS('model.venue.point');
+				return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
 		}
+	},
+
+	getNewPoint(point) {
+		this.getDefaultBinding().set('model.venue.point', Immutable.fromJS(point));
 	},
 
 	isPostcodeInputBlocked() {
@@ -491,8 +498,11 @@ export const EventVenue = (React as any).createClass({
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
-					<Map	point				= { this.getPoint() }
-							customStylingClass	= "eEvents_venue_map"
+					<Map
+						key                 = { binding.toJS('model.venue.postcodeData') ? binding.toJS('model.venue.postcodeData').id : 'emptyPostcode' }
+						point				= { this.getPoint() }
+						getNewPoint         = { this.getNewPoint }
+						customStylingClass	= "eEvents_venue_map"
 					/>
 				</If>
 				<If condition={this.isShowPlacePopup()}>

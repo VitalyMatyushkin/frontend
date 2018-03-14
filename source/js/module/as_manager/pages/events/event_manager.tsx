@@ -515,7 +515,8 @@ export const EventManager = (React as any).createClass({
 			eventId:	event.id
 		});
 	},
-	submitEvent: function(): Promise<any> {
+	// submitEvent: function(): Promise<any> {
+	submitEvent: function() {
 		const binding = this.getDefaultBinding();
 
 		const model = binding.toJS('model');
@@ -562,13 +563,18 @@ export const EventManager = (React as any).createClass({
 	},
 	setVenueToBody: function(body): void {
 		const binding = this.getDefaultBinding();
-
 		const modelVenue = binding.toJS('model.venue');
 		body.venue = {
-			venueType: modelVenue.venueType
+			venueType: modelVenue.venueType,
+			point: modelVenue.point
 		};
 		if(modelVenue.postcodeData.id !== 'TBD') {
 			body.venue.postcodeId = modelVenue.postcodeData.id;
+
+			if (modelVenue.postcodeData.placeId) {
+				body.venue.placeId = modelVenue.postcodeData.placeId;
+			}
+
 		}
 	},
 	/**
