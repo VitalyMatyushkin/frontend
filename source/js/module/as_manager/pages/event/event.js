@@ -1048,6 +1048,7 @@ const Event = React.createClass({
 			<AddPhotoButton	handleChange			= { file => GalleryActions.addPhotoToEvent(userRole, galleryBinding, activeSchool, eventId, file) }
 							isUserCanUploadPhotos	= { isUserCanUploadPhotos }
 							isLoading				= { isLoading }
+						    userRole                = { userRole }
 			/>
 		);
 	},

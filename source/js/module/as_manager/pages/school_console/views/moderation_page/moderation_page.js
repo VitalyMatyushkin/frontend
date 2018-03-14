@@ -61,7 +61,7 @@ const ModerationPage = React.createClass({
 						field		= 'photosEnabled'
 						classNames	= 'mSingleLine'
 					>
-						User can upload photos to event
+						Parent and student can upload photos to event
 					</FormField>
 					<FormField
 						type		= 'checkbox'

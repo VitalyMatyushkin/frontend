@@ -8,11 +8,18 @@ const AddPhotoButton = React.createClass({
 	propTypes: {
 		isLoading:				React.PropTypes.bool.isRequired,
 		isUserCanUploadPhotos:	React.PropTypes.bool.isRequired,
-		handleChange:			React.PropTypes.func.isRequired
+		handleChange:			React.PropTypes.func.isRequired,
+		userRole:               React.PropTypes.func.string
 	},
 
 	handleClick: function(eventDescriptor) {
-		if(this.props.isUserCanUploadPhotos) {
+		if ((this.props.userRole === 'STUDENT' || this.props.userRole === 'PARENT') && !this.props.isUserCanUploadPhotos) {
+			window.simpleAlert(
+				`Sorry, this feature is not available in your school`,
+				'Ok',
+				() => {}
+			);
+		} else {
 			if(typeof this.fileInputRef !== 'undefined') {
 				let event;
 				//This is true only for IE,firefox
@@ -28,12 +35,6 @@ const AddPhotoButton = React.createClass({
 				this.fileInputRef.dispatchEvent(event);
 				eventDescriptor.stopPropagation();
 			}
-		} else {
-			window.simpleAlert(
-				`Sorry, this feature is not available in your school`,
-				'Ok',
-				() => {}
-			);
 		}
 	},
 	handleChange: function(eventDescriptor) {
