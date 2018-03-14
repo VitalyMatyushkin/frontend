@@ -161,8 +161,9 @@ export const ParentRegister = (React as any).createClass({
 			case STEP_PARENT.CHILD_STEP.key:
 				currentView = (
 					<ChildStep
-						binding         = {binding.sub('childFields')}
+						binding         = {binding}
 						setChild        = {this.setChild}
+						school          = {binding.toJS('school')}
 						handleClickBack = {this.handleClickBack}
 					/>
 				);

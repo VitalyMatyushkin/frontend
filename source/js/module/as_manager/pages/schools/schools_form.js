@@ -39,6 +39,13 @@ const SchoolForm = React.createClass({
 		}
 		return result;
 	},
+	getConditionChildField: function() {
+		return [
+			{value: 'HIDDEN', text: 'hidden'},
+			{value: 'OPTIONAL', text: 'optional'},
+			{value: 'REQUIRED', text: 'required'}
+		];
+	},
 	/**
 	 * Function is something like middleware for form dropdown
 	 * If function returns false then field doesn't change value
@@ -72,7 +79,7 @@ const SchoolForm = React.createClass({
 	},
 	setDefaultPublicBigscreenSiteAccess: function() {
 		const binding = this.getDefaultBinding();
-		
+
 		if(typeof binding.toJS('publicBigscreenSite.status') === 'undefined') {
 			binding.set(
 				'publicBigscreenSite.status',
@@ -91,16 +98,16 @@ const SchoolForm = React.createClass({
 		return (
 			<div className="container">
 				<Form
-						formStyleClass 		= "row"
-						name 				= { this.props.title }
-						binding 			= { this.getDefaultBinding() }
-						service 			= "i/schools/domains"
-						onSubmit 			= { this.props.onSubmit }
-						submitOnEnter 		= { false }
-						formButtonsClass 	= "col-md-10 col-md-offset-1"
-						formTitleClass 		= "col-md-10 col-md-offset-1"
-						submitButtonId 		= "school_summary_submit"
-						cancelButtonId 		= "school_summary_cancel">
+					formStyleClass 		= "row"
+					name 				= { this.props.title }
+					binding 			= { this.getDefaultBinding() }
+					service 			= "i/schools/domains"
+					onSubmit 			= { this.props.onSubmit }
+					submitOnEnter 		= { false }
+					formButtonsClass 	= "col-md-10 col-md-offset-1"
+					formTitleClass 		= "col-md-10 col-md-offset-1"
+					submitButtonId 		= "school_summary_submit"
+					cancelButtonId 		= "school_summary_cancel">
 					<FormColumn customStyle="col-md-5 col-md-offset-1">
 						<FormField
 							type 		= "imageFile"
@@ -127,7 +134,7 @@ const SchoolForm = React.createClass({
 							Sports Department Email
 						</FormField>
 					</FormColumn>
-					
+
 					<FormColumn customStyle="col-md-5">
 						<FormField
 							type 		= "text"
@@ -235,6 +242,39 @@ const SchoolForm = React.createClass({
 							options 	= { SchoolConsts.PUBLIC_STUDENT_VIEW_OPTIONS }
 						>
 							Public student view type
+						</FormField>
+						<h3>For parent registration</h3>
+						<FormField
+							type 		= "dropdown"
+							field 		= "additionalPermissionRequestFields.childGender"
+							id 			= "school_access_select"
+							options 	= {this.getConditionChildField()}
+						>
+							Gender child
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							field 		= "additionalPermissionRequestFields.childDateOfBirth"
+							id 			= "school_access_select"
+							options 	= {this.getConditionChildField()}
+						>
+							DOB child
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							field 		= "additionalPermissionRequestFields.childHouse"
+							id 			= "school_access_select"
+							options 	= {this.getConditionChildField()}
+						>
+							House child
+						</FormField>
+						<FormField
+							type 		= "dropdown"
+							field 		= "additionalPermissionRequestFields.childForm"
+							id 			= "school_access_select"
+							options 	= {this.getConditionChildField()}
+						>
+							Form child
 						</FormField>
 					</FormColumn>
 				</Form>

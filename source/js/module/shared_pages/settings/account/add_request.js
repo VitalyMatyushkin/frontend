@@ -13,7 +13,15 @@ const	Form				= require('module/ui/form/form'),
 		PostcodeSelector	= require('../../../ui/postcode_selector/postcode_selector'),
 		GeoSearchHelper		= require('../../../helpers/geo_search_helper'),
 		RoleHelper			= require('module/helpers/role_helper'),
-		SportManager		= require('./helpers/sport-manager');
+		SportManager		= require('./helpers/sport-manager'),
+		FormBlock			= require('module/ui/form/form_block/form_block'),
+		{DateHelper}        = require('module/helpers/date_helper');
+
+const ADDITIONAL_FIELD_CONDITION= {
+	HIDDEN:     'HIDDEN',
+	OPTIONAL:   'OPTIONAL',
+	REQUIRED:   'REQUIRED'
+};
 
 const AddPermissionRequest = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -23,7 +31,7 @@ const AddPermissionRequest = React.createClass({
 		activeSchool:	React.PropTypes.object.isRequired
 	},
 	getDefaultState:function() {
-        return Immutable.Map({
+		return Immutable.Map({
 			preset:		'',
 			schoolId:	'',
 			comment:	'',
@@ -32,57 +40,108 @@ const AddPermissionRequest = React.createClass({
 			rivals: []
 		});
 	},
-    componentWillMount:function(){
-        this.initCountSportFieldsBlocks();
-    },
+	componentWillMount:function(){
+		this.initCountSportFieldsBlocks();
+	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();
 	},
-    initCountSportFieldsBlocks: function() {
-        const binding = this.getDefaultBinding();
-
-        const countSportFields = binding.toJS('countSportFields');
-
-        if(typeof countSportFields === 'undefined' || countSportFields < 0) {
-            binding.set('countSportFields', 0);
-        }
-        binding.set('rivals', Immutable.fromJS([]));
-    },
-	continueButtonClick:function(model) {
+	initCountSportFieldsBlocks: function() {
 		const binding = this.getDefaultBinding();
+
+		const countSportFields = binding.toJS('countSportFields');
+
+		if(typeof countSportFields === 'undefined' || countSportFields < 0) {
+			binding.set('countSportFields', 0);
+		}
+		binding.set('rivals', Immutable.fromJS([]));
+	},
+	continueButtonClick:function(model){
+		const 	binding 		= this.getDefaultBinding(),
+			selectedSchool  = this.getDefaultBinding().sub('form').meta('schoolId.fullValue').toJS();
 
 		model.preset = model.preset.toUpperCase();
 
-		if (
-			model.preset === RoleHelper.USER_PERMISSIONS.TEACHER ||
-			model.preset === RoleHelper.USER_PERMISSIONS.COACH
-		) {
-			model.sportIds = binding.toJS('rivals').map(r => r.id);
+		if (model.preset === RoleHelper.USER_PERMISSIONS.PARENT) {
+			if (this.showErrors(selectedSchool) === 0) {
+				model.childDateOfBirth = DateHelper.getFormatDateTimeUTCString(model.childDateOfBirth);
+				model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
+
+				window.Server.profileRequests.post(model)
+					.then(result => {
+						return this.props.onSuccess && this.props.onSuccess(result);
+					});
+			}
+		} else {
+			if (model.preset === RoleHelper.USER_PERMISSIONS.TEACHER || model.preset === RoleHelper.USER_PERMISSIONS.COACH)
+				model.sportIds = binding.toJS('rivals').map(r => r.id);
+
+			window.Server.profileRequests.post(model)
+				.then(result => {
+					return this.props.onSuccess && this.props.onSuccess(result);
+				});
+		}
+	},
+	showErrors: function (school) {
+		const   binding = this.getDefaultBinding().sub('form').meta();
+
+		const fieldData = {
+			active:	true,
+			showError: true,
+			value:	''
+		};
+
+		let countError = 0;
+		if (school.additionalPermissionRequestFields.childDateOfBirth === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`childDateOfBirth`).value === 'undefined' || binding.toJS(`childGender`).value === ''))
+		{
+			binding.set(`childDateOfBirth`, Immutable.fromJS(fieldData));
+			countError ++;
 		}
 
-		if(typeof model.studentName !== 'undefined') {
-			const formComment = typeof model.comment !== 'undefined' ? model.comment : '';
-
-			model.comment = `Request to be parent of [ ${model.studentName} ] \r\n ${formComment}`;
+		if (typeof binding.toJS(`studentName`).value === 'undefined' || binding.toJS(`studentName`).value === '')
+		{
+			binding.set(`studentName`, Immutable.fromJS(fieldData));
+			countError ++;
 		}
 
-		window.Server.profileRequests.post(model)
-			.then(result => {
-				return this.props.onSuccess && this.props.onSuccess(result);
-			});
-		},
+		if (school.additionalPermissionRequestFields.childGender === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`childGender`).value === 'undefined' || binding.toJS(`childGender`).value === ''))
+		{
+			const genderField = binding.toJS(`childGender`);
+			genderField.showError = true;
+			binding.set(`childGender`, Immutable.fromJS(genderField));
+			countError ++;
+		}
+
+		if (school.additionalPermissionRequestFields.childForm === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`childFormId`).value === 'undefined' || binding.toJS(`childFormId`).value === ''))
+		{
+			binding.set(`childFormId`, Immutable.fromJS(fieldData));
+			countError ++;
+		}
+
+		if (school.additionalPermissionRequestFields.childHouse === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`childHouseId`).value === 'undefined' || binding.toJS(`childHouseId`).value === ''))
+		{
+			binding.set(`childHouseId`, Immutable.fromJS(fieldData));
+			countError ++;
+		}
+
+		return countError;
+	},
 	isSchoolSelected: function() {
 		const formBinding = this.getDefaultBinding().sub('form');
 
 		return typeof formBinding.meta().toJS('schoolId.value') !== 'undefined' &&
 			formBinding.meta().toJS('schoolId.value') !== '';
 	},
-    isRoleCoachOrTeacherSelected: function() {
-        const 	formBinding 	= this.getDefaultBinding().sub('form'),
+	isRoleCoachOrTeacherSelected: function() {
+		const 	formBinding 	= this.getDefaultBinding().sub('form'),
 				selectedRole 	= formBinding.meta().toJS('preset.value');
 		return selectedRole === RoleHelper.USER_PERMISSIONS.TEACHER.toLowerCase()
-				|| selectedRole === RoleHelper.USER_PERMISSIONS.COACH.toLowerCase();
-    },
+			|| selectedRole === RoleHelper.USER_PERMISSIONS.COACH.toLowerCase();
+	},
 	getSchoolSelectedId: function() {
 		const formBinding = this.getDefaultBinding().sub('form');
 
@@ -93,6 +152,56 @@ const AddPermissionRequest = React.createClass({
 	},
 	isRoleSelectDisabled: function() {
 		return !this.isSchoolSelected();
+	},
+	getGender: function () {
+		const gendersArray = [
+			{
+				value: 'boy',
+				id: 'MALE'
+			},
+			{
+				value: 'girl',
+				id: 'FEMALE'
+			}
+		];
+
+		return gendersArray;
+	},
+
+	getClassService: function () {
+		const schoolId = this.getDefaultBinding().sub('form').meta('schoolId.value').toJS();
+		return (txt) => {
+			return window.Server.publicSchoolForms.get(
+				{
+					schoolId: schoolId,
+					filter: {
+						where: {
+							name: {
+								like: txt
+							}
+						},
+						limit: 100
+					}
+				});
+		}
+	},
+
+	getHouseService: function () {
+		const schoolId = this.getDefaultBinding().sub('form').meta('schoolId.value').toJS();
+		return (txt) => {
+			return window.Server.publicSchoolHouses.get(
+				{
+					schoolId: schoolId,
+					filter: {
+						where: {
+							name: {
+								like: txt
+							}
+						},
+						limit: 100
+					}
+				});
+		}
 	},
 	getRoles: function() {
 		const	formBinding			= this.getDefaultBinding().sub('form'),
@@ -110,7 +219,7 @@ const AddPermissionRequest = React.createClass({
 				.filter(p => p.schoolId === this.getSchoolSelectedId())
 				.map(p => p.role.toLowerCase());
 		}
-		
+
 		// if user also have role in this school, we must cut this role from role list
 		// but this restriction don't act on parent
 		const hasUserCurrentRole = currentRole => {
@@ -122,7 +231,7 @@ const AddPermissionRequest = React.createClass({
 		if (fullSchoolData && fullSchoolData.kind === 'SchoolUnion') {
 			return roleListForSchool.filter(role => !hasUserCurrentRole(role.id) && role.id === 'admin');
 		}
-		
+
 		//if in school disabled registration student, we must cut role 'student' from role list
 		return roleListForSchool.filter(role => {
 			if (fullSchoolData && fullSchoolData.studentSelfRegistrationEnabled === false && role.id === 'student') {
@@ -183,7 +292,9 @@ const AddPermissionRequest = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				formBinding	= binding.sub('form'),
 				isParent	= 	formBinding.meta('preset.value').toJS() === 'parent'
-								&& formBinding.meta('schoolId.value').toJS();
+					&& formBinding.meta('schoolId.value').toJS();
+
+		const selectedSchool = this.getDefaultBinding().sub('form').meta('schoolId.fullValue').toJS();
 
 		return (
 			<div>
@@ -227,7 +338,7 @@ const AddPermissionRequest = React.createClass({
 					>
 						Role
 					</FormField>
-	                { this.isRoleCoachOrTeacherSelected() ?
+					{ this.isRoleCoachOrTeacherSelected() ?
 						<div className="eForm_field">
 							<div className="eForm_fieldName">
 								Sports
@@ -241,14 +352,51 @@ const AddPermissionRequest = React.createClass({
 						</div>
 						:
 						<div></div>
-	                }
-					<FormField
-						type		= "text"
-						field		= "studentName"
-						isDisabled	= { !isParent }
+					}
+					<FormBlock
+						isVisible			= { isParent }
+						isShowCloseButton	= { false }
 					>
-						Student
-					</FormField>
+						<FormField
+							type		= "text"
+							field		= "studentName"
+							isVisible	= { isParent }
+						>
+							Student
+						</FormField>
+						<FormField
+							type		    = "select"
+							field			= {`childGender`}
+							sourceArray	    = { this.getGender() }
+							isVisible       = { isParent && selectedSchool && selectedSchool.additionalPermissionRequestFields.childGender !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
+						>
+							Gender
+						</FormField>
+						<FormField
+							type		= 'date'
+							field		= {`childDateOfBirth`}
+							validation	= {`birthday`}
+							isVisible   = { isParent && selectedSchool && selectedSchool.additionalPermissionRequestFields.childDateOfBirth !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
+						>
+							Date of birth
+						</FormField>
+						<FormField
+							type			= 'autocomplete'
+							serviceFullData	= { this.getClassService() }
+							field			= {`childFormId`}
+							isVisible       = { isParent && selectedSchool && selectedSchool.additionalPermissionRequestFields.childForm !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
+						>
+							Form
+						</FormField>
+						<FormField
+							type			= 'autocomplete'
+							serviceFullData	= { this.getHouseService() }
+							field			= {`childHouseId`}
+							isVisible       = { isParent && selectedSchool && selectedSchool.additionalPermissionRequestFields.childHouse !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
+						>
+							House
+						</FormField>
+					</FormBlock>
 					<FormField
 						type	= "textarea"
 						field	= "comment"
