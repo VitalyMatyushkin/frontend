@@ -13,8 +13,6 @@ const ADDITIONAL_FIELD_CONDITION= {
 	REQUIRED:   'REQUIRED'
 };
 
-const MAX_COUNT_CHILDREN = 10;
-
 export const ChildStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
