@@ -1502,8 +1502,8 @@ const Event = React.createClass({
 		const	event			= binding.toJS('model'),
 				activeTab		= this.getActiveTab(),
 				role			= RoleHelper.getLoggedInUserRole(this),
-				point 			= binding.toJS('model.venue.point') ? binding.toJS('model.venue.point')
-					: binding.toJS('model.venue.postcodeData.point'),
+				point 			= binding.toJS('model.venue.point') && binding.toJS('model.venue.point').coordinates.length>0
+					? binding.toJS('model.venue.point') : binding.toJS('model.venue.postcodeData.point'),
 				isNewEvent		= binding.get('isNewEvent');
 
 		const EventContainerStyle = classNames({
