@@ -191,13 +191,18 @@ const Manager = React.createClass({
 	},
 	setVenueToBody: function(body) {
 		const binding = this.getDefaultBinding();
-
 		const modelVenue = binding.toJS('model.venue');
 		body.venue = {
-			venueType: modelVenue.venueType
+			venueType: modelVenue.venueType,
+			point: modelVenue.point
 		};
 		if(modelVenue.postcodeData.id !== 'TBD') {
 			body.venue.postcodeId = modelVenue.postcodeData.id;
+
+			if (modelVenue.postcodeData.placeId) {
+				body.venue.placeId = modelVenue.postcodeData.placeId;
+			}
+
 		}
 	},
 	submit: function () {

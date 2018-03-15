@@ -515,8 +515,7 @@ export const EventManager = (React as any).createClass({
 			eventId:	event.id
 		});
 	},
-	// submitEvent: function(): Promise<any> {
-	submitEvent: function() {
+	submitEvent: function(): Promise<any> {
 		const binding = this.getDefaultBinding();
 
 		const model = binding.toJS('model');
