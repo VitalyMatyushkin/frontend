@@ -14,5 +14,7 @@
 }
 
 .eDashboardMainPage_row {
+  margin-bottom: 20px;
+
   @include make-row();
 }

@@ -8,13 +8,11 @@
   background: $secondBackgroundColor;
   border: $mainBorder;
   border-radius: $borderRadius;
-  height: 100%;
-  min-height: 300px;
-  max-height: 415px;
+  height: 360px;
   overflow-y: auto;
 
   &.mGeneral {
-    margin: 0px;
+    margin: 0;
   }
 
   .eChallenge {

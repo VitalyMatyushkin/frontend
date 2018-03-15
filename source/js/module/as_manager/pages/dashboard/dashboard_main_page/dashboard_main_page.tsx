@@ -6,6 +6,7 @@ import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashb
 
 import 'styles/ui/dashboard/dashboard_main_page.scss'
 import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
+import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -46,36 +47,46 @@ export const DashboardMainPage = (React as any).createClass({
 		return (
 			<div className="bDashboardMainPage">
 				<div className='eDashboardMainPage_mainContainer'>
-					<DashboardCard
-						bootstrapWidth={3}
-						headerText='School Profile'
-					>
-						<DashboardSchoolProfileWidget school={{name: 'GreatWalsteadSchool'}}/>
-					</DashboardCard>
-					<DashboardCard
-						headerText='School Data'
-						bootstrapWidth={3}
-					>
-						<DashboardDataWidget
-							data={this.getSchoolDataData()}
-						/>
-					</DashboardCard>
-					<DashboardCard
-						headerText='School Users'
-						bootstrapWidth={3}
-					>
-						<DashboardDataWidget
-							data={this.getSchoolUsersData()}
-						/>
-					</DashboardCard>
-					<DashboardCard
-						headerText='Invites'
-						bootstrapWidth={3}
-					>
-						<DashboardDataWidget
-							data={this.getSchoolInvitesData()}
-						/>
-					</DashboardCard>
+					<div className='eDashboardMainPage_row'>
+						<DashboardCard
+							bootstrapWidth={3}
+							headerText='School Profile'
+						>
+							<DashboardSchoolProfileWidget school={{name: 'GreatWalsteadSchool'}}/>
+						</DashboardCard>
+						<DashboardCard
+							headerText='School Data'
+							bootstrapWidth={3}
+						>
+							<DashboardDataWidget
+								data={this.getSchoolDataData()}
+							/>
+						</DashboardCard>
+						<DashboardCard
+							headerText='School Users'
+							bootstrapWidth={3}
+						>
+							<DashboardDataWidget
+								data={this.getSchoolUsersData()}
+							/>
+						</DashboardCard>
+						<DashboardCard
+							headerText='Invites'
+							bootstrapWidth={3}
+						>
+							<DashboardDataWidget
+								data={this.getSchoolInvitesData()}
+							/>
+						</DashboardCard>
+					</div>
+					<div className='eDashboardMainPage_row'>
+						<DashboardCard
+							headerText='Fixtures and results'
+							bootstrapWidth={11}
+						>
+							<DashboardCalendarWidget binding={this.getDefaultBinding().sub('dashboardCalendarWidget')}/>
+						</DashboardCard>
+					</div>
 				</div>
 			</div>
 		);

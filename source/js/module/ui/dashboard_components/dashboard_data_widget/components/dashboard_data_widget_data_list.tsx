@@ -13,7 +13,11 @@ export class DashboardDataWidgetDataList extends React.Component<DashboardDataWi
 	render() {
 		return (
 			<div className='eDashboardDataWidget_dataList'>
-				{this.props.data.dataItems.map(item => <DashboardDataWidgetDataItem dataItem={item}/>)}
+				{
+					this.props.data.dataItems.map((item, index) =>
+						<DashboardDataWidgetDataItem key={`dashboardDataWidgetDataItem_${index}`} dataItem={item}/>
+					)
+				}
 			</div>
 		);
 	}

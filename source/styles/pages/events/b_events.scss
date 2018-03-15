@@ -3,47 +3,44 @@
 
 .bEvents {
   margin-top: 50px;
+
+  display: flex;
+  justify-content: center;
+
+  &.mNoMargin {
+    margin: 0;
+  }
 }
 
 .eEvents {
-
-  &_container {
-    @extend .container
-  }
-
-  &_row {
-    @include make-row();
-    display: flex;//added flexbox for equal height columns
-    flex-wrap: nowrap;
-    align-content:stretch;
-  }
-
   &_leftSideContainer {
-    @include make-lg-column(5);
-    @extend .col-md-6;
+    width: 360px;
+
     display: flex;
     flex-direction: column;
+
+    float: right;
   }
 
   &_rightSideContainer {
-    @include make-lg-column(6);
-    @extend .col-md-6;
+    width: 500px;
+
     display: flex;
     flex-direction: column;
-  }
-}
 
-.eEvents_buttons {
-  width: 650px;
-  display: flex;
-  justify-content: flex-end;
-  margin: 30px auto;
+    margin-left: 20px;
+  }
+
+  &_buttons {
+    width: 650px;
+
+    display: flex;
+    justify-content: flex-end;
+    margin: 30px auto;
+  }
 }
 
 @media screen and (max-width:992px) {
-  .eEvents_row {
-    display: block;
-  }
   .eEvents_rightSideContainer {
     max-width: 410px;
     margin: auto;

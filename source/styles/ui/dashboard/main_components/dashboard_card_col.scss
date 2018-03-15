@@ -1,6 +1,14 @@
 @import '../../../bootstrap-custom';
 
 .bDashboardCardCol {
+  &.mCol-1 {
+    @include make-md-column(1);
+  }
+
+  &.mCol-2 {
+    @include make-md-column(2);
+  }
+
   &.mCol-3 {
     @include make-md-column(3);
   }
@@ -15,5 +23,29 @@
 
   &.mCol-6 {
     @include make-md-column(6);
+  }
+
+  &.mCol-7 {
+    @include make-md-column(7);
+  }
+
+  &.mCol-8 {
+    @include make-md-column(8);
+  }
+
+  &.mCol-9 {
+    @include make-md-column(9);
+  }
+
+  &.mCol-10 {
+    @include make-md-column(10);
+  }
+
+  &.mCol-11 {
+    @include make-md-column(11);
+  }
+
+  &.mCol-12 {
+    @include make-md-column(12);
   }
 }
