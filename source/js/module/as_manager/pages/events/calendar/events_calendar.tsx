@@ -16,10 +16,12 @@ import './../../../../../../styles/pages/events/b_events.scss';
 /** Show calendar section: month calendar and events for selected date */
 export const EventsCalendar = (React as any).createClass({
 	mixins:[Morearty.Mixin ],
-
+	propTypes: {
+		extraStyleForContainer: (React as any).PropTypes.string
+	},
 	componentWillMount: function () {
 		const	binding					= this.getDefaultBinding(),
-			activeSchoolId			= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
+				activeSchoolId			= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
 		binding.set('isSyncSlider', false);
 		/** Loading initial data for this month */
@@ -96,11 +98,19 @@ export const EventsCalendar = (React as any).createClass({
 
 	isSchoolWorker: function (): boolean {
 		const	role		= RoleHelper.getLoggedInUserRole(this),
-			schoolKind	= RoleHelper.getActiveSchoolKind(this);
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		return typeof role !== "undefined" && schoolKind === "School";
 	},
+	getStyleForContainer() {
+		let style = "bEvents";
 
+		if(typeof this.props.extraStyleForContainer !== 'undefined') {
+			style += ` ${this.props.extraStyleForContainer}`;
+		}
+
+		return style;
+	},
 	render: function(){
 		const	binding						= this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
@@ -109,24 +119,20 @@ export const EventsCalendar = (React as any).createClass({
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
 
 		return (
-			<div className="bEvents">
-				<div className="eEvents_container">
-					<div className="eEvents_row">
-						<div className="eEvents_leftSideContainer">
-							<Calendar binding={binding}/>
-						</div>
-						<div className="eEvents_rightSideContainer">
-							<Challenges
-								activeSchoolId 		= { activeSchoolId }
-								isSync 				= { isSelectedDateEventsInSync }
-								events 				= { selectedDateEvents }
-								onClick 			= { this.onEventClick }
-								onClickDeleteEvent 	= { this.onDeleteEvent }
-								isUserSchoolWorker 	= { isUserSchoolWorker }
-							/>
-							<AddEventButton handleClick={this.handleClickAddEventButton}/>
-						</div>
-					</div>
+			<div className={this.getStyleForContainer()}>
+				<div className="eEvents_leftSideContainer">
+					<Calendar binding={binding}/>
+				</div>
+				<div className="eEvents_rightSideContainer">
+					<Challenges
+						activeSchoolId 		= { activeSchoolId }
+						isSync 				= { isSelectedDateEventsInSync }
+						events 				= { selectedDateEvents }
+						onClick 			= { this.onEventClick }
+						onClickDeleteEvent 	= { this.onDeleteEvent }
+						isUserSchoolWorker 	= { isUserSchoolWorker }
+					/>
+					<AddEventButton handleClick={this.handleClickAddEventButton}/>
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
 			</div>

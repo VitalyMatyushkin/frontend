@@ -1,0 +1,35 @@
+@import '../../../bootstrap-custom';
+
+.bDashboardDataWidget {
+}
+
+.eDashboardDataWidget_dataList {
+
+}
+
+.eDashboardDataWidget_dataItem {
+  @include make-row();
+}
+
+.eDashboardDataWidget_dataCol {
+  padding: .75rem;
+
+  font-family: "Montserrat", sans-serif;
+  color: #67757c;
+  font-weight: 300;
+
+  border-top: 1px solid #dee2e6;
+
+  &.mLong {
+    @include make-md-column(8);
+  }
+
+  &.mShort {
+    @include make-md-column(4);
+  }
+
+  &.mTextRight {
+    text-align: right;
+  }
+}
+

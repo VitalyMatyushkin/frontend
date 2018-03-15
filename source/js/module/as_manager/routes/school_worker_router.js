@@ -51,9 +51,10 @@ const SchoolWorkerRouter = React.createClass({
 				/>
 
 				<Route
-					path        = "/dashboard /dashboard/:subPage"
-		            binding     = {binding.sub('dashboardPage')}
-		            component   = {Dashboard}
+					path            = "/dashboard /dashboard/:subPage"
+		            binding         = {binding.sub('dashboardPage')}
+					activeSchoolId	= {this.activeSchoolId}
+		            component       = {Dashboard}
 				/>
 
 				<Route	path        = "/schools /schools/:subPage"

@@ -11,7 +11,7 @@ import * as Immutable from 'immutable';
 export class CalendarActions {
 	static setCurrentMonth (monthDate, activeSchoolId: string, eventsBinding) {  //loadMonthDistinctEventDatesToBinding
 		const   monthStartDate  = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
-			monthEndDate    = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
+				monthEndDate    = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
 		eventsBinding.set('distinctEventDatesData.isSync', false);	// TODO: is it okay?
 
@@ -69,7 +69,7 @@ export class CalendarActions {
 
 	static loadDailyEvents (date, activeSchoolId: string, eventsBinding) {
 		const   dayStart    = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
-			dayEnd      = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
+				dayEnd      = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
 
 		eventsBinding.set('selectedDateEventsData.isSync', false);
 
