@@ -243,39 +243,6 @@ const SchoolForm = React.createClass({
 						>
 							Public student view type
 						</FormField>
-						<h3>For parent registration</h3>
-						<FormField
-							type 		= "dropdown"
-							field 		= "additionalPermissionRequestFields.childGender"
-							id 			= "school_access_select"
-							options 	= {this.getConditionChildField()}
-						>
-							Gender child
-						</FormField>
-						<FormField
-							type 		= "dropdown"
-							field 		= "additionalPermissionRequestFields.childDateOfBirth"
-							id 			= "school_access_select"
-							options 	= {this.getConditionChildField()}
-						>
-							DOB child
-						</FormField>
-						<FormField
-							type 		= "dropdown"
-							field 		= "additionalPermissionRequestFields.childHouse"
-							id 			= "school_access_select"
-							options 	= {this.getConditionChildField()}
-						>
-							House child
-						</FormField>
-						<FormField
-							type 		= "dropdown"
-							field 		= "additionalPermissionRequestFields.childForm"
-							id 			= "school_access_select"
-							options 	= {this.getConditionChildField()}
-						>
-							Form child
-						</FormField>
 					</FormColumn>
 				</Form>
 			</div>

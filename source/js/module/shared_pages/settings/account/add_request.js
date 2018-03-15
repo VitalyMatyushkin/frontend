@@ -65,7 +65,7 @@ const AddPermissionRequest = React.createClass({
 		if (model.preset === RoleHelper.USER_PERMISSIONS.PARENT) {
 			if (this.showErrors(selectedSchool) === 0) {
 				model.childDateOfBirth = DateHelper.getFormatDateTimeUTCString(model.childDateOfBirth);
-				model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
+				model.comment = `Request to be parent of [ ${model.studentFirstName}  ${model.studentLastName}] \r\n` + model.comment;
 
 				window.Server.profileRequests.post(model)
 					.then(result => {
@@ -99,9 +99,17 @@ const AddPermissionRequest = React.createClass({
 			countError ++;
 		}
 
-		if (typeof binding.toJS(`studentName`).value === 'undefined' || binding.toJS(`studentName`).value === '')
+		if (school.additionalPermissionRequestFields.childFirstName === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`studentFirstName`).value === 'undefined' || binding.toJS(`studentFirstName`).value === ''))
 		{
-			binding.set(`studentName`, Immutable.fromJS(fieldData));
+			binding.set(`studentFirstName`, Immutable.fromJS(fieldData));
+			countError ++;
+		}
+
+		if (school.additionalPermissionRequestFields.childLastName === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+			(typeof binding.toJS(`studentLastName`).value === 'undefined' || binding.toJS(`studentLastName`).value === ''))
+		{
+			binding.set(`studentLastName`, Immutable.fromJS(fieldData));
 			countError ++;
 		}
 
@@ -359,10 +367,17 @@ const AddPermissionRequest = React.createClass({
 					>
 						<FormField
 							type		= "text"
-							field		= "studentName"
+							field		= "studentFirstName"
 							isVisible	= { isParent }
 						>
-							Student
+							Student first name
+						</FormField>
+						<FormField
+							type		= "text"
+							field		= "studentLastName"
+							isVisible	= { isParent }
+						>
+							Student last name
 						</FormField>
 						<FormField
 							type		    = "select"
