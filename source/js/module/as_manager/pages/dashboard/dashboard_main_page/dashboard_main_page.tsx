@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as Morearty from 'morearty'
+import * as Immutable from 'immutable'
 
 import {DashboardCard} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget";
@@ -7,21 +8,50 @@ import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashb
 import 'styles/ui/dashboard/dashboard_main_page.scss'
 import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
 import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
+import {SchoolDataWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_data_widget_actions";
+import {SchoolInvitesWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_invites_widget_actions";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		activeSchoolId: (React as any).PropTypes.string.isRequired
 	},
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			schoolDataWidget: {
+				data: {
+					dataItems: [
+						{name: 'Students', value: '0'},
+						{name: 'Forms', value: '0'},
+						{name: 'Houses', value: '0'},
+						{name: 'Teams', value: '0'}
+					]
+				}
+			},
+			schoolInvitesData: {
+				data: {
+					dataItems: [
+						{name: 'Invites(new)', value: '0'},
+						{name: 'Outbox(pending)', value: '0'},
+						{name: 'Archive', value: '0'}
+					]
+				}
+			}
+		});
+	},
+	componentWillMount() {
+		SchoolDataWidgetActions.getDataForSchoolDataWidget(this.props.activeSchoolId)
+			.then(data => {
+				this.getDefaultBinding().set('schoolDataWidget.data', Immutable.fromJS(data));
+
+				return SchoolInvitesWidgetActions.getDataForSchoolInvitesWidget(this.props.activeSchoolId);
+			})
+			.then(data => {
+				this.getDefaultBinding().set('schoolInvitesData.data', Immutable.fromJS(data));
+			});
+	},
 	getSchoolDataData() {
-		return {
-			dataItems:[
-				{name: 'Students', value: '113'},
-				{name: 'Forms', value: '15'},
-				{name: 'Houses', value: '29'},
-				{name: 'Teams', value: '9'}
-			]
-		};
+		return this.getDefaultBinding().toJS('schoolDataWidget.data');
 	},
 	getSchoolUsersData() {
 		return {
@@ -35,13 +65,7 @@ export const DashboardMainPage = (React as any).createClass({
 		};
 	},
 	getSchoolInvitesData() {
-		return {
-			dataItems:[
-				{name: 'Invites(new)', value: '6'},
-				{name: 'Outbox(pending)', value: '19'},
-				{name: 'Archive', value: '463'}
-			]
-		};
+		return this.getDefaultBinding().toJS('schoolInvitesData.data');
 	},
 	render() {
 		return (
