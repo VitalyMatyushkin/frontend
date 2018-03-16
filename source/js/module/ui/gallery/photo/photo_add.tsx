@@ -28,21 +28,37 @@ interface PhotoAddComponentProps {
 }
 
 interface PhotoAddComponentState {
-	fileImage: string,
-	imageOriginSize: any,
-	imageShowSize: any
+	fileImage: string
+	windowWidth: number
+	imageOriginSize: {width: number, height: number}
+	imageShowSize: {width: number, height: number}
 }
 
 export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, PhotoAddComponentState> {
+	readonly MARGIN = 40;
+
 	constructor(props) {
 		super(props);
-		this.state = {fileImage: '', imageOriginSize: {width: 0, height: 0},  imageShowSize: {width: 0, height: 0}};
+		this.state = {fileImage: '', windowWidth: window.innerWidth, imageOriginSize: {width: 0, height: 0},  imageShowSize: {width: 0, height: 0}};
 	}
 	
 	onCancelButtonClick(): void {
 		window.history.back();
 	}
-	
+
+	componentDidMount() {
+		window.addEventListener('resize', this.handleResize.bind(this));
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.handleResize.bind(this));
+	}
+
+	handleResize(): void {
+		this.setState({
+			windowWidth: window.innerWidth
+		});
+	}
 	onCropButtonClick(): void {
 		const 	canvas 	= this.refs.canvasImage,
 				file 	= CropImageHelper.dataURLtoFile((canvas as any).toDataURL("image/jpeg"));
@@ -132,7 +148,7 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 	
 	render(){
 		return (
-			<div className="bPhotoAdd">
+			<div className="bPhotoAdd" style={{maxWidth: this.state.windowWidth-this.MARGIN*2, marginLeft: this.MARGIN, marginRight: this.MARGIN}}>
 				<div className="eInputFileImage">
 					<input
 						key			= "input-file-image"

@@ -22,16 +22,29 @@ const PhotoStrip = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			currentPhoto:0
+			currentPhoto:   0,
+			windowWidth:	window.innerWidth
 		};
+	},
+	componentDidMount() {
+		window.addEventListener('resize', this.handleResize.bind(this));
+	},
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.handleResize.bind(this));
 	},
 	componentDidUpdate(prevProps) {
 		if (prevProps.photos !== this.props.photos) {
-			const indexForScrolling = this.props.photos.length - Math.floor(LAYOUT_WIDTH/PHOTO_WIDTH);
+			const indexForScrolling = this.props.photos.length -
+				Math.floor((this.state.windowWidth < LAYOUT_WIDTH ? this.state.windowWidth-60 : LAYOUT_WIDTH)/PHOTO_WIDTH);
 			this.setState({
 				currentPhoto: indexForScrolling > 0 ? indexForScrolling : 0
 			});
 		}
+	},
+	handleResize(){
+		this.setState({
+			windowWidth: window.innerWidth
+		});
 	},
 	renderPhotos: function() {
 		const photos = this.props.photos.map( photo =>
@@ -65,17 +78,20 @@ const PhotoStrip = React.createClass({
 		const 	countPhotos = this.props.photos && this.props.photos.length;
 
 		let index = this.state.currentPhoto;
-		index = index >= countPhotos - Math.floor(LAYOUT_WIDTH/PHOTO_WIDTH) ? index : index+1;
+		index = index >= countPhotos -
+		Math.floor((this.state.windowWidth < LAYOUT_WIDTH ? this.state.windowWidth-60 : LAYOUT_WIDTH)/PHOTO_WIDTH) ? index : index+1;
 
 		this.setState({
 			currentPhoto: index
 		});
 	},
 	render: function() {
-		const 	countPhotos = this.props.photos && this.props.photos.length,
+		console.log(this.state.windowWidth);
+		const 	windowWidth = this.state.windowWidth < LAYOUT_WIDTH ? this.state.windowWidth-60 : LAYOUT_WIDTH,
+				countPhotos = this.props.photos && this.props.photos.length,
 				widthStrip 	= this.props.isLoading ? (countPhotos + 1) * PHOTO_WIDTH : countPhotos * PHOTO_WIDTH,
 				offset = this.state.currentPhoto*PHOTO_WIDTH,
-				margin = offset + LAYOUT_WIDTH <= widthStrip || offset === 0 ? -offset : LAYOUT_WIDTH - widthStrip,
+				margin = offset + windowWidth <= widthStrip || offset === 0 ? -offset : windowWidth - widthStrip,
 				style 		= {width:widthStrip, marginLeft:margin},
 				lBtnClasses = classNames({
 					eArrow:true,
@@ -85,7 +101,7 @@ const PhotoStrip = React.createClass({
 				rBtnClasses = classNames({
 					eArrow:true,
 					mRight:true,
-					mHidden: LAYOUT_WIDTH > widthStrip || margin !== -offset
+					mHidden: windowWidth > widthStrip || margin !== -offset
 				});
 
 			return (
