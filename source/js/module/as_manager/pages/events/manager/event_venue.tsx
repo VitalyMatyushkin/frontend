@@ -325,7 +325,7 @@ export const EventVenue = (React as any).createClass({
 				return point;
 			case typeof venuePoint !== 'undefined':
 				point = this.getDefaultBinding().toJS('model.venue.point');
-				return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
+				return typeof point !== 'undefined' && point.coordinates.length > 0 ? point : venuePoint.point;
 		}
 	},
 

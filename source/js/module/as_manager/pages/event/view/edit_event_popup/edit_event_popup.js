@@ -46,7 +46,8 @@ const EditEventPopup = React.createClass({
 		return (
 			origin.startTime !== current.startTime ||
 			origin.endTime !== current.endTime ||
-			this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue)
+			this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue) ||
+			this.isOthersCoordinates(origin.venue.point.coordinates, current.venue.point.coordinates)
 		);
 	},
 	/**
@@ -117,6 +118,13 @@ const EditEventPopup = React.createClass({
 			return typeof postcode._id !== "undefined" ? postcode._id : postcode.id;
 		}
 	},
+	isOthersCoordinates: function(originCoordinates, currentCoordinates) {
+		return (
+			originCoordinates.length !== currentCoordinates.length ||
+			originCoordinates[0] !== currentCoordinates[0] ||
+			originCoordinates[1] !== currentCoordinates[1]
+		);
+	},
 	getEditEventService: function () {
 		const binding = this.getDefaultBinding();
 
@@ -154,11 +162,16 @@ const EditEventPopup = React.createClass({
 				// TODO copy cat from event_manager.setEventVenue
 				const venue = currentEvent.venue;
 				body.venue = {
-					venueType: venue.venueType
+					venueType: venue.venueType,
+					point: venue.point
 				};
 				if(venue.venueType !== 'TBD') {
 					const postcodeId = this.getPostcodeIdFromVenue(venue);
 					body.venue.postcodeId = postcodeId;
+
+					if (venue.postcodeData.placeId) {
+						body.venue.placeId = venue.postcodeData.placeId;
+					}
 				}
 
 				binding.set('isProcessingSubmit', true);
