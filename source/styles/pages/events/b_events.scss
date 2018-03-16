@@ -2,10 +2,9 @@
 @import "../../bootstrap-custom";
 
 .bEvents {
-  margin-top: 50px;
+  @include container-fixed();
 
-  display: flex;
-  justify-content: center;
+  margin-top: 50px;
 
   &.mNoMargin {
     margin: 0;
@@ -13,22 +12,34 @@
 }
 
 .eEvents {
+  &_row {
+    @include make-row();
+  }
+
   &_leftSideContainer {
-    width: 360px;
+    @extend .col-md-5;
+
+    @extend .col-sm-offset-0;
+    @extend .col-sm-12;
+
+    @extend .col-xs-offset-0;
+    @extend .col-xs-12;
 
     display: flex;
     flex-direction: column;
 
-    float: right;
+    min-width: 370px;
   }
 
   &_rightSideContainer {
-    width: 500px;
+    @extend .col-md-7;
+    @extend .col-sm-12;
+    @extend .col-xs-12;
 
     display: flex;
     flex-direction: column;
 
-    margin-left: 20px;
+    min-width: 370px;
   }
 
   &_buttons {
@@ -37,18 +48,5 @@
     display: flex;
     justify-content: flex-end;
     margin: 30px auto;
-  }
-}
-
-@media screen and (max-width:992px) {
-  .eEvents_rightSideContainer {
-    max-width: 410px;
-    margin: auto;
-  }
-}
-@media screen and (max-width:480px) {
-  .eEvents_rightSideContainer {
-    max-width: 100%;
-    margin-top: 20px;
   }
 }

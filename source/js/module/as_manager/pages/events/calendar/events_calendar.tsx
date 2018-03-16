@@ -120,19 +120,21 @@ export const EventsCalendar = (React as any).createClass({
 
 		return (
 			<div className={this.getStyleForContainer()}>
-				<div className="eEvents_leftSideContainer">
-					<Calendar binding={binding}/>
-				</div>
-				<div className="eEvents_rightSideContainer">
-					<Challenges
-						activeSchoolId 		= { activeSchoolId }
-						isSync 				= { isSelectedDateEventsInSync }
-						events 				= { selectedDateEvents }
-						onClick 			= { this.onEventClick }
-						onClickDeleteEvent 	= { this.onDeleteEvent }
-						isUserSchoolWorker 	= { isUserSchoolWorker }
-					/>
-					<AddEventButton handleClick={this.handleClickAddEventButton}/>
+				<div className="eEvents_row">
+					<div className="eEvents_leftSideContainer">
+						<Calendar binding={binding}/>
+					</div>
+					<div className="eEvents_rightSideContainer">
+						<Challenges
+							activeSchoolId 		= { activeSchoolId }
+							isSync 				= { isSelectedDateEventsInSync }
+							events 				= { selectedDateEvents }
+							onClick 			= { this.onEventClick }
+							onClickDeleteEvent 	= { this.onDeleteEvent }
+							isUserSchoolWorker 	= { isUserSchoolWorker }
+						/>
+						<AddEventButton handleClick={this.handleClickAddEventButton}/>
+					</div>
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
 			</div>

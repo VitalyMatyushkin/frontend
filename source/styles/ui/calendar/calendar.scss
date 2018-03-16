@@ -66,14 +66,9 @@ $active-day-background: #b2d7ec;
 
 .eCalendar_eMonth {
   display: flex;
-  flex-flow: column wrap;
+  flex-direction: column;
 
-  align-items: flex-end;
-  margin: 0px;
-
-  &.mAlignStart {
-    align-items: flex-start;
-  }
+  margin: 0;
 }
 
 .eMonth_row {
