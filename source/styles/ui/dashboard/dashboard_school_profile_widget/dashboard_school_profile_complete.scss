@@ -44,7 +44,50 @@
   margin-bottom: 0;
   background-clip: content-box;
   text-align: right!important;
-  background-image: linear-gradient(378deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+
+  &.mProgress-0 {
+    background-image: linear-gradient(90deg, #fafafa 50%, transparent 50%, transparent), linear-gradient(90deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-10 {
+    background-image: linear-gradient(90deg, #fafafa 50%, transparent 50%, transparent), linear-gradient(126deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-20 {
+    background-image: linear-gradient(90deg, #fafafa 50%, transparent 50%, transparent), linear-gradient(162deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-30 {
+    background-image: linear-gradient(90deg, #fafafa 50%, transparent 50%, transparent), linear-gradient(198deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-40 {
+    background-image: linear-gradient(90deg, #fafafa 50%, transparent 50%, transparent), linear-gradient(234deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-50 {
+    background-image: linear-gradient(270deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-60 {
+    background-image: linear-gradient(306deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-70 {
+    background-image: linear-gradient(342deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-80 {
+    background-image: linear-gradient(378deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-90 {
+    background-image: linear-gradient(414deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
+
+  &.mProgress-100 {
+    background-image: linear-gradient(450deg, #7460ee 50%, transparent 50%, transparent), linear-gradient(270deg, #7460ee 50%, #fafafa 50%, #fafafa);
+  }
 }
 
 .eDashboardSchoolProfileComplete_donutProgressBar:after {
