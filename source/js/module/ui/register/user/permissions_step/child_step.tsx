@@ -13,8 +13,6 @@ const ADDITIONAL_FIELD_CONDITION= {
 	REQUIRED:   'REQUIRED'
 };
 
-const MAX_COUNT_CHILDREN = 10;
-
 export const ChildStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 
@@ -24,6 +22,7 @@ export const ChildStep = (React as any).createClass({
 
 	componentWillUnmount: function() {
 		this.getDefaultBinding().sub('childrenForm').clear();
+		this.getDefaultBinding().set('countChildren', 0);
 	},
 
 	initCountChildren: function() {
@@ -38,7 +37,7 @@ export const ChildStep = (React as any).createClass({
 
 	onSubmit: function (data): void {
 		if (this.showErrors() === 0) {
-			const childrenDataToServer = this.convertChildrenDataToServerFormat(data);
+			const childrenDataToServer = this.convertChildrenDataToServerFormat();
 			this.props.setChild(childrenDataToServer);
 		}
 	},
@@ -60,45 +59,45 @@ export const ChildStep = (React as any).createClass({
 		let countError = 0;
 
 		for(let index = 0; index < countChildrenBlocks; index++) {
-			if (typeof binding.toJS(`child_${index}_firstName`).value === 'undefined' || binding.toJS(`child_${index}_firstName`).value === '')
+			if (typeof binding.toJS(`child.${index}.firstName`).value === 'undefined' || binding.toJS(`child.${index}.firstName`).value === '')
 			{
-				binding.set(`child_${index}_firstName`, Immutable.fromJS(fieldData));
+				binding.set(`child.${index}.firstName`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 
-			if (typeof binding.toJS(`child_${index}_lastName`).value === 'undefined' || binding.toJS(`child_${index}_lastName`).value === '')
+			if (typeof binding.toJS(`child.${index}.lastName`).value === 'undefined' || binding.toJS(`child.${index}.lastName`).value === '')
 			{
-				binding.set(`child_${index}_lastName`, Immutable.fromJS(fieldData));
+				binding.set(`child.${index}.lastName`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 
 			if (school.additionalPermissionRequestFields.childDateOfBirth === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
-				(typeof binding.toJS(`child_${index}_birthday`).value === 'undefined' || binding.toJS(`child_${index}_birthday`).value === ''))
+				(typeof binding.toJS(`child.${index}.birthday`).value === 'undefined' || binding.toJS(`child.${index}.birthday`).value === ''))
 			{
-				binding.set(`child_${index}_birthday`, Immutable.fromJS(fieldData));
+				binding.set(`child.${index}.birthday`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 
 			if (school.additionalPermissionRequestFields.childGender === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
-				(typeof binding.toJS(`child_${index}_gender`).value === 'undefined' || binding.toJS(`child_${index}_gender`).value === ''))
+				(typeof binding.toJS(`child.${index}.gender`).value === 'undefined' || binding.toJS(`child.${index}.gender`).value === ''))
 			{
-				const genderField = binding.toJS(`child_${index}_gender`);
+				const genderField = binding.toJS(`child.${index}.gender`);
 				(genderField as any).showError = true;
-				binding.set(`child_${index}_gender`, Immutable.fromJS(genderField));
+				binding.set(`child.${index}.gender`, Immutable.fromJS(genderField));
 				countError ++;
 			}
 
 			if (school.additionalPermissionRequestFields.childForm === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
-				(typeof binding.toJS(`child_${index}_formId`).value === 'undefined' || binding.toJS(`child_${index}_formId`).value === ''))
+				(typeof binding.toJS(`child.${index}.formId`).value === 'undefined' || binding.toJS(`child.${index}.formId`).value === ''))
 			{
-				binding.set(`child_${index}_formId`, Immutable.fromJS(fieldData));
+				binding.set(`child.${index}.formId`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 
 			if (school.additionalPermissionRequestFields.childHouse === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
-				(typeof binding.toJS(`child_${index}_houseId`).value === 'undefined' || binding.toJS(`child_${index}_houseId`).value === ''))
+				(typeof binding.toJS(`child.${index}.houseId`).value === 'undefined' || binding.toJS(`child.${index}.houseId`).value === ''))
 			{
-				binding.set(`child_${index}_houseId`, Immutable.fromJS(fieldData));
+				binding.set(`child.${index}.houseId`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 		}
@@ -108,10 +107,10 @@ export const ChildStep = (React as any).createClass({
 
 	renderChildren: function() {
 		const   binding = this.getDefaultBinding(),
-			countChildren	= binding.get('countChildren');
+				countChildren	= binding.get('countChildren');
 		const children = [];
 
-		for(let i = 0; i < MAX_COUNT_CHILDREN; i++) {
+		for(let i = 0; i < countChildren; i++) {
 			children.push(
 				this.renderChild(i)
 			);
@@ -127,17 +126,13 @@ export const ChildStep = (React as any).createClass({
 		);
 	},
 	renderFormElementManager: function() {
-		if (this.getDefaultBinding().get('countChildren') < MAX_COUNT_CHILDREN) {
-			return (
-				<FormElementManager
-					text={'Add new "Child" item'}
-					onClick={this.onClickAddChildItem}
-					id={'add_child'}
-				/>
-			);
-		} else {
-			return <div></div>;
-		}
+		return (
+			<FormElementManager
+				text={'Add new "Child" item'}
+				onClick={this.onClickAddChildItem}
+				id={'add_child'}
+			/>
+		);
 	},
 
 	onClickAddChildItem: function() {
@@ -148,31 +143,13 @@ export const ChildStep = (React as any).createClass({
 	},
 	onClickDeleteChildItem: function(index) {
 		const	binding			= this.getDefaultBinding(),
-			countChildren	= binding.get('countChildren');
+				countChildren	= binding.get('countChildren');
 
+		const children = binding.sub('childrenForm').meta().toJS('child');
+		let childrenArray = Object.keys(children).map(key => children[key]);
+		childrenArray.splice(index, 1);
+		binding.sub('childrenForm').meta().set('child', Immutable.fromJS(childrenArray));
 		binding.set('countChildren', countChildren - 1);
-
-		this.clearChildByIndex(index);
-	},
-
-	clearChildByIndex: function(index) {
-		const binding = this.getDefaultBinding().sub('childrenForm');
-
-		const fieldData = {
-			active:	true,
-			error:	false,
-			value:	''
-		};
-
-		binding.meta()
-			.atomically()
-			.set(`child_${index}_firstName`,	Immutable.fromJS(fieldData))
-			.set(`child_${index}_lastName`,		Immutable.fromJS(fieldData))
-			.set(`child_${index}_gender`,		Immutable.fromJS(fieldData))
-			.set(`child_${index}_birthday`,		Immutable.fromJS(fieldData))
-			.set(`child_${index}_formId`,	    Immutable.fromJS(fieldData))
-			.set(`child_${index}_houseId`,	    Immutable.fromJS(fieldData))
-			.commit();
 	},
 
 	getGender: function () {
@@ -229,32 +206,35 @@ export const ChildStep = (React as any).createClass({
 				countChildrenBlocks	    = binding.get('countChildren'),
 				school                  = this.props.school;
 
-		const	isVisible				= index < countChildrenBlocks;
+		const child = binding.sub('childrenForm').meta().toJS('child') && binding.sub('childrenForm').meta().toJS('child')[index]
+			? binding.sub('childrenForm').meta().toJS('child')[index] : undefined;
 
 		return (
 			<FormBlock
-				isVisible			= { isVisible }
-				isShowCloseButton	= { index !==0 && index === countChildrenBlocks-1 }
+				isShowCloseButton	= { countChildrenBlocks > 1 }
 				onClickClose		= { this.onClickDeleteChildItem.bind(this, index) }
 				key 				= {`child_block_${index}`}
 			>
 				<FormField
 					type        = "text"
-					field       = {`child_${index}_firstName`}
+					field       = {`child.${index}.firstName`}
+					key         = {`child_${index}${countChildrenBlocks}_firstName`}
 					validation  = "text"
 				>
 					Child’s name
 				</FormField>
 				<FormField
 					type        = "text"
-					field       = {`child_${index}_lastName`}
+					field       = {`child.${index}.lastName`}
+					key         = {`child_${index}${countChildrenBlocks}_lastName`}
 					validation  = "text"
 				>
 					Child’s surname
 				</FormField>
 				<FormField
 					type		    = "select"
-					field			= {`child_${index}_gender`}
+					field			= {`child.${index}.gender`}
+					key 			= {`child_${index}${countChildrenBlocks}_gender`}
 					sourceArray	    = { this.getGender() }
 					isVisible       = { school.additionalPermissionRequestFields.childGender !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
 				>
@@ -262,7 +242,8 @@ export const ChildStep = (React as any).createClass({
 				</FormField>
 				<FormField
 					type		= 'date'
-					field		= {`child_${index}_birthday`}
+					field		= {`child.${index}.birthday`}
+					key 		= {`child_${index}${countChildrenBlocks}_birthday`}
 					validation	= {`birthday`}
 					isVisible   = { school.additionalPermissionRequestFields.childDateOfBirth !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
 				>
@@ -271,8 +252,9 @@ export const ChildStep = (React as any).createClass({
 				<FormField
 					type			= 'autocomplete'
 					serviceFullData	= { this.getClassService() }
-					field			= {`child_${index}_formId`}
-					defaultItem		= { this.props.initialForm }
+					field			= {`child.${index}.formId`}
+					key 			= {`child_${index}${countChildrenBlocks}_formId`}
+					defaultItem		= { child && child.formId ? child.formId.fullValue : undefined }
 					isVisible       = { school.additionalPermissionRequestFields.childForm !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
 				>
 					Form
@@ -280,8 +262,9 @@ export const ChildStep = (React as any).createClass({
 				<FormField
 					type			= 'autocomplete'
 					serviceFullData	= { this.getHouseService() }
-					field			= {`child_${index}_houseId`}
-					defaultItem		= { this.props.initialHouse }
+					field			= {`child.${index}.houseId`}
+					key 			= {`child_${index}${countChildrenBlocks}_houseId`}
+					defaultItem		= { child && child.houseId ? child.houseId.fullValue : undefined }
 					isVisible       = { school.additionalPermissionRequestFields.childHouse !== ADDITIONAL_FIELD_CONDITION.HIDDEN }
 				>
 					House
@@ -290,39 +273,36 @@ export const ChildStep = (React as any).createClass({
 		);
 	},
 
-	convertChildrenDataToServerFormat: function(data){
+	convertChildrenDataToServerFormat: function(){
 		const   childrenData = [],
-				countChildrenBlocks = this.getDefaultBinding().get('countChildren'),
+				binding = this.getDefaultBinding(),
 				childFields = [
-					'firstName',
-					'lastName',
-					'gender',
-					'birthday',
-					'formId',
-					'houseId'
-				];
+		            'firstName',
+		            'lastName',
+		            'gender',
+		            'birthday',
+		            'formId',
+		            'houseId'
+		        ];
 
-		for(let index = 0; index < countChildrenBlocks; index++) {
+		const   children = binding.sub('childrenForm').meta().toJS('child'),
+				childrenArray = Object.keys(children).map(key => children[key]);
+
+		childrenArray.map(child => {
 			const emptyChildren = {};
 
 			childFields.forEach(field => {
-				const value = data[`child_${index}_${field}`];
-
+				const value = child[field].value;
 				if(typeof value !== 'undefined' && value !== '') {
 					emptyChildren[field] = value;
-					// it's a little trick - delete old form data
-					// because this should not be in post data
-					data[`child_${index}_${field}`] = undefined;
 				}
-
 			});
 
 			if(Object.keys(emptyChildren).length > 0) {
 				childrenData.push(emptyChildren);
 			}
-		}
+		});
 
-		data.children = childrenData;
 		return childrenData;
 	},
 

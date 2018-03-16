@@ -96,6 +96,19 @@ const SystemAdminSchoolForm = React.createClass({
 			case true:	return false;
 		}
 	},
+	getConditionChildField: function() {
+		return [
+			{value: 'HIDDEN', text: 'hidden'},
+			{value: 'OPTIONAL', text: 'optional'},
+			{value: 'REQUIRED', text: 'required'}
+		];
+	},
+	getConditionChildFieldForName: function() {
+		return [
+			{value: 'OPTIONAL', text: 'optional'},
+			{value: 'REQUIRED', text: 'required'}
+		];
+	},
 	render: function () {
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
@@ -204,6 +217,49 @@ const SystemAdminSchoolForm = React.createClass({
 						field 		= "isFavoriteSportsEnabled"
 					>
 						Disable favorite sports in limited school version
+					</FormField>
+					<h3>For parent registration</h3>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childFirstName"
+						options 	= {this.getConditionChildFieldForName()}
+					>
+						First name child
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childLastName"
+						options 	= {this.getConditionChildFieldForName()}
+					>
+						Last name child
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childGender"
+						options 	= {this.getConditionChildField()}
+					>
+						Gender child
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childDateOfBirth"
+						options 	= {this.getConditionChildField()}
+					>
+						DOB child
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childHouse"
+						options 	= {this.getConditionChildField()}
+					>
+						House child
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "additionalPermissionRequestFields.childForm"
+						options 	= {this.getConditionChildField()}
+					>
+						Form child
 					</FormField>
 				</FormColumn>
 				<FormColumn customStyle={'mTwoColumns'}>
