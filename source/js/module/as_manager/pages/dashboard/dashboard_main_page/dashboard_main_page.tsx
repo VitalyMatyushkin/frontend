@@ -10,6 +10,7 @@ import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data
 import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 import {SchoolDataWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_data_widget_actions";
 import {SchoolInvitesWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_invites_widget_actions";
+import {SchoolUsersWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_users_widget_actions";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -25,6 +26,17 @@ export const DashboardMainPage = (React as any).createClass({
 						{name: 'Forms', value: '0'},
 						{name: 'Houses', value: '0'},
 						{name: 'Teams', value: '0'}
+					]
+				}
+			},
+			schoolUsersData: {
+				data: {
+					dataItems: [
+						{name: 'School Admin staff', value: '0'},
+						{name: 'School PE staff', value: '0'},
+						{name: 'Parents', value: '0'},
+						{name: 'Students', value: '0'},
+						{name: 'Requests pending', value: '0'}
 					]
 				}
 			},
@@ -48,21 +60,18 @@ export const DashboardMainPage = (React as any).createClass({
 			})
 			.then(data => {
 				this.getDefaultBinding().set('schoolInvitesData.data', Immutable.fromJS(data));
+
+				return SchoolUsersWidgetActions.getDataForSchoolUsersWidget(this.props.activeSchoolId);
+			})
+			.then(data => {
+				this.getDefaultBinding().set('schoolUsersData.data', Immutable.fromJS(data));
 			});
 	},
 	getSchoolDataData() {
 		return this.getDefaultBinding().toJS('schoolDataWidget.data');
 	},
 	getSchoolUsersData() {
-		return {
-			dataItems:[
-				{name: 'School Admin staff', value: '5'},
-				{name: 'School PE staff', value: '12'},
-				{name: 'Parents', value: '175'},
-				{name: 'Students', value: '145'},
-				{name: 'Requests pending', value: '9'}
-			]
-		};
+		return this.getDefaultBinding().toJS('schoolUsersData.data');
 	},
 	getSchoolInvitesData() {
 		return this.getDefaultBinding().toJS('schoolInvitesData.data');
