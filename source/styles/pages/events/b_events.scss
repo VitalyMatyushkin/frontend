@@ -12,6 +12,11 @@
 }
 
 .eEvents {
+  &_container {
+    @include container-fixed();
+    max-width: 1200px;
+  }
+
   &_row {
     @include make-row();
   }

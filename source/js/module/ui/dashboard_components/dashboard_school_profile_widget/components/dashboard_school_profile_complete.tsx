@@ -21,7 +21,7 @@ export class DashboardSchoolProfileComplete extends React.Component<DashboardSch
 				<div className='eDashboardSchoolProfileComplete_col mTextRight'>
 					<div
 						data-label={`${this.props.profileCompletePercent}%`}
-						className='eDashboardSchoolProfileComplete_donutProgressBar'
+						className={`eDashboardSchoolProfileComplete_donutProgressBar mProgress-${this.props.profileCompletePercent}`}
 					>
 						<i className='eDashboardSchoolProfileComplete_donutProgressBarCircle'>
 						</i>

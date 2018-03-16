@@ -6,6 +6,7 @@ import 'styles/ui/dashboard/main_components/dashboard_info_button.scss'
 const DEFAULT_BUTTON_COL_WIDTH = 3;
 
 export interface DashboardInfoButtonProps {
+	handleClick: () => void
 	bootstrapWidth?: number
 	text: string
 }
@@ -23,7 +24,10 @@ export class DashboardInfoButton extends React.Component<DashboardInfoButtonProp
 	render() {
 		return (
 			<div className={this.getButtonColStyle()}>
-				<button className='bDashboardInfoButton'>
+				<button
+					className='bDashboardInfoButton'
+					onClick={this.props.handleClick}
+				>
 					{this.props.text}
 				</button>
 			</div>

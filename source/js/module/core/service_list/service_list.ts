@@ -121,6 +121,7 @@ export class ServiceList {
 	statusPermissionRequest: Service;
 
 	//Permissions
+	schoolPermissions: Service<Permission[], Permission, any>;
 	schoolUserPermissions: Service<Permission[], Permission, any>;
 	schoolUserPermission: Service<Permission, Permission, any>;
 
@@ -445,6 +446,7 @@ export class ServiceList {
 		this.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
 		//Permissions
+		this.schoolPermissions = new Service('/i/schools/{schoolId}/permissions',binding);
 		this.schoolUserPermissions = new Service<Permission[], Permission, any>('/i/schools/{schoolId}/users/{userId}/permissions',binding);
 		this.schoolUserPermission = new Service<Permission, Permission, any>('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
 
