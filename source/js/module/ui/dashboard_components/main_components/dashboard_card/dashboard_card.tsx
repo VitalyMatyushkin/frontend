@@ -6,19 +6,14 @@ import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 const DEFAULT_CARD_COL_WIDTH = 6;
 
 export interface DashboardCardProps {
-	bootstrapWidth?: number,
+	bootstrapWrapperStyle: string,
 	headerText: string,
 	children: any
 }
 
 export class DashboardCard extends React.Component<DashboardCardProps, {}> {
-	getCardWidth(): number {
-		return typeof this.props.bootstrapWidth !== 'undefined' ?
-			this.props.bootstrapWidth : DEFAULT_CARD_COL_WIDTH;
-	}
-
 	getCardColStyle(): string {
-		return `bDashboardCardCol mCol-${this.getCardWidth()}`;
+		return `bDashboardCardCol ${this.props.bootstrapWrapperStyle}`;
 	}
 
 	render() {

@@ -49,14 +49,14 @@ export const DashboardMainPage = (React as any).createClass({
 				<div className='eDashboardMainPage_mainContainer'>
 					<div className='eDashboardMainPage_row'>
 						<DashboardCard
-							bootstrapWidth={3}
+							bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 							headerText='School Profile'
 						>
 							<DashboardSchoolProfileWidget school={{name: 'GreatWalsteadSchool'}}/>
 						</DashboardCard>
 						<DashboardCard
 							headerText='School Data'
-							bootstrapWidth={3}
+							bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 						>
 							<DashboardDataWidget
 								data={this.getSchoolDataData()}
@@ -64,7 +64,7 @@ export const DashboardMainPage = (React as any).createClass({
 						</DashboardCard>
 						<DashboardCard
 							headerText='School Users'
-							bootstrapWidth={3}
+							bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 						>
 							<DashboardDataWidget
 								data={this.getSchoolUsersData()}
@@ -72,7 +72,7 @@ export const DashboardMainPage = (React as any).createClass({
 						</DashboardCard>
 						<DashboardCard
 							headerText='Invites'
-							bootstrapWidth={3}
+							bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 						>
 							<DashboardDataWidget
 								data={this.getSchoolInvitesData()}
@@ -82,7 +82,7 @@ export const DashboardMainPage = (React as any).createClass({
 					<div className='eDashboardMainPage_row'>
 						<DashboardCard
 							headerText='Fixtures and results'
-							bootstrapWidth={11}
+							bootstrapWrapperStyle='col-xs-12 col-sm-12 col-md-12'
 						>
 							<DashboardCalendarWidget binding={this.getDefaultBinding().sub('dashboardCalendarWidget')}/>
 						</DashboardCard>
