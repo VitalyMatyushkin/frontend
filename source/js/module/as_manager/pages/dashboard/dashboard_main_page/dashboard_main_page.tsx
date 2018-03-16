@@ -11,6 +11,7 @@ import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboa
 import {SchoolDataWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_data_widget_actions";
 import {SchoolInvitesWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_invites_widget_actions";
 import {SchoolUsersWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_users_widget_actions";
+import {SchoolProfileWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_profile_widget_actions";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -19,6 +20,9 @@ export const DashboardMainPage = (React as any).createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			schoolProfileData: {
+				school: {}
+			},
 			schoolDataWidget: {
 				data: {
 					dataItems: [
@@ -65,7 +69,15 @@ export const DashboardMainPage = (React as any).createClass({
 			})
 			.then(data => {
 				this.getDefaultBinding().set('schoolUsersData.data', Immutable.fromJS(data));
+
+				return SchoolProfileWidgetActions.getSchoolData(this.props.activeSchoolId);
+			})
+			.then(school => {
+				this.getDefaultBinding().set('schoolProfileData.school', Immutable.fromJS(school))
 			});
+	},
+	getSchoolForSchoolProfileWidget() {
+		return this.getDefaultBinding().toJS('schoolProfileData.school');
 	},
 	getSchoolDataData() {
 		return this.getDefaultBinding().toJS('schoolDataWidget.data');
@@ -85,7 +97,7 @@ export const DashboardMainPage = (React as any).createClass({
 							bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 							headerText='School Profile'
 						>
-							<DashboardSchoolProfileWidget school={{name: 'GreatWalsteadSchool'}}/>
+							<DashboardSchoolProfileWidget school={this.getSchoolForSchoolProfileWidget()}/>
 						</DashboardCard>
 						<DashboardCard
 							headerText='School Data'
