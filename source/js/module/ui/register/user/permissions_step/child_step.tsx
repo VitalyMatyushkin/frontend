@@ -292,7 +292,7 @@ export const ChildStep = (React as any).createClass({
 			const emptyChildren = {};
 
 			childFields.forEach(field => {
-				const value = child[field].value;
+				const value = child[field] ? child[field].value : undefined;
 				if(typeof value !== 'undefined' && value !== '') {
 					emptyChildren[field] = value;
 				}
