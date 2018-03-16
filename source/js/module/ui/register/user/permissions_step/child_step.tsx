@@ -128,7 +128,7 @@ export const ChildStep = (React as any).createClass({
 	renderFormElementManager: function() {
 		return (
 			<FormElementManager
-				text={'Add new "Child" item'}
+				text={'Add new child'}
 				onClick={this.onClickAddChildItem}
 				id={'add_child'}
 			/>
@@ -221,7 +221,7 @@ export const ChildStep = (React as any).createClass({
 					key         = {`child_${index}${countChildrenBlocks}_firstName`}
 					validation  = "text"
 				>
-					Child’s name
+					First name
 				</FormField>
 				<FormField
 					type        = "text"
@@ -229,7 +229,7 @@ export const ChildStep = (React as any).createClass({
 					key         = {`child_${index}${countChildrenBlocks}_lastName`}
 					validation  = "text"
 				>
-					Child’s surname
+					Surname
 				</FormField>
 				<FormField
 					type		    = "select"
