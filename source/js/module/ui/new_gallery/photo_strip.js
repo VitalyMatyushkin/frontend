@@ -29,6 +29,9 @@ const PhotoStrip = React.createClass({
 	componentDidMount() {
 		window.addEventListener('resize', this.handleResize.bind(this));
 	},
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.handleResize.bind(this));
+	},
 	componentDidUpdate(prevProps) {
 		if (prevProps.photos !== this.props.photos) {
 			const indexForScrolling = this.props.photos.length -
