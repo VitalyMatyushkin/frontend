@@ -144,26 +144,13 @@ const EventHeaderWrapper = React.createClass({
 		binding.set('isOpenEditReportAvailabilityPopup', true);
 	},
 	onSendConsentRequest: function() {
-		const	binding			= this.getDefaultBinding(),
-			event			= binding.toJS('model'),
-			activeSchoolId	= this.props.activeSchoolId;
+		const	binding			= this.getDefaultBinding();
 
-		EventHeaderActions.sendConsentRequest(activeSchoolId, event.id).then(messages => {
-			binding.set('parentalConsentTab.messages', Immutable.fromJS(messages));
-
-			const text = messages.length > 0 ?
-				"Consent requests have been successfully sent" :
-				"No parental accounts for these team members can be detected to send messages to.";
-			window.simpleAlert(
-				text,
-				'Ok',
-				() => this.props.onReload()
-			);
-		});
+		binding.set("isConsentRequestPopupOpen", true);
 	},
 	onReportNotParticipate: function() {
 		const	binding		= this.getDefaultBinding(),
-			event		= binding.toJS('model');
+				event		= binding.toJS('model');
 
 		EventHeaderActions.reportNotParticipate(event).then(messages => {
 			binding.set('parentalReportTab.messages', Immutable.fromJS(messages));

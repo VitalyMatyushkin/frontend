@@ -1,0 +1,90 @@
+.bUniqConsentRequestWrapper {
+
+  .bLoader {
+    top: 40%;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+  .bUniqConsentRequestMainBody {
+    margin-top: 20px;
+    text-align: center;
+
+    .bConsentRequestAdditionalInfo {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .bConsentRequestDontAskCheckbox {
+      margin-top: 15px;
+
+      .eCheckbox_switch + label {
+        margin-left: 0;
+      }
+
+      span {
+        margin-left: 30px;
+      }
+    }
+
+    .bButton {
+      margin-top: 15px;
+    }
+
+    .mDisable {
+      pointer-events: none;
+    }
+  }
+
+
+  .bUniqConsentRequestMainControlButton {
+    width: 500px;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+
+    .bButton {
+      width: 150px;
+      margin: 8px 5px;
+    }
+  }
+
+  .eForm_atCenter {
+    width: 350px;
+    border: 1px solid #d2d2d2;
+    border-radius: 10px;
+    margin: 20px;
+
+    h2 {
+      text-align: center;
+    }
+
+    .bCheckboxConsentRequest   {
+      position: relative;
+
+      .eForm_fieldName {
+        display: inline-block;
+        max-width: 305px;
+      }
+
+      .eForm_fieldSet {
+        display: inline-block;
+        position: absolute;
+        right: 30px;
+      }
+    }
+
+    .eForm_savePanel {
+      display: inline-block;
+      text-align: center;
+
+      .bButton {
+        width: 150px;
+        margin: 8px 5px;
+        float: none;
+      }
+    }
+  }
+}

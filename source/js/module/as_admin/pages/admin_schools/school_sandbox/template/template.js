@@ -120,10 +120,18 @@ const ConsentRequestTemplateComponent = React.createClass({
 						Heading
 					</FormField>
 					<FormField
-						type 	= "checkbox"
-						field 	= {`isRequired_${index}`}
+						type 		= "checkbox"
+						classNames  = "bCheckboxConsentRequest"
+						field 	    = {`isRequired_${index}`}
 					>
 						Is required
+					</FormField>
+					<FormField
+						type 	    = "checkbox"
+						classNames  = "bCheckboxConsentRequest"
+						field 	    = {`isDefault_${index}`}
+					>
+						Available by default
 					</FormField>
 					<FormField
 						type 	= "dropdown"
@@ -184,6 +192,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 				data.fields.push({
 					heading: 		formBinding.meta(`heading_${index}.value`).toJS(),
 					isRequired: 	Boolean(formBinding.meta(`isRequired_${index}.value`).toJS()),
+					isDefault: 	    Boolean(formBinding.meta(`isDefault_${index}.value`).toJS()),
 					type: 			type,
 					enumOptions: 	enumOptions
 				});
@@ -191,6 +200,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 				data.fields.push({
 					heading: 		formBinding.meta(`heading_${index}.value`).toJS(),
 					isRequired: 	Boolean(formBinding.meta(`isRequired_${index}.value`).toJS()),
+					isDefault: 	    Boolean(formBinding.meta(`isDefault_${index}.value`).toJS()),
 					type: 			type
 				});
 			}

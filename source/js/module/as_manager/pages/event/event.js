@@ -47,6 +47,8 @@ const	Rivals							= require('module/as_manager/pages/event/view/rivals/rivals')
 		SelectForCricketWrapperStyles	= require('styles/ui/select_for_cricket/select_for_cricket_wrapper.scss'),
 		SchoolHelper 					= require('module/helpers/school_helper'),
 		ManagerGroupChanges 			= require('module/ui/manager_group_changes/managerGroupChanges'),
+		Popup                           = require('module/ui/popup'),
+		{ConsentRequestPopup}           = require('module/as_manager/pages/event/view/consent_request/consent_request_popup'),
 		propz							= require('propz');
 
 const 	EventFormConsts 	= require('module/as_manager/pages/events/manager/event_form/consts/consts'),
@@ -78,6 +80,7 @@ const Event = React.createClass({
 			isNewEvent: false,
 			isEditEventPopupOpen: false,
 			isDeleteEventPopupOpen: false,
+			isConsentRequestPopupOpen: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -1328,6 +1331,48 @@ const Event = React.createClass({
 			return null;
 		}
 	},
+	renderConsentRequestPopupOpen: function() {
+		const binding	= this.getDefaultBinding();
+
+		return (
+			<Popup
+				binding         = { binding }
+				stateProperty   = { "isConsentRequestPopupOpen" }
+				onRequestClose  = { () => binding.set("isConsentRequestPopupOpen", false) }
+				otherClass      = 'bConsentRequestPopup'
+			>
+				<ConsentRequestPopup
+					binding             = { binding.sub('consentRequest') }
+					schoolId	        = { this.props.activeSchoolId }
+					sendConsent         = { this.handleClickSendConsentRequest }
+					handleClickClose    = { this.closeConsentRequestPopup }
+				/>
+			</Popup>
+		)
+	},
+	closeConsentRequestPopup: function () {
+		this.getDefaultBinding().set("isConsentRequestPopupOpen", false);
+	},
+	handleClickSendConsentRequest: function(fields){
+		const 	activeSchoolId 		= this.props.activeSchoolId,
+				binding	            = this.getDefaultBinding(),
+				rootBinding 		= this.getMoreartyContext().getBinding(),
+				eventId 			= rootBinding.get('routing.pathParameters.0');
+
+		const players = binding.toJS('model.players');
+
+		Promise.all(players.map( player => {
+			const playerDetails = {userId: player.userId, permissionId: player.permissionId};
+			return EventHeaderActions.sendConsentRequestFields(activeSchoolId, eventId, fields, playerDetails);
+		})).then( () => {
+			this.closeConsentRequestPopup();
+			window.simpleAlert(
+				'Consent requests have been successfully sent',
+				'Ok',
+				() => this.props.onReload()
+			);
+		});
+	},
 	renderEditTeamButtons: function() {
 		if(TeamHelper.isShowEditEventButton(this, this.props.mode)) {
 			return (
@@ -1621,6 +1666,7 @@ const Event = React.createClass({
 						{ this.renderOpponentSchoolManager() }
 						{ this.renderEditEventPopupOpen() }
 						{ this.renderDeleteEventPopupOpen() }
+						{ this.renderConsentRequestPopupOpen() }
 					</div>
 				);
 			// sync and edit squad mode

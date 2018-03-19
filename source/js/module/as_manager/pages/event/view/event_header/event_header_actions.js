@@ -588,6 +588,12 @@ function sendConsentRequest(schoolId, eventId) {
 	);
 }
 
+function sendConsentRequestFields(schoolId, eventId, fields, playerDetails) {
+	return window.Server.schoolEventsInvitationMessages.post(
+		{ schoolId }, { eventId, fields, playerDetails }
+	);
+}
+
 function deleteEvent(schoolId, eventId){
 	return window.Server.schoolEvent.delete(
 		{
@@ -617,6 +623,7 @@ module.exports.closeMatch 							= closeMatch;
 module.exports.reportNotParticipate 				= reportNotParticipate;
 module.exports.downloadCSV 							= downloadCSV;
 module.exports.sendConsentRequest 					= sendConsentRequest;
+module.exports.sendConsentRequestFields 			= sendConsentRequestFields;
 module.exports.deleteEvent 							= deleteEvent;
 module.exports.deleteGroupEvents 					= deleteGroupEvents;
 module.exports.convertAffectedUsersToClient 	    = convertAffectedUsersToClient;

@@ -1,4 +1,9 @@
 @import "../../!variables";
 .bConsentRequestTemplateFormBlock{
 	background-color: #ffffff;
+
+	.bCheckboxConsentRequest{
+		width: 50%;
+		display: inline-block;
+	}
 }
