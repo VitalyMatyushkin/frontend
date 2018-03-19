@@ -388,7 +388,14 @@ const SportIcon = React.createClass({
 			case 	sport === 'hockey sevens':
 				icon = "hockey_sevens";
 				break;
-			case 	sport === 'cross-country running':
+			case 	sport === 'cross-country running' ||
+					sport === 'cross-country running 1500m' ||
+					sport === 'cross-country running 2000m' ||
+					sport === 'cross-country running 2500m' ||
+					sport === 'cross-country running 2850m' ||
+					sport === 'cross-country running 3450m' ||
+					sport === 'cross-country running 3800m' ||
+					sport === 'cross-country running 4500m':
 				icon = "cross-country";
 				break;
 			case 	sport === 'canoeing (individual)' ||
