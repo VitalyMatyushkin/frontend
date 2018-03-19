@@ -126,7 +126,10 @@ const EventHeader = React.createClass({
 		if(typeof postcode !== 'undefined') {
 			eventLocation += `, ${postcode}`;
 		}
-
+		const venueName = propz.get(venue, ['placeData', 'name']);
+		if(typeof venueName !== 'undefined') {
+			eventLocation += `, ${venueName}`;
+		}
 		return eventLocation;
 	},
 	//We don't show the pencil(edit) button for parent, student and if event is finished
