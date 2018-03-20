@@ -133,7 +133,7 @@ const ScoreHelper = {
 					// remove hours in sec from remainder
 					remainder -= hourCount * 3600;
 
-					const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart);
+					const hourString = this.convertValueUnitToStringByMask(hourCount, maskPart, 'TIME');
 
 					timeString = hourString + this.getDelimiterByMaskAndRegex(mask, this.HOUR_WITH_DELIMITER_REGEX);
 					break;
@@ -143,7 +143,7 @@ const ScoreHelper = {
 					// remove minutes in sec from remainder
 					remainder -= minCount * 60;
 
-					const minString = this.convertValueUnitToStringByMask(minCount, maskPart);
+					const minString = this.convertValueUnitToStringByMask(minCount, maskPart, 'TIME');
 
 					timeString += minString + this.getDelimiterByMaskAndRegex(mask, this.MINUTE_WITH_DELIMITER_REGEX);
 					break;
@@ -152,7 +152,7 @@ const ScoreHelper = {
 					// at this step remainder is a fresh seconds without hours(in sec naturally) and minutes(in sec naturally)
 					const secCount = remainder;
 
-					const secString = this.convertValueUnitToStringByMask(secCount, maskPart);
+					const secString = this.convertValueUnitToStringByMask(secCount, maskPart, 'TIME');
 
 					timeString += secString + this.getDelimiterByMaskAndRegex(mask, this.SECOND_WITH_DELIMITER_REGEX);
 					break;
@@ -160,7 +160,7 @@ const ScoreHelper = {
 				case (this.isMillisecondMask(maskPart)): {
 					const msecCount = String(floatPartOfValue);
 
-					const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart);
+					const msecString = this.convertValueUnitToStringByMask(msecCount, maskPart, 'TIME');
 
 					timeString += msecString;
 					break;
@@ -185,7 +185,7 @@ const ScoreHelper = {
 					// remove km in cm from remainder
 					remainder -= kmCount * 100000;
 
-					const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart);
+					const kmString = this.convertValueUnitToStringByMask(kmCount, maskPart, 'DISTANCE');
 
 					distanceString = kmString + this.getDelimiterByMaskAndRegex(mask, this.KILOMETER_WITH_DELIMITER_REGEX);
 					break;
@@ -195,7 +195,7 @@ const ScoreHelper = {
 					// remove m in cm from remainder
 					remainder -= mCount * 100;
 
-					const mString = this.convertValueUnitToStringByMask(mCount, maskPart);
+					const mString = this.convertValueUnitToStringByMask(mCount, maskPart, 'DISTANCE');
 
 					distanceString += mString + this.getDelimiterByMaskAndRegex(mask, this.METER_WITH_DELIMITER_REGEX);
 					break;
@@ -204,7 +204,7 @@ const ScoreHelper = {
 					// at this step remainder is a fresh cm without km(in cm naturally) and m(in cm naturally)
 					const cmCount = remainder;
 
-					const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart);
+					const cmString = this.convertValueUnitToStringByMask(cmCount, maskPart, 'DISTANCE');
 
 					distanceString += cmString;
 					break;
@@ -298,21 +298,21 @@ const ScoreHelper = {
 				return 0;
 		}
 	},
-	convertValueUnitToStringByMask: function(value, mask) {
+	convertValueUnitToStringByMask: function(value, mask, unit) {
 		// convert value to string
 		let result = String(value);
 
 		switch (true) {
+			case this.isCentimeterMask(mask) && unit === 'DISTANCE': {
+				result = this.addZerosToStartByMask(result, mask);
+				break;
+			}
 			// For milliseconds we have different rules than for other units
 			// Because milliseconds are stored as fraction of float number
 			// So we should add zeros to end if it need
 			// Also we should cut off score string value
 			// if value length more than mask length
-			case this.isCentimeterMask(mask): {
-				result = this.addZerosToStartByMask(result, mask);
-				break;
-			}
-			case this.isMillisecondMask(mask): {
+			case this.isMillisecondMask(mask) && unit === 'TIME': {
 				if(mask.length > result.length) {
 					result = this.addZerosToEndByMask(result, mask);
 				} else if(mask.length < result.length) {
