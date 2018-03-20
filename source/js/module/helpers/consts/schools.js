@@ -64,7 +64,8 @@ const PUBLIC_STUDENT_VIEW_OPTIONS = [
 const AGE_GROUPS_NAMING_OPTIONS = [
 	{ text: 'English', 	value: 'ENGLISH'},
 	{ text: 'Scottish', value: 'SCOTTISH'},
-	{ text: 'U6-U19', 	value: 'U6-U19'}
+	{ text: 'U6-U19', 	value: 'U6-U19'},
+	{ text: 'US', 	value: 'US'}
 ];
 
 const INVITE_ACTION_OPTIONS = [
@@ -79,7 +80,8 @@ const INVITE_ACTION_OPTIONS = [
 const AGE_GROUPS = {
 	'ENGLISH': 	['Reception', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12', 'Y13'],
 	'SCOTTISH': ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'NotExist'],
-	'U6-U19': 	['U6', 'U7', 'U8', 'U9', 'U10', 'U11', 'U12', 'U13', 'U14', 'U15', 'U16', 'U17', 'U18', 'U19']
+	'U6-U19': 	['U6', 'U7', 'U8', 'U9', 'U10', 'U11', 'U12', 'U13', 'U14', 'U15', 'U16', 'U17', 'U18', 'U19'],
+	'US': 		['Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade']
 };
 
 const SUBSCRIPTION_PLAN_OPTIONS = [
