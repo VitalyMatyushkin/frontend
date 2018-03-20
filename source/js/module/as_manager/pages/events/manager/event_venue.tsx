@@ -39,6 +39,7 @@ export const EventVenue = (React as any).createClass({
 		// It exists because we must have opportunity to reset state of this component by hand.
 		binding.set('postcodeInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
 		binding.sub('fartherThen').addListener(() => this.clearVenueData());
+		binding.set('model.venue.point', Immutable.fromJS(this.getPoint()));
 	},
 
 	generatePostcodeInputKey() {

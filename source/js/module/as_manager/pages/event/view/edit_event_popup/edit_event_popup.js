@@ -161,6 +161,7 @@ const EditEventPopup = React.createClass({
 
 				// TODO copy cat from event_manager.setEventVenue
 				const venue = currentEvent.venue;
+
 				body.venue = {
 					venueType: venue.venueType,
 					point: venue.point
