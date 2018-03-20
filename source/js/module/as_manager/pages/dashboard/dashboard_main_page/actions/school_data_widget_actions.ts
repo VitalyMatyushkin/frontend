@@ -6,22 +6,62 @@ export const SchoolDataWidgetActions = {
 
 		return this.getSchoolStudentsCount(schoolId)
 			.then((countData) => {
-				data.dataItems.push({name: 'Students', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Students',
+						value: String(countData.count),
+						button: {
+							text: 'Edit',
+							handleClick: () => {window.location.hash = 'school_admin/students';},
+							extraStyle: 'mSm'
+						}
+					}
+				);
 
 				return this.getSchoolFormsCount(schoolId);
 			})
 			.then((countData) => {
-				data.dataItems.push({name: 'Forms', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Forms',
+						value: String(countData.count),
+						button: {
+							text: 'Edit',
+							handleClick: () => {window.location.hash = 'school_admin/forms';},
+							extraStyle: 'mSm'
+						}
+					}
+				);
 
 				return this.getSchoolHousesCount(schoolId);
 			})
 			.then((countData) => {
-				data.dataItems.push({name: 'Houses', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Houses',
+						value: String(countData.count),
+						button: {
+							text: 'Edit',
+							handleClick: () => {window.location.hash = 'school_admin/houses';},
+							extraStyle: 'mSm'
+						}
+					}
+				);
 
 				return this.getSchoolTeamsCount(schoolId);
 			})
 			.then((countData) => {
-				data.dataItems.push({name: 'Teams', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Teams',
+						value: String(countData.count),
+						button: {
+							text: 'Edit',
+							handleClick: () => {window.location.hash = 'school_admin/teams';},
+							extraStyle: 'mSm'
+						}
+					}
+				);
 
 				return data;
 			});

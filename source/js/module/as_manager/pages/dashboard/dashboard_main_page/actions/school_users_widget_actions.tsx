@@ -21,10 +21,28 @@ export const SchoolUsersWidgetActions = {
 				return this.getSchoolRequestsCount(schoolId);
 			})
 			.then(countData => {
-				data.dataItems.push({name: 'Requests pending', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Requests pending',
+						value: String(countData.count),
+						extraStyle: this.getExtraStyleForInviteInboxItem(countData.count),
+						button: {
+							text: 'Accept',
+							extraStyle: 'mDanger mSm',
+							handleClick: () => {window.location.hash = 'school_console/requests';}
+						}
+					}
+				);
 
 				return data;
 			})
+	},
+	getExtraStyleForInviteInboxItem(invitesCount: number) {
+		if(invitesCount === 0) {
+			return '';
+		} else {
+			return 'mRedColor';
+		}
 	},
 	getAdminStaffCountByPermissions(permissions) {
 		return permissions.filter(permission =>

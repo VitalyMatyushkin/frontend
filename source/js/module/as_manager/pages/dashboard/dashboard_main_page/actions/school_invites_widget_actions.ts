@@ -1,4 +1,4 @@
-import {ServiceList} from "module/core/service_list/service_list";
+import {ServiceList} from "module/core/service_list/service_list"
 
 export const SchoolInvitesWidgetActions = {
 	getDataForSchoolInvitesWidget(schoolId: string) {
@@ -6,7 +6,18 @@ export const SchoolInvitesWidgetActions = {
 
 		return this.getSchoolInvitesInboxCount(schoolId)
 			.then((countData) => {
-				data.dataItems.push({name: 'Invites(new)', value: String(countData.count)});
+				data.dataItems.push(
+					{
+						name: 'Invites(new)',
+						value: String(countData.count),
+						extraStyle: this.getExtraStyleForInviteInboxItem(countData.count),
+						button: {
+							text: 'Accept',
+							handleClick: () => {window.location.hash = 'invites/inbox';},
+							extraStyle: 'mDanger mSm'
+						}
+					}
+				);
 
 				return this.getSchoolInvitesOutboxCount(schoolId);
 			})
@@ -20,6 +31,13 @@ export const SchoolInvitesWidgetActions = {
 
 				return data;
 			})
+	},
+	getExtraStyleForInviteInboxItem(invitesCount: number) {
+		if(invitesCount === 0) {
+			return '';
+		} else {
+			return 'mRedColor';
+		}
 	},
 	getSchoolInvitesInboxCount(schoolId: string) {
 		return (window.Server as ServiceList).inviteInboxCount.get({schoolId});

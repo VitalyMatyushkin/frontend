@@ -10,7 +10,13 @@ export interface Data {
 
 export interface DataItem {
 	name: string,
-	value: string
+	value: string,
+	extraStyle?: string,
+	button?: {
+		text: string,
+		handleClick: () => void,
+		extraStyle: string
+	}
 }
 
 export interface DashboardDataWidgetProps {

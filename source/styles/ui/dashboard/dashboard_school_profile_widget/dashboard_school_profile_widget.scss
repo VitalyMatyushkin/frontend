@@ -1,7 +1,16 @@
+@import '../../../bootstrap-custom';
+
 .bDashboardSchoolProfileWidget {
 
 }
 
 .eDashboardSchoolProfileWidget_body {
+  @include make-row();
   margin-top: 20px;
+}
+
+.eDashboardSchoolProfileWidget_button {
+  @extend .col-md-12;
+  @extend .col-sm-12;
+  @extend .col-xs-12;
 }

@@ -3,7 +3,7 @@ import * as React from 'react';
 import {DashboardSchoolProfileComplete} from "module/ui/dashboard_components/dashboard_school_profile_widget/components/dashboard_school_profile_complete";
 
 import 'styles/ui/dashboard/dashboard_school_profile_widget/dashboard_school_profile_widget.scss'
-import {DashboardInfoButton} from "module/ui/dashboard_components/main_components/dashboard_info_button/dashboard_info_button";
+import {DashboardButton} from "module/ui/dashboard_components/main_components/dashboard_button/dashboard_button";
 
 export interface DashboardSchoolProfileWidgetProps {
 	school: any
@@ -50,11 +50,12 @@ export class DashboardSchoolProfileWidget extends React.Component<DashboardSchoo
 			<div className='bDashboardSchoolProfileWidget'>
 				<DashboardSchoolProfileComplete profileCompletePercent={this.getSchoolProfileCompletePercents()}/>
 				<div className='eDashboardSchoolProfileWidget_body'>
-					<DashboardInfoButton
-						handleClick={() => this.handleClick()}
-						bootstrapWidth={12}
-						text='More Information'
-					/>
+					<div className='eDashboardSchoolProfileWidget_button'>
+						<DashboardButton
+							handleClick={() => this.handleClick()}
+							text='More Information'
+						/>
+					</div>
 				</div>
 			</div>
 		);
