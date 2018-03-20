@@ -44,7 +44,7 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 			students = _students.concat(students);
 
 			if(students.length === 0) {
-				return this.searchStudentsByLastName(permissionRequest.requester.lastName);
+				return this.searchStudentsByLastNameAndGender(permissionRequest.requester.lastName);
 			} else {
 				return Promise.resolve([]);
 			}
@@ -111,8 +111,10 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 			regexArray.forEach(regex => {
 				const result = comment.match(regex);
 				if(result !== null) {
+					this.getDefaultBinding().set('studentFirstNameFromRequest', result[1]);
+					this.getDefaultBinding().set('studentLastNameFromRequest', result[2]);
 					promises = promises.concat(
-						this.searchStudentsByFirstNameAndLastName(result[1], result[2])
+						this.searchStudentsByFirstNameAndLastNameAndGender(result[1], result[2])
 					);
 				}
 			});
@@ -128,12 +130,12 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 			return students;
 		});
 	},
-	searchStudentsByFirstNameAndLastName(firstName: string, lastName: string): BPromise<any[]> {
+	searchStudentsByFirstNameAndLastNameAndGender(firstName: string, lastName: string): BPromise<any[]> {
 		const permissionRequest = this.props.permissionRequest;
 
 		let students = [];
 		const filter = {
-			where: { firstName: firstName, lastName: lastName }
+			where: { firstName: firstName, lastName: lastName, gender: permissionRequest.requestedPermission.childGender }
 		};
 
 		return window.Server.schoolStudents.get(
@@ -155,12 +157,13 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 			return BPromise.resolve(students);
 		});
 	},
-	searchStudentsByLastName(lastName: string): BPromise<any[]> {
+	searchStudentsByLastNameAndGender(lastName: string): BPromise<any[]> {
 		const permissionRequest = this.props.permissionRequest;
 
 		const filter = {
 			where: {
-				lastName: lastName
+				lastName: lastName,
+				gender: permissionRequest.requestedPermission.childGender
 			}
 		};
 

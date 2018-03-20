@@ -6,12 +6,16 @@ const	React				= require('react'),
 		{AdminPermissionAcceptParentDoubleRequestTooltip} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_parent_double_request_tooltip'),
 		{AdminPermissionAcceptTooltipWrapper} = require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_tooltip_wrapper'),
 		Loader				= require('module/ui/loader'),
+		Timezone			= require('moment-timezone'),
 		RoleHelper			= require('module/helpers/role_helper'),
+		Popup               = require('module/ui/popup'),
+		{StudentForm} 		= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/student_form.tsx'),
 		SquareCrossButton	= require('module/ui/square_cross_button');
 
 const propz = require('propz');
 
 const	MiddleWideContainer	= require('styles/ui/b_middle_wide_container.scss');
+const	StudentFormPopup	= require('styles/pages/register/b_student_form_register_popup.scss');
 
 const 	ERROR_ADD_CHILD_TEXT = 'Unable to add permission to this user. Probably this user is already a parent of this student.';
 
@@ -67,23 +71,80 @@ const AdminPermissionAcceptParent = React.createClass({
 
 				binding.set('permissionRequest', permissionRequest);
 				binding.set('comment', permissionRequest.requestedPermission.comment);
-				return window.Server.schoolUserPermissions.get(
-					{
-						schoolId: schoolId,
-						userId: permissionRequest.requesterId
-					}
-				)
+
+				const formPromise = (
+						permissionRequest.requestedPermission.childFormId ?
+							window.Server.schoolForm.get(
+								{
+									schoolId:	schoolId,
+									formId:		permissionRequest.requestedPermission.childFormId
+								}
+							):
+							Promise.resolve(undefined)
+					),
+					housePromise = (
+						permissionRequest.requestedPermission.childHouseId ?
+							window.Server.schoolHouse.get(
+								{
+									schoolId:	schoolId,
+									houseId:	permissionRequest.requestedPermission.childHouseId
+								}
+							):
+							Promise.resolve(undefined)
+					),
+					userPermissions = (
+						window.Server.schoolUserPermissions.get(
+							{
+								schoolId: schoolId,
+								userId: permissionRequest.requesterId
+							}
+					));
+
+				return Promise.all([
+					formPromise,
+					housePromise,
+					userPermissions
+				])
 			})
-			.then(permissions => {
+			.then( data => {
+					const  permissions = data[2];
+
 				const linkedStudents = permissions
 					.filter(p => p.preset === RoleHelper.USER_ROLES.PARENT)
 					.map(p => p.studentId);
 
 				binding.set('linkedStudentIds', Immutable.fromJS(linkedStudents));
+				binding.set('studentFormFromRequest', Immutable.fromJS(data[0]));
+				binding.set('studentHouseFromRequest', Immutable.fromJS(data[1]));
 				binding.set('isSync', true);
-			})
+			});
 
 		}
+	},
+	getChildDetails: function () {
+		const 	binding = this.getDefaultBinding(),
+				permissionRequest = binding.toJS('permissionRequest');
+
+		const childDetails = [];
+
+		if (typeof permissionRequest.requestedPermission.childDateOfBirth !== 'undefined') {
+			childDetails.push(`DOB: ${Timezone.tz(permissionRequest.requestedPermission.childDateOfBirth,
+				window.timezone).format('DD.MM.YY')}`);
+		}
+
+		if (typeof permissionRequest.requestedPermission.childGender !== 'undefined') {
+			childDetails.push(`Gender: ${permissionRequest.requestedPermission.childGender}`);
+		}
+
+		if (binding.toJS('studentFormFromRequest')) {
+			childDetails.push(`Form: ${binding.toJS('studentFormFromRequest').name}`);
+		}
+
+		if (binding.toJS('studentHouseFromRequest')) {
+			childDetails.push(`House: ${binding.toJS('studentHouseFromRequest').name}`);
+		}
+
+		return childDetails.length > 0 ? childDetails.join(', ') : undefined;
 	},
 	generatePostcodeInputKey: function() {
 		// just current date in timestamp view
@@ -268,6 +329,29 @@ const AdminPermissionAcceptParent = React.createClass({
 			}
 		});
 	},
+	onAcceptPermissionAndAddStudent: function() {
+		const	binding		= this.getDefaultBinding();
+
+		const	prId		= binding.get('prId'),
+				schoolId	= binding.get('schoolId'),
+				data        = binding.toJS('dataNewStudent');
+
+		window.Server.schoolStudents.post(binding.get('schoolId'), data)
+		.then(student => {
+			return window.Server.statusPermissionRequest.put(
+				{ schoolId, prId },
+				{ status:'ACCEPTED', studentId: student.id }
+			)
+		})
+		.then(() => {
+			document.location.hash = this.props.afterSubmitPage;
+		})
+		.catch((e) => {
+			if (e.xhr.status === 404) {
+				binding.set('errorAddChild', true);
+			}
+		});
+	},
 	onClickDeselectForm: function() {
 		this.deselectForm();
 		this.deselectStudent();
@@ -308,6 +392,68 @@ const AdminPermissionAcceptParent = React.createClass({
 			);
 		}
 	},
+	addNewStudent: function () {
+		this.getDefaultBinding().set("isAddStudentPopupOpen", true);
+		this.setStudentFormData();
+	},
+	renderAddStudentPopupOpen: function () {
+		const   binding         = this.getDefaultBinding(),
+				initialForm		= binding.toJS('studentForm.form'),
+				initialHouse	= binding.toJS('studentForm.house');
+
+		return (
+			<Popup
+				binding         = { binding }
+				stateProperty   = { "isAddStudentPopupOpen" }
+				onRequestClose  = { () => binding.set("isAddStudentPopupOpen", false) }
+				otherClass      = 'bStudentRegPopup'
+			>
+				<StudentForm
+					initialForm		= { initialForm }
+					initialHouse	= { initialHouse }
+					onFormSubmit	= { this.onSubmitStudentForm }
+					onClickBack	    = { () => binding.set("isAddStudentPopupOpen", false) }
+					schoolId		= { binding.get('schoolId') }
+					binding			= { binding }
+				/>
+			</Popup>
+		)
+	},
+	onSubmitStudentForm: function (student) {
+		const   binding = this.getDefaultBinding();
+
+		binding.set("isAddStudentPopupOpen", false);
+		binding.set("dataNewStudent", Immutable.fromJS(student));
+
+	},
+	setStudentFormData: function () {
+		const   binding = this.getDefaultBinding(),
+				permissionRequest = binding.toJS('permissionRequest');
+
+		const student = {};
+
+		student.form 	= binding.toJS('studentFormFromRequest');
+		student.formId 	= binding.toJS('studentFormFromRequest') ? binding.toJS('studentFormFromRequest').id : undefined;
+		student.house 	= binding.toJS('studentHouseFromRequest');
+		student.houseId = binding.toJS('studentHouseFromRequest') ? binding.toJS('studentHouseFromRequest').id : undefined;
+
+		if (binding.sub('adminPermissionAcceptTooltipWrapper').toJS('studentFirstNameFromRequest')) {
+			student.firstName 	= binding.sub('adminPermissionAcceptTooltipWrapper').toJS('studentFirstNameFromRequest');
+		}
+		if (binding.sub('adminPermissionAcceptTooltipWrapper').toJS('studentLastNameFromRequest')) {
+			student.lastName 	= binding.sub('adminPermissionAcceptTooltipWrapper').toJS('studentLastNameFromRequest');
+		}
+
+		if (permissionRequest.requestedPermission.childGender) {
+			student.gender 	= permissionRequest.requestedPermission.childGender;
+		}
+
+		if (permissionRequest.requestedPermission.childDateOfBirth) {
+			student.birthday 	= permissionRequest.requestedPermission.childDateOfBirth;
+		}
+
+		binding.set('studentForm', Immutable.fromJS(student));
+	},
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
 				errorAddChild = binding.get('errorAddChild'),
@@ -315,76 +461,112 @@ const AdminPermissionAcceptParent = React.createClass({
 
 		let content;
 		if(binding.toJS('isSync')) {
+			const   childDetails = this.getChildDetails(),
+					canCreateStudentFromParentPermissionRequest = binding.toJS('school').canCreateStudentFromParentPermissionRequest;
+
 			content = (
-				<div className='bForm'>
-					<div className="eForm_atCenter">
+				<div>
+					<div className='bForm'>
+						<div className="eForm_atCenter">
 
-						<h2 className='eForm_header mBlack'>{ binding.toJS('school.name') }.</h2>
+							<h2 className='eForm_header mBlack'>{ binding.toJS('school.name') }.</h2>
 
-						<h2 className='eForm_header mBlack'>Accept parent permission. Please choose student.</h2>
+							<h2 className='eForm_header mBlack'>Accept parent permission.</h2>
 
-						<h3 className='eForm_header mBlack'>Comment from parent: {comment}</h3>
+							<h3 className='eForm_header mBlack'>Comment from parent: {comment}</h3>
 
-						<div className='eForm_field'>
-							<Autocomplete
-								key				= { binding.toJS('formInputKey') }
-								defaultItem     = { this.getFormFromSelectedStudent() }
-								serviceFilter	= { this.serviceFormFilter }
-								serverField		= 'name'
-								onSelect		= { this.onSelectForm }
-								placeholder		= 'Form'
-								extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
-							/>
-							<SquareCrossButton
-								handleClick = {this.onClickDeselectForm}
-							/>
-						</div>
-
-						<div className='eForm_field'>
-							<Autocomplete
-								key				= { binding.toJS('houseInputKey') }
-								defaultItem     = { this.getHouseFromSelectedStudent() }
-								serviceFilter	= { this.serviceHouseFilter }
-								serverField		= 'name'
-								onSelect		= { this.onSelectHouse}
-								placeholder		= 'House'
-								extraCssStyle	= { 'mWidth350 mInline mRightMargin' }
-							/>
-							<SquareCrossButton
-								handleClick = {this.onClickDeselectHouse}
-							/>
-						</div>
-
-						<div className='eForm_field'>
-							{
-								errorAddChild &&
-								<span className="verify_error">{ ERROR_ADD_CHILD_TEXT }</span>
+							{childDetails ?
+								<h3 className='eForm_header mBlack'>Child details received from parent: {childDetails}</h3>
+								:
+								null
 							}
-							<Autocomplete
-								key				= {binding.toJS('studentInputKey')}
-								defaultItem     = {binding.toJS('selectedStudent')}
-								serviceFilter	= {this.serviceStudentsFilter}
-								serverField		= 'name'
-								onSelect		= {this.onSelectStudent}
-								placeholder		= 'Student name'
-								extraCssStyle	= {'mWidth350 mInline mRightMargin'}
-							/>
-							<SquareCrossButton
-								handleClick = {this.handleDeselectStudent}
-							/>
+
+							{
+								canCreateStudentFromParentPermissionRequest ?
+									<h2 className='eForm_header mBlack'>Please choose student
+										or <a onClick={() => this.addNewStudent()}>add a new student</a>.</h2>
+									:
+									<h2 className='eForm_header mBlack'>Please choose student.</h2>
+							}
+
+							{ typeof binding.get('dataNewStudent') === 'undefined' ?
+								<div>
+									<div className='eForm_field'>
+										<Autocomplete
+											key={binding.toJS('formInputKey')}
+											defaultItem={this.getFormFromSelectedStudent()}
+											serviceFilter={this.serviceFormFilter}
+											serverField='name'
+											onSelect={this.onSelectForm}
+											placeholder='Form'
+											extraCssStyle={'mWidth350 mInline mRightMargin'}
+										/>
+										<SquareCrossButton
+											handleClick={this.onClickDeselectForm}
+										/>
+									</div>
+
+									< div className='eForm_field'>
+									<Autocomplete
+									key                = {binding.toJS('houseInputKey')}
+									defaultItem     = {this.getHouseFromSelectedStudent()}
+									serviceFilter    = {this.serviceHouseFilter}
+									serverField        = 'name'
+									onSelect        = {this.onSelectHouse}
+									placeholder        = 'House'
+									extraCssStyle    = {'mWidth350 mInline mRightMargin'}
+									/>
+									<SquareCrossButton
+									handleClick = {this.onClickDeselectHouse}
+									/>
+									</div>
+
+									<div className='eForm_field'>
+								{
+									errorAddChild &&
+									<span className="verify_error">{ERROR_ADD_CHILD_TEXT}</span>
+								}
+									<Autocomplete
+									key                = {binding.toJS('studentInputKey')}
+									defaultItem     = {binding.toJS('selectedStudent')}
+									serviceFilter    = {this.serviceStudentsFilter}
+									serverField        = 'name'
+									onSelect        = {this.onSelectStudent}
+									placeholder        = 'Student name'
+									extraCssStyle    = {'mWidth350 mInline mRightMargin'}
+									/>
+									<SquareCrossButton
+									handleClick = {this.handleDeselectStudent}
+									/>
+									</div>
+
+									{this.renderTooltips()}
+
+								</div>
+								:
+								<div></div>
+							}
+
+							<If condition={typeof binding.get('studentId') !== 'undefined' && typeof binding.get('studentForm') === 'undefined'}>
+								<div
+									className	= "bButton"
+									onClick		= { this.onAcceptPermission }
+								>
+									Accept permission
+								</div>
+							</If>
+
+							<If condition={typeof binding.get('studentForm') !== 'undefined'}>
+								<div
+									className	= "bButton"
+									onClick		= { this.onAcceptPermissionAndAddStudent }
+								>
+									Accept permission and add new student
+								</div>
+							</If>
 						</div>
-
-						<If condition={typeof binding.get('studentId') !== 'undefined'}>
-							<div
-								className	= "bButton"
-								onClick		= { this.onAcceptPermission }
-							>
-								Accept permission
-							</div>
-						</If>
-
-						{this.renderTooltips()}
 					</div>
+					{ this.renderAddStudentPopupOpen() }
 				</div>
 			)
 		} else {

@@ -39,13 +39,6 @@ const SchoolForm = React.createClass({
 		}
 		return result;
 	},
-	getConditionChildField: function() {
-		return [
-			{value: 'HIDDEN', text: 'hidden'},
-			{value: 'OPTIONAL', text: 'optional'},
-			{value: 'REQUIRED', text: 'required'}
-		];
-	},
 	/**
 	 * Function is something like middleware for form dropdown
 	 * If function returns false then field doesn't change value
@@ -234,6 +227,14 @@ const SchoolForm = React.createClass({
 							field 		= "studentSelfRegistrationEnabled"
 						>
 							Student registration
+						</FormField>
+						<FormField
+							classNames 	= "mSingleLine"
+							type 		= "checkbox"
+							id 			= "createS_student_from_parent_permission"
+							field 		= "canCreateStudentFromParentPermissionRequest"
+						>
+							Admin can create student from parent permission request
 						</FormField>
 						<FormField
 							type 		= "dropdown"

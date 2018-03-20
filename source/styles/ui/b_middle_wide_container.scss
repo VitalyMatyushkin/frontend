@@ -1,9 +1,13 @@
 .bMiddleWideContainer {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 
   .verify_error{
     display: block;
     width: 440px;
+  }
+
+  a {
+    color: #007abf;
   }
 }

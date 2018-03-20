@@ -177,6 +177,18 @@
   padding: 4px;
   cursor: pointer;
 }
+.bStudentRegPopup {
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
+  width: 500px;
+  padding: 0;
+
+  .ePopup_Close{
+    z-index: 100;
+  }
+}
 .bPopupEdit{
   top: 180px;
   width: 800px;
