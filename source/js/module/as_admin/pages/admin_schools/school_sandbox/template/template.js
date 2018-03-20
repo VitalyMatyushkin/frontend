@@ -80,21 +80,27 @@ const ConsentRequestTemplateComponent = React.createClass({
 		this.clearConsentRequestTemplateFieldsByIndex(index);
 	},
 	clearConsentRequestTemplateFieldsByIndex: function(index){
-		const binding = this.getDefaultBinding().sub('formData');
-		
-		const fieldData = {
-			active:	true,
-			error:	false,
-			value:	''
-		};
-		
-		binding.meta()
-		.atomically()
-		.set(`heading_${index}`,		Immutable.fromJS(fieldData))
-		.set(`isRequired_${index}`,		Immutable.fromJS(fieldData))
-		.set(`type_${index}`,			Immutable.fromJS(fieldData))
-		.set(`enumOptions_${index}`,	Immutable.fromJS(fieldData))
-		.commit();
+		const   binding = this.getDefaultBinding(),
+				formBinding = binding.sub('formData'),
+				countFields = binding.toJS('consentRequestTemplateCountFields');
+
+		const fields = Object.assign({}, formBinding.meta().toJS());
+
+		for (let i = index; i < countFields; ++i) {
+			fields[`heading_${i}`] = fields[`heading_${i+1}`];
+			fields[`isRequired_${i}`] = fields[`isRequired_${i+1}`];
+			fields[`isDefault_${i}`] = fields[`isDefault_${i+1}`];
+			fields[`type_${i}`] = fields[`type_${i+1}`];
+			fields[`enumOptions_${i}`] = fields[`enumOptions_${i+1}`];
+		}
+
+		delete fields[`heading_${countFields}`];
+		delete fields[`isRequired_${countFields}`];
+		delete fields[`isDefault_${countFields}`];
+		delete fields[`type_${countFields}`];
+		delete fields[`enumOptions_${countFields}`];
+
+		formBinding.meta().set(Immutable.fromJS(fields));
 		
 		this.forceUpdate();
 	},
@@ -111,18 +117,20 @@ const ConsentRequestTemplateComponent = React.createClass({
 					customStyle 		= 'bConsentRequestTemplateFormBlock'
 					key 				= { `consentRequestTemplate-${index}` }
 					onClickClose 		= { () => this.onClickFormBlockHeader(index) }
-					isShowCloseButton 	= { index !== 0 } //for first element we don't show close button
+					isShowCloseButton 	= { countFields > 1 }
 				>
 					<FormField
 						type 	= "text"
 						field 	= {`heading_${index}`}
+						key 	= {`heading_${index}${countFields}`}
 					>
 						Heading
 					</FormField>
 					<FormField
-						type 		= "checkbox"
-						classNames  = "bCheckboxConsentRequest"
+						type 	    = "checkbox"
 						field 	    = {`isRequired_${index}`}
+						classNames  = "bCheckboxConsentRequest"
+						key 	    = {`isRequired_${index}${countFields}`}
 					>
 						Is required
 					</FormField>
@@ -130,12 +138,14 @@ const ConsentRequestTemplateComponent = React.createClass({
 						type 	    = "checkbox"
 						classNames  = "bCheckboxConsentRequest"
 						field 	    = {`isDefault_${index}`}
+						key 	    = {`isDefault_${index}${countFields}`}
 					>
 						Available by default
 					</FormField>
 					<FormField
 						type 	= "dropdown"
 						field 	= {`type_${index}`}
+						key 	= {`type_${index}${countFields}`}
 						options = { CONSENT_REQUEST_TEMPLATE_FIELD_TYPE_ARRAY }
 					>
 						Type
@@ -143,6 +153,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 					<FormField
 						type 		= "text"
 						field 		= {`enumOptions_${index}`}
+						key 		= {`enumOptions_${index}${countFields}`}
 						isDisabled 	= { formBinding.meta(`type_${index}.value`).toJS() !== CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.ENUM }
 						validation 	= { 'alphanumericAndComma' }
 					>
