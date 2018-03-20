@@ -2,7 +2,8 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 	    React       = require('react'),
         Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
-		helper		= require('module/helpers/loader_utils');
+		helper		= require('module/helpers/loader_utils'),
+		{SVG}       = require('module/ui/svg');
 
 /**
  * Note:
@@ -115,10 +116,22 @@ const TypePhone =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput mPhone">
-                <select id="select_phone_prefix" onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
-					{codes.map(code => <option key={code} value={code} >{code}</option>)}
-                </select>
-                <input ref="input" type="text" id={self.props.id} value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} disabled={!!this.props.isDisabled} />
+				<div className={`eForm_selectWrapper ${cc === '+1' ? 'mUS' : ''}`}>
+					{ cc === '+1' ? <SVG icon="icon_united-states-flag" /> : null }
+					<select id="select_phone_prefix" onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
+						{codes.map(code => <option key={code} value={code} >{code}</option>)}
+					</select>
+				</div>
+                <input
+	                className={`${cc === '+1' ? 'mUS' : ''}`}
+	                ref="input"
+	                type="text"
+	                id={self.props.id}
+	                value={phone}
+	                onChange={self.phoneChange}
+	                onBlur={self.handleBlur}
+	                disabled={!!this.props.isDisabled}
+                />
 			</div>
 		)
 	}

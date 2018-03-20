@@ -140,17 +140,43 @@ select::-ms-expand {
 }
 
 .eForm_fieldInput.mPhone {
+  .eForm_selectWrapper {
+    position: absolute;
+
+    height: 38px;
+    width: 55px;
+
+    &.mUS {
+      width: 114px;
+    }
+  }
+
   select{
+    display: inline-block;
+    vertical-align: top;
+
     border: none;
     background-color: transparent;
 
-    position: absolute;
     height: 38px;
     width: 55px;
     margin: 1px;
   }
+  svg{
+    display: inline-block;
+    vertical-align: top;
+
+    height: 38px;
+    width: 55px;
+    margin: 1px;
+    margin-right: -15px;
+  }
   input{
     padding-left: 60px;
+
+    &.mUS {
+      padding-left: 100px;
+    }
   }
 }
 
