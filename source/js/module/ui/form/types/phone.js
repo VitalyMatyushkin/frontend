@@ -49,6 +49,8 @@ const TypePhone =  React.createClass({
 
         if(value.indexOf('+7') === 0)
             cc = '+7';
+        if(value.indexOf('+1') === 0)
+			cc = '+1';
 
         phone = value.replace(cc, '');
         binding.atomically()
@@ -66,7 +68,8 @@ const TypePhone =  React.createClass({
 
         self.setValue(cc + phone);
     },
-    clearPhone:function(phone){
+    clearPhone:function(phone) {
+		// TODO Do we need remove 0 in US (+1) phone numbers?
 		/** remove 0 before phone number */
 		if(phone && phone.indexOf('+440') === 0)
 			phone = phone.replace('+440', '+44');
@@ -95,7 +98,7 @@ const TypePhone =  React.createClass({
 		this.cursor = -1;
 	},
 	getAvailableCodes:function(){
-		const codes = ["+44"];
+		const codes = ["+44", "+1"];
 
 		if(helper.isDeveloperEnvironment(window.location.hostname)){
 			codes.push("+7");
