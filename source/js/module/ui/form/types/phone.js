@@ -3,7 +3,10 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
 		helper		= require('module/helpers/loader_utils'),
+		{Dropdown}	= require('module/ui/dropdown/dropdown'),
 		{SVG}       = require('module/ui/svg');
+
+const CountryCodeStyle = require('styles/ui/b_country_code.scss');
 
 /**
  * Note:
@@ -78,14 +81,6 @@ const TypePhone =  React.createClass({
 		//Stops error being thrown when phone is null and replace method is being invoked
         return phone ? phone.replace(/[^+#\d]/g, ''):'';
     },
-    ccChange: function(e) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            inputValue = e.target.value;
-
-        binding.set('cc', inputValue);
-        self.saveValue();
-    },
     phoneChange: function(e) {
         const self = this,
             binding = self.getDefaultBinding(),
@@ -107,20 +102,72 @@ const TypePhone =  React.createClass({
 
 		return codes;
 	},
+	getCCDropdownElement(code) {
+		let flagModifier = '';
+		switch (code) {
+			case '+1': {
+				flagModifier = 'mUSA';
+				break;
+			}
+			case '+44': {
+				flagModifier = 'mBritish';
+				break;
+			}
+			default: {
+				flagModifier = 'mUSA';
+				break;
+			}
+		}
+
+		return (
+			<div className='bCountryCode'>
+				<div className={'eCountryCode_flag ' + flagModifier}>
+				</div>
+				<div
+					className='eCountryCode_text'
+				>
+					{code}
+				</div>
+			</div>
+		);
+	},
+	getExtraStyleForCC() {
+		const   self = this,
+				binding = self.getDefaultBinding();
+
+		if(binding.toJS('showError')) {
+			return 'mBorderRed';
+		} else {
+			return '';
+		}
+	},
+	getCCDropdownArray() {
+		return this.getAvailableCodes().map(code => {
+			return {
+				id: code,
+				element: this.getCCDropdownElement(code)
+			}
+		});
+	},
+	handleClickCC(cc) {
+		this.getDefaultBinding().set('cc', cc);
+		this.saveValue();
+	},
 	render: function () {
-		const self = this,
-            binding = self.getDefaultBinding(),
-            cc = binding.get('cc'),
-            phone = binding.get('phone'),
-			codes = self.getAvailableCodes();
+		const   self = this,
+                binding = self.getDefaultBinding(),
+                cc = binding.get('cc'),
+                phone = binding.get('phone');
 
 		return (
 			<div className="eForm_fieldInput mPhone">
-				<div className={`eForm_selectWrapper ${cc === '+1' ? 'mUS' : ''}`}>
-					{ cc === '+1' ? <SVG icon="icon_united-states-flag" /> : null }
-					<select id="select_phone_prefix" onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
-						{codes.map(code => <option key={code} value={code} >{code}</option>)}
-					</select>
+				<div className='eForm_selectWrapper'>
+					<Dropdown
+						extraStyle={this.getExtraStyleForCC()}
+						selectedItemId={cc}
+						items={this.getCCDropdownArray()}
+						handleClickItem={cc => this.handleClickCC(cc)}
+					/>
 				</div>
                 <input
 	                className={`${cc === '+1' ? 'mUS' : ''}`}
