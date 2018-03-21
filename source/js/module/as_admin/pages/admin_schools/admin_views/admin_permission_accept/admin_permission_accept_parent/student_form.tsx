@@ -51,7 +51,7 @@ export const StudentForm = (React as any).createClass({
 		}
 	},
 	getGender: function () {
-		const gendersArray = [
+		return [
 			{
 				value: 'boy',
 				id: 'MALE'
@@ -61,8 +61,6 @@ export const StudentForm = (React as any).createClass({
 				id: 'FEMALE'
 			}
 		];
-
-		return Promise.resolve(gendersArray);
 	},
 
 	render: function () {
@@ -104,7 +102,7 @@ export const StudentForm = (React as any).createClass({
 					<FormField
 						type			= 'radio'
 						field			= 'gender'
-						sourcePromise	= { this.getGender }
+						sourceArray 	= { this.getGender() }
 						validation		= 'required'
 						id 				= 'student_gender'
 					>

@@ -38,9 +38,11 @@ const RadioGroup = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultId', () => {
-			this.setDefaultId();
-		});
+		if (this.props.sourcePromise) {
+			binding.addListener('defaultId', () => {
+				this.setDefaultId();
+			});
+		}
 
 		if (this.props.sourcePromise) {
 			this.props.sourcePromise().then( dataArray => {

@@ -64,7 +64,9 @@ const AddPermissionRequest = React.createClass({
 
 		if (model.preset === RoleHelper.USER_PERMISSIONS.PARENT) {
 			if (this.showErrors(selectedSchool) === 0) {
-				model.childDateOfBirth = DateHelper.getFormatDateTimeUTCString(model.childDateOfBirth);
+				if (model.childDateOfBirth) {
+					model.childDateOfBirth = DateHelper.getFormatDateTimeUTCString(model.childDateOfBirth);
+				}
 				model.comment = `Request to be parent of [ ${model.studentFirstName}  ${model.studentLastName}] \r\n` + model.comment;
 
 				window.Server.profileRequests.post(model)
