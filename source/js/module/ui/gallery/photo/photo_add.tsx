@@ -29,36 +29,21 @@ interface PhotoAddComponentProps {
 
 interface PhotoAddComponentState {
 	fileImage: string
-	windowWidth: number
 	imageOriginSize: {width: number, height: number}
 	imageShowSize: {width: number, height: number}
+	isSync: boolean
 }
 
 export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, PhotoAddComponentState> {
-	readonly MARGIN = 40;
-
 	constructor(props) {
 		super(props);
-		this.state = {fileImage: '', windowWidth: window.innerWidth, imageOriginSize: {width: 0, height: 0},  imageShowSize: {width: 0, height: 0}};
+		this.state = {fileImage: '', isSync: false, imageOriginSize: {width: 0, height: 0},  imageShowSize: {width: 0, height: 0}};
 	}
 	
 	onCancelButtonClick(): void {
 		window.history.back();
 	}
 
-	componentDidMount() {
-		window.addEventListener('resize', this.handleResize.bind(this));
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.handleResize.bind(this));
-	}
-
-	handleResize(): void {
-		this.setState({
-			windowWidth: window.innerWidth
-		});
-	}
 	onCropButtonClick(): void {
 		const 	canvas 	= this.refs.canvasImage,
 				file 	= CropImageHelper.dataURLtoFile((canvas as any).toDataURL("image/jpeg"));
@@ -112,6 +97,7 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 	}
 	
 	onInputFileImageChange(event): void {
+		this.setState({isSync: false})
 		const file = event.target.files.item(0);
 		const imageType = /^image\//;
 		
@@ -120,23 +106,25 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 		}
 		
 		const reader = new (window as any).FileReader();
-		
+
 		reader.onload = (eventOnLoad) => {
 			const image = new Image();
-			image.src = eventOnLoad.target.result;
+			image.crossOrigin = 'anonymous';
 			image.onload = () => {
 				this.setState({
 					imageOriginSize: {width: image.width, height: image.height},
-					fileImage: eventOnLoad.target.result
+					fileImage: eventOnLoad.target.result,
+					isSync: true
 				});
 			};
+			image.src = eventOnLoad.target.result;
 		};
 		
 		reader.readAsDataURL(file);
 	}
 	
 	isFileImageSelectInInput(): boolean {
-		return this.state.fileImage !== '';
+		return this.state.fileImage !== '' && this.state.isSync;
 	}
 	
 	getAlbumId(): string {
@@ -148,7 +136,7 @@ export class PhotoAddComponent extends React.Component<PhotoAddComponentProps, P
 	
 	render(){
 		return (
-			<div className="bPhotoAdd" style={{maxWidth: this.state.windowWidth-this.MARGIN*2, marginLeft: this.MARGIN, marginRight: this.MARGIN}}>
+			<div className="bPhotoAdd">
 				<div className="eInputFileImage">
 					<input
 						key			= "input-file-image"
