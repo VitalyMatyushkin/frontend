@@ -21,7 +21,7 @@ export const ConsentRequestForm = (React as any).createClass({
 	getFieldsConverted: function(fields){
 		const formData = {};
 		fields.forEach((field, index) => {
-			formData[`isDefault_${index}`] = field['isDefault'];
+			formData[`willBeSent_${index}`] = field['willBeSent'];
 		});
 
 		return formData;
@@ -32,10 +32,10 @@ export const ConsentRequestForm = (React as any).createClass({
 			this.props.consentFields.map((field, index) => {
 				return (
 					<FormField
-						key         = {`isDefault_${index}`}
+						key         = {`willBeSent_${index}`}
 						type 		= "checkbox"
 						classNames	= "bCheckboxConsentRequest"
-						field 		= {`isDefault_${index}`}
+						field 		= {`willBeSent_${index}`}
 					>
 						{field.heading}
 					</FormField>
@@ -46,7 +46,7 @@ export const ConsentRequestForm = (React as any).createClass({
 
 	onClickSubmit: function (data) {
 		const newConsentFields = this.props.consentFields.map((field, index) => {
-			field.isDefault = data[`isDefault_${index}`];
+			field.willBeSent = data[`willBeSent_${index}`];
 			return field;
 		});
 		this.props.onSubmit(newConsentFields);

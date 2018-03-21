@@ -11,8 +11,6 @@ const SchoolConst = require('module/helpers/consts/schools');
 
 const ConsentRequestTemplateComponentStyles = require('styles/ui/b_consent_request_template/b_consent_request_template.scss');
 
-let accumulator = []; // used for accumulation initial value of fields
-
 const ConsentRequestTemplateComponent = React.createClass({
 	propTypes:{
 		template: 				React.PropTypes.object.isRequired,
@@ -23,7 +21,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 	},
 	getInitialState: function(){
 		return {
-			templateData: []
+			templateData:   []
 		}
 	},
 	getDefaultValue: function(field, index){
@@ -65,15 +63,15 @@ const ConsentRequestTemplateComponent = React.createClass({
 	},
 	onChange: function(fieldData, isInitial, index){
 		if (isInitial) {
-			accumulator[index] = fieldData;
+			const templateData = this.state.templateData;
+			templateData[index] = fieldData;
 			this.setState({
-				templateData: this.state.templateData.concat(accumulator)
+				templateData: templateData
 			});
-			this.props.onChange(accumulator);
+			this.props.onChange(templateData);
 		} else {
 			const Array = this.state.templateData.slice();
 			Array[index] = fieldData;
-
 			this.setState({
 				templateData: Array
 			});
@@ -104,8 +102,7 @@ const ConsentRequestTemplateComponent = React.createClass({
 	},
 	
 	render: function(){
-		const 	template 	= this.props.template,
-				message 	= this.props.message,
+		const 	message 	= this.props.message,
 				type 		= this.props.type;
 		
 		switch(true){
@@ -115,10 +112,10 @@ const ConsentRequestTemplateComponent = React.createClass({
 						{this.renderField(message.fields, true)}
 					</div>
 				);
-			case (type === MESSAGE_TYPE.INBOX && Array.isArray(template.fields) && template.fields.length > 0):
+			case (type === MESSAGE_TYPE.INBOX && Array.isArray(message.fields) && message.fields.length > 0):
 				return (
 					<div className="bConsentRequestTemplate">
-						{this.renderField(template.fields, false)}
+						{this.renderField(message.fields, false)}
 					</div>
 				);
 			default: return null;

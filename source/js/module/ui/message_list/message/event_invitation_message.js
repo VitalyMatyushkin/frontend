@@ -93,7 +93,6 @@ const EventInvitationMessage = React.createClass({
 				actionType	= MessageConsts.MESSAGE_INVITATION_ACTION_TYPE.ACCEPT;
 		
 		const templateData = this.state.templateData;
-		
 		if (this.isAllRequiredFieldFilled() && this.isAllNumericFieldValid()) {
 			this.props.onAction(
 				messageId,
@@ -142,14 +141,13 @@ const EventInvitationMessage = React.createClass({
 	},
 	isRenderConsentRequestTemplate: function(){
 		const 	message 	= this.props.message,
-				template 	= this.props.template,
 				type 		= this.props.type;
 		return (
 			type === MessageConsts.MESSAGE_TYPE.ARCHIVE &&
 			Array.isArray(message.fields) && message.fields.length > 0
 			) || (
 				type === MessageConsts.MESSAGE_TYPE.INBOX &&
-				Array.isArray(template.fields) && template.fields.length > 0
+				Array.isArray(message.fields) && message.fields.length > 0
 			);
 	},
 	renderConsentRequestTemplate: function(){

@@ -18,8 +18,12 @@ export const ConsentRequestPopup = (React as any).createClass({
 		const binding = this.getDefaultBinding();
 		binding.set('isSync', false);
 		(window as any).Server.consentRequestTemplate.get({schoolId: this.props.schoolId}).then(template => {
+			const currentField = template.fields.map(field => {
+				field.willBeSent = field.isDefault;
+				return field;
+			});
 			binding.atomically()
-				.set('consentFields', Immutable.fromJS(template.fields))
+				.set('consentFields', Immutable.fromJS(currentField))
 				.set('consentStep', STEP.MAIN)
 				.set('isDontAskCheckbox', false)
 				.set('isSync', true)
@@ -33,17 +37,17 @@ export const ConsentRequestPopup = (React as any).createClass({
 		binding.set('isDontAskCheckbox', e.target.checked);
 		binding.set('isDisableManage', e.target.checked);
 		if (e.target.checked) {
-			this.removeAllDefaultField();
+			this.removeAllCheckedField();
 		}
 		e.stopPropagation();
 	},
 
-	removeAllDefaultField: function () {
+	removeAllCheckedField: function () {
 		const   binding = this.getDefaultBinding();
 		let     consentFields = binding.toJS('consentFields');
 
 		consentFields = consentFields.map(field => {
-			field.isDefault = false;
+			field.willBeSent = false;
 			return field;
 		});
 
@@ -54,7 +58,7 @@ export const ConsentRequestPopup = (React as any).createClass({
 		const consentFields = this.getDefaultBinding().toJS('consentFields');
 		let countField = 0;
 		consentFields.forEach(field => {
-			if (field.isDefault) {
+			if (field.willBeSent) {
 				countField++;
 			}
 		});
@@ -72,9 +76,14 @@ export const ConsentRequestPopup = (React as any).createClass({
 	},
 
 	sendConsentRequest: function () {
-		this.getDefaultBinding().set('isSync', false);
+		const binding = this.getDefaultBinding();
 
-		const fields = this.getDefaultBinding().toJS('consentFields');
+		binding.set('isSync', false);
+
+		const  currentFields = binding.toJS('consentFields');
+
+		const fields = currentFields.filter( field => field.willBeSent ).map(field => {delete field.willBeSent; return field});
+
 		this.props.sendConsent(fields);
 	},
 
