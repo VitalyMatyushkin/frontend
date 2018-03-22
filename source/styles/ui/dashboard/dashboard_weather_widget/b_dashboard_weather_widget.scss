@@ -1,0 +1,141 @@
+@import '../../../bootstrap-custom';
+
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
+
+$color1: #C8DAE6;
+$color2: white;
+$color3: #B8B8B8;
+$color4: #FFCD41;
+$color5: #2092A9;
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+.bDashboardWeatherWidget {
+  padding: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 140px;
+  background-color: $color2;
+  box-shadow: 0 0 25px 1px rgba(50, 50, 50, 0.1);
+  animation: appear 500ms ease-out forwards;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.eDashboardWeatherWidget_col {
+  width: 125px;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight:300;
+  font-size:28px;
+  color: $color3;
+}
+
+.eDashboardWeatherWidget_weatherDescription {
+  font-family: "Montserrat", sans-serif;
+  font-weight:300;
+  font-size:16px;
+  color: $color3;
+}
+
+.eDashboardWeatherWidget_temp {
+  font-family: 'Lato', sans-serif;
+  font-weight:300;
+  font-size:70px;
+  color: $color3;
+  //opacity: 0;
+  //transform: translateX(150px);
+  //animation: title-appear 500ms ease-out 500ms forwards;
+}
+
+.eDashboardWeatherWidget_city {
+  font-family: "Montserrat", sans-serif;
+  font-weight:300;
+  font-size:20px;
+  color: $color3;
+  //animation: title-appear 1s ease-out 500ms forwards;
+}
+
+.eDashboardWeatherWidget_weatherIcon {
+  width: 120px;
+  height: 60px;
+  background-size: 80px;
+  background-repeat: no-repeat;
+  background-position: 0;
+  //animation: weather-icon-move 5s ease-in-out infinite;
+
+  &.m01d {
+    background-image: url("http://openweathermap.org/img/w/01d.png");
+  }
+
+  &.m01n {
+    background-image: url("http://openweathermap.org/img/w/01d.png");
+  }
+
+  &.m02d {
+    background-image: url("http://openweathermap.org/img/w/02d.png");
+  }
+
+  &.m02n {
+    background-image: url("http://openweathermap.org/img/w/02d.png");
+  }
+
+  &.m03d {
+    background-image: url("http://openweathermap.org/img/w/03d.png");
+  }
+
+  &.m03n {
+    background-image: url("http://openweathermap.org/img/w/03d.png");
+  }
+
+  &.m04d {
+    background-image: url("http://openweathermap.org/img/w/04d.png");
+  }
+
+  &.m04n {
+    background-image: url("http://openweathermap.org/img/w/04d.png");
+  }
+
+  &.m09d {
+    background-image: url("http://openweathermap.org/img/w/09d.png");
+  }
+
+  &.m09n {
+    background-image: url("http://openweathermap.org/img/w/09d.png");
+  }
+
+  &.m10d {
+    background-image: url("http://openweathermap.org/img/w/10d.png");
+  }
+
+  &.m10n {
+    background-image: url("http://openweathermap.org/img/w/10d.png");
+  }
+
+  &.m11d {
+    background-image: url("http://openweathermap.org/img/w/11d.png");
+  }
+
+  &.m11n {
+    background-image: url("http://openweathermap.org/img/w/11d.png");
+  }
+
+  &.m13d {
+    background-image: url("http://openweathermap.org/img/w/13d.png");
+  }
+
+  &.m13n {
+    background-image: url("http://openweathermap.org/img/w/13d.png");
+  }
+
+  &.m50d {
+    background-image: url("http://openweathermap.org/img/w/50d.png");
+  }
+
+  &.m50n {
+    background-image: url("http://openweathermap.org/img/w/50d.png");
+  }
+}

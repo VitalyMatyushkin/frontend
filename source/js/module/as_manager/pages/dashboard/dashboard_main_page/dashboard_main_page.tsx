@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as Morearty from 'morearty'
 import * as Immutable from 'immutable'
+import * as propz from 'propz';
 
 import {DashboardCard} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget";
@@ -12,6 +13,7 @@ import {SchoolDataWidgetActions} from "module/as_manager/pages/dashboard/dashboa
 import {SchoolInvitesWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_invites_widget_actions";
 import {SchoolUsersWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_users_widget_actions";
 import {SchoolProfileWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_profile_widget_actions";
+import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_weather_widget/dashboard_weather_widget";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -88,6 +90,31 @@ export const DashboardMainPage = (React as any).createClass({
 	getSchoolInvitesData() {
 		return this.getDefaultBinding().toJS('schoolInvitesData.data');
 	},
+	getSchoolCoordinates(): {lat: number, lng: number} {
+		const school = this.getDefaultBinding().toJS('schoolProfileData.school');
+
+		const lng = propz.get(school, ['postcode', 'point', 'lng'], undefined);
+		const lat = propz.get(school, ['postcode', 'point', 'lat'], undefined);
+
+		if(typeof lng !== 'undefined' && typeof lat !== 'undefined') {
+			return {lng, lat};
+		} else {
+			return undefined;
+		}
+	},
+	renderWeatherWidget() {
+		const schoolCoordinates = this.getSchoolCoordinates();
+
+		if(typeof schoolCoordinates !== 'undefined') {
+			return (
+				<DashboardWeatherWidget
+					coordinates={schoolCoordinates}
+				/>
+			);
+		} else {
+			return null;
+		}
+	},
 	render() {
 		return (
 			<div className="bDashboardMainPage">
@@ -122,6 +149,12 @@ export const DashboardMainPage = (React as any).createClass({
 							<DashboardDataWidget
 								data={this.getSchoolInvitesData()}
 							/>
+						</DashboardCard>
+						<DashboardCard
+							headerText='Weather'
+							bootstrapWrapperStyle='col-xs-6 col-sm-6 col-md-3'
+						>
+							{this.renderWeatherWidget()}
 						</DashboardCard>
 					</div>
 					<div className='eDashboardMainPage_row'>
