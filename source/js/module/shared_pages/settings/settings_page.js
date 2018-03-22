@@ -1,7 +1,3 @@
-import {ServiceList} from "../../core/service_list/service_list";
-import * as RoleHelper from "../../helpers/role_helper";
-import * as UserConsts from "../../helpers/consts/user";
-
 const	RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		React							= require('react'),

@@ -11,13 +11,24 @@ const	React					= require('react'),
  */
 const AddSchoolPopup = React.createClass({
 	propTypes: {
-		isOpen					: React.PropTypes.bool.isRequired,
-		handleClickOkButton		: React.PropTypes.bool.isRequired,
-		handleClickCancelButton	: React.PropTypes.bool.isRequired,
-		blackList				: React.PropTypes.array.isRequired
+		schoolUnionId: React.PropTypes.string.isRequired,
+		isOpen: React.PropTypes.bool.isRequired,
+		handleClickOkButton: React.PropTypes.bool.isRequired,
+		handleClickCancelButton: React.PropTypes.bool.isRequired,
+		blackList: React.PropTypes.array.isRequired
+	},
+	componentWillMount() {
+		window.Server.school.get({schoolId: this.props.schoolUnionId}).then(schoolUnion => {
+			this.setState({
+				activeSchoolUnion: schoolUnion,
+				isSync: true
+			});
+		});
 	},
 	getInitialState: function() {
 		return {
+			isSync: false,
+			activeSchoolUnion: undefined,
 			school:		undefined,
 			postcode:	undefined
 		};
@@ -115,7 +126,7 @@ const AddSchoolPopup = React.createClass({
 		});
 	},
 	render: function () {
-		if(this.props.isOpen) {
+		if(this.props.isOpen && this.state.isSync) {
 			return (
 				<ConfirmPopup	okButtonText			= "Add school"
 								cancelButtonText		= "Back"
@@ -129,10 +140,12 @@ const AddSchoolPopup = React.createClass({
 						<div className="eForm_fieldName">
 							Postcode
 						</div>
-						<PostcodeSelector	currentPostcode			= { this.state.postcode }
-											handleSelectPostcode	= { this.handleSelectPostcode }
-											handleEscapePostcode	= { this.handleEscapePostcode }
-											extraCssStyle			= { 'mSchoolUnionPostcode' }
+						<PostcodeSelector
+							region                  = { this.state.activeSchoolUnion.region }
+							currentPostcode			= { this.state.postcode }
+							handleSelectPostcode	= { this.handleSelectPostcode }
+							handleEscapePostcode	= { this.handleEscapePostcode }
+							extraCssStyle			= { 'mSchoolUnionPostcode' }
 						/>
 					</div>
 					<div className="eForm_field">

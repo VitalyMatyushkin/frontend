@@ -6,11 +6,10 @@ const	React			= require('react'),
 		Morearty		= require('morearty');
 
 const	Actions 		= require('./request-list-model'),
-		{If}			= require('module/ui/if/if'),
 		Popup			= require('module/ui/popup'),
 		SchoolHelper	= require('../../../helpers/school_helper'),
 		AddRequest		= require('module/shared_pages/settings/account/add_request'),
-		{Grid}		= require('module/ui/grid/grid'),
+		{Grid}		    = require('module/ui/grid/grid'),
 		Loader			= require('module/ui/loader');
 
 const PermissionRequestList = React.createClass({

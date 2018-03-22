@@ -149,7 +149,16 @@ export const EventVenue = (React as any).createClass({
 				return Promise.resolve(result);
 			});
 	},
+	/**
+	 * Returns school region. If school region is undefined return GB region by default.
+	 * @returns {string}
+	 */
+	getSchoolRegion() {
+		const schoolInfo = this.getDefaultBinding().toJS('schoolInfo');
+		const schoolRegion = propz.get(schoolInfo, ['region'], undefined);
 
+		return typeof schoolRegion !== 'undefined' ? schoolRegion : 'GB';
+	},
 	getResultForNotEmptySearchString(postcode) {
 		const	gameType	= this.props.eventType;
 
@@ -162,7 +171,8 @@ export const EventVenue = (React as any).createClass({
 				text: {
 					like	: postcode,
 					options	: 'i'
-				}
+				},
+				region: this.getSchoolRegion()
 			},
 			limit: 10
 		};
@@ -469,6 +479,7 @@ export const EventVenue = (React as any).createClass({
 
 	render() {
 		const binding = this.getDefaultBinding();
+		console.log(binding.toJS());
 
 		// Note. Pls look at Autocomplete component.
 		// You can see generated key.

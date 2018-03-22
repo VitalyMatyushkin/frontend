@@ -2,12 +2,13 @@ const	React 			= require ('react'),
 		CrossButton		= require('../cross_button/cross_button'),
 		{Autocomplete}	= require('../autocomplete2/OldAutocompleteWrapper');
 
-const PermissionDetails = React.createClass({
+const PostcodeSelector = React.createClass({
 	propTypes: {
-		currentPostcode			: React.PropTypes.object,
-		extraCssStyle			: React.PropTypes.string,
-		handleSelectPostcode	: React.PropTypes.func.isRequired,
-		handleEscapePostcode	: React.PropTypes.func.isRequired
+		region: React.PropTypes.string,
+		currentPostcode: React.PropTypes.object,
+		extraCssStyle: React.PropTypes.string,
+		handleSelectPostcode: React.PropTypes.func.isRequired,
+		handleEscapePostcode: React.PropTypes.func.isRequired
 	},
 	getInitialState: function(){
 		// It's auto generated key for postcode input.
@@ -30,6 +31,9 @@ const PermissionDetails = React.createClass({
 			},
 			limit: 10
 		};
+		if(typeof this.props.region !== 'undefined') {
+			postCodeFilter.where.region = this.props.region;
+		}
 
 		return window.Server.postCodes.get({ filter: postCodeFilter });
 	},
@@ -60,4 +64,4 @@ const PermissionDetails = React.createClass({
 	}
 });
 
-module.exports = PermissionDetails;
+module.exports = PostcodeSelector;

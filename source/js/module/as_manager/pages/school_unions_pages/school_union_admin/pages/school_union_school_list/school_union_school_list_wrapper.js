@@ -6,6 +6,9 @@ const	RouterView 				= require('module/core/router'),
 
 const SchoolUnionSchoolListWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		schoolUnionId: React.PropTypes.string.isRequired
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
@@ -15,9 +18,10 @@ const SchoolUnionSchoolListWrapper = React.createClass({
 			<RouterView	binding	= {globalBinding}
 						routes	= {binding.sub('schoolUnionSchoolListRouting')}
 			>
-				<Route	binding		= {binding.sub('schoolUnionSchoolList')}
-						path		= "/school_union_admin/schools"
-						component	= {SchoolUnionSchoolList}
+				<Route	binding		    = {binding.sub('schoolUnionSchoolList')}
+						path		    = "/school_union_admin/schools"
+					    schoolUnionId   = {this.props.schoolUnionId}
+						component	    = {SchoolUnionSchoolList}
 				/>
 			</RouterView>
 		)

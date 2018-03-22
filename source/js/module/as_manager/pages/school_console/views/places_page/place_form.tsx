@@ -29,6 +29,16 @@ export const PlaceForm = (React as any).createClass({
 
 	DEFAULT_VENUE_POINT: { coordinates: [-0.246722, 50.832949]},
 
+	componentWillMount() {
+		const binding = this.getDefaultBinding();
+
+		binding.set('isSync', false);
+		return (window.Server as ServiceList).school.get({schoolId: this.props.activeSchoolId})
+			.then(school => {
+				binding.set('school', Immutable.fromJS(school));
+				binding.set('isSync', true);
+			});
+	},
 	getPoint() {
 		const point = this.getDefaultBinding().toJS('point');
 
@@ -38,7 +48,9 @@ export const PlaceForm = (React as any).createClass({
 	getNewPoint(point) {
 		this.getDefaultBinding().set('point', Immutable.fromJS(point));
 	},
-
+	getSchoolRegion() {
+		return this.getDefaultBinding().toJS('school.region');
+	},
 	postcodeService(searchText: string): BPromise<any> {
 		return (window.Server as ServiceList).postCodes.get(
 			{
@@ -47,66 +59,68 @@ export const PlaceForm = (React as any).createClass({
 						postcode: {
 							like: searchText,
 							options: 'i'
-						}
+						},
+						region: this.getSchoolRegion()
 					},
 					limit: 10
 				}
 			});
 	},
-
 	onSelectPostcode(id: string, postcode: Postcode) {
 		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode));
 		this.getDefaultBinding().set('point', Immutable.fromJS(postcode.point));
 	},
-
 	onSubmit(data) {
 		data.point = this.getDefaultBinding().toJS('point');
 		this.props.onSubmit(data);
 	},
-
 	render() {
-		const selectedPostcode = this.getDefaultBinding().toJS('selectedPostcode');
+		if(this.getDefaultBinding().get('isSync')) {
+			const selectedPostcode = this.getDefaultBinding().toJS('selectedPostcode');
 
-		return (
-			<Form
-				name			= { this.props.title }
-				onSubmit		= { this.onSubmit }
-				onCancel		= { this.props.onCancel }
-				binding			= { this.getDefaultBinding().sub('form') }
-				defaultButton	= { 'Save' }
-			>
-				<FormField
-					type		= 'text'
-					field		= 'name'
-					validation	= 'required'
+			return (
+				<Form
+					name			= { this.props.title }
+					onSubmit		= { this.onSubmit }
+					onCancel		= { this.props.onCancel }
+					binding			= { this.getDefaultBinding().sub('form') }
+					defaultButton	= { 'Save' }
 				>
-					Place name
-				</FormField>
-				<FormField
-					classNames	= 'mSingleLine'
-					type		= 'checkbox'
-					field		= 'isHome'
-				>
-					Home place
-				</FormField>
-				<FormField
-					type			= 'autocomplete'
-					serviceFullData	= { this.postcodeService }
-					defaultItem		= { selectedPostcode }
-					serverField		= { 'postcode' }
-					field			= 'postcode'
-					onSelect		= { this.onSelectPostcode }
-					validation		= 'required'
-				>
-					Postcode
-				</FormField>
-				<Map
-					key                 = { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
-					point				= { this.getPoint() }
-					getNewPoint         = { this.getNewPoint }
-					customStylingClass	= "eEvents_venue_map"
-				/>
-			</Form>
-		);
+					<FormField
+						type		= 'text'
+						field		= 'name'
+						validation	= 'required'
+					>
+						Place name
+					</FormField>
+					<FormField
+						classNames	= 'mSingleLine'
+						type		= 'checkbox'
+						field		= 'isHome'
+					>
+						Home place
+					</FormField>
+					<FormField
+						type			= 'autocomplete'
+						serviceFullData	= { this.postcodeService }
+						defaultItem		= { selectedPostcode }
+						serverField		= { 'postcode' }
+						field			= 'postcode'
+						onSelect		= { this.onSelectPostcode }
+						validation		= 'required'
+					>
+						Postcode
+					</FormField>
+					<Map
+						key                 = { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
+						point				= { this.getPoint() }
+						getNewPoint         = { this.getNewPoint }
+						customStylingClass	= "eEvents_venue_map"
+					/>
+				</Form>
+			);
+		} else {
+			return null;
+		}
 	}
 });

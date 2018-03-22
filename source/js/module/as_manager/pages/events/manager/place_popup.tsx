@@ -44,9 +44,11 @@ export const PlacePopup = (React as any).createClass({
 	render() {
 		return (
 			<ConfirmPopup isShowButtons = { false }>
-				<PlaceForm	binding = { this.getDefaultBinding().sub('placeForm') }
-							onSubmit = { this.onSubmit }
-							onCancel = { this.props.onCancel }
+				<PlaceForm
+					activeSchoolId	= { this.props.activeSchoolId }
+					binding         = { this.getDefaultBinding().sub('placeForm') }
+					onSubmit        = { this.onSubmit }
+					onCancel        = { this.props.onCancel }
 				/>
 			</ConfirmPopup>
 		);

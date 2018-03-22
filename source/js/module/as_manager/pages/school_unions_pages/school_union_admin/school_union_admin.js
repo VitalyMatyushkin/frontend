@@ -1,3 +1,5 @@
+import {ServiceList} from "../../../../core/service_list/service_list";
+
 const	React							= require('react'),
 		Morearty						= require('morearty'),
 		RouterView						= require('module/core/router'),
@@ -85,9 +87,10 @@ const SchoolUnionAdmin = React.createClass({
 								binding		= {binding.sub('schoolUnionEdit')}
 								component	= {SchoolUnionEdit}
 						/>
-						<Route	path		= "/school_union_admin/schools /school_union_admin/schools:mode"
-								binding		= {binding.sub('schoolUnionSchoolListWrapper')}
-								component	= {SchoolUnionSchoolListWrapper}
+						<Route	path		    = "/school_union_admin/schools /school_union_admin/schools:mode"
+								binding		    = {binding.sub('schoolUnionSchoolListWrapper')}
+							    schoolUnionId   = {this.schoolUnionId}
+								component	    = {SchoolUnionSchoolListWrapper}
 						/>
 						<Route	path		= "/school_union_admin/news /school_union_admin/news/:mode"
 								binding		= {binding.sub('schoolUnionNews')}

@@ -201,10 +201,11 @@ const PermissionDetails = React.createClass({
 				 */}
 				<If condition={typeof currentType !== 'undefined'}>
 					<div>
-						<PostcodeSelector	currentPostcode			= {this.state.postcode}
-											handleSelectPostcode	= {this.handleSelectPostcode}
-											handleEscapePostcode	= {this.handleEscapePostcode}
-											extraCssStyle			= {'mRegistrationPostcode'}
+						<PostcodeSelector
+							currentPostcode			= {this.state.postcode}
+							handleSelectPostcode	= {this.handleSelectPostcode}
+							handleEscapePostcode	= {this.handleEscapePostcode}
+							extraCssStyle			= {'mRegistrationPostcode'}
 						/>
 						<Autocomplete
 							serviceFilter	= { this.serviceSchoolFilter }

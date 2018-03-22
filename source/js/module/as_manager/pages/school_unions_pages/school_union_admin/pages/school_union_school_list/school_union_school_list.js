@@ -10,6 +10,9 @@ const	SchoolUnionSchoolListStyle	= require('../../../../../../../../styles/ui/b_
 
 const SchoolUnionSchoolList = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		schoolUnionId: React.PropTypes.string.isRequired
+	},
 	componentWillMount: function () {
 		this.initData();
 	},
@@ -73,10 +76,12 @@ const SchoolUnionSchoolList = React.createClass({
 		return (
 			<div className="bSchoolUnionSchoolList">
 				{this.renderGrid()}
-				<AddSchoolPopup	isOpen					= {this.getIsOpenAddSchoolPopup()}
-								handleClickOkButton		= {this.handleClickOkButton}
-								handleClickCancelButton	= {this.handleClickCancelButton}
-								blackList				= {this.getBlackList()}
+				<AddSchoolPopup
+					schoolUnionId           = {this.props.schoolUnionId}
+					isOpen					= {this.getIsOpenAddSchoolPopup()}
+					handleClickOkButton		= {this.handleClickOkButton}
+					handleClickCancelButton	= {this.handleClickCancelButton}
+					blackList				= {this.getBlackList()}
 				/>
 			</div>
 		);
