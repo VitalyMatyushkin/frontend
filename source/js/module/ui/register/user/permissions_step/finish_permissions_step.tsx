@@ -33,7 +33,7 @@ export const FinishPermissionsStep = (React as any).createClass({
 					childFormId: 		child.formId,
 					childHouseId: 		child.houseId,
 					childGender: 		child.gender,
-					childDateOfBirth: 	DateHelper.getFormatDateTimeUTCString(child.birthday),
+					childDateOfBirth: 	typeof child.birthday !== 'undefined' ? DateHelper.getFormatDateTimeUTCString(child.birthday) : undefined,
 					comment:            `${child.firstName} ${child.lastName}`
 				});
 			})).then(() => {
