@@ -1,7 +1,9 @@
 import {ServiceList} from "module/core/service_list/service_list";
+import {DataItem} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
+import * as BPromise from "bluebird";
 
 export const SchoolDataWidgetActions = {
-	getDataForSchoolDataWidget(schoolId: string) {
+	getDataForSchoolDataWidget(schoolId: string): BPromise<{dataItems: DataItem[]}> {
 		const data = {dataItems: []};
 
 		return this.getSchoolStudentsCount(schoolId)
@@ -66,7 +68,7 @@ export const SchoolDataWidgetActions = {
 				return data;
 			});
 	},
-	getSchoolStudentsCount(schoolId: string) {
+	getSchoolStudentsCount(schoolId: string): BPromise<{count: number}> {
 		return (window.Server as ServiceList).schoolStudentsCount.get({schoolId});
 	},
 	getSchoolFormsCount(schoolId: string) {
@@ -75,13 +77,13 @@ export const SchoolDataWidgetActions = {
 				return {count: forms.length};
 			});
 	},
-	getSchoolHousesCount(schoolId: string) {
+	getSchoolHousesCount(schoolId: string): BPromise<{count: number}> {
 		return (window.Server as ServiceList).schoolHouses.get({schoolId}, {filter: {limit: 1000}})
 			.then(houses => {
 				return {count: houses.length};
 			});
 	},
-	getSchoolTeamsCount(schoolId: string) {
+	getSchoolTeamsCount(schoolId: string): BPromise<{count: number}> {
 		return (window.Server as ServiceList).teams.get(
 			{schoolId},
 			{filter: {where: {removed:false}, limit: 1000}}

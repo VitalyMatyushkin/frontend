@@ -35,10 +35,10 @@ export class DashboardDataWidgetDataItem extends React.Component<DashboardDataWi
 	render() {
 		return (
 			<div className={'eDashboardDataWidget_dataItem' + this.getExtraStyle()}>
-				<div className={'eDashboardDataWidget_dataCol m-8-width' + this.getExtraStyle()}>
+				<div className={'eDashboardDataWidget_dataCol m-9-width' + this.getExtraStyle()}>
 					{this.props.dataItem.name}
 				</div>
-				<div className={'eDashboardDataWidget_dataCol m-4-width mTextRight' + this.getExtraStyle()}>
+				<div className={'eDashboardDataWidget_dataCol m-3-width mTextRight' + this.getExtraStyle()}>
 					{this.props.dataItem.value}
 				</div>
 				{this.renderButton()}

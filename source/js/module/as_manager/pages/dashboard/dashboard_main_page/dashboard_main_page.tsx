@@ -78,6 +78,9 @@ export const DashboardMainPage = (React as any).createClass({
 				this.getDefaultBinding().set('schoolProfileData.school', Immutable.fromJS(school))
 			});
 	},
+	componentWillUnmount() {
+		this.getDefaultBinding().clear();
+	},
 	getSchoolForSchoolProfileWidget() {
 		return this.getDefaultBinding().toJS('schoolProfileData.school');
 	},
