@@ -16,7 +16,7 @@ $color5: #2092A9;
   padding: 10px;
   border-radius: 20px;
   overflow: hidden;
-  height: 140px;
+  min-height: 140px;
   background-color: $color2;
   box-shadow: 0 0 25px 1px rgba(50, 50, 50, 0.1);
   animation: appear 500ms ease-out forwards;
