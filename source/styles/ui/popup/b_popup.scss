@@ -108,12 +108,9 @@
   margin-top: -250px;
 }
 .bPopupGrant{
-  position: fixed;
-  top: 50%;
-  height: auto;
-  margin: 0;
-  padding-top: 0;
-  transform: translateY(-50%) translateX(-50%);
+  position: absolute;
+  top: -50%;
+  margin-bottom: 20px;
 }
 /*Confirm Dialog styling*/
 .bDialog{
