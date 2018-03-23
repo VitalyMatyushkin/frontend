@@ -2,15 +2,17 @@
  * Created by wert on 18.11.16.
  */
 
-const 	Form 			    = require('module/ui/form/form'),
-		FormField 		    = require('module/ui/form/form_field'),
-		FormColumn 		    = require('module/ui/form/form_column'),
+const 	Form 				= require('module/ui/form/form'),
+		FormField 			= require('module/ui/form/form_field'),
+		FormColumn 			= require('module/ui/form/form_column'),
+		{Map}				= require('module/ui/map/map2_editable'),
 		{RolesHelper} 		= require('./roles_helper'),
-		SchoolConsts	    = require('../../../helpers/consts/schools'),
-		Immutable		    = require('immutable'),
-		Morearty		    = require('morearty'),
-		MultiselectDropdown	= require('module/ui/multiselect-dropdown/multiselect_dropdown'),
-		React 			    = require('react');
+		SchoolConsts 		= require('../../../helpers/consts/schools'),
+		Immutable 			= require('immutable'),
+		Morearty 			= require('morearty'),
+		propz 				= require('propz'),
+		MultiselectDropdown = require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		React 				= require('react');
 
 const SystemAdminSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,6 +20,7 @@ const SystemAdminSchoolForm = React.createClass({
 		title: 		React.PropTypes.string.isRequired,
 		onSubmit: 	React.PropTypes.func
 	},
+	DEFAULT_SCHOOL_POINT: { coordinates: [-0.246722, 50.832949]},
 	//share form and multiselect binding, because multiselect don't include in form
 	//and change multiselect call re-render form
 	componentWillMount: function () {
@@ -28,6 +31,13 @@ const SystemAdminSchoolForm = React.createClass({
 
 		// if it need
 		this.setDefaultPublicSiteAccess();
+		
+		//fill field postcode
+		const postcode = formBinding.toJS('postcode');
+		if (typeof postcode !== 'undefined') {
+			binding.set('selectedPostcode', Immutable.fromJS(postcode));
+		}
+		binding.set('isSyncForm', true);
 		
 		multiSelectBinding.set('availableRoles', Immutable.fromJS(RolesHelper.convertRolesFromServerToClient(serverRoles)));
 		let roles = multiSelectBinding.toJS('availableRoles');
@@ -87,6 +97,13 @@ const SystemAdminSchoolForm = React.createClass({
 		const 	binding 			= this.getDefaultBinding(),
 				multiSelectBinding 	= binding.sub('multiSelect');
 		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(multiSelectBinding.toJS('availableRoles'));
+		
+		propz.set(data, ['postcode', 'point'], this.getDefaultBinding().toJS('point'));
+		const postcodeId = this.getDefaultBinding().toJS('selectedPostcode.id');
+		if (typeof postcodeId !== 'undefined') {
+			propz.set(data, ['postcodeId'], postcodeId);
+		}
+		
 		this.props.onSubmit(data);
 	},
 	//inverting the values to not change the field names on the server
@@ -115,6 +132,39 @@ const SystemAdminSchoolForm = React.createClass({
 			{value: 'REQUIRED', text: 'required'}
 		];
 	},
+	getPoint: function() {
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form'),
+				point 			= formBinding.toJS('postcode.point');
+
+		return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
+	},
+	
+	getNewPoint: function(point) {
+		this.getDefaultBinding().set('point', Immutable.fromJS(point));
+	},
+	getSchoolRegion() {
+		return this.getDefaultBinding().toJS('school.region');
+	},
+	postcodeService: function(searchText) {
+		return window.Server.postCodes.get(
+			{
+				filter: {
+					where: {
+						postcode: {
+							like: searchText,
+							options: 'i'
+						},
+						region: this.getSchoolRegion()
+					},
+					limit: 10
+				}
+			});
+	},
+	onSelectPostcode: function(id, postcode) {
+		this.getDefaultBinding().set('selectedPostcode', Immutable.fromJS(postcode));
+		this.getDefaultBinding().set('point', Immutable.fromJS(postcode.point));
+	},
 	render: function () {
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
@@ -127,6 +177,8 @@ const SystemAdminSchoolForm = React.createClass({
 					{ text: 'No',	value: false }
 				],
 				postcode 				= formBinding.toJS('postcode');
+		
+		const 	selectedPostcode 	= binding.toJS('selectedPostcode');
 
 		return (
 			<Form
@@ -299,10 +351,13 @@ const SystemAdminSchoolForm = React.createClass({
 						Phone
 					</FormField>
 					<FormField
-						type 			= "area"
-						field 			= "postcodeId"
-						defaultItem 	= { postcode }
-						validation 		= "any"
+						type			= 'autocomplete'
+						serviceFullData	= { this.postcodeService }
+						defaultItem		= { selectedPostcode }
+						serverField		= { 'postcode' }
+						field			= 'postcode'
+						onSelect		= { this.onSelectPostcode }
+						validation		= 'required'
 					>
 						Postcode
 					</FormField>
@@ -414,6 +469,11 @@ const SystemAdminSchoolForm = React.createClass({
 							extraStyle		= 'mSmallWide'
 						/>
 					</div>
+					<Map
+						key 				= { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
+						point 				= { this.getPoint() }
+						getNewPoint 		= { this.getNewPoint }
+					/>
 				</FormColumn>
 			</Form>
 		);

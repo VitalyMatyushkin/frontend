@@ -5,7 +5,9 @@ const 	SchoolForm 		= require('../../schools/school_form'),
 		React 			= require('react'),
 		Morearty 		= require('morearty'),
 		Immutable 		= require('immutable'),
-		Loader          = require('module/ui/loader');
+		Loader 			= require('module/ui/loader');
+
+const schoolFormStyles = require('styles/pages/schools/b_school_edit.scss');
 
 const EditSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -43,12 +45,14 @@ const EditSchoolForm = React.createClass({
 	render: function() {
 		if (this.getDefaultBinding().toJS('isSync')) {
 			return (
-				<SchoolForm
-					title="Edit school..."
-					onSubmit={this.submitEdit}
-					binding={this.getDefaultBinding()}
-					isSuperAdmin={true}
-				/>
+				<div className = "bSchoolEdit">
+					<SchoolForm
+						title 			= "Edit school..."
+						onSubmit 		= { this.submitEdit }
+						binding 		= { this.getDefaultBinding() }
+						isSuperAdmin 	= { true }
+					/>
+				</div>
 			)
 		} else {
 			return <Loader/>;

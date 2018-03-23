@@ -11,19 +11,24 @@ const EditSchoolForm = React.createClass({
 				globalBinding 	= this.getMoreartyContext().getBinding(),
 				routingData 	= globalBinding.sub('routing.parameters').toJS(),
 				schoolId 		= routingData.id;
-
-		//binding.clear();
-
+		
 		if (schoolId) {
 			window.Server.school.get(schoolId, { filter: { include:'postcode '} }).then(data => {
 				if(data.postcode && data.postcode._id){
 					data.postcode.id = data.postcode._id;
 				}
 				binding.set(Immutable.fromJS(data));
+				binding.set('isSync', true);
 			});
 			
 			this.schoolId = schoolId;
+		} else {
+			binding.set('isSync', true);
 		}
+	},
+	componentWillUnmount: function(){
+		const binding = this.getDefaultBinding();
+		binding.clear();
 	},
 	submitEdit: function(schoolData) {
 		window.Server.school.put(this.schoolId, schoolData).then(res => {
@@ -33,16 +38,22 @@ const EditSchoolForm = React.createClass({
 
 	},
 	render: function() {
-		return (
-			<div className="bSchoolEdit">
-				<SchoolForm
-					title="Edit school..."
-					onSubmit={this.submitEdit}
-					binding={this.getDefaultBinding()}
-					isSuperAdmin={false}
-				/>
-			</div>
-		)
+		const isSync = Boolean(this.getDefaultBinding().toJS('isSync'));
+
+		if (isSync) {
+			return (
+				<div className="bSchoolEdit">
+					<SchoolForm
+						title 			= "Edit school..."
+						onSubmit 		= { this.submitEdit }
+						binding 		= { this.getDefaultBinding() }
+						isSuperAdmin 	= { false }
+					/>
+				</div>
+			)
+		} else {
+			return null;
+		}
 	}
 });
 
