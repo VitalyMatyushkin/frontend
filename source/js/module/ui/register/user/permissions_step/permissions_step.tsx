@@ -9,6 +9,28 @@ import 'styles/pages/register/b_register_permission_step.scss';
 
 export const PermissionsStep = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.setRegion();
+	},
+	setRegion: function () {
+		const   loginSessions = this.props.loginSessions,
+				binding = this.getDefaultBinding();
+
+		const phone = loginSessions.phone;
+		let region = undefined;
+
+		if (phone.indexOf('+44') === 0) {
+			region = 'GB';
+		} else {
+			if (phone.indexOf('+1') === 0) {
+				region = 'US';
+			}
+		}
+
+		binding.sub('staffRegister.schoolField').set('region', region);
+		binding.sub('parentRegister.schoolField').set('region', region);
+		binding.sub('studentRegister.schoolField').set('region', region);
+	},
 	setRegisterType: function(type: string): void {
 		const binding = this.getDefaultBinding();
 		binding.set('userType', type);

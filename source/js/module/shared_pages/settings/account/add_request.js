@@ -42,6 +42,24 @@ const AddPermissionRequest = React.createClass({
 	},
 	componentWillMount:function(){
 		this.initCountSportFieldsBlocks();
+		this.setRegion();
+	},
+	setRegion: function () {
+		const phone = this.getMoreartyContext().getBinding().toJS('userData.sessions.loginSession.phone');
+
+		let region = undefined;
+
+		if (typeof phone !== 'undefined' && phone !== '') {
+			if (phone.indexOf('+44') === 0) {
+				region = 'GB';
+			} else {
+				if (phone.indexOf('+1') === 0) {
+					region = 'US';
+				}
+			}
+		}
+
+		this.getDefaultBinding().set('region', region);
 	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();
@@ -58,7 +76,7 @@ const AddPermissionRequest = React.createClass({
 	},
 	continueButtonClick:function(model){
 		const 	binding 		= this.getDefaultBinding(),
-			selectedSchool  = this.getDefaultBinding().sub('form').meta('schoolId.fullValue').toJS();
+				selectedSchool  = this.getDefaultBinding().sub('form').meta('schoolId.fullValue').toJS();
 
 		model.preset = model.preset.toUpperCase();
 
@@ -252,7 +270,8 @@ const AddPermissionRequest = React.createClass({
 		});
 	},
 	schoolService: function(schoolName) {
-		const postcode = this.getDefaultBinding().toJS('postcode');
+		const   postcode    = this.getDefaultBinding().toJS('postcode'),
+				region      = this.getDefaultBinding().toJS('region');
 
 		const filter = {
 			filter: {
@@ -290,6 +309,10 @@ const AddPermissionRequest = React.createClass({
 			filter.filter.order = "name ASC";
 		}
 
+		if(typeof region !== 'undefined') {
+			filter.filter.where.region = region;
+		}
+
 		return window.Server.publicSchools.get(filter);
 	},
 	handleSelectPostcode: function(id, postcode) {
@@ -322,6 +345,7 @@ const AddPermissionRequest = React.createClass({
 							Postcode
 						</div>
 						<PostcodeSelector
+							region                  = {binding.toJS('region')}
 							currentPostcode			= {binding.toJS('postcode')}
 							handleSelectPostcode	= {this.handleSelectPostcode}
 							handleEscapePostcode	= {this.handleEscapePostcode}

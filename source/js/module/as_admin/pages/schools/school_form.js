@@ -63,6 +63,12 @@ const SystemAdminSchoolForm = React.createClass({
 				multiSelectBinding 	= binding.sub('multiSelect');
 		return multiSelectBinding.toJS('availableRoles');
 	},
+	getRegions: function() {
+		return [
+			{value: 'GB', text: 'GB'},
+			{value: 'US', text: 'US'}
+		];
+	},
 	handleSelectRole: function (role) {
 		const 	binding 			= this.getDefaultBinding(),
 				multiSelectBinding 	= binding.sub('multiSelect'),
@@ -313,6 +319,14 @@ const SystemAdminSchoolForm = React.createClass({
 						validation 	= "domain server"
 					>
 						Domain
+					</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "region"
+						id 			= "school_region"
+						options 	= {this.getRegions()}
+					>
+						Region
 					</FormField>
 					<FormField
 						type 		= "dropdown"

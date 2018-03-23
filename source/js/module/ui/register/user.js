@@ -406,6 +406,9 @@ const RegisterUserPage = React.createClass({
             case 'permissions':
                 currentView = <PermissionsStep
                     binding={binding.sub('permissionsStep')}
+                    loginSessions={SessionHelper.getLoginSession(
+	                    this.getUserDataBinding()
+                    )}
                     />;
                 break;
         }

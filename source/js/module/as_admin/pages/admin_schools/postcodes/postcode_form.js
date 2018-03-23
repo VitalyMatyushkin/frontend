@@ -13,6 +13,12 @@ const PostcodeForm = React.createClass({
 		title: 			React.PropTypes.string.isRequired,
 		onFormSubmit: 	React.PropTypes.func
 	},
+	getRegions: function() {
+		return [
+			{value: 'GB', text: 'GB'},
+			{value: 'US', text: 'US'}
+		];
+	},
 	render: function() {
 		const 	binding = this.getDefaultBinding();
 		return (
@@ -47,6 +53,14 @@ const PostcodeForm = React.createClass({
 					validation 	= "required latitude"
 				>
 					Latitude
+				</FormField>
+				<FormField
+					type 		= "dropdown"
+					field 		= "region"
+					id 			= "school_region"
+					options 	= {this.getRegions()}
+				>
+					Region
 				</FormField>
 			</Form>
 		)

@@ -25,7 +25,8 @@ export const SchoolStep = (React as any).createClass({
 	},
 
 	getSchoolService: function() {
-		const postcode = this.getDefaultBinding().toJS('postcode');
+		const   postcode    = this.getDefaultBinding().toJS('postcode'),
+				region      = this.getDefaultBinding().toJS('region');
 
 		return (schoolName) => {
 			const filter: any = {
@@ -71,6 +72,10 @@ export const SchoolStep = (React as any).createClass({
 				filter.filter.where['postcode.point'] = GeoSearchHelper.getUnlimitedGeoSchoolFilter(postcode.point);
 			} else {
 				filter.filter.order = "name ASC";
+			}
+
+			if(typeof region !== 'undefined') {
+				filter.filter.where.region = region;
 			}
 
 			return (window as any).Server.publicSchools.get(filter);
@@ -123,6 +128,7 @@ export const SchoolStep = (React as any).createClass({
 							Postcode
 						</div>
 						<PostcodeSelector
+							region={binding.toJS('region')}
 							currentPostcode={binding.toJS('postcode')}
 							handleSelectPostcode={this.handleSelectPostcode}
 							handleEscapePostcode={this.handleEscapePostcode}
