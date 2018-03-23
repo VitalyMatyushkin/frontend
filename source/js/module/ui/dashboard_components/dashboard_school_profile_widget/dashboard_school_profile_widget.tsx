@@ -11,7 +11,7 @@ export interface DashboardSchoolProfileWidgetProps {
 
 const REQUIRED_FIELDS = [
 	'pic', 'email', 'sportsDepartmentEmail',
-	'notificationEmail', 'name', 'description',
+	'name', 'description',
 	'phone', 'postcodeId', 'address'
 ];
 
@@ -42,7 +42,6 @@ export class DashboardSchoolProfileWidget extends React.Component<DashboardSchoo
 			}
 		}
 
-		console.log(schoolProfileCompletePercents);
 		return schoolProfileCompletePercents;
 	}
 	render() {

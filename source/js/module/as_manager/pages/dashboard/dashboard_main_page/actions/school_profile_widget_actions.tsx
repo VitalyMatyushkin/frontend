@@ -5,6 +5,6 @@ export const SchoolProfileWidgetActions = {
 		return this.getSchoolData(schoolId);
 	},
 	getSchoolData(schoolId: string) {
-		return (window.Server as ServiceList).publicSchool.get({schoolId});
+		return (window.Server as ServiceList).school.get({schoolId});
 	}
 };

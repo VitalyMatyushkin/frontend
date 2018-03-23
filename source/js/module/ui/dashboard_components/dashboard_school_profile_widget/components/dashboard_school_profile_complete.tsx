@@ -12,7 +12,7 @@ export class DashboardSchoolProfileComplete extends React.Component<DashboardSch
 			<div className='bDashboardSchoolProfileComplete'>
 				<div className='eDashboardSchoolProfileComplete_col'>
 					<h1 className='eDashboardSchoolProfileComplete_percentComplete'>
-						{this.props.profileCompletePercent}
+						{this.props.profileCompletePercent}%
 					</h1>
 					<h6 className='eDashboardSchoolProfileComplete_text'>
 						Profile Completed
