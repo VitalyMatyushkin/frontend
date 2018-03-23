@@ -4,6 +4,7 @@ import * as classNames from 'classnames';
 import {Button} from 'module/ui/button/button';
 
 interface ConfirmPopupProps {
+	isOkButtonLoading?:         boolean
 	okButtonText?:			    string | string[]
 	cancelButtonText?:		    string
 	handleClickOkButton?:	    () => void
@@ -18,6 +19,7 @@ interface ConfirmPopupProps {
 
 export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
 	static defaultProps: Partial<ConfirmPopupProps> = {
+		isOkButtonLoading: false,
 		isShowButtons: true,
 		isShowOkButton: true,
 		isShowCancelButton: true,
@@ -78,6 +80,7 @@ export class ConfirmPopup extends React.Component<ConfirmPopupProps, {}> {
 								extraStyleClasses	= { cancelButtonClassName }
 							/>
 							<Button
+								isLoading           = { this.props.isOkButtonLoading }
 								text				= { this.props.okButtonText }
 								onClick				= { () => this.handleClickOkButton() }
 								extraStyleClasses	= { okButtonClassName }

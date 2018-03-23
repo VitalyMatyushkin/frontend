@@ -210,12 +210,14 @@ const EditEventPopup = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			<ConfirmPopup	okButtonText			= "Save"
-							cancelButtonText		= "Cancel"
-							isOkButtonDisabled		= { binding.toJS('isProcessingSubmit') }
-							handleClickOkButton		= { this.handleClickOkButton }
-							handleClickCancelButton	= { this.handleClickCancelButton }
-							customStyle				= 'mMiddle mFullWidth'
+			<ConfirmPopup
+				isOkButtonLoading       = { binding.toJS('isProcessingSubmit') }
+				okButtonText			= "Save"
+				cancelButtonText		= "Cancel"
+				isOkButtonDisabled		= { binding.toJS('isProcessingSubmit') }
+				handleClickOkButton		= { this.handleClickOkButton }
+				handleClickCancelButton	= { this.handleClickCancelButton }
+				customStyle				= 'mMiddle mFullWidth'
 			>
 				<EventEditForm
 					activeSchoolId	= { this.props.activeSchoolId }
