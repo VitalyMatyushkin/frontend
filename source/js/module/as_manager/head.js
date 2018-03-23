@@ -107,7 +107,7 @@ const Head = React.createClass({
 	 */
 	setInvitesCountToMenu: function() {
 		window.Server.inviteInboxCount.get(MoreartyHelper.getActiveSchoolId(this)).then(data => {
-			if(data.count > 0) {
+			if(data.count >= 0) {
 				const	rootBinding		= this.getMoreartyContext().getBinding(),
 						topMenuItems	= rootBinding.toJS('topMenuItems');
 
@@ -138,13 +138,13 @@ const Head = React.createClass({
 		}
 		
 		service.get(params ,filter).then(data => {
-			if(data.count > 0) {
+			if(data.count >= 0) {
 				const rootBinding = this.getMoreartyContext().getBinding();
 				const topMenuItems = rootBinding.toJS('topMenuItems');
 
-				const inviteItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
-				if(inviteItemIndex !== -1) {
-					topMenuItems[inviteItemIndex].name = `Messages(${data.count})`;
+				const messageItemIndex = topMenuItems.findIndex(i => i.key === 'Messages');
+				if(messageItemIndex !== -1) {
+					topMenuItems[messageItemIndex].name = `Messages(${data.count})`;
 
 					rootBinding.set('topMenuItems', Immutable.fromJS(topMenuItems));
 				}
