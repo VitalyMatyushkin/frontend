@@ -22,9 +22,34 @@ const PlayerStatusTableBody = React.createClass({
 			expandedElementArray: this.props.players.map( () => false )
 		}
 	},
-	renderParents: function(index){
-		const parents = this.props.messages[index].playerDetailsData.parents;
-		
+	renderStatusByPlayerAndMessage: function (player) {
+		let status = '';
+		switch (true) {
+			case this.getParentsByPlayer(player).length === 0 && player.status === 'NOT_READY': {
+				status = 'Not sent';
+				break;
+			}
+			default: {
+				status = MessageConsts.MESSAGE_INVITATION_STATUS_MAP[player.status];
+				break;
+			}
+		}
+
+		return status;
+	},
+	getParentsByPlayer(player) {
+		let parents = [];
+
+		const currentMessage = this.props.messages.find(messages => messages.playerDetailsData.id === player.id);
+		if(typeof currentMessage !== 'undefined') {
+			parents = currentMessage.playerDetailsData.parents;
+		}
+
+		return parents;
+	},
+	renderParents: function(player){
+		const parents = this.getParentsByPlayer(player);
+
 		if (Array.isArray(parents) && parents.length > 0) {
 			return (
 				parents.map((parent, index) => {
@@ -93,23 +118,22 @@ const PlayerStatusTableBody = React.createClass({
 	},
 	
 	render: function(){
-		const 	players 	= this.props.players,
-				messages 	= this.props.messages;
-		
+		const players = this.props.players;
+
 		let rows = [];
 		players.forEach((player, index) => {
 			rows.push(
 				<tr style={{cursor: 'pointer'}} key={player.id} onClick={() => { this.onClickPlayer(index) }}>
 					<td>{player.name}</td>
-					<td>{MessageConsts.MESSAGE_INVITATION_STATUS_MAP[player.status]}</td>
-					<td>{this.renderParents(index)}</td>
+					<td>{this.renderStatusByPlayerAndMessage(player)}</td>
+					<td>{this.renderParents(player)}</td>
 					<td>
 						{
 							player.status !== 'NOT_SEND' ?
 								(
 									this.state.expandedElementArray[index] ?
-										<i className="fa fa-sort-asc" aria-hidden="true"></i> :
-										<i className="fa fa-sort-desc" aria-hidden="true"></i>
+										<i className="fa fa-sort-asc" aria-hidden="true"/> :
+										<i className="fa fa-sort-desc" aria-hidden="true"/>
 								) :
 								null
 						}
