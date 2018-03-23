@@ -67,6 +67,7 @@ const EventInvitationMessage = React.createClass({
 	isAllRequiredFieldFilled: function(){
 		const templateData = this.state.templateData;
 		const allRequiredFieldNotFilledIndexes = [];
+
 		templateData.forEach((field, index) => {
 			if (field.isRequired && field.value === '') {
 				allRequiredFieldNotFilledIndexes.push(index);
@@ -78,9 +79,9 @@ const EventInvitationMessage = React.createClass({
 	isAllNumericFieldValid: function(){
 		const templateData = this.state.templateData;
 		const allRequiredFieldNotFilledIndexes = [];
-		
+
 		templateData.forEach((field, index) => {
-			if (field.type === CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER && !this.isNumeric(field.value)) {
+			if (field.type === CONSENT_REQUEST_TEMPLATE_FIELD_TYPE.NUMBER && field.value !== '' && !this.isNumeric(field.value)) {
 				allRequiredFieldNotFilledIndexes.push(index);
 			}
 		});
