@@ -42,7 +42,7 @@ const PlayerStatusTableBody = React.createClass({
 
 		const currentMessage = this.props.messages.find(messages => messages.playerDetailsData.id === player.id);
 		if(typeof currentMessage !== 'undefined') {
-			parents = currentMessage.playerDetailsData.parents;
+			parents = currentMessage.playerDetailsData.parents ? currentMessage.playerDetailsData.parents : [];
 		}
 
 		return parents;
