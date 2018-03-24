@@ -20,11 +20,17 @@ export const PlaceEdit = (React as any).createClass({
 				globalBinding   = this.getMoreartyContext().getBinding(),
 				routingData     = globalBinding.sub('routing.parameters').toJS();
 
+		// using here "isSyncPlaceEdit" as sync flag because default binding already have 'isSync' property which
+		// conflicts with some other component. I don't know which one exactly but under certain circumstances
+		// components are start infinite race for this flag which leads to white screen 
+
 		this.placeId = routingData.id;
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 
 		if (typeof this.placeId !== 'undefined') {
 			let placeData;
+
+			binding.set('isSyncPlaceEdit', false);
 
 			(window.Server as ServiceList).schoolPlace.get({
 				schoolId: this.activeSchoolId,
@@ -41,8 +47,10 @@ export const PlaceEdit = (React as any).createClass({
 						isHome: 	placeData.isHome
 					}))
 					.set('selectedPostcode', Immutable.fromJS(postcodeData))
-					.set('isSync', true)
+					.set('isSyncPlaceEdit', true)
 					.commit();
+
+				console.log('place edit will mount');
 			});
 		}
 	},
@@ -67,7 +75,8 @@ export const PlaceEdit = (React as any).createClass({
 	},
 
 	render() {
-		if(this.getDefaultBinding().toJS('isSync')) {
+
+		if(this.getDefaultBinding().toJS('isSyncPlaceEdit')) {
 			return (
 				<div className="container">
 					<PlaceForm
