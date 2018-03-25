@@ -178,7 +178,9 @@ const FixtureList = React.createClass({
 		if (this.state.events.length === 0 && !this.state.hasMore) {
 			content = (
 				<div className="eChallengeDate_wrap">
-					<span>No fixtures to report.</span>
+					<div className='eChallengeDate_noFixtures'>
+						No fixtures to report.
+					</div>
 				</div>
 			);
 		} else {
@@ -196,11 +198,7 @@ const FixtureList = React.createClass({
 			);
 		}
 
-		return <div className="eChallengeDate_wrap">
-			<div className='eChallengeDate_noFixtures'>
-				No fixtures to report.
-			</div>
-		</div>;
+		return content;
     }
 
 });
