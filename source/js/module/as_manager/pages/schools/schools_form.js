@@ -100,7 +100,14 @@ const SchoolForm = React.createClass({
 		this.getDefaultBinding().set('point', Immutable.fromJS(point));
 	},
 	getSchoolRegion() {
-		return this.getDefaultBinding().toJS('school.region');
+		// region1 was originally used here, but in case of editing school from school admin's profile
+		// there is no such data. I don't know where this module also used, so just add region2 which is
+		// place where data really exists.
+		// Probably region1 should be removed, but I'm not sure
+		const	region1 = this.getDefaultBinding().toJS('school.region'),
+			  	region2 = this.getDefaultBinding().toJS('region');
+
+		return region1 ? region1 : region2;
 	},
 	postcodeService(searchText) {
 		return window.Server.postCodes.get(
