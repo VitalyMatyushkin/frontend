@@ -55,33 +55,34 @@ const ParentalConsentTab = React.createClass({
 
 				const teamPlayers = TeamHelper.getPlayers(this.props.schoolId, eventBinding.toJS());
 				const msgPlayers = this.getPlayersFromMessages(messages);
+				//sorts an array of messages in the same order as the players in the team
+				let messagesSortedAsWellAsTeam = [];
 
-				const notNotifiedPlayers = [];
 				teamPlayers.forEach(teamPlayer => {
 					const index = msgPlayers.findIndex(msgPlayer =>
 						teamPlayer.userId === msgPlayer.userId && teamPlayer.permissionId === msgPlayer.permissionId
 					);
 
-					if(index === -1) {
-						notNotifiedPlayers.push(teamPlayer);
+					if(index === -1) { //not notified players
+						messagesSortedAsWellAsTeam.push(
+							{
+								playerDetails: {
+									userId: teamPlayer.userId,
+									permissionId: teamPlayer.permissionId
+								},
+								playerDetailsData: teamPlayer,
+								schoolId: this.props.schoolId,
+								invitationStatus: 'NOT_SEND'
+							}
+						);
+					} else {
+						messagesSortedAsWellAsTeam.push(messages[index]);
 					}
 				});
-				const notSendMessages = notNotifiedPlayers.map(player => {
-					return {
-						playerDetails: {
-							userId: player.userId,
-							permissionId: player.permissionId
-						},
-						playerDetailsData: player,
-						schoolId: this.props.schoolId,
-						invitationStatus: 'NOT_SEND'
-					};
-				});
-				messages = messages.concat(notSendMessages);
 
-				binding.set('messages', Immutable.fromJS(messages));
-				binding.set('loggedUser', Immutable.fromJS(user));
-				binding.set('isSync', true);
+				binding.set('messages', 	Immutable.fromJS(messagesSortedAsWellAsTeam));
+				binding.set('loggedUser', 	Immutable.fromJS(user));
+				binding.set('isSync', 		true);
 			});
 		}
 
