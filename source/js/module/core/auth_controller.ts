@@ -130,7 +130,7 @@ export const authController = {
 					break;
 				}
 				// When user is log in but doesn't have role
-				case (isUserAuth && !isUserOnRole): {
+				case (isUserAuth && !isUserOnRole && !this.isSettingsVerificationPage()): {
 					window.location.href = DomainHelper.getLoginUrl();
 					// Remove old requested page for case when user change role
 					// i don't know why but it must be here
@@ -145,7 +145,7 @@ export const authController = {
 					}
 					break;
 				}
-				case (!this.isPublicPage()): {
+				case (!this.isPublicPage() && !this.isSettingsVerificationPage()): {
 					window.location.href = DomainHelper.getLoginUrl();
 					break;
 				}
@@ -203,6 +203,11 @@ export const authController = {
 		const path = window.location.hash;
 
 		return this.publicPages.some(value => {return path.indexOf(value) !== -1});
+	},
+	isSettingsVerificationPage() {
+		const path = window.location.hash;
+
+		return path === '#settings/verification';
 	},
 	/**
 	 * Function redirects to requested page and clear field requested page

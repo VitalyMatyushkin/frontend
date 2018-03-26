@@ -47,10 +47,9 @@ const Verification = React.createClass({
 	handleClickConfirmEmail: function (emailCode) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
-				verificationBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).sub('verification');
+				verificationBinding	= SessionHelper.getLoginSessionBinding(this.getUserDataBinding()).sub('verified');
 
 		binding.set('isSync', false);
-
 		window.Server.confirmUser.post( {token: emailCode} ).then(data => {
 			if(data.confirmed) {
 				verificationBinding.set('email', true);
@@ -68,10 +67,9 @@ const Verification = React.createClass({
 	handleClickConfirmPhone: function (phoneCode) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
-				verificationBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).sub('verification');
+				verificationBinding	= SessionHelper.getLoginSessionBinding( this.getUserDataBinding() ).sub('verified');
 
 		binding.set('isSync', false);
-
 		window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
 			if(data.confirmed) {
 				verificationBinding.set('sms', true);
