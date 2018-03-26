@@ -29,12 +29,12 @@ export const authController = {
 		}
 
 		let initPromises = [];
-		
-		if(this.isUserAuth()) {
+
+		if(this.isUserAuth() && !this.isSuperAdmin()) {
 			initPromises.push(this.setUserInfo());
 			initPromises.push(this.setRoleList());
 		}
-		if(this.hasUserOnlyOneLoginRole()) {
+		if(this.hasUserOnlyOneLoginRole() && !this.isSuperAdmin()) {
 			initPromises.push(this.becomeOneRole());
 		}
 

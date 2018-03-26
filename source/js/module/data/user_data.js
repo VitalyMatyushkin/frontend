@@ -168,6 +168,7 @@ UserDataClass.isValidSession = function (session) {
 
 	const	id			= propz.get(session, ['id']),
 			userId		= propz.get(session, ['userId']),
+			adminId		= propz.get(session, ['adminId']),
 			expireAt	= propz.get(session, ['expireAt']);
 
 	if(
@@ -190,6 +191,13 @@ UserDataClass.isValidSession = function (session) {
 				return { isValidSession: false };
 			});
 	} else {
+		if (typeof id === 'string' &&
+			typeof adminId === 'string' &&
+			typeof expireAt === 'string')
+		{
+			$.ajaxSetup({});
+			resultObject.isValidSession = true;
+		}
 		resultPromise = Promise.resolve(resultObject);
 	}
 
