@@ -27,9 +27,9 @@ const ParentalReportsTableBody = React.createClass({
 		const role = this.props.role;
 		switch (true){
 			case message.isActionPerformed:
-				return 'Read';
+				return 'Seen';
 			case role === RoleHelper.USER_ROLES.PARENT && !message.isActionPerformed:
-				return 'Don\'t read';
+				return 'Not seen';
 			default:
 				return 'Got it';
 		}
