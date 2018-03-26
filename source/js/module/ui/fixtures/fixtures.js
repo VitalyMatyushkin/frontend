@@ -6,6 +6,8 @@ const   React           = require('react'),
 		FixtureTitle 	= require('./fixture_title'),
 		FixtureList 	= require('./fixture_list');
 
+const RandomHelper = require('module/helpers/random_helper');
+
 const EventFixtures = React.createClass({
 	propTypes:{
 		date: 			React.PropTypes.object.isRequired,
@@ -27,7 +29,7 @@ const EventFixtures = React.createClass({
 			<div className="bChallenges">
 				<FixtureTitle />
 				<FixtureList
-					key				= {date}
+					key				= {RandomHelper.getRandomString()}
 					mode			= {this.props.mode}
 					children		= {this.props.children}
 					childIdList 	= {this.props. childIdList}
