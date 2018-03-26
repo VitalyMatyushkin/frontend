@@ -7,6 +7,20 @@ export interface DashboardSchoolProfileCompleteProps {
 }
 
 export class DashboardSchoolProfileComplete extends React.Component<DashboardSchoolProfileCompleteProps, {}> {
+	getRoundCompletePercent() {
+		let result = 0;
+
+		// up round percents
+		const tmp = Math.floor(this.props.profileCompletePercent / 10);
+		if(tmp === 0) {
+			// up round
+			result = 10;
+		} else {
+			result = tmp * 10;
+		}
+
+		return result;
+	}
 	render() {
 		return (
 			<div className='bDashboardSchoolProfileComplete'>
@@ -21,7 +35,7 @@ export class DashboardSchoolProfileComplete extends React.Component<DashboardSch
 				<div className='eDashboardSchoolProfileComplete_col mTextRight'>
 					<div
 						data-label={`${this.props.profileCompletePercent}%`}
-						className={`eDashboardSchoolProfileComplete_donutProgressBar mProgress-${this.props.profileCompletePercent}`}
+						className={`eDashboardSchoolProfileComplete_donutProgressBar mProgress-${this.getRoundCompletePercent()}`}
 					>
 						<i className='eDashboardSchoolProfileComplete_donutProgressBarCircle'>
 						</i>

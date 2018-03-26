@@ -20,25 +20,37 @@ export class DashboardSchoolProfileWidget extends React.Component<DashboardSchoo
 		window.location.hash = `schools/edit?id=${this.props.school.id}`;
 	}
 	getSchoolProfileCompletePercents() {
+		const self = this;
+
 		let schoolProfileCompletePercents = 0;
 
 		// get count of filled fields
 		let filledFields = 0;
 		REQUIRED_FIELDS.forEach(field => {
-			if(typeof this.props.school[field] !== 'undefined') {
-				filledFields++;
+			switch (true) {
+				case typeof self.props.school[field] === 'string' && self.props.school[field] !== '': {
+					filledFields++;
+					break;
+				}
+				case typeof self.props.school[field] !== 'string' && typeof self.props.school[field] !== 'undefined': {
+					filledFields++;
+					break;
+				}
 			}
 		});
 
-		// get percent of filled fields from all fields
-		if(filledFields !== 0) {
-			const exactPercents = Math.floor(filledFields/REQUIRED_FIELDS.length * 100);
-			// up round percents
-			const tmp = Math.floor(exactPercents / 10);
-			if(tmp === 0) {
-				schoolProfileCompletePercents = 10;
-			} else {
-				schoolProfileCompletePercents = tmp * 10;
+		switch (true) {
+			case filledFields === 0: {
+				schoolProfileCompletePercents = 0;
+				break;
+			}
+			case filledFields === REQUIRED_FIELDS.length: {
+				schoolProfileCompletePercents = 100;
+				break;
+			}
+			default: {
+				schoolProfileCompletePercents = Math.floor(filledFields/REQUIRED_FIELDS.length * 100);
+				break;
 			}
 		}
 
