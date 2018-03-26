@@ -1,7 +1,9 @@
-const 	{SVG} 		= require('module/ui/svg'),
-		{DateHelper}= require('module/helpers/date_helper'),
-		Morearty	= require('morearty'),
-		React 		= require('react');
+const 	{SVG} 			= require('module/ui/svg'),
+		{DateHelper}	= require('module/helpers/date_helper'),
+		Morearty		= require('morearty'),
+		React 			= require('react'),
+		userConst		= require('module/helpers/consts/user'),
+		GENDERS			= userConst.GENDER;
 
 const AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -37,11 +39,29 @@ const AboutMeBlock = React.createClass({
 			</div>
 			);
 	},
+	getGenderNode: function(){
+		const 	binding = this.getDefaultBinding(),
+				gender = binding.toJS('gender');
+		
+		if (typeof gender !== 'undefined' && gender !== null) { // not defined gender === null (on server)
+			const 	genderText 	= gender === GENDERS.FEMALE ? 'Female' : 'Male',
+					icon 		= gender === GENDERS.FEMALE ? 'icon_girl' : 'icon_boy';
+			return (
+				<div key={'gender'} title={'Gender'} className="eAboutList_item">
+					<SVG icon={icon} />
+					{genderText}
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (
 			<div className="bAboutList">
 				<h6>{this.props.title || 'About me'}</h6>
 				{this._getAboutNode()}
+				{this.getGenderNode()}
 				{this.getMedicalInfo()}
 			</div>
 		)

@@ -1,7 +1,9 @@
-const 	{SVG} 		= require('module/ui/svg'),
+const 	{SVG} 			= require('module/ui/svg'),
 		{DateHelper} 	= require('module/helpers/date_helper'),
-		Morearty	= require('morearty'),
-		React 		= require('react');
+		Morearty		= require('morearty'),
+		React 			= require('react'),
+		userConst		= require('module/helpers/consts/user'),
+		GENDERS			= userConst.GENDER;
 
 const AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -43,6 +45,23 @@ const AboutMeBlock = React.createClass({
 			)
 		}
 	},
+	getGenderNode: function(){
+		const 	binding = this.getDefaultBinding(),
+				gender = binding.toJS('gender');
+		
+		if (typeof gender !== 'undefined' && gender !== null) { // not defined gender === null (on server)
+			const 	genderText 	= gender === GENDERS.FEMALE ? 'Female' : 'Male',
+					icon 		= gender === GENDERS.FEMALE ? 'icon_girl' : 'icon_boy';
+			return (
+				<div key={'gender'} title={'Gender'} className="eAboutList_item">
+					<SVG icon={icon} />
+					{genderText}
+					</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	getMedicalInfo: function () {
 		const 	binding = this.getDefaultBinding(),
 				medicalInfo = binding.toJS('student.medicalInfo');
@@ -59,6 +78,7 @@ const AboutMeBlock = React.createClass({
 			<div className="bAboutList">
 				<h6>{this.props.title || 'About me'}</h6>
 				{this._getAboutNode()}
+				{this.getGenderNode()}
 				<h6>Parents</h6>
 				{this._getAboutParentNode()}
 				{this.getMedicalInfo()}
