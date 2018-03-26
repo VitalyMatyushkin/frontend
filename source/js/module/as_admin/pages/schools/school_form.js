@@ -361,6 +361,11 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Postcode
 					</FormField>
+					<Map
+						key 				= { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
+						point 				= { this.getPoint() }
+						getNewPoint 		= { this.getNewPoint }
+					/>
 					<FormField
 						type 		= "text"
 						field 		= "address"
@@ -469,11 +474,6 @@ const SystemAdminSchoolForm = React.createClass({
 							extraStyle		= 'mSmallWide'
 						/>
 					</div>
-					<Map
-						key 				= { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
-						point 				= { this.getPoint() }
-						getNewPoint 		= { this.getNewPoint }
-					/>
 				</FormColumn>
 			</Form>
 		);
