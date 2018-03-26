@@ -1,6 +1,10 @@
 .bParentalConsentTab {
   padding: 25px;
   min-height: 250px;
+
+  .eConsentRequestTemplateWrapper select {
+    background: none;
+  }
 }
 
 .eParentalConsentTab_info {

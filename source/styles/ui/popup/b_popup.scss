@@ -109,8 +109,11 @@
 }
 .bPopupGrant{
   position: absolute;
-  top: -50%;
-  margin-bottom: 20px;
+  top: -40px;
+  left: 0;
+  right: 0;
+  width: 380px;
+  margin: 0 auto 20px;
 }
 /*Confirm Dialog styling*/
 .bDialog{

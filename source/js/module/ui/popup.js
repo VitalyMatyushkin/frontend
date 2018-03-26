@@ -29,7 +29,7 @@ const Popup = React.createClass({
 						<div className="ePopup_Close" onClick={this.props.onRequestClose}></div>
 						{self.props.children}
 					</div>
-					<div className={popup_back_class_name}></div>
+					<div className={popup_back_class_name} onClick={this.props.onRequestClose}></div>
 				</div>
 			);
 		} else {

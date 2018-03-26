@@ -353,6 +353,11 @@ const AdminPermissionAcceptParent = React.createClass({
 			}
 		});
 	},
+	handleClickCancelAcceptPermissionAndAddStudent: function() {
+		const	binding		= this.getDefaultBinding();
+
+		binding.remove('dataNewStudent');
+	},
 	onClickDeselectForm: function() {
 		this.deselectForm();
 		this.deselectStudent();
@@ -564,11 +569,19 @@ const AdminPermissionAcceptParent = React.createClass({
 							</If>
 
 							<If condition={typeof binding.get('dataNewStudent') !== 'undefined'}>
-								<div
-									className	= "bButton"
-									onClick		= { this.onAcceptPermissionAndAddStudent }
-								>
-									Accept permission and add new student
+								<div>
+									<div
+										className	= "bButton mCancel"
+										onClick		= { () => this.handleClickCancelAcceptPermissionAndAddStudent() }
+									>
+										Cancel
+									</div>
+									<div
+										className	= "bButton"
+										onClick		= { () => this.onAcceptPermissionAndAddStudent() }
+									>
+										Accept permission and add new student
+									</div>
 								</div>
 							</If>
 						</div>
