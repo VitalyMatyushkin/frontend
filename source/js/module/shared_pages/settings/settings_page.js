@@ -1,6 +1,7 @@
 const	RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		React							= require('react'),
+		propz 			                = require('propz'),
 		Tabs							= require('module/ui/tabs/tabs'),
 		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
@@ -112,14 +113,18 @@ const SettingsPage = React.createClass({
 		return this.isEmailVerified() && this.isPhoneVerified();
 	},
 	isEmailVerified: function() {
-		return SessionHelper.getActiveSession(
+		const userData = SessionHelper.getActiveSession(
 			this.getMoreartyContext().getBinding().sub('userData')
-		).verified.email;
+		);
+
+		return propz.get(userData, ['verified', 'email'], false);
 	},
 	isPhoneVerified: function() {
-		return SessionHelper.getActiveSession(
+		const userData = SessionHelper.getActiveSession(
 			this.getMoreartyContext().getBinding().sub('userData')
-		).verified.sms;
+		);
+
+		return propz.get(userData, ['verified', 'sms'], false);
 	},
 
 	render: function() {
