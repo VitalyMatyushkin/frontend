@@ -1359,19 +1359,15 @@ const Event = React.createClass({
 				rootBinding 		= this.getMoreartyContext().getBinding(),
 				eventId 			= rootBinding.get('routing.pathParameters.0');
 
-		const players = binding.toJS('model.players');
-
-		Promise.all(players.map( player => {
-			const playerDetails = {userId: player.userId, permissionId: player.permissionId};
-			return EventHeaderActions.sendConsentRequestFields(activeSchoolId, eventId, fields, playerDetails);
-		})).then( () => {
-			this.closeConsentRequestPopup();
-			window.simpleAlert(
-				'Consent requests have been successfully sent',
-				'Ok',
-				() => this.props.onReload()
-			);
-		});
+		EventHeaderActions.sendConsentRequest(activeSchoolId, eventId, fields)
+			.then(() => {
+				this.closeConsentRequestPopup();
+				window.simpleAlert(
+					'Consent requests have been successfully sent',
+					'Ok',
+					() => this.props.onReload()
+				);
+			});
 	},
 	renderEditTeamButtons: function() {
 		if(TeamHelper.isShowEditEventButton(this, this.props.mode)) {

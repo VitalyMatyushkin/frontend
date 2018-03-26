@@ -579,11 +579,13 @@ function reportNotParticipate(event){
 	});
 }
 
-function sendConsentRequest(schoolId, eventId) {
+function sendConsentRequest(schoolId, eventId, fields) {
 	return window.Server.sendInvitationMessagesForEvent.post(
 		{
 			schoolId:	schoolId,
 			eventId:	eventId
+		}, {
+			fields
 		}
 	);
 }

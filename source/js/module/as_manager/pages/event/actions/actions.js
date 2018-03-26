@@ -203,7 +203,6 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 function submitAllChanges(activeSchoolId, binding) {
 	switch ( binding.toJS('teamManagerMode') ) {
 		case 'ADD_TEAM': {
-			console.log('ADD TEAM');
 			const	selectedRivalIndex	= binding.toJS('teamManagerWrapper.default.teamModeView.selectedRivalIndex'),
 					event				= binding.toJS('model'),
 					rival				= binding.toJS(`teamManagerWrapper.default.rivals.${selectedRivalIndex}`),

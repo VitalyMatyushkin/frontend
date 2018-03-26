@@ -57,8 +57,6 @@ export const DashboardMainPage = (React as any).createClass({
 				return WeatherWidgetActions.getWeatherWidgetData(coordinates.lng, coordinates.lat);
 			})
 			.then(weatherWidgetData => {
-				console.log(weatherWidgetData);
-
 				this.getDefaultBinding().set('weatherWidgetData.isSync', true);
 				this.getDefaultBinding().set('weatherWidgetData.data', Immutable.fromJS(weatherWidgetData))
 			});
