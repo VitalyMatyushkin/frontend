@@ -105,6 +105,10 @@ const TypePhone =  React.createClass({
 	getCCDropdownElement(code) {
 		let flagModifier = '';
 		switch (code) {
+			case '+7': {
+				flagModifier = 'mRus';
+				break;
+			}
 			case '+1': {
 				flagModifier = 'mUSA';
 				break;
