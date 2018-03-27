@@ -943,7 +943,7 @@ const Event = React.createClass({
 
 		binding.set('activeTab', value);
 
-		window.location.hash = hash + '?tab=' + value;
+		window.location.hash = hash + '?tab=' + value + '&schoolId=' + this.props.activeSchoolId; //parent get active school id from routing
 	},
 	getPerformanceTabBinding: function() {
 		const binding	= this.getDefaultBinding();
