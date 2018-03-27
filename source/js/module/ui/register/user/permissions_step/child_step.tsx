@@ -59,13 +59,15 @@ export const ChildStep = (React as any).createClass({
 		let countError = 0;
 
 		for(let index = 0; index < countChildrenBlocks; index++) {
-			if (typeof binding.toJS(`child.${index}.firstName`).value === 'undefined' || binding.toJS(`child.${index}.firstName`).value === '')
+			if (school.additionalPermissionRequestFields.childFirstName === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+				(typeof binding.toJS(`child.${index}.firstName`).value === 'undefined' || binding.toJS(`child.${index}.firstName`).value === ''))
 			{
 				binding.set(`child.${index}.firstName`, Immutable.fromJS(fieldData));
 				countError ++;
 			}
 
-			if (typeof binding.toJS(`child.${index}.lastName`).value === 'undefined' || binding.toJS(`child.${index}.lastName`).value === '')
+			if (school.additionalPermissionRequestFields.childLastName === ADDITIONAL_FIELD_CONDITION.REQUIRED &&
+				(typeof binding.toJS(`child.${index}.lastName`).value === 'undefined' || binding.toJS(`child.${index}.lastName`).value === ''))
 			{
 				binding.set(`child.${index}.lastName`, Immutable.fromJS(fieldData));
 				countError ++;
