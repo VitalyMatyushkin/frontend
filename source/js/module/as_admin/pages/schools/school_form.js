@@ -137,14 +137,18 @@ const SystemAdminSchoolForm = React.createClass({
 				formBinding 	= binding.sub('form'),
 				point 			= formBinding.toJS('postcode.point');
 
-		return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
+		return typeof point !== 'undefined' ? point : this.DEFAULT_SCHOOL_POINT;
 	},
 	
 	getNewPoint: function(point) {
 		this.getDefaultBinding().set('point', Immutable.fromJS(point));
 	},
 	getSchoolRegion() {
-		return this.getDefaultBinding().toJS('school.region');
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form'),
+				region 			= formBinding.meta('region.value').toJS();
+		
+		return region;
 	},
 	postcodeService: function(searchText) {
 		return window.Server.postCodes.get(

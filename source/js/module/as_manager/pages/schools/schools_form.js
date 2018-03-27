@@ -93,7 +93,7 @@ const SchoolForm = React.createClass({
 	},
 	getPoint() {
 		const point = this.getDefaultBinding().toJS('postcode.point');
-		return typeof point !== 'undefined' ? point : this.DEFAULT_VENUE_POINT;
+		return typeof point !== 'undefined' ? point : this.DEFAULT_SCHOOL_POINT;
 	},
 	
 	getNewPoint(point) {
@@ -186,11 +186,6 @@ const SchoolForm = React.createClass({
 							>
 								Sports Department Email
 							</FormField>
-							<Map
-								key 				= { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
-								point 				= { this.getPoint() }
-								getNewPoint 		= { this.getNewPoint }
-							/>
 						</FormColumn>
 						
 						<FormColumn customStyle="col-md-5">
@@ -238,6 +233,11 @@ const SchoolForm = React.createClass({
 							>
 								Postcode
 							</FormField>
+							<Map
+								key 				= { selectedPostcode ? selectedPostcode.id : 'emptyPostcode' }
+								point 				= { this.getPoint() }
+								getNewPoint 		= { this.getNewPoint }
+							/>
 							<FormField
 								type 		= "text"
 								field 		= "address"
