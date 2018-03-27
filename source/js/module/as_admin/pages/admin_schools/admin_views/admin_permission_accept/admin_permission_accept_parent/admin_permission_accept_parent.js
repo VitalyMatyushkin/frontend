@@ -464,6 +464,11 @@ const AdminPermissionAcceptParent = React.createClass({
 
 		return `${typeof requester.firstName !== 'undefined' ? requester.firstName : ''} ${typeof requester.lastName !== 'undefined' ? requester.lastName : ''}`;
 	},
+	getNewStudentName: function () {
+	 const formData = this.getDefaultBinding().toJS('dataNewStudent');
+
+	 return `${formData.firstName} ${formData.lastName}`;
+	},
 	render: function() {
 		const 	binding = this.getDefaultBinding(),
 				errorAddChild = binding.get('errorAddChild'),
@@ -474,6 +479,10 @@ const AdminPermissionAcceptParent = React.createClass({
 			const   childDetails = this.getChildDetails(),
 					canCreateStudentFromParentPermissionRequest = binding.toJS('school').canCreateStudentFromParentPermissionRequest;
 
+			const acceptSupportingText = typeof binding.get('dataNewStudent') === 'undefined' ?
+				`Accept parent permission ${this.getParentName()}.` :
+				`Accept parent permission ${this.getParentName()} and add new student ${this.getNewStudentName()}.`;
+
 			content = (
 				<div>
 					<div className='bForm'>
@@ -481,7 +490,7 @@ const AdminPermissionAcceptParent = React.createClass({
 
 							<h2 className='eForm_header mBlack'>{ binding.toJS('school.name') }.</h2>
 
-							<h2 className='eForm_header mBlack'>Accept parent permission {this.getParentName()}.</h2>
+							<h2 className='eForm_header mBlack'>{ acceptSupportingText }</h2>
 							{ typeof binding.get('dataNewStudent') === 'undefined' ?
 								<div>
 									<h3 className='eForm_header mBlack'>Comment from parent: {comment}</h3>
@@ -578,7 +587,7 @@ const AdminPermissionAcceptParent = React.createClass({
 										className	= "bButton"
 										onClick		= { () => this.onAcceptPermissionAndAddStudent() }
 									>
-										Accept permission and add new student
+										Accept
 									</div>
 								</div>
 							</If>
