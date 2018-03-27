@@ -234,15 +234,16 @@ const Head = React.createClass({
 	 */
 	getMainMenuItemsForSchoolWorker: function() {
 		return [
+			// {
+			// 	href			: '/#dashboard/mainPage',
+			// 	icon			: '',
+			// 	name			: 'Dashboard',
+			// 	key				: 'Dashboard',
+			// 	routes			: ['/dashboard', '/dashboard/:subPage'],
+			// 	authorization	: true,
+			// 	verified		: true
+			// },
 			{
-				href			: '/#dashboard/mainPage',
-				icon			: '',
-				name			: 'Dashboard',
-				key				: 'Dashboard',
-				routes			: ['/dashboard', '/dashboard/:subPage'],
-				authorization	: true,
-				verified		: true
-			}, {
 				href			: '/#school_admin/summary',
 				icon			: '',
 				name			: 'School',
