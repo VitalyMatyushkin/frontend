@@ -292,8 +292,6 @@ const AdminPermissionAcceptParent = React.createClass({
 		binding.set('selectedStudent', Immutable.fromJS(student));
 	},
 	handleDeselectStudent: function () {
-		this.deselectForm();
-		this.deselectHouse();
 		this.deselectStudent();
 	},
 	deselectStudent: function () {

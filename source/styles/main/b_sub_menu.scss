@@ -60,8 +60,15 @@ a.mDisabled{
   pointer-events: none;
 }
 
+.bParentsPage .bSubMenu{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .bParentsPage .eSubMenu_item{
-  padding: 17px 25px 0;
+  padding: 0 25px;
+  line-height: 20px;
 }
 
 .bIcon.allChildren{
