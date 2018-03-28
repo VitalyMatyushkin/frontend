@@ -17,7 +17,7 @@ const EditSchoolForm = React.createClass({
 				if(data.postcode && data.postcode._id){
 					data.postcode.id = data.postcode._id;
 				}
-				binding.set(Immutable.fromJS(data));
+				binding.set('form', Immutable.fromJS(data));
 				binding.set('isSync', true);
 			});
 			

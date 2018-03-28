@@ -21,7 +21,8 @@ const SchoolForm = React.createClass({
 		isSuperAdmin:   React.PropTypes.bool.isRequired
 	},
 	componentWillMount: function () {
-		const binding = this.getDefaultBinding();
+		const	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form');
 
 		if(!this.props.isSuperAdmin) {
 			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
@@ -29,7 +30,7 @@ const SchoolForm = React.createClass({
 			});
 		}
 		//fill field postcode
-		const postcode = this.getDefaultBinding().toJS('postcode');
+		const postcode = formBinding.toJS('postcode');
 		if (typeof postcode !== 'undefined') {
 			binding.set('selectedPostcode', Immutable.fromJS(postcode));
 		}
@@ -72,20 +73,22 @@ const SchoolForm = React.createClass({
 	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
-		const binding = this.getDefaultBinding();
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form');
 
-		if(typeof binding.toJS('publicSite.status') === 'undefined') {
-			binding.set(
+		if(typeof formBinding.toJS('publicSite.status') === 'undefined') {
+			formBinding.set(
 				'publicSite.status',
 				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE)
 			);
 		}
 	},
 	setDefaultPublicBigscreenSiteAccess: function() {
-		const binding = this.getDefaultBinding();
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form');
 
-		if(typeof binding.toJS('publicBigscreenSite.status') === 'undefined') {
-			binding.set(
+		if(typeof formBinding.toJS('publicBigscreenSite.status') === 'undefined') {
+			formBinding.set(
 				'publicBigscreenSite.status',
 				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE)
 			);
@@ -104,8 +107,11 @@ const SchoolForm = React.createClass({
 		// there is no such data. I don't know where this module also used, so just add region2 which is
 		// place where data really exists.
 		// Probably region1 should be removed, but I'm not sure
-		const	region1 = this.getDefaultBinding().toJS('school.region'),
-			  	region2 = this.getDefaultBinding().toJS('region');
+		const 	binding 		= this.getDefaultBinding(),
+				formBinding 	= binding.sub('form');
+		
+		const	region1 = formBinding.toJS('school.region'),
+			  	region2 = formBinding.toJS('region');
 
 		return region1 ? region1 : region2;
 	},
@@ -140,8 +146,9 @@ const SchoolForm = React.createClass({
 		const 	binding 				= this.getDefaultBinding(),
 				rootBinding 			= this.getMoreartyContext().getBinding(),
 				statusActive 			= !rootBinding.get('userRules.activeSchoolId'),
-				passActive 				= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-				passBigscreenActive 	= binding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
+				formBinding				= binding.sub('form'),
+				passActive 				= formBinding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				passBigscreenActive 	= formBinding.meta().toJS('publicBigscreenSite.status.value') === 'PROTECTED',
 				postcode 				= binding.toJS('postcode');
 		
 		const 	selectedPostcode 	= binding.toJS('selectedPostcode'),
@@ -153,7 +160,7 @@ const SchoolForm = React.createClass({
 					<Form
 						formStyleClass 		= "row"
 						name 				= { this.props.title }
-						binding 			= { this.getDefaultBinding() }
+						binding 			= { formBinding }
 						service 			= "i/schools/domains"
 						onSubmit 			= { this.onSubmit }
 						submitOnEnter 		= { false }

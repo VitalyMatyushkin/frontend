@@ -21,7 +21,7 @@ const AddSchoolForm = React.createClass({
 				<SchoolForm
 					title 			= "Add new school..."
 					onSubmit 		= { this.submitAdd }
-					binding 		= { this.getDefaultBinding().sub('form') }
+					binding 		= { this.getDefaultBinding() }
 					isSuperAdmin 	= { true }
 				/>
 			</div>
