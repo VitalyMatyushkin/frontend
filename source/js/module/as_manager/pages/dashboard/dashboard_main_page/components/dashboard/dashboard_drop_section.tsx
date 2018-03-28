@@ -2,13 +2,15 @@ import * as React from 'react'
 
 import { DropTarget } from 'react-dnd'
 
-import 'styles/ui/dashboard/dashboard_main_page.scss'
+import 'styles/ui/dashboard/dasbboard_drop_section.scss'
 
 export interface DashboardDropSectionProps {
+	// props from dnd lib
 	connectDropTarget: (any) => any
 	isOver: any
-	widget: any
-	moveSubject: (item: any, dropResult: any) => any
+
+	index: number
+	handleDroppedWidget: (moveResult: any) => void
 }
 
 const collect = (connect, monitor) => {
@@ -20,25 +22,24 @@ const collect = (connect, monitor) => {
 
 const DashboardDropSectionTarget = {
 	drop(props) {
-		return props;
+		return {
+			whereDroppedIndex: props.index
+		};
 	},
 	canDrop() {
+		// always can drop
 		return true;
 	},
 };
 
 class DashboardDropSection extends React.Component<DashboardDropSectionProps, {}> {
-	renderItems() {
-		return (
-			<div className='eDashboardMainPage_row'>
-				{this.props.children}
-			</div>
-		);
+	renderChildren() {
+		const styles = this.props.isOver ? { opacity: 0.7 } : null;
+
+		return <div className='bDashboardDropSection' style={styles}>{this.props.children}</div>;
 	}
 	render() {
-		const { connectDropTarget } = this.props;
-
-		return connectDropTarget(this.renderItems());
+		return this.props.connectDropTarget(this.renderChildren());
 	}
 }
 

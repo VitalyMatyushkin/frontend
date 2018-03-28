@@ -4,14 +4,21 @@ import { DragSource } from 'react-dnd';
 import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 
+export interface MoveResult {
+	whoDroppedIndex: number,    // index of current widget in widget array, so also it's old place of widget
+	whereDroppedIndex: number   // index of new place for widget
+}
+
 export interface DashboardCardProps {
+	// props from dnd lib
 	connectDragSource: any
 	isDragging: any
 	connectDragPreview: any
+
+	index: number
 	bootstrapWrapperStyle: string,
 	headerText: string,
-	children: any,
-	moveSubject: (item: any, dropResult: any) => any
+	handleDroppedWidget: (moveResult: any) => void
 }
 
 const subjectSource = {
@@ -22,10 +29,12 @@ const subjectSource = {
 		if (!monitor.didDrop()) {
 			return;
 		}
-		const item = monitor.getItem();
 		const dropResult = monitor.getDropResult();
 
-		props.moveSubject(item, dropResult);
+		props.handleDroppedWidget({
+			whoDroppedIndex: props.index,
+			whereDroppedIndex: dropResult.whereDroppedIndex
+		});
 	},
 };
 

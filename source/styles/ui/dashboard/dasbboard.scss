@@ -1,0 +1,13 @@
+@import '../../bootstrap-custom';
+
+.bDashboard {
+  @include container-fixed();
+
+  padding: 50px;
+}
+
+.eDashboard_body {
+  margin-bottom: 20px;
+
+  @include make-row();
+}

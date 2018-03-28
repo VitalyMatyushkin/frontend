@@ -6,15 +6,3 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
-.eDashboardMainPage_mainContainer {
-  @include container-fixed();
-
-  padding: 50px;
-}
-
-.eDashboardMainPage_row {
-  margin-bottom: 20px;
-
-  @include make-row();
-}

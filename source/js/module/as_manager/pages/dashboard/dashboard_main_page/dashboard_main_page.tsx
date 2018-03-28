@@ -14,6 +14,7 @@ import Dashboard, {
 } from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/dashboard";
 
 import 'styles/ui/dashboard/dashboard_main_page.scss'
+import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -47,6 +48,10 @@ export const DashboardMainPage = (React as any).createClass({
 					type: WIDGET_TYPE.WeatherWidgetData,
 					data: undefined,
 					isSync: false
+				},
+				{
+					type: WIDGET_TYPE.CalendarWidgetData,
+					isSync: true
 				}
 			]
 		});
@@ -70,6 +75,9 @@ export const DashboardMainPage = (React as any).createClass({
 		SchoolInvitesWidgetActions.getDataForSchoolInvitesWidget(this.props.activeSchoolId)
 			.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolInvitesWidgetData));
 	},
+	componentWillUnmount() {
+		this.getDefaultBinding().clear();
+	},
 	/**
 	 * Sets data and flag isSync to true by widgetType
 	 * Use for init state of widget in componentWillMount
@@ -86,9 +94,6 @@ export const DashboardMainPage = (React as any).createClass({
 
 		binding.set('widgetArray', Immutable.fromJS(widgetArray));
 	},
-	componentWillUnmount() {
-		this.getDefaultBinding().clear();
-	},
 	getSchoolCoordinatesBySchool(school): {lat: number, lng: number} {
 		return {
 			lng: propz.get(school, ['postcode', 'point', 'lng'], undefined),
@@ -98,20 +103,30 @@ export const DashboardMainPage = (React as any).createClass({
 	getWidgetArray(): Widget[] {
 		return this.getDefaultBinding().toJS('widgetArray');
 	},
-	moveSubject(item, dropResult) {
-		console.log("ITEM");
-		console.log(item);
+	handleDroppedWidget(moveResult: MoveResult) {
+		const binding = this.getDefaultBinding();
+		const widgetArray: Widget[] = binding.toJS('widgetArray');
 
-		console.log("DROP RESULT");
-		console.log(dropResult);
+		// copy
+		const droppedWidget = Object.assign({}, widgetArray[moveResult.whoDroppedIndex]);
+		// insert
+		widgetArray.splice(moveResult.whereDroppedIndex, 0, droppedWidget);
+		// remove widget at old position
+		widgetArray.splice(
+			// shift up by one point old position if new position less then old position
+			moveResult.whereDroppedIndex < moveResult.whoDroppedIndex ?
+				moveResult.whoDroppedIndex + 1 : moveResult.whoDroppedIndex,
+			1);
 
+		binding.set('widgetArray', Immutable.fromJS(widgetArray));
 	},
 	render() {
 		return (
 			<div className="bDashboardMainPage">
 				<Dashboard
 					widgetArray={this.getWidgetArray()}
-					moveSubject={(item, dropResult) => this.moveSubject(item, dropResult)}
+					handleDroppedWidget={(moveResult) => this.handleDroppedWidget(moveResult)}
+					calendarWidgetBinding={this.getDefaultBinding().sub('dashboardCalendarWidget')}
 				/>
 			</div>
 		);
