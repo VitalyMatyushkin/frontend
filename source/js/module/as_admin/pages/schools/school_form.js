@@ -12,6 +12,7 @@ const 	Form 				= require('module/ui/form/form'),
 		Morearty 			= require('morearty'),
 		propz 				= require('propz'),
 		MultiselectDropdown = require('module/ui/multiselect-dropdown/multiselect_dropdown'),
+		RandomHelper        = require('module/helpers/random_helper.js'),
 		React 				= require('react');
 
 const SystemAdminSchoolForm = React.createClass({
@@ -21,6 +22,7 @@ const SystemAdminSchoolForm = React.createClass({
 		onSubmit: 	React.PropTypes.func
 	},
 	DEFAULT_SCHOOL_POINT: { coordinates: [-0.246722, 50.832949]},
+	DEFAULT_SCHOOL_REGION: 'GB',
 	//share form and multiselect binding, because multiselect don't include in form
 	//and change multiselect call re-render form
 	componentWillMount: function () {
@@ -36,7 +38,11 @@ const SystemAdminSchoolForm = React.createClass({
 		const postcode = formBinding.toJS('postcode');
 		if (typeof postcode !== 'undefined') {
 			binding.set('selectedPostcode', Immutable.fromJS(postcode));
+			binding.set('point', Immutable.fromJS(postcode.point));
+		} else {
+			binding.set('point', Immutable.fromJS(this.DEFAULT_SCHOOL_POINT));
 		}
+
 		binding.set('isSyncForm', true);
 		
 		multiSelectBinding.set('availableRoles', Immutable.fromJS(RolesHelper.convertRolesFromServerToClient(serverRoles)));
@@ -44,6 +50,9 @@ const SystemAdminSchoolForm = React.createClass({
 		if(typeof roles === 'undefined') {
 			multiSelectBinding.set('availableRoles', Immutable.fromJS([]));
 		}
+	},
+	componentWillUnmount: function () {
+		this.getDefaultBinding().clear();
 	},
 	getPublicSiteAccessTypes: function() {
 		const result = [];
@@ -133,9 +142,7 @@ const SystemAdminSchoolForm = React.createClass({
 		];
 	},
 	getPoint: function() {
-		const 	binding 		= this.getDefaultBinding(),
-				formBinding 	= binding.sub('form'),
-				point 			= formBinding.toJS('postcode.point');
+		const point = this.getDefaultBinding().toJS('point');
 
 		return typeof point !== 'undefined' ? point : this.DEFAULT_SCHOOL_POINT;
 	},
@@ -143,11 +150,19 @@ const SystemAdminSchoolForm = React.createClass({
 	getNewPoint: function(point) {
 		this.getDefaultBinding().set('point', Immutable.fromJS(point));
 	},
-	getSchoolRegion() {
+	getSchoolRegion: function() {
 		const 	binding 		= this.getDefaultBinding(),
 				formBinding 	= binding.sub('form'),
 				region 			= formBinding.meta('region.value').toJS();
 		
+		return typeof region !== 'undefined' ? region : this.DEFAULT_SCHOOL_REGION;
+	},
+	onSelectRegion: function (region) {
+		const binding = this.getDefaultBinding();
+		binding.set('selectedPostcode', undefined);
+		binding.sub('form').meta().clear('postcode');
+		binding.set('point', Immutable.fromJS(this.DEFAULT_SCHOOL_POINT));
+
 		return region;
 	},
 	postcodeService: function(searchText) {
@@ -181,8 +196,8 @@ const SystemAdminSchoolForm = React.createClass({
 					{ text: 'No',	value: false }
 				],
 				postcode 				= formBinding.toJS('postcode');
-		
-		const 	selectedPostcode 	= binding.toJS('selectedPostcode');
+
+		const 	selectedPostcode = binding.toJS('selectedPostcode');
 
 		return (
 			<Form
@@ -355,7 +370,17 @@ const SystemAdminSchoolForm = React.createClass({
 						Phone
 					</FormField>
 					<FormField
+						type 		= "dropdown"
+						field 		= "region"
+						id 			= "school_region"
+						options 	= { this.getRegions() }
+						onSelect    = { this.onSelectRegion }
+					>
+						Region
+					</FormField>
+					<FormField
 						type			= 'autocomplete'
+						key             = { RandomHelper.getRandomString() }
 						serviceFullData	= { this.postcodeService }
 						defaultItem		= { selectedPostcode }
 						serverField		= { 'postcode' }
@@ -383,14 +408,6 @@ const SystemAdminSchoolForm = React.createClass({
 						validation 	= "domain server"
 					>
 						Domain
-					</FormField>
-					<FormField
-						type 		= "dropdown"
-						field 		= "region"
-						id 			= "school_region"
-						options 	= {this.getRegions()}
-					>
-						Region
 					</FormField>
 					<FormField
 						type 		= "dropdown"

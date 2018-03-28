@@ -34,7 +34,7 @@ export const FinishPermissionsStep = (React as any).createClass({
 					childHouseId: 		child.houseId,
 					childGender: 		child.gender,
 					childDateOfBirth: 	typeof child.birthday !== 'undefined' ? DateHelper.getFormatDateTimeUTCString(child.birthday) : undefined,
-					comment:            `${child.firstName} ${child.lastName}`
+					comment:            `${typeof child.firstName !== 'undefined' ? child.firstName : ''} ${typeof child.lastName !== 'undefined' ? child.lastName : ''}`
 				});
 			})).then(() => {
 				this.setSyncAndGoToProfile();

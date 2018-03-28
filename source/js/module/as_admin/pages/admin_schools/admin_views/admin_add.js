@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 09/06/15.
  */
-const 	SchoolForm 	= require('module/as_manager/pages/schools/schools_form'),
+const 	SchoolForm 	= require('../../schools/school_form'),
 		React 		= require('react'),
 		Morearty 	= require('morearty');
 
