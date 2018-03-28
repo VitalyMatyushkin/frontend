@@ -11,6 +11,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 import 'styles/ui/dashboard/dashboard_main_page.scss'
 import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_weather_widget/dashboard_weather_widget";
+import DashboardCard from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
@@ -27,7 +28,8 @@ export interface Widget {
 }
 
 export interface DashboardProps {
-	widgetArray: Widget[]
+	widgetArray: Widget[],
+	moveSubject: (item: any, dropResult: any) => any
 }
 
 class Dashboard extends React.Component<DashboardProps, {}> {
@@ -35,12 +37,20 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		let widget = null;
 
 		if(widgetData.isSync) {
-			widget = <DashboardSchoolProfileWidget school={widgetData.school}/>;
+			widget = <DashboardSchoolProfileWidget school={widgetData.data}/>;
 		} else {
 			widget = <Loader condition={true}/>;
 		}
 
-		return widget;
+		return (
+			<DashboardCard
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				headerText='School Profile'
+				moveSubject = {this.props.moveSubject}
+			>
+				{widget}
+			</DashboardCard>
+		);
 	}
 	renderSchoolDataWidget(widgetData) {
 		let widget = null;
@@ -51,7 +61,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 			widget = <Loader condition={true}/>;
 		}
 
-		return widget;
+		return (
+			<DashboardCard
+				headerText='School Data'
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				moveSubject = {this.props.moveSubject}
+			>
+				{widget}
+			</DashboardCard>
+		);
 	}
 	renderSchoolUsersWidget(widgetData) {
 		let widget = null;
@@ -62,7 +80,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 			widget = <Loader condition={true}/>;
 		}
 
-		return widget;
+		return (
+			<DashboardCard
+				headerText='School Users'
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				moveSubject = {this.props.moveSubject}
+			>
+				{widget}
+			</DashboardCard>
+		);
 	}
 	renderSchoolInvitesWidget(widgetData) {
 		let widget = null;
@@ -73,7 +99,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 			widget = <Loader condition={true}/>;
 		}
 
-		return widget;
+		return (
+			<DashboardCard
+				headerText='Invites'
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				moveSubject = {this.props.moveSubject}
+			>
+				{widget}
+			</DashboardCard>
+		);
 	}
 	renderWeatherWidget(widgetData) {
 		let widget = null;
@@ -84,7 +118,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 			widget = <Loader condition={true}/>;
 		}
 
-		return widget;
+		return (
+			<DashboardCard
+				headerText='Weather'
+				bootstrapWrapperStyle='col-xs-6 col-sm-6 col-md-3'
+				moveSubject = {this.props.moveSubject}
+			>
+				{widget}
+			</DashboardCard>
+		);
 	}
 	renderWidgets() {
 		return this.props.widgetArray.map(widget => {

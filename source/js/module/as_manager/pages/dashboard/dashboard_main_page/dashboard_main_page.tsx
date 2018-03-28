@@ -98,10 +98,21 @@ export const DashboardMainPage = (React as any).createClass({
 	getWidgetArray(): Widget[] {
 		return this.getDefaultBinding().toJS('widgetArray');
 	},
+	moveSubject(item, dropResult) {
+		console.log("ITEM");
+		console.log(item);
+
+		console.log("DROP RESULT");
+		console.log(dropResult);
+
+	},
 	render() {
 		return (
 			<div className="bDashboardMainPage">
-				<Dashboard widgetArray={this.getWidgetArray()}/>
+				<Dashboard
+					widgetArray={this.getWidgetArray()}
+					moveSubject={(item, dropResult) => this.moveSubject(item, dropResult)}
+				/>
 			</div>
 		);
 	}

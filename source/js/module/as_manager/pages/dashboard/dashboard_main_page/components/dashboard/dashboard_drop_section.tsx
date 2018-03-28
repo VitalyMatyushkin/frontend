@@ -7,9 +7,8 @@ import 'styles/ui/dashboard/dashboard_main_page.scss'
 export interface DashboardDropSectionProps {
 	connectDropTarget: (any) => any
 	isOver: any
-	xPos: any
-	yPos: any
 	widget: any
+	moveSubject: (item: any, dropResult: any) => any
 }
 
 const collect = (connect, monitor) => {

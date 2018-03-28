@@ -5,9 +5,13 @@ import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 
 export interface DashboardCardProps {
+	connectDragSource: any
+	isDragging: any
+	connectDragPreview: any
 	bootstrapWrapperStyle: string,
 	headerText: string,
-	children: any
+	children: any,
+	moveSubject: (item: any, dropResult: any) => any
 }
 
 const subjectSource = {
@@ -15,7 +19,13 @@ const subjectSource = {
 		return props;
 	},
 	endDrag(props, monitor, component) {
-		return props;
+		if (!monitor.didDrop()) {
+			return;
+		}
+		const item = monitor.getItem();
+		const dropResult = monitor.getDropResult();
+
+		props.moveSubject(item, dropResult);
 	},
 };
 
@@ -33,7 +43,9 @@ export class DashboardCard extends React.Component<DashboardCardProps, {}> {
 	}
 
 	render() {
-		return (
+		const { connectDragSource } = this.props;
+
+		return connectDragSource(
 			<div className={this.getCardColStyle()}>
 				<div className='bDashboardCard'>
 					<div className='eDashboardCard_header'>
