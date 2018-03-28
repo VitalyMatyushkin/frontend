@@ -1,14 +1,30 @@
 import * as React from 'react';
+import { DragSource } from 'react-dnd';
 
 import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
-
-const DEFAULT_CARD_COL_WIDTH = 6;
 
 export interface DashboardCardProps {
 	bootstrapWrapperStyle: string,
 	headerText: string,
 	children: any
+}
+
+const subjectSource = {
+	beginDrag(props, monitor, component) {
+		return props;
+	},
+	endDrag(props, monitor, component) {
+		return props;
+	},
+};
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging(),
+		connectDragPreview: connect.dragPreview(),
+	};
 }
 
 export class DashboardCard extends React.Component<DashboardCardProps, {}> {
@@ -33,3 +49,5 @@ export class DashboardCard extends React.Component<DashboardCardProps, {}> {
 		);
 	}
 }
+
+export default DragSource('dashboardCard', subjectSource, collect)(DashboardCard);
