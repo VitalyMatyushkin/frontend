@@ -7,13 +7,16 @@ import * as propz from 'propz'
 import {AdminPermissionAcceptTooltip} from "module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_parent/admin_permission_accept_tooltip";
 
 const stopWordsArray = [
-	'request',
+	'Request',
 	'to',
 	'be',
 	'parent',
 	'of',
 	'optional',
-	'undefined',
+	'undefined'
+];
+
+const stopSymbolArray = [
 	'\\(',
 	'\\)',
 	'\\[',
@@ -21,7 +24,7 @@ const stopWordsArray = [
 	'"',
 	'“',
 	'”',
-	'\'',
+	'\''
 ];
 
 export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
@@ -37,8 +40,9 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 		let students = [];
 		binding.set('isSync', false);
 
-		this.searchStudentsByRegexArrayAndComment(
-			this.getRegexArray(),
+		console.log(this.getPreparedComment());
+
+		this.searchStudentsByComment(
 			this.getPreparedComment()
 		).then(_students => {
 			students = _students.concat(students);
@@ -96,31 +100,34 @@ export const AdminPermissionAcceptTooltipWrapper = (React as any).createClass({
 		const permissionRequest = this.props.permissionRequest;
 		let comment = propz.get(permissionRequest, ['requestedPermission', 'comment'], '');
 
-		stopWordsArray.forEach(stopWord => {
-			const regexp = new RegExp(stopWord, 'ig');
+		stopSymbolArray.forEach(stopSymbol => {
+			const regexp = new RegExp(stopSymbol, 'ig');
 			comment = comment.replace(regexp, '');
 		});
-		comment = comment.replace(/\s{2,}/g, '');
+		comment = comment.replace(/\s\s+/g, ' ');
 		comment = comment.trim();
 
 		return comment;
 	},
-	searchStudentsByRegexArrayAndComment(regexArray: RegExp[], comment): BPromise<any[]> {
-		let promises = [];
+	searchStudentsByComment(comment): BPromise<any[]> {
+		let wordArray;
+
 		if(typeof comment !== 'undefined') {
-			regexArray.forEach(regex => {
-				const result = comment.match(regex);
-				if(result !== null) {
-					this.getDefaultBinding().set('studentFirstNameFromRequest', result[1]);
-					this.getDefaultBinding().set('studentLastNameFromRequest', result[2]);
-					promises = promises.concat(
-						this.searchStudentsByFirstNameAndLastNameAndGender(result[1], result[2])
-					);
+			wordArray = comment.split(' ');
+			stopWordsArray.forEach(stopWord => {
+				const indexWord = wordArray.indexOf(stopWord);
+				if (indexWord !== -1) {
+					wordArray.splice(indexWord, 1);
 				}
 			});
 		}
 
-		return BPromise.all(promises).then(results => {
+		this.getDefaultBinding().set('studentFirstNameFromRequest', wordArray[0]);
+		this.getDefaultBinding().set('studentLastNameFromRequest', wordArray[1]);
+
+		const promise = this.searchStudentsByFirstNameAndLastNameAndGender(wordArray[0], wordArray[1]);
+
+		return BPromise.resolve(promise).then(results => {
 			let students = [];
 
 			results.forEach(result => {
