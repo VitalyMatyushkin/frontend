@@ -7,13 +7,13 @@ import 'styles/ui/dashboard/dasbboard_drop_section.scss'
 export interface DashboardDropSectionProps {
 	// props from dnd lib
 	connectDropTarget: (any) => any
-	isOver: any
+	isOver: boolean
 
 	index: number
 	handleDroppedWidget: (moveResult: any) => void
 }
 
-const collect = (connect, monitor) => {
+function  collect(connect, monitor) {
 	return {
 		connectDropTarget: connect.dropTarget(),
 		isOver: monitor.isOver(),
@@ -21,7 +21,7 @@ const collect = (connect, monitor) => {
 };
 
 const DashboardDropSectionTarget = {
-	drop(props) {
+	drop(props: DashboardDropSectionProps) {
 		return {
 			whereDroppedIndex: props.index
 		};

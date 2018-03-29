@@ -12,7 +12,7 @@ export interface MoveResult {
 export interface DashboardCardProps {
 	// props from dnd lib
 	connectDragSource: any
-	isDragging: any
+	isDragging: boolean
 	connectDragPreview: any
 
 	index: number
@@ -22,10 +22,10 @@ export interface DashboardCardProps {
 }
 
 const subjectSource = {
-	beginDrag(props, monitor, component) {
+	beginDrag(props: DashboardCardProps, monitor, component) {
 		return props;
 	},
-	endDrag(props, monitor, component) {
+	endDrag(props: DashboardCardProps, monitor, component) {
 		if (!monitor.didDrop()) {
 			return;
 		}
