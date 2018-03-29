@@ -47,7 +47,7 @@ export const EventFixtures = (React as any).createClass({
 					mode			= { MODE_FIXTURES.ADMIN }
 					date			= { binding.get('dateCalendar') }
 					activeSchoolId	= { activeSchoolId }
-					onClick			= { () => this.onClickChallenge() }
+					onClick			= { (eventId) => this.onClickChallenge(eventId) }
 				/>
 			</div>
 		);
