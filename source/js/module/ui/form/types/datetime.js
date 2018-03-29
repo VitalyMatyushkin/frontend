@@ -2,7 +2,7 @@ const 	MaskedInput		= require('module/ui/masked_input'),
 		{DateHelper} 	= require('module/helpers/date_helper'),
 		React 			= require('react');
 
-const MASKED_INPUT_DATETIME = '__.__.____/__:__';
+const MASKED_INPUT_DATETIME = '__.__.____/__:__ __';
 
 const MaskedDateTime =  React.createClass({	
 	propTypes: {
@@ -10,7 +10,8 @@ const MaskedDateTime =  React.createClass({
 		defaultValue:	React.PropTypes.string,
 		onChange: 		React.PropTypes.func,
 		onBlur: 		React.PropTypes.func,
-		validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
+		validateOn: 	React.PropTypes.bool, 		//true - validation on, false - off
+		region:         React.PropTypes.string
 	},
 	getDefaultProps: function(){
 		return {
@@ -48,10 +49,19 @@ const MaskedDateTime =  React.createClass({
 		return localeDateTime;
 	},
 	toIsoDateTime:function(localeDateTime){
-		const isoDateTime = DateHelper.toIsoDateTime(localeDateTime);
+		const isoDateTime = this.toIsoDateTimeString(localeDateTime);
 		return localeDateTime && (!this.props.validateOn || DateHelper.isValidDateTime(isoDateTime)) ? isoDateTime : '';
-	},	
+	},
+	toIsoDateTimeString: function(dotString) {
+		const dateTimeParts = dotString ? dotString.split('/'):[],
+			dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
+			timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
 
+			//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
+			isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
+
+		return isoStr;
+	},
 	handleBlur: function(e) {
 		let value = e.target.value;
 
@@ -73,7 +83,7 @@ const MaskedDateTime =  React.createClass({
 	},
 	render: function () {
         const dateTime = this.state.dateTime;
-
+console.log(this.props.region);
 		return (
 			<MaskedInput
 				title		= "Format date-time dd.mm.yyyy/hh:mm"

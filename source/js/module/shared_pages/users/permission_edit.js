@@ -31,7 +31,7 @@ const EditPermission = React.createClass({
         binding.set('isSync', false);
         this.getUserPermissionsService().get(this.getUserPermissionsServiceParams())
 	        .then(userPermission => {
-				userPermission.activatedAt = DateHelper._getDateStringFromDateObject(new Date(userPermission.activatedAt));
+				userPermission.activatedAt = DateHelper.getDateTimeStringFromDateObject(new Date(userPermission.activatedAt));
 
 	            if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {
 		            binding.set('sportManager', Immutable.fromJS({

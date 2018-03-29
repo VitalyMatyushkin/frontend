@@ -51,20 +51,25 @@ var validationsSet = {
 	datetime:function(value){
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
-		if(value){
-			if(DateHelper.isValidDateTime(value) === false){
-				return 'Incorrect date!';
-			}
 
-			const date = DateHelper.parseValidDateTime(value);
+		if (this.props.region === 'US') {
+			if(value){
+				if(this.props.region === 'US' && DateHelper.isValidDateTimeForUS(value) === false
+					|| this.props.region !== 'US' && DateHelper.isValidDateTimeForGB(value) === false){
+					return 'Incorrect date!';
+				}
 
-			if(date <= minValue){
-				return 'Date should be > "01/01/1900"';
-			}
-			if(date >= maxValue){
-				return 'Date should be < "01/01/2100"';
+				const date = DateHelper.parseValidDateTime(value);
+
+				if(date <= minValue){
+					return 'Date should be > "01/01/1900"';
+				}
+				if(date >= maxValue){
+					return 'Date should be < "01/01/2100"';
+				}
 			}
 		}
+
 
 		return false;
 	},

@@ -11,7 +11,8 @@ const NewsList = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		//The function, which will call when user click on <Row> in Grid
-		handleClick: React.PropTypes.func
+		handleClick: React.PropTypes.func,
+		region: React.PropTypes.string
 	},
 	componentWillMount: function () {
 		const 	binding 	= this.getDefaultBinding(),

@@ -28,7 +28,7 @@ const NewsAddPage = React.createClass({
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		data.schoolId = this.activeSchoolId;
-		
+
 		if (data.date){
 			data.date = DateHelper.getFormatDateTimeUTCString(data.date);
 		}
@@ -48,7 +48,7 @@ const NewsAddPage = React.createClass({
 		return (
 				<div className="bNewsEdit">
 					<NewsTitle />
-					<NewsForm title="Add news" onFormSubmit={this.submitAdd} binding={binding}/>
+					<NewsForm title="Add news" onFormSubmit={this.submitAdd} binding={binding} region={this.props.region}/>
 				</div>
 			)
 	}

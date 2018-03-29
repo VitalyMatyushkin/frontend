@@ -3,9 +3,25 @@
  */
 
 import * as Moment from 'moment';
+import * as Timezone from 'moment-timezone';
 
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 export const DateHelper = {
+	getFormatDateTimeUTCString: function(dateTime: Date): string {
+		return Moment(dateTime).utc().format();
+	},
+	getFormatDateTimeFromISOForUS: function (date: Date) {
+		return Moment(date).format('MM.DD.YYYY hh:mm A');
+	},
+	getFormatDateTimeFromISOForGB: function (date: Date) {
+		return Moment(date).format('DD.MM.YYYY HH:mm');
+	},
+	getFormatDateTimeFromISOTimezoneForUS: function (date: Date) {
+		return Timezone.tz(date, window.timezone).format('MM.DD.YYYY/hh:mm A');
+	},
+	getFormatDateTimeFromISOTimezoneForGB: function (date: Date) {
+		return Timezone.tz(date, window.timezone).format('DD.MM.YYYY/HH:mm');
+	},
 
 	/**
 	 * Get date string dd.mm.yyyy from date object
@@ -18,7 +34,7 @@ export const DateHelper = {
 		return Moment(date).format('DD.MM.YYYY');
 	},
 
-	_getDateStringFromDateObject: function(date: Date): string {
+	getDateTimeStringFromDateObject: function(date: Date): string {
 		return Moment(date).format('DD-MM-YYYY HH:mm');
 	},
 
@@ -44,10 +60,6 @@ export const DateHelper = {
 				time = this.getTimeUTCStringFromDateObject(dateTime);
 
 		return `${date}, ${time}`;
-	},
-
-	getFormatDateTimeUTCString: function(dateTime: Date): string {
-		return Moment(dateTime).utc().format();
 	},
 
 	getDateTimeString: function(dateTime: Date): string {
@@ -109,21 +121,8 @@ export const DateHelper = {
 		return isoStr;
 	},
 
-	/**
-	 * Converts date from this format: "dd.mm.yyyy/hh:mm" to this "yyyy-mm-dd hh:mm"
-	 * @param {string} dotString
-	 * @return {string}
-	 */
-	toIsoDateTime: function(dotString: string): string {
-		const dateTimeParts = dotString ? dotString.split('/'):[],
-				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
-				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
 
-				//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
-				isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
 
-		return isoStr;
-	},
 
 	/** validation date ISO-format or 'yyyy-mm-dd' */
 	isValid:function(value: string): boolean {
@@ -145,6 +144,24 @@ export const DateHelper = {
 	 * @param {string} value
 	 * @return {boolean}
 	 */
+	isValidDateTimeForUS:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-DD-MM HH:mm');
+		}
+
+		const momentResult = Moment(value, 'YYYY-DD-MM HH:mm', true).isValid();
+		return momentResult;
+	},
+
+	isValidDateTimeForGB:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-MM-DD HH:mm');
+		}
+
+		const momentResult = Moment(value, 'YYYY-MM-DD HH:mm', true).isValid();
+		return momentResult;
+	},
+
 	isValidDateTime:function(value: string): boolean {
 		if (value.indexOf('T') !== -1){
 			value = Moment(value).format('YYYY-MM-DD HH:mm');
@@ -220,9 +237,7 @@ export const DateHelper = {
      * If number of month less then 10, then add "0" to start of month string, for example "7" => "07".
      */
     getMonthString: function(date) {
-        const self = this;
-
-        const monthNumber = self.getMonthNumber(date);
+        const monthNumber = this.getMonthNumber(date);
 
         let monthSting;
 
@@ -245,18 +260,6 @@ export const DateHelper = {
      */
     getEndDayTimeString: function() {
         return "23:59:59.000Z";
-    },
-    /**
-     * Return last date of month
-     * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
-     */
-    getLastDayOfMonth: function(date) {
-        const _date = new Date(date);
-
-        const lastDayOfMonthDateTime = new Date(_date.getFullYear(), _date.getMonth() + 1, 0);
-
-        return lastDayOfMonthDateTime.getDate();
-
     },
 
 	getShortDateString: function(date) {
@@ -311,24 +314,6 @@ export const DateHelper = {
 
 		return yearRangeArray;
 	},
-
-	/**
-	 * {
-	 * 	"January': 0,
-	 * 	"February": 1,
-	 * 	..............
-	 * 	"December": 11
-	 * }
-	 */
-	getRevertIndexedMonthMap: function() {
-		const monthMap = {};
-
-		this.monthNames.forEach((month, index) => {
-			monthMap[month] = index;
-		});
-
-		return monthMap;
-	}
 };
 
 

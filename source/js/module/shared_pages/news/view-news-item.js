@@ -13,6 +13,7 @@ const	React 				= require('react'),
 const 	SchoolHelper 		= require('module/helpers/school_helper'),
 		DomainHelper 		= require('module/helpers/domain_helper'),
 		RoleHelper 			= require('module/helpers/role_helper'),
+		{DateHelper}        = require('module/helpers/date_helper'),
 		TwitterHelper 		= require('module/helpers/twitter_helper');
 
 const 	NewsStyle		= require('./../../../../styles/ui/b_school_news.scss'),
@@ -24,7 +25,8 @@ const 	TWEET_LENGTH 		= 140,
 const ViewNewsItem = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	propTypes: {
-		value: React.PropTypes.object.isRequired
+		value: React.PropTypes.object.isRequired,
+		region: React.PropTypes.string.isRequired
 	},
 
 	//Temporarily remove img from news body
@@ -32,8 +34,12 @@ const ViewNewsItem = React.createClass({
 		if(news !== undefined){
 			return (
 				<div>
-					{this.getDateFromIso(news.date) + ", "}
-					{this.getTimeFromIso(news.date)}
+					{
+						this.props.region === 'US' ?
+						DateHelper.getFormatDateTimeFromISOForUS(news.date)
+							:
+						DateHelper.getFormatDateTimeFromISOForGB(news.date)
+					}
 				</div>
 			)
 		}

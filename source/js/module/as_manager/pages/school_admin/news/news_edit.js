@@ -60,7 +60,7 @@ const NewsEditPage = React.createClass({
 		return (
 			<div className="bNewsEdit">
 				<NewsTitle />
-				<NewsForm title="Edit news" onFormSubmit={this.submitEdit} binding={binding}/>
+				<NewsForm title="Edit news" onFormSubmit={this.submitEdit} binding={binding} region={this.props.region}/>
 			</div>
 		)
 	}
