@@ -1,14 +1,49 @@
 import * as React from 'react';
+import { DragSource } from 'react-dnd';
 
 import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 
-const DEFAULT_CARD_COL_WIDTH = 6;
+export interface MoveResult {
+	whoDroppedIndex: number,    // index of current widget in widget array, so also it's old place of widget
+	whereDroppedIndex: number   // index of new place for widget
+}
 
 export interface DashboardCardProps {
+	// props from dnd lib
+	connectDragSource: any
+	isDragging: boolean
+	connectDragPreview: any
+
+	index: number
 	bootstrapWrapperStyle: string,
 	headerText: string,
-	children: any
+	handleDroppedWidget: (moveResult: any) => void
+}
+
+const subjectSource = {
+	beginDrag(props: DashboardCardProps, monitor, component) {
+		return props;
+	},
+	endDrag(props: DashboardCardProps, monitor, component) {
+		if (!monitor.didDrop()) {
+			return;
+		}
+		const dropResult = monitor.getDropResult();
+
+		props.handleDroppedWidget({
+			whoDroppedIndex: props.index,
+			whereDroppedIndex: dropResult.whereDroppedIndex
+		});
+	},
+};
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging(),
+		connectDragPreview: connect.dragPreview(),
+	};
 }
 
 export class DashboardCard extends React.Component<DashboardCardProps, {}> {
@@ -17,7 +52,9 @@ export class DashboardCard extends React.Component<DashboardCardProps, {}> {
 	}
 
 	render() {
-		return (
+		const { connectDragSource } = this.props;
+
+		return connectDragSource(
 			<div className={this.getCardColStyle()}>
 				<div className='bDashboardCard'>
 					<div className='eDashboardCard_header'>
@@ -33,3 +70,5 @@ export class DashboardCard extends React.Component<DashboardCardProps, {}> {
 		);
 	}
 }
+
+export default DragSource('dashboardCard', subjectSource, collect)(DashboardCard);
