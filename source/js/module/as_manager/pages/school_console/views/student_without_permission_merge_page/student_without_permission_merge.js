@@ -190,17 +190,18 @@ const StudentWithoutPermissionMergeComponent = React.createClass({
 							placeholder		= 'Student name'
 						/>
 					</div>
-					<Button
-						text 				= "Cancel"
-						onClick 			= { this.onClickCancelButton }
-						extraStyleClasses 	= "mCancel"
-					/>
-					<Button
-						text 				= "Merge"
-						onClick 			= { this.onClickMergeButton }
-						extraStyleClasses 	= "eStudentMergeButton"
-						isDisabled 			= { typeof binding.toJS('studentWithHistory') === 'undefined' }
-					/>
+					<div className="bStudentMergeMainButton">
+						<Button
+							text 				= "Cancel"
+							onClick 			= { this.onClickCancelButton }
+							extraStyleClasses 	= "mCancel"
+						/>
+						<Button
+							text 				= "Merge"
+							onClick 			= { this.onClickMergeButton }
+							isDisabled 			= { typeof binding.toJS('studentWithHistory') === 'undefined' }
+						/>
+					</div>
 				</div>
 				<If condition = {isPopupOpen}>
 					<ConfirmPopup
