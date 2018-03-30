@@ -42,6 +42,7 @@ export const PermissionsStep = (React as any).createClass({
 	backToUserType: function () {
 		this.getDefaultBinding().set('userType', '');
 		this.getDefaultBinding().clear();
+		this.setRegion();
 	},
 
 	render: function()  {
