@@ -32,11 +32,17 @@ export const SchoolsManager = (React as any).createClass({
 		const	binding					= this.getDefaultBinding();
 
 		const	activeSchool			= binding.toJS('schoolInfo'),
-			activeSchoolPostcode	= activeSchool.postcode,
-			rivals					= binding.toJS('rivals'),
-			fartherThen				= binding.toJS('fartherThen');
+				activeSchoolPostcode	= activeSchool.postcode,
+				rivals					= binding.toJS('rivals'),
+				fartherThen				= binding.toJS('fartherThen'),
+				region					= activeSchool.region;
 
 		const filter = this.getMainSchoolFilter(rivals, schoolName);
+
+		if(typeof region !== 'undefined') {
+			filter.filter.where['region'] = region;
+		}
+
 		if(typeof activeSchoolPostcode !== 'undefined') {
 			const point = activeSchoolPostcode.point;
 			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(fartherThen, point);
