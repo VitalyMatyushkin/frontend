@@ -6,7 +6,8 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 const TypeDate =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
     propTypes: {
-        id:				React.PropTypes.string 		// just old good html id
+        id:				React.PropTypes.string ,		// just old good html id
+	    region:         React.PropTypes.string
     },
 	render: function () {
         const self = this,
@@ -14,7 +15,7 @@ const TypeDate =  React.createClass({
 			value = binding.get('value');
 
 		return (
-            <Date value={value} validateOn={false} id={self.props.id} onChange={self.changeValue} onBlur={self.setValue} />
+            <Date value={value} region={this.props.region} validateOn={false} id={self.props.id} onChange={self.changeValue} onBlur={self.setValue} />
 		)
 	}
 });

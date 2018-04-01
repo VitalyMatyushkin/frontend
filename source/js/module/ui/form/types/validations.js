@@ -27,12 +27,13 @@ var validationsSet = {
 			return false;
 		}
 	},
-	date:function(value){
+	date:function(value, defaultValue, region){
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
 
 		if(value){
-			if(!DateHelper.isValid(value)){
+			if(region === 'US' && !DateHelper.isValidForUS(value) ||
+				region !== 'US' && !DateHelper.isValidForGB(value)){
 				return 'Incorrect date!';
 			}
 
@@ -48,27 +49,26 @@ var validationsSet = {
 
 		return false;
 	},
-	datetime:function(value){
+	datetime:function(value, defaultValue, region){
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
 
-		if (this.props.region === 'US') {
-			if(value){
-				if(this.props.region === 'US' && DateHelper.isValidDateTimeForUS(value) === false
-					|| this.props.region !== 'US' && DateHelper.isValidDateTimeForGB(value) === false){
-					return 'Incorrect date!';
-				}
+		if(value){
+			if(region === 'US' && DateHelper.isValidDateTimeForUS(value) === false
+				|| region !== 'US' && DateHelper.isValidDateTimeForGB(value) === false){
+				return 'Incorrect date!';
+			}
 
-				const date = DateHelper.parseValidDateTime(value);
+			const date = region === 'US' ? DateHelper.parseValidDateTimeForUS(value) : DateHelper.parseValidDateTimeForGB(value);
 
-				if(date <= minValue){
-					return 'Date should be > "01/01/1900"';
-				}
-				if(date >= maxValue){
-					return 'Date should be < "01/01/2100"';
-				}
+			if(date <= minValue){
+				return 'Date should be > "01/01/1900"';
+			}
+			if(date >= maxValue){
+				return 'Date should be < "01/01/2100"';
 			}
 		}
+
 
 
 		return false;

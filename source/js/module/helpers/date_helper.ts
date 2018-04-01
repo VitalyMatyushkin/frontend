@@ -34,6 +34,14 @@ export const DateHelper = {
 		return Moment(date).format('DD.MM.YYYY');
 	},
 
+	getDateStringFromDateObjectForGB: function(date: Date): string {
+		return Moment(date).format('DD.MM.YYYY');
+	},
+
+	getDateStringFromDateObjectForUS: function(date: Date): string {
+		return Moment(date).format('MM.DD.YYYY');
+	},
+
 	getDateTimeStringFromDateObject: function(date: Date): string {
 		return Moment(date).format('DD-MM-YYYY HH:mm');
 	},
@@ -74,7 +82,11 @@ export const DateHelper = {
 	 * @param {Date} dateTime
 	 * @return {string}
 	 */
-	getDateShortTimeString: function(dateTime: Date): string {
+	getDateShortTimeStringForUS: function(dateTime: Date): string {
+		return Moment(dateTime).format('MM.DD.YYYY/HH:mm');
+	},
+
+	getDateShortTimeStringForGB: function(dateTime: Date): string {
 		return Moment(dateTime).format('DD.MM.YYYY/HH:mm');
 	},
 
@@ -88,10 +100,28 @@ export const DateHelper = {
 		return this.getDateStringFromDateObject(new Date(str));
 	},
 
-	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
+	toLocalForUS:function(str: string): string {
+		return this.getDateStringFromDateObjectForUS(new Date(str));
+	},
+
+	toLocalForGB:function(str: string): string {
+		return this.getDateStringFromDateObjectForGB(new Date(str));
+	},
+
 	toLocalDateTime:function(str: string): string {
-		const date = this.parseValidDateTime(str);
-		return this.getDateShortTimeString(date);
+		const date = this.parseValidDateTimeForGB(str);
+		return this.getDateShortTimeStringForGB(date);
+	},
+
+	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
+	toLocalDateTimeForUS:function(str: string): string {
+		const date = this.parseValidDateTimeForUS(str);
+		return this.getDateShortTimeStringForUS(date);
+	},
+
+	toLocalDateTimeForGB:function(str: string): string {
+		const date = this.parseValidDateTimeForGB(str);
+		return this.getDateShortTimeStringForGB(date);
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
@@ -112,31 +142,23 @@ export const DateHelper = {
 
 	},
 
-	/** convert local date format 'dd.mm.yyyy' to ISO-string */
-	toIso: function(dotString: string): string {
-		const dateParts = dotString ? dotString.split('.'):[],
-		//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
-			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
-
-		return isoStr;
+	/** validation date ISO-format or 'yyyy-mm-dd' */
+	isValidForGB:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-DD-MM');
+		}
+		
+		const momentResult = Moment(value, 'YYYY-DD-MM', true).isValid();
+		return momentResult;
 	},
 
-
-
-
-	/** validation date ISO-format or 'yyyy-mm-dd' */
-	isValid:function(value: string): boolean {
-		if(Date.parse(value)){
-			const 	date        = new Date(value),
-					valueArray  = value.split('-'),
-					day         = parseInt(valueArray[2].split('T')[0]),
-					month       = parseInt(valueArray[1]),
-					year        = parseInt(valueArray[0]);
-
-			return date.getUTCFullYear() === year && date.getUTCMonth() === (month - 1) && date.getUTCDate() === day;
+	isValidForUS:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-MM-DD');
 		}
 
-		return false;
+		const momentResult = Moment(value, 'YYYY-MM-DD', true).isValid();
+		return momentResult;
 	},
 
 	/**
@@ -162,19 +184,13 @@ export const DateHelper = {
 		return momentResult;
 	},
 
-	isValidDateTime:function(value: string): boolean {
-		if (value.indexOf('T') !== -1){
-			value = Moment(value).format('YYYY-MM-DD HH:mm');
-		}
-
-		const momentResult = Moment(value, 'YYYY-MM-DD HH:mm', true).isValid();
-		return momentResult;
+	parseValidDateTimeForUS: function(value: string): Date {
+		return Moment(value, 'YYYY-DD-MM HH:mm', true).toDate();
 	},
 
-	parseValidDateTime: function(value: string): Date {
+	parseValidDateTimeForGB: function(value: string): Date {
 		return Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
 	},
-
 
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

@@ -1,5 +1,6 @@
 const 	React 			= require('react'),
-		validationsSet 	= require('module/ui/form/types/validations');
+		validationsSet 	= require('module/ui/form/types/validations'),
+		{RegionHelper} 	= require('module/helpers/region_helper');
 
 
 /**
@@ -41,10 +42,11 @@ const InputTypeMixin = {
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				validator	= self.validations[validType],
-                defaultValue= binding.get('defaultValue');
+                defaultValue= binding.get('defaultValue'),
+				region      = RegionHelper.getRegion(this.getMoreartyContext().getBinding());
 
 		if(validator) {
-			const validationResult = validator(value, defaultValue);
+			const validationResult = validator(value, defaultValue, region);
 			binding.set('error', validationResult);		// TODO: I even can't imaging why fucking binding is here. I just re-structure code
 			return validationResult;
 		} else {

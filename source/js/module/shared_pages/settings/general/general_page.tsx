@@ -118,6 +118,7 @@ export const GeneralSettingsPage = (React as any).createClass({
 							type 		="date"
 							field 		="birthday"
 							validation 	="birthday"
+							region      ={this.props.region}
 						>
 							Date of birth
 						</FormField>

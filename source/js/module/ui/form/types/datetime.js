@@ -39,8 +39,10 @@ const MaskedDateTime =  React.createClass({
 		return this.setDateTime(props.defaultValue);
 	},
 	setDateTime: function(dateTime) {
-		const 	isValid				= dateTime && DateHelper.isValidDateTime(dateTime),
-				localeDateTime 		= isValid ? DateHelper.toLocalDateTime(dateTime) : '';
+		const 	isValid				= dateTime && this.isValidDateTime(dateTime),
+				localeDateTime 		= isValid ?
+					(this.props.region === 'US' ? DateHelper.toLocalDateTimeForUS(dateTime) : DateHelper.toLocalDateTimeForGB(dateTime))
+					: '';
 
 		if(this.props.validateOn || localeDateTime){
 			this.setState({dateTime:localeDateTime});
@@ -48,9 +50,13 @@ const MaskedDateTime =  React.createClass({
 		}
 		return localeDateTime;
 	},
+	isValidDateTime: function (dateTime) {
+		return this.props.region === 'US' ? DateHelper.isValidDateTimeForUS(dateTime) :
+			DateHelper.isValidDateTimeForGB(dateTime);
+	},
 	toIsoDateTime:function(localeDateTime){
 		const isoDateTime = this.toIsoDateTimeString(localeDateTime);
-		return localeDateTime && (!this.props.validateOn || DateHelper.isValidDateTime(isoDateTime)) ? isoDateTime : '';
+		return localeDateTime && (!this.props.validateOn || this.isValidDateTime(isoDateTime)) ? isoDateTime : '';
 	},
 	toIsoDateTimeString: function(dotString) {
 		const dateTimeParts = dotString ? dotString.split('/'):[],
@@ -82,11 +88,11 @@ const MaskedDateTime =  React.createClass({
         e.stopPropagation();
 	},
 	render: function () {
-        const dateTime = this.state.dateTime;
-console.log(this.props.region);
+        const   dateTime = this.state.dateTime,
+				title = this.props.region === 'US' ? "Format date-time mm.dd.yyyy/hh:mm" : "Format date-time dd.mm.yyyy/hh:mm";
 		return (
 			<MaskedInput
-				title		= "Format date-time dd.mm.yyyy/hh:mm"
+				title		= {title}
 				value		= {dateTime}
 				className	= "eDateTimeInput"
 				onBlur		= {this.handleBlur}
