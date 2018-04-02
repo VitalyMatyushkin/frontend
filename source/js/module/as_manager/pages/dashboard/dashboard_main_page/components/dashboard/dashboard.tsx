@@ -89,14 +89,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
+			<DashboardCardCol
 				headerText='School Users'
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={3}
+				widget={widget}
+			/>
 		);
 	}
 	renderSchoolInvitesWidget(widgetData: Widget, index: number) {
@@ -109,14 +109,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
+			<DashboardCardCol
 				headerText='Invites'
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
-				handleDroppedWidget = {this.props.handleDroppedWidget}
+				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={3}
+				widget={widget}
+			/>
 		);
 	}
 	renderWeatherWidget(widgetData: Widget, index: number) {
@@ -129,14 +129,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
+			<DashboardCardCol
 				headerText='Weather'
-				bootstrapWrapperStyle='col-xs-6 col-sm-6 col-md-3'
-				handleDroppedWidget = {this.props.handleDroppedWidget}
+				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={3}
+				widget={widget}
+			/>
 		);
 	}
 	renderCalendarWidget(widgetData: Widget, index: number) {
@@ -149,14 +149,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
+			<DashboardCardCol
 				headerText='Fixtures and results'
-				bootstrapWrapperStyle='col-xs-12 col-sm-12 col-md-12'
-				handleDroppedWidget = {this.props.handleDroppedWidget}
+				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={12}
+				widget={widget}
+			/>
 		);
 	}
 	renderWidgets() {
