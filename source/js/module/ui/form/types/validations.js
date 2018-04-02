@@ -73,8 +73,8 @@ var validationsSet = {
 
 		return false;
 	},
-	birthday:function(value){
-		let result = validationsSet.date(value);
+	birthday:function(value, defaultValue, region){
+		let result = validationsSet.date(value, defaultValue, region);
 		if(!result && value){
 			const date = new Date(value),
 				maxDate = new Date();

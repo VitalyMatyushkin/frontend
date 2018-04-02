@@ -42,7 +42,8 @@ const NewsEditPage = React.createClass({
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 		
 		if (data.date){
-			data.date = DateHelper.getFormatDateTimeUTCString(data.date);
+			data.date = this.props.region === 'US' ? DateHelper.getFormatDateTimeUTCStringForUS(data.date) :
+				DateHelper.getFormatDateTimeUTCStringForGB(data.date);
 		}
 		
 		window.Server.schoolNewsItem.put({schoolId:this.schoolId, newsId:this.newsId}, data).then(() => {

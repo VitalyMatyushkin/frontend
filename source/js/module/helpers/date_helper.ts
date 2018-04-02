@@ -10,6 +10,12 @@ export const DateHelper = {
 	getFormatDateTimeUTCString: function(dateTime: Date): string {
 		return Moment(dateTime).utc().format();
 	},
+	getFormatDateTimeUTCStringForUS: function(dateTime: Date): string {
+		return Moment(dateTime, 'YYYY-DD-MM HH:mm').utc().format();
+	},
+	getFormatDateTimeUTCStringForGB: function(dateTime: Date): string {
+		return Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
+	},
 	getFormatDateTimeFromISOForUS: function (date: Date) {
 		return Moment(date).format('MM.DD.YYYY hh:mm A');
 	},
@@ -40,6 +46,42 @@ export const DateHelper = {
 
 	getDateStringFromDateObjectForUS: function(date: Date): string {
 		return Moment(date).format('MM.DD.YYYY');
+	},
+
+	/** convert date from UTC-string to 'dd.mm.yyyy' format */
+	toLocal:function(str: string): string {
+		return this.getDateStringFromDateObject(new Date(str));
+	},
+
+	toLocalForUS:function(str: string): string {
+		// return this.getDateStringFromDateObjectForUS(new Date(str));
+		console.log(str);
+		// console.log(new Date(str));
+		// console.log(this.getDateStringFromDateObjectForUS(new Date(str)));
+		console.log(Moment(str,'YYYY-DD-MM').format('MM.DD.YYYY'));
+		return Moment(str,'YYYY-DD-MM').format('MM.DD.YYYY');
+	},
+
+	toLocalForGB:function(str: string): string {
+		return this.getDateStringFromDateObjectForGB(new Date(str));
+	},
+
+	/** validation date ISO-format or 'yyyy-mm-dd' */
+	isValidForGB:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-MM-DD');
+		}
+
+		return Moment(value, 'YYYY-MM-DD', true).isValid();
+	},
+
+	isValidForUS:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-DD-MM');
+		}
+		console.log(value);
+		console.log(Moment(value, 'YYYY-DD-MM', true).isValid());
+		return Moment(value, 'YYYY-DD-MM', true).isValid();
 	},
 
 	getDateTimeStringFromDateObject: function(date: Date): string {
@@ -95,19 +137,6 @@ export const DateHelper = {
 		return strDateTime;
 	},
 
-	/** convert date from UTC-string to 'dd.mm.yyyy' format */
-	toLocal:function(str: string): string {
-		return this.getDateStringFromDateObject(new Date(str));
-	},
-
-	toLocalForUS:function(str: string): string {
-		return this.getDateStringFromDateObjectForUS(new Date(str));
-	},
-
-	toLocalForGB:function(str: string): string {
-		return this.getDateStringFromDateObjectForGB(new Date(str));
-	},
-
 	toLocalDateTime:function(str: string): string {
 		const date = this.parseValidDateTimeForGB(str);
 		return this.getDateShortTimeStringForGB(date);
@@ -140,25 +169,6 @@ export const DateHelper = {
 
 		return [date, this.getMonthName(month), year].join(' ');
 
-	},
-
-	/** validation date ISO-format or 'yyyy-mm-dd' */
-	isValidForGB:function(value: string): boolean {
-		if (value.indexOf('T') !== -1){
-			value = Moment(value).format('YYYY-DD-MM');
-		}
-		
-		const momentResult = Moment(value, 'YYYY-DD-MM', true).isValid();
-		return momentResult;
-	},
-
-	isValidForUS:function(value: string): boolean {
-		if (value.indexOf('T') !== -1){
-			value = Moment(value).format('YYYY-MM-DD');
-		}
-
-		const momentResult = Moment(value, 'YYYY-MM-DD', true).isValid();
-		return momentResult;
 	},
 
 	/**

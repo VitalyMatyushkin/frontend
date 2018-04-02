@@ -63,7 +63,6 @@ const MaskedDateTime =  React.createClass({
 			dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
 			timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
 
-			//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
 			isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
 
 		return isoStr;

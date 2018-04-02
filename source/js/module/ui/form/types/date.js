@@ -58,7 +58,6 @@ const MaskedDate =  React.createClass({
 	/** convert local date format 'dd.mm.yyyy' to ISO-string */
 	toIsoString: function(dotString) {
 		const dateParts = dotString ? dotString.split('.'):[],
-			//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
 			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
 		return isoStr;
