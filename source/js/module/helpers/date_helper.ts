@@ -3,7 +3,6 @@
  */
 
 import * as Moment from 'moment';
-import * as Timezone from 'moment-timezone';
 
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 export const DateHelper = {
@@ -21,12 +20,6 @@ export const DateHelper = {
 	},
 	getFormatDateTimeFromISOForGB: function (date: Date) {
 		return Moment(date).format('DD.MM.YYYY HH:mm');
-	},
-	getFormatDateTimeFromISOTimezoneForUS: function (date: Date) {
-		return Timezone.tz(date, window.timezone).format('MM.DD.YYYY/hh:mm A');
-	},
-	getFormatDateTimeFromISOTimezoneForGB: function (date: Date) {
-		return Timezone.tz(date, window.timezone).format('DD.MM.YYYY/HH:mm');
 	},
 
 	/**

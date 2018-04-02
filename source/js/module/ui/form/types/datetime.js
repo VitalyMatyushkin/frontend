@@ -2,7 +2,7 @@ const 	MaskedInput		= require('module/ui/masked_input'),
 		{DateHelper} 	= require('module/helpers/date_helper'),
 		React 			= require('react');
 
-const MASKED_INPUT_DATETIME = '__.__.____/__:__ __';
+const MASKED_INPUT_DATETIME = '__.__.____/__:__';
 
 const MaskedDateTime =  React.createClass({	
 	propTypes: {

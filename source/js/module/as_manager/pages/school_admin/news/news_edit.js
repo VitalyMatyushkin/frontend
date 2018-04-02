@@ -32,9 +32,6 @@ const NewsEditPage = React.createClass({
 		if (newsId) {
 			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
 				.then(data => {
-					if ( this.props.region === 'US') {
-						data.date = Moment(data.date).format('YYYY-DD-MM HH:mm');
-					}
 					binding.set(Immutable.fromJS(data));
 					binding.set('isSync', true);
 				});

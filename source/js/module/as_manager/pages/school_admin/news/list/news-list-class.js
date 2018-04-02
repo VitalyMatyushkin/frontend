@@ -72,9 +72,9 @@ class NewsListModel {
 	
 	getNewsTime(item){
 		if (this.props.region === 'US') {
-			return DateHelper.getFormatDateTimeFromISOTimezoneForUS(item.date);
+			return DateHelper.getFormatDateTimeFromISOForUS(item.date);
 		} else {
-			return DateHelper.getFormatDateTimeFromISOTimezoneForGB(item.date);
+			return DateHelper.getFormatDateTimeFromISOForGB(item.date);
 		}
 	}
 	

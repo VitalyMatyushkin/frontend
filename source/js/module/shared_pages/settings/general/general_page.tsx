@@ -21,9 +21,6 @@ export const GeneralSettingsPage = (React as any).createClass({
 
 		//binding.clear();
 		(window.Server as ServiceList).profile.get().then((data) => {
-			if (this.props.region === 'US') {
-				data.birthday = Moment(data.birthday).format('YYYY-DD-MM');
-			}
 			binding.set(Immutable.fromJS(data));
 		});
 	},

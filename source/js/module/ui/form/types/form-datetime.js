@@ -3,6 +3,7 @@
  */
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 		DateTime 	= require('module/ui/form/types/datetime'),
+		Moment      = require('moment'),
 		React 		= require('react'),
 		Morearty	= require('morearty');
 
@@ -11,6 +12,12 @@ const TypeDate =  React.createClass({
 	propTypes: {
 		id:				React.PropTypes.string,		// just old good html id
 		region:         React.PropTypes.string
+	},
+	componentWillMount: function () {
+		const   binding = this.getDefaultBinding(),
+				value = this.props.region === 'US' ? Moment(binding.get('value')).format('YYYY-DD-MM HH:mm') : binding.get('value');
+
+		binding.set('value', value);
 	},
 	render: function () {
 		const 	self = this,
