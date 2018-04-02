@@ -8,6 +8,7 @@ const BOOTSTRAP_PADDING = 30;
 
 export interface DashboardCardColProps {
 	index: number
+	colWidth: number
 	headerText: string
 	handleDroppedWidget: (moveResult: MoveResult) => void
 	widget: any
@@ -21,6 +22,10 @@ export interface DashboardCardColState {
 	width: number,
 	delta: number
 }
+
+const CONSTRAINTS_MD_WIDTH = 3;
+const CONSTRAINTS_SM_WIDTH = 3;
+const CONSTRAINTS_XS_WIDTH = 3;
 
 export class DashboardCardCol extends React.Component<DashboardCardColProps, DashboardCardColState> {
 	cardCol = undefined;
@@ -39,7 +44,22 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 		});
 	}
 	getCardColStyle(): string {
-		return `bDashboardCardCol col-md-${this.props.mdWidth + this.state.delta} col-sm-${this.props.smWidth + this.state.delta} col-xs-${this.props.xsWidth + this.state.delta} `;
+		let mdWidth = this.props.mdWidth + this.state.delta;
+		if(mdWidth < CONSTRAINTS_MD_WIDTH) {
+			mdWidth = CONSTRAINTS_MD_WIDTH;
+		}
+
+		let smWidth = this.props.smWidth + this.state.delta;
+		if(smWidth < CONSTRAINTS_SM_WIDTH) {
+			smWidth = CONSTRAINTS_SM_WIDTH;
+		}
+
+		let xsWidth = this.props.xsWidth + this.state.delta;
+		if(xsWidth < CONSTRAINTS_XS_WIDTH) {
+			xsWidth = CONSTRAINTS_SM_WIDTH;
+		}
+
+		return `bDashboardCardCol col-md-${mdWidth} col-sm-${smWidth} col-xs-${xsWidth}`;
 	}
 
 	/**
@@ -72,6 +92,7 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 				{
 					this.state.isSync ?
 						<DashboardCard
+							colWidth={this.props.colWidth}
 							width={this.state.width}
 							index={this.props.index}
 							headerText={this.props.headerText}

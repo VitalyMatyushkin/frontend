@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as Loader from 'module/ui/loader';
+import ReactResizeDetector from 'react-resize-detector';
 
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -9,11 +10,11 @@ import DashboardDropSection from 'module/as_manager/pages/dashboard/dashboard_ma
 import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget";
 import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
 import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_weather_widget/dashboard_weather_widget";
-
-import 'styles/ui/dashboard/dasbboard.scss'
 import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 import {DashboardCardCol} from "module/ui/dashboard_components/main_components/dashboard_card_col/dashboard_card_col";
 import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
+
+import 'styles/ui/dashboard/dasbboard.scss'
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
@@ -37,7 +38,19 @@ export interface DashboardProps {
 	calendarWidgetBinding: any
 }
 
-class Dashboard extends React.Component<DashboardProps, {}> {
+const DEFAULT_WIDTH = 1200;
+
+class Dashboard extends React.Component<DashboardProps, {width: number}> {
+	dashboard = undefined;
+	componentWillMount() {
+		this.setState({width: DEFAULT_WIDTH})
+	}
+	componentDidMount() {
+		this.setState({width: this.dashboard.clientWidth})
+	}
+	getColWidth() {
+		return this.state.width/12;
+	}
 	renderDashboardSchoolProfileWidget(widgetData: Widget, index: number) {
 		let widget = null;
 
@@ -52,6 +65,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Profile'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
 				xsWidth={6}
@@ -74,6 +88,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Data'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
 				xsWidth={6}
@@ -95,6 +110,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Users'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
 				xsWidth={6}
@@ -116,6 +132,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Invites'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
 				xsWidth={6}
@@ -137,6 +154,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Weather'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
 				xsWidth={6}
@@ -158,6 +176,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Fixtures and results'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
+				colWidth={this.getColWidth()}
 				mdWidth={12}
 				smWidth={12}
 				xsWidth={12}
@@ -234,12 +253,19 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 			}
 		});
 	}
+	handleResizeDashboard(width) {
+		this.setState({width: width});
+	}
 	render() {
 		return (
-			<div className='bDashboard'>
+			<div
+				className='bDashboard'
+				ref={(dashboard) => { this.dashboard = dashboard; }}
+			>
 				<div className='eDashboard_body'>
 					{this.renderWidgets()}
 				</div>
+				<ReactResizeDetector handleWidth handleHeight onResize={(width) => this.handleResizeDashboard(width)} />
 			</div>
 		);
 	}

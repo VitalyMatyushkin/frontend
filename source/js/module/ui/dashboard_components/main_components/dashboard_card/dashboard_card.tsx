@@ -7,14 +7,12 @@ import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 
 export interface DashboardCardProps {
-	width?: number
-	height?: number
+	colWidth: number
+	width: number
 	index: number
 	headerText: string,
 	handleDroppedWidget: (moveResult: MoveResult) => void,
-	// TODO Remove
-	bootstrapWrapperStyle?: string
-	handleResize?: (deltaPoints: number) => void
+	handleResize: (deltaPoints: number) => void
 }
 
 export interface DashboardCardState {
@@ -51,8 +49,6 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 	}
 	handleResize(e, {element, size}) {
 		this.setState({resizingWidth: size.width});
-		console.log('RESIZE:');
-		console.log(this.state);
 	}
 	handleResizeStart(e, {element, size}) {
 		this.setState({
@@ -60,14 +56,12 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			resizingWidth: size.width,
 			isResizing: true
 		});
-		console.log('RESIZE START:');
-		console.log(this.state);
 	}
 	handleResizeStop(e, {element, size}) {
 		const oldWidth = this.state.oldWidth;
 		const newWidth = size.width;
 		const delta = newWidth - oldWidth;
-		const deltaPoints = Math.floor(delta / 100);
+		const deltaPoints = Math.floor(delta / this.props.colWidth);
 
 		this.props.handleResize(deltaPoints);
 
