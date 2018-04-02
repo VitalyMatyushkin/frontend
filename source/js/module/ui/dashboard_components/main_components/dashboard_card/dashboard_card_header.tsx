@@ -18,11 +18,17 @@ export interface DashboardCardHeaderProps {
 	index: number
 	headerText: string
 	handleDroppedWidget: (moveResult: MoveResult) => void
+	canDrag: boolean
+	handlePin: () => void
+	handleMinimize: () => void
 }
 
 const subjectSource = {
 	beginDrag(props: DashboardCardHeaderProps, monitor, component) {
 		return props;
+	},
+	canDrag(props: DashboardCardHeaderProps, monitor) {
+		return props.canDrag;
 	},
 	endDrag(props: DashboardCardHeaderProps, monitor, component) {
 		if (!monitor.didDrop()) {
@@ -46,14 +52,33 @@ function collect(connect, monitor) {
 }
 
 class DashboardCardHeader extends React.Component<DashboardCardHeaderProps, {}> {
+	getStyleForPinControl() {
+		let style = 'eDashboardCard_control';
+
+		if(!this.props.canDrag) {
+			style += ' mActive'
+		}
+
+		return style;
+	}
 	render() {
 		const { connectDragSource } = this.props;
 
 		return connectDragSource(
 			<div className='eDashboardCard_header'>
-				<h4 className='eDashboardCard_headerText'>
-					{this.props.headerText}
-				</h4>
+				<div className='eDashboardCard_headerTextWrapper'>
+					<h4 className='eDashboardCard_headerText'>
+						{this.props.headerText}
+					</h4>
+				</div>
+				<div className='eDashboardCard_controls'>
+					<div className='eDashboardCard_control mMarginRight'>
+						<i onClick={this.props.handleMinimize} className="fa fa-minus" aria-hidden="true"/>
+					</div>
+					<div className={this.getStyleForPinControl()}>
+						<i onClick={this.props.handlePin} className="fa fa-thumb-tack" aria-hidden="true"/>
+					</div>
+				</div>
 			</div>
 		);
 	}

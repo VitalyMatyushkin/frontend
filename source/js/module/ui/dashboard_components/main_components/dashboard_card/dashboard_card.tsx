@@ -20,6 +20,8 @@ export interface DashboardCardState {
 	resizingWidth?: number
 	resizingHeight?: number
 	isResizing: boolean
+	canDrag: boolean
+	isMinimize: boolean
 }
 
 export class DashboardCard extends React.Component<DashboardCardProps, DashboardCardState> {
@@ -28,7 +30,9 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 		this.setState({
 			oldWidth: undefined,
 			resizingWidth: undefined,
-			isResizing: false
+			isResizing: false,
+			canDrag: true,
+			isMinimize: false
 		});
 	}
 	getCardStyle() {
@@ -36,6 +40,10 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 
 		if(this.state.isResizing) {
 			style += ' mAbsolute';
+		}
+
+		if(this.state.isMinimize || !this.state.canDrag) {
+			style += ' mDisable';
 		}
 
 		return style;
@@ -71,6 +79,27 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			isResizing: false
 		});
 	}
+	handlePin() {
+		this.setState({
+			canDrag: !this.state.canDrag
+		});
+	}
+	handleMinimize() {
+		this.setState({
+			isMinimize: !this.state.isMinimize
+		});
+	}
+	renderBody() {
+		if(this.state.isMinimize) {
+			return null;
+		} else {
+			return (
+				<div className='eDashboardCard_body'>
+					{this.props.children}
+				</div>
+			);
+		}
+	}
 	render() {
 		const width = this.getWidth();
 		const style = {width};
@@ -96,10 +125,11 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 						index = {this.props.index}
 						headerText = {this.props.headerText}
 						handleDroppedWidget = {this.props.handleDroppedWidget}
+						canDrag = {this.state.canDrag}
+						handlePin = {() => this.handlePin()}
+						handleMinimize = {() => this.handleMinimize()}
 					/>
-					<div className='eDashboardCard_body'>
-						{this.props.children}
-					</div>
+					{this.renderBody()}
 				</div>
 			</Resizable>
 		);

@@ -31,12 +31,37 @@
   border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
   border-bottom: 1px solid rgba(0,0,0,.125);
   border-color: #398bf7;
+
+  display: flex;
+  justify-content: space-between;
 }
 
 
 .eDashboardCard_headerText {
   margin-bottom: 0;
   color: #ffffff !important;
+}
+
+.eDashboardCard_controls {
+  color: #ffffff !important;
+}
+
+.eDashboardCard_control {
+  display: inline-block;
+  vertical-align: top;
+
+  &.mMarginRight {
+    margin-right: 15px;
+  }
+
+  &.mActive {
+    color: black;
+  }
+
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
 }
 
 .eDashboardCard_body {
