@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
-import DashboardCard, {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
+import DashboardCard from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
+import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
 
 const BOOTSTRAP_PADDING = 30;
 
@@ -9,9 +10,10 @@ export interface DashboardCardColProps {
 	index: number
 	headerText: string
 	handleDroppedWidget: (moveResult: MoveResult) => void
-	bootstrapWrapperStyle: string
 	widget: any
 	mdWidth: number
+	smWidth: number
+	xsWidth: number
 }
 
 export interface DashboardCardColState {
@@ -37,7 +39,7 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 		});
 	}
 	getCardColStyle(): string {
-		return `bDashboardCardCol col-md-${this.props.mdWidth + this.state.delta}`;
+		return `bDashboardCardCol col-md-${this.props.mdWidth + this.state.delta} col-sm-${this.props.smWidth + this.state.delta} col-xs-${this.props.xsWidth + this.state.delta} `;
 	}
 
 	/**

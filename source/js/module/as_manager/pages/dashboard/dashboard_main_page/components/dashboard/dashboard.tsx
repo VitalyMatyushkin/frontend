@@ -5,7 +5,6 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import DashboardDropSection from 'module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/dashboard_drop_section'
-import DashboardCard from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 
 import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget";
 import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
@@ -14,6 +13,7 @@ import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_w
 import 'styles/ui/dashboard/dasbboard.scss'
 import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 import {DashboardCardCol} from "module/ui/dashboard_components/main_components/dashboard_card_col/dashboard_card_col";
+import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
@@ -33,7 +33,7 @@ export interface Widget {
 export interface DashboardProps {
 	widgetArray: Widget[],
 	// TODO need type
-	handleDroppedWidget: (moveResult: any) => void,
+	handleDroppedWidget: (moveResult: MoveResult) => void,
 	calendarWidgetBinding: any
 }
 
@@ -52,8 +52,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Profile'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
 				widget={widget}
 			/>
 
@@ -73,8 +74,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Data'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
 				widget={widget}
 			/>
 		);
@@ -93,8 +95,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='School Users'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
 				widget={widget}
 			/>
 		);
@@ -113,8 +116,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Invites'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
 				widget={widget}
 			/>
 		);
@@ -133,8 +137,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Weather'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
 				widget={widget}
 			/>
 		);
@@ -153,8 +158,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 				headerText='Fixtures and results'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				mdWidth={12}
+				smWidth={12}
+				xsWidth={12}
 				widget={widget}
 			/>
 		);

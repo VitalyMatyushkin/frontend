@@ -1,15 +1,10 @@
 import * as React from 'react';
 import { DragSource } from 'react-dnd';
 import { Resizable, ResizableBox } from 'react-resizable';
-import DashboardCardHeader from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
+import DashboardCardHeader, {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
 
 import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
-
-export interface MoveResult {
-	whoDroppedIndex: number,    // index of current widget in widget array, so also it's old place of widget
-	whereDroppedIndex: number   // index of new place for widget
-}
 
 export interface DashboardCardProps {
 	width?: number
