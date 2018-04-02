@@ -4,7 +4,6 @@ const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'
 		Immutable 	= require('immutable'),
 		{DateHelper}= require('module/helpers/date_helper'),
 		Loader	    = require('module/ui/loader'),
-		Moment	    = require('moment'),
 		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
