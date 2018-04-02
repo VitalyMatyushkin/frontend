@@ -38,6 +38,15 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			isResizing: false
 		});
 	}
+	getCardStyle() {
+		let style = 'bDashboardCard';
+
+		if(this.state.isResizing) {
+			style += ' mAbsolute';
+		}
+
+		return style;
+	}
 	getWidth() {
 		if(this.state.isResizing) {
 			return this.state.resizingWidth;
@@ -91,7 +100,7 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			>
 				<div
 					ref={(card) => { this.card = card; }}
-					className='bDashboardCard'
+					className={this.getCardStyle()}
 					style={style}
 				>
 					<DashboardCardHeader
