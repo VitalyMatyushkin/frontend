@@ -13,6 +13,7 @@ import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_w
 
 import 'styles/ui/dashboard/dasbboard.scss'
 import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
+import {DashboardCardCol} from "module/ui/dashboard_components/main_components/dashboard_card_col/dashboard_card_col";
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
@@ -47,14 +48,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+			<DashboardCardCol
 				headerText='School Profile'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={3}
+				widget={widget}
+			/>
+
 		);
 	}
 	renderSchoolDataWidget(widgetData: Widget, index: number) {
@@ -67,14 +69,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 		}
 
 		return (
-			<DashboardCard
+			<DashboardCardCol
 				headerText='School Data'
-				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
-			>
-				{widget}
-			</DashboardCard>
+				bootstrapWrapperStyle='col-xs-6 col-sm-4 col-md-3'
+				mdWidth={3}
+				widget={widget}
+			/>
 		);
 	}
 	renderSchoolUsersWidget(widgetData: Widget, index: number) {

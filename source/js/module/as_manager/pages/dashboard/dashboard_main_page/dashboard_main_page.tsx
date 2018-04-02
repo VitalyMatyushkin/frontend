@@ -33,47 +33,54 @@ export const DashboardMainPage = (React as any).createClass({
 					type: WIDGET_TYPE.SchoolDataWidgetData,
 					data: undefined,
 					isSync: false
-				},
-				{
-					type: WIDGET_TYPE.SchoolUsersWidgetData,
-					data: undefined,
-					isSync: false
-				},
-				{
-					type: WIDGET_TYPE.SchoolInvitesWidgetData,
-					data: undefined,
-					isSync: false
-				},
-				{
-					type: WIDGET_TYPE.WeatherWidgetData,
-					data: undefined,
-					isSync: false
-				},
-				{
-					type: WIDGET_TYPE.CalendarWidgetData,
-					isSync: true
 				}
+				// ,
+				// {
+				// 	type: WIDGET_TYPE.SchoolUsersWidgetData,
+				// 	data: undefined,
+				// 	isSync: false
+				// },
+				// {
+				// 	type: WIDGET_TYPE.SchoolInvitesWidgetData,
+				// 	data: undefined,
+				// 	isSync: false
+				// },
+				// {
+				// 	type: WIDGET_TYPE.WeatherWidgetData,
+				// 	data: undefined,
+				// 	isSync: false
+				// },
+				// {
+				// 	type: WIDGET_TYPE.CalendarWidgetData,
+				// 	isSync: true
+				// }
 			]
 		});
 	},
 	componentWillMount() {
 		SchoolProfileWidgetActions.getSchoolData(this.props.activeSchoolId)
-			.then(school => {
-				this.initWidgetByType(school, WIDGET_TYPE.SchoolProfileWidget);
-
-				const coordinates = this.getSchoolCoordinatesBySchool(school);
-				return WeatherWidgetActions.getWeatherWidgetData(coordinates.lng, coordinates.lat);
-			})
-			.then(weatherWidgetData => this.initWidgetByType(weatherWidgetData, WIDGET_TYPE.WeatherWidgetData));
+			.then(school => this.initWidgetByType(school, WIDGET_TYPE.SchoolProfileWidget))
 
 		SchoolDataWidgetActions.getDataForSchoolDataWidget(this.props.activeSchoolId)
 			.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolDataWidgetData));
 
-		SchoolUsersWidgetActions.getDataForSchoolUsersWidget(this.props.activeSchoolId)
-			.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolUsersWidgetData));
-
-		SchoolInvitesWidgetActions.getDataForSchoolInvitesWidget(this.props.activeSchoolId)
-			.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolInvitesWidgetData));
+		// SchoolProfileWidgetActions.getSchoolData(this.props.activeSchoolId)
+		// 	.then(school => {
+		// 		this.initWidgetByType(school, WIDGET_TYPE.SchoolProfileWidget);
+		//
+		// 		const coordinates = this.getSchoolCoordinatesBySchool(school);
+		// 		return WeatherWidgetActions.getWeatherWidgetData(coordinates.lng, coordinates.lat);
+		// 	})
+		// 	.then(weatherWidgetData => this.initWidgetByType(weatherWidgetData, WIDGET_TYPE.WeatherWidgetData));
+		//
+		// SchoolDataWidgetActions.getDataForSchoolDataWidget(this.props.activeSchoolId)
+		// 	.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolDataWidgetData));
+		//
+		// SchoolUsersWidgetActions.getDataForSchoolUsersWidget(this.props.activeSchoolId)
+		// 	.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolUsersWidgetData));
+		//
+		// SchoolInvitesWidgetActions.getDataForSchoolInvitesWidget(this.props.activeSchoolId)
+		// 	.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolInvitesWidgetData));
 	},
 	componentWillUnmount() {
 		this.getDefaultBinding().clear();

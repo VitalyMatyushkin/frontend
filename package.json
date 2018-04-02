@@ -34,7 +34,8 @@
     "react-dom": "^15.2.1",
     "react-infinite-scroller": "^1.1.1",
     "react-konva": "~1.1.6",
-    "react-maskedinput": "^4.0.0"
+    "react-maskedinput": "^4.0.0",
+    "react-resizable": "^1.7.5"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
