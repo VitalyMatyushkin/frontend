@@ -9,6 +9,7 @@ const   React           = require('react'),
 	    {SVG} 	        = require('module/ui/svg'),
         RoleHelper      = require('module/helpers/role_helper'),
         {DateHelper}    = require('module/helpers/date_helper'),
+		Moment		    = require('moment'),
 		MoreartyHelper  = require('module/helpers/morearty_helper'),
 		SportManager    = require('module/shared_pages/settings/account/helpers/sport-manager');
 
@@ -31,8 +32,6 @@ const EditPermission = React.createClass({
         binding.set('isSync', false);
         this.getUserPermissionsService().get(this.getUserPermissionsServiceParams())
 	        .then(userPermission => {
-				userPermission.activatedAt = DateHelper.getDateTimeStringFromDateObject(new Date(userPermission.activatedAt));
-
 	            if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {
 		            binding.set('sportManager', Immutable.fromJS({
 			            rivals: userPermission.sports

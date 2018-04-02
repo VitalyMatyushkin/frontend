@@ -2,7 +2,8 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
-const 	$ 			= require('jquery'),
+const 	$ 			    = require('jquery'),
+		Moment		    = require('moment'),
 		{DateHelper} 	= require('module/helpers/date_helper');
 
 let serverValidationTimer = null;
@@ -59,7 +60,7 @@ var validationsSet = {
 				return 'Incorrect date!';
 			}
 
-			const date = region === 'US' ? DateHelper.parseValidDateTimeForUS(value) : DateHelper.parseValidDateTimeForGB(value);
+			const date = region === 'US' ? Moment(value, 'YYYY-DD-MM HH:mm', true).toDate() : Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
 
 			if(date <= minValue){
 				return 'Date should be > "01/01/1900"';

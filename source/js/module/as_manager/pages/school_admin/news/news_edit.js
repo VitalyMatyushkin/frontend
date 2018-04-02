@@ -3,6 +3,8 @@ const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'
 		Morearty	= require('morearty'),
 		Immutable 	= require('immutable'),
 		{DateHelper}= require('module/helpers/date_helper'),
+		Loader	    = require('module/ui/loader'),
+		Moment	    = require('moment'),
 		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
@@ -30,7 +32,11 @@ const NewsEditPage = React.createClass({
 		if (newsId) {
 			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
 				.then(data => {
+					if ( this.props.region === 'US') {
+						data.date = Moment(data.date).format('YYYY-DD-MM HH:mm');
+					}
 					binding.set(Immutable.fromJS(data));
+					binding.set('isSync', true);
 				});
 
 			this.newsId 	= newsId;
@@ -57,13 +63,18 @@ const NewsEditPage = React.createClass({
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
-
 		return (
 			<div className="bNewsEdit">
 				<NewsTitle />
-				<NewsForm title="Edit news" onFormSubmit={this.submitEdit} binding={binding} region={this.props.region}/>
+				{
+					binding.get('isSync') ?
+					<NewsForm title="Edit news" onFormSubmit={this.submitEdit} binding={binding} region={this.props.region}/>
+					:
+					<Loader/>
+				}
 			</div>
-		)
+		);
+
 	}
 });
 

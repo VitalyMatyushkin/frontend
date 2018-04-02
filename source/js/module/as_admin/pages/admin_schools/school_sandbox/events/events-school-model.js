@@ -2,13 +2,12 @@
  * Created by Anatoly on 30.11.2016.
  */
 
-const 	{DataLoader} 		= require('module/ui/grid/data-loader'),
+const 	{DataLoader} 	= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
-		Morearty		= require('morearty'),
-		{DateHelper} 		= require('module/helpers/date_helper'),
+		{DateHelper} 	= require('module/helpers/date_helper'),
 		EventHelper 	= require('module/helpers/eventHelper'),
-		EventsConst		= require('module/helpers/consts/events'),
-		{GridModel}		= require('module/ui/grid/grid-model');
+		{GridModel}		= require('module/ui/grid/grid-model'),
+		Moment		    = require('moment');
 
 /**
  * EventsSchoolModel
@@ -67,8 +66,7 @@ EventsSchoolModel.prototype.getOpponentName = function(item){
 };
 
 EventsSchoolModel.prototype.getDateTime = function(item){
-	
-	return DateHelper.getDateTimeString(item.startTime);
+	return Moment(item.startTime).format('DD.MM.YYYY, HH:mm:ss');
 };
 
 EventsSchoolModel.prototype.getSports = function () {

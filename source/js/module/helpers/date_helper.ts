@@ -40,30 +40,17 @@ export const DateHelper = {
 		return Moment(date).format('DD.MM.YYYY');
 	},
 
-	getDateStringFromDateObjectForGB: function(date: Date): string {
-		return Moment(date).format('DD.MM.YYYY');
-	},
-
-	getDateStringFromDateObjectForUS: function(date: Date): string {
-		return Moment(date).format('MM.DD.YYYY');
-	},
-
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
 	toLocal:function(str: string): string {
 		return this.getDateStringFromDateObject(new Date(str));
 	},
 
 	toLocalForUS:function(str: string): string {
-		// return this.getDateStringFromDateObjectForUS(new Date(str));
-		console.log(str);
-		// console.log(new Date(str));
-		// console.log(this.getDateStringFromDateObjectForUS(new Date(str)));
-		console.log(Moment(str,'YYYY-DD-MM').format('MM.DD.YYYY'));
 		return Moment(str,'YYYY-DD-MM').format('MM.DD.YYYY');
 	},
 
 	toLocalForGB:function(str: string): string {
-		return this.getDateStringFromDateObjectForGB(new Date(str));
+		return Moment(str,'YYYY-MM-DD').format('DD.MM.YYYY');
 	},
 
 	/** validation date ISO-format or 'yyyy-mm-dd' */
@@ -79,13 +66,7 @@ export const DateHelper = {
 		if (value.indexOf('T') !== -1){
 			value = Moment(value).format('YYYY-DD-MM');
 		}
-		console.log(value);
-		console.log(Moment(value, 'YYYY-DD-MM', true).isValid());
 		return Moment(value, 'YYYY-DD-MM', true).isValid();
-	},
-
-	getDateTimeStringFromDateObject: function(date: Date): string {
-		return Moment(date).format('DD-MM-YYYY HH:mm');
 	},
 
 	/**
@@ -105,52 +86,28 @@ export const DateHelper = {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}/i)[0];
 	},
 
-	getDateTimeUTCString: function(dateTime: Date): string {
-		const 	date = this.getDateStringFromDateObject(dateTime),
-				time = this.getTimeUTCStringFromDateObject(dateTime);
-
-		return `${date}, ${time}`;
-	},
-
-	getDateTimeString: function(dateTime: Date): string {
-		const 	date = this.getDateStringFromDateObject(dateTime),
-				time = this.getTimeStringFromDateObject(dateTime);
-
-		return `${date}, ${time}`;
-	},
-
 	/**
 	 * return date in format "DD.MM.YYYY/HH:mm"
 	 * @param {Date} dateTime
 	 * @return {string}
 	 */
-	getDateShortTimeStringForUS: function(dateTime: Date): string {
-		return Moment(dateTime).format('MM.DD.YYYY/HH:mm');
-	},
-
-	getDateShortTimeStringForGB: function(dateTime: Date): string {
-		return Moment(dateTime).format('DD.MM.YYYY/HH:mm');
-	},
-
 	getDateLongTimeString: function(dateTime: Date): string {
 		const strDateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm:ss');
 		return strDateTime;
 	},
 
 	toLocalDateTime:function(str: string): string {
-		const date = this.parseValidDateTimeForGB(str);
-		return this.getDateShortTimeStringForGB(date);
+		const date = Moment(str, 'YYYY-MM-DD HH:mm', true).toDate();
+		return Moment(date).format('DD.MM.YYYY/HH:mm');
 	},
 
 	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
 	toLocalDateTimeForUS:function(str: string): string {
-		const date = this.parseValidDateTimeForUS(str);
-		return this.getDateShortTimeStringForUS(date);
+		return Moment(str, 'YYYY-DD-MM HH:mm').format('MM.DD.YYYY/HH:mm');
 	},
 
 	toLocalDateTimeForGB:function(str: string): string {
-		const date = this.parseValidDateTimeForGB(str);
-		return this.getDateShortTimeStringForGB(date);
+		return Moment(str).format('DD.MM.YYYY/HH:mm');
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
@@ -192,14 +149,6 @@ export const DateHelper = {
 
 		const momentResult = Moment(value, 'YYYY-MM-DD HH:mm', true).isValid();
 		return momentResult;
-	},
-
-	parseValidDateTimeForUS: function(value: string): Date {
-		return Moment(value, 'YYYY-DD-MM HH:mm', true).toDate();
-	},
-
-	parseValidDateTimeForGB: function(value: string): Date {
-		return Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
 	},
 
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],

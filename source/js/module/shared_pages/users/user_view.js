@@ -22,7 +22,7 @@ const   EditUser            = require('./user_edit'),
         {If}                = require('module/ui/if/if'),
 		propz				= require('propz'),
 	    {SVG} 	            = require('module/ui/svg'),
-	    {DateHelper} 	    = require('module/helpers/date_helper'),
+	    Moment		        = require('moment'),
 	    loaderUtils	        = require('module/helpers/loader_utils');
 
 const UserDetail= React.createClass({
@@ -122,8 +122,8 @@ const UserDetail= React.createClass({
                         deactivated = role.deactivatedAt ? new Date(role.deactivatedAt) : null,
                         statusRole = (role.status === 'ACTIVE' && activated && deactivated && (today < activated || today > deactivated)) ? `${role.status}/Outdated` : role.status,
                         dateInterval = (role.status === 'ACTIVE' && activated && deactivated)
-                            ? `${DateHelper.getDateShortTimeString(activated)} 
-                            - ${DateHelper.getDateShortTimeString(deactivated)}` : '';
+                            ? `${Moment(activated).format('DD.MM.YYYY/HH:mm')} 
+                            - ${Moment(deactivated).format('DD.MM.YYYY/HH:mm')}` : '';
 				return(
                     <div key={i} className="eDataList_listItem">
                         <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={imageSrc}/></span></div>

@@ -86,7 +86,6 @@ const PhotoStrip = React.createClass({
 		});
 	},
 	render: function() {
-		console.log(this.state.windowWidth);
 		const 	windowWidth = this.state.windowWidth < LAYOUT_WIDTH ? this.state.windowWidth-60 : LAYOUT_WIDTH,
 				countPhotos = this.props.photos && this.props.photos.length,
 				widthStrip 	= this.props.isLoading ? (countPhotos + 1) * PHOTO_WIDTH : countPhotos * PHOTO_WIDTH,
