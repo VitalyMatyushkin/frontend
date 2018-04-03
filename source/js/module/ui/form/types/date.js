@@ -90,6 +90,7 @@ const MaskedDate =  React.createClass({
 		const   date = this.state.date,
 				title = this.props.region === 'US' ? "Format date mm.dd.yyyy" : "Format date dd.mm.yyyy",
 				placeholder = this.props.region === 'US' ? "mm.dd.yyyy" : "dd.mm.yyyy";
+
 		return (
 			<MaskedInput
 				title		= {title}

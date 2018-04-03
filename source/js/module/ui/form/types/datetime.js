@@ -88,7 +88,9 @@ const MaskedDateTime =  React.createClass({
 	},
 	render: function () {
         const   dateTime = this.state.dateTime,
-				title = this.props.region === 'US' ? "Format date-time mm.dd.yyyy/hh:mm" : "Format date-time dd.mm.yyyy/hh:mm";
+				title = this.props.region === 'US' ? "Format date-time mm.dd.yyyy/hh:mm" : "Format date-time dd.mm.yyyy/hh:mm",
+	            placeholder = this.props.region === 'US' ? "mm.dd.yyyy/hh:mm" : "dd.mm.yyyy/hh:mm";
+
 		return (
 			<MaskedInput
 				title		= {title}
@@ -97,6 +99,7 @@ const MaskedDateTime =  React.createClass({
 				onBlur		= {this.handleBlur}
 				onChange	= {this.handleChange}
 				mask		= "99.99.9999/99:99"
+				placeholder	= {placeholder}
 			/>
 		);
 	}
