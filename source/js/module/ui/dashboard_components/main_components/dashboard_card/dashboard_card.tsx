@@ -1,74 +1,139 @@
 import * as React from 'react';
 import { DragSource } from 'react-dnd';
+import { Resizable, ResizableBox } from 'react-resizable';
+import DashboardCardHeader, {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
 
 import 'styles/ui/dashboard/main_components/dashboard_card.scss'
 import 'styles/ui/dashboard/main_components/dashboard_card_col.scss'
 
-export interface MoveResult {
-	whoDroppedIndex: number,    // index of current widget in widget array, so also it's old place of widget
-	whereDroppedIndex: number   // index of new place for widget
-}
-
 export interface DashboardCardProps {
-	// props from dnd lib
-	connectDragSource: any
-	isDragging: boolean
-	connectDragPreview: any
-
+	colWidth: number
+	width: number
 	index: number
-	bootstrapWrapperStyle: string,
 	headerText: string,
-	handleDroppedWidget: (moveResult: any) => void
+	handleDroppedWidget: (moveResult: MoveResult) => void,
+	handleResize: (deltaPoints: number) => void
 }
 
-const subjectSource = {
-	beginDrag(props: DashboardCardProps, monitor, component) {
-		return props;
-	},
-	endDrag(props: DashboardCardProps, monitor, component) {
-		if (!monitor.didDrop()) {
-			return;
-		}
-		const dropResult = monitor.getDropResult();
+export interface DashboardCardState {
+	oldWidth?: number
+	resizingWidth?: number
+	resizingHeight?: number
+	isResizing: boolean
+	canDrag: boolean
+	isMinimize: boolean
+}
 
-		props.handleDroppedWidget({
-			whoDroppedIndex: props.index,
-			whereDroppedIndex: dropResult.whereDroppedIndex
+export class DashboardCard extends React.Component<DashboardCardProps, DashboardCardState> {
+	card = undefined;
+	componentWillMount() {
+		this.setState({
+			oldWidth: undefined,
+			resizingWidth: undefined,
+			isResizing: false,
+			canDrag: true,
+			isMinimize: false
 		});
-	},
-};
-
-function collect(connect, monitor) {
-	return {
-		connectDragSource: connect.dragSource(),
-		isDragging: monitor.isDragging(),
-		connectDragPreview: connect.dragPreview(),
-	};
-}
-
-export class DashboardCard extends React.Component<DashboardCardProps, {}> {
-	getCardColStyle(): string {
-		return `bDashboardCardCol ${this.props.bootstrapWrapperStyle}`;
 	}
+	getCardStyle() {
+		let style = 'bDashboardCard';
 
-	render() {
-		const { connectDragSource } = this.props;
+		if(this.state.isResizing) {
+			style += ' mAbsolute';
+		}
 
-		return connectDragSource(
-			<div className={this.getCardColStyle()}>
-				<div className='bDashboardCard'>
-					<div className='eDashboardCard_header'>
-						<h4 className='eDashboardCard_headerText'>
-							{this.props.headerText}
-						</h4>
-					</div>
-					<div className='eDashboardCard_body'>
-						{this.props.children}
-					</div>
+		if(this.state.isMinimize || !this.state.canDrag) {
+			style += ' mDisable';
+		}
+
+		return style;
+	}
+	getWidth() {
+		if(this.state.isResizing) {
+			return this.state.resizingWidth;
+		} else {
+			return this.props.width;
+		}
+	}
+	handleResize(e, {element, size}) {
+		this.setState({resizingWidth: size.width});
+	}
+	handleResizeStart(e, {element, size}) {
+		this.setState({
+			oldWidth: size.width,
+			resizingWidth: size.width,
+			isResizing: true
+		});
+	}
+	handleResizeStop(e, {element, size}) {
+		const oldWidth = this.state.oldWidth;
+		const newWidth = size.width;
+		const delta = newWidth - oldWidth;
+		const deltaPoints = Math.floor(delta / this.props.colWidth);
+
+		this.props.handleResize(deltaPoints);
+
+		this.setState({
+			oldWidth: undefined,
+			resizingWidth: undefined,
+			isResizing: false
+		});
+	}
+	handlePin() {
+		this.setState({
+			canDrag: !this.state.canDrag
+		});
+	}
+	handleMinimize() {
+		this.setState({
+			isMinimize: !this.state.isMinimize
+		});
+	}
+	renderBody() {
+		if(this.state.isMinimize) {
+			return null;
+		} else {
+			return (
+				<div className='eDashboardCard_body'>
+					{this.props.children}
 				</div>
-			</div>
+			);
+		}
+	}
+	render() {
+		const width = this.getWidth();
+		const style = {width};
+
+		return (
+			<Resizable
+				width={width}
+				height={300}
+
+				minConstraints={[253, 253]}
+				maxConstraints={[1100, 600]}
+
+				onResize={(e, {element, size}) => this.handleResize(e, {element, size})}
+				onResizeStart={(e, {element, size}) => this.handleResizeStart(e, {element, size})}
+				onResizeStop={(e, {element, size}) => this.handleResizeStop(e, {element, size})}
+			>
+				<div
+					ref={(card) => { this.card = card; }}
+					className={this.getCardStyle()}
+					style={style}
+				>
+					<DashboardCardHeader
+						index = {this.props.index}
+						headerText = {this.props.headerText}
+						handleDroppedWidget = {this.props.handleDroppedWidget}
+						canDrag = {this.state.canDrag}
+						handlePin = {() => this.handlePin()}
+						handleMinimize = {() => this.handleMinimize()}
+					/>
+					{this.renderBody()}
+				</div>
+			</Resizable>
 		);
 	}
 }
 
-export default DragSource('dashboardCard', subjectSource, collect)(DashboardCard);
+export default DashboardCard;

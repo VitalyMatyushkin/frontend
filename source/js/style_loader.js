@@ -205,3 +205,5 @@ const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');
 const	customFont	= require('../styles/custom-font.scss');
 
 const BootstrapcustomStyle = require('../styles/bootstrap-custom.scss');
+
+const Style = require('../styles/react-resizable/react-resizable.scss');

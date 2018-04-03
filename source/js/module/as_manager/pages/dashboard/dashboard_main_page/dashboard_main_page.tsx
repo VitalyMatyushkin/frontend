@@ -3,6 +3,8 @@ import * as Morearty from 'morearty'
 import * as Immutable from 'immutable'
 import * as propz from 'propz';
 
+import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
+
 import {SchoolDataWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_data_widget_actions";
 import {SchoolInvitesWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_invites_widget_actions";
 import {SchoolUsersWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_users_widget_actions";
@@ -14,7 +16,6 @@ import Dashboard, {
 } from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/dashboard";
 
 import 'styles/ui/dashboard/dashboard_main_page.scss'
-import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
