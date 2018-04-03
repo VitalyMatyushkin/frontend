@@ -8,7 +8,8 @@ const MaskedDate =  React.createClass({
 		defaultValue:	React.PropTypes.string,
 		onChange: 		React.PropTypes.func,
 		onBlur: 		React.PropTypes.func,
-        validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
+        validateOn: 	React.PropTypes.bool, 		//true - validation on, false - off
+		region:         React.PropTypes.string
 	},
 	getDefaultProps: function(){
 		return {
@@ -40,8 +41,9 @@ const MaskedDate =  React.createClass({
 		return this.setDate(props.defaultValue);
 	},
 	setDate: function(date) {
-		const 	isValid			= date && DateHelper.isValid(date),
-				localeDate 		= isValid ? DateHelper.toLocal(date):'';
+		const 	isValid			= date && this.isValid(date),
+				localeDate 		= isValid ? (this.props.region === 'US' ? DateHelper.toLocalForUS(date) : DateHelper.toLocalForGB(date))
+					:'';
 
 		if(this.props.validateOn || localeDate){
 			this.setState({date:localeDate});
@@ -50,10 +52,19 @@ const MaskedDate =  React.createClass({
 		return localeDate;
 	},
 	toIso:function(localeDate){
-		let isoDate = DateHelper.toIso(localeDate);
-		return localeDate && (!this.props.validateOn || DateHelper.isValid(isoDate)) ? isoDate : '';
+		let isoDate = this.toIsoString(localeDate);
+		return localeDate && (!this.props.validateOn || this.isValid(isoDate)) ? isoDate : '';
 	},
+	/** convert local date format 'dd.mm.yyyy' to ISO-string */
+	toIsoString: function(dotString) {
+		const dateParts = dotString ? dotString.split('.'):[],
+			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
+		return isoStr;
+	},
+	isValid: function (date) {
+		return this.props.region === 'US' ?  DateHelper.isValidForUS(date) : DateHelper.isValidForGB(date);
+	},
 	handleBlur: function(e) {
 		const self = this;
 		let value = e.target.value;
@@ -76,17 +87,20 @@ const MaskedDate =  React.createClass({
         e.stopPropagation();
 	},
 	render: function () {
-		const date = this.state.date;
+		const   date = this.state.date,
+				title = this.props.region === 'US' ? "Format date mm.dd.yyyy" : "Format date dd.mm.yyyy",
+				placeholder = this.props.region === 'US' ? "mm.dd.yyyy" : "dd.mm.yyyy";
 
 		return (
 			<MaskedInput
-				title		= "Format date dd.mm.yyyy"
+				title		= {title}
 				value		= {date}
 				id 			= {this.props.id}
 				className	= "eDateInput"
 				onBlur		= {this.handleBlur}
 				onChange	= {this.handleChange}
 				mask		= "99.99.9999"
+				placeholder	= {placeholder}
 			/>
 		)
 	}

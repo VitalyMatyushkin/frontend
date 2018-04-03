@@ -18,7 +18,8 @@ const FormField = React.createClass({
 		placeHolder:		React.PropTypes.string,
 		onSelect:			React.PropTypes.func,
 		isVisible:			React.PropTypes.bool,
-		binding:			React.PropTypes.any
+		binding:			React.PropTypes.any,
+		region:             React.PropTypes.string
 	},
 	getDefaultProps: function() {
 		return {

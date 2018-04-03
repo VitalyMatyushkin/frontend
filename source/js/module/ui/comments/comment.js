@@ -1,6 +1,6 @@
 const	React			= require('react'),
-		{DateHelper}		= require('../../helpers/date_helper'),
 		CommentAvatar	= require('./comment_avatar'),
+		Moment		    = require('moment'),
 		CommentStyle	= require('../../../../styles/ui/comments/b_comment.scss');
 
 const Comment = React.createClass({
@@ -83,7 +83,7 @@ const Comment = React.createClass({
 						</a>
 						{ this.renderRemoveLink() }
 						<span className="eComment_commentDate">
-							{DateHelper.getDateTimeString(this.props.comment.createdAt)}
+							{Moment(this.props.comment.createdAt).format('DD.MM.YYYY, HH:mm:ss')}
 						</span>
 					</div>
 				</div>

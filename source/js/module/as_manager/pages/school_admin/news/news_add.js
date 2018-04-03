@@ -28,9 +28,10 @@ const NewsAddPage = React.createClass({
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		data.schoolId = this.activeSchoolId;
-		
+
 		if (data.date){
-			data.date = DateHelper.getFormatDateTimeUTCString(data.date);
+			data.date = this.props.region === 'US' ? DateHelper.getFormatDateTimeUTCStringForUS(data.date) :
+				DateHelper.getFormatDateTimeUTCStringForGB(data.date);
 		}
 		
 		this.activeSchoolId && window.Server.schoolNews.post(this.activeSchoolId, data).then( () => {
@@ -48,7 +49,7 @@ const NewsAddPage = React.createClass({
 		return (
 				<div className="bNewsEdit">
 					<NewsTitle />
-					<NewsForm title="Add news" onFormSubmit={this.submitAdd} binding={binding}/>
+					<NewsForm title="Add news" onFormSubmit={this.submitAdd} binding={binding} region={this.props.region}/>
 				</div>
 			)
 	}

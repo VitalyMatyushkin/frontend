@@ -2,7 +2,8 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
-const 	$ 			= require('jquery'),
+const 	$ 			    = require('jquery'),
+		Moment		    = require('moment'),
 		{DateHelper} 	= require('module/helpers/date_helper');
 
 let serverValidationTimer = null;
@@ -27,12 +28,13 @@ var validationsSet = {
 			return false;
 		}
 	},
-	date:function(value){
+	date:function(value, defaultValue, region){
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
 
 		if(value){
-			if(!DateHelper.isValid(value)){
+			if(region === 'US' && !DateHelper.isValidForUS(value) ||
+				region !== 'US' && !DateHelper.isValidForGB(value)){
 				return 'Incorrect date!';
 			}
 
@@ -48,15 +50,17 @@ var validationsSet = {
 
 		return false;
 	},
-	datetime:function(value){
+	datetime:function(value, defaultValue, region){
 		const 	minValue = new Date('1900-01-01'),
 				maxValue = new Date('2100-01-01');
+
 		if(value){
-			if(DateHelper.isValidDateTime(value) === false){
+			if(region === 'US' && DateHelper.isValidDateTimeForUS(value) === false
+				|| region !== 'US' && DateHelper.isValidDateTimeForGB(value) === false){
 				return 'Incorrect date!';
 			}
 
-			const date = DateHelper.parseValidDateTime(value);
+			const date = region === 'US' ? Moment(value, 'YYYY-DD-MM HH:mm', true).toDate() : Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
 
 			if(date <= minValue){
 				return 'Date should be > "01/01/1900"';
@@ -66,10 +70,12 @@ var validationsSet = {
 			}
 		}
 
+
+
 		return false;
 	},
-	birthday:function(value){
-		let result = validationsSet.date(value);
+	birthday:function(value, defaultValue, region){
+		let result = validationsSet.date(value, defaultValue, region);
 		if(!result && value){
 			const date = new Date(value),
 				maxDate = new Date();

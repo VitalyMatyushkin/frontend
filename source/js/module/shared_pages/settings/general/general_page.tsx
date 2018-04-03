@@ -10,7 +10,8 @@ import {ServiceList} from "module/core/service_list/service_list";
 
 const Bootstrap = require('../../../../../styles/bootstrap-custom.scss');
 
-const USER = require('module/helpers/consts/user');
+const   USER = require('module/helpers/consts/user'),
+		Moment = require('moment');
 
 export const GeneralSettingsPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -19,7 +20,7 @@ export const GeneralSettingsPage = (React as any).createClass({
 				binding	= self.getDefaultBinding();
 
 		//binding.clear();
-		(window.Server as ServiceList).profile.get().then(function (data) {
+		(window.Server as ServiceList).profile.get().then((data) => {
 			binding.set(Immutable.fromJS(data));
 		});
 	},
@@ -32,6 +33,9 @@ export const GeneralSettingsPage = (React as any).createClass({
 
 		if(!data.birthday) {
 			data.birthday = null;
+		} else {
+			data.birthday = this.props.region === 'US' ?  Moment(data.birthday, 'YYYY-DD-MM').format('YYYY-MM-DD') :
+				data.birthday;
 		}
 
 		(window.Server as ServiceList).profile.put(data).then(data => {
@@ -118,6 +122,7 @@ export const GeneralSettingsPage = (React as any).createClass({
 							type 		="date"
 							field 		="birthday"
 							validation 	="birthday"
+							region      ={this.props.region}
 						>
 							Date of birth
 						</FormField>

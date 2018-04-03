@@ -33,7 +33,7 @@ const NewsViewPage = React.createClass({
 			return (
 				<div className="eSchoolNewsContainer">
 					<div className="eSchoolNewsItems">
-						<NewsItem value={news} binding={binding.sub('viewItem')} />
+						<NewsItem value={news} binding={binding.sub('viewItem')} region={this.props.region}/>
 					</div>
 				</div>
 			);

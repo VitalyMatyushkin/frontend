@@ -11,6 +11,7 @@ const	RouterView						= require('module/core/router'),
 		AccountRequestsComponent		= require("module/shared_pages/settings/account/request-list"),
 		Verification					= require('./verification/verification'),
 		SessionHelper					= require('module/helpers/session_helper'),
+		{RegionHelper} 		            = require('module/helpers/region_helper'),
 		Notifications					= require('./notifications/notifications');
 
 const SettingsPage = React.createClass({
@@ -130,7 +131,8 @@ const SettingsPage = React.createClass({
 	render: function() {
 		const	self = this,
 				binding = self.getDefaultBinding(),
-				globalBinding = self.getMoreartyContext().getBinding();
+				globalBinding = self.getMoreartyContext().getBinding(),
+				region = RegionHelper.getRegion(globalBinding);
 
 		return (
 			<div>
@@ -152,6 +154,7 @@ const SettingsPage = React.createClass({
 							path 		="/settings/general"
 							binding 	={ binding.sub('userInfo') }
 							component 	={ GeneralSettingsPage }
+							region      ={region}
 						/>
 						<Route
 							path 		="/settings/password"

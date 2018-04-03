@@ -6,6 +6,21 @@ import * as Moment from 'moment';
 
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 export const DateHelper = {
+	getFormatDateTimeUTCString: function(dateTime: Date): string {
+		return Moment(dateTime).utc().format();
+	},
+	getFormatDateTimeUTCStringForUS: function(dateTime: Date): string {
+		return Moment(dateTime, 'YYYY-DD-MM HH:mm').utc().format();
+	},
+	getFormatDateTimeUTCStringForGB: function(dateTime: Date): string {
+		return Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
+	},
+	getFormatDateTimeFromISOForUS: function (date: Date) {
+		return Moment(date).format('MM.DD.YYYY hh:mm A');
+	},
+	getFormatDateTimeFromISOForGB: function (date: Date) {
+		return Moment(date).format('DD.MM.YYYY HH:mm');
+	},
 
 	/**
 	 * Get date string dd.mm.yyyy from date object
@@ -18,8 +33,33 @@ export const DateHelper = {
 		return Moment(date).format('DD.MM.YYYY');
 	},
 
-	_getDateStringFromDateObject: function(date: Date): string {
-		return Moment(date).format('DD-MM-YYYY HH:mm');
+	/** convert date from UTC-string to 'dd.mm.yyyy' format */
+	toLocal:function(str: string): string {
+		return this.getDateStringFromDateObject(new Date(str));
+	},
+
+	toLocalForUS:function(str: string): string {
+		return Moment(str,'YYYY-DD-MM').format('MM.DD.YYYY');
+	},
+
+	toLocalForGB:function(str: string): string {
+		return Moment(str,'YYYY-MM-DD').format('DD.MM.YYYY');
+	},
+
+	/** validation date ISO-format or 'yyyy-mm-dd' */
+	isValidForGB:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-MM-DD');
+		}
+
+		return Moment(value, 'YYYY-MM-DD', true).isValid();
+	},
+
+	isValidForUS:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-DD-MM');
+		}
+		return Moment(value, 'YYYY-DD-MM', true).isValid();
 	},
 
 	/**
@@ -39,47 +79,28 @@ export const DateHelper = {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}/i)[0];
 	},
 
-	getDateTimeUTCString: function(dateTime: Date): string {
-		const 	date = this.getDateStringFromDateObject(dateTime),
-				time = this.getTimeUTCStringFromDateObject(dateTime);
-
-		return `${date}, ${time}`;
-	},
-
-	getFormatDateTimeUTCString: function(dateTime: Date): string {
-		return Moment(dateTime).utc().format();
-	},
-
-	getDateTimeString: function(dateTime: Date): string {
-		const 	date = this.getDateStringFromDateObject(dateTime),
-				time = this.getTimeStringFromDateObject(dateTime);
-
-		return `${date}, ${time}`;
-	},
-
 	/**
 	 * return date in format "DD.MM.YYYY/HH:mm"
 	 * @param {Date} dateTime
 	 * @return {string}
 	 */
-	getDateShortTimeString: function(dateTime: Date): string {
-		return Moment(dateTime).format('DD.MM.YYYY/HH:mm');
-	},
-
 	getDateLongTimeString: function(dateTime: Date): string {
 		const strDateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm:ss');
 		return strDateTime;
 	},
 
-	/** convert date from UTC-string to 'dd.mm.yyyy' format */
-	toLocal:function(str: string): string {
-		return this.getDateStringFromDateObject(new Date(str));
+	toLocalDateTime:function(str: string): string {
+		const date = Moment(str, 'YYYY-MM-DD HH:mm', true).toDate();
+		return Moment(date).format('DD.MM.YYYY/HH:mm');
 	},
 
 	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
-	toLocalDateTime:function(str: string): string {
-		const date = this.parseValidDateTime(str);
-		return this.getDateShortTimeString(date);
+	toLocalDateTimeForUS:function(str: string): string {
+		return Moment(str, 'YYYY-DD-MM HH:mm').format('MM.DD.YYYY/HH:mm');
+	},
+
+	toLocalDateTimeForGB:function(str: string): string {
+		return Moment(str).format('DD.MM.YYYY/HH:mm');
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
@@ -100,52 +121,21 @@ export const DateHelper = {
 
 	},
 
-	/** convert local date format 'dd.mm.yyyy' to ISO-string */
-	toIso: function(dotString: string): string {
-		const dateParts = dotString ? dotString.split('.'):[],
-		//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
-			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
-
-		return isoStr;
-	},
-
-	/**
-	 * Converts date from this format: "dd.mm.yyyy/hh:mm" to this "yyyy-mm-dd hh:mm"
-	 * @param {string} dotString
-	 * @return {string}
-	 */
-	toIsoDateTime: function(dotString: string): string {
-		const dateTimeParts = dotString ? dotString.split('/'):[],
-				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
-				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
-
-				//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
-				isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
-
-		return isoStr;
-	},
-
-	/** validation date ISO-format or 'yyyy-mm-dd' */
-	isValid:function(value: string): boolean {
-		if(Date.parse(value)){
-			const 	date        = new Date(value),
-					valueArray  = value.split('-'),
-					day         = parseInt(valueArray[2].split('T')[0]),
-					month       = parseInt(valueArray[1]),
-					year        = parseInt(valueArray[0]);
-
-			return date.getUTCFullYear() === year && date.getUTCMonth() === (month - 1) && date.getUTCDate() === day;
-		}
-
-		return false;
-	},
-
 	/**
 	 * I'm not sure about all formats acceptable here, but at least it takes values with format "YYYY-MM-DD HH:mm"
 	 * @param {string} value
 	 * @return {boolean}
 	 */
-	isValidDateTime:function(value: string): boolean {
+	isValidDateTimeForUS:function(value: string): boolean {
+		if (value.indexOf('T') !== -1){
+			value = Moment(value).format('YYYY-DD-MM HH:mm');
+		}
+
+		const momentResult = Moment(value, 'YYYY-DD-MM HH:mm', true).isValid();
+		return momentResult;
+	},
+
+	isValidDateTimeForGB:function(value: string): boolean {
 		if (value.indexOf('T') !== -1){
 			value = Moment(value).format('YYYY-MM-DD HH:mm');
 		}
@@ -153,11 +143,6 @@ export const DateHelper = {
 		const momentResult = Moment(value, 'YYYY-MM-DD HH:mm', true).isValid();
 		return momentResult;
 	},
-
-	parseValidDateTime: function(value: string): Date {
-		return Moment(value, 'YYYY-MM-DD HH:mm', true).toDate();
-	},
-
 
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -220,9 +205,7 @@ export const DateHelper = {
      * If number of month less then 10, then add "0" to start of month string, for example "7" => "07".
      */
     getMonthString: function(date) {
-        const self = this;
-
-        const monthNumber = self.getMonthNumber(date);
+        const monthNumber = this.getMonthNumber(date);
 
         let monthSting;
 
@@ -245,18 +228,6 @@ export const DateHelper = {
      */
     getEndDayTimeString: function() {
         return "23:59:59.000Z";
-    },
-    /**
-     * Return last date of month
-     * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
-     */
-    getLastDayOfMonth: function(date) {
-        const _date = new Date(date);
-
-        const lastDayOfMonthDateTime = new Date(_date.getFullYear(), _date.getMonth() + 1, 0);
-
-        return lastDayOfMonthDateTime.getDate();
-
     },
 
 	getShortDateString: function(date) {
@@ -311,24 +282,6 @@ export const DateHelper = {
 
 		return yearRangeArray;
 	},
-
-	/**
-	 * {
-	 * 	"January': 0,
-	 * 	"February": 1,
-	 * 	..............
-	 * 	"December": 11
-	 * }
-	 */
-	getRevertIndexedMonthMap: function() {
-		const monthMap = {};
-
-		this.monthNames.forEach((month, index) => {
-			monthMap[month] = index;
-		});
-
-		return monthMap;
-	}
 };
 
 
