@@ -7,6 +7,7 @@ import {DataLoader} from 'module/ui/grid/data-loader';
 
 import {GridModel} from 'module/ui/grid/grid-model';
 import {AdminServiceList} from "module/core/service_list/admin_service_list";
+import {SVG} from "module/ui/svg";
 
 /**
  * StudentsListClass
@@ -35,7 +36,7 @@ export class StudentListModel {
 			actionPanel:{
 				title:      'Students',
 				showStrip:  true,
-				btnAdd:     this.props.addButton
+				btnAdd:     this.getAddButton()
 			},
 			columns:    this.columns,
 			filters:    { limit: 100 }
@@ -50,8 +51,20 @@ export class StudentListModel {
 			onLoad: 		this.getDataLoadedHandle()
 		});
 	}
+
+	getAddButton() {
+		return (
+			<div
+				className="addButton bTooltip"
+				data-description="Add Student"
+				onClick={() => {document.location.hash += '/add';}}
+			>
+				<SVG icon="icon_add_student" />
+			</div>
+		)
+	}
 	
-	getActions(){
+	getActions() {
 		return ['Edit', 'Merge'];
 	}
 	
