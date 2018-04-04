@@ -23,6 +23,7 @@ const UserModel = function(userData, userModelParams){
 	self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData, statusPermission);
     self.details = um.getDetails(userData, statusPermission);
+    self.tokens = um.getTokens(userData);
     self.roleArray = um.getRoleArray(userData, statusPermission);
     self.school = um.getSchool(userData, statusPermission);
 	self.schoolArray = um.getSchoolArray(userData, statusPermission);
@@ -41,6 +42,14 @@ UserModel.getStatus = function(user) {
             return 'Registered';
         }
     }
+};
+UserModel.getTokens = function(user) {
+	let result = [];
+    if(user && typeof user.verification !== 'undefined'){
+	    result.push(user.verification.tokens && user.verification.tokens.sms ? `sms: ${user.verification.tokens.sms}` : '');
+	    result.push(user.verification.tokens && user.verification.tokens.email ? `email: ${user.verification.tokens.email}` : '');
+    }
+	return <ul>{result.map(token => <li>{token}</li>)}</ul>;
 };
 //Lets return block HTML element containing the list of roles
 UserModel.getRoles = function(user, statusPermission){

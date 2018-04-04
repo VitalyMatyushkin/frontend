@@ -406,6 +406,12 @@ export class UsersActionsClass {
 				}
 			},
 			{
+				text:'Tokens',
+				cell:{
+					dataField:'tokens'
+				}
+			},
+			{
 				text:'Actions',
 				cell:{
 					type:'action-list',
