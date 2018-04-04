@@ -143,8 +143,9 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 	renderWeatherWidget(widgetData: Widget, index: number) {
 		let widget = null;
 
+		console.log(widgetData);
 		if(widgetData.isSync) {
-			widget = <DashboardWeatherWidget data={widgetData.data}/>;
+			widget = <DashboardWeatherWidget weatherWidgetList={widgetData.data}/>;
 		} else {
 			widget = <Loader condition={true}/>;
 		}
@@ -155,9 +156,9 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				handleDroppedWidget={this.props.handleDroppedWidget}
 				index={index}
 				colWidth={this.getColWidth()}
-				mdWidth={3}
-				smWidth={4}
-				xsWidth={6}
+				mdWidth={12}
+				smWidth={12}
+				xsWidth={12}
 				widget={widget}
 			/>
 		);

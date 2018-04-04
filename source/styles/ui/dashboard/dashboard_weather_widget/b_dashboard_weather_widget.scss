@@ -12,26 +12,50 @@ $color5: #2092A9;
   box-sizing: border-box;
 }
 
-.bDashboardWeatherWidget {
-  padding: 10px;
-  border-radius: 20px;
-  overflow: hidden;
-  min-height: 140px;
-  background-color: $color2;
-  box-shadow: 0 0 25px 1px rgba(50, 50, 50, 0.1);
-  animation: appear 500ms ease-out forwards;
 
+.bDashboardWeatherWidget {
+
+}
+
+.eDashboardWeatherWidget_header {
+  font-family: "Montserrat", sans-serif;
+  font-weight:300;
+  font-size:20px;
+  color: $color3;
+}
+
+.eDashboardWeatherWidget_body {
   display: flex;
   justify-content: space-between;
 }
 
+.eDashboardWeatherWidget_empty {
+  font-family: "Montserrat", sans-serif;
+  font-weight:300;
+  font-size:30px;
+  color: $color3;
+}
+
+.eDashboardWeatherWidget_weatherItem {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 10px;overflow: hidden;
+  min-height: 100px;
+  background-color: $color2;
+}
+
 .eDashboardWeatherWidget_col {
-  width: 125px;
+  width: 90px;
 
   font-family: "Montserrat", sans-serif;
   font-weight:300;
   font-size:28px;
   color: $color3;
+
+  &.mShort {
+    width: 70px !important;
+  }
 }
 
 .eDashboardWeatherWidget_weatherDescription {
@@ -44,19 +68,15 @@ $color5: #2092A9;
 .eDashboardWeatherWidget_temp {
   font-family: 'Lato', sans-serif;
   font-weight:300;
-  font-size:70px;
+  font-size:50px;
   color: $color3;
-  //opacity: 0;
-  //transform: translateX(150px);
-  //animation: title-appear 500ms ease-out 500ms forwards;
 }
 
-.eDashboardWeatherWidget_city {
+.eDashboardWeatherWidget_date {
   font-family: "Montserrat", sans-serif;
   font-weight:300;
-  font-size:20px;
+  font-size:14px;
   color: $color3;
-  //animation: title-appear 1s ease-out 500ms forwards;
 }
 
 .eDashboardWeatherWidget_weatherIcon {
@@ -65,7 +85,6 @@ $color5: #2092A9;
   background-size: 80px;
   background-repeat: no-repeat;
   background-position: 0;
-  //animation: weather-icon-move 5s ease-in-out infinite;
 
   &.m01d {
     background-image: url("http://openweathermap.org/img/w/01d.png");

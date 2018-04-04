@@ -8,7 +8,7 @@ export const WeatherWidgetActions = {
 		// TODO shall use our axios wrapper, but by default wrapper sends request to squadInTouch domain
 		// Alex create AjaxConfig interface for this but for some reason doesn't use it in wrapper
 		// Until we can't configure ajax wrapper we use pure axios
-		return axios.get('http://api.openweathermap.org/data/2.5/weather', {
+		return axios.get('http://api.openweathermap.org/data/2.5/forecast', {
 			params: {
 				lat: lat,
 				lon: lng,
@@ -16,16 +16,34 @@ export const WeatherWidgetActions = {
 				units: 'metric'
 			},
 		}).then((response:any) => {
-			return {
-				weather: {
-					main: response.data.weather[0].main,
-					description: response.data.weather[0].description,
-					icon: response.data.weather[0].icon
-				},
-				temp: Math.floor(response.data.main.temp),
-				city: response.data.name,
-				isSync: true
-			};
+			const weatherDataList = response.data.list;
+
+			// response.data.list is 5 day forecast includes weather data every 3 hours
+			// we need weather data only for 15-00
+			// so, index 3 it's a weather data for first day
+			// index 11 it's a weather data for second day
+			const cutWeatherDataList = [weatherDataList[3]];
+			for(let i = 11; i < weatherDataList.length; i += 8) {
+				cutWeatherDataList.push(weatherDataList[i]);
+			}
+
+			const clientWeatherDataList = cutWeatherDataList.map(data => {
+				return ({
+					weather: {
+						main: data.weather[0].main,
+						description: data.weather[0].description,
+						icon: data.weather[0].icon
+					},
+					temp: Math.floor(data.main.temp),
+					city: response.data.city.name,
+					date: data.dt_txt
+				});
+			});
+
+
+			return clientWeatherDataList;
+		}).catch(() => {
+			return [];
 		});
 
 	}
