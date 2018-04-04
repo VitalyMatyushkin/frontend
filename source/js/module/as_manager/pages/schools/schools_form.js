@@ -95,7 +95,7 @@ const SchoolForm = React.createClass({
 		}
 	},
 	getPoint() {
-		const point = this.getDefaultBinding().toJS('postcode.point');
+		const point = this.getDefaultBinding().sub('form').toJS('postcode.point');
 		return typeof point !== 'undefined' ? point : this.DEFAULT_SCHOOL_POINT;
 	},
 	
