@@ -1,5 +1,6 @@
 import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
+import {DateHelper} from "module/helpers/date_helper";
 
 export class PostsModel{
 
@@ -25,6 +26,14 @@ export class PostsModel{
 		this.setColumns();
 	}
 
+	getCreatedAt(item: any): string {
+		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
+	}
+
+	getPublishedAt(item: any): string {
+		return DateHelper.getFormatDateTimeFromISOByRegion(item.publishedAt, this.props.region);
+	}
+
 	setColumns(): void {
 		this.columns = [
 			{
@@ -38,10 +47,31 @@ export class PostsModel{
 				}
 			},
 			{
+				text:'Created',
+				isSorted:  true,
+				cell:{
+					dataField:'createdAt',
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getCreatedAt.bind(this)
+					}
+				},
+				filter:{
+					type:'between-date-time'
+				}
+			},
+			{
 				text:'Published',
 				isSorted:  true,
 				cell:{
-					dataField:'publishedAt'
+					dataField:'publishedAt',
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getPublishedAt.bind(this)
+					}
+				},
+				filter:{
+					type:'between-date-time'
 				}
 			},
 			{
@@ -66,7 +96,7 @@ export class PostsModel{
 	}
 
 	onEdit(post, eventDescriptor: any) {
-		document.location.hash += `/edit?id=${post.id}`;
+		document.location.hash = `/blogs/${this.blogId}/posts/edit?id=${post.id}`;
 		eventDescriptor.stopPropagation();
 	}
 

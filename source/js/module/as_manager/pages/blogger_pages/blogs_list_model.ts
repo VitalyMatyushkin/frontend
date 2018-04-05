@@ -1,5 +1,6 @@
 import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
+import {DateHelper} from "module/helpers/date_helper";
 
 export class BlogsModel{
 
@@ -23,6 +24,10 @@ export class BlogsModel{
 		this.setColumns();
 	}
 
+	getCreatedAt(item: any): string {
+		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
+	}
+
 	setColumns(): void {
 		this.columns = [
 			{
@@ -33,6 +38,20 @@ export class BlogsModel{
 				},
 				filter:{
 					type:'string'
+				}
+			},
+			{
+				text:'Created',
+				isSorted:  true,
+				cell:{
+					dataField:'createdAt',
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getCreatedAt.bind(this)
+					}
+				},
+				filter:{
+					type:'between-date-time'
 				}
 			},
 			{
