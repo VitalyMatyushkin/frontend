@@ -30,8 +30,7 @@ const NewsAddPage = React.createClass({
 		data.schoolId = this.activeSchoolId;
 
 		if (data.date){
-			data.date = this.props.region === 'US' ? DateHelper.getFormatDateTimeUTCStringForUS(data.date) :
-				DateHelper.getFormatDateTimeUTCStringForGB(data.date);
+			data.date = DateHelper.getFormatDateTimeUTCStringByRegion(data.date, this.props.region);
 		}
 		
 		this.activeSchoolId && window.Server.schoolNews.post(this.activeSchoolId, data).then( () => {

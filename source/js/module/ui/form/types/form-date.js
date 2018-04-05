@@ -11,10 +11,12 @@ const TypeDate =  React.createClass({
 	    region:         React.PropTypes.string
     },
 	componentWillMount: function () {
-		const   binding = this.getDefaultBinding(),
-				value = this.props.region === 'US' ? Moment(binding.get('value')).format('YYYY-DD-MM') : binding.get('value');;
+		const   binding = this.getDefaultBinding();
 
-		binding.set('value', value);
+		if (binding.get('value')) {
+			const value = this.props.region === 'US' ? Moment(binding.get('value')).format('YYYY-DD-MM') : binding.get('value');
+			binding.set('value', value);
+		}
 	},
 	render: function () {
         const   binding = this.getDefaultBinding(),

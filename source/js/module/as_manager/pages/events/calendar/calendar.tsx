@@ -6,9 +6,11 @@ import * as React from 'react';
 import * as Morearty from 'morearty';
 import {MonthCalendar} from '../../../../ui/calendar/month_calendar';
 import {CalendarActions} from './calendar-actions';
+import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
 interface CalendarProps {
 	onSelect: (date: string) => void
+	size: CalendarSize
 }
 
 /** Show calendar section: month calendar and events for selected date */
@@ -43,6 +45,7 @@ export const Calendar = (React as any).createClass({
 		if(typeof monthDate !== 'undefined') {
 			return (
 				<MonthCalendar
+					size            = {this.props.size}
 					monthDate		= {monthDate}
 					todayDate		= {todayDate}
 					selectedDate	= {selectedDate}

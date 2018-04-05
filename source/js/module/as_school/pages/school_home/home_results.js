@@ -9,7 +9,8 @@ const HomeResults = React.createClass({
 		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				binding			= this.getDefaultBinding().sub('events'),
 				events			= typeof binding.get('prevSevenDaysFinishedEvents.events') !== 'undefined' ? binding.get('prevSevenDaysFinishedEvents.events').toJS() : {},
-				isSync			= typeof binding.get('prevSevenDaysFinishedEvents.isSync') !== 'undefined' ? binding.get('prevSevenDaysFinishedEvents.isSync') : false;
+				isSync			= typeof binding.get('prevSevenDaysFinishedEvents.isSync') !== 'undefined' ? binding.get('prevSevenDaysFinishedEvents.isSync') : false,
+				region          = this.getMoreartyContext().getBinding().toJS('activeSchool.region');
 
 		return (
 			<FixtureList	title					= "Results"
@@ -18,6 +19,7 @@ const HomeResults = React.createClass({
 							isSync					= { isSync }
 							events					= { events }
 							isDaySelected			= { true }
+							region                  = { region }
 			/>
 		);
 	}

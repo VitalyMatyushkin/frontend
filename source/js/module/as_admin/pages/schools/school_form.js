@@ -31,6 +31,8 @@ const SystemAdminSchoolForm = React.createClass({
 				multiSelectBinding 	= binding.sub('multiSelect'),
 				serverRoles 		= formBinding.toJS('allowedPermissionPresets');
 
+		binding.set('isLoading', false);
+
 		// if it need
 		this.setDefaultPublicSiteAccess();
 		
@@ -105,6 +107,9 @@ const SystemAdminSchoolForm = React.createClass({
 	onSubmit: function (data) {
 		const 	binding 			= this.getDefaultBinding(),
 				multiSelectBinding 	= binding.sub('multiSelect');
+
+		binding.set('isLoading', true);
+
 		data.allowedPermissionPresets = RolesHelper.convertRolesFromClientToServer(multiSelectBinding.toJS('availableRoles'));
 		
 		propz.set(data, ['postcode', 'point'], this.getDefaultBinding().toJS('point'));
@@ -206,6 +211,7 @@ const SystemAdminSchoolForm = React.createClass({
 				service 		= "i/schools/domains"
 				onSubmit 		= { this.onSubmit }
 				submitOnEnter 	= { false }
+				isLoading       = { binding.toJS('isLoading') }
 			>
 				<FormColumn customStyle={'mTwoColumns'}>
 					<FormField

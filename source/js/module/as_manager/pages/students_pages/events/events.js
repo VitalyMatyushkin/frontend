@@ -107,9 +107,12 @@ const EventView = React.createClass({
 			<div className='bSchoolMaster'>
 				<RouterView routes={binding.sub('eventsRouting')}
 							binding={rootBinging}>
-					<Route	path='/events/calendar/:schoolId'
-							binding={binding}
-							component={EventsCalendarComponent}/>
+					<Route
+						path='/events/calendar/:schoolId'
+						binding={binding}
+						component={EventsCalendarComponent}
+					    extraStyleForCol={'mBootstrap'}
+					/>
 
 					<Route	path='/events/fixtures/:schoolId'
 							binding={binding}

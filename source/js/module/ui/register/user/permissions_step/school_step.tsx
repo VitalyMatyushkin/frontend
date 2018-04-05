@@ -26,7 +26,7 @@ export const SchoolStep = (React as any).createClass({
 
 	getSchoolService: function() {
 		const   postcode    = this.getDefaultBinding().toJS('postcode'),
-				region      = this.getDefaultBinding().toJS('region');
+				region      = this.props.region;
 
 		return (schoolName) => {
 			const filter: any = {
@@ -128,7 +128,7 @@ export const SchoolStep = (React as any).createClass({
 							Postcode
 						</div>
 						<PostcodeSelector
-							region={binding.toJS('region')}
+							region={this.props.region}
 							currentPostcode={binding.toJS('postcode')}
 							handleSelectPostcode={this.handleSelectPostcode}
 							handleEscapePostcode={this.handleEscapePostcode}

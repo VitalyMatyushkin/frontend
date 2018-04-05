@@ -24,6 +24,8 @@ const SchoolForm = React.createClass({
 		const	binding 		= this.getDefaultBinding(),
 				formBinding 	= binding.sub('form');
 
+		this.getDefaultBinding().set('isLoading', false);
+
 		if(!this.props.isSuperAdmin) {
 			window.Server.school.get(MoreartyHelper.getActiveSchoolId(this)).then(school => {
 				this.activeSchoolInfo = school;
@@ -135,6 +137,7 @@ const SchoolForm = React.createClass({
 		this.getDefaultBinding().set('point', Immutable.fromJS(postcode.point));
 	},
 	onSubmit(data) {
+		this.getDefaultBinding().set('isLoading', true);
 		propz.set(data, ['postcode', 'point'], this.getDefaultBinding().toJS('point'));
 		const postcodeId = this.getDefaultBinding().toJS('selectedPostcode.id');
 		if (typeof postcodeId !== 'undefined') {
@@ -167,7 +170,9 @@ const SchoolForm = React.createClass({
 						formButtonsClass 	= "col-md-10 col-md-offset-1"
 						formTitleClass 		= "col-md-10 col-md-offset-1"
 						submitButtonId 		= "school_summary_submit"
-						cancelButtonId 		= "school_summary_cancel">
+						cancelButtonId 		= "school_summary_cancel"
+						isLoading           = {this.getDefaultBinding().toJS('isLoading')}
+					>
 						<FormColumn customStyle="col-md-5 col-md-offset-1">
 							<FormField
 								type 		= "imageFile"

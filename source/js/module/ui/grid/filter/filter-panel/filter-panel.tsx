@@ -9,9 +9,10 @@ import {BadgeAreaModel} from "module/ui/grid/filter/model/badge-area-model";
 
 export interface FilterPanelProps {
     model: {
-    	badgeArea: BadgeAreaModel,
+    	badgeArea: BadgeAreaModel
 		filterFields: any[]
 	}
+	region?: string
 }
 
 export class FilterPanel extends React.Component<FilterPanelProps, {}> {
@@ -29,16 +30,17 @@ export class FilterPanel extends React.Component<FilterPanelProps, {}> {
 
 	render() {
 		const 	model 	= this.props.model,
+				region 	= this.props.region,
 				fields 	= model.filterFields;
 
 		return (
 			<div className="bFilterPanel">
 				<div className="bFilterFields">
 					{fields.map((field, index) => {
-						return <FilterField key={index} model={field} />;
+						return <FilterField key={index} model={field} region={region}/>;
 					})}
 				</div>
-				<BadgeArea model={model.badgeArea} />
+				<BadgeArea model={model.badgeArea} region={region}/>
 			</div>
 		);
 	}

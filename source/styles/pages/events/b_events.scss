@@ -18,33 +18,52 @@
   }
 
   &_row {
-    @include make-row();
+    &.mBootstrap {
+      @include make-row();
+    }
   }
 
   &_leftSideContainer {
-    @extend .col-md-5;
-
-    @extend .col-sm-offset-0;
-    @extend .col-sm-12;
-
-    @extend .col-xs-offset-0;
-    @extend .col-xs-12;
-
     display: flex;
     flex-direction: column;
 
+    float: left;
+
     min-width: 370px;
+    width: 50%;
+
+    &.mBootstrap {
+      @extend .col-md-offset-0;
+      @extend .col-md-5;
+
+      @extend .col-sm-offset-0;
+      @extend .col-sm-12;
+
+      @extend .col-xs-offset-0;
+      @extend .col-xs-12;
+    }
+
+    &.mMedium {
+      width: 370px !important;
+    }
   }
 
   &_rightSideContainer {
-    @extend .col-md-7;
-    @extend .col-sm-12;
-    @extend .col-xs-12;
-
     display: flex;
     flex-direction: column;
 
     min-width: 370px;
+    width: 50%;
+
+    &.mBootstrap {
+      @extend .col-md-7;
+      @extend .col-sm-12;
+      @extend .col-xs-12;
+    }
+
+    &.mMedium {
+      width: 370px !important;
+    }
   }
 
   &_buttons {

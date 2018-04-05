@@ -14,7 +14,8 @@ const PlayerStatusTable = React.createClass({
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
 		checkComments: 			React.PropTypes.func.isRequired,
-		onAction: 				React.PropTypes.func.isRequired
+		onAction: 				React.PropTypes.func.isRequired,
+		region: 				React.PropTypes.string
 	},
 	render: function(){
 		return (
@@ -31,6 +32,7 @@ const PlayerStatusTable = React.createClass({
 						onClickSubmitComment 	= { this.props.onClickSubmitComment }
 						checkComments 			= { this.props.checkComments }
 						onAction 				= { this.props.onAction }
+						region                  = { this.props.region }
 					/>
 				</table>
 			</div>

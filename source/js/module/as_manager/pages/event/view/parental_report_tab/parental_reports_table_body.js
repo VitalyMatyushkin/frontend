@@ -16,7 +16,8 @@ const ParentalReportsTableBody = React.createClass({
 		checkComments:			React.PropTypes.func.isRequired,
 		setComments:			React.PropTypes.func.isRequired,
 		role: 					React.PropTypes.string.isRequired,
-		user: 					React.PropTypes.object.isRequired
+		user: 					React.PropTypes.object.isRequired,
+		region:                 React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {
@@ -70,6 +71,7 @@ const ParentalReportsTableBody = React.createClass({
 							type 					= { this.getTypeForMessage(message) }
 							onAction 				= { this.props.onGotIt }
 							user 					= { this.props.user }
+							region                  = {this.props.region}
 						/>
 					</td>
 				</tr>

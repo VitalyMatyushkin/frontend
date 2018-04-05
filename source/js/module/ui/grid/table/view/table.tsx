@@ -11,12 +11,13 @@ export interface TableProps {
 		data: any[],		// data.id not declared in type because I don't know how
 		columns: any[]
 	},
+	region?: string
 	handleClick: (dataItemId: string, dataItemName: string) => void	//The function, which will call when user click on <Row> in Grid
 }
 
 export class Table extends React.Component<TableProps, {}> {
 	render(){
-		const {model} = this.props;
+		const {model, region} = this.props;
 		const {data, columns} = model;
 
 		return (
@@ -28,6 +29,7 @@ export class Table extends React.Component<TableProps, {}> {
 								key			={ item.id ? item.id : index }
 								dataItem	={ item }
 								columns		={ columns }
+								region      ={region}
 							/>
 				}) : null}
 			</div>

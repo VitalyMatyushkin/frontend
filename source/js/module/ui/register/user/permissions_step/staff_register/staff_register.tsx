@@ -151,6 +151,7 @@ export const StaffRegister = (React as any).createClass({
 						binding             = {binding.sub('schoolField')}
 						mode                = {binding.toJS('userType')}
 						defaultSchool       = {binding.toJS('school')}
+						region              = {binding.get('region')}
 						handleChangeSchool  = {this.handleChangeSchool}
 						handleClickBack     = {this.handleClickBack}
 					/>

@@ -26,6 +26,7 @@ export interface GridProps {
         pagination: PaginationModel
     },
     id?:     string
+    region?: string
 }
 
 export interface GridState {
@@ -56,7 +57,7 @@ export class Grid extends React.Component<GridProps, GridState> {
     }
 
 	render() {
-		const {id, model}	= this.props;
+		const {id, model, region}	= this.props;
 		const	classStyleAdmin	= model.classStyleAdmin ? ' bGrid-wide' : '',
 				//The function, which will call when user click on <Row> in Grid otherwise we display in console log warning
 				handleClick		= model.handleClick ? (itemId: string, itemName: string): void => model.handleClick(itemId, itemName) : this.emptyClickHandler,
@@ -71,9 +72,9 @@ export class Grid extends React.Component<GridProps, GridState> {
 					model = { model.actionPanel }
 				/>
 				<div className={mHidden}>
-					<FilterPanel model={model.filterPanel} />
+					<FilterPanel model={model.filterPanel} region={region}/>
 				</div>
-				<Table model={model.table} handleClick={handleClick} />
+				<Table model={model.table} handleClick={handleClick} region={region}/>
 				<Pagination model={model.pagination} />
 			</div>
 		);

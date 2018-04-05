@@ -166,6 +166,7 @@ const OpponentSchoolManager = React.createClass({
 				activeSchoolInfo	= binding.toJS('activeSchoolInfo'),
 				postcode			= activeSchoolInfo.postcode,
 				distance			= binding.toJS('distance'),
+				region				= activeSchoolInfo.region,
 				event				= binding.toJS('model');
 
 		const nin = event.invitedSchoolIds.concat(this.props.activeSchoolId);
@@ -190,6 +191,10 @@ const OpponentSchoolManager = React.createClass({
 			filter.filter.where['postcode.point'] = GeoSearchHelper.getMainGeoSchoolFilterByParams(distance, postcode.point)
 		} else {
 			filter.filter.order = "name ASC";
+		}
+
+		if(typeof region !== 'undefined') {
+			filter.filter.where['region'] = region;
 		}
 
 		if (this.props.schoolType === EventFormConsts.EVENT_FORM_MODE.SCHOOL_UNION) {

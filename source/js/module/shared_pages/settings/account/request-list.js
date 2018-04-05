@@ -10,6 +10,7 @@ const	Actions 		= require('./request-list-model'),
 		SchoolHelper	= require('../../../helpers/school_helper'),
 		AddRequest		= require('module/shared_pages/settings/account/add_request'),
 		{Grid}		    = require('module/ui/grid/grid'),
+		{RegionHelper} 	= require('module/helpers/region_helper'),
 		Loader			= require('module/ui/loader');
 
 const PermissionRequestList = React.createClass({
@@ -43,6 +44,7 @@ const PermissionRequestList = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		const	schools	= binding.get('schools'),
+				region  = RegionHelper.getRegion(this.getMoreartyContext().getBinding()),
 				isSync	= binding.get('isSync');
 
 		if(this.isSync()) {
@@ -54,10 +56,12 @@ const PermissionRequestList = React.createClass({
 							  onRequestClose	= {this.actions._closePopup.bind(this.actions)}
 							  otherClass		= "bPopupGrant"
 					>
-						<AddRequest	binding			= {binding.sub('addRequest')}
-									   activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
-									   onSuccess		= {this.actions._onSuccess.bind(this.actions)}
-									   onCancel		= {this.actions._closePopup.bind(this.actions)}
+						<AddRequest
+							binding			= {binding.sub('addRequest')}
+							activeSchool	= {SchoolHelper.getActiveSchoolInfo(this)}
+							region          = {region}
+							onSuccess		= {this.actions._onSuccess.bind(this.actions)}
+							onCancel		= {this.actions._closePopup.bind(this.actions)}
 						/>
 					</Popup>
 				</div>

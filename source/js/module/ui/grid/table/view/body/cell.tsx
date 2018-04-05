@@ -17,6 +17,7 @@ export interface CellProps {
         id:     any
         name:   any
     }
+	region?: string
 }
 
 export function Cell(props: CellProps){
@@ -26,5 +27,5 @@ export function Cell(props: CellProps){
 
 
 
-    return <CellType cell={cell} dataItem={props.dataItem}  width={width} />;
+    return <CellType cell={cell} dataItem={props.dataItem}  width={width} region={props.region}/>;
 }

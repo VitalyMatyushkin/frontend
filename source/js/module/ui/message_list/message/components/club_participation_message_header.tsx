@@ -7,6 +7,7 @@ const Style = require('styles/ui/b_club_participation_message.scss');
 
 export interface ClubParticipationMessageHeaderProps {
 	message: any
+	region: string
 }
 
 export class ClubParticipationMessageHeader extends React.Component<ClubParticipationMessageHeaderProps, {}> {
@@ -55,13 +56,13 @@ export class ClubParticipationMessageHeader extends React.Component<ClubParticip
 	getStartDate(): string {
 		const club = this.getClub();
 
-		return DateHelper.toLocalWithMonthName(club.startDate);
+		return DateHelper.getLongDateStringByRegion(club.startDate, this.props.region);
 	}
 
 	getEndDate(): string {
 		const club = this.getClub();
 
-		return DateHelper.toLocalWithMonthName(club.finishDate);
+		return DateHelper.getLongDateStringByRegion(club.finishDate, this.props.region);
 	}
 
 	renderDate() {

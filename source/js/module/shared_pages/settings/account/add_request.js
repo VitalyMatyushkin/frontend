@@ -28,7 +28,8 @@ const AddPermissionRequest = React.createClass({
 	propTypes: {
 		onSuccess:		React.PropTypes.func,
 		onCancel:		React.PropTypes.func,
-		activeSchool:	React.PropTypes.object.isRequired
+		activeSchool:	React.PropTypes.object.isRequired,
+		region:	        React.PropTypes.string
 	},
 	getDefaultState:function() {
 		return Immutable.Map({
@@ -42,24 +43,6 @@ const AddPermissionRequest = React.createClass({
 	},
 	componentWillMount:function(){
 		this.initCountSportFieldsBlocks();
-		this.setRegion();
-	},
-	setRegion: function () {
-		const phone = this.getMoreartyContext().getBinding().toJS('userData.sessions.loginSession.phone');
-
-		let region = undefined;
-
-		if (typeof phone !== 'undefined' && phone !== '') {
-			if (phone.indexOf('+44') === 0) {
-				region = 'GB';
-			} else {
-				if (phone.indexOf('+1') === 0) {
-					region = 'US';
-				}
-			}
-		}
-
-		this.getDefaultBinding().set('region', region);
 	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();
@@ -83,7 +66,7 @@ const AddPermissionRequest = React.createClass({
 		if (model.preset === RoleHelper.USER_PERMISSIONS.PARENT) {
 			if (this.showErrors(selectedSchool) === 0) {
 				if (model.childDateOfBirth) {
-					model.childDateOfBirth = DateHelper.getFormatDateTimeUTCString(model.childDateOfBirth);
+					model.childDateOfBirth = DateHelper.getFormatDateUTCStringByRegion(model.childDateOfBirth, this.props.region);
 				}
 				model.comment = `Request to be parent of [${model.studentFirstName} ${model.studentLastName}] ${model.comment ? model.comment : ''}`;
 
@@ -271,7 +254,7 @@ const AddPermissionRequest = React.createClass({
 	},
 	schoolService: function(schoolName) {
 		const   postcode    = this.getDefaultBinding().toJS('postcode'),
-				region      = this.getDefaultBinding().toJS('region');
+				region      = this.props.region;
 
 		const filter = {
 			filter: {
@@ -345,7 +328,7 @@ const AddPermissionRequest = React.createClass({
 							Postcode
 						</div>
 						<PostcodeSelector
-							region                  = {binding.toJS('region')}
+							region                  = {this.props.region}
 							currentPostcode			= {binding.toJS('postcode')}
 							handleSelectPostcode	= {this.handleSelectPostcode}
 							handleEscapePostcode	= {this.handleEscapePostcode}
@@ -415,6 +398,7 @@ const AddPermissionRequest = React.createClass({
 						</FormField>
 						<FormField
 							type		= 'date'
+							region      = {this.props.region}
 							field		= {`childDateOfBirth`}
 							validation	= {`birthday`}
 							isVisible   = { isParent && selectedSchool && selectedSchool.additionalPermissionRequestFields.childDateOfBirth !== ADDITIONAL_FIELD_CONDITION.HIDDEN }

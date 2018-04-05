@@ -6,6 +6,7 @@ const	React						= require('react'),
 		MessageConsts				= require('module/ui/message_list/message/const/message_consts'),
 		PlayerStatusTable			= require('module/ui/player_status_table/player_status_table'),
 		Loader						= require('module/ui/loader'),
+		{RegionHelper} 	            = require('module/helpers/region_helper'),
 		ParentalConsentTabStyle		= require('../../../../../../../styles/ui/b_parental_consent_tab/b_parental_consent_tab.scss');
 
 import {MessageListActions} from 'module/as_manager/pages/messages/message_list_wrapper/message_list_actions/message_list_actions'
@@ -364,6 +365,7 @@ const ParentalConsentTab = React.createClass({
 						onClickSubmitComment 	= { this.onClickSubmitComment }
 						checkComments 			= { this.checkComments }
 						onAction				= { this.onAction }
+						region                  = {RegionHelper.getRegion(this.getMoreartyContext().getBinding())}
 					/>
 				</div>
 			);

@@ -4,6 +4,7 @@ const	React               = require('react'),
 		{UsersActionsClass} = require('./users-actions-class'),
 		{Grid}              = require('module/ui/grid/grid'),
 		{GrantRole}         = require('module/as_manager/pages/school_console/grant_role/grant_role'),
+		{RegionHelper} 	    = require('module/helpers/region_helper'),
 		{ConfirmPopup}      = require('module/ui/confirm_popup');
 
 const	CSVExportPopupStyle	= require('styles/ui/b_csv_export_popup/b_csv_export_popup.scss');
@@ -85,13 +86,14 @@ const Users = React.createClass({
 		}
 	},
 	render: function () {
-		const binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding(),
+				region  = RegionHelper.getRegion(this.getMoreartyContext().getBinding());
 
 		binding.set('grid', Immutable.fromJS(this.model.grid));
 
 		return this.model.grid ? (
 			<div className="eTable_view">
-				<Grid model={this.model.grid}/>
+				<Grid model={this.model.grid} region={region}/>
 				{ this.renderPopup() }
 				{ this.renderCSVExportPopup() }
 			</div>

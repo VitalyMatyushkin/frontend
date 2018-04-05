@@ -6,6 +6,7 @@ import {MessageListActions} from 'module/as_manager/pages/messages/message_list_
 import * as MessageList from 'module/ui/message_list/message_list'
 
 import * as RandomHelper from 'module/helpers/random_helper'
+import {RegionHelper} from 'module/helpers/region_helper'
 import * as MessageConsts from 'module/ui/message_list/message/const/message_consts'
 import {ServiceList} from "module/core/service_list/service_list";
 
@@ -216,6 +217,7 @@ export const MessageListWrapper = (React as any).createClass({
 					onClickShowComments		= { this.onClickShowComments }
 					onClickSubmitComment	= { this.onClickSubmitComment }
 					checkComments			= { this.checkComments }
+					region                  = { RegionHelper.getRegion(this.getMoreartyContext().getBinding()) }
 				/>
 			);
 		}

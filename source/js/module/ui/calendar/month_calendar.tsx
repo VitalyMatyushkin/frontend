@@ -6,6 +6,7 @@ import * as React		from 'react';
 import {MonthYearSelector}	from './month_year_selector';
 import {DaysOfWeekBar}		from './days_of_week_bar';
 import {MonthDaysPanel}		from './month_days_panel';
+import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
 /**
  * Calendar component. Here is schema:
@@ -25,6 +26,7 @@ import {MonthDaysPanel}		from './month_days_panel';
  */
 
 interface MonthCalendarProps {
+	size?:              CalendarSize
 	isSync?:			boolean
 	onMonthClick?:		(object: any) => void
 	onClick?:			(object: any) => void
@@ -52,19 +54,34 @@ export class MonthCalendar extends React.Component<MonthCalendarProps> {
 	getCustomStyle() {
 		return typeof this.props.customStyle !== 'undefined' ? this.props.customStyle : '';
 	}
+
+	getSizeModifierStyle() {
+		switch (this.props.size) {
+			case CalendarSize.Medium: {
+				return ' mMedium';
+			}
+			default: {
+				return ''
+			}
+		}
+	}
 	
 	render() {
 		const monthDate = this.props.monthDate;
 		
 		return (
-			<div className={`eCalendar_eMonth ${this.getCustomStyle()}`}>
+			<div className={`eCalendar_eMonth ${this.getSizeModifierStyle()} ${this.getCustomStyle()}`}>
 				<MonthYearSelector
+					size            = {this.props.size}
 					isSync			= {this.props.isSync}
 					date			= {monthDate}
 					onMonthClick	= {this.onMonthClick.bind(this)}
 				/>
-				<DaysOfWeekBar/>
+				<DaysOfWeekBar
+					size = {this.props.size}
+				/>
 				<MonthDaysPanel
+					size            = {this.props.size}
 					isSync			= {this.props.isSync}
 					monthDate		= {monthDate}
 					todayDate		= {this.props.todayDate}

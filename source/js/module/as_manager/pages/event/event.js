@@ -147,7 +147,7 @@ const Event = React.createClass({
 		//For different roles we use different service
 		const service = this.getServiceForEvent(role);
 
-		window.Server.publicSchool.get(this.props.activeSchoolId).then(activeSchool => {
+		window.Server.school.get(this.props.activeSchoolId).then(activeSchool => {
 			binding.set('activeSchoolInfo', Immutable.fromJS(activeSchool));
 
 			return service.get({

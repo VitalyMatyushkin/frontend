@@ -1,5 +1,5 @@
 const	React			= require('react'),
-		{DateHelper}		= require('module/helpers/date_helper'),
+		{DateHelper}	= require('module/helpers/date_helper'),
 		Bootstrap		= require('styles/bootstrap-custom.scss'),
 		InviteStyles	= require('styles/pages/events/b_invite.scss');
 
@@ -36,7 +36,8 @@ const EventInfo = React.createClass({
 				ages				= event.ages,
 				gender				= event.gender,
 				startTimeDataObject	= new Date(event.startTime),
-				startDate			= DateHelper.getDateStringFromDateObject(startTimeDataObject),
+				region              = this.props.region,
+				startDate 			= DateHelper.getDateStringByRegion(startTimeDataObject, region),
 				hours				= this.addZeroToFirst(startTimeDataObject.getHours()),
 				minutes				= this.addZeroToFirst(startTimeDataObject.getMinutes());
 

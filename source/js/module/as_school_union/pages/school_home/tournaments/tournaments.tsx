@@ -10,6 +10,7 @@ import {Tournament} 	from 'module/as_manager/pages/tournaments/tournament';
 
 interface TournamentItemProps {
 	tournaments: Tournament[]
+	region: string
 }
 
 interface TournamentItemState {
@@ -31,12 +32,14 @@ export class Tournaments extends React.Component<TournamentItemProps, Tournament
 	}
 
 	renderTournamentList() {
-		const tournaments = this.props.tournaments;
+		const   tournaments = this.props.tournaments;
+
 		return tournaments.map((tournament, index) => {
 			return (
 				<TournamentItem
 					key			= { index }
 					tournament	= { tournament }
+					region      = { this.props.region }
 				/>
 			);
 		});

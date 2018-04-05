@@ -12,6 +12,7 @@ export enum MembersOfStaffTypes {
 
 export interface ClubParticipationMessageMiddleInfoSectionProps {
 	message: any
+	region: string
 }
 
 export class ClubParticipationMessageMiddleInfoSection extends React.Component<ClubParticipationMessageMiddleInfoSectionProps, {}> {

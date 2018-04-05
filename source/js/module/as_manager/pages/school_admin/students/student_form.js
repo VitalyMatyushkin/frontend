@@ -16,6 +16,7 @@ const StudentForm = React.createClass({
 	propTypes: {
 		schoolId:		React.PropTypes.string.isRequired,
 		title:			React.PropTypes.string.isRequired,
+		region:			React.PropTypes.string,
 		onFormSubmit:	React.PropTypes.func,
 		initialForm:	React.PropTypes.object,
 		initialHouse:	React.PropTypes.object
@@ -279,6 +280,7 @@ const StudentForm = React.createClass({
 						</FormField>
 						<FormField
 							type		= 'date'
+							region      = {this.props.region}
 							field		= 'birthday'
 							validation	= 'birthday'
 							id 			= 'student_birthday'

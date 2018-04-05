@@ -29,7 +29,8 @@ const EventInvitationMessage = React.createClass({
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
 		checkComments: 			React.PropTypes.func.isRequired,
 		template:				React.PropTypes.object.isRequired,
-		user: 					React.PropTypes.object.isRequired
+		user: 					React.PropTypes.object.isRequired,
+		region: 				React.PropTypes.string
 	},
 	getDefaultProps: function(){
 		return {
@@ -232,7 +233,7 @@ const EventInvitationMessage = React.createClass({
 									message={this.props.message}
 								/>
 								<EventInfo
-									message={this.props.message}
+									message={this.props.message} region={this.props.region}
 								/>
 								<MessageText
 									message={this.props.message}

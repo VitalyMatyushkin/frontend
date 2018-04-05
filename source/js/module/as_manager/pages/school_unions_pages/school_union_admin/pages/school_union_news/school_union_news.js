@@ -2,6 +2,7 @@ const	RouterView 			= require('module/core/router'),
 		React 				= require('react'),
 		Morearty			= require('morearty'),
 		Route 				= require('module/core/route'),
+		{RegionHelper} 		= require('module/helpers/region_helper'),
 		NewsListComponent 	= require("module/as_manager/pages/school_admin/news/list/news-list"),
 		NewsAddComponent 	= require("module/as_manager/pages/school_admin/news/news_add"),
 		NewsEditComponent 	= require("module/as_manager/pages/school_admin/news/news_edit"),
@@ -16,7 +17,8 @@ const SchoolUnionNews = React.createClass({
 	
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding();
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				region          = RegionHelper.getRegion(globalBinding);
 
 		return (
 			<RouterView routes={ binding.sub('newsRouting') } binding={globalBinding}>
@@ -26,21 +28,25 @@ const SchoolUnionNews = React.createClass({
 					formBinding	= { binding.sub('classesForm') }
 					component	= { NewsListComponent }
 					handleClick	= { this.handleClickNews }
+					region      = { region }
 				/>
 				<Route
 					path		= "/school_union_admin/news/add"
 					binding		= { binding.sub('newsAdd') }
 					component	= { NewsAddComponent }
+					region      = { region }
 				/>
 				<Route
 					path		= "/school_union_admin/news/edit"
 					binding		= { binding.sub('newsForm') }
 					component	= { NewsEditComponent }
+					region      = { region }
 				/>
 				<Route
 					path		= "/school_union_admin/news/view"
 					binding		= { binding.sub('newsView') }
 					component	= { NewsViewComponent }
+					region      = { region }
 				/>
 			</RouterView>
 		)

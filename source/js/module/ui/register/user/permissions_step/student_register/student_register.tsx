@@ -140,6 +140,7 @@ export const StudentRegister = (React as any).createClass({
 						mode				= {binding.toJS('userType')}
 						binding				= {binding.sub('schoolField')}
 						defaultSchool		= {binding.toJS('school')}
+						region              = {binding.get('region')}
 						handleChangeSchool	= {this.handleChangeSchool}
 						handleClickBack		= {this.handleClickBack}
 					/>

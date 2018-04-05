@@ -20,7 +20,8 @@ const MessageList = React.createClass({
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
 		checkComments: 			React.PropTypes.func.isRequired,
 		//array custom consent request template templates of school
-		templates: 				React.PropTypes.array.isRequired
+		templates: 				React.PropTypes.array.isRequired,
+		region:                 React.PropTypes.string
 	},
 	getDefaultProps: function(){
 		return {
@@ -70,6 +71,7 @@ const MessageList = React.createClass({
 								onClickSubmitComment 	= {this.props.onClickSubmitComment}
 								checkComments 			= {this.props.checkComments}
 								template 				= {template}
+								region                  = {this.props.region}
 							/>
 						);
 					case MessageConsts.MESSAGE_KIND.REFUSAL:
@@ -84,6 +86,7 @@ const MessageList = React.createClass({
 								onClickShowComments 	= {this.props.onClickShowComments}
 								onClickSubmitComment 	= {this.props.onClickSubmitComment}
 								checkComments 			= {this.props.checkComments}
+								region                  = {this.props.region}
 							/>
 						);
 					case MessageConsts.MESSAGE_KIND.AVAILABILITY:
@@ -98,6 +101,7 @@ const MessageList = React.createClass({
 								onClickShowComments 	= {this.props.onClickShowComments}
 								onClickSubmitComment 	= {this.props.onClickSubmitComment}
 								checkComments 			= {this.props.checkComments}
+								region                  = {this.props.region}
 							/>
 						);
 					case MessageConsts.MESSAGE_KIND.CLUB_PARTICIPANT_INVITE:
@@ -112,6 +116,7 @@ const MessageList = React.createClass({
 								onClickShowComments 	= {this.props.onClickShowComments}
 								onClickSubmitComment 	= {this.props.onClickSubmitComment}
 								checkComments 			= {this.props.checkComments}
+								region                  = {this.props.region}
 							/>
 						);
 				}

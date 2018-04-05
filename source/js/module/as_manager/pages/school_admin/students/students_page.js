@@ -2,6 +2,7 @@ const 	RouterView 				= require('module/core/router'),
 		React 					= require('react'),
 		Morearty				= require('morearty'),
 		Route 					= require('module/core/route'),
+		{RegionHelper} 	        = require('module/helpers/region_helper'),
 		StudentsListComponent 	= require("module/as_manager/pages/school_admin/students/list/student-list"),
 		StudentsAddComponent 	= require("module/as_manager/pages/school_admin/students/student_add"),
 		StudentsEditComponent 	= require("module/as_manager/pages/school_admin/students/student_edit"),
@@ -20,7 +21,8 @@ const StudentPage = React.createClass({
 	},
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
-				globalBinding 	= this.getMoreartyContext().getBinding();
+				globalBinding 	= this.getMoreartyContext().getBinding(),
+				region          = RegionHelper.getRegion(globalBinding);
 
 		return (
 			<RouterView routes={ binding.sub('studentsRouting') } binding={globalBinding}>
@@ -29,16 +31,19 @@ const StudentPage = React.createClass({
 					binding		={ binding.sub('studentsList') }
 					component	={ StudentsListComponent }
 					handleClick	={ this.handleClick }
+					region      ={region}
 				/>
 				<Route
 					path		="/school_admin/students/add"
 					binding		={ binding.sub('studentAdd') }
 					component	={ StudentsAddComponent }
+					region      ={region}
 				/>
 				<Route
 					path		="/school_admin/students/edit"
 					binding		={ binding.sub('studentEdit') }
 					component	={ StudentsEditComponent }
+					region      ={region}
 				/>
 				<Route
 					path="/school_admin/students/merge"

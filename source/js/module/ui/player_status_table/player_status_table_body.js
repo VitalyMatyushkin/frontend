@@ -15,7 +15,8 @@ const PlayerStatusTableBody = React.createClass({
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
 		checkComments: 			React.PropTypes.func.isRequired,
-		onAction: 				React.PropTypes.func.isRequired
+		onAction: 				React.PropTypes.func.isRequired,
+		region: 				React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {
@@ -108,6 +109,7 @@ const PlayerStatusTableBody = React.createClass({
 							checkComments 			= { this.props.checkComments }
 							template 				= { this.props.template }
 							user 					= { this.props.user }
+							region                  = { this.props.region }
 						/>
 					</td>
 				</tr>

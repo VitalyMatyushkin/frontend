@@ -26,10 +26,11 @@ const HomeNews = React.createClass({
 	renderNewsItems: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding(),
-				newsList	= binding.toJS('schoolNews');
+				newsList = binding.toJS('schoolNews'),
+				region = this.getMoreartyContext().getBinding().toJS('activeSchool.region');
 
 		if(newsList !== undefined){
-			return newsList.map(news => <NewsItem key={news.id} value={news} binding={binding} />);
+			return newsList.map(news => <NewsItem key={news.id} value={news} binding={binding} region={region}/>);
 		}
 	},
 	render: function() {
