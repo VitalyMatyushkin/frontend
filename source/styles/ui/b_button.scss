@@ -38,6 +38,11 @@
 
   &.mAddEvent {
     width: 100%;
+
+    &.mMedium {
+      height: 40px;
+      line-height: 42px;
+    }
   }
 
   &:hover{

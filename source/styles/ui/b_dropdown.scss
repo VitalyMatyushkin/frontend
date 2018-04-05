@@ -14,9 +14,13 @@
     border: 1px solid #959595;
   }
 
+  &.mMedium {
+    font-size: 14px !important;
+  }
+
   &.mDateSelector{
     max-width: 130px;
-    padding: 0px;
+    padding: 5px;
 
     font-size: 18px;
 

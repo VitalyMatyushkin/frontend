@@ -182,6 +182,8 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				smWidth={12}
 				xsWidth={12}
 				widget={widget}
+				// It's good size for cute widget fit
+				minSizeConstraints={[840, 250]}
 			/>
 		);
 	}

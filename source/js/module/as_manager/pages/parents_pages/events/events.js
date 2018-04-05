@@ -126,6 +126,7 @@ const EventView = React.createClass({
 						path		= '/events/calendar/:userId'
 						binding		= { binding }
 						component	= { EventsCalendarComponent }
+						extraStyleForCol    = {'mBootstrap'}
 					/>
 
 					<Route

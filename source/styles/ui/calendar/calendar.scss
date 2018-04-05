@@ -69,6 +69,10 @@ $active-day-background: #b2d7ec;
   flex-direction: column;
 
   margin: 0;
+
+  &.mMedium {
+    width: 310px;
+  }
 }
 
 .eMonth_row {
@@ -91,6 +95,13 @@ $active-day-background: #b2d7ec;
   text-align: center;
   transition: border .5s;
   width: $month_day_size;
+
+  &.mMedium {
+    height: 40px;
+    width: 40px;
+
+    font-size: 14px !important;
+  }
 
   &:hover {
     border-color: $darkGrey;

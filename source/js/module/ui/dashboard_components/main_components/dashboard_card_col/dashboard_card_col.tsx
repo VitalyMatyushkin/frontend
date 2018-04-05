@@ -15,6 +15,7 @@ export interface DashboardCardColProps {
 	mdWidth: number
 	smWidth: number
 	xsWidth: number
+	minSizeConstraints?: [number, number]
 }
 
 export interface DashboardCardColState {
@@ -98,6 +99,7 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 							headerText={this.props.headerText}
 							handleDroppedWidget={this.props.handleDroppedWidget}
 							handleResize={(deltaPoints) => this.handleResize(deltaPoints)}
+							minSizeConstraints={this.props.minSizeConstraints}
 						>
 							{this.props.widget}
 						</DashboardCard> :

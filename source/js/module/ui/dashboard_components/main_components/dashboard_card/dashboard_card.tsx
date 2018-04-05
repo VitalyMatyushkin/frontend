@@ -13,6 +13,7 @@ export interface DashboardCardProps {
 	headerText: string,
 	handleDroppedWidget: (moveResult: MoveResult) => void,
 	handleResize: (deltaPoints: number) => void
+	minSizeConstraints?: [number, number]
 }
 
 export interface DashboardCardState {
@@ -23,6 +24,13 @@ export interface DashboardCardState {
 	canDrag: boolean
 	isMinimize: boolean
 }
+
+// just plug for resizable component
+// real height of component does't equal it
+// About values - it's good size for cute widget fit
+const HEIGHT_PLUG = 300;
+const MIN_SIZE_CONSTARINATS = [253, 253];
+const MAX_SIZE_CONSTARAINTS = [1100, 600];
 
 export class DashboardCard extends React.Component<DashboardCardProps, DashboardCardState> {
 	card = undefined;
@@ -47,6 +55,13 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 		}
 
 		return style;
+	}
+	getMinSizeConstraints() {
+		if(typeof this.props.minSizeConstraints !== 'undefined') {
+			return this.props.minSizeConstraints;
+		} else {
+			return MIN_SIZE_CONSTARINATS;
+		}
 	}
 	getWidth() {
 		if(this.state.isResizing) {
@@ -104,13 +119,15 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 		const width = this.getWidth();
 		const style = {width};
 
+		console.log(this.props.minSizeConstraints);
+
 		return (
 			<Resizable
 				width={width}
-				height={300}
+				height={HEIGHT_PLUG}
 
-				minConstraints={[253, 253]}
-				maxConstraints={[1100, 600]}
+				minConstraints={this.getMinSizeConstraints()}
+				maxConstraints={MAX_SIZE_CONSTARAINTS}
 
 				onResize={(e, {element, size}) => this.handleResize(e, {element, size})}
 				onResizeStart={(e, {element, size}) => this.handleResizeStart(e, {element, size})}

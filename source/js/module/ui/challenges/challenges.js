@@ -6,10 +6,13 @@ const 	React				= require('react'),
 		ChallengeModel		= require('./challenge_model'),
 		ChallengeListTitle	= require('./challenge_list_title'),
 		ChallengeListItem	= require('./challenge_list_item'),
-		NoResultItem		= require('./no_result_item');
+		NoResultItem		= require('./no_result_item')
+
+const {CalendarSize} = require('module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget.tsx');
 
 const Challenges = React.createClass({
 	propTypes: {
+		size:                   React.PropTypes.enum,
 		onClick:				React.PropTypes.func,
 		isSync:					React.PropTypes.bool,
 		isDaySelected:			React.PropTypes.bool,
@@ -26,6 +29,18 @@ const Challenges = React.createClass({
 			isPublicSite: false
 		};
 	},
+
+	getSizeModifierStyle() {
+		switch (this.props.size) {
+			case CalendarSize.Medium: {
+				return ' mMedium';
+			}
+			default: {
+				return ''
+			}
+		}
+	},
+
 	_getEvents: function () {
 		const 	isSync				= this.props.isSync,
 				events				= this.props.events,
@@ -64,7 +79,7 @@ const Challenges = React.createClass({
 
 	render: function() {
 		return (
-			<div className="eEvents_challenges mGeneral">
+			<div className={`eEvents_challenges mGeneral ${this.getSizeModifierStyle()}`}>
 				<ChallengeListTitle/>
 				{this._getEvents()}
 			</div>

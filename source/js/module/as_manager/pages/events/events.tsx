@@ -149,9 +149,10 @@ export const Events = (React as any).createClass({
                         binding = {rootBinging}
                     >
                         <Route
-                            path         = '/events/calendar'
-                            binding      = {binding.sub('calendar')}
-                            component    = {EventsCalendar}
+                            path                = '/events/calendar'
+                            binding             = {binding.sub('calendar')}
+                            component           = {EventsCalendar}
+                            extraStyleForCol    = {'mBootstrap'}
                         />
                         <Route
                             path        = '/events/fixtures'

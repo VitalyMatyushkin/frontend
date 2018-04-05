@@ -115,6 +115,7 @@ export const MonthDaysPanel = (React as any).createClass({
 					row			= rows[rowNumber] || [];
 			
 			const 	dayPanel = <DayPanel
+					size={this.props.size}
 					key={`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`}
 					isActive={dataAtDate}
 					isSelected={isSelected}

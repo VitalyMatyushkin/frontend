@@ -2,10 +2,12 @@ import * as React		from 'react';
 import * as Dropdown	from '../date_selector/dropdown/dropdown';
 import {DateHelper}		from 'module/helpers/date_helper';
 import 'styles/ui/b_month_year_selector.scss';
+import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
 interface MonthYearSelectorProps {
+	size?:          CalendarSize
 	isSync?:		boolean
-	date:			any,
+	date:			any
 	onMonthClick?:	(object: any) => void
 }
 
@@ -31,7 +33,18 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 	componentWillReceiveProps(nextProps) {
 		this.setState({dateState: nextProps.date});
 	}
-	
+
+	getSizeModifierStyle() {
+		switch (this.props.size) {
+			case CalendarSize.Medium: {
+				return ' mMedium';
+			}
+			default: {
+				return ''
+			}
+		}
+	}
+
 	getCurrentMonth(): number {
 		return new Date(this.state.dateState).getMonth();
 	}
@@ -126,7 +139,7 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 	
 	render() {
 		return (
-			<div className="bMonthYearSelector">
+			<div className={`bMonthYearSelector ${this.getSizeModifierStyle()}`}>
 				{ this.renderPlaceHolder() }
 				<div className="eMonthYearSelector_smallSizeColumn mLeft">
 					<div
@@ -141,7 +154,7 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 						optionsArray		= { this.getOptionsForMonthDropdown() }
 						currentOptionId		= { String(this.getCurrentMonth()) }
 						handleChange		= { this.handleChangeMonth.bind(this) }
-						extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+						extraCssStyle		= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle() }
 					/>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
@@ -149,7 +162,7 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 						optionsArray		= { this.getOptionsForYearDropdown() }
 						currentOptionId		= { String(this.getCurrentYear()) }
 						handleChange		= { this.handleChangeYear.bind(this) }
-						extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
+						extraCssStyle		= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle()}
 					/>
 				</div>
 				<div className="eMonthYearSelector_smallSizeColumn mWithoutBorder mRight">

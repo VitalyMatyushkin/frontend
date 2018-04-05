@@ -12,12 +12,15 @@ import * as EventHeaderActions from 'module/as_manager/pages/event/view/event_he
 import {ConfirmPopup} from 'module/ui/confirm_popup';
 import * as RoleHelper from 'module/helpers/role_helper';
 import './../../../../../../styles/pages/events/b_events.scss';
+import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
 /** Show calendar section: month calendar and events for selected date */
 export const EventsCalendar = (React as any).createClass({
 	mixins:[Morearty.Mixin ],
 	propTypes: {
-		extraStyleForContainer: (React as any).PropTypes.string
+		size: (React as any).PropTypes.string,
+		extraStyleForContainer: (React as any).PropTypes.string,
+		extraStyleForCol: (React as any).PropTypes.string
 	},
 	componentWillMount: function () {
 		const	binding					= this.getDefaultBinding(),
@@ -111,6 +114,25 @@ export const EventsCalendar = (React as any).createClass({
 
 		return style;
 	},
+	getColModifierStyle() {
+		let style = '';
+
+		if(typeof this.props.extraStyleForCol !== 'undefined') {
+			style = ` ${this.props.extraStyleForCol}`
+		}
+
+		return style;
+	},
+	getSizeModifierStyle() {
+		switch (this.props.size) {
+			case CalendarSize.Medium: {
+				return ' mMedium';
+			}
+			default: {
+				return ''
+			}
+		}
+	},
 	render: function(){
 		const	binding						= this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
@@ -121,11 +143,15 @@ export const EventsCalendar = (React as any).createClass({
 		return (
 			<div className={this.getStyleForContainer()}>
 				<div className="eEvents_row">
-					<div className="eEvents_leftSideContainer">
-						<Calendar binding={binding}/>
+					<div className={`eEvents_leftSideContainer ${this.getColModifierStyle()} ${this.getSizeModifierStyle()}`}>
+						<Calendar
+							size={this.props.size}
+							binding={binding}
+						/>
 					</div>
-					<div className="eEvents_rightSideContainer">
+					<div className={`eEvents_rightSideContainer ${this.getSizeModifierStyle()}`}>
 						<Challenges
+							size={this.props.size}
 							activeSchoolId 		= { activeSchoolId }
 							isSync 				= { isSelectedDateEventsInSync }
 							events 				= { selectedDateEvents }
@@ -133,7 +159,10 @@ export const EventsCalendar = (React as any).createClass({
 							onClickDeleteEvent 	= { this.onDeleteEvent }
 							isUserSchoolWorker 	= { isUserSchoolWorker }
 						/>
-						<AddEventButton handleClick={this.handleClickAddEventButton}/>
+						<AddEventButton
+							size={this.props.size}
+							handleClick={this.handleClickAddEventButton}
+						/>
 					</div>
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
