@@ -70,7 +70,8 @@ const RoleList = (React as any).createClass({
 	renderRole:function(permission, active: boolean){
 		const	role			= permission.role,
 				roleClientView	= RoleHelper.ROLE_TO_PERMISSION_MAPPING[permission.role],
-				schoolName		= role !== 'PARENT' && role !== 'STUDENT' ? permission.school.name : null;
+				schoolName		= role !== 'PARENT' && role !== 'STUDENT' && role !== 'PUBLIC_BLOGGER'
+					? permission.school.name : null;
 
 		return (
 			<div

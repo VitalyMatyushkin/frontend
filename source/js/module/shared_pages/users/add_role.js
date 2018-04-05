@@ -7,8 +7,8 @@ const   React           	= require('react'),
 		Form 		    	= require('module/ui/form/form'),
 		FormField 	    	= require('module/ui/form/form_field'),
 		RoleList			= require('module/data/roles_data'),
+		{RoleListWithoutSchool}	= require('module/data/roles_data_without_school.tsx'),
 		ErrorAddRole		= require('module/data/text_add_role_error'),
-		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
 		RoleHelper			= require('module/helpers/role_helper'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
@@ -48,6 +48,11 @@ const AddRole = React.createClass({
 					schoolId:   model.schoolId,
 					sportIds:	sports.map(r => r.id),
 					studentId:  model.studentId
+				};
+				break;
+			case 'public_blogger':
+				body = {
+					preset:     model.preset.toUpperCase()
 				};
 				break;
 			default:
@@ -111,7 +116,7 @@ const AddRole = React.createClass({
 				}
 			});
 		} else {
-			return [];
+			return RoleListWithoutSchool;
 		}
 	},
 	getSchoolService: function() {
@@ -136,6 +141,7 @@ const AddRole = React.createClass({
 	},
 	handleSelectSchool: function(schoolId, schoolData) {
 		this.selectedSchool = schoolData;
+		this.getDefaultBinding().sub('formAddRole').meta().remove('preset');
 	},
 	getSchoolSelectedId: function() {
 		const formBinding = this.getDefaultBinding().sub('formAddRole');
@@ -183,7 +189,7 @@ const AddRole = React.createClass({
 					</FormField>
 					<FormField
 						type="select"
-						isDisabled={ typeof this.selectedSchool === 'undefined' }
+						key={ typeof this.selectedSchool === 'undefined' ? 'withoutSchool' : this.selectedSchool.id }
 						field="preset"
 						sourceArray={ this.getRoleList() }
 					>

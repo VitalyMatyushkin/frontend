@@ -6,7 +6,7 @@ import * as Immutable from 'immutable'
 import * as SessionHelper from 'module/helpers/session_helper'
 import * as StorageHelper from 'module/helpers/storage'
 import * as BPromise from 'bluebird'
-import {Role} from "module/models/role/role";
+import * as	RoleHelper from 'module/helpers/role_helper';
 import {ServiceList} from "module/core/service_list/service_list";
 import {AdminServiceList} from "module/core/service_list/admin_service_list";
 

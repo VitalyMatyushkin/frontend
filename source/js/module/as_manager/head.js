@@ -185,6 +185,8 @@ const Head = React.createClass({
 				return this.getMainMenuItemsForParent();
 			case role === RoleHelper.USER_ROLES.STUDENT && kindSchool === 'School':
 				return this.getMainMenuItemsForStudent();
+			case role === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER:
+				return this.getMainMenuItemsForBlogger();
 		}
 	},
 	getMainMenuItemsForSchoolUnionAdmin: function() {
@@ -358,11 +360,31 @@ const Head = React.createClass({
 				authorization:	true,
 				routes:			['/messages/:subPage']
 			}, {
+				href:			'/#blogs',
+				name:			'Blogs',
+				key:			'Blogs',
+				authorization:	true,
+				routes:			['/blogs/:subPage']
+			},{
 				href: '/#help',
 				name: 'Help',
 				key: 'Help'
 			}
 		];
+	},
+	getMainMenuItemsForBlogger: function() {
+		return [
+		{
+			href:			'/#blogs',
+			name:			'Blogs',
+			key:			'Blogs',
+			authorization:	true,
+			routes:			['/blogs/:subPage']
+		},{
+			href: '/#help',
+			name: 'Help',
+			key: 'Help'
+		}]
 	},
 	getSchoolUnionConsoleMenuItem: function() {
 		return {

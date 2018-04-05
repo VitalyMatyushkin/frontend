@@ -4,6 +4,7 @@ const	React				= require('react'),
 		RoleHelper			= require('../helpers/role_helper'),
 
 		ParentRouter		= require('./routes/parent_router'),
+		{BloggerRouter}		= require('./routes/blogger_router'),
 		StudentRouter		= require('./routes/student_router'),
 		SchoolWorkerRouter	= require('./routes/school_worker_router'),
 		SchoolUnionsRouter	= require('./routes/school_unions_router'),
@@ -46,6 +47,11 @@ const Center = React.createClass({
 			case role === "PARENT":
 				return (
 					<ParentRouter binding={binding}/>
+				);
+			// for blogger
+			case role === "PUBLIC_BLOGGER":
+				return (
+					<BloggerRouter binding={binding}/>
 				);
 			// for students
 			case role === "STUDENT":

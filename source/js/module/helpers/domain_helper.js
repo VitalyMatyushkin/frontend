@@ -60,6 +60,8 @@ const DomainHelper = {
 				return `events/calendar`;
 			case _roleName === 'parent' && schoolKind === 'School':
 				return `events/calendar/all`;
+			case _roleName === 'public_blogger':
+				return `blogs`;
 			case _roleName === 'student' && schoolKind === 'School':
 				return `events/calendar/all`;
 			case _roleName === 'admin' && schoolKind === 'SchoolUnion':
