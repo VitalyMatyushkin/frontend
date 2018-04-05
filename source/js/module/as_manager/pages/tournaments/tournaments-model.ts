@@ -4,9 +4,9 @@
 
 import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
-import * as Timezone    from 'moment-timezone';
 import {Tournament}     from 'module/as_manager/pages/tournaments/tournament';
 import {ServiceList} from "module/core/service_list/service_list";
+import {DateHelper} from "module/helpers/date_helper";
 
 /**
  * TournamentsModel
@@ -54,11 +54,11 @@ export class TournamentsModel{
     }
 
     getStartTime(item: any): string {
-        return Timezone.tz(item.startTime, (<any>window).timezone).format('DD.MM.YY HH:mm');
+        return DateHelper.getFormatDateTimeFromISOByRegion(item.startTime, this.props.region);
     }
 
     getEndTime(item: any): string {
-        return Timezone.tz(item.endTime, (<any>window).timezone).format('DD.MM.YY HH:mm');
+        return DateHelper.getFormatDateTimeFromISOByRegion(item.endTime, this.props.region);
     }
 
     setColumns(): void {

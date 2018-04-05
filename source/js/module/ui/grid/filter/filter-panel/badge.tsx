@@ -3,12 +3,13 @@
  */
 
 import * as React from 'react';
-import {DateHelper} from 'module/helpers/date_helper';
+import * as Moment from 'moment';
 import {BadgeModel} from "../model/badge-model";
 
 
 export interface BadgeProps {
     model: 	BadgeModel
+	region?: string
 }
 
 export class Badge extends React.Component<BadgeProps, {}> {
@@ -47,21 +48,25 @@ export class Badge extends React.Component<BadgeProps, {}> {
 	}
 
 	_getBetweenDateValue(): string {
-		const values = this.props.model.values;
+		const   values = this.props.model.values,
+				region = this.props.region;
+
 		let result = '';
 
-		result += values[0] ? 'from ' + DateHelper.toLocal(values[0]) + ' ' : '';
-		result += values[1] ? 'to ' + DateHelper.toLocal(values[1]) : '';
+		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY') : values[0]) + ' ' : '';
+		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY') : values[1]) : '';
 
 		return result;
 	}
 
 	_getBetweenDateTimeValue(): string {
-		const values = this.props.model.values;
+		const   values = this.props.model.values,
+				region = this.props.region;
+
 		let result = '';
 
-		result += values[0] ? 'from ' + DateHelper.toLocalDateTime(values[0]) + ' ' : '';
-		result += values[1] ? 'to ' + DateHelper.toLocalDateTime(values[1]) : '';
+		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY/HH:mm') : values[0]) + ' ' : '';
+		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY/HH:mm') : values[1]) : '';
 
 		return result;
 	}

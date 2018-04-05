@@ -1,11 +1,12 @@
 /**
  * Created by vitaly on 04.12.17.
  */
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		{SVG}		= require('module/ui/svg'),
-		RouterView	= require('module/core/router'),
-		Route		= require('module/core/route');
+const	React		    = require('react'),
+		Morearty	    = require('morearty'),
+		{SVG}		    = require('module/ui/svg'),
+		RouterView	    = require('module/core/router'),
+		Route		    = require('module/core/route'),
+		{RegionHelper} 	= require('module/helpers/region_helper');
 
 const	{TournamentsList}	= require('module/as_manager/pages/tournaments/tournaments'),
 		TournamentAdd		= require('module/as_manager/pages/tournaments/tournament_add'),
@@ -20,6 +21,7 @@ const TournamentsPage = React.createClass({
 	render: function() {
 		const	binding 		= this.getDefaultBinding(),
 				globalBinding	= this.getMoreartyContext().getBinding(),
+				region          = RegionHelper.getRegion(globalBinding),
 				addButton 		= <div className="addButtonShort" onClick={() => document.location.hash +='/add'}><SVG icon="icon_add_student" /></div>;
 		
 		
@@ -33,16 +35,19 @@ const TournamentsPage = React.createClass({
 					component	= { TournamentsList }
 					handleClick	= { this.handleClick }
 					addButton	= { addButton }
+					region      = { region }
 				/>
 				<Route
 					path		= "/tournaments/add"
 					binding		= { binding.sub('tournamentFormWrapper') }
 					component	= { TournamentAdd }
+					region      = { region }
 				/>
 				<Route
 					path		= "/tournaments/edit"
 					binding		= { binding.sub('tournamentFormWrapper') }
 					component	= { TournamentEdit }
+					region      = { region }
 				/>
 			</RouterView>
 		)

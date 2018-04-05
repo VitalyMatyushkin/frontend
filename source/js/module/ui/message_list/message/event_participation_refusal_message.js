@@ -21,7 +21,8 @@ const EventParticipationRefusalMessage = React.createClass({
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
-		checkComments: 			React.PropTypes.func.isRequired
+		checkComments: 			React.PropTypes.func.isRequired,
+		region: 				React.PropTypes.string
 	},
 	componentWillUnmount: function(){
 		clearInterval(this.timerID);
@@ -116,7 +117,7 @@ const EventParticipationRefusalMessage = React.createClass({
 									message={this.props.message}
 								/>
 								<EventInfo
-									message={this.props.message}
+									message={this.props.message} region={this.props.region}
 								/>
 								<MessageText
 									message={this.props.message}

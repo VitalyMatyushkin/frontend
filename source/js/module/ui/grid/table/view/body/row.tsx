@@ -11,6 +11,7 @@ export interface RowProps {
         id: any
         name: any
     },
+	region?: string
     handleClick?:	(dataItemId: string, dataItemName: string) => void//The function, which will call when user click on <Row> in Grid
 }
 
@@ -28,7 +29,7 @@ export class Row extends React.Component<RowProps, {}> {
 			<div className="eDataList_listItem" onClick={() => this.onClickRow()} >
 				{this.props.columns.map((column, index) => {
 					/** why index? - for the column key number of sequence is sufficient. */
-					return <Cell key={index} column={column} dataItem={this.props.dataItem} />
+					return <Cell key={index} column={column} dataItem={this.props.dataItem} region={this.props.region}/>
 				})}
 			</div>
 		);

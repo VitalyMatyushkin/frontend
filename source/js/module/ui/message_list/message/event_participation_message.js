@@ -22,7 +22,8 @@ const EventParticipationMessage = React.createClass({
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
 		checkComments: 			React.PropTypes.func.isRequired,
-		user: 					React.PropTypes.object.isRequired
+		user: 					React.PropTypes.object.isRequired,
+		region: 				React.PropTypes.string
 	},
 	componentWillUnmount: function(){
 		clearInterval(this.timerID);
@@ -110,7 +111,7 @@ const EventParticipationMessage = React.createClass({
 									message={this.props.message}
 								/>
 								<EventInfo
-									message={this.props.message}
+									message={this.props.message} region={this.props.region}
 								/>
 								<MessageText
 									message={this.props.message}

@@ -24,6 +24,7 @@ const ClubParticipationMessage = React.createClass({
 		message:				React.PropTypes.object.isRequired,
 		type:					React.PropTypes.string.isRequired,
 		userType:				React.PropTypes.string,
+		region :				React.PropTypes.string,
 		onAction:				React.PropTypes.func.isRequired,
 		onClickShowComments: 	React.PropTypes.func.isRequired,
 		onClickSubmitComment: 	React.PropTypes.func.isRequired,
@@ -133,8 +134,8 @@ const ClubParticipationMessage = React.createClass({
 						<div className='eClubParticipationMessage_info'>
 							<div className='eClubParticipationMessage_topSection'>
 								<ClubParticipationMessageSchoolLogo message={this.props.message}/>
-								<ClubParticipationMessageHeader message={this.props.message}/>
-								<ClubParticipationMessageMiddleInfoSection message={this.props.message}/>
+								<ClubParticipationMessageHeader message={this.props.message} region={this.props.region}/>
+								<ClubParticipationMessageMiddleInfoSection message={this.props.message} region={this.props.region}/>
 							</div>
 							<div className='eClubParticipationMessage_bottomSection'>
 								<ClubParticipationMessageText message={this.props.message}/>

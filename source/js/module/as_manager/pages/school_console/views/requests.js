@@ -6,6 +6,7 @@ const 	React 					= require('react'),
 		Morearty				= require('morearty'),
 		RequestActionsClass 	= require('module/as_manager/pages/school_console/views/request-actions-class'),
 		{Grid}					= require('module/ui/grid/grid'),
+		{RegionHelper} 	    = require('module/helpers/region_helper'),
 		Immutable				= require('immutable');
 
 const SchoolRequest = React.createClass({
@@ -24,10 +25,11 @@ const SchoolRequest = React.createClass({
 		}
 	},
 	render: function () {
-		const binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding(),
+				region  = RegionHelper.getRegion(this.getMoreartyContext().getBinding());
 		
 		binding.set('grid', Immutable.fromJS(this.model.grid));
-		return this.model.grid ? <Grid model={this.model.grid}/> : null;
+		return this.model.grid ? <Grid model={this.model.grid} region={region}/> : null;
 	}
 });
 

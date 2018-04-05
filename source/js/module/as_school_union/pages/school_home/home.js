@@ -79,14 +79,15 @@ const SchoolHomePage = React.createClass({
 	renderTournament: function () {
 		const 	binding 			= this.getDefaultBinding(),
 				isSyncTournament 	= binding.toJS('tournamentsIsSync'),
-				showTournament 		= binding.toJS('tournamentsShow');
+				showTournament 		= binding.toJS('tournamentsShow'),
+				region              = this.getMoreartyContext().getBinding().toJS('activeSchool.region');
 		
 		if (isSyncTournament) {
 			if (showTournament) {
 				return (
 					<Tournaments
-						binding={ binding }
-						ref={ 'tournaments' }
+						region  ={ region }
+						ref     ={ 'tournaments' }
 						tournaments={ binding.toJS('tournaments') }
 					/>
 				);

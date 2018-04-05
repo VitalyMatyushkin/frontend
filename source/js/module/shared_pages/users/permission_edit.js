@@ -8,7 +8,6 @@ const   React           = require('react'),
         FormField 	    = require('module/ui/form/form_field'),
 	    {SVG} 	        = require('module/ui/svg'),
         RoleHelper      = require('module/helpers/role_helper'),
-        {DateHelper}    = require('module/helpers/date_helper'),
 		Moment		    = require('moment'),
 		MoreartyHelper  = require('module/helpers/morearty_helper'),
 		SportManager    = require('module/shared_pages/settings/account/helpers/sport-manager');
@@ -91,10 +90,10 @@ const EditPermission = React.createClass({
         const binding = this.getDefaultBinding();
 
 		if (data.activatedAt){
-            data.activatedAt = DateHelper.getFormatDateTimeUTCString(data.activatedAt);
+            data.activatedAt = Moment(data.activatedAt).utc().format();
 		}
 		if (data.deactivatedAt){
-			data.deactivatedAt = DateHelper.getFormatDateTimeUTCString(data.deactivatedAt);
+			data.deactivatedAt = Moment(data.deactivatedAt).utc().format();
 		}
 		const userPermission = binding.toJS('formPermission');
 	    if(userPermission.preset === RoleHelper.USER_ROLES.COACH) {

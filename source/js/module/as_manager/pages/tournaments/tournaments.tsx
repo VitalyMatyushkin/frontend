@@ -22,7 +22,7 @@ export const TournamentsList = (React as any).createClass({
 	render: function () {
 		return (
 			<div className="bSchoolMaster">
-				<Grid model={this.model.grid}/>
+				<Grid model={this.model.grid} region={this.props.region}/>
 			</div>
 		);
 	}

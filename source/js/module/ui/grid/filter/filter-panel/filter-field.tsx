@@ -18,11 +18,13 @@ export interface FilterFieldModel {
 	field: {
 		text: string
 	}
+	region?: string
 }
 
 export interface FilterFieldProps {
-	id?: string,
+	id?: string
     model: FilterFieldModel
+	region?: string
 }
 
 export const FilterTypeList = {
@@ -35,7 +37,7 @@ export const FilterTypeList = {
 export class FilterField extends React.Component<FilterFieldProps, {}> {
 
 	render() {
-		const 	{model}			= this.props,
+		const 	{model, region}	= this.props,
 				id				= model.id ? model.id + '_title' : undefined,
 				FilterFieldType = FilterTypeList[model.type];
 
@@ -43,7 +45,7 @@ export class FilterField extends React.Component<FilterFieldProps, {}> {
 			<div className="bFilterField">
 				<div className="eField" id={id}>{model.field.text}</div>
 				<div className="eFilterContainer">
-					<FilterFieldType filterField={model} />
+					<FilterFieldType filterField={model} region={region}/>
 				</div>
 			</div>
 		);

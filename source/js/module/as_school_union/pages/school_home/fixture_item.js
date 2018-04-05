@@ -10,6 +10,7 @@ const 	React				= require('react'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		SportIcon			= require('module/ui/icons/sport_icon'),
 		ChallengeModel		= require('module/ui/challenges/challenge_model'),
+		{DateHelper} 	    = require('module/helpers/date_helper'),
 		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureItem = React.createClass({
@@ -18,7 +19,8 @@ const FixtureItem = React.createClass({
 
 	propTypes: {
 		event:			React.PropTypes.any.isRequired,
-		activeSchoolId: React.PropTypes.string.isRequired
+		activeSchoolId: React.PropTypes.string.isRequired,
+		region:         React.PropTypes.string
 	},
 	handleClickFixtureItem: function() {
 		document.location.hash = `event/${this.props.event.id}`;
@@ -27,7 +29,7 @@ const FixtureItem = React.createClass({
 		const eventName = propz.get(event, ['generatedNames', this.props.activeSchoolId]) || propz.get(event, ['generatedNames', 'official']);
 		return(
 			<div>
-				<div className="bFix_date">{`${this.getDateFromIso(event.startTime)} ${this.getTimeFromIso(event.startTime)}`}</div>
+				<div className="bFix_date">{DateHelper.getLongDateTimeStringByRegion(event.startTime, this.props.region)}</div>
 				<div className="bFix_name">{eventName}</div>
 				<div className="bFix_type">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
 			</div>

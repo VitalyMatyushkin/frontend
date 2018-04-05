@@ -6,22 +6,23 @@ import * as Moment from 'moment';
 
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 export const DateHelper = {
-	getFormatDateTimeUTCString: function(dateTime: Date): string {
-		return Moment(dateTime).utc().format();
+	getFormatDateUTCStringByRegion: function(date: Date, region: string): string {
+		return region === 'US' ? Moment(date, 'YYYY-DD-MM').utc().format() :
+			Moment(date, 'YYYY-MM-DD').utc().format();
 	},
-	getFormatDateTimeUTCStringForUS: function(dateTime: Date): string {
-		return Moment(dateTime, 'YYYY-DD-MM HH:mm').utc().format();
+	getFormatDateTimeUTCStringByRegion: function(dateTime: Date, region: string): string {
+		return region === 'US' ? Moment(dateTime, 'YYYY-DD-MM HH:mm').utc().format() :
+			Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
 	},
-	getFormatDateTimeUTCStringForGB: function(dateTime: Date): string {
-		return Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
-	},
-	getFormatDateTimeFromISOForUS: function (date: Date) {
-		return Moment(date).format('MM.DD.YYYY hh:mm A');
-	},
-	getFormatDateTimeFromISOForGB: function (date: Date) {
-		return Moment(date).format('DD.MM.YYYY HH:mm');
+	getFormatDateTimeFromISOByRegion: function(dateTime: Date | string, region: string): string {
+		return region === 'US' ? Moment(dateTime).format('MM.DD.YYYY hh:mm A') :
+			Moment(dateTime).format('DD.MM.YYYY HH:mm');
 	},
 
+	getFormatDateToSend: function (date: Date, region: string) {
+		return region === 'US' ? Moment(date, 'YYYY-DD-MM').format('YYYY-MM-DD') :
+			date;
+	},
 	/**
 	 * Get date string dd.mm.yyyy from date object
 	 * Use it instead date.toLocaleDateString
@@ -31,6 +32,18 @@ export const DateHelper = {
 	 */
 	getDateStringFromDateObject: function(date: Date): string {
 		return Moment(date).format('DD.MM.YYYY');
+	},
+
+	getDateStringByRegion: function(date: Date, region: string): string {
+		return region === 'US' ? Moment(date).format('MM.DD.YYYY') : Moment(date).format('DD.MM.YYYY');
+	},
+
+	getLongDateTimeStringByRegion: function(dateTime: Date, region: string): string {
+		return region === 'US' ? Moment(dateTime).format('MMMM DD YYYY hh:mm A') : Moment(dateTime).format('DD MMMM YYYY HH:mm');
+	},
+
+	getLongDateStringByRegion: function(date: Date, region: string): string {
+		return region === 'US' ?  Moment(date).format('MMMM DD YYYY') : Moment(date).format('DD MMMM YYYY');
 	},
 
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
@@ -87,11 +100,6 @@ export const DateHelper = {
 	getDateLongTimeString: function(dateTime: Date): string {
 		const strDateTime = Moment(dateTime).format('DD.MM.YYYY/HH:mm:ss');
 		return strDateTime;
-	},
-
-	toLocalDateTime:function(str: string): string {
-		const date = Moment(str, 'YYYY-MM-DD HH:mm', true).toDate();
-		return Moment(date).format('DD.MM.YYYY/HH:mm');
 	},
 
 	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */

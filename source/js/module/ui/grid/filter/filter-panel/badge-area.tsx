@@ -14,18 +14,19 @@ export interface BadgeAreaModel {
 
 export interface BadgeAreaProps {
     model: BadgeAreaModel
+	region?: string
 }
 
 export class BadgeArea extends React.Component<BadgeAreaProps, {}> {
 	render() {
-		const 	model 	= this.props.model,
+		const 	{model, region} 	= this.props,
 				badges 	= model.badges;
 
 		return (
 			<div className="bBadgeArea">
 					{Object.keys(badges).map((key, index) => {
 						const badge = badges[key];
-						return <Badge key={index} model={badge} />;
+						return <Badge key={index} model={badge} region={region}/>;
 					})}
 			</div>
 		);

@@ -27,9 +27,9 @@ export const PermissionsStep = (React as any).createClass({
 			}
 		}
 
-		binding.sub('staffRegister.schoolField').set('region', region);
-		binding.sub('parentRegister.schoolField').set('region', region);
-		binding.sub('studentRegister.schoolField').set('region', region);
+		binding.sub('staffRegister').set('region', region);
+		binding.sub('parentRegister').set('region', region);
+		binding.sub('studentRegister').set('region', region);
 	},
 	setRegisterType: function(type: string): void {
 		const binding = this.getDefaultBinding();

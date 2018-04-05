@@ -68,6 +68,7 @@ const TournamentForm = React.createClass({
 						type		= "datetime"
 						field		= "startTime"
 						validation	= "datetime required"
+						region      = {this.props.region}
 					>
 						Start Time
 					</FormField>
@@ -75,6 +76,7 @@ const TournamentForm = React.createClass({
 						type		= "datetime"
 						field		= "endTime"
 						validation	= "datetime required"
+						region      = {this.props.region}
 					>
 						End time
 					</FormField>

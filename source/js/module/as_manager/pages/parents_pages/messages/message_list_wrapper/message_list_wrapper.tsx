@@ -1,7 +1,7 @@
 import * as  React from 'react'
 import * as  Morearty from 'morearty'
 import * as  Immutable from 'immutable'
-
+import{RegionHelper} from 'module/helpers/region_helper'
 import * as  MessageList from 'module/ui/message_list/message_list'
 import * as MessageConsts from "module/ui/message_list/message/const/message_consts";
 
@@ -103,6 +103,7 @@ export const MessageListWrapper = (React as any).createClass({
 					onClickSubmitComment	= { this.onClickSubmitComment }
 					checkComments			= { this.checkComments }
 					templates				= { templates }
+					region                  = { RegionHelper.getRegion(this.getMoreartyContext().getBinding()) }
 				/>
 			);
 		}

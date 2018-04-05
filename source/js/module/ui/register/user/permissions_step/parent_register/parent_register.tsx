@@ -153,6 +153,7 @@ export const ParentRegister = (React as any).createClass({
 						binding             = {binding.sub('schoolField')}
 						mode                = {binding.toJS('userType')}
 						defaultSchool       = {binding.toJS('school')}
+						region              = {binding.get('region')}
 						handleChangeSchool  = {this.handleChangeSchool}
 						handleClickBack     = {this.handleClickBack}
 					/>
@@ -162,6 +163,7 @@ export const ParentRegister = (React as any).createClass({
 				currentView = (
 					<ChildStep
 						binding         = {binding}
+						region          = {binding.get('region')}
 						setChild        = {this.setChild}
 						school          = {binding.toJS('school')}
 						handleClickBack = {this.handleClickBack}

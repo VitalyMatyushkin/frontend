@@ -5,6 +5,7 @@ const   React 				= require('react'),
 		Morearty			= require('morearty'),
 		StudentListClass  	= require('./student-list-class'),
 		{Grid}				= require('module/ui/grid/grid'),
+		{RegionHelper} 	    = require('module/helpers/region_helper'),
 		Immutable			= require('immutable');
 
 const StudentList = React.createClass({
@@ -24,10 +25,11 @@ const StudentList = React.createClass({
 		}
 	},
 	render: function () {
-		const binding = this.getDefaultBinding();
+		const   binding = this.getDefaultBinding(),
+				region  = RegionHelper.getRegion(this.getMoreartyContext().getBinding());
 		
 		binding.set('grid', Immutable.fromJS(this.model.grid));
-		return this.model.grid ? <Grid model={this.model.grid} id="students_table"/> : null;
+		return this.model.grid ? <Grid model={this.model.grid} id="students_table" region={region}/> : null;
 	}
 });
 

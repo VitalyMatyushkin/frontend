@@ -35,10 +35,7 @@ const ViewNewsItem = React.createClass({
 			return (
 				<div>
 					{
-						this.props.region === 'US' ?
-						DateHelper.getFormatDateTimeFromISOForUS(news.date)
-							:
-						DateHelper.getFormatDateTimeFromISOForGB(news.date)
+						DateHelper.getFormatDateTimeFromISOByRegion(news.date, this.props.region)
 					}
 				</div>
 			)

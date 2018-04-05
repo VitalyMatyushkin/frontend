@@ -8,8 +8,7 @@ const 	React 			= require('react'),
 		{SVG} 			= require('module/ui/svg'),
 		{DataLoader} 	= require('module/ui/grid/data-loader'),
 		{GridModel}		= require('module/ui/grid/grid-model'),
-		{DateHelper}    = require('module/helpers/date_helper'),
-		Timezone    	= require('moment-timezone');
+		{DateHelper}    = require('module/helpers/date_helper');
 /**
  * NewsListClass
  *
@@ -71,11 +70,7 @@ class NewsListModel {
 	}
 	
 	getNewsTime(item){
-		if (this.props.region === 'US') {
-			return DateHelper.getFormatDateTimeFromISOForUS(item.date);
-		} else {
-			return DateHelper.getFormatDateTimeFromISOForGB(item.date);
-		}
+		return DateHelper.getFormatDateTimeFromISOByRegion(item.date, this.props.region);
 	}
 	
 	getColumns() {

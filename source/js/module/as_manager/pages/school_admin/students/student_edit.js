@@ -2,6 +2,7 @@ const 	React 				= require('react'),
 		Immutable 			= require('immutable'),
 		Morearty			= require('morearty'),
 		Promise				= require('bluebird'),
+		{DateHelper}        = require('module/helpers/date_helper'),
 		StudentsFormHelper	= require('./students_form_helper'),
 		StudentForm 		= require('module/as_manager/pages/school_admin/students/student_form');
 
@@ -101,6 +102,9 @@ const StudentEditPage = React.createClass({
 		}
 
 		StudentsFormHelper.convertNextOfKinToServerFormat(countNextOfKinBlocks, data);
+		if (data.birthday) {
+			data.birthday = DateHelper.getFormatDateToSend(data.birthday, this.props.region);
+		}
 		return window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: this.studentId}, data)
 			.then(() => {
 				document.location.hash = 'school_admin/students';
@@ -121,6 +125,7 @@ const StudentEditPage = React.createClass({
 					onFormSubmit	= { this.submitEdit }
 					schoolId		= { this.activeSchoolId }
 					binding			= { binding }
+					region          = {this.props.region}
 				/>
 			)
 		} else {

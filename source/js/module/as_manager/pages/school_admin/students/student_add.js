@@ -1,5 +1,6 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
+		{DateHelper}        = require('module/helpers/date_helper'),
 		StudentForm			= require('module/as_manager/pages/school_admin/students/student_form'),
 		StudentsFormHelper	= require('./students_form_helper');
 
@@ -17,6 +18,9 @@ const StudentAddPage = React.createClass({
 				countNextOfKinBlocks	= binding.toJS('countNextOfKinBlocks');
 
 		StudentsFormHelper.convertNextOfKinToServerFormat(countNextOfKinBlocks, data);
+		if (data.birthday) {
+			data.birthday = DateHelper.getFormatDateToSend(data.birthday, this.props.region);
+		}
 		return window.Server.schoolStudents.post(this.activeSchoolId, data)
 			.then(() => {
 				document.location.hash = 'school_admin/students';
@@ -33,6 +37,7 @@ const StudentAddPage = React.createClass({
 				onFormSubmit	= { this.submitAdd }
 				schoolId		= { this.activeSchoolId }
 				binding			= { binding }
+				region          = {this.props.region}
 			/>
 		)
 	}

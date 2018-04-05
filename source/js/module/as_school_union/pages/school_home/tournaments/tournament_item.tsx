@@ -2,12 +2,13 @@
  * Created by vitaly on 05.12.17.
  */
 
-import * as Timezone from 'moment-timezone';
+import {DateHelper}  from 'module/helpers/date_helper';
 import * as React    from 'react';
 import {Tournament}	 from 'module/as_manager/pages/tournaments/tournament';
 
 interface TournamentItemProps {
-	tournament: Tournament;
+	tournament: Tournament
+	region: string
 }
 
 export class TournamentItem extends React.Component<TournamentItemProps> {
@@ -32,8 +33,8 @@ export class TournamentItem extends React.Component<TournamentItemProps> {
 					{this.props.tournament.name}
 				</div>
 				<div className="ePublicSchoolUnionTournamenItem_tournamenDate">
-					{Timezone.tz(this.props.tournament.startTime, (window as any).timezone).format('DD.MM.YY HH:mm')} -
-					{Timezone.tz(this.props.tournament.endTime, (window as any).timezone).format('DD.MM.YY HH:mm')}
+					{DateHelper.getFormatDateTimeFromISOByRegion(this.props.tournament.startTime, this.props.region)} -
+					{DateHelper.getFormatDateTimeFromISOByRegion(this.props.tournament.endTime, this.props.region)}
 				</div>
 			</div>
 	);

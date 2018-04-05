@@ -12,6 +12,7 @@ const FixtureList = React.createClass({
 		title:					React.PropTypes.string.isRequired,
 		showAllItemsButtonText:	React.PropTypes.string.isRequired,
 		activeSchoolId:			React.PropTypes.string.isRequired,
+		region:			        React.PropTypes.string,
 		isDaySelected:			React.PropTypes.bool.isRequired,
 		isSync:					React.PropTypes.bool.isRequired,
 		events:					React.PropTypes.any
@@ -28,7 +29,7 @@ const FixtureList = React.createClass({
 		this.setState( {isShowAllItems: !this.state.isShowAllItems} );
 	},
 	getFixtureListByEvents: function(events) {
-		return events.map( e => <FixtureItem key={ e.id } event={ e } activeSchoolId={ this.props.activeSchoolId } /> );
+		return events.map( e => <FixtureItem key={ e.id } event={ e } activeSchoolId={ this.props.activeSchoolId } region={this.props.region}/> );
 	},
 	getFixtureMessage: function(title) {
 		return (title === "Fixtures") ? "There are no upcoming events to display" : "There are no recent results to display";

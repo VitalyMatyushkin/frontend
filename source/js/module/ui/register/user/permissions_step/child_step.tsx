@@ -244,6 +244,7 @@ export const ChildStep = (React as any).createClass({
 				</FormField>
 				<FormField
 					type		= 'date'
+					region      = {this.props.region}
 					field		= {`child.${index}.birthday`}
 					key 		= {`child_${index}${countChildrenBlocks}_birthday`}
 					validation	= {`birthday`}
