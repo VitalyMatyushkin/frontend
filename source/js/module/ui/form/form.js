@@ -10,6 +10,8 @@
  * NOTE: I'm not sure if binding propagation is good idea, but it was implemented in that way.
  *
  */
+import {Button} from "../button/button";
+
 const   React       = require('react'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
@@ -23,6 +25,7 @@ const   React       = require('react'),
 const Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		isLoading:                  React.PropTypes.bool,
 		onSubmit: 			        React.PropTypes.func,
 		onSuccess: 			        React.PropTypes.func,
 		onError: 			        React.PropTypes.func,
@@ -310,9 +313,13 @@ const Form = React.createClass({
 							</button>
 						</If>
 						<If condition={!this.props.hideSubmitButton}>
-							<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
-								{binding.meta().get('buttonText')}
-							</button>
+							<Button
+								id={this.props.submitButtonId}
+								text={binding.meta().get('buttonText')}
+								onClick={this.tryToSubmit}
+								extraStyleClasses="bButton mRight"
+								isLoading={typeof this.props.isLoading !== 'undefined' ? this.props.isLoading : this.busy}
+							/>
 						</If>
 					</div>
 				</div>
