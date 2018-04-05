@@ -8,7 +8,7 @@ const 	React				= require('react'),
 		ChallengeListItem	= require('./challenge_list_item'),
 		NoResultItem		= require('./no_result_item')
 
-const {CalendarSize} = require('module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget.tsx');
+import {CalendarSize} from 'module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget.tsx';
 
 const Challenges = React.createClass({
 	propTypes: {
