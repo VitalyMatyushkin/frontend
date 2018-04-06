@@ -35,6 +35,7 @@ export const Blogs = (React as any).createClass({
 					component	= { BlogsList }
 					handleClick	= { this.handleClick }
 					addButton	= { addButton }
+					region      = { region }
 				/>
 				<Route
 					path		= "/blogs/add"
