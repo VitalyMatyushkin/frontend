@@ -24,7 +24,8 @@ const UserViewSummary = React.createClass({
 					gender 	= this.props.selectedUserData.gender,
 					email 	= this.props.selectedUserData.email,
 					phone 	= this.props.selectedUserData.phone ? this.props.selectedUserData.phone : '',
-					avatar 	= this.props.selectedUserData.avatar;
+					avatar 	= this.props.selectedUserData.avatar,
+					tokens  = this.props.selectedUserData.verification.tokens ? this.props.selectedUserData.verification.tokens : '';
 			
 			return (
 				<div className="eSchoolMaster_summary_wrap">
@@ -49,6 +50,15 @@ const UserViewSummary = React.createClass({
 							<div className="eSchoolMaster_field_name">Phone:</div>
 							<div className="eSchoolMaster_field_value">{phone}</div>
 						</div>
+						{
+							tokens ?
+								<div className="eSchoolMaster_field">
+									<div className="eSchoolMaster_field_name">Tokens:</div>
+									<div className="eSchoolMaster_field_value">sms: {tokens.sms}, email: {tokens.email}</div>
+								</div>
+								:
+								null
+						}
 					</div>
 				</div>
 			)

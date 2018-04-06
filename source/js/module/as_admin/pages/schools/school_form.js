@@ -261,6 +261,14 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField
 						classNames 	= "mWideSingleLine"
 						type 		= "checkbox"
+						id 			= "createS_student_from_parent_permission"
+						field 		= "canCreateStudentFromParentPermissionRequest"
+					>
+						Admin can create student from parent permission request
+					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
 						field 		= "notificationsEnabled"
 					>
 						Enable push notification

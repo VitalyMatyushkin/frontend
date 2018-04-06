@@ -81,7 +81,7 @@ export class UsersActionsClass {
 				} else {
 					action += permission.preset;
 
-					if(!activeSchoolId) {
+					if(!activeSchoolId && permission.school) {
 						action +=' for ' + permission.school.name;
 					}
 				}
@@ -403,12 +403,6 @@ export class UsersActionsClass {
 						hideFilter:true,
 						hideButtons:true
 					}
-				}
-			},
-			{
-				text:'Tokens',
-				cell:{
-					dataField:'tokens'
 				}
 			},
 			{

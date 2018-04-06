@@ -7,10 +7,9 @@ const	Form				= require('../../../../ui/form/form'),
 		React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		classNames			= require('classnames'),
 		RoleList			= require('module/data/roles_data'),
 		ErrorAddRole		= require('module/data/text_add_role_error'),
-		SchoolUnionRoleList	= require('module/data/school_union_role_list'),
+		{RoleListWithoutSchool}	= require('module/data/roles_data_without_school'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
 const FilteringServices = require('module/core/services/FilteringServices');
@@ -76,8 +75,8 @@ const GrantRole = React.createClass({
 					return !hasUserCurrentRole(role.id);
 				}
 			});
-		} else {
-			return [];
+		} else  {
+			return RoleListWithoutSchool;
 		}
 	},
 	getSchoolService: function() {
@@ -125,6 +124,11 @@ const GrantRole = React.createClass({
 						sportIds:	sports.map(r => r.id)
 					};
 					break;
+				case 'public_blogger':
+					body = {
+						preset:     model.preset.toUpperCase()
+					};
+					break;
 				default:
 					body = {
 						preset:     model.preset.toUpperCase(),
@@ -146,6 +150,7 @@ const GrantRole = React.createClass({
 	},
 	handleSelectSchool: function(schoolId, schoolData) {
 		this.selectedSchool = schoolData;
+		this.getDefaultBinding().sub('formGrantRole').meta().remove('preset');
 	},
 	getSchoolSelectedId: function() {
 		const binding = this.getDefaultBinding().sub('formGrantRole');
@@ -188,7 +193,7 @@ const GrantRole = React.createClass({
 					School
 				</FormField>
 				<FormField	type		= "select"
-							isDisabled	= { typeof this.selectedSchool === 'undefined' }
+				            key         = { typeof this.selectedSchool === 'undefined' ? 'withoutSchool' : this.selectedSchool.id }
 							field		= "preset"
 							sourceArray	= { this.getRoleList() }
 				>

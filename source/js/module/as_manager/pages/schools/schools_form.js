@@ -300,22 +300,6 @@ const SchoolForm = React.createClass({
 								Public Bigscreen Site Access Password
 							</FormField>
 							<FormField
-								classNames 	= "mSingleLine"
-								type 		= "checkbox"
-								id 			= "school_registration_checkbox"
-								field 		= "studentSelfRegistrationEnabled"
-							>
-								Student registration
-							</FormField>
-							<FormField
-								classNames 	= "mSingleLine"
-								type 		= "checkbox"
-								id 			= "createS_student_from_parent_permission"
-								field 		= "canCreateStudentFromParentPermissionRequest"
-							>
-								Admin can create student from parent permission request
-							</FormField>
-							<FormField
 								type 		= "dropdown"
 								id 			= "school_public_student_view_type_checkbox"
 								field 		= "publicStudentViewType"
