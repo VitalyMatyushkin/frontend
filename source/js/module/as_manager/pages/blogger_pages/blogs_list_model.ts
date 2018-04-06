@@ -36,7 +36,6 @@ export class BlogsModel{
 	}
 
 	getCreatedAt(item: Blog): string {
-		console.log(item);
 		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
 	}
 
