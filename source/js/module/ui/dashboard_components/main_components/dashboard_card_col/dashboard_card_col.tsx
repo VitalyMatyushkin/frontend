@@ -16,12 +16,17 @@ export interface DashboardCardColProps {
 	smWidth: number
 	xsWidth: number
 	minSizeConstraints?: [number, number]
+	handlePinWidget: () => void
+	handleMinimizeWidget: () => void
+	handleResize: (delta) => void
+	isPin: boolean
+	isMinimize: boolean
+	delta: number
 }
 
 export interface DashboardCardColState {
 	isSync: boolean,
-	width: number,
-	delta: number
+	width: number
 }
 
 const CONSTRAINTS_MD_WIDTH = 3;
@@ -34,8 +39,7 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 	componentWillMount() {
 		this.setState({
 			isSync: false,
-			width: 0,
-			delta: 0
+			width: 0
 		});
 	}
 	componentDidMount() {
@@ -45,17 +49,17 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 		});
 	}
 	getCardColStyle(): string {
-		let mdWidth = this.props.mdWidth + this.state.delta;
+		let mdWidth = this.props.mdWidth + this.props.delta;
 		if(mdWidth < CONSTRAINTS_MD_WIDTH) {
 			mdWidth = CONSTRAINTS_MD_WIDTH;
 		}
 
-		let smWidth = this.props.smWidth + this.state.delta;
+		let smWidth = this.props.smWidth + this.props.delta;
 		if(smWidth < CONSTRAINTS_SM_WIDTH) {
 			smWidth = CONSTRAINTS_SM_WIDTH;
 		}
 
-		let xsWidth = this.props.xsWidth + this.state.delta;
+		let xsWidth = this.props.xsWidth + this.props.delta;
 		if(xsWidth < CONSTRAINTS_XS_WIDTH) {
 			xsWidth = CONSTRAINTS_SM_WIDTH;
 		}
@@ -69,9 +73,10 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 	 */
 	handleResize(deltaPoints) {
 		this.setState({
-			isSync: false,
-			delta: this.state.delta + deltaPoints
+			isSync: false
 		});
+
+		this.props.handleResize(this.props.delta + deltaPoints);
 
 		// a little dirty
 		// but we need some time for resize bDashboardCardCol by delta changes
@@ -93,6 +98,10 @@ export class DashboardCardCol extends React.Component<DashboardCardColProps, Das
 				{
 					this.state.isSync ?
 						<DashboardCard
+							isPin={this.props.isPin}
+							isMinimize={this.props.isMinimize}
+							handlePinWidget={this.props.handlePinWidget}
+							handleMinimizeWidget={this.props.handleMinimizeWidget}
 							colWidth={this.props.colWidth}
 							width={this.state.width}
 							index={this.props.index}

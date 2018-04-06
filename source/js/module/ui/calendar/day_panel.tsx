@@ -24,6 +24,7 @@ export class DayPanel extends React.Component<DayPanelProps> {
 		const classes	= classNames({
 			eMonth_day:	true,
 			mMedium:    this.props.size === CalendarSize.Medium,
+			mSmall:     this.props.size === CalendarSize.Small,
 			mToday:		this.props.isToday === true,
 			mActive:	this.props.isSelected ? false : this.props.isActive,	// nobody care about day activity if day is selected
 			mSelect:	this.props.isSelected === true,

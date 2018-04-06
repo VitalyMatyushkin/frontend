@@ -36,6 +36,9 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.Small: {
+				return ' mMedium';
+			}
 			case CalendarSize.Medium: {
 				return ' mMedium';
 			}

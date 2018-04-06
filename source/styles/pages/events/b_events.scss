@@ -18,6 +18,8 @@
   }
 
   &_row {
+    display: flex;
+
     &.mBootstrap {
       @include make-row();
     }
@@ -26,8 +28,6 @@
   &_leftSideContainer {
     display: flex;
     flex-direction: column;
-
-    float: left;
 
     min-width: 370px;
     width: 50%;
@@ -43,8 +43,12 @@
       @extend .col-xs-12;
     }
 
-    &.mMedium {
+    &.mSmall {
       width: 370px !important;
+      margin: 0 auto;
+    }
+
+    &.mMedium {
     }
   }
 
@@ -52,7 +56,7 @@
     display: flex;
     flex-direction: column;
 
-    min-width: 370px;
+    min-width: 285px;
     width: 50%;
 
     &.mBootstrap {
@@ -61,8 +65,11 @@
       @extend .col-xs-12;
     }
 
+    &.mSmall {
+      display: none;
+    }
+
     &.mMedium {
-      width: 370px !important;
     }
   }
 

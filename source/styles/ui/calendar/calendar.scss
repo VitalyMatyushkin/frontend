@@ -70,6 +70,11 @@ $active-day-background: #b2d7ec;
 
   margin: 0;
 
+  &.mSmall {
+    width: 310px;
+    margin: 0 auto;
+  }
+
   &.mMedium {
     width: 310px;
   }
@@ -95,6 +100,13 @@ $active-day-background: #b2d7ec;
   text-align: center;
   transition: border .5s;
   width: $month_day_size;
+
+  &.mSmall {
+    height: 40px;
+    width: 40px;
+
+    font-size: 14px !important;
+  }
 
   &.mMedium {
     height: 40px;

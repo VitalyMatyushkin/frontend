@@ -125,6 +125,9 @@ export const EventsCalendar = (React as any).createClass({
 	},
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.Small: {
+				return ' mSmall';
+			}
 			case CalendarSize.Medium: {
 				return ' mMedium';
 			}
@@ -133,12 +136,53 @@ export const EventsCalendar = (React as any).createClass({
 			}
 		}
 	},
-	render: function(){
-		const	binding						= this.getDefaultBinding(),
+	getRightContainer() {
+		const   binding                     = this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
+
+		return (
+			<div className={`eEvents_rightSideContainer ${this.getSizeModifierStyle()}`}>
+				<Challenges
+					size={this.props.size}
+					activeSchoolId 		= { activeSchoolId }
+					isSync 				= { isSelectedDateEventsInSync }
+					events 				= { selectedDateEvents }
+					onClick 			= { this.onEventClick }
+					onClickDeleteEvent 	= { this.onDeleteEvent }
+					isUserSchoolWorker 	= { isUserSchoolWorker }
+				/>
+				<AddEventButton
+					size={this.props.size}
+					handleClick={this.handleClickAddEventButton}
+				/>
+			</div>
+		);
+	},
+	renderRightContainer() {
+		let rightContainer;
+
+		switch (this.props.size) {
+			case CalendarSize.Small: {
+				rightContainer = this.getRightContainer();
+				break;
+			}
+			case CalendarSize.Medium: {
+				rightContainer = this.getRightContainer();
+				break;
+			}
+			default: {
+				rightContainer = this.getRightContainer();
+				break;
+			}
+		}
+
+		return rightContainer;
+	},
+	render: function(){
+		const binding = this.getDefaultBinding();
 
 		return (
 			<div className={this.getStyleForContainer()}>
@@ -149,21 +193,7 @@ export const EventsCalendar = (React as any).createClass({
 							binding={binding}
 						/>
 					</div>
-					<div className={`eEvents_rightSideContainer ${this.getSizeModifierStyle()}`}>
-						<Challenges
-							size={this.props.size}
-							activeSchoolId 		= { activeSchoolId }
-							isSync 				= { isSelectedDateEventsInSync }
-							events 				= { selectedDateEvents }
-							onClick 			= { this.onEventClick }
-							onClickDeleteEvent 	= { this.onDeleteEvent }
-							isUserSchoolWorker 	= { isUserSchoolWorker }
-						/>
-						<AddEventButton
-							size={this.props.size}
-							handleClick={this.handleClickAddEventButton}
-						/>
-					</div>
+					{this.renderRightContainer()}
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
 			</div>

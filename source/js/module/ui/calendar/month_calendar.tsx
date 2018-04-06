@@ -57,6 +57,9 @@ export class MonthCalendar extends React.Component<MonthCalendarProps> {
 
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.Small: {
+				return ' mSmall';
+			}
 			case CalendarSize.Medium: {
 				return ' mMedium';
 			}

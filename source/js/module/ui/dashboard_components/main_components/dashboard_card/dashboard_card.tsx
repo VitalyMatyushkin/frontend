@@ -14,6 +14,10 @@ export interface DashboardCardProps {
 	handleDroppedWidget: (moveResult: MoveResult) => void,
 	handleResize: (deltaPoints: number) => void
 	minSizeConstraints?: [number, number]
+	handlePinWidget: () => void
+	handleMinimizeWidget: () => void
+	isPin: boolean
+	isMinimize: boolean
 }
 
 export interface DashboardCardState {
@@ -21,8 +25,6 @@ export interface DashboardCardState {
 	resizingWidth?: number
 	resizingHeight?: number
 	isResizing: boolean
-	canDrag: boolean
-	isMinimize: boolean
 }
 
 // just plug for resizable component
@@ -39,8 +41,6 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			oldWidth: undefined,
 			resizingWidth: undefined,
 			isResizing: false,
-			canDrag: true,
-			isMinimize: false
 		});
 	}
 	getCardStyle() {
@@ -50,7 +50,7 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			style += ' mAbsolute';
 		}
 
-		if(this.state.isMinimize || !this.state.canDrag) {
+		if(this.props.isMinimize || this.props.isPin) {
 			style += ' mDisable';
 		}
 
@@ -95,17 +95,13 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 		});
 	}
 	handlePin() {
-		this.setState({
-			canDrag: !this.state.canDrag
-		});
+		this.props.handlePinWidget();
 	}
 	handleMinimize() {
-		this.setState({
-			isMinimize: !this.state.isMinimize
-		});
+		this.props.handleMinimizeWidget();
 	}
 	renderBody() {
-		if(this.state.isMinimize) {
+		if(this.props.isMinimize) {
 			return null;
 		} else {
 			return (
@@ -118,8 +114,6 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 	render() {
 		const width = this.getWidth();
 		const style = {width};
-
-		console.log(this.props.minSizeConstraints);
 
 		return (
 			<Resizable
@@ -142,7 +136,7 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 						index = {this.props.index}
 						headerText = {this.props.headerText}
 						handleDroppedWidget = {this.props.handleDroppedWidget}
-						canDrag = {this.state.canDrag}
+						isPin = {this.props.isPin}
 						handlePin = {() => this.handlePin()}
 						handleMinimize = {() => this.handleMinimize()}
 					/>

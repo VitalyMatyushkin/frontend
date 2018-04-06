@@ -11,6 +11,7 @@ export interface DashboardDropSectionProps {
 
 	index: number
 	handleDroppedWidget: (moveResult: any) => void
+	canDrop: boolean
 }
 
 function  collect(connect, monitor) {
@@ -26,9 +27,9 @@ const DashboardDropSectionTarget = {
 			whereDroppedIndex: props.index
 		};
 	},
-	canDrop() {
-		// always can drop
-		return true;
+	canDrop(props: DashboardDropSectionProps) {
+		console.log(props.canDrop);
+		return props.canDrop;
 	},
 };
 

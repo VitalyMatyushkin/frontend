@@ -13,6 +13,9 @@ const BUTTON_TEXT = 'Add event';
 export const AddEventButton = (React as any).createClass({
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.Small: {
+				return ' mSmall';
+			}
 			case CalendarSize.Medium: {
 				return ' mMedium';
 			}

@@ -28,30 +28,48 @@ export const DashboardMainPage = (React as any).createClass({
 				{
 					type: WIDGET_TYPE.SchoolProfileWidget,
 					data: undefined,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: false
 				},
 				{
 					type: WIDGET_TYPE.SchoolDataWidgetData,
 					data: undefined,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: false
 				},
 				{
 					type: WIDGET_TYPE.SchoolUsersWidgetData,
 					data: undefined,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: false
 				},
 				{
 					type: WIDGET_TYPE.SchoolInvitesWidgetData,
 					data: undefined,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: false
 				},
 				{
 					type: WIDGET_TYPE.WeatherWidgetData,
 					data: undefined,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: false
 				},
 				{
 					type: WIDGET_TYPE.CalendarWidgetData,
+					isPin: false,
+					isMinimize: false,
+					delta: 0,
 					isSync: true
 				}
 			]
@@ -78,6 +96,36 @@ export const DashboardMainPage = (React as any).createClass({
 	},
 	componentWillUnmount() {
 		this.getDefaultBinding().clear();
+	},
+	handlePinWidget(type: WIDGET_TYPE) {
+		const binding = this.getDefaultBinding();
+		const widgetArray: Widget[] = binding.toJS('widgetArray');
+
+		const widgetIndex = widgetArray.findIndex(widget => widget.type === type);
+		if(widgetIndex !== -1) {
+			widgetArray[widgetIndex].isPin = !widgetArray[widgetIndex].isPin;
+			binding.set('widgetArray', Immutable.fromJS(widgetArray));
+		}
+	},
+	handleMinimizeWidget(type: WIDGET_TYPE) {
+		const binding = this.getDefaultBinding();
+		const widgetArray: Widget[] = binding.toJS('widgetArray');
+
+		const widgetIndex = widgetArray.findIndex(widget => widget.type === type);
+		if(widgetIndex !== -1) {
+			widgetArray[widgetIndex].isMinimize = !widgetArray[widgetIndex].isMinimize;
+			binding.set('widgetArray', Immutable.fromJS(widgetArray));
+		}
+	},
+	handleResize(type: WIDGET_TYPE, delta: number) {
+		const binding = this.getDefaultBinding();
+		const widgetArray: Widget[] = binding.toJS('widgetArray');
+
+		const widgetIndex = widgetArray.findIndex(widget => widget.type === type);
+		if(widgetIndex !== -1) {
+			widgetArray[widgetIndex].delta = delta;
+			binding.set('widgetArray', Immutable.fromJS(widgetArray));
+		}
 	},
 	/**
 	 * Sets data and flag isSync to true by widgetType
@@ -128,6 +176,9 @@ export const DashboardMainPage = (React as any).createClass({
 					widgetArray={this.getWidgetArray()}
 					handleDroppedWidget={(moveResult) => this.handleDroppedWidget(moveResult)}
 					calendarWidgetBinding={this.getDefaultBinding().sub('dashboardCalendarWidget')}
+					handlePinWidget={(type) => this.handlePinWidget(type)}
+					handleMinimizeWidget={(type) => this.handleMinimizeWidget(type)}
+					handleResize={(type, delta) => this.handleResize(type, delta)}
 				/>
 			</div>
 		);

@@ -16,6 +16,9 @@ export interface DaysOfWeekBarProps {
 export class DaysOfWeekBar extends React.Component<DaysOfWeekBarProps, {}> {
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.Small: {
+				return ' mSmall';
+			}
 			case CalendarSize.Medium: {
 				return ' mMedium';
 			}

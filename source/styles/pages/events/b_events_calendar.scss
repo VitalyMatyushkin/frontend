@@ -11,6 +11,11 @@
   height: 360px;
   overflow-y: auto;
 
+  &.mSmall {
+    font-size: 14px !important;
+    height: 302px !important;
+  }
+
   &.mMedium {
     font-size: 14px !important;
     height: 302px !important;

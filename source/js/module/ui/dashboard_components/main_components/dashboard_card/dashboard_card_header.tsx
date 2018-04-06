@@ -18,7 +18,7 @@ export interface DashboardCardHeaderProps {
 	index: number
 	headerText: string
 	handleDroppedWidget: (moveResult: MoveResult) => void
-	canDrag: boolean
+	isPin: boolean
 	handlePin: () => void
 	handleMinimize: () => void
 }
@@ -28,7 +28,7 @@ const subjectSource = {
 		return props;
 	},
 	canDrag(props: DashboardCardHeaderProps, monitor) {
-		return props.canDrag;
+		return !props.isPin;
 	},
 	endDrag(props: DashboardCardHeaderProps, monitor, component) {
 		if (!monitor.didDrop()) {
@@ -55,7 +55,7 @@ class DashboardCardHeader extends React.Component<DashboardCardHeaderProps, {}> 
 	getStyleForPinControl() {
 		let style = 'eDashboardCard_control';
 
-		if(!this.props.canDrag) {
+		if(this.props.isPin) {
 			style += ' mActive'
 		}
 
