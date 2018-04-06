@@ -10,12 +10,13 @@ const RoleHelper = {
 		no_body:	'app'// it's a synthetic role, it isn't exist on server
 	},
 	USER_ROLES: {
-		ADMIN:		'ADMIN',
-		MANAGER:	'MANAGER',
-		TEACHER:	'TEACHER',
-		COACH:		'COACH',
-		STUDENT:	'STUDENT',
-		PARENT:		'PARENT'
+		ADMIN:		    'ADMIN',
+		MANAGER:	    'MANAGER',
+		TEACHER:	    'TEACHER',
+		COACH:		    'COACH',
+		STUDENT:	    'STUDENT',
+		PARENT:		    'PARENT',
+		PUBLIC_BLOGGER:	'PUBLIC_BLOGGER'
 	},
 	USER_PERMISSIONS: {
 		ADMIN:		'ADMIN',
@@ -25,13 +26,17 @@ const RoleHelper = {
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},
+	USER_PERMISSIONS_WITHOUT_SCHOOL: {
+		PUBLIC_BLOGGER:		'PUBLIC_BLOGGER'
+	},
 	ROLE_TO_PERMISSION_MAPPING:{
-		ADMIN:		'ADMIN',
-		MANAGER:	'MANAGER',
-		TEACHER:	'TEACHER',
-		COACH:		'COACH',
-		STUDENT:	'STUDENT',
-		PARENT:		'PARENT'
+		ADMIN:		    'ADMIN',
+		MANAGER:	    'MANAGER',
+		TEACHER:	    'TEACHER',
+		COACH:		    'COACH',
+		STUDENT:	    'STUDENT',
+		PARENT:		    'PARENT',
+		PUBLIC_BLOGGER:	'BLOGGER'
 	},
 	/**
 	 * Return role of logged in user

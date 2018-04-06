@@ -1,0 +1,1 @@
+export const RoleListWithoutSchool = [{id:'public_blogger',  value:'Blogger'}];

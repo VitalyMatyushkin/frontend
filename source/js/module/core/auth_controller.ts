@@ -9,6 +9,7 @@ import * as UserInfoHelper from 'module/shared_pages/head/user_info_helper';
 
 import * as propz from  'propz';
 import {ServiceList} from "module/core/service_list/service_list";
+import * as RoleHelper from 'module/helpers/role_helper';
 
 export const authController = {
 	requestedPage: undefined,
@@ -277,7 +278,7 @@ export const authController = {
 		let schoolKind;
 
 		const permissions = propz.get(binding.toJS('userData'), ['roleList', 'permissions'], undefined);
-		if(typeof permissions !== 'undefined') {
+		if(typeof permissions !== 'undefined' && role !== RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER) {
 			const permission = permissions.find(p => p.role === role && p.schoolId === schoolId);
 
 			if(typeof permission !== 'undefined') {
@@ -300,7 +301,7 @@ export const authController = {
 
 		const permissions = propz.get(binding.toJS(), ['userData', 'roleList', 'permissions'], undefined);
 
-		if(typeof permissions !== 'undefined') {
+		if(typeof permissions !== 'undefined' && role !== RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER) {
 			const permission = permissions.find(item => item.role === role && item.status === 'ACTIVE');
 
 			if(typeof permission !== 'undefined') {

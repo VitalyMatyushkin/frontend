@@ -326,6 +326,12 @@ export class ServiceList {
 
 	actionDescriptor : Service;
 
+	//Blogs
+	blogs: Service;
+	blog: Service;
+	posts: Service;
+	post: Service;
+
 	//Achievements
 	childrenSports: Service;
 	childSports: Service;
@@ -652,6 +658,12 @@ export class ServiceList {
 		this.schoolTournament  = new Service('/i/schools/{schoolUnionId}/schools/tournaments/{tournamentId}', binding);
 
 		this.actionDescriptor  = new Service('/i/actiondescriptors/{actionDescriptorId}', binding);
+
+		//Blogs
+		this.blogs = new Service('/i/blogs', binding);
+		this.blog = new Service('/i/blogs/{blogId}', binding);
+		this.posts = new Service('/i/blogs/{blogId}/posts', binding);
+		this.post = new Service('/i/blogs/{blogId}/posts/{postId}', binding);
 
 		//Achievements
 		this.childrenSports = new Service('/i/children/sports', binding);
