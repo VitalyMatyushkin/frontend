@@ -61,8 +61,12 @@ const RoleList = (React as any).createClass({
 	setRole:function(roleName, school){
 		const rootBinding = this.getMoreartyContext().getBinding();
 
-		rootBinding.set('userRules.activeSchoolId', school.id);
-		this.roleBecome(roleName, school.kind);
+		if (typeof school !== 'undefined') {
+			rootBinding.set('userRules.activeSchoolId', school.id);
+			this.roleBecome(roleName, school.kind);
+		} else {
+			this.roleBecome(roleName);
+		}
 	},
 	roleBecome:function(roleName){
 		AuthorizationServices.become(roleName).then(() => window.location.reload());
