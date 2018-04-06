@@ -2,6 +2,20 @@ import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
 import {DateHelper} from "module/helpers/date_helper";
 import {STATUS_FOR_FILTER} from '../status_helper';
+import {ServiceList} from "module/core/service_list/service_list";
+
+interface Post {
+	authorId: string
+	blogId: string
+	content: string
+	createdAt: string
+	id: string
+	publishedAt: string
+	status: string
+	threadId: string
+	title: string
+	updatedAt: string
+}
 
 export class PostsModel{
 
@@ -27,11 +41,12 @@ export class PostsModel{
 		this.setColumns();
 	}
 
-	getCreatedAt(item: any): string {
+	getCreatedAt(item: Post): string {
+		console.log(item);
 		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
 	}
 
-	getPublishedAt(item: any): string {
+	getPublishedAt(item: Post): string {
 		return DateHelper.getFormatDateTimeFromISOByRegion(item.publishedAt, this.props.region);
 	}
 
@@ -110,17 +125,17 @@ export class PostsModel{
 		];
 	}
 
-	onEdit(post, eventDescriptor: any) {
+	onEdit(post: Post, eventDescriptor: any) {
 		document.location.hash = `/blogs/${this.blogId}/posts/edit?id=${post.id}`;
 		eventDescriptor.stopPropagation();
 	}
 
-	onRemove(post, eventDescriptor: any) {
-		(<any>window).confirmAlert(
+	onRemove(post: Post, eventDescriptor: any) {
+		(window as any).confirmAlert(
 			`Are you sure you want to remove post ${post.title}?`,
 			"Ok",
 			"Cancel",
-			() => (<any>window).Server.post
+			() => (window.Server as ServiceList).post
 				.delete(
 					{
 						blogId: this.blogId,
@@ -155,7 +170,7 @@ export class PostsModel{
 		return this;
 	};
 
-	createGridFromExistingData(grid: any){
+	createGridFromExistingData(grid: GridModel){
 
 		this.grid = new GridModel({
 			actionPanel:{

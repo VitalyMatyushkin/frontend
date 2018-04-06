@@ -1,6 +1,7 @@
 import {BlogForm} from './blog_form';
-import * as Morearty from'morearty';
-import * as React from'react';
+import {ServiceList} from "module/core/service_list/service_list";
+import * as Morearty from 'morearty';
+import * as React from 'react';
 
 export const BlogAdd = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -8,7 +9,7 @@ export const BlogAdd = (React as any).createClass({
 		this.getDefaultBinding().clear();
 	},
 	submitAdd: function(data) {
-		(window as any).Server.blogs.post(data).then(() =>  {
+		(window.Server as ServiceList).blogs.post(data).then(() =>  {
 			document.location.hash = 'blogs';
 		});
 	},

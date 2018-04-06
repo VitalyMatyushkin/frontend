@@ -2,6 +2,16 @@ import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
 import {DateHelper} from "module/helpers/date_helper";
 import {STATUS_FOR_FILTER} from './status_helper';
+import {ServiceList} from "module/core/service_list/service_list";
+
+interface Blog {
+	authorId: string
+	createdAt: string
+	id: string
+	name: string
+	status: string
+	updatedAt: string
+}
 
 export class BlogsModel{
 
@@ -25,7 +35,8 @@ export class BlogsModel{
 		this.setColumns();
 	}
 
-	getCreatedAt(item: any): string {
+	getCreatedAt(item: Blog): string {
+		console.log(item);
 		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
 	}
 
@@ -90,17 +101,17 @@ export class BlogsModel{
 		];
 	}
 
-	onEdit(blog, eventDescriptor: any) {
+	onEdit(blog: Blog, eventDescriptor: any) {
 		document.location.hash = `blogs/edit?id=${blog.id}`;
 		eventDescriptor.stopPropagation();
 	}
 
-	onRemove(blog, eventDescriptor: any) {
-		(<any>window).confirmAlert(
+	onRemove(blog: Blog, eventDescriptor: any) {
+		(window as any).confirmAlert(
 			`Are you sure you want to remove blog ${blog.name}?`,
 			"Ok",
 			"Cancel",
-			() => (<any>window).Server.blog
+			() => (window.Server as ServiceList).blog
 				.delete(
 				{
 						blogId: blog.id
@@ -133,7 +144,7 @@ export class BlogsModel{
 		return this;
 	};
 
-	createGridFromExistingData(grid: any){
+	createGridFromExistingData(grid: GridModel){
 
 		this.grid = new GridModel({
 			actionPanel:{

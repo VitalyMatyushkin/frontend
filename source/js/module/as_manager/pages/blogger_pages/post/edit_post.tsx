@@ -1,4 +1,5 @@
 import {PostForm} from './post_form';
+import {ServiceList} from "module/core/service_list/service_list";
 import * as Immutable from 'immutable';
 import * as Morearty from'morearty';
 import * as React from'react';
@@ -14,7 +15,7 @@ export const PostEdit = (React as any).createClass({
 		binding.clear();
 
 		if (postId) {
-			(window as any).Server.post.get({blogId: this.props.blogId, postId}).then( data => {
+			(window.Server as ServiceList).post.get({blogId: this.props.blogId, postId}).then( data => {
 				binding.set(Immutable.fromJS(data));
 			});
 
@@ -22,7 +23,7 @@ export const PostEdit = (React as any).createClass({
 		}
 	},
 	submitEdit: function(data) {
-		(window as any).Server.post.put({blogId: this.props.blogId, postId: this.postId}, data).then(() =>  {
+		(window.Server as ServiceList).post.put({blogId: this.props.blogId, postId: this.postId}, data).then(() =>  {
 			document.location.hash = `blogs/${this.props.blogId}/posts`;
 		});
 	},

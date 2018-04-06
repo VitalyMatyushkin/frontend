@@ -44,17 +44,17 @@ const Center = React.createClass({
 
 		switch (true) {
 			// for parents
-			case role === "PARENT":
+			case role === RoleHelper.USER_PERMISSIONS.PARENT:
 				return (
 					<ParentRouter binding={binding}/>
 				);
 			// for blogger
-			case role === "PUBLIC_BLOGGER":
+			case role === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER:
 				return (
 					<BloggerRouter binding={binding}/>
 				);
 			// for students
-			case role === "STUDENT":
+			case role === RoleHelper.USER_PERMISSIONS.STUDENT:
 				return (
 					<StudentRouter binding={binding}/>
 				);
