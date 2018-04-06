@@ -18,13 +18,11 @@ export class DashboardDataWidgetDataItem extends React.Component<DashboardDataWi
 		switch (true) {
 			case typeof this.props.dataItem.button !== 'undefined': {
 				return (
-					<div className={'eDashboardDataWidget_dataCol m-5-width mNoneBorder' + this.getExtraStyle()}>
-						<DashboardButton
-							text={this.props.dataItem.button.text}
-							extraStyle={this.props.dataItem.button.extraStyle}
-							handleClick={this.props.dataItem.button.handleClick}
-						/>
-					</div>
+					<i
+						className={"eDashboardDataWidget_icon fa fa-pencil-square-o" + this.getExtraStyle()}
+						aria-hidden="true"
+						onClick={this.props.dataItem.button.handleClick}
+					/>
 				);
 			}
 			default: {
@@ -35,13 +33,13 @@ export class DashboardDataWidgetDataItem extends React.Component<DashboardDataWi
 	render() {
 		return (
 			<div className={'eDashboardDataWidget_dataItem' + this.getExtraStyle()}>
-				<div className={'eDashboardDataWidget_dataCol m-9-width' + this.getExtraStyle()}>
+				<div className={'eDashboardDataWidget_dataCol m-7-width' + this.getExtraStyle()}>
 					{this.props.dataItem.name}
 				</div>
-				<div className={'eDashboardDataWidget_dataCol m-3-width mTextRight' + this.getExtraStyle()}>
+				<div className={'eDashboardDataWidget_dataCol m-5-width mTextRight' + this.getExtraStyle()}>
 					{this.props.dataItem.value}
+					{this.renderButton()}
 				</div>
-				{this.renderButton()}
 			</div>
 		);
 	}

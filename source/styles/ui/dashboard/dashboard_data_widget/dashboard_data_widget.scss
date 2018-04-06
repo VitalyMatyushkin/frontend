@@ -53,16 +53,22 @@
     @extend .col-xs-8;
   }
 
+  &.m-7-width {
+    @extend .col-md-7;
+    @extend .col-sm-7;
+    @extend .col-xs-7;
+  }
+
   &.m-6-width {
     @extend .col-md-6;
-    @extend .col-sm-8;
-    @extend .col-xs-8;
+    @extend .col-sm-6;
+    @extend .col-xs-6;
   }
 
   &.m-5-width {
-    @extend .col-md-8;
-    @extend .col-sm-8;
-    @extend .col-xs-8;
+    @extend .col-md-5;
+    @extend .col-sm-5;
+    @extend .col-xs-5;
   }
 
   &.m-4-width {
@@ -90,3 +96,16 @@
   }
 }
 
+.eDashboardDataWidget_icon {
+  margin-left: 5px;
+  color: #398bf7;
+
+  &.mRedColor {
+    color: red;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: #2d454b;
+  }
+}
