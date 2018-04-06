@@ -1,6 +1,7 @@
 import {DataLoader}     from 'module/ui/grid/data-loader';
 import {GridModel}      from 'module/ui/grid/grid-model';
 import {DateHelper} from "module/helpers/date_helper";
+import {STATUS_FOR_FILTER} from '../status_helper';
 
 export class PostsModel{
 
@@ -79,6 +80,20 @@ export class PostsModel{
 				isSorted:  true,
 				cell:{
 					dataField:'status'
+				}
+			},
+			{
+				text:'Status',
+				hidden:true,
+				cell:{
+					dataField:'status'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: STATUS_FOR_FILTER,
+						hideFilter:true
+					}
 				}
 			},
 			{

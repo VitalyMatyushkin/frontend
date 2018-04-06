@@ -4,6 +4,9 @@ import * as React from'react';
 
 export const PostAdd = (React as any).createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.getDefaultBinding().clear();
+	},
 	submitAdd: function(data) {
 		(window as any).Server.posts.post({blogId: this.props.blogId}, data).then(() =>  {
 			document.location.hash = `blogs/${this.props.blogId}/posts`;

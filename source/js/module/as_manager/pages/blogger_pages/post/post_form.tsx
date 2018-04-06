@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Morearty from 'morearty';
 import * as Form from 'module/ui/form/form';
 import * as FormField from 'module/ui/form/form_field';
+import {STATUS} from '../status_helper';
 
 export const PostForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -31,6 +32,13 @@ export const PostForm = (React as any).createClass({
 					field 		= "content"
 				>
 					Content
+				</FormField>
+				<FormField
+					type    = "dropdown"
+					field   = "status"
+					options = { STATUS }
+				>
+					Status
 				</FormField>
 			</Form>
 		);
