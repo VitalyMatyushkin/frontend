@@ -91,6 +91,8 @@ const TabItemDetails = React.createClass({
     render:function(){
         const binding = this.getDefaultBinding();
 
+        console.log('IM HERE');
+
         return (
             <div className="bDetailsTab">
                 <Form binding       = {binding.sub('form')}
@@ -107,6 +109,7 @@ const TabItemDetails = React.createClass({
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
 						<FormField type="dropdown" field="gender" options={this.getGender()}>Gender</FormField>
+	                    <FormField type="date" field="birthday" validation="birthday">Date of birth</FormField>
                         <FormField type="text" field="email" validation="email server">Email</FormField>
                         <FormField type="phone" field="phone" validation="server" onPrePost={this.getPhone}>Mobile phone</FormField>
 						<FormField type="checkbox" field="verification.status.email">Email verified</FormField>
