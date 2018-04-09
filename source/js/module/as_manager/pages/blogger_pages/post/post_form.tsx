@@ -4,6 +4,8 @@ import * as Form from 'module/ui/form/form';
 import * as FormField from 'module/ui/form/form_field';
 import {STATUS} from '../status_helper';
 
+import 'styles/pages/blog/b_blog.scss';
+
 export const PostForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -18,7 +20,9 @@ export const PostForm = (React as any).createClass({
 			<Form
 				name		    = {this.props.title}
 				binding         = { binding }
+				submitOnEnter 	= { false }
 				onSubmit        = { this.props.onClickSubmit }
+				formStyleClass  = "bPostForm"
 			>
 				<FormField
 					type 		= "text"
@@ -28,17 +32,18 @@ export const PostForm = (React as any).createClass({
 					Title
 				</FormField>
 				<FormField
-					type 		= "textarea"
-					field 		= "content"
-				>
-					Content
-				</FormField>
-				<FormField
 					type    = "dropdown"
 					field   = "status"
 					options = { STATUS }
 				>
 					Status
+				</FormField>
+				<FormField
+					type 		    = "textarea"
+					field 		    = "content"
+					fieldClassName  = "ePostContent"
+				>
+					Content
 				</FormField>
 			</Form>
 		);

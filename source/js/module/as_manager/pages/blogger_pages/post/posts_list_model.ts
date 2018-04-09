@@ -45,10 +45,6 @@ export class PostsModel{
 		return DateHelper.getFormatDateTimeFromISOByRegion(item.createdAt, this.props.region);
 	}
 
-	getPublishedAt(item: Post): string {
-		return DateHelper.getFormatDateTimeFromISOByRegion(item.publishedAt, this.props.region);
-	}
-
 	setColumns(): void {
 		this.columns = [
 			{
@@ -69,20 +65,6 @@ export class PostsModel{
 					type:'custom',
 					typeOptions:{
 						parseFunction: this.getCreatedAt.bind(this)
-					}
-				},
-				filter:{
-					type:'between-date-time'
-				}
-			},
-			{
-				text:'Published',
-				isSorted:  true,
-				cell:{
-					dataField:'publishedAt',
-					type:'custom',
-					typeOptions:{
-						parseFunction: this.getPublishedAt.bind(this)
 					}
 				},
 				filter:{
@@ -125,7 +107,7 @@ export class PostsModel{
 	}
 
 	onEdit(post: Post, eventDescriptor: any) {
-		document.location.hash = `/blogs/${this.blogId}/posts/edit?id=${post.id}`;
+		document.location.hash = `blogs/${this.blogId}/posts/edit?id=${post.id}`;
 		eventDescriptor.stopPropagation();
 	}
 

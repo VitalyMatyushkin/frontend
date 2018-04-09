@@ -10,6 +10,7 @@ const	Form				= require('../../../../ui/form/form'),
 		RoleList			= require('module/data/roles_data'),
 		ErrorAddRole		= require('module/data/text_add_role_error'),
 		{RoleListWithoutSchool}	= require('module/data/roles_data_without_school'),
+		RoleHelper			= require('module/helpers/role_helper'),
 		SportManager		= require('module/shared_pages/settings/account/helpers/sport-manager');
 
 const FilteringServices = require('module/core/services/FilteringServices');
@@ -76,7 +77,13 @@ const GrantRole = React.createClass({
 				}
 			});
 		} else  {
-			return RoleListWithoutSchool;
+			//Do not show the role of the blogger, if it already exists
+			if (!this.props.userPermissionsBinding.toJS()
+					.find(role => role.preset === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER)) {
+				return RoleListWithoutSchool;
+			} else {
+				return [];
+			}
 		}
 	},
 	getSchoolService: function() {

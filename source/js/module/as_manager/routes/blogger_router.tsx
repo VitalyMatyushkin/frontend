@@ -27,7 +27,7 @@ export const BloggerRouter = (React as any).createClass({
 				<SettingsRoute	binding	= {binding.sub('userData')}/>
 
 				<Route
-					path		= '/blogs /blogs/:subPage /blogs/:blogId/posts'
+					path		= '/blogs /blogs/:subPage /blogs/:blogId/posts /blogs/:blogId/posts/:subPage'
 					binding		= {binding.sub('blogs')}
 					component	= {Blogs}
 				/>

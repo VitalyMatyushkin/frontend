@@ -84,8 +84,8 @@ const AddRole = React.createClass({
 	},
 	getRoleList: function() {
 		if (typeof this.selectedSchool !== 'undefined') {
-			const fullSchoolData = this.selectedSchool,
-				currentPermissions = this.getDefaultBinding().toJS('userWithPermissionDetail.permissions');
+			const   fullSchoolData = this.selectedSchool,
+					currentPermissions = this.getDefaultBinding().toJS('userWithPermissionDetail.permissions');
 
 			let currentRoles = [];
 
@@ -116,7 +116,13 @@ const AddRole = React.createClass({
 				}
 			});
 		} else {
-			return RoleListWithoutSchool;
+			//Do not show the role of the blogger, if it already exists
+			if (!this.getDefaultBinding().toJS('userWithPermissionDetail.permissions')
+					.find(role => role.preset === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER)) {
+				return RoleListWithoutSchool;
+			} else {
+				return [];
+			}
 		}
 	},
 	getSchoolService: function() {

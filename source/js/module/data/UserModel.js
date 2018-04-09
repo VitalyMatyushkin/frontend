@@ -3,6 +3,7 @@
  */
 
 const React = require('react');
+const RoleHelper = require('module/helpers/role_helper');
 
 const STATUS_ROLE = {
 	ACTIVE: 'ACTIVE',
@@ -47,7 +48,12 @@ UserModel.getRoles = function(user, statusPermission){
 	return (
 		<ul>
 			{
-				this.getRoleArray(user, statusPermission).map( (role, i) => <li key={i}>{role}</li> )
+				this.getRoleArray(user, statusPermission).map( (role, i) => {
+					return <li key={i}>{
+						RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER === role ?
+							RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL_TO_CLIENT.PUBLIC_BLOGGER : role
+					}</li>
+				} )
 			}
 		</ul>
 	);

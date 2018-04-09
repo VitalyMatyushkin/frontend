@@ -1,0 +1,23 @@
+@media (min-width: 600px) {
+  .bPostForm {
+    h2 {
+      max-width: 360px;
+      margin: 25px auto;
+    }
+
+    .ePostContent {
+      width: 500px;
+      max-width: 500px;
+
+      textarea {
+        width: 500px;
+        max-width: 500px;
+        min-height: 250px;
+      }
+    }
+
+    .eForm_savePanel {
+      justify-content: center;
+    }
+  }
+}

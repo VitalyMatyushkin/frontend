@@ -246,6 +246,15 @@ export class UsersActionsClass {
 				value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
 			});
 		});
+
+		if (this.activeSchoolId === null) {
+			Object.keys(RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL_TO_CLIENT).forEach( key => {
+				roles.push({
+					key: key,
+					value: RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL_TO_CLIENT[key].toLowerCase()
+				});
+			});
+		}
 		
 		return roles;
 	}
