@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import 'styles/ui/dashboard/dashboard_data_widget/dashboard_data_widget.scss'
 import {DataItem} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
-import {DashboardButton} from "module/ui/dashboard_components/main_components/dashboard_button/dashboard_button";
 
 export interface DashboardDataWidgetDataItemProps {
 	dataItem: DataItem
@@ -16,12 +15,12 @@ export class DashboardDataWidgetDataItem extends React.Component<DashboardDataWi
 	}
 	renderButton() {
 		switch (true) {
-			case typeof this.props.dataItem.button !== 'undefined': {
+			case typeof this.props.dataItem.icon !== 'undefined': {
 				return (
 					<i
-						className={"eDashboardDataWidget_icon fa fa-pencil-square-o" + this.getExtraStyle()}
+						className={`eDashboardDataWidget_icon fa ${this.props.dataItem.icon.iconStyle} ${this.getExtraStyle()}`}
 						aria-hidden="true"
-						onClick={this.props.dataItem.button.handleClick}
+						onClick={this.props.dataItem.icon.handleClick}
 					/>
 				);
 			}

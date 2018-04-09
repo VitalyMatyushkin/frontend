@@ -12,15 +12,43 @@ export const SchoolUsersWidgetActions = {
 		return this.getSchoolPermissions(schoolId)
 			.then(permissions => {
 				data.dataItems.push(
-					{name: 'School Admin staff', value: String(this.getAdminStaffCountByPermissions(permissions))},
-					{name: 'School PE staff', value: String(this.getSchoolPEStaffCountByPermissions(permissions))},
-					{name: 'Parents', value: String(this.getParentsCountByPermissions(permissions))}
+					{
+						name: 'School Admin staff',
+						value: String(this.getAdminStaffCountByPermissions(permissions)),
+						icon: {
+							iconStyle: 'fa-eye',
+							handleClick: () => {window.location.hash = 'school_console/users';}
+						}
+					},
+					{
+						name: 'School PE staff',
+						value: String(this.getSchoolPEStaffCountByPermissions(permissions)),
+						icon: {
+							iconStyle: 'fa-eye',
+							handleClick: () => {window.location.hash = 'school_console/users';}
+						}
+					},
+					{
+						name: 'Parents',
+						value: String(this.getParentsCountByPermissions(permissions)),
+						icon: {
+							iconStyle: 'fa-eye',
+							handleClick: () => {window.location.hash = 'school_console/users';}
+						}
+					}
 				);
 
 				return this.getSchoolStudentsCount(schoolId);
 			})
 			.then(countData => {
-				data.dataItems.push({name: 'Students', value: String(countData.count)});
+				data.dataItems.push({
+					name: 'Students',
+					value: String(countData.count),
+					icon: {
+						iconStyle: 'fa-eye',
+						handleClick: () => {window.location.hash = 'school_console/users';}
+					}
+				});
 
 				return this.getSchoolRequestsCount(schoolId);
 			})
@@ -31,12 +59,17 @@ export const SchoolUsersWidgetActions = {
 					extraStyle: this.getExtraStyleForInviteInboxItem(countData.count)
 				};
 				if(countData.count > 0) {
-					item.button = {
-						text: 'Accept',
-						extraStyle: 'mDanger mSm',
+					item.icon = {
+						iconStyle: 'fa-pencil-square-o',
+						handleClick: () => {window.location.hash = 'school_console/requests';}
+					}
+				} else {
+					item.icon = {
+						iconStyle: 'fa-eye',
 						handleClick: () => {window.location.hash = 'school_console/requests';}
 					}
 				}
+
 				data.dataItems.push(item);
 
 				return data;

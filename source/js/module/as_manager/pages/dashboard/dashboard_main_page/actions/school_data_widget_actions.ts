@@ -12,10 +12,9 @@ export const SchoolDataWidgetActions = {
 					{
 						name: 'Students',
 						value: String(countData.count),
-						button: {
-							text: 'Edit',
+						icon: {
 							handleClick: () => {window.location.hash = 'school_admin/students';},
-							extraStyle: 'mSm'
+							iconStyle: 'fa-pencil-square-o'
 						}
 					}
 				);
@@ -27,10 +26,9 @@ export const SchoolDataWidgetActions = {
 					{
 						name: 'Forms',
 						value: String(countData.count),
-						button: {
-							text: 'Edit',
+						icon: {
 							handleClick: () => {window.location.hash = 'school_admin/forms';},
-							extraStyle: 'mSm'
+							iconStyle: 'fa-pencil-square-o'
 						}
 					}
 				);
@@ -42,10 +40,9 @@ export const SchoolDataWidgetActions = {
 					{
 						name: 'Houses',
 						value: String(countData.count),
-						button: {
-							text: 'Edit',
+						icon: {
 							handleClick: () => {window.location.hash = 'school_admin/houses';},
-							extraStyle: 'mSm'
+							iconStyle: 'fa-pencil-square-o'
 						}
 					}
 				);
@@ -57,10 +54,9 @@ export const SchoolDataWidgetActions = {
 					{
 						name: 'Teams',
 						value: String(countData.count),
-						button: {
-							text: 'Edit',
+						icon: {
 							handleClick: () => {window.location.hash = 'school_admin/teams';},
-							extraStyle: 'mSm'
+							iconStyle: 'fa-pencil-square-o'
 						}
 					}
 				);

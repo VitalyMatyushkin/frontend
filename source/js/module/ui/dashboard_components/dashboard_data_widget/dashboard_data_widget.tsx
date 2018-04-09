@@ -12,10 +12,9 @@ export interface DataItem {
 	name: string,
 	value: string,
 	extraStyle?: string,
-	button?: {
-		text: string,
+	icon?: {
 		handleClick: () => void,
-		extraStyle: string
+		iconStyle: string
 	}
 }
 

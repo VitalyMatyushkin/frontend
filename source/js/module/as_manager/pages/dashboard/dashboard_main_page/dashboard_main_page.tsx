@@ -157,15 +157,31 @@ export const DashboardMainPage = (React as any).createClass({
 		const widgetArray: Widget[] = binding.toJS('widgetArray');
 
 		// copy
-		const droppedWidget = Object.assign({}, widgetArray[moveResult.whoDroppedIndex]);
+		const draggingWidget = Object.assign({}, widgetArray[moveResult.whoDroppedIndex]);
+		const replacingWidget = Object.assign({}, widgetArray[moveResult.whereDroppedIndex]);
+
 		// insert
-		widgetArray.splice(moveResult.whereDroppedIndex, 0, droppedWidget);
-		// remove widget at old position
-		widgetArray.splice(
-			// shift up by one point old position if new position less then old position
-			moveResult.whereDroppedIndex < moveResult.whoDroppedIndex ?
-				moveResult.whoDroppedIndex + 1 : moveResult.whoDroppedIndex,
-			1);
+		widgetArray.splice(moveResult.whereDroppedIndex, 0, draggingWidget);
+		if(moveResult.whereDroppedIndex - moveResult.whoDroppedIndex === -1) {
+			// case when we move widget by index 4 to place by index 3
+			// we must insert widget to new position and remove widget from old position with one point correction
+			// remove old dragging widget
+			widgetArray.splice(
+				moveResult.whoDroppedIndex + 1,
+				1);
+		} else {
+			// remove replaced widget
+			widgetArray.splice(
+				moveResult.whereDroppedIndex + 1,
+				1);
+
+			// insert replaced widget
+			widgetArray.splice(moveResult.whoDroppedIndex, 0, replacingWidget);
+			// remove old dragging widget
+			widgetArray.splice(
+				moveResult.whereDroppedIndex + 1,
+				1);
+		}
 
 		binding.set('widgetArray', Immutable.fromJS(widgetArray));
 	},

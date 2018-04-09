@@ -14,10 +14,14 @@ export const SchoolInvitesWidgetActions = {
 					extraStyle: this.getExtraStyleForInviteInboxItem(countData.count)
 				};
 				if(countData.count > 0) {
-					item.button = {
-						text: 'Accept',
+					item.icon = {
 						handleClick: () => {window.location.hash = 'invites/inbox';},
-						extraStyle: 'mDanger mSm'
+						iconStyle: 'fa-pencil-square-o'
+					}
+				} else {
+					item.icon = {
+						handleClick: () => {window.location.hash = 'invites/inbox';},
+						iconStyle: 'fa-eye'
 					}
 				}
 
@@ -26,12 +30,26 @@ export const SchoolInvitesWidgetActions = {
 				return this.getSchoolInvitesOutboxCount(schoolId);
 			})
 			.then((countData) => {
-				data.dataItems.push({name: 'Outbox(pending)', value: String(countData.count)});
+				data.dataItems.push({
+					name: 'Outbox(pending)',
+					value: String(countData.count),
+					icon: {
+						handleClick: () => {window.location.hash = 'invites/outbox';},
+						iconStyle: 'fa-eye'
+					}
+				});
 
 				return this.getSchoolInvitesArchiveCount(schoolId);
 			})
 			.then((countData) => {
-				data.dataItems.push({name: 'Archive', value: String(countData.count)});
+				data.dataItems.push({
+					name: 'Archive',
+					value: String(countData.count),
+					icon: {
+						handleClick: () => {window.location.hash = 'invites/archive';},
+						iconStyle: 'fa-eye'
+					}
+				});
 
 				return data;
 			})
