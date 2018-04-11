@@ -140,9 +140,9 @@ const TypePhone =  React.createClass({
 				binding = self.getDefaultBinding();
 
 		if(binding.toJS('showError')) {
-			return 'mBorderRed';
+			return 'mPhone mBorderRed';
 		} else {
-			return '';
+			return 'mPhone';
 		}
 	},
 	getCCDropdownArray() {

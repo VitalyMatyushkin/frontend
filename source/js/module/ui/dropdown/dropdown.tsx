@@ -11,7 +11,7 @@ export interface DropdownProps {
 	extraStyle?: string
 	placeholder?: string
 	selectedItemId?: string,
-	handleClickItem: (id) => void
+	handleClickItem: (id: string) => void
 	items: Item[]
 }
 
@@ -87,7 +87,7 @@ export class Dropdown extends React.Component<DropdownProps, DropdownState> {
 					{this.renderSelectedItem()}
 				</button>
 				<div
-					className='eSimpleDropdown_triangle'
+					className={'eSimpleDropdown_triangle' + this.getExtraStyle()}
 					onClick={() => this.handleClick()}
 					onBlur={() => this.handleBlur()}
 				/>

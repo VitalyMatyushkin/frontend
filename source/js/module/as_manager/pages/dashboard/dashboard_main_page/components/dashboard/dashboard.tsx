@@ -1,25 +1,38 @@
 import * as React from 'react'
 import * as Loader from 'module/ui/loader';
-import ReactResizeDetector from 'react-resize-detector';
 
-import { DragDropContext } from 'react-dnd';
+// drag n drop
+import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+// resize stuff
+import ReactResizeDetector from 'react-resize-detector';
+
+// Dashboard components
+import {
+	DASHBOARD_VIEW_MODE,
+	DashboardViewModeDropdown
+} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/components/dashboard_view_mode_dropdown"
 import DashboardDropSection from 'module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/dashboard_drop_section'
 
-import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget";
-import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget";
-import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_weather_widget/dashboard_weather_widget";
-import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
-import {DashboardCardCol} from "module/ui/dashboard_components/main_components/dashboard_card_col/dashboard_card_col";
-import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
+// widgets
+import {DashboardSchoolProfileWidget} from "module/ui/dashboard_components/dashboard_school_profile_widget/dashboard_school_profile_widget"
+import {DashboardDataWidget} from "module/ui/dashboard_components/dashboard_data_widget/dashboard_data_widget"
+import {DashboardWeatherWidget} from "module/ui/dashboard_components/dashboard_weather_widget/dashboard_weather_widget"
+import {DashboardCalendarWidget} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget"
+import {DashboardCardCol} from "module/ui/dashboard_components/main_components/dashboard_card_col/dashboard_card_col"
 
+// interfaces
+import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header"
+
+// styles
 import 'styles/ui/dashboard/dasbboard.scss'
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
 	SchoolDataWidgetData = 'SCHOOL_DATA_WIDGET_DATA',
 	SchoolUsersWidgetData = 'SCHOOL_USERS_WIDGET_DATA',
+	SchoolMessagesWidgetData = 'SCHOOL_MESSAGES_WIDGET_DATA',
 	SchoolInvitesWidgetData = 'SCHOOL_INVITES_WIDGET_DATA',
 	WeatherWidgetData = 'WEATHER_WIDGET_DATA',
 	CalendarWidgetData = 'CALENDAR_WIDGET_DATA'
@@ -36,11 +49,14 @@ export interface Widget {
 
 export interface DashboardProps {
 	widgetArray: Widget[],
-	// TODO need type
-	handleDroppedWidget: (moveResult: MoveResult) => void,
+	selectedViewModeDropdownItemId: DASHBOARD_VIEW_MODE
+	handleChangeDashboardViewMode: (viewModeId: DASHBOARD_VIEW_MODE) => void
+	handleDroppedWidget: (moveResult: MoveResult) => void
 	handlePinWidget: (type: WIDGET_TYPE) => void
 	handleMinimizeWidget: (type: WIDGET_TYPE) => void
 	handleResize: (type: WIDGET_TYPE, delta: number) => void
+
+	// Morearty state for calendar
 	calendarWidgetBinding: any
 }
 
@@ -170,6 +186,34 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 			/>
 		);
 	}
+	renderSchoolMessagesWidget(widgetData: Widget, index: number) {
+		let widget = null;
+
+		if(widgetData.isSync) {
+			widget = <DashboardDataWidget data={widgetData.data}/>;
+		} else {
+			widget = <Loader condition={true}/>;
+		}
+
+		return (
+			<DashboardCardCol
+				isPin={widgetData.isPin}
+				isMinimize={widgetData.isMinimize}
+				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolMessagesWidgetData)}
+				handleMinimizeWidget={() => this.props.handleMinimizeWidget(WIDGET_TYPE.SchoolMessagesWidgetData)}
+				headerText='Messages'
+				handleDroppedWidget={this.props.handleDroppedWidget}
+				index={index}
+				colWidth={this.getColWidth()}
+				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
+				widget={widget}
+				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolMessagesWidgetData, delta)}
+				delta={widgetData.delta}
+			/>
+		);
+	}
 	renderWeatherWidget(widgetData: Widget, index: number) {
 		let widget = null;
 
@@ -264,6 +308,17 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 						</DashboardDropSection>
 					);
 				}
+				case WIDGET_TYPE.SchoolMessagesWidgetData: {
+					return (
+						<DashboardDropSection
+							key={`${index}_${widget.type}`}
+							index={index}
+							canDrop={!widget.isPin}
+						>
+							{this.renderSchoolMessagesWidget(widget, index)}
+						</DashboardDropSection>
+					);
+				}
 				case WIDGET_TYPE.SchoolInvitesWidgetData: {
 					return (
 						<DashboardDropSection
@@ -312,6 +367,12 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				className='bDashboard'
 				ref={(dashboard) => { this.dashboard = dashboard; }}
 			>
+				<div className='eDashboard_header'>
+					<DashboardViewModeDropdown
+						selectedViewModeDropdownItemId={this.props.selectedViewModeDropdownItemId}
+						handleChangeViewMode={this.props.handleChangeDashboardViewMode}
+					/>
+				</div>
 				<div className='eDashboard_body'>
 					{this.renderWidgets()}
 				</div>
