@@ -45,6 +45,13 @@ const Head = React.createClass({
 				authorization:true
 			},
 			{
+				href: '/#payments/stripe_integrations',
+				name: 'Payments',
+				key: 'payments',
+				routes:['/payments/:subPage'],
+				authorization:true
+			},
+			{
 				href:			'/#apps',
 				name:			'Applications',
 				key:			'Applications',

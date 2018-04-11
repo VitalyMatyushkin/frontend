@@ -24,6 +24,7 @@ const 	SchoolPageComponent 	= require('module/as_school/pages/school/school_page
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert'),
 		AdminUserPageComponent 	= require('module/as_admin/pages/admin_user/admin_user_page_component'),
 		ToolsComponent 			= require('module/as_admin/pages/admin_schools/tools'),
+		{PaymentsComponent} 	= require('module/as_admin/pages/admin_schools/payments/payments'),
 		AppsComponent 			= require('module/as_admin/pages/apps/apps'),
 		UsersComponent			= require('module/as_admin/pages/admin_schools/users'),
 		SchoolsComponent		= require('module/as_admin/pages/admin_schools/schools'),
@@ -109,6 +110,11 @@ const Center = React.createClass({
 							path 		= "/tools /tools/:subPage"
 							binding 	= { binding.sub('tools') }
 							component 	= { ToolsComponent }
+						/>
+						<Route
+							path 		= "/payments /payments/:subPage"
+							binding 	= { binding.sub('payments') }
+							component 	= { PaymentsComponent }
 						/>
 						<Route
 							path 		= "/apps /apps/:subPage"

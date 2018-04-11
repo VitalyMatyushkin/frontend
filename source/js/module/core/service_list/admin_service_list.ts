@@ -103,6 +103,10 @@ export class AdminServiceList {
 	//consent request template
 	consentRequestTemplate: Service;
 
+	//payments
+	paymentsStripeIntegration: Service;
+	paymentsStripeIntegrations: Service;
+
 	//user statistic
 	userStats: Service;
 
@@ -207,6 +211,10 @@ export class AdminServiceList {
 
 		//consent request template
 		this.consentRequestTemplate = new Service('/superadmin/schools/{schoolId}/template', binding);
+
+		//payments
+		this.paymentsStripeIntegration = new Service('/superadmin/payments/stripe/integrations/{integrationId}', binding);
+		this.paymentsStripeIntegrations = new Service('/superadmin/payments/stripe/integrations', binding);
 
 		//user statistic
 		this.userStats = new Service('/superadmin/stats/userpresence', binding);
