@@ -3,6 +3,8 @@
  */
 
 import * as EventProperty from 'module/core/event-property';
+import * as DateTime from 'module/ui/form/types/datetime';
+import {DateHelper} from "module/helpers/date_helper";
 
 /**the number of lines on the page by default, if you do not explicitly set a different value.*/
 const DEFAULT_PAGE_LIMIT = 20;
@@ -97,12 +99,12 @@ export class FilterModel {
         }
 
         if (values[0]){
-            this.where[field].$gte = values[0];
+            this.where[field].$gte = DateHelper.getFormatDateTimeUTCStringByRegion(values[0], 'GB');
         } else if(this.where[field].$gte){
             delete this.where[field].$gte;
         }
         if (values[1]){
-            this.where[field].$lte = values[1];
+            this.where[field].$lte = DateHelper.getFormatDateTimeUTCStringByRegion(values[1], 'GB');
         } else if(this.where[field].$lte){
             delete this.where[field].$lte;
         }

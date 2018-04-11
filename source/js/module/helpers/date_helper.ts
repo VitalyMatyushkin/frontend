@@ -14,6 +14,9 @@ export const DateHelper = {
 		return region === 'US' ? Moment(dateTime, 'YYYY-DD-MM HH:mm').utc().format() :
 			Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
 	},
+	getFormatDateTimeUTCString: function(dateTime: Date): string {
+		return Moment(dateTime, 'YYYY-MM-DD HH:mm').utc().format();
+	},
 	getFormatDateTimeFromISOByRegion: function(dateTime: Date | string, region: string): string {
 		return region === 'US' ? Moment(dateTime).format('MM.DD.YYYY hh:mm A') :
 			Moment(dateTime).format('DD.MM.YYYY HH:mm');

@@ -53,8 +53,8 @@ export class Badge extends React.Component<BadgeProps, {}> {
 
 		let result = '';
 
-		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY') : values[0]) + ' ' : '';
-		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY') : values[1]) : '';
+		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY') : Moment(values[0]).format('DD.MM.YYYY/HH:mm')) + ' ' : '';
+		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY') :Moment(values[1]).format('DD.MM.YYYY/HH:mm')) : '';
 
 		return result;
 	}
@@ -65,8 +65,8 @@ export class Badge extends React.Component<BadgeProps, {}> {
 
 		let result = '';
 
-		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY/HH:mm') : values[0]) + ' ' : '';
-		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY/HH:mm') : values[1]) : '';
+		result += values[0] ? 'from ' + (region === 'US' ? Moment(values[0]).format('MM.DD.YYYY/HH:mm') : Moment(values[0]).format('DD.MM.YYYY/HH:mm')) + ' ' : '';
+		result += values[1] ? 'to ' + (region === 'US' ? Moment(values[1]).format('MM.DD.YYYY/HH:mm') : Moment(values[1]).format('DD.MM.YYYY/HH:mm')) : '';
 
 		return result;
 	}
