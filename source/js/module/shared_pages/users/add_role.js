@@ -14,6 +14,8 @@ const   React           	= require('react'),
 
 const FilteringServices = require('module/core/services/FilteringServices');
 
+const NO_ROLES_DATA = [{id:'empty_role',  value:'No available roles'}];
+
 const AddRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
@@ -118,11 +120,16 @@ const AddRole = React.createClass({
 		} else {
 			//Do not show the role of the blogger, if it already exists
 			if (!this.getDefaultBinding().toJS('userWithPermissionDetail.permissions')
-					.find(role => role.preset === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER)) {
+					.find(role => role.preset === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER && role.status !== "REMOVED")) {
 				return RoleListWithoutSchool;
 			} else {
-				return [];
+				return NO_ROLES_DATA;
 			}
+		}
+	},
+	onSelectRole : function (data) {
+		if (data !== NO_ROLES_DATA[0].id) {
+			return data;
 		}
 	},
 	getSchoolService: function() {
@@ -194,10 +201,11 @@ const AddRole = React.createClass({
 						School
 					</FormField>
 					<FormField
-						type="select"
-						key={ typeof this.selectedSchool === 'undefined' ? 'withoutSchool' : this.selectedSchool.id }
-						field="preset"
-						sourceArray={ this.getRoleList() }
+						type        = "select"
+						key         = { typeof this.selectedSchool === 'undefined' ? 'withoutSchool' : this.selectedSchool.id }
+						field       = "preset"
+						sourceArray = { this.getRoleList() }
+						onSelect    = { this.onSelectRole }
 					>
 						Role
 					</FormField>

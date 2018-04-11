@@ -74,13 +74,19 @@ const Select = React.createClass({
 				model 		= Lazy(this.props.sourceArray).findWhere({ id: newId});
 
         if (self.props.onSelect) {
-            self.props.onSelect(newId, model.value);
+	        const result = self.props.onSelect(newId, model.value);
+	        if(result) {
+		        binding.atomically()
+			        .set('selectedId', newId)
+			        .set('selectedValue', model.value)
+			        .commit();
+	        }
+        } else {
+	        binding.atomically()
+		        .set('selectedId', newId)
+		        .set('selectedValue', model.value)
+		        .commit();
         }
-
-		binding.atomically()
-			.set('selectedId', newId)
-			.set('selectedValue', model.value)
-			.commit();
 
 		binding.set('showList', false);
 	},

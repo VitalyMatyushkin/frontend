@@ -15,6 +15,8 @@ const	Form				= require('../../../../ui/form/form'),
 
 const FilteringServices = require('module/core/services/FilteringServices');
 
+const NO_ROLES_DATA = [{id:'empty_role',  value:'No available roles'}];
+
 const GrantRole = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes: {
@@ -81,9 +83,14 @@ const GrantRole = React.createClass({
 			if (!this.props.userPermissionsBinding.toJS()
 					.find(role => role.preset === RoleHelper.USER_PERMISSIONS_WITHOUT_SCHOOL.PUBLIC_BLOGGER)) {
 				return RoleListWithoutSchool;
-			} else {
-				return [];
+			}  else {
+				return NO_ROLES_DATA;
 			}
+		}
+	},
+	onSelectRole : function (data) {
+		if (data !== NO_ROLES_DATA[0].id) {
+			return data;
 		}
 	},
 	getSchoolService: function() {
@@ -203,6 +210,7 @@ const GrantRole = React.createClass({
 				            key         = { typeof this.selectedSchool === 'undefined' ? 'withoutSchool' : this.selectedSchool.id }
 							field		= "preset"
 							sourceArray	= { this.getRoleList() }
+						    onSelect    = { this.onSelectRole }
 				>
 					Role
 				</FormField>
