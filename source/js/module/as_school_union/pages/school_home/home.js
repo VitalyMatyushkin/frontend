@@ -81,7 +81,7 @@ const SchoolHomePage = React.createClass({
 				isSyncTournament 	= binding.toJS('tournamentsIsSync'),
 				showTournament 		= binding.toJS('tournamentsShow'),
 				region              = this.getMoreartyContext().getBinding().toJS('activeSchool.region');
-		
+
 		if (isSyncTournament) {
 			if (showTournament) {
 				return (

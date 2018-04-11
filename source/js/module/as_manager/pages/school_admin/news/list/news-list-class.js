@@ -148,7 +148,8 @@ class NewsListModel {
 					) : null
 			},
 			columns:this.columns,
-			handleClick: this.props.handleClick
+			handleClick: this.props.handleClick,
+			filters:{order:'date DESC'}
 		});
 		
 		this.dataLoader = new DataLoader({

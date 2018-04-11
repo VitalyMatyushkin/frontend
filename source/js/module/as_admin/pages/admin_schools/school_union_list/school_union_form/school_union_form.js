@@ -49,6 +49,15 @@ const SchoolUnionForm = React.createClass({
 			{value: 'REQUIRED', text: 'required'}
 		];
 	},
+	getRegions: function() {
+		return [
+			{value: 'GB', text: 'GB'},
+			{value: 'US', text: 'US'}
+		];
+	},
+	onSelectRegion: function (region) {
+		return region;
+	},
 	render: function () {
 		const	binding			= this.getDefaultBinding(),
 				rootBinding		= this.getMoreartyContext().getBinding(),
@@ -151,6 +160,15 @@ const SchoolUnionForm = React.createClass({
 						School Status
 					</FormField>
 					<FormField type="phone" field="phone" validation="any">Phone</FormField>
+					<FormField
+						type 		= "dropdown"
+						field 		= "region"
+						id 			= "school_region"
+						options 	= { this.getRegions() }
+						onSelect    = { this.onSelectRegion }
+					>
+						Region
+					</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
 					<FormField	type	= "dropdown"
