@@ -53,6 +53,9 @@ const Player = React.createClass({
 				<If condition={Boolean(player.isCaptain)}>
 					<CaptainStar/>
 				</If>
+				<If condition={Boolean(player.sub)}>
+					<span className="ePlayer_sub">(S)</span>
+				</If>
 				<PlayerInfo
 					playerIndex	= {playerIndex}
 					player		= {player}

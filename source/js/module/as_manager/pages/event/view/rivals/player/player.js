@@ -54,6 +54,9 @@ const Player = React.createClass({
 				<If condition={Boolean(player.isCaptain)}>
 					<CaptainStar/>
 				</If>
+				<If condition={Boolean(player.sub)}>
+					<span className="ePlayer_sub">(S)</span>
+				</If>
 				<If condition={
 						!this.isNonInternalEventForOneOnOneSport(event) &&
 						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing') &&
