@@ -43,7 +43,7 @@ export class PhotoGrid extends React.Component<PhotoGridProps, PhotoGridState> {
 	}
 
 	scrollToPhoto(photoId) {
-		ReactDOM.findDOMNode(this.refs[photoId] as any).scrollIntoView({ behavior: 'smooth' });
+		(ReactDOM.findDOMNode(this.refs[photoId] as any) as any).scrollIntoView({ behavior: 'smooth' });
 	}
 
 	renderPhotos(): React.ReactNode {
