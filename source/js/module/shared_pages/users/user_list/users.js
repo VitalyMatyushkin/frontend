@@ -16,7 +16,7 @@ const Users = React.createClass({
 		canAcceptStaffRoles:		React.PropTypes.bool,
 		permissionServiceName: 		React.PropTypes.string,
 		blockService: 				React.PropTypes.object,
-		addButton:					React.PropTypes.func,
+		addButton:					React.PropTypes.object,
 		//The function, which will call when user click on <Row> in Grid
 		handleClick:				React.PropTypes.func
 	},

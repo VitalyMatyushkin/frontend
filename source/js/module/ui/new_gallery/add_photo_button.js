@@ -9,7 +9,7 @@ const AddPhotoButton = React.createClass({
 		isLoading:				React.PropTypes.bool.isRequired,
 		isUserCanUploadPhotos:	React.PropTypes.bool.isRequired,
 		handleChange:			React.PropTypes.func.isRequired,
-		userRole:               React.PropTypes.func.string
+		userRole:               React.PropTypes.string.isRequired
 	},
 
 	handleClick: function(eventDescriptor) {

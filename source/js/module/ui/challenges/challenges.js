@@ -12,7 +12,7 @@ import {CalendarSize} from 'module/as_manager/pages/dashboard/dashboard_main_pag
 
 const Challenges = React.createClass({
 	propTypes: {
-		size:                   React.PropTypes.enum,
+		size:                   React.PropTypes.number,
 		onClick:				React.PropTypes.func,
 		isSync:					React.PropTypes.bool,
 		isDaySelected:			React.PropTypes.bool,

@@ -13,9 +13,9 @@ const bFormStyles = require('../../../../../styles/ui/forms/b_form.scss');
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onChangeRememberMe:	React.PropTypes.func.isRequired,
-		onSuccess:			React.PropTypes.func.isRequired,
-		onError:			React.PropTypes.func.isRequired,
+		onChangeRememberMe:	React.PropTypes.func,
+		onSuccess:			React.PropTypes.func,
+		onError:			React.PropTypes.func,
 		customName:			React.PropTypes.string
 	},
 	componentWillMount:function(){

@@ -3,8 +3,8 @@ const	React					= require('react'),
 
 const RememberrMeCheckbox = React.createClass({
 	propTypes: {
-		isChecked:	React.PropTypes.bool.isRequired,
-		onChange:	React.PropTypes.func.isRequired
+		isChecked:	React.PropTypes.bool,
+		onChange:	React.PropTypes.func
 	},
 	render: function() {
 		return (

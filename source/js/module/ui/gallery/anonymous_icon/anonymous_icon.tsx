@@ -362,7 +362,7 @@ export class AnonymousIcon extends React.Component<AnonymousIconProps, Anonymous
 						</Stage>
 						<Loader/>
 					</div>
-					<div className='eFullScreenPhoto_sideContainer'  style={{heigth: this.props.heightImgContainer-10}}>
+					<div className='eFullScreenPhoto_sideContainer' style={{height: this.props.heightImgContainer - 10}}>
 						<div className="bAnonymousIconHeaderText">
 							Click on "Add icon" to add an icon.
 							Select the added icon and drag it to the desired location.<br/>
