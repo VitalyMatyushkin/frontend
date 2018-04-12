@@ -143,10 +143,7 @@ export const DashboardMainPage = (React as any).createClass({
 			dashboard = dashboardState.find(state => state.permissionId === permissionId);
 		}
 
-		return {
-			widgetArray: dashboard.widgetArray,
-			dashboardModeView: dashboard.dashboardModeView
-		};
+		return dashboard;
 	},
 	saveDashboardStateToLocalStorage() {
 		const permissionId = this.getMoreartyContext().getBinding().get('userData.roleList.activePermission.id');
