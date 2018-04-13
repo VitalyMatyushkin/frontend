@@ -4,7 +4,8 @@
 const 	React 			= 	require('react'),
 		Morearty 		= 	require('morearty'),
 		PostcodeForm 	= 	require('module/as_admin/pages/admin_schools/postcodes/postcode_form'),
-		Immutable 		= require('immutable');
+		Loader 			= 	require('module/ui/loader'),
+		Immutable 		= 	require('immutable');
 
 const PostcodeAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -35,13 +36,17 @@ const PostcodeAddPage = React.createClass({
 	render: function() {
 		const binding = this.getDefaultBinding();
 
-		return (
-			<PostcodeForm
-				title 			= "Edit postcode"
-				onFormSubmit 	= { this.submitEdit }
-				binding 		= { binding }
-			/>
-		)
+		if (binding.get('postcodeData')) {
+			return (
+				<PostcodeForm
+					title 			= "Edit postcode"
+					onFormSubmit 	= { this.submitEdit }
+					binding 		= { binding }
+				/>
+			)
+		} else {
+			return <Loader/>
+		}
 	}
 });
 

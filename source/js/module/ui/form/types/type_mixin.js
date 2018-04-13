@@ -43,7 +43,7 @@ const InputTypeMixin = {
 				binding 	= self.getDefaultBinding(),
 				validator	= self.validations[validType],
                 defaultValue= binding.get('defaultValue'),
-				region      = RegionHelper.getRegion(this.getMoreartyContext().getBinding());
+				region      = this.props.region;
 
 		if(validator) {
 			const validationResult = validator(value, defaultValue, region);

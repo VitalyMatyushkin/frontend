@@ -6,21 +6,22 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 const TypeText =  React.createClass({
 	propTypes: {
 		textType: 		React.PropTypes.string,
-		id:				React.PropTypes.string 		// just old good html id
+		id:				React.PropTypes.string, 		// just old good html id
+		region:         React.PropTypes.string
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 		// For case when form filled async
 		binding.addListener('defaultValue', () => {
-			this.fullValidate(binding.get('defaultValue'));
+			this.fullValidate(binding.get('defaultValue'), this.props.region);
 		});
 	},
 	handleBlur: function(value) {
-		this.setValue(value);
+		this.setValue(value, this.props.region);
 	},
 	handleChange: function(value) {
-		this.changeValue(value);
+		this.changeValue(value, this.props.region);
 	},
 	render: function () {
 		const value = typeof this.getDefaultBinding().get('value') !== 'undefined' ?

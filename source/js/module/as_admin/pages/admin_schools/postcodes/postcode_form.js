@@ -20,7 +20,10 @@ const PostcodeForm = React.createClass({
 		];
 	},
 	render: function() {
-		const 	binding = this.getDefaultBinding();
+		const 	binding = this.getDefaultBinding(),
+				region = typeof binding.sub('postcodeData').meta().toJS('region.value') === 'undefined' ? 'GB'
+					: binding.sub('postcodeData').meta().toJS('region.value');
+
 		return (
 			<Form
 				formStyleClass 	= "mNarrow"
@@ -31,10 +34,20 @@ const PostcodeForm = React.createClass({
 				cancelButtonId	= 'postcode_cancel'
 			>
 				<FormField
+					type 		= "dropdown"
+					field 		= "region"
+					id 			= "school_region"
+					options 	= {this.getRegions()}
+				>
+					Region
+				</FormField>
+				<FormField
 					type 		= "text"
 					field 		= "postcode"
 					id 			= "postcode_name"
 					validation 	= "required postcode"
+					key			= { region }
+					region		= { region }
 				>
 					Postcode name
 				</FormField>
@@ -53,14 +66,6 @@ const PostcodeForm = React.createClass({
 					validation 	= "required latitude"
 				>
 					Latitude
-				</FormField>
-				<FormField
-					type 		= "dropdown"
-					field 		= "region"
-					id 			= "school_region"
-					options 	= {this.getRegions()}
-				>
-					Region
 				</FormField>
 			</Form>
 		)
