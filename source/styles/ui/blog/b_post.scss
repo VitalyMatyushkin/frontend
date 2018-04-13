@@ -1,0 +1,31 @@
+@import '../../bootstrap-custom';
+
+.bPost {
+  padding: 50px;
+}
+
+.ePost_mainHeader {
+  font-family: "Righteous", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+
+  margin-bottom: 50px;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.ePost_header {
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  color: rgb(41, 43, 44);
+}
+
+.ePost_content {
+
+}

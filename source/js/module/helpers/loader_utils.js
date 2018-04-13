@@ -16,7 +16,8 @@ const 	specialModels 	= [
 		'password',
 		'bigscreen',
 		'api_test',
-		'invite'
+		'invite',
+		'blog'
 	],
 		defaultModel 	= 'school',
 		apiVersion 		= 1;
@@ -88,7 +89,7 @@ function startModuleSelector(domainName) {
 	const 	parsedDomain 	= parseDomainName(domainName),
 			model 			= parsedDomain.model,
 			modelToStart 	= specialModels.indexOf(model) !== -1 ? model : defaultModel;
-	
+
 	let startModule = 'module/start_as_' + modelToStart;
 	
 	// TEST SERVER TEMPORARY SOLUTION

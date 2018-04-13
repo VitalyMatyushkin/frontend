@@ -1,0 +1,7 @@
+@import '../../bootstrap-custom';
+
+.bBlogs {
+  @include container-fixed();
+
+  padding: 50px;
+}

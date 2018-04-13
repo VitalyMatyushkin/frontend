@@ -1,0 +1,74 @@
+@import '../../bootstrap-custom';
+
+.bPostPreview {
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 2px;
+  height: 260px;
+  padding: 10px;
+
+  margin-bottom: 30px;
+}
+
+.ePostPreview_header {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.25;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  margin-bottom: 20px;
+}
+
+.ePostPreview_content {
+  height: 125px;
+
+  margin-bottom: 30px;
+
+  color: rgba(0,0,0,.44);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  font-weight: 400;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ePostPreview_author {
+  height: 50px;
+}
+
+.ePostPreview_authorUserPickContainer {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+}
+
+.ePostPreview_authorUserPick {
+  border-radius: 50%;
+}
+
+.ePostPreview_authorNameContainer {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.ePostPreview_authorName {
+  color: rgba(0,0,0,.8);
+  font-size: 14px;
+  font-weight: 400;
+
+  &:hover {
+    text-decoration: underline;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+}
+
+.ePostPreview_postDate {
+  color: rgba(0,0,0,.44);
+  font-size: 12px;
+  font-weight: 400;
+}

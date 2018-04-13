@@ -20,6 +20,7 @@ import * as asSchool from './module/start_as_school';
 import * as asPlayGround from './module/start_as_playground';
 import * as asBigScreen from './module/start_as_bigscreen';
 import * as asInvite from './module/start_as_invite';
+import {asBlog} from "module/start_as_blog";
 import * as testApi from './module/start_as_api_test';
 import {ServiceList} from "module/core/service_list/service_list";
 import {AdminServiceList} from "module/core/service_list/admin_service_list";
@@ -86,5 +87,6 @@ switch(startModule) {
 	case 'module/start_as_playground':	asPlayGround();	break;
 	case 'module/start_as_bigscreen':	asBigScreen();	break;
 	case 'module/start_as_invite':		asInvite();		break;
+	case 'module/start_as_blog': 		asBlog();		break;
 	default: asApp();
 }

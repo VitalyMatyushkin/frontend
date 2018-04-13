@@ -8,7 +8,6 @@ import {ClubFormData} from "module/as_manager/pages/clubs/club_form/models/club_
 
 export const ClubAdd = (React as any).createClass({
 	mixins: [Morearty.Mixin],
-
 	componentWillMount() {
 		this.getDefaultBinding().sub('clubsForm').clear();
 	},

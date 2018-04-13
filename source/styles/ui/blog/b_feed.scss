@@ -1,0 +1,58 @@
+@import '../../bootstrap-custom';
+
+.bFeed {
+  //@include container-fixed();
+
+  padding: 50px;
+}
+
+.eFeed_headerSection {
+  @include make-row();
+}
+
+.eFeed_header {
+  //@extend .col-lg-12;
+  //@extend .col-md-12;
+  //@extend .col-sm-12;
+  //@extend .col-xs-12;
+
+  font-family: "Righteous", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+
+  margin-bottom: 25px
+}
+
+.eFeed_body {
+  @include make-row();
+}
+
+.eFeed_section {
+
+}
+
+.eFeed_sectionTitle {
+  border-bottom: 1px solid rgba(0,0,0,.15);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 27px;
+}
+
+.eFeed_sectionTitleText {
+  border-bottom: 1px solid rgba(0,0,0,.44);
+  display: inline-block;
+  padding-bottom: 20px;
+  margin-bottom: -1px;
+}
+
+.eFeed_sectionBody {
+  @include make-row();
+}
+
+.eFeed_card {
+  @extend .col-lg-4;
+  @extend .col-md-6;
+  @extend .col-sm-12;
+  @extend .col-xs-12;
+}

@@ -130,6 +130,12 @@ export const authController = {
 					this.requestedPage = undefined;
 					break;
 				}
+				case this.asBlog === true: {
+					window.location.hash = 'feed';
+
+					this.requestedPage = undefined;
+					break;
+				}
 				// When user is log in but doesn't have role
 				case (isUserAuth && !isUserOnRole && !this.isSettingsVerificationPage()): {
 					window.location.href = DomainHelper.getLoginUrl();
