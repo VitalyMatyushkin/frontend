@@ -27,5 +27,28 @@
 }
 
 .ePost_content {
+  font-family: Merriweather;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: rgba(0,0,0,.8);
+  font-weight: 400;
+  margin: 0 0 1.5rem 0;
 
+  h2 {
+    margin: 0;
+  }
+
+  h3 {
+    color: inherit;
+  }
+
+  img {
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    height: auto;
+    border-style: none;
+    vertical-align: middle;
+  }
 }
