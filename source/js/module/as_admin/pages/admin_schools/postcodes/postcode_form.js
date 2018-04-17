@@ -16,7 +16,8 @@ const PostcodeForm = React.createClass({
 	getRegions: function() {
 		return [
 			{value: 'GB', text: 'GB'},
-			{value: 'US', text: 'US'}
+			{value: 'US', text: 'US'},
+			{value: 'DE', text: 'DE'}
 		];
 	},
 	render: function() {

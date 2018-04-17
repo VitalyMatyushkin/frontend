@@ -87,7 +87,8 @@ const SystemAdminSchoolForm = React.createClass({
 	getRegions: function() {
 		return [
 			{value: 'GB', text: 'GB'},
-			{value: 'US', text: 'US'}
+			{value: 'US', text: 'US'},
+			{value: 'DE', text: 'DE'}
 		];
 	},
 	handleSelectRole: function (role) {

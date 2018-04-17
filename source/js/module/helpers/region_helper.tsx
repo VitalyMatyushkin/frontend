@@ -6,10 +6,19 @@ export const RegionHelper = {
 		const phone = globalBinding.toJS('userData.sessions.loginSession.phone');
 		let region = undefined;
 
-		if (typeof phone !== 'undefined' && phone.indexOf('+1') === 0) {
-			region = 'US';
-		} else {
-			region = 'GB';
+		switch(true){
+			case typeof phone !== 'undefined' && phone.indexOf('+1') === 0:
+				region = 'US';
+				break;
+			case typeof phone !== 'undefined' && phone.indexOf('+44') === 0:
+				region = 'GB';
+				break;
+			case typeof phone !== 'undefined' && phone.indexOf('+49') === 0:
+				region = 'DE';
+				break;
+			default:
+				region = 'GB';
+				break;
 		}
 
 		return region;

@@ -55,6 +55,8 @@ const TypePhone =  React.createClass({
             cc = '+7';
         if(value.indexOf('+1') === 0)
 			cc = '+1';
+		if(value.indexOf('+49') === 0)
+			cc = '+49';
 
         phone = value.replace(cc, '');
         binding.atomically()
@@ -94,7 +96,7 @@ const TypePhone =  React.createClass({
 		this.cursor = -1;
 	},
 	getAvailableCodes:function(){
-		const codes = ["+44", "+1"];
+		const codes = ["+44", "+1", "+49"];
 
 		if(helper.isDeveloperEnvironment(window.location.hostname)){
 			codes.push("+7");
@@ -115,6 +117,10 @@ const TypePhone =  React.createClass({
 			}
 			case '+44': {
 				flagModifier = 'mBritish';
+				break;
+			}
+			case '+49': {
+				flagModifier = 'mGermany';
 				break;
 			}
 			default: {

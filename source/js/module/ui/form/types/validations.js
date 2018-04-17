@@ -88,7 +88,7 @@ var validationsSet = {
 		return result;
 	},
 	postcode:function (value, defaultValue, region) {
-		if(region === 'US' && !(/^[0-9\/]{5}$/).test(value)){
+		if((region === 'US' || region === 'DE') && !(/^[0-9\/]{5}$/).test(value)){
 			return 'should be have 5 digits';
 		} else {
 			if (region === 'GB' && !(/^[a-zA-Z0-9\/]{2,4}\s[a-zA-Z0-9\/]{3}$/).test(value)) {

@@ -19,12 +19,19 @@ export const PermissionsStep = (React as any).createClass({
 		const phone = loginSessions.phone;
 		let region = undefined;
 
-		if (phone.indexOf('+44') === 0) {
-			region = 'GB';
-		} else {
-			if (phone.indexOf('+1') === 0) {
+		switch(true){
+			case (phone.indexOf('+44') === 0):
+				region = 'GB';
+				break;
+			case (phone.indexOf('+1') === 0):
 				region = 'US';
-			}
+				break;
+			case (phone.indexOf('+49') === 0):
+				region = 'DE';
+				break;
+			default:
+				region = 'GB';
+				break;
 		}
 
 		binding.sub('staffRegister').set('region', region);
