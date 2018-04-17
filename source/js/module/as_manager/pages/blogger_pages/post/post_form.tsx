@@ -21,30 +21,30 @@ export const PostForm = (React as any).createClass({
 		return (
 			<div className='container' style={{margin: '30px 0 0 0'}}>
 				<Form
-					binding         = { binding }
-					submitOnEnter 	= { false }
-					onSubmit        = { this.props.onClickSubmit }
-					formStyleClass  = "bPostForm"
+					binding={ binding }
+					submitOnEnter={ false }
+					onSubmit={ this.props.onClickSubmit }
+					formStyleClass="bPostForm"
 				>
 					<FormColumn customStyle='col-md-7'>
 						<FormField
-							type 		= "text"
-							field 		= "title"
-							validation  = "required"
+							type="text"
+							field="title"
+							validation="required"
 						>
 							Title
 						</FormField>
 						<FormField
-							type    = "dropdown"
-							field   = "status"
-							options = { STATUS }
+							type="dropdown"
+							field="status"
+							options={ STATUS }
 						>
 							Status
 						</FormField>
 						<FormField
-							type 		    = "textarea"
-							field 		    = "content"
-							fieldClassName  = "ePostContent"
+							type="postTextArea"
+							field="content"
+							fieldClassName="ePostContent"
 						>
 							Content
 						</FormField>

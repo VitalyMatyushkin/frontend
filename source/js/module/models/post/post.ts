@@ -1,6 +1,10 @@
 export interface PostData {
 	id: string
 	authorId: string
+	author: {
+		lastName: string
+		firstName: string
+	}
 	blogId: string
 	status: PostStatus
 	title: string

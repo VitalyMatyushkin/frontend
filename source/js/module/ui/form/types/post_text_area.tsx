@@ -1,28 +1,25 @@
-/**
- * Created by bridark on 04/08/15.
- */
-const 	TypeMixin	= require('module/ui/form/types/type_mixin'),
-		Morearty	= require('morearty'),
-		React		= require('react');
+import * as React from 'react'
+import * as Morearty from 'morearty'
+import * as TypeMixin from'module/ui/form/types/type_mixin'
 
 import Textarea from "react-textarea-autosize";
 
-const MIN_ROWS = 3;
+const MIN_ROWS = 10;
 
-const TypeTextArea = React.createClass({
+export const TypeTextArea = (React as any).createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	textArea: undefined,
 	cursorPosition: 0,
-	componentDidUpdate: function () {
+	componentDidUpdate() {
 		if(this.cursorPosition >= 0){
 			this.textArea.setSelectionRange(this.cursorPosition, this.cursorPosition);
 		}
 	},
-	handleChange: function(event) {
+	handleChange(event) {
 		this.cursorPosition = event.target.selectionStart;
 		this.changeValue(event.target.value);
 	},
-	render: function () {
+	render() {
 		return (
 			<Textarea
 				inputRef={textArea => (this.textArea = textArea)}
@@ -33,5 +30,3 @@ const TypeTextArea = React.createClass({
 		)
 	}
 });
-
-module.exports = TypeTextArea;

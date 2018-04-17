@@ -211,6 +211,9 @@ const RouterView = React.createClass({
 		// Valid when login session in binding is equal login session in cookie
 		return propz.get(loginSessionFromCookie, ['id']) === propz.get(loginSessionFromBinding, ['id']);
 	},
+	isBlogUrl: function() {
+		return document.location.hostname.search('blog') !== -1;
+	},
 	componentWillMount: function() {
 		const	self	= this,
 				routes	= self.normalizeAllRoutes(self.props.children);
@@ -257,7 +260,16 @@ const RouterView = React.createClass({
 			document.location.href.indexOf('#') === -1 ||
 			document.location.hash === ''
 		) {
-			document.location = '#login';
+			switch (true) {
+				case this.isBlogUrl(): {
+					document.location = '#feed';
+					break;
+				}
+				default: {
+					document.location = '#login';
+					break;
+				}
+			}
 		}
 
 		if(!this.isLoginSessionValid()) {

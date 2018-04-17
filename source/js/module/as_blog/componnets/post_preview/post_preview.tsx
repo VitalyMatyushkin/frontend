@@ -11,14 +11,17 @@ export interface PostPreviewProps {
 
 export class PostPreview extends React.Component<PostPreviewProps, {}> {
 	getPublishDate() {
-		return DateHelper.getFormatDateTimeUTCStringByRegion(
-			new Date(this.props.post.publishedAt),
+		return DateHelper.getFormatDateTimeFromISOByRegion(
+			this.props.post.publishedAt,
 			'UK'
 		);
 	}
 	redirectToPostPage() {
 		document.location.hash = `blogs/${this.props.post.blogId}/posts/${this.props.post.id}`;
 	}
+    getAuthorFullName() {
+		return `${this.props.post.author.firstName} ${this.props.post.author.lastName}`;
+    }
 	handleClickHeader() {
 		this.redirectToPostPage();
 	}
@@ -44,7 +47,7 @@ export class PostPreview extends React.Component<PostPreviewProps, {}> {
 						/>
 					</div>
 					<div className='ePostPreview_authorNameContainer'>
-						<span className='ePostPreview_authorName'>Oleg Pikhnenko</span><br/>
+						<span className='ePostPreview_authorName'>{this.getAuthorFullName()}</span><br/>
 						<span className='ePostPreview_postDate'>{this.getPublishDate()}</span>
 					</div>
 				</div>

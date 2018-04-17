@@ -21,6 +21,10 @@ export const PostWrapper  = (React as any).createClass({
 				this.getDefaultBinding().set('postData', Immutable.fromJS(postData));
 			});
 	},
+	componentWillUnmount() {
+		this.getDefaultBinding().set('isSync', false);
+		this.getDefaultBinding().set('postData', undefined);
+	},
 	getBlogIdFromUrl(): string {
 		return this.getMoreartyContext().getBinding().sub('routing.pathParameters').toJS()[0];
 	},
