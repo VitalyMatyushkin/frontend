@@ -32,6 +32,19 @@ const IntegrationPage = React.createClass({
 		});
 	},
 	
+	onOutlookClick: function(){
+		const 	activeSchoolId 	= SchoolHelper.getActiveSchoolId(this),
+				binding 		= this.getDefaultBinding();
+		//it dirty way, but browser blocked opening window in async request
+		const windowTwitter = window.open("","_blank");
+		
+		window.Server.integrationOutlook.post({schoolId: activeSchoolId}).then( link => {
+			const linkOutlook = link.url;
+			windowTwitter.location.href = linkOutlook;
+			binding.set('isPopupOpen', false);
+		});
+	},
+	
 	onGoogleCalendarClick: function(){
 		const 	activeSchoolId 	= SchoolHelper.getActiveSchoolId(this),
 				binding 		= this.getDefaultBinding();
@@ -74,6 +87,11 @@ const IntegrationPage = React.createClass({
 							<Button
 								onClick				= { this.onTwitterClick }
 								text				= { [<i key="Twitter" className='fa fa-twitter' aria-hidden='true'></i>, " ", "Twitter"] }
+								extraStyleClasses 	= 'eTwitter'
+							/>
+							<Button
+								onClick				= { this.onOutlookClick }
+								text				= { [<i key="Outlook" className='fa fa-windows' aria-hidden='true'></i>, " ", "Outlook"] }
 								extraStyleClasses 	= 'eTwitter'
 							/>
 						</ConfirmPopup>

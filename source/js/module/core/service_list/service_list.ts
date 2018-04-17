@@ -292,6 +292,7 @@ export class ServiceList {
 	// Integrations
 	integrationGoogleCalendar: Service;
 	integrationTwitter: Service;
+	integrationOutlook: Service;
 	integrationTwitterTweet: Service;
 	integrations: Service;
 	integration: Service;
@@ -625,6 +626,7 @@ export class ServiceList {
 		// Integrations
 		this.integrationGoogleCalendar = new Service('/i/schools/{schoolId}/integrations/googlecalendar', binding);
 		this.integrationTwitter = new Service('/i/schools/{schoolId}/integrations/twitter', binding);
+		this.integrationOutlook = new Service('/i/schools/{schoolId}/integrations/outlook', binding);
 		this.integrationTwitterTweet = new Service('/i/schools/{schoolId}/integrations/twitter/{twitterId}/tweet', binding);
 		this.integrations = new Service('/i/schools/{schoolId}/integrations', binding);
 		this.integration = new Service('/i/schools/{schoolId}/integrations/{integrationId}', binding);

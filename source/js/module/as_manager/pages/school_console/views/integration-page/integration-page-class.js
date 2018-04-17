@@ -60,6 +60,8 @@ class IntegrationPageClass{
 				return  'Google Calendar';
 			case item.type === 'twitter':
 				return 'Twitter';
+			case item.type === 'outlook':
+				return 'Outlook';
 			default: return null
 		}
 	}
@@ -70,6 +72,8 @@ class IntegrationPageClass{
 				return  <i className="fa fa-google" aria-hidden="true"></i>;
 			case item.type === 'twitter':
 				return <i className="fa fa-twitter" aria-hidden="true"></i>;
+			case item.type === 'outlook':
+				return <i className="fa fa-windows" aria-hidden="true"></i>;
 			default: return null
 		}
 		
