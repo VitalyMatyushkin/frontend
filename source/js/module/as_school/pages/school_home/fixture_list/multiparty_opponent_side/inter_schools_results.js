@@ -1,5 +1,5 @@
 const	React								= require('react'),
-		ChallengeModel						= require('module/ui/challenges/challenge_model'),
+		{ChallengeModel}					= require('module/ui/challenges/challenge_model'),
 		MultipartyInterSchoolsResultsStyle	= require('./../../../../../../../styles/ui/b_multiparty_interSchools_results/b_multiparty_interSchools_results.scss'),
 		FixtureItemStyle					= require('./../../../../../../../styles/main/b_school_fixtures.scss');
 

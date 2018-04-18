@@ -1,7 +1,7 @@
 const	React					= require('react'),
 		Morearty				= require('morearty'),
 
-		Challenges				= require('../../../../ui/challenges/challenges'),
+		{Challenges}			= require('../../../../ui/challenges/challenges'),
 		AllChildrenChallenges 	= require('./calendar/challenges/all_children_challenges'),
 		Calendar 				= require('./calendar/calendar'),
 		CalendarActions			= require('./calendar/calendar-actions');

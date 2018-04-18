@@ -1,5 +1,5 @@
 const	React				= require('react'),
-		ChallengeModel		= require('module/ui/challenges/challenge_model'),
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model'),
 		FixtureRivalStyle	= require('../../../../../../../styles/ui/b_fixture_rival/b_fixture_rival.scss');
 
 const InterSchoolsRival = React.createClass({

@@ -2,49 +2,49 @@
  * Created by wert on 06.09.16.
  */
 
-const 	React				= require('react'),
-		ChallengeModel		= require('./challenge_model'),
-		ChallengeListTitle	= require('./challenge_list_title'),
-		ChallengeListItem	= require('./challenge_list_item'),
-		NoResultItem		= require('./no_result_item')
+import * as React from 'react';
+import {ChallengeModel} from './challenge_model';
+import {ChallengeListTitle} from './challenge_list_title';
+import {ChallengeListItem} from './challenge_list_item';
+import {NoResultItem} from './no_result_item';
+import {Event} from 'module/as_manager/pages/events/events';
 
 import {CalendarSize} from 'module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget.tsx';
 
-const Challenges = React.createClass({
-	propTypes: {
-		size:                   React.PropTypes.number,
-		onClick:				React.PropTypes.func,
-		isSync:					React.PropTypes.bool,
-		isDaySelected:			React.PropTypes.bool,
-		activeSchoolId:			React.PropTypes.string,
-		activeSchoolKind:		React.PropTypes.string,
-		events:					React.PropTypes.any,
-		onClickDeleteEvent: 	React.PropTypes.func,
-		isUserSchoolWorker: 	React.PropTypes.bool,
-		isPublicSite:           React.PropTypes.bool
-	},
-	getDefaultProps: function () {
-		return {
-			isDaySelected: true,
-			isPublicSite: false
-		};
-	},
+interface ChallengesProps {
+	size?:                  number
+	onClick?:				() => void
+	isSync?:				boolean
+	isDaySelected?:			boolean
+	activeSchoolId?:		string
+	activeSchoolKind?:		string
+	events?:				Event[]
+	onClickDeleteEvent?: 	() => void
+	isUserSchoolWorker?: 	boolean
+	isPublicSite?:          boolean
+}
 
-	getSizeModifierStyle() {
+export class Challenges  extends React.Component<ChallengesProps, {}> {
+	static defaultProps: Partial<ChallengesProps> = {
+		isDaySelected: true,
+		isPublicSite: false
+	};
+
+	getSizeModifierStyle (): string {
 		switch (this.props.size) {
-			case CalendarSize.Small: {
+			case (CalendarSize as any).Small: {
 				return ' mSmall';
 			}
-			case CalendarSize.Medium: {
+			case (CalendarSize as any).Medium: {
 				return ' mMedium';
 			}
 			default: {
 				return ''
 			}
 		}
-	},
+	}
 
-	_getEvents: function () {
+	_getEvents (): React.ReactNode {
 		const 	isSync				= this.props.isSync,
 				events				= this.props.events,
 				isDaySelected		= this.props.isDaySelected,
@@ -78,9 +78,9 @@ const Challenges = React.createClass({
 			default:
 				return <NoResultItem text="There are no events for selected day"/>;
 		}
-	},
+	}
 
-	render: function() {
+	render () {
 		return (
 			<div className={`eEvents_challenges mGeneral ${this.getSizeModifierStyle()}`}>
 				<ChallengeListTitle/>
@@ -88,7 +88,4 @@ const Challenges = React.createClass({
 			</div>
 		);
 	}
-});
-
-
-module.exports = Challenges;
+}

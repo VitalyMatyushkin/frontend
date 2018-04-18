@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import * as Morearty from 'morearty';
-import * as Challenges from './../../../../ui/challenges/challenges';
+import {Challenges} from '../../../../ui/challenges/challenges';
 import {Calendar} from './calendar';
 import {CalendarActions} from './calendar-actions';
 import {AddEventButton} from './add_event_button';

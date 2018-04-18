@@ -2,7 +2,7 @@
 const 	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
-		Challenges		= require('module/ui/challenges/challenges'),
+		{Challenges}	= require('module/ui/challenges/challenges'),
 		{MonthCalendar}	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions');
 

@@ -1,7 +1,7 @@
 const	React					= require('react'),
 		classNames				= require('classnames');
 
-const	ChallengeModelHelper	= require('module/ui/challenges/challenge_model_helper'),
+const	{ChallengeModelHelper}	= require('module/ui/challenges/challenge_model_helper'),
 		EventHelper				= require('module/helpers/eventHelper');
 
 const	EventRivalsStyle		= require('../../../../../../../../../../../styles/pages/event/b_event_rivals.scss'),

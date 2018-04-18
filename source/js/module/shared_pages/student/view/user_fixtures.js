@@ -4,7 +4,7 @@
 
 const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
-		GameType 		= require('module/ui/challenges/event-game-type-with-score'),
+   	 	{GameType} 		= require('module/ui/challenges/event-game-type-with-score'),
 		Sport 			= require('module/ui/icons/sport_icon'),
 	    SessionHelper	= require('module/helpers/session_helper'),
         Morearty        = require('morearty'),

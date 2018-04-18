@@ -47,15 +47,19 @@ export interface Event {
 	players: Player[]
 	results: {
 		houseScore: any[]
+		teamScore: any[]
 		individualDiscipline: any[]
 		individualPerformance: any[]
 		individualScore: any[]
 		schoolScore: any[]
+		cricketResult?: any
 	}
+	settings: 			any[]
 	schoolsData:        School[]
 	sport:              Sport
 	sportId:            string
 	startTime:          string
+	status:				string
 	teamsData:          any
 	threadId:           string
 	type:               string

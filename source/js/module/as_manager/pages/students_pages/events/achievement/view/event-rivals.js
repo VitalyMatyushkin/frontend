@@ -2,7 +2,7 @@
  * Created by Anatoly on 31.08.2016.
  */
 const 	React 			= require('react'),
-		ChallengeModel 	= require('module/ui/challenges/challenge_model'),
+		{ChallengeModel}= require('module/ui/challenges/challenge_model'),
 		Sport 			= require('module/ui/icons/sport_icon'),
 		classNames 		= require('classnames');
 

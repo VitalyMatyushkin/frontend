@@ -1,5 +1,7 @@
-const ChallengeModelHelper = {
-	getSortedScoreArrayForInterSchoolsMultipartyTeamEvent: function(event) {
+import {Event} from 'module/as_manager/pages/events/events';
+
+export class ChallengeModelHelper {
+	static getSortedScoreArrayForInterSchoolsMultipartyTeamEvent (event: Event) {
 		const	teamsData = event.teamsData,
 				teamScore = event.results.teamScore;
 
@@ -38,8 +40,9 @@ const ChallengeModelHelper = {
 		});
 
 		return score;
-	},
-	getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent: function(event) {
+	}
+
+	static getSortedPlaceArrayForInterSchoolsMultipartyTeamEvent (event: Event) {
 		const places = [];
 
 		const scoreArray = this.getSortedScoreArrayForInterSchoolsMultipartyTeamEvent(event);
@@ -72,6 +75,4 @@ const ChallengeModelHelper = {
 
 		return places;
 	}
-} ;
-
-module.exports = ChallengeModelHelper;
+}

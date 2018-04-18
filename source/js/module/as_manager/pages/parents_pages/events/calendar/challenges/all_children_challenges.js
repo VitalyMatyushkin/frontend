@@ -7,7 +7,7 @@ const	React			= require('react'),
 
 		Header 			= require('./header'),
 		ChildChallenges = require('./child_challenges'),
-		NoResultItem	= require('../../../../../../ui/challenges/no_result_item');
+		{NoResultItem}	= require('../../../../../../ui/challenges/no_result_item');
 
 const AllChildrenChallenges = React.createClass({
 	propTypes: {

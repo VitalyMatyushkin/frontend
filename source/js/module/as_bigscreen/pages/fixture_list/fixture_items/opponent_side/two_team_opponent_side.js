@@ -6,7 +6,7 @@ const 	React				= require('react'),
 		propz				= require('propz'),
 		DateTimeMixin		= require('module/mixins/datetime'),
 		SportHelper 		= require('module/helpers/sport_helper'),
-		ChallengeModel		= require('module/ui/challenges/challenge_model');
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model');
 
 /**
  * This component is opponent part of fixture item.

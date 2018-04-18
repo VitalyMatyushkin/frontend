@@ -9,7 +9,7 @@ const 	React				= require('react'),
 		SportHelper 		= require('module/helpers/sport_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		SportIcon			= require('module/ui/icons/sport_icon'),
-		ChallengeModel		= require('module/ui/challenges/challenge_model'),
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model'),
 		{DateHelper} 	    = require('module/helpers/date_helper'),
 		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
 

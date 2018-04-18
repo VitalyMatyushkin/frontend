@@ -4,7 +4,7 @@
 
 const	React			= require('react'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		GameType 		= require('module/ui/challenges/event-game-type-with-score'),
+		{GameType} 		= require('module/ui/challenges/event-game-type-with-score'),
 		Sport 			= require('module/ui/icons/sport_icon'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');

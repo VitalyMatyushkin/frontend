@@ -1,49 +1,47 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		{DateHelper}		= require('../../helpers/date_helper'),
-		Challenges		= require('./challenges');
+import * as React from 'react';
+import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+import * as InvitesMixin from 'module/as_manager/pages/invites/mixins/invites_mixin';
+import * as MoreartyHelper from 'module/helpers/morearty_helper';
+import	{DateHelper} from '../../helpers/date_helper';
+import {Challenges} from './challenges';
 
-const ChallengesList = React.createClass({
+export const ChallengesList = (React as any).createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	componentWillMount: function() {
-		const	self = this;
+	componentWillMount: function () {
+		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		self._initBinding();
-		self._addListeners();
+		this._initBinding();
+		this._addListeners();
 	},
-	_initBinding: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
+
+	_initBinding: function (): void {
+		const	binding		= this.getDefaultBinding(),
 				selectDay	= binding.get('calendar.selectDay');
 
 		if(selectDay !== undefined && selectDay !== null) {
-			self._setFixturesByDate(selectDay.date);
+			this._setFixturesByDate(selectDay.date);
 		} else {
 			binding.set('selectedDayFixtures', Immutable.fromJS([]));
 		}
 	},
-	_addListeners: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+
+	_addListeners: function(): void {
+		const binding = this.getDefaultBinding();
 
 		binding.sub('calendar.selectDay').addListener((descriptor) => {
-			self._setFixturesByDate(descriptor.getCurrentValue().date);
+			this._setFixturesByDate(descriptor.getCurrentValue().date);
 		});
 
 		binding.sub('models').addListener(() => {
 			const currentCalendarDate = binding.toJS('calendar.selectDay');
 
-			currentCalendarDate && self._setFixturesByDate(currentCalendarDate.date);
+			currentCalendarDate && this._setFixturesByDate(currentCalendarDate.date);
 		});
 	},
-	_setFixturesByDate:function(date) {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
+
+	_setFixturesByDate: function (date): void {
+		const	binding	= this.getDefaultBinding(),
 				sync	= binding.toJS('sync') && binding.toJS('sports.sync');
 		let		selectedDayFixture = [];
 
@@ -63,9 +61,11 @@ const ChallengesList = React.createClass({
 
 		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
 	},
-	_onClickEvent: function(eventId) {
+
+	_onClickEvent: function (eventId: string): void {
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
+
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
 				isSync			= binding.toJS('sync'),
@@ -84,5 +84,3 @@ const ChallengesList = React.createClass({
 		);
 	}
 });
-
-module.exports = ChallengesList;

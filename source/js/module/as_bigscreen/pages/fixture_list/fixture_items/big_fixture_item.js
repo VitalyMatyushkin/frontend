@@ -1,6 +1,6 @@
 const	React 					= require('react'),
 
-		ChallengeModel			= require('./../../../../ui/challenges/challenge_model'),
+		{ChallengeModel}		= require('../../../../ui/challenges/challenge_model'),
 		BigEventResultView		= require('./event_views/big_event_result_view'),
 		FixtureItemFooterFooter	= require('./footer/fixture_item_footer');
 

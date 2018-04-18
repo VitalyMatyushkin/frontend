@@ -2,19 +2,16 @@
  * Created by Woland on 10.01.2017.
  */
 const 	React 				= require('react'),
-	Immutable			= require('immutable'),
-	Morearty 			= require('morearty'),
+		Immutable			= require('immutable'),
+		Morearty 			= require('morearty'),
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model'),
+		propz				= require('propz'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		RoleHelper			= require('module/helpers/role_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 
-	ChallengeModel		= require('module/ui/challenges/challenge_model'),
-
-	propz				= require('propz'),
-
-	MoreartyHelper		= require('module/helpers/morearty_helper'),
-	RoleHelper			= require('module/helpers/role_helper'),
-	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-
-	EventHeader 		= require('./event_header'),
-	EventHeaderActions 	= require('./event_header_actions');
+		EventHeader 		= require('./event_header'),
+		EventHeaderActions 	= require('./event_header_actions');
 
 const	ManagerConsts	= require('module/ui/managers/helpers/manager_consts');
 

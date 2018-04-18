@@ -1,9 +1,9 @@
 /**
  * Created by vitaly on 30.10.17.
  */
-const	React			= require('react'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		ChallengeModel	= require('module/ui/challenges/challenge_model');
+const	React				= require('react'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model');
 
 const InterSchoolsResults = React.createClass({
 	propTypes: {

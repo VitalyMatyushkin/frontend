@@ -1,7 +1,7 @@
 const 	React           = require('react'),
 		DateTimeMixin   = require('module/mixins/datetime'),
 		SportHelper     = require('module/helpers/sport_helper'),
-		ChallengeModel  = require('module/ui/challenges/challenge_model');
+		{ChallengeModel}= require('module/ui/challenges/challenge_model');
 
 const FixtureItemStyle	= require('./../../../../../../styles/main/b_school_fixtures.scss');
 

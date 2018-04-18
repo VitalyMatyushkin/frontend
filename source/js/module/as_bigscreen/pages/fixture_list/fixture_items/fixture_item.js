@@ -1,8 +1,8 @@
 const	React 					= require('react'),
 
-		ChallengeModel			= require('./../../../../ui/challenges/challenge_model'),
+		{ChallengeModel}		= require('../../../../ui/challenges/challenge_model'),
 		EventResultView			= require('./event_views/event_result_view'),
-		FixtureItemFooter	= require('./footer/fixture_item_footer');
+		FixtureItemFooter		= require('./footer/fixture_item_footer');
 
 const FixtureItem = React.createClass({
 	propTypes: {

@@ -1,6 +1,5 @@
-const	React			= require('react'),
-
-		ChallengeModel	= require('./../../ui/challenges/challenge_model');
+const	React				= require('react'),
+		{ChallengeModel}	= require('../../ui/challenges/challenge_model');
 
 const Footer = React.createClass({
 	propTypes: {

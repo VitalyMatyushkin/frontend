@@ -2,7 +2,7 @@
  * Created by vitaly on 30.10.17.
  */
 const	React				= require('react'),
-		ChallengeModel		= require('module/ui/challenges/challenge_model');
+		{ChallengeModel}	= require('module/ui/challenges/challenge_model');
 
 const InterSchoolsRival = React.createClass({
 	propTypes: {

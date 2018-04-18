@@ -5,7 +5,7 @@
 const 	React 			= require('react'),
 		Sport           = require('module/ui/icons/sport_icon'),
 		classNames      = require('classnames'),
-		ChallengeModel  = require('module/ui/challenges/challenge_model'),
+		{ChallengeModel}= require('module/ui/challenges/challenge_model'),
 		SportHelper 	= require('module/helpers/sport_helper');
 
 const FixtureItem = React.createClass({

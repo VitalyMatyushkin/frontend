@@ -2,31 +2,36 @@
  * Created by wert on 03.09.16.
  */
 
-const 	React				= require('react'),
-		SportIcon			= require('module/ui/icons/sport_icon'),
-		SportHelper 		= require('module/helpers/sport_helper'),
-		EventCalendarStyle	= require('../../../../styles/pages/events/b_events_calendar.scss');
+import * as React from 'react';
+import * as SportIcon from 'module/ui/icons/sport_icon';
+import * as SportHelper from 'module/helpers/sport_helper';
+import {Event} from 'module/as_manager/pages/events/events';
+import {ChallengeModel} from './challenge_model';
+
+import '../../../../styles/pages/events/b_events_calendar.scss';
 
 /** Object to draw event details in challenge list.
  *  Have a lot of undocumented shit inside - it was just compiled from already existed code.
  *  I believe somebody one day will refactor it and bring all event view to common denominator... yeah.
  *  Be carefull here.
  */
-const ChallengeListItem = React.createClass({
 
-	propTypes: {
-		event: 				React.PropTypes.any,
-		model:				React.PropTypes.any,
-		onClick: 			React.PropTypes.func, 	// first argument is eventId
-		onClickDeleteEvent: React.PropTypes.func,
-		isUserSchoolWorker: React.PropTypes.bool
-	},
+interface ChallengeListItemProps {
+	event?: 				Event
+	model?:					ChallengeModel
+	onClick?: 				(eventId: string) => void
+	onClickDeleteEvent?: 	(id: string) => void
+	isUserSchoolWorker?: 	boolean
+}
 
-	onClick: function(eventId) {
-		if(typeof this.props.onClick === 'function')
+export class ChallengeListItem extends React.Component<ChallengeListItemProps, {}> {
+	onClick (eventId: string) {
+		if(typeof this.props.onClick === 'function') {
 			this.props.onClick(eventId);
-	},
-	render: function () {
+		}
+	}
+
+	render () {
 		const 	event 						= this.props.event,
 				model						= this.props.model,
 				isCancelled					= event.status === 'CANCELED',
@@ -68,8 +73,8 @@ const ChallengeListItem = React.createClass({
 
 		/* calculating styles. cancelled and rejected events have their own inactive style */
 		const	isInactive	= isCancelled || isRejected,
-				topClassName	= 'eChallenge ' + (isInactive ? 'mInactive' : ''),
-				iconClassName	= 'bIcon_invites ' + (isInactive ? 'mInactive' : '');
+			topClassName	= 'eChallenge ' + (isInactive ? 'mInactive' : ''),
+			iconClassName	= 'bIcon_invites ' + (isInactive ? 'mInactive' : '');
 
 		// TODO: actually it shouldn't be here. Click event should be triggered on any event and dispatched on
 		// TODO: top levels of hierarchy. But this is faster solution.
@@ -94,8 +99,4 @@ const ChallengeListItem = React.createClass({
 			</div>
 		);
 	}
-
-});
-
-
-module.exports = ChallengeListItem;
+}
