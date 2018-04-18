@@ -21,7 +21,8 @@ const FixtureList = React.createClass({
         schoolId:       React.PropTypes.array || React.PropTypes.string,
         schoolIdList:   React.PropTypes.array,
         school: 		React.PropTypes.array,
-        mode:           React.PropTypes.string
+        mode:           React.PropTypes.string,
+		region:			React.PropTypes.string
 	},
     getInitialState: function() {
         return {
@@ -146,7 +147,7 @@ const FixtureList = React.createClass({
 				return (
 					<div key={dtIndex} className="bChallengeDate">
 						<div className="eChallengeDate_wrap">
-							<div className="eChallengeDate_date">{date}</div>
+							<div className="eChallengeDate_date">{DateHelper.getDateByRegion(date, this.props.region)}</div>
 							<div className="eChallengeDate_list">{this.getEvents(date)}</div>
 						</div>
 					</div>

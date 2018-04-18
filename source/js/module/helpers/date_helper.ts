@@ -120,6 +120,10 @@ export const DateHelper = {
 		return this.toLocal(str).replace(/[.]/g, '/');
 	},
 
+	getDateByRegion: function (str: string, region: string): string {
+		return region === 'US' ? Moment(str, 'DD/MM/YYYY').format('MM/DD/YYYY') : str;
+	},
+
 	/** convert date from UTC-string to 'dd mmm yyyy' format */
 	toLocalWithMonthName:function(utcStr){
 		// TODO birthday?? WTF??
@@ -208,6 +212,18 @@ export const DateHelper = {
 
         return `${_date.getFullYear()}-${this.getMonthString(date)}-${this.getLastDayOfMonth(date)}T${this.getEndDayTimeString()}`;
     },
+	/**
+	 * Return last date of month
+	 * @param date - is a date time string like that "Sun Jul 03 2016 20:46:21 GMT+0600 (RTZ 5 (зима))"
+	 */
+	getLastDayOfMonth: function(date) {
+		const _date = new Date(date);
+
+		const lastDayOfMonthDateTime = new Date(_date.getFullYear(), _date.getMonth() + 1, 0);
+
+		return lastDayOfMonthDateTime.getDate();
+
+	},
     getMonthNumber: function(date) {
         return new Date(date).getMonth() + 1;
     },

@@ -7,6 +7,7 @@ const	React		= require('react'),
 
 const	{MonthYearSelector}	= require('module/ui/calendar/month_year_selector'),
     	{MODE_FIXTURES}		= require('module/ui/fixtures/fixtures_helper'),
+		{RegionHelper} 		= require('module/helpers/region_helper'),
 		Fixtures			= require('../../../../ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
@@ -54,6 +55,7 @@ const EventFixtures = React.createClass({
 						onClick			= {this.onClickChallenge}
 						children		= {binding.toJS('children')}
 						childIdList		= {childIdList}
+						region			= {RegionHelper.getRegion(this.getMoreartyContext().getBinding())}
 					/>
 				</div>
 		);

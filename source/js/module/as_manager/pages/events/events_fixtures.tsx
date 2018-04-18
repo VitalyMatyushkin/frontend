@@ -7,7 +7,9 @@ import * as	Morearty from 'morearty';
 
 import {MonthYearSelector} from 'module/ui/calendar/month_year_selector';
 import {MODE_FIXTURES} from 'module/ui/fixtures/fixtures_helper';
-import * as	Fixtures from 'module/ui/fixtures/fixtures';
+import * as	 Fixtures from 'module/ui/fixtures/fixtures';
+import {RegionHelper} from 'module/helpers/region_helper'
+
 
 import './../../../../../styles/ui/bFixtures.scss';
 
@@ -48,6 +50,7 @@ export const EventFixtures = (React as any).createClass({
 					date			= { binding.get('dateCalendar') }
 					activeSchoolId	= { activeSchoolId }
 					onClick			= { (eventId) => this.onClickChallenge(eventId) }
+					region			= {RegionHelper.getRegion(this.getMoreartyContext().getBinding())}
 				/>
 			</div>
 		);

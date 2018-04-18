@@ -18,7 +18,8 @@ const EventFixtures = React.createClass({
         schoolId: 		React.PropTypes.array || React.PropTypes.string,
         schoolIdList: 	React.PropTypes.array,
         school: 		React.PropTypes.array,
-        mode: 			React.PropTypes.string.isRequired
+        mode: 			React.PropTypes.string.isRequired,
+		region:			React.PropTypes.string
 	},
 	render: function () {
         const   date  			= this.props.date,
@@ -39,6 +40,7 @@ const EventFixtures = React.createClass({
 					school			= {this.props.school}
 					schoolId		= {this.props.schoolId}
 					schoolIdList	= {this.props.schoolIdList}
+					region			= {this.props.region}
 				/>
 			</div>
         );
