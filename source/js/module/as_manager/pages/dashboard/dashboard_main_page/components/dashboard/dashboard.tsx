@@ -51,9 +51,10 @@ export interface Widget {
 export const WidgetInterfaceKeyArray = ['id', 'type', 'data', 'isPin', 'isMinimize', 'delta', 'isSync'];
 
 export interface DashboardProps {
+	isDashboardDefaultPage: boolean,
 	widgetArray: Widget[],
-	selectedViewModeDropdownItemId: DASHBOARD_VIEW_MODE
-	handleChangeDashboardViewMode: (viewModeId: DASHBOARD_VIEW_MODE) => void
+	selectedSettingsDropdownItemId: DASHBOARD_VIEW_MODE
+	handleClickSettingsDropdown: (viewModeId: DASHBOARD_VIEW_MODE) => void
 	handleDroppedWidget: (moveResult: MoveResult) => void
 	handlePinWidget: (type: WIDGET_TYPE) => void
 	handleMinimizeWidget: (type: WIDGET_TYPE) => void
@@ -378,8 +379,9 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 			>
 				<div className='eDashboard_header'>
 					<DashboardViewModeDropdown
-						selectedViewModeDropdownItemId={this.props.selectedViewModeDropdownItemId}
-						handleChangeViewMode={this.props.handleChangeDashboardViewMode}
+						selectedSettingsDropdownItemId={this.props.selectedSettingsDropdownItemId}
+						isDashboardDefaultPage={this.props.isDashboardDefaultPage}
+						handleClickSettingsDropdown={this.props.handleClickSettingsDropdown}
 					/>
 				</div>
 				<div className='eDashboard_body'>

@@ -22,8 +22,12 @@ import Dashboard, {
 import * as RoleHelper from 'module/helpers/role_helper'
 
 import 'styles/ui/dashboard/dashboard_main_page.scss'
-import {DASHBOARD_VIEW_MODE} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/components/dashboard_view_mode_dropdown";
+import {
+	DASHBOARD_VIEW_MODE,
+	DEFAULT_START_PAGE
+} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/components/dashboard_view_mode_dropdown";
 import {DashboardPresetArray} from "module/as_manager/pages/dashboard/dashboard_main_page/data/dashboard_preset";
+import {DefaultPageSettingsHelper} from "module/helpers/default_page_settings_helper";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -33,18 +37,37 @@ export const DashboardMainPage = (React as any).createClass({
 	getDefaultState: function () {
 		const dashboard = this.getDashboardStateFromLocalStorage();
 
+		console.log(this.isDashboardDefaultPage());
 		if(typeof dashboard !== 'undefined') {
-			 return Immutable.fromJS(dashboard);
+		 return Immutable.fromJS({
+				 isDashboardDefaultPage: this.isDashboardDefaultPage(),
+				 dashboardModeView: dashboard.dashboardModeView,
+				 widgetArray: dashboard.widgetArray
+			 });
 		} else {
-			const dashboardModeView = this.getDefaultDashboardViewMode();
 			return Immutable.fromJS({
-				dashboardModeView: dashboardModeView,
-				widgetArray: this.getDefaultWidgetsStateByDashboardViewMode(dashboardModeView)
+				isDashboardDefaultPage: this.isDashboardDefaultPage(),
+				dashboardModeView: this.getDefaultDashboardViewMode(),
+				widgetArray: this.getDefaultWidgetsStateByDashboardViewMode(this.getDefaultDashboardViewMode())
 			});
 		}
 	},
 	componentWillMount() {
 		this.updateWidgetArrayData().then(() => this.saveDashboardStateToLocalStorage());
+	},
+	isDashboardDefaultPage() {
+		const settings = DefaultPageSettingsHelper.getDefaultPageSettingsByRole(this.getCurrentRole());
+		if(typeof settings !== 'undefined') {
+			return settings.isDashboardDefaultPage;
+		} else {
+			return false;
+		}
+	},
+	getCurrentPermissionId() {
+		return this.getMoreartyContext().getBinding().get('userData.roleList.activePermission.id');
+	},
+	getCurrentRole() {
+		return this.getMoreartyContext().getBinding().get('userData.roleList.activePermission.role');
 	},
 	getDefaultDashboardViewMode() {
 		const permission = this.getMoreartyContext().getBinding().toJS('userData.roleList.activePermission');
@@ -52,11 +75,11 @@ export const DashboardMainPage = (React as any).createClass({
 		let dashboardViewMode;
 		switch (permission.role) {
 			case RoleHelper.USER_ROLES.TEACHER: {
-				dashboardViewMode = DASHBOARD_VIEW_MODE.PE_TEACHER;
+				dashboardViewMode = DASHBOARD_VIEW_MODE.PeTeacher;
 				break;
 			}
 			default: {
-				dashboardViewMode = DASHBOARD_VIEW_MODE.GET_STARTED;
+				dashboardViewMode = DASHBOARD_VIEW_MODE.GetStarted;
 			}
 		}
 
@@ -160,7 +183,7 @@ export const DashboardMainPage = (React as any).createClass({
 	getDashboardStateFromLocalStorage() {
 		let dashboard;
 
-		const permissionId = this.getMoreartyContext().getBinding().get('userData.roleList.activePermission.id');
+		const permissionId = this.getCurrentPermissionId();
 
 		const dashboardState = StorageHelpers.LocalStorage.get('dashboardState');
 		if(typeof dashboardState !== 'undefined') {
@@ -291,18 +314,54 @@ export const DashboardMainPage = (React as any).createClass({
 		binding.set('widgetArray', Immutable.fromJS(widgetArray));
 		this.saveDashboardStateToLocalStorage();
 	},
-	handleChangeDashboardViewMode(viewModeId: DASHBOARD_VIEW_MODE) {
-		this.getDefaultBinding().set('dashboardModeView', Immutable.fromJS(viewModeId));
-		this.getDefaultBinding().set('widgetArray', Immutable.fromJS(this.getDefaultWidgetsStateByDashboardViewMode(viewModeId)));
+	changeDashboardModeView(dashboardModeView: DASHBOARD_VIEW_MODE) {
+		this.getDefaultBinding().set('dashboardModeView', Immutable.fromJS(dashboardModeView));
+		this.getDefaultBinding().set('widgetArray', Immutable.fromJS(this.getDefaultWidgetsStateByDashboardViewMode(dashboardModeView)));
 		this.updateWidgetArrayData().then(() => this.saveDashboardStateToLocalStorage());
+	},
+	handleClickSettingsDropdown(itemId: DASHBOARD_VIEW_MODE | DEFAULT_START_PAGE) {
+		switch (itemId) {
+			case DASHBOARD_VIEW_MODE.GetStarted: {
+				this.changeDashboardModeView(itemId);
+				break;
+			}
+			case DASHBOARD_VIEW_MODE.PeTeacher: {
+				this.changeDashboardModeView(itemId);
+				break;
+			}
+			case DASHBOARD_VIEW_MODE.Manager: {
+				this.changeDashboardModeView(itemId);
+				break;
+			}
+			case DEFAULT_START_PAGE.Dashboard: {
+				let settings = DefaultPageSettingsHelper.getDefaultPageSettingsByRole(this.getCurrentRole());
+
+				if(typeof settings === 'undefined') {
+					settings = {
+						isDashboardDefaultPage: !this.isDashboardDefaultPage()
+					}
+				} else {
+					settings.isDashboardDefaultPage = !this.isDashboardDefaultPage();
+				}
+
+				DefaultPageSettingsHelper.setDefaultPageSettingsByRole(settings, this.getCurrentRole());
+				this.getDefaultBinding().set(
+					'isDashboardDefaultPage',
+					!this.getDefaultBinding().toJS('isDashboardDefaultPage')
+				);
+				break;
+			}
+		}
+
 	},
 	render() {
 		return (
 			<div className="bDashboardMainPage">
 				<Dashboard
+					isDashboardDefaultPage={this.getDefaultBinding().toJS('isDashboardDefaultPage')}
 					widgetArray={this.getWidgetArray()}
-					selectedViewModeDropdownItemId={this.getDefaultBinding().toJS('dashboardModeView')}
-					handleChangeDashboardViewMode={(viewModeId: DASHBOARD_VIEW_MODE) => this.handleChangeDashboardViewMode(viewModeId)}
+					selectedSettingsDropdownItemId={this.getDefaultBinding().toJS('dashboardModeView')}
+					handleClickSettingsDropdown={(itemId: DASHBOARD_VIEW_MODE | DEFAULT_START_PAGE) => this.handleClickSettingsDropdown(itemId)}
 					handleDroppedWidget={(moveResult) => this.handleDroppedWidget(moveResult)}
 					calendarWidgetBinding={this.getDefaultBinding().sub('dashboardCalendarWidget')}
 					handlePinWidget={(type) => this.handlePinWidget(type)}

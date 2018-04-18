@@ -1,0 +1,36 @@
+.bSettingsDropdownDefaultItem {
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  cursor: pointer;
+
+  white-space: nowrap;
+  background-color: transparent;
+
+  padding: 8px 16px;
+  text-align: center;
+
+  color: #67757c;
+
+  &:hover {
+    color: #16181b;
+    background-color: #f8f9fa;
+  }
+}
+
+.eSettingsDropdownDefaultItem_text {
+  word-wrap: break-word;
+}
+
+.eSettingsDropdownDefaultItem_checkIconWrapper {
+  position: relative;
+  width: 15px;
+  margin-right: 3px;
+}
+
+.eSettingsDropdownDefaultItem_checkIcon {
+  position: absolute;
+  color: #16181b;
+  top: -3px;
+}

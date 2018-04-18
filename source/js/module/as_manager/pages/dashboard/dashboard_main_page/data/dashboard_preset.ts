@@ -8,7 +8,7 @@ export interface DashboardPresetInterface {
 
 export const DashboardPresetArray: DashboardPresetInterface[] = [
 	{
-		type: DASHBOARD_VIEW_MODE.GET_STARTED,
+		type: DASHBOARD_VIEW_MODE.GetStarted,
 		widgetTypes: [
 			WIDGET_TYPE.SchoolProfileWidget,
 			WIDGET_TYPE.SchoolUsersWidgetData,
@@ -16,7 +16,7 @@ export const DashboardPresetArray: DashboardPresetInterface[] = [
 		]
 	},
 	{
-		type: DASHBOARD_VIEW_MODE.MANAGER,
+		type: DASHBOARD_VIEW_MODE.Manager,
 		widgetTypes: [
 			WIDGET_TYPE.SchoolProfileWidget,
 			WIDGET_TYPE.SchoolDataWidgetData,
@@ -28,7 +28,7 @@ export const DashboardPresetArray: DashboardPresetInterface[] = [
 		]
 	},
 	{
-		type: DASHBOARD_VIEW_MODE.PE_TEACHER,
+		type: DASHBOARD_VIEW_MODE.PeTeacher,
 		widgetTypes: [
 			WIDGET_TYPE.SchoolProfileWidget,
 			WIDGET_TYPE.SchoolUsersWidgetData,

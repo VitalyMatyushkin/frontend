@@ -1,4 +1,6 @@
 // @flow
+import {DefaultPageSettingsHelper} from "./default_page_settings_helper";
+
 /**
  * Created by Anatoly on 29.05.2016.
  */
@@ -45,7 +47,15 @@ const DomainHelper = {
 	getDefaultPageByRoleNameAndSchoolKind: function(roleName, schoolKind) {
 		const _roleName = roleName.toLowerCase();
 
+		let isDashboardDefaultPage = false;
+		const settings = DefaultPageSettingsHelper.getDefaultPageSettingsByRole(roleName);
+		if(typeof settings !== 'undefined') {
+			isDashboardDefaultPage = settings.isDashboardDefaultPage;
+		}
+
 		switch (true) {
+			case isDashboardDefaultPage && schoolKind === 'School':
+				return 'dashboard/mainPage';
 			case _roleName === 'no_body':
 				return `settings/general`;
 			case _roleName === 'owner' && schoolKind === 'School':

@@ -1,45 +1,76 @@
 import * as React from 'react'
 
-import {Dropdown, Item} from "module/ui/dropdown/dropdown";
+import {
+	SettingsDropdown,
+	SettingsDropdownItemType
+} from "module/ui/settings_dropdown/settings_dropdown";
 
 import 'styles/ui/dashboard/dashboard_view_mode_dropdown.scss'
 
 export enum DASHBOARD_VIEW_MODE {
-	GET_STARTED = 'Get started',
-	PE_TEACHER = 'PE Teacher',
-	MANAGER = 'Manager'
+	GetStarted = 'GET_STARTED',
+	PeTeacher = 'PE_TEACHER',
+	Manager = 'MANAGER'
+}
+
+export enum DEFAULT_START_PAGE {
+	Dashboard = 'DASHBOARD'
 }
 
 export interface DashboardViewModeDropdownProps {
-	selectedViewModeDropdownItemId: DASHBOARD_VIEW_MODE
-	handleChangeViewMode: (item: DASHBOARD_VIEW_MODE) => void
+	selectedSettingsDropdownItemId: DASHBOARD_VIEW_MODE,
+	isDashboardDefaultPage: boolean,
+	handleClickSettingsDropdown: (item) => void
 }
 
-export const DASHBOARD_VIEW_MODE_DROPDOWN_ITEMS: Item[] = [
-	{
-		id: DASHBOARD_VIEW_MODE.GET_STARTED,
-		element: <div>{DASHBOARD_VIEW_MODE.GET_STARTED}</div>
-	}, {
-		id: DASHBOARD_VIEW_MODE.PE_TEACHER,
-		element: <div>{DASHBOARD_VIEW_MODE.PE_TEACHER}</div>
-	}, {
-		id: DASHBOARD_VIEW_MODE.MANAGER,
-		element: <div>{DASHBOARD_VIEW_MODE.MANAGER}</div>
-	}
-];
-
 export class DashboardViewModeDropdown extends React.Component<DashboardViewModeDropdownProps, {}> {
+	getDropdownItemArray() {
+		return [
+			{
+				id: SettingsDropdownItemType.SettingsDropdownTitleItem,
+				text: 'Dashboard view mode',
+				isSelected: false,
+				type: SettingsDropdownItemType.SettingsDropdownTitleItem
+			},
+			{
+				id: DASHBOARD_VIEW_MODE.GetStarted,
+				text: 'Get Started',
+				isSelected: DASHBOARD_VIEW_MODE.GetStarted === this.props.selectedSettingsDropdownItemId,
+				type: SettingsDropdownItemType.SettingsDropdownDefaultItem
+			},
+			{
+				id: DASHBOARD_VIEW_MODE.PeTeacher,
+				text: 'Pe Teacher',
+				isSelected: DASHBOARD_VIEW_MODE.PeTeacher === this.props.selectedSettingsDropdownItemId,
+				type: SettingsDropdownItemType.SettingsDropdownDefaultItem
+			},
+			{
+
+				id: DASHBOARD_VIEW_MODE.Manager,
+				text: 'Manager',
+				isSelected: DASHBOARD_VIEW_MODE.Manager === this.props.selectedSettingsDropdownItemId,
+				type: SettingsDropdownItemType.SettingsDropdownDefaultItem
+			},
+			{
+				id: SettingsDropdownItemType.SettingsDropdownSeparateLineItem,
+				text: '',
+				isSelected: false,
+				type: SettingsDropdownItemType.SettingsDropdownSeparateLineItem
+			},
+			{
+				id: DEFAULT_START_PAGE.Dashboard,
+				text: 'Use Dashboard as my default page',
+				isSelected: this.props.isDashboardDefaultPage,
+				type: SettingsDropdownItemType.SettingsDropdownDefaultItem
+			}
+		];
+	}
 	render() {
 		return (
 			<div className='bDashboardViewModeDropdown'>
-				<h4 className='eDashboardViewModeDropdown_label'>
-					Change view mode
-				</h4>
-				<Dropdown
-					extraStyle='mMain'
-					selectedItemId={this.props.selectedViewModeDropdownItemId}
-					handleClickItem={this.props.handleChangeViewMode}
-					items={DASHBOARD_VIEW_MODE_DROPDOWN_ITEMS}
+				<SettingsDropdown
+					items={this.getDropdownItemArray()}
+					handleClickItem={this.props.handleClickSettingsDropdown}
 				/>
 			</div>
 		);
