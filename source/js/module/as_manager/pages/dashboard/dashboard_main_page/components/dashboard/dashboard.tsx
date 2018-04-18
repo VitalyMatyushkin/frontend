@@ -39,6 +39,7 @@ export enum WIDGET_TYPE {
 }
 
 export interface Widget {
+	id: string,
 	type: string,
 	data: any,
 	isPin: boolean
@@ -46,6 +47,8 @@ export interface Widget {
 	delta: number
 	isSync: boolean
 }
+
+export const WidgetInterfaceKeyArray = ['id', 'type', 'data', 'isPin', 'isMinimize', 'delta', 'isSync'];
 
 export interface DashboardProps {
 	widgetArray: Widget[],
@@ -84,6 +87,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolProfileWidget)}
@@ -113,6 +117,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolDataWidgetData)}
@@ -169,6 +174,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolInvitesWidgetData)}
@@ -197,6 +203,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolMessagesWidgetData)}
@@ -225,6 +232,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.WeatherWidgetData)}
@@ -253,6 +261,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 
 		return (
 			<DashboardCardCol
+				key={widgetData.id}
 				isPin={widgetData.isPin}
 				isMinimize={widgetData.isMinimize}
 				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.CalendarWidgetData)}
@@ -278,7 +287,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.SchoolProfileWidget: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -289,7 +298,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.SchoolUsersWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -300,7 +309,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.SchoolDataWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -311,7 +320,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.SchoolMessagesWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -322,7 +331,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.SchoolInvitesWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -333,7 +342,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.WeatherWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>
@@ -344,7 +353,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				case WIDGET_TYPE.CalendarWidgetData: {
 					return (
 						<DashboardDropSection
-							key={`${index}_${widget.type}`}
+							key={widget.id}
 							index={index}
 							canDrop={!widget.isPin}
 						>

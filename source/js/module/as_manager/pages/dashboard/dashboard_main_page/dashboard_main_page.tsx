@@ -4,6 +4,7 @@ import * as Immutable from 'immutable'
 import * as propz from 'propz';
 import * as BPromise from 'bluebird';
 import * as StorageHelpers from 'module/helpers/storage';
+import * as RandomHelper from 'module/helpers/random_helper';
 
 import {MoveResult} from "module/ui/dashboard_components/main_components/dashboard_card/dashboard_card_header";
 
@@ -15,7 +16,7 @@ import {SchoolProfileWidgetActions} from "module/as_manager/pages/dashboard/dash
 import {WeatherWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/weather_widget_actions";
 import Dashboard, {
 	Widget,
-	WIDGET_TYPE
+	WIDGET_TYPE, WidgetInterfaceKeyArray
 } from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/dashboard";
 
 import * as RoleHelper from 'module/helpers/role_helper'
@@ -66,6 +67,7 @@ export const DashboardMainPage = (React as any).createClass({
 
 		return currentPreset.widgetTypes.map(widgetType => {
 			return {
+				id: RandomHelper.getRandomString(),
 				type: widgetType,
 				data: undefined,
 				isPin: false,
@@ -79,7 +81,7 @@ export const DashboardMainPage = (React as any).createClass({
 	updateWidgetArrayData() {
 		const promises = [];
 
-		const widgetArray = this.getDefaultBinding().toJS('widgetArray');
+		const widgetArray: Widget[] = this.getDefaultBinding().toJS('widgetArray');
 
 		widgetArray.forEach(widget => {
 			switch (widget.type) {
@@ -133,6 +135,28 @@ export const DashboardMainPage = (React as any).createClass({
 
 		return BPromise.all(promises);
 	},
+	/**
+	 * State can contain not valid dashboard state.
+	 * For example widget model was changed.
+	 * @param dashboard
+	 * @returns {boolean}
+	 */
+	isValidWidgetState(dashboard) {
+		let isValid = true;
+
+		// count of fields should be equal
+		if(Object.keys(dashboard).length !== WidgetInterfaceKeyArray.length) {
+			isValid = false;
+		} else {
+			WidgetInterfaceKeyArray.forEach(key => {
+				if(typeof dashboard[key] === 'undefined') {
+					isValid = false;
+				}
+			});
+		}
+
+		return isValid;
+	},
 	getDashboardStateFromLocalStorage() {
 		let dashboard;
 
@@ -140,7 +164,10 @@ export const DashboardMainPage = (React as any).createClass({
 
 		const dashboardState = StorageHelpers.LocalStorage.get('dashboardState');
 		if(typeof dashboardState !== 'undefined') {
-			dashboard = dashboardState.find(state => state.permissionId === permissionId);
+			const _dashboard = dashboardState.find(state => state.permissionId === permissionId);
+			if(typeof _dashboard !== 'undefined' && this.isValidWidgetState(_dashboard.widgetArray[0])) {
+				dashboard = _dashboard;
+			}
 		}
 
 		return dashboard;
