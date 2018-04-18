@@ -107,6 +107,11 @@ export const DashboardMainPage = (React as any).createClass({
 		const widgetArray: Widget[] = this.getDefaultBinding().toJS('widgetArray');
 
 		widgetArray.forEach(widget => {
+			widget.isSync = false;
+		});
+		this.getDefaultBinding().set('widgetArray', Immutable.fromJS(widgetArray));
+
+		widgetArray.forEach(widget => {
 			switch (widget.type) {
 				case WIDGET_TYPE.SchoolProfileWidget: {
 					promises.push(

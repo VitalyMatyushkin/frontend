@@ -35,7 +35,7 @@ export const SchoolMessagesWidgetActions = {
 					value: String(countData.count),
 					icon: {
 						handleClick: () => {window.location.hash = 'messages/outbox';},
-						iconStyle: 'fa-pencil-square-o'
+						iconStyle: 'fa-eye'
 					}
 				});
 
@@ -47,7 +47,7 @@ export const SchoolMessagesWidgetActions = {
 					value: String(countData.count),
 					icon: {
 						handleClick: () => {window.location.hash = 'messages/archive';},
-						iconStyle: 'fa-pencil-square-o'
+						iconStyle: 'fa-eye'
 					}
 				});
 
@@ -62,20 +62,27 @@ export const SchoolMessagesWidgetActions = {
 		}
 	},
 	getSchoolMessagesInboxCount(schoolId: string): BPromise<{count: number}> {
-		return (window.Server as ServiceList).schoolEventsMessagesInboxCount.get({schoolId});
+		return (window.Server as ServiceList).schoolEventsMessagesInboxCount.get(
+			{schoolId},
+			{ filter: { where: { allMessageTypes:true } } }
+			);
 	},
 	getSchoolMessagesOutboxCount(schoolId: string): BPromise<{count: number}> {
-		return (window.Server as ServiceList).schoolEventsMessagesOutbox.get({schoolId}).then(messages => {
-			return {
-				count: messages.length
-			}
-		});
+		return (window.Server as ServiceList).schoolEventsMessagesOutbox.get(
+			{schoolId},
+			{ filter: { limit: 1000, where: { allMessageTypes:true } } }
+			)
+			.then(messages => {
+				return {count: messages.length}
+			});
 	},
 	getSchoolMessagesArchiveCount(schoolId: string): BPromise<{count: number}> {
-		return (window.Server as ServiceList).schoolEventsMessagesArchive.get({schoolId}).then(messages => {
-			return {
-				count: messages.length
-			}
-		});
+		return (window.Server as ServiceList).schoolEventsMessagesArchive.get(
+			{schoolId},
+			{ filter: { limit: 1000, where: { allMessageTypes:true } } }
+			)
+			.then(messages => {
+				return {count: messages.length}
+			});
 	}
 };
