@@ -46,7 +46,7 @@
   &.mRight {
     float: right;
   }
-  .mSmall {
+  &.mSmall {
     display: inline-block;
     font-size: 1.3rem;
     vertical-align: middle;

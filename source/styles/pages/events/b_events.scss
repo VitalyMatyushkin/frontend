@@ -66,7 +66,8 @@
     }
 
     &.mSmall {
-      display: none;
+      width: 370px !important;
+      margin: 0 auto;
     }
 
     &.mMedium {

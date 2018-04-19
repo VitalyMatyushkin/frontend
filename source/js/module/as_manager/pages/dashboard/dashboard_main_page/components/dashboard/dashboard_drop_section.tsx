@@ -28,7 +28,6 @@ const DashboardDropSectionTarget = {
 		};
 	},
 	canDrop(props: DashboardDropSectionProps) {
-		console.log(props.canDrop);
 		return props.canDrop;
 	},
 };

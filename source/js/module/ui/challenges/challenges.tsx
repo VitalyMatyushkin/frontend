@@ -13,13 +13,13 @@ import {CalendarSize} from 'module/as_manager/pages/dashboard/dashboard_main_pag
 
 interface ChallengesProps {
 	size?:                  number
-	onClick?:				() => void
+	onClick?:				(eventId: string) => void
 	isSync?:				boolean
 	isDaySelected?:			boolean
 	activeSchoolId?:		string
 	activeSchoolKind?:		string
 	events?:				Event[]
-	onClickDeleteEvent?: 	() => void
+	onClickDeleteEvent?: 	(eventId: string) => void
 	isUserSchoolWorker?: 	boolean
 	isPublicSite?:          boolean
 }

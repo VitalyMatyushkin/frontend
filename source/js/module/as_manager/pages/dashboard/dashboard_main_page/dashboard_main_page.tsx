@@ -37,7 +37,6 @@ export const DashboardMainPage = (React as any).createClass({
 	getDefaultState: function () {
 		const dashboard = this.getDashboardStateFromLocalStorage();
 
-		console.log(this.isDashboardDefaultPage());
 		if(typeof dashboard !== 'undefined') {
 		 return Immutable.fromJS({
 				 isDashboardDefaultPage: this.isDashboardDefaultPage(),
@@ -369,7 +368,6 @@ export const DashboardMainPage = (React as any).createClass({
 
 	},
 	render() {
-		console.log(this.getWidgetArray());
 		return (
 			<div className="bDashboardMainPage">
 				<Dashboard

@@ -4,15 +4,23 @@
 
 import * as React from 'react';
 import * as Morearty from 'morearty';
+import * as Immutable from 'immutable';
+
 import {Challenges} from '../../../../ui/challenges/challenges';
 import {Calendar} from './calendar';
 import {CalendarActions} from './calendar-actions';
-import {AddEventButton} from './add_event_button';
+import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
+import {CalendarFooter} from "module/as_manager/pages/events/calendar/calendar_footer";
 import * as EventHeaderActions from 'module/as_manager/pages/event/view/event_header/event_header_actions';
 import {ConfirmPopup} from 'module/ui/confirm_popup';
 import * as RoleHelper from 'module/helpers/role_helper';
 import './../../../../../../styles/pages/events/b_events.scss';
-import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
+
+export enum EventsCalendarViewMode {
+	Default = 'DEFAULT',
+	LeftCol = 'LEFT_COL',
+	RightCol = 'RIGHT_COL'
+}
 
 /** Show calendar section: month calendar and events for selected date */
 export const EventsCalendar = (React as any).createClass({
@@ -22,13 +30,32 @@ export const EventsCalendar = (React as any).createClass({
 		extraStyleForContainer: (React as any).PropTypes.string,
 		extraStyleForCol: (React as any).PropTypes.string
 	},
-	componentWillMount: function () {
-		const	binding					= this.getDefaultBinding(),
-				activeSchoolId			= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
+	componentWillReceiveProps(newProps) {
+		if(newProps.size === CalendarSize.Small && this.props.size !== CalendarSize.Small) {
+			this.getDefaultBinding().set(
+				'eventsCalendarComponentState',
+				Immutable.fromJS({
+					viewMode: EventsCalendarViewMode.LeftCol
+				})
+			);
+		}
+		if(newProps.size !== CalendarSize.Small && this.props.size === CalendarSize.Small) {
+			this.getDefaultBinding().set(
+				'eventsCalendarComponentState',
+				Immutable.fromJS({
+					viewMode: EventsCalendarViewMode.Default
+				})
+			);
+		}
+	},
+	componentWillMount () {
+		const	binding         = this.getDefaultBinding(),
+				activeSchoolId  = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
 		binding.set('isSyncSlider', false);
 		/** Loading initial data for this month */
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
+		this.initCalendarViewMode();
 
 		if (this.isSchoolWorker()) {
 			(window as any).Server.profile.get().then(p => {
@@ -38,72 +65,36 @@ export const EventsCalendar = (React as any).createClass({
 			});
 		}
 	},
+	initCalendarViewMode() {
+		let viewMode;
 
-	onEventClick: function(eventId: string): void {
-		document.location.hash = 'event/' + eventId + '?tab=gallery';
-	},
-
-	onDeleteEvent: function(eventId: string): void {
-		const binding = this.getDefaultBinding();
-
-		binding.atomically()
-			.set("deleteEventId", eventId)
-			.set("isDeleteEventPopupOpen", true)
-			.commit();
-	},
-
-	renderDeleteEventPopupOpen: function(): React.ReactNode | null {
-		const binding	= this.getDefaultBinding();
-
-		if(binding.get("isDeleteEventPopupOpen")) {
-			return (
-				<ConfirmPopup	okButtonText			= "Delete"
-				                 cancelButtonText		= "Cancel"
-				                 isOkButtonDisabled		= { false }
-				                 handleClickOkButton		= { this.handleClickDeleteButton }
-				                 handleClickCancelButton	= { this.handleCancelDeleteEventPopup }
-				>
-					<div>Are you sure you want to delete the selected event?</div>
-				</ConfirmPopup>
-			)
-		} else {
-			return null;
+		switch (this.props.size) {
+			case CalendarSize.Small: {
+				viewMode = EventsCalendarViewMode.LeftCol;
+				break;
+			}
+			default: {
+				viewMode = EventsCalendarViewMode.Default;
+			}
 		}
+
+		this.getDefaultBinding().set('eventsCalendarComponentState', Immutable.fromJS( { viewMode: viewMode } ) );
 	},
-
-	handleClickDeleteButton: function(): void {
-		const 	activeSchoolId 	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-			binding 		= this.getDefaultBinding(),
-			selectedDate 	= typeof binding.toJS('selectedDate') !== 'undefined' ? binding.toJS('selectedDate') : new Date(),
-			eventId 		= binding.toJS("deleteEventId");
-
-		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
-			binding.set("isDeleteEventPopupOpen", false);
-			(window as any).simpleAlert(
-				'Event has been successfully deleted',
-				'Ok',
-				() => {
-					CalendarActions.setSelectedDate(selectedDate, activeSchoolId, binding);
-				}
-			);
-		});
-	},
-
-	handleCancelDeleteEventPopup: function(): void {
-		const binding = this.getDefaultBinding();
-
-		binding.set("isDeleteEventPopupOpen", false);
-	},
-
-	handleClickAddEventButton: function(): void {
-		document.location.hash = 'events/manager';
-	},
-
-	isSchoolWorker: function (): boolean {
+	isSchoolWorker (): boolean {
 		const	role		= RoleHelper.getLoggedInUserRole(this),
 				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		return typeof role !== "undefined" && schoolKind === "School";
+	},
+	isShowLeftCol(): boolean {
+		const viewMode = this.getDefaultBinding().toJS('eventsCalendarComponentState.viewMode');
+
+		return viewMode === EventsCalendarViewMode.Default || viewMode === EventsCalendarViewMode.LeftCol;
+	},
+	isShowRightCol(): boolean {
+		const viewMode = this.getDefaultBinding().toJS('eventsCalendarComponentState.viewMode');
+
+		return viewMode === EventsCalendarViewMode.Default || viewMode === EventsCalendarViewMode.RightCol;
 	},
 	getStyleForContainer() {
 		let style = "bEvents";
@@ -136,64 +127,133 @@ export const EventsCalendar = (React as any).createClass({
 			}
 		}
 	},
-	getRightContainer() {
-		const   binding                     = this.getDefaultBinding(),
-				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
-				isUserSchoolWorker 			= RoleHelper.isUserSchoolWorker(this),
-				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
-
-		return (
-			<div className={`eEvents_rightSideContainer ${this.getSizeModifierStyle()}`}>
-				<Challenges
-					size={this.props.size}
-					activeSchoolId 		= { activeSchoolId }
-					isSync 				= { isSelectedDateEventsInSync }
-					events 				= { selectedDateEvents }
-					onClick 			= { this.onEventClick }
-					onClickDeleteEvent 	= { this.onDeleteEvent }
-					isUserSchoolWorker 	= { isUserSchoolWorker }
-				/>
-				<AddEventButton
-					size={this.props.size}
-					handleClick={this.handleClickAddEventButton}
-				/>
-			</div>
-		);
+	handleClickBackButton(): void {
+		this.getDefaultBinding().set('eventsCalendarComponentState', Immutable.fromJS( { viewMode: EventsCalendarViewMode.LeftCol } ) );
 	},
-	renderRightContainer() {
-		let rightContainer;
+	handleEventClick: function(eventId){
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
+	},
+	handleRemoveEvent(eventId: string): void {
+		const binding = this.getDefaultBinding();
 
+		binding.atomically()
+			.set("deleteEventId", eventId)
+			.set("isDeleteEventPopupOpen", true)
+			.commit();
+	},
+	handleClickDeleteButton(): void {
+		const 	activeSchoolId 	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+			binding 		= this.getDefaultBinding(),
+			selectedDate 	= typeof binding.toJS('selectedDate') !== 'undefined' ? binding.toJS('selectedDate') : new Date(),
+			eventId 		= binding.toJS("deleteEventId");
+
+		EventHeaderActions.deleteEvent(activeSchoolId, eventId).then( () => {
+			binding.set("isDeleteEventPopupOpen", false);
+			(window as any).simpleAlert(
+				'Event has been successfully deleted',
+				'Ok',
+				() => {
+					CalendarActions.setSelectedDate(selectedDate, activeSchoolId, binding);
+				}
+			);
+		});
+	},
+	handleCancelDeleteEventPopup(): void {
+		const binding = this.getDefaultBinding();
+
+		binding.set("isDeleteEventPopupOpen", false);
+	},
+	handleClickAddEventButton(): void {
+		document.location.hash = 'events/manager';
+	},
+	handleClickCalendarDate(): void {
+		if(this.props.size === CalendarSize.Small) {
+			this.getDefaultBinding().set(
+				'eventsCalendarComponentState',
+				Immutable.fromJS({
+					viewMode: EventsCalendarViewMode.RightCol
+				})
+			);
+		}
+	},
+
+	renderAddEventButtonForLeftCol() {
 		switch (this.props.size) {
 			case CalendarSize.Small: {
-				rightContainer = this.getRightContainer();
-				break;
-			}
-			case CalendarSize.Medium: {
-				rightContainer = this.getRightContainer();
-				break;
+				return (
+					<CalendarFooter
+						size={this.props.size}
+						handleClick={this.handleClickAddEventButton}
+						extraStyle={'mLeftCol'}
+					/>
+				);
 			}
 			default: {
-				rightContainer = this.getRightContainer();
-				break;
+				return null;
 			}
 		}
-
-		return rightContainer;
 	},
-	render: function(){
+	renderDeleteEventPopupOpen(): React.ReactNode | null {
 		const binding = this.getDefaultBinding();
+
+		if(binding.get("isDeleteEventPopupOpen")) {
+			return (
+				<ConfirmPopup
+					okButtonText="Delete"
+	                cancelButtonText="Cancel"
+					isOkButtonDisabled={false}
+					handleClickOkButton={this.handleClickDeleteButton}
+					handleClickCancelButton={this.handleCancelDeleteEventPopup}
+				>
+					<div>Are you sure you want to delete the selected event?</div>
+				</ConfirmPopup>
+			)
+		} else {
+			return null;
+		}
+	},
+	render(){
+		const binding = this.getDefaultBinding();
+		const activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
+		const isSelectedDateEventsInSync = binding.get('selectedDateEventsData.isSync');
+		const isUserSchoolWorker = RoleHelper.isUserSchoolWorker(this);
+		const selectedDateEvents = binding.toJS('selectedDateEventsData.events');
 
 		return (
 			<div className={this.getStyleForContainer()}>
 				<div className="eEvents_row">
-					<div className={`eEvents_leftSideContainer ${this.getColModifierStyle()} ${this.getSizeModifierStyle()}`}>
-						<Calendar
-							size={this.props.size}
-							binding={binding}
-						/>
-					</div>
-					{this.renderRightContainer()}
+					{
+						this.isShowLeftCol() ?
+							<div className={`eEvents_leftSideContainer ${this.getColModifierStyle()} ${this.getSizeModifierStyle()}`}>
+								<Calendar
+									onSelect={() => this.handleClickCalendarDate()}
+									size={this.props.size}
+									binding={binding}
+								/>
+								{this.renderAddEventButtonForLeftCol()}
+							</div> : null
+					}
+					{
+						this.isShowRightCol() ?
+							<div className={`eEvents_rightSideContainer ${this.getSizeModifierStyle()}`}>
+								<Challenges
+									size={this.props.size}
+									activeSchoolId={activeSchoolId}
+									isSync={isSelectedDateEventsInSync}
+									events={selectedDateEvents}
+									onClick={(eventId) => this.handleEventClick(eventId)}
+									onClickDeleteEvent={(eventId) => this.handleRemoveEvent(eventId)}
+									isUserSchoolWorker={isUserSchoolWorker}
+								/>
+								<CalendarFooter
+									size={this.props.size}
+									isShowBackButton={true}
+									handleClick={() => this.handleClickAddEventButton()}
+									handleClickBackButton={() => this.handleClickBackButton()}
+									extraStyle={this.props.size === CalendarSize.Small ? 'mNoLeftMargin' : ''}
+								/>
+							</div> : null
+					}
 				</div>
 				{ this.renderDeleteEventPopupOpen() }
 			</div>

@@ -80,7 +80,6 @@ const LoginUserPage2 = (React as any).createClass({
 				if(roleList.length == 0) {
 					promise = AuthorizationServices.become('NOBODY');
 				} else if(roleList.length == 1) {
-					console.log('setPermissions');
 					promise = AuthorizationServices.become(roleList[0]).then(() => window.location.reload());
 				} else {
 					promise = true;

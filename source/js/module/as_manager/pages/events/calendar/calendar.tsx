@@ -8,14 +8,13 @@ import {MonthCalendar} from '../../../../ui/calendar/month_calendar';
 import {CalendarActions} from './calendar-actions';
 import {CalendarSize} from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard_calendar_widget/dashboard_calendar_widget";
 
-interface CalendarProps {
-	onSelect: (date: string) => void
-	size: CalendarSize
-}
-
 /** Show calendar section: month calendar and events for selected date */
 export const Calendar = (React as any).createClass({
 	mixins:[Morearty.Mixin],
+	propTypes: {
+		onSelect: (React as any).PropTypes.func,
+		size: (React as any).PropTypes.string
+	},
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding(),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');

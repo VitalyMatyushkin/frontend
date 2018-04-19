@@ -36,7 +36,24 @@
     width: 400px;
   }
 
-  &.mAddEvent {
+  &.mLeftCol {
+    width: 310px !important;
+    margin-left: 0 !important;
+  }
+
+  &.mNoLeftMargin {
+    margin-left: 0 !important;
+  }
+
+  &.mBack {
+    width: 50px;
+    height: 40px;
+    line-height: 42px;
+
+    margin-right: 10px;
+  }
+
+    &.mAddEvent {
     width: 100%;
 
     &.mMedium {
