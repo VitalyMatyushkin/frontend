@@ -28,6 +28,7 @@ import {
 } from "module/as_manager/pages/dashboard/dashboard_main_page/components/dashboard/components/dashboard_view_mode_dropdown";
 import {DashboardPresetArray} from "module/as_manager/pages/dashboard/dashboard_main_page/data/dashboard_preset";
 import {DefaultPageSettingsHelper} from "module/helpers/default_page_settings_helper";
+import {SchoolClubsWidgetActions} from "module/as_manager/pages/dashboard/dashboard_main_page/actions/school_clubs_widget_actions";
 
 export const DashboardMainPage = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -142,6 +143,13 @@ export const DashboardMainPage = (React as any).createClass({
 					promises.push(
 						SchoolDataWidgetActions.getDataForSchoolDataWidget(this.props.activeSchoolId)
 							.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolDataWidgetData))
+					);
+					break;
+				}
+				case WIDGET_TYPE.SchoolClubWidget: {
+					promises.push(
+						SchoolClubsWidgetActions.getDataForClubMessagesWidget(this.props.activeSchoolId)
+							.then(data => this.initWidgetByType(data, WIDGET_TYPE.SchoolClubWidget))
 					);
 					break;
 				}

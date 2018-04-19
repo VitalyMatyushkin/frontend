@@ -21,6 +21,7 @@ export const DashboardPresetArray: DashboardPresetInterface[] = [
 			WIDGET_TYPE.SchoolProfileWidget,
 			WIDGET_TYPE.SchoolDataWidgetData,
 			WIDGET_TYPE.SchoolUsersWidgetData,
+			WIDGET_TYPE.SchoolClubWidget,
 			WIDGET_TYPE.SchoolMessagesWidgetData,
 			WIDGET_TYPE.SchoolInvitesWidgetData,
 			WIDGET_TYPE.WeatherWidgetData,

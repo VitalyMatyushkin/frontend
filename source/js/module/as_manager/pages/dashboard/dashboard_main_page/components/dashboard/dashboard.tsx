@@ -30,6 +30,7 @@ import 'styles/ui/dashboard/dasbboard.scss'
 
 export enum WIDGET_TYPE {
 	SchoolProfileWidget = 'SCHOOL_PROFILE_WIDGET',
+	SchoolClubWidget = 'SCHOOL_CLUB_WIDGET',
 	SchoolDataWidgetData = 'SCHOOL_DATA_WIDGET_DATA',
 	SchoolUsersWidgetData = 'SCHOOL_USERS_WIDGET_DATA',
 	SchoolMessagesWidgetData = 'SCHOOL_MESSAGES_WIDGET_DATA',
@@ -132,6 +133,35 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				xsWidth={6}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolDataWidgetData, delta)}
+				delta={widgetData.delta}
+			/>
+		);
+	}
+	renderSchoolClubWidget(widgetData: Widget, index: number) {
+		let widget = null;
+
+		if(widgetData.isSync) {
+			widget = <DashboardDataWidget data={widgetData.data}/>
+		} else {
+			widget = <Loader condition={true}/>;
+		}
+
+		return (
+			<DashboardCardCol
+				key={widgetData.id}
+				isPin={widgetData.isPin}
+				isMinimize={widgetData.isMinimize}
+				handlePinWidget={() => this.props.handlePinWidget(WIDGET_TYPE.SchoolClubWidget)}
+				handleMinimizeWidget={() => this.props.handleMinimizeWidget(WIDGET_TYPE.SchoolClubWidget)}
+				headerText='Clubs'
+				handleDroppedWidget={this.props.handleDroppedWidget}
+				index={index}
+				colWidth={this.getColWidth()}
+				mdWidth={3}
+				smWidth={4}
+				xsWidth={6}
+				widget={widget}
+				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolClubWidget, delta)}
 				delta={widgetData.delta}
 			/>
 		);
@@ -359,6 +389,17 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 							canDrop={!widget.isPin}
 						>
 							{this.renderCalendarWidget(widget, index)}
+						</DashboardDropSection>
+					);
+				}
+				case WIDGET_TYPE.SchoolClubWidget: {
+					return (
+						<DashboardDropSection
+							key={widget.id}
+							index={index}
+							canDrop={!widget.isPin}
+						>
+							{this.renderSchoolClubWidget(widget, index)}
 						</DashboardDropSection>
 					);
 				}
