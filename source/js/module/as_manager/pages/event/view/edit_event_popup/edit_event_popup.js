@@ -5,6 +5,8 @@ const	React				= require('react'),
 
 const	{ConfirmPopup}		= require('module/ui/confirm_popup'),
 		EventConsts			= require('module/helpers/consts/events'),
+		TeamHelper 			= require('module/ui/managers/helpers/team_helper'),
+		Loader 				= require('module/ui/loader'),
 		EventEditForm		= require('./edit_event_form');
 
 const EditEventPopup = React.createClass({
@@ -20,16 +22,35 @@ const EditEventPopup = React.createClass({
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.atomically()
-			.set('isProcessingSubmit',					false)
-			.set('eventEditForm.model',					Immutable.fromJS(this.props.event))
-			.set('eventEditForm.changeMode',			EventConsts.CHANGE_MODE.SINGLE)
-			.set('eventEditForm.isShowChangesManager',	false)
-			.set('eventEditForm.originModel',			Immutable.fromJS(this.props.event))
-			.commit();
-		if(typeof this.props.event.endTime === "undefined") {
-			this.initEndTime();
-		}
+		binding.set('isSyncEditData', false);
+		let schoolData;
+
+		window.Server.school.get(this.props.activeSchoolId)
+		.then(_schoolData => {
+			schoolData = _schoolData;
+
+			// get forms data
+			return window.Server.schoolForms.get(this.props.activeSchoolId, {filter:{limit:1000}});
+		})
+		.then(formData => {
+
+			schoolData.forms = formData;
+			const	ages = TeamHelper.getAges(schoolData);
+
+			binding.atomically()
+				.set('isProcessingSubmit',					false)
+				.set('eventEditForm.model',					Immutable.fromJS(this.props.event))
+				.set('eventEditForm.changeMode',			EventConsts.CHANGE_MODE.SINGLE)
+				.set('eventEditForm.isShowChangesManager',	false)
+				.set('eventEditForm.schoolInfo',			Immutable.fromJS(schoolData))
+				.set('eventEditForm.availableAges',			Immutable.fromJS(ages))
+				.set('eventEditForm.originModel',			Immutable.fromJS(this.props.event))
+				.set('isSyncEditData',						true)
+				.commit();
+			if(typeof this.props.event.endTime === "undefined") {
+				this.initEndTime();
+			}
+		});
 	},
 	initEndTime: function () {
 		const binding = this.getDefaultBinding();
@@ -47,7 +68,8 @@ const EditEventPopup = React.createClass({
 			origin.startTime !== current.startTime ||
 			origin.endTime !== current.endTime ||
 			this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue) ||
-			this.isOthersCoordinates(origin.venue.point.coordinates, current.venue.point.coordinates)
+			this.isOthersCoordinates(origin.venue.point.coordinates, current.venue.point.coordinates) ||
+			this.isAgesChanged(origin, current)
 		);
 	},
 	/**
@@ -65,6 +87,9 @@ const EditEventPopup = React.createClass({
 	},
 	isPostcodeChanged: function (origin, current) {
 		return this.getPostcodeIdFromVenue(origin.venue) !== this.getPostcodeIdFromVenue(current.venue);
+	},
+	isAgesChanged: function (origin, current) {
+		return origin.ages !== current.ages;
 	},
 	isStartTimeChanged: function (origin, current) {
 		const originStartDate = origin.startTime;
@@ -162,6 +187,8 @@ const EditEventPopup = React.createClass({
 				// TODO copy cat from event_manager.setEventVenue
 				const venue = currentEvent.venue;
 
+				body.ages = currentEvent.ages;
+
 				body.venue = {
 					venueType: venue.venueType,
 					point: venue.point
@@ -206,8 +233,7 @@ const EditEventPopup = React.createClass({
 		this.props.handleClosePopup();
 	},
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding	= this.getDefaultBinding();
 
 		return (
 			<ConfirmPopup
@@ -215,18 +241,25 @@ const EditEventPopup = React.createClass({
 				okButtonText			= "Save"
 				cancelButtonText		= "Cancel"
 				isOkButtonDisabled		= { binding.toJS('isProcessingSubmit') }
+				isShowButtons			= { binding.get('isSyncEditData') }
 				handleClickOkButton		= { this.handleClickOkButton }
 				handleClickCancelButton	= { this.handleClickCancelButton }
 				customStyle				= 'mMiddle mFullWidth'
 			>
-				<EventEditForm
-					activeSchoolId	= { this.props.activeSchoolId }
-					activeSchool	= { this.props.activeSchool }
-					schoolType		= { this.props.schoolType }
-					binding			= { binding.sub('eventEditForm') }
-				/>
+				{
+					binding.get('isSyncEditData') ?
+						<EventEditForm
+							activeSchoolId	= { this.props.activeSchoolId }
+							activeSchool	= { this.props.activeSchool }
+							schoolType		= { this.props.schoolType }
+							binding			= { binding.sub('eventEditForm') }
+						/>
+						:
+						<Loader/>
+				}
 			</ConfirmPopup>
 		);
+
 	}
 });
 

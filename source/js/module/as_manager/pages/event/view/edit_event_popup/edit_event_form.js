@@ -6,6 +6,7 @@ const	React				= require('react'),
 const	DateSelector		= require('../../../../../ui/date_selector/date_selector'),
 		FullTimeInput		= require('../../../../../ui/full_time_input/full_time_input'),
 		SaveChangesManager	= require('module/as_manager/pages/event/view/edit_event_popup/save_changes_manager'),
+		{AgeMultiselectDropdownWrapper} = require('module/as_manager/pages/events/manager/event_form/components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
 		{EventVenue}		= require('../../../events/manager/event_venue');
 
 // Helpers
@@ -116,8 +117,7 @@ const EditEventForm = React.createClass({
 		}
 	},
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding	= this.getDefaultBinding();
 
 		return (
 			<div className="bEventEdit">
@@ -152,6 +152,12 @@ const EditEventForm = React.createClass({
 						handleChangeHour	= { this.handleChangeFinishTimeHour }
 						handleChangeMinutes	= { this.handleChangeFinishTimeMinutes }
 					/>
+				</div>
+				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
+					<div className="bInputLabel">
+						Ages
+					</div>
+					<AgeMultiselectDropdownWrapper binding={ this.getDefaultBinding() }/>
 				</div>
 				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
 					<EventVenue
