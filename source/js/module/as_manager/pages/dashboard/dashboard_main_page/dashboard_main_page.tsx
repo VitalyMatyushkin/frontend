@@ -101,15 +101,24 @@ export const DashboardMainPage = (React as any).createClass({
 			}
 		});
 	},
+	initSyncFieldForAllWidgets() {
+		const widgetArray: Widget[] = this.getDefaultBinding().toJS('widgetArray');
+
+		widgetArray.forEach(widget => {
+			if(widget.type ===  WIDGET_TYPE.CalendarWidgetData) {
+				widget.isSync = true;
+			} else {
+				widget.isSync = false;
+			}
+		});
+
+		this.getDefaultBinding().set('widgetArray', Immutable.fromJS(widgetArray));
+	},
 	updateWidgetArrayData() {
 		const promises = [];
 
 		const widgetArray: Widget[] = this.getDefaultBinding().toJS('widgetArray');
-
-		widgetArray.forEach(widget => {
-			widget.isSync = false;
-		});
-		this.getDefaultBinding().set('widgetArray', Immutable.fromJS(widgetArray));
+		this.initSyncFieldForAllWidgets();
 
 		widgetArray.forEach(widget => {
 			switch (widget.type) {
@@ -360,6 +369,7 @@ export const DashboardMainPage = (React as any).createClass({
 
 	},
 	render() {
+		console.log(this.getWidgetArray());
 		return (
 			<div className="bDashboardMainPage">
 				<Dashboard
