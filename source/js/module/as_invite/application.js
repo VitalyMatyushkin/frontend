@@ -124,7 +124,7 @@ const Application = React.createClass({
 		const hostName = document.location.hostname.replace('invite', 'app');
 		
 		window.simpleAlert(
-			'Please check your email inbox, we sent your password.',
+			'Please check your email inbox, we sent password reset link.',
 			'Ok',
 			() => {
 				window.location.href = domainHelper.getLoginUrl();
