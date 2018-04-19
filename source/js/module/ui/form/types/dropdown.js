@@ -20,6 +20,7 @@ const TypeDropDown = React.createClass({
 		// This function is something like middleware for form dropdown
 		// If function returns false then field doesn't change value
 		onSelect: React.PropTypes.func,
+		isDisabled: React.PropTypes.bool,
         id: React.PropTypes.string
 	},
 	componentWillMount: function () {
@@ -70,7 +71,7 @@ const TypeDropDown = React.createClass({
 		let valueSelect = (value === null || typeof value === 'undefined') ? NULL_STRING : value;
 
 		return (
-			<select id={this.props.id} value={valueSelect} onChange={this.onChange}>
+			<select id={this.props.id} value={valueSelect} onChange={this.onChange} disabled={`${this.props.isDisabled ? 'disabled' : ''}`}>
 				{this.renderOptions()}
 			</select>
 		);

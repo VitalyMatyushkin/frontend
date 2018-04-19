@@ -19,6 +19,7 @@ const	React									= require('react'),
 		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_student'),
 		{AdminPermissionAcceptCoach}        	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept/admin_permission_accept_coach/admin_permission_accept_coach'),
 		MergeStudentComponent 					= require('module/as_manager/pages/school_console/views/student_without_permission_merge_page/student_without_permission_merge'),
+		{PaymentsAccounts} 						= require('module/as_manager/pages/school_console/payments_accounts/payments_accounts'),
 		ModerationPage							= require('./views/moderation_page/moderation_page'),
 		IntegrationPage							= require('./views/integration-page/integration-page'),
 		FavouriteSportPageWrapper				= require('module/shared_pages/sport_pages/favourite_sports/favourite_sport_page_wrapper'),
@@ -161,6 +162,13 @@ const SchoolConsole = React.createClass({
 				key: 'sports'
 			});
 		}
+		if (viewerRole === 'ADMIN' && this.activeSchoolInfo.isPaymentsEnabled) {
+			menuItems.push({
+				href: '/#school_console/accounts',
+				name: 'Payments accounts',
+				key: 'payments_accounts'
+			});
+		}
 
 		binding.set('subMenuItems', Immutable.fromJS(menuItems));
 	},
@@ -247,6 +255,11 @@ const SchoolConsole = React.createClass({
 									path 		= '/school_console/notifications'
 									binding 	= { binding.sub('notifications') }
 									component 	= { NotificationsPage }
+								/>
+								<Route
+									path 		= "/school_console/accounts /school_console/accounts/:subPage"
+									binding 	= { binding }
+									component 	= { PaymentsAccounts }
 								/>
 							</RouterView>
 						</div>

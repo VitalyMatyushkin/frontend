@@ -106,6 +106,8 @@ export class AdminServiceList {
 	//payments
 	paymentsStripeIntegration: Service;
 	paymentsStripeIntegrations: Service;
+	paymentsAccount: Service;
+	paymentsAccounts: Service;
 
 	//user statistic
 	userStats: Service;
@@ -215,6 +217,9 @@ export class AdminServiceList {
 		//payments
 		this.paymentsStripeIntegration = new Service('/superadmin/payments/stripe/integrations/{integrationId}', binding);
 		this.paymentsStripeIntegrations = new Service('/superadmin/payments/stripe/integrations', binding);
+
+		this.paymentsAccount = new Service('/superadmin/schools/{schoolId}/payments/accounts/{accountId}', binding);
+		this.paymentsAccounts = new Service('/superadmin/schools/{schoolId}/payments/accounts', binding);
 
 		//user statistic
 		this.userStats = new Service('/superadmin/stats/userpresence', binding);

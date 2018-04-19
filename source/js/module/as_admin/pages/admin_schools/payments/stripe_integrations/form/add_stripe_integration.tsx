@@ -9,8 +9,16 @@ export const AddStripeIntegration = (React as any).createClass({
 		this.getDefaultBinding().clear();
 	},
 	submitAdd: function (data) {
-		(window.Server as AdminServiceList).paymentsStripeIntegrations.post(data).then(() => {
+		(window.Server as AdminServiceList).paymentsStripeIntegrations.post(data)
+		.then(() => {
 			document.location.hash = 'payments/stripe_integrations';
+		})
+		.catch((err) => {
+			window.simpleAlert(
+				'Invalid key',
+				'Ok',
+				() => {}
+			);
 		});
 	},
 	render: function () {

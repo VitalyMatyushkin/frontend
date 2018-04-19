@@ -310,6 +310,14 @@ const SystemAdminSchoolForm = React.createClass({
 					>
 						Disable favorite sports in limited school version
 					</FormField>
+					<FormField
+						classNames 	= "mWideSingleLine"
+						type 		= "checkbox"
+						id 			= "payments_enabled_checkbox"
+						field 		= "isPaymentsEnabled"
+					>
+						Enable payments
+					</FormField>
 					<h3>For parent registration</h3>
 					<FormField
 						type 		= "dropdown"

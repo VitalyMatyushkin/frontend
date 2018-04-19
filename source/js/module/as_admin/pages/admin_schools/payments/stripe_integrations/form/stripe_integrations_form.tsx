@@ -35,9 +35,10 @@ export const StripeIntegrationForm = (React as any).createClass({
 					Key
 				</FormField>
 				<FormField
-					type    = "dropdown"
-					field   = "status"
-					options = { STATUS }
+					type    		= "dropdown"
+					field   		= "status"
+					options 		= { STATUS }
+					defaultValue 	= { STATUS[0].value }
 				>
 					Status
 				</FormField>

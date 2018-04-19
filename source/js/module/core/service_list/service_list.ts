@@ -340,6 +340,10 @@ export class ServiceList {
 	childAchievements: Service;
 	childTeamEvents: Service;
 
+	//Payments
+	paymentsAccount: Service;
+	paymentsAccounts: Service;
+
 	images: object;
 
 	// Services which require authorization
@@ -673,6 +677,10 @@ export class ServiceList {
 		this.childrenAchievements = new Service('/i/children/achievements', binding);
 		this.childAchievements = new Service('/i/children/{childId}/achievements', binding);
 		this.childTeamEvents = new Service('/i/children/{childId}/teamSports/{sportId}/teamEvents', binding);
+
+		//Payments
+		this.paymentsAccount = new Service('/i/schools/{schoolId}/payments/accounts/{accountId}', binding);
+		this.paymentsAccounts = new Service('/i/schools/{schoolId}/payments/accounts', binding);
 
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		this.images = new ImageService((window as any).apiImg);

@@ -17,6 +17,7 @@ const 	RouterView 							= require('module/core/router'),
 		ConsentRequestTemplateComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/template/template'),
 		SportsComponent						= require('./favorite_sports/sports_page'),
 		{UserStats}							= require('module/as_admin/pages/admin_schools/school_sandbox/user_stats/user-stats'),
+		{PaymentsAccounts}					= require('module/as_admin/pages/admin_schools/school_sandbox/payments_accounts/payments_accounts'),
 		{CSVExportButton}					= require('module/shared_pages/users/user_list/buttons/csv_export_button'),
 		{AllowedSportsManager} 				= require('module/as_admin/pages/admin_schools/school_sandbox/allowed_sports/allowed_sports_manager');
 
@@ -120,6 +121,12 @@ const SchoolSandbox = React.createClass({
 				name:'Allowed sports',
 				key:'allowed_sports',
 				routes:[`/school_sandbox/${schoolId}/allowed_sports`]
+			},
+			{
+				href:`/#school_sandbox/${schoolId}/accounts`,
+				name:'Payments accounts',
+				key:'payments_accounts',
+				routes:[`/school_sandbox/${schoolId}/accounts`]
 			}
 		];
 		//Set sub menu items in default binding
@@ -190,6 +197,11 @@ const SchoolSandbox = React.createClass({
 							path 			= "/school_sandbox/:schoolId/sports"
 							binding 		= { binding }
 							component 		= { SportsComponent }
+						/>
+						<Route
+							path 			= "/school_sandbox/:schoolId/accounts"
+							binding 		= { binding }
+							component 		= { PaymentsAccounts }
 						/>
 						<Route
 							path 			= "/school_sandbox/:schoolId/notifications"

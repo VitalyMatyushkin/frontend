@@ -98,6 +98,13 @@ var validationsSet = {
 			}
 		}
 	},
+	ip:function (value) {
+		if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value)) {
+			return false;
+		} else {
+			return 'IP should be X.X.X.X where X is a number 0-255';
+		}
+	},
 	longitude:function (value) {
 		let result = false;
 		if (value && (value >= 180 || value <= -180)) {
