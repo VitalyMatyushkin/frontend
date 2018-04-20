@@ -25,7 +25,8 @@ const UserViewSummary = React.createClass({
 					email 	= this.props.selectedUserData.email,
 					phone 	= this.props.selectedUserData.phone ? this.props.selectedUserData.phone : '',
 					avatar 	= this.props.selectedUserData.avatar,
-					tokens  = this.props.selectedUserData.verification.tokens ? this.props.selectedUserData.verification.tokens : '';
+					tokens  = this.props.selectedUserData.verification && this.props.selectedUserData.verification.tokens
+						? this.props.selectedUserData.verification.tokens : '';
 			
 			return (
 				<div className="eSchoolMaster_summary_wrap">
