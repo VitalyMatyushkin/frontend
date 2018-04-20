@@ -126,12 +126,6 @@ export const AccountForm = (React as any).createClass({
 				>
 					Account holder type
 				</FormField>
-				<FormField
-					field	='stripeData.externalAccount.routingNumber'
-					type	="text"
-				>
-					Routing number
-				</FormField>
 			</FormBlock>
 		);
 	},
@@ -194,7 +188,7 @@ export const AccountForm = (React as any).createClass({
 				<FormField
 					field		= 'stripeData.tosAcceptance.ip'
 					type		= "text"
-					validation  = "ip required"
+					validation  = "required"
 				>
 					IP
 				</FormField>
@@ -229,6 +223,31 @@ export const AccountForm = (React as any).createClass({
 		);
 	},
 
+	renderTosAcceptanceAgreementBlock: function() {
+		return (
+			<FormBlock
+				isShowCloseButton	= {false}
+			>
+				<FormField
+					classNames 	= "mSingleLine"
+					type 		= "checkbox"
+					field 		= "tosAcceptanceAgreement"
+				>
+					Accept TOS
+				</FormField>
+			</FormBlock>
+		);
+	},
+
+	isShowTosAcceptanceAgreement: function() {
+		const binding = this.getDefaultBinding();
+
+		return 	binding.toJS('stripeData.tosAcceptance.date') === null &&
+				binding.toJS('stripeData.tosAcceptance.ip') === null &&
+				binding.toJS('stripeData.tosAcceptance.userAgent') === null;
+
+	},
+
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -252,7 +271,8 @@ export const AccountForm = (React as any).createClass({
 					customStyle	= 'col-md-5 col-md-offset-2'
 				>
 					{this.renderLegalEntityDataBlock()}
-					{this.props.mode === MODE.EDIT ? this.renderTosAcceptanceDataBlock() : <div></div>}
+					{this.props.mode === MODE.EDIT && !this.isShowTosAcceptanceAgreement() ? this.renderTosAcceptanceDataBlock() : <div></div>}
+					{this.isShowTosAcceptanceAgreement() ? this.renderTosAcceptanceAgreementBlock() : <div></div>}
 					{this.renderAccountAgreementBlock()}
 				</FormColumn>
 			</Form>

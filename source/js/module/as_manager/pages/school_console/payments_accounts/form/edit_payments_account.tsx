@@ -6,6 +6,7 @@ import * as Loader from 'module/ui/loader';
 import * as Immutable from 'immutable';
 import {AccountFormHelper} from 'module/as_admin/pages/admin_schools/school_sandbox/payments_accounts/form/account_form_helper';
 import {MODE} from "module/as_manager/pages/school_console/payments_accounts/form/payments_account_form";
+import * as BPromise  from  'bluebird';
 
 export const EditAccount = (React as any).createClass({
 	mixins: [Morearty.Mixin],
@@ -27,9 +28,17 @@ export const EditAccount = (React as any).createClass({
 		}
 	},
 	submitEdit: function(data) {
-		(window.Server as ServiceList).paymentsAccount.put({schoolId: this.props.schoolId, accountId: this.accountId}, data).then(() =>  {
+		const 	submitFormPromise = (window.Server as ServiceList).paymentsAccount.put({schoolId: this.props.schoolId, accountId: this.accountId}, data),
+				acceptTOSPromise = data.tosAcceptanceAgreement ? (window.Server as ServiceList).tosAcceptance.put({schoolId: this.props.schoolId, accountId: this.accountId}) :
+					BPromise.resolve(true);
+
+		BPromise.all([
+			submitFormPromise,
+			acceptTOSPromise
+		])
+		.then(() =>  {
 			document.location.hash = `school_console/accounts`;
-		});
+		})
 	},
 	render: function() {
 		if (this.getDefaultBinding().get('isSyncEditForm')) {

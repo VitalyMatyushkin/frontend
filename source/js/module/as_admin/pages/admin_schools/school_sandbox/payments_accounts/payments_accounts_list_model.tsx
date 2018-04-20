@@ -12,29 +12,29 @@ export interface PaymentAccount {
 		businessName: string
 		country: string
 		email: string
-	}
-	externalAccount: {
-		accountHolderName: string
-		accountHolderType: string
-		accountNumber: string
-		country: string
-		currency: string
-		routingNumber: string
-	}
-	legalEntity: {
-		dob: {
-			day: number
-			month: number
-			year: number
+		externalAccount: {
+			accountHolderName: string
+			accountHolderType: string
+			accountNumber: string
+			country: string
+			currency: string
+			routingNumber: string
 		}
-		firstName: string
-		lastName: string
-		type: string
-	}
-	tosAcceptance: {
-		date: string
-		ip: string
-		userAgent: string
+		legalEntity: {
+			dob: {
+				day: number
+				month: number
+				year: number
+			}
+			firstName: string
+			lastName: string
+			type: string
+		}
+		tosAcceptance: {
+			date: string
+			ip: string
+			userAgent: string
+		}
 	}
 }
 

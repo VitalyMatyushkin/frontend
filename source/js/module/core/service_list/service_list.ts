@@ -343,6 +343,7 @@ export class ServiceList {
 	//Payments
 	paymentsAccount: Service;
 	paymentsAccounts: Service;
+	tosAcceptance: Service;
 
 	images: object;
 
@@ -681,6 +682,7 @@ export class ServiceList {
 		//Payments
 		this.paymentsAccount = new Service('/i/schools/{schoolId}/payments/accounts/{accountId}', binding);
 		this.paymentsAccounts = new Service('/i/schools/{schoolId}/payments/accounts', binding);
+		this.tosAcceptance = new Service('/i/schools/{schoolId}/payments/accounts/{accountId}/tos', binding);
 
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		this.images = new ImageService((window as any).apiImg);

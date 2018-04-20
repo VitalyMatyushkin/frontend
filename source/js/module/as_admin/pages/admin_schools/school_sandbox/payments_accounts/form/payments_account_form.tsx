@@ -125,12 +125,6 @@ export const AccountForm = (React as any).createClass({
 				>
 					Account holder type
 				</FormField>
-				<FormField
-					field	='stripeData.externalAccount.routingNumber'
-					type	="text"
-				>
-					Routing number
-				</FormField>
 			</FormBlock>
 		);
 	},
@@ -183,21 +177,20 @@ export const AccountForm = (React as any).createClass({
 				<FormField
 					field		= 'stripeData.tosAcceptance.date'
 					type		= "date"
-					validation  = "date required"
+					validation  = "date"
 				>
 					Date
 				</FormField>
 				<FormField
 					field		= 'stripeData.tosAcceptance.ip'
 					type		= "text"
-					validation  = "ip required"
+					validation  = "ip"
 				>
 					IP
 				</FormField>
 				<FormField
 					field		= 'stripeData.tosAcceptance.userAgent'
 					type		= "text"
-					validation  = "required"
 				>
 					User agent
 				</FormField>

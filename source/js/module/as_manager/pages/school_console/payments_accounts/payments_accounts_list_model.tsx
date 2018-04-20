@@ -54,6 +54,17 @@ export class PaymentAccountModel{
 				}
 			},
 			{
+				text:'Details',
+				isSorted:  false,
+				cell:{
+					dataField:'details',
+					type:'custom',
+					typeOptions:{
+						parseFunction: this.getDetails.bind(this)
+					}
+				}
+			},
+			{
 				text: 'Actions',
 				cell: {
 					type: 'action-buttons',
@@ -64,6 +75,16 @@ export class PaymentAccountModel{
 				}
 			}
 		];
+	}
+
+	getDetails(account: PaymentAccount) {
+		if (account.stripeData.tosAcceptance.date === null &&
+			account.stripeData.tosAcceptance.ip === null &&
+			account.stripeData.tosAcceptance.userAgent === null) {
+			return 'TOS acceptance required';
+		} else {
+			return '';
+		}
 	}
 
 	onEdit(account: PaymentAccount, eventDescriptor: any) {
