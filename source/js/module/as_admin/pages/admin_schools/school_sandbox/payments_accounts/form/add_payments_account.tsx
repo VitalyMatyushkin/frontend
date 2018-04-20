@@ -21,8 +21,12 @@ export const AddAccount = (React as any).createClass({
 	},
 	submitAdd: function (data) {
 		const schoolId = this.getMoreartyContext().getBinding().get('routing.pathParameters.0');
-		(window.Server as AdminServiceList).paymentsAccounts.post({schoolId}, data).then(() => {
+		(window.Server as AdminServiceList).paymentsAccounts.post({schoolId}, data)
+		.then(() => {
 			document.location.hash = `/school_sandbox/${schoolId}/accounts`;
+		})
+		.catch((err) => {
+			this.getDefaultBinding().set('errors', err.response.data.details.text);
 		});
 	},
 	render: function () {
@@ -33,6 +37,7 @@ export const AddAccount = (React as any).createClass({
 					onClickSubmit	= { this.submitAdd }
 					binding			= { this.getDefaultBinding() }
 					mode			= { MODE.ADD }
+					errors			= { this.getDefaultBinding().get('errors') }
 				/>
 			)
 		} else {

@@ -38,8 +38,12 @@ export const EditAccount = (React as any).createClass({
 		}
 	},
 	submitEdit: function(data) {
-		(window.Server as AdminServiceList).paymentsAccount.put({schoolId: this.schoolId, accountId: this.accountId}, data).then(() =>  {
+		(window.Server as AdminServiceList).paymentsAccount.put({schoolId: this.schoolId, accountId: this.accountId}, data)
+		.then(() =>  {
 			document.location.hash = `school_sandbox/${this.schoolId}/accounts`;
+		})
+		.catch((err) => {
+			this.getDefaultBinding().set('errors', err.response.data.details.text);
 		});
 	},
 	render: function() {
@@ -50,6 +54,7 @@ export const EditAccount = (React as any).createClass({
 					onClickSubmit	= { this.submitEdit }
 					binding			= { this.getDefaultBinding() }
 					mode			= { MODE.EDIT }
+					errors			= { this.getDefaultBinding().get('errors') }
 				/>
 			)
 		} else {

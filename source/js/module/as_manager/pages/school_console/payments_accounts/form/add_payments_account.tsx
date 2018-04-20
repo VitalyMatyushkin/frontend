@@ -10,8 +10,12 @@ export const AddAccount = (React as any).createClass({
 		this.getDefaultBinding().clear();
 	},
 	submitAdd: function (data) {
-		(window.Server as ServiceList).paymentsAccounts.post({schoolId: this.props.schoolId}, data).then(() => {
+		(window.Server as ServiceList).paymentsAccounts.post({schoolId: this.props.schoolId}, data)
+		.then(() => {
 			document.location.hash = `school_console/accounts`;
+		})
+		.catch((err) => {
+			this.getDefaultBinding().set('errors', err.response.data.details.text);
 		});
 	},
 	render: function () {
@@ -23,6 +27,7 @@ export const AddAccount = (React as any).createClass({
 				binding			= { this.getDefaultBinding() }
 				region			= { this.props.region }
 				mode			= { MODE.ADD }
+				errors			= { this.getDefaultBinding().get('errors') }
 			/>
 		)
 	}

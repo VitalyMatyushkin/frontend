@@ -100,6 +100,7 @@ export class PaymentAccountModel{
 			() => (window.Server as ServiceList).paymentsAccount
 				.delete(
 					{
+						schoolId: this.schoolId,
 						accountId: 	account.id
 					}
 				)

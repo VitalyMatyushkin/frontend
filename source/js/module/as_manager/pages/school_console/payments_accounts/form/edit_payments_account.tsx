@@ -39,6 +39,9 @@ export const EditAccount = (React as any).createClass({
 		.then(() =>  {
 			document.location.hash = `school_console/accounts`;
 		})
+		.catch((err) => {
+			this.getDefaultBinding().set('errors', err.response.data.details.text);
+		});
 	},
 	render: function() {
 		if (this.getDefaultBinding().get('isSyncEditForm')) {
@@ -49,6 +52,7 @@ export const EditAccount = (React as any).createClass({
 					binding			= { this.getDefaultBinding() }
 					region			= { this.props.region }
 					mode			= { MODE.EDIT }
+					errors			= { this.getDefaultBinding().get('errors') }
 				/>
 			)
 		} else {

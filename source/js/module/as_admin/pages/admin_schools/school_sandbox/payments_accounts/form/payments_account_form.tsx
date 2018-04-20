@@ -16,7 +16,8 @@ export const AccountForm = (React as any).createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: (React as any).PropTypes.string.isRequired,
-		onClickSubmit: (React as any).PropTypes.func.isRequired
+		onClickSubmit: (React as any).PropTypes.func.isRequired,
+		errors: (React as any).PropTypes.string
 	},
 
 	onSubmit: function(data) {
@@ -198,6 +199,14 @@ export const AccountForm = (React as any).createClass({
 		);
 	},
 
+	renderErrorsBlock: function() {
+		return (
+			<div className='bErrorsBlock'>
+				{this.props.errors}
+			</div>
+		);
+	},
+
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -222,6 +231,7 @@ export const AccountForm = (React as any).createClass({
 				>
 					{this.renderLegalEntityDataBlock()}
 					{this.renderTosAcceptanceDataBlock()}
+					{this.props.errors ? this.renderErrorsBlock() : <div></div>}
 				</FormColumn>
 			</Form>
 		);

@@ -21,7 +21,8 @@ export const AccountForm = (React as any).createClass({
 		title: (React as any).PropTypes.string.isRequired,
 		onClickSubmit: (React as any).PropTypes.func.isRequired,
 		region: (React as any).PropTypes.string,
-		mode: (React as any).PropTypes.string
+		mode: (React as any).PropTypes.string,
+		errors: (React as any).PropTypes.string
 	},
 
 	onSubmit: function(data) {
@@ -223,6 +224,14 @@ export const AccountForm = (React as any).createClass({
 		);
 	},
 
+	renderErrorsBlock: function() {
+		return (
+			<div className='bErrorsBlock'>
+				{this.props.errors}
+			</div>
+		);
+	},
+
 	renderTosAcceptanceAgreementBlock: function() {
 		return (
 			<FormBlock
@@ -274,6 +283,7 @@ export const AccountForm = (React as any).createClass({
 					{this.props.mode === MODE.EDIT && !this.isShowTosAcceptanceAgreement() ? this.renderTosAcceptanceDataBlock() : <div></div>}
 					{this.isShowTosAcceptanceAgreement() ? this.renderTosAcceptanceAgreementBlock() : <div></div>}
 					{this.renderAccountAgreementBlock()}
+					{this.props.errors ? this.renderErrorsBlock() : <div></div>}
 				</FormColumn>
 			</Form>
 		);

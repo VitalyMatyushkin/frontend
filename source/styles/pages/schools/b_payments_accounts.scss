@@ -37,4 +37,11 @@
     cursor: default;
     pointer-events: none;
   }
+
+  .bErrorsBlock {
+    padding-top: 20px;
+    text-align: center;
+    color: $INVALID_COLOR;
+    max-width: 360px;
+  }
 }
