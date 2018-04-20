@@ -38,7 +38,7 @@ export const SchoolClubsWidgetActions = {
 	getSchoolActiveClubsCount(schoolId: string): BPromise<{count: number}> {
 		return (window.Server as ServiceList).schoolClubs.get(
 			{schoolId},
-			{ filter: { where: { status: 'ACTIVE' } } }
+			{ filter: { where: { status: 'ACTIVE' }, limit: 1000 } }
 			)
 			.then(clubs => {
 				return {count: clubs.length}
@@ -47,7 +47,7 @@ export const SchoolClubsWidgetActions = {
 	getSchoolDraftClubsCount(schoolId: string): BPromise<{count: number}> {
 		return (window.Server as ServiceList).schoolClubs.get(
 			{schoolId},
-			{ filter: { where: { status: 'DRAFT' } } }
+			{ filter: { where: { status: 'DRAFT' }, limit: 1000 } }
 			)
 			.then(messages => {
 				return {count: messages.length}
