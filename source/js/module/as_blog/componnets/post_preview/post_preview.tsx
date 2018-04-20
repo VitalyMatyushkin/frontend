@@ -1,9 +1,11 @@
 import * as React from 'react';
+import * as Reactmarkdown from 'react-markdown';
 
 import {PostData} from "module/models/post/post";
 import {DateHelper} from "module/helpers/date_helper";
 
 import 'styles/ui/blog/b_post_preview.scss'
+import {PostPreviewAuthorUserPic} from "module/as_blog/componnets/post_preview/components/post_preview_author_user_pic";
 
 export interface PostPreviewProps {
 	post: PostData
@@ -35,17 +37,12 @@ export class PostPreview extends React.Component<PostPreviewProps, {}> {
 					{this.props.post.title}
 				</h4>
 				<div className='ePostPreview_content'>
-					{this.props.post.content.substring(0, 350)}
+					<Reactmarkdown
+						source={this.props.post.content.substring(0, 350)}
+					/>
 				</div>
 				<div className='ePostPreview_author'>
-					<div className='ePostPreview_authorUserPickContainer'>
-						<img
-							className='ePostPreview_authorUserPick'
-							src="https://pp.userapi.com/c824600/v824600525/858e4/feBmYQCSHHA.jpg"
-							height="40px"
-							width="40px"
-						/>
-					</div>
+					<PostPreviewAuthorUserPic post={this.props.post}/>
 					<div className='ePostPreview_authorNameContainer'>
 						<span className='ePostPreview_authorName'>{this.getAuthorFullName()}</span><br/>
 						<span className='ePostPreview_postDate'>{this.getPublishDate()}</span>

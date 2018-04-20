@@ -2,6 +2,7 @@ export interface PostData {
 	id: string
 	authorId: string
 	author: {
+		avatar?: string
 		lastName: string
 		firstName: string
 	}
