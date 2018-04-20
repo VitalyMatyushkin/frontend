@@ -479,7 +479,6 @@ export const EventVenue = (React as any).createClass({
 
 	render() {
 		const binding = this.getDefaultBinding();
-		console.log(binding.toJS());
 
 		// Note. Pls look at Autocomplete component.
 		// You can see generated key.

@@ -210,22 +210,23 @@ export const EventForm = (React as any).createClass({
 				gender                      = binding.toJS('model.gender'),
 				fartherThen					= binding.get('fartherThen'),
 				type						= event.type,
+				cssClassName 				= Boolean(binding.toJS('model.isTimesValid')) ? '' : 'mError',
 				opponentSchoolInfoArray		= this.getOpponentSchoolInfoArray();
 
 		return(
 			<div className="eManager_base">
-				<DateSelectorWrapper binding={binding.sub('model.startTime')}/>
+				<DateSelectorWrapper binding={binding.sub('model')}/>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
 						Start Time
 					</div>
-					<TimeInputWrapper binding={binding.sub('model.startTime')}/>
+					<TimeInputWrapper cssClassName = {cssClassName} binding={binding.sub('model.startTime')}/>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
 						Finish Time
 					</div>
-					<TimeInputWrapper binding={binding.sub('model.endTime')}/>
+					<TimeInputWrapper cssClassName = {cssClassName} binding={binding.sub('model.endTime')}/>
 				</div>
 				<SportSelector
 					binding			= { binding }

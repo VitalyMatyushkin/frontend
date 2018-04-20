@@ -14,7 +14,7 @@ export const TimeInputWrapper = (React as any).createClass({
 
 		dateObject.setHours(hour);
 
-		binding.set(dateObject.toISOString());
+		binding.set(dateObject);
 	},
 	handleChangeMinutes: function(minute: number): void {
 		const binding = this.getDefaultBinding();
@@ -24,7 +24,7 @@ export const TimeInputWrapper = (React as any).createClass({
 
 		dateObject.setMinutes(minute);
 
-		binding.set(dateObject.toISOString());
+		binding.set(dateObject);
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
@@ -38,6 +38,7 @@ export const TimeInputWrapper = (React as any).createClass({
 				minutesValue		= { dateObject.getMinutes() }
 				handleChangeHour	= { this.handleChangeHour }
 				handleChangeMinutes	= { this.handleChangeMinutes }
+				cssClassName 		= { this.props.cssClassName }
 			/>
 		);
 	}

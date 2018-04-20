@@ -11,4 +11,7 @@
   border: solid #959595!important;
   border-width: 0 0 1px!important;
   border-radius: 0!important;
+  &.mError{
+    border: 1px solid red!important;
+  }
 }

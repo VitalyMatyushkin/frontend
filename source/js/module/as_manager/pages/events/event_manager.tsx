@@ -291,10 +291,36 @@ export const EventManager = (React as any).createClass({
 	},
 	addListeners: function(): void {
 		this.addListenerForTeamManager();
+		this.addListenersForEventTimeAndSetDefaultValue();
 		if(this.mode === 'copy') {
 			this.addListenersForEventManagerBase();
 		}
 	},
+	//end time must be greater then start time always (this restriction was add to server 19-04-2018)
+	//if not, add error style in component TimeInputWrapper
+	addListenersForEventTimeAndSetDefaultValue: function(): void{
+		const binding = this.getDefaultBinding();
+		binding.set('model.isTimesValid', true);
+		this.listeners.push(binding.sub('model.startTime').addListener( eventDescriptor =>
+			{
+				if (eventDescriptor.getCurrentValue() > binding.sub('model.endTime').toJS()){
+					binding.set('model.isTimesValid', false);
+				} else {
+					binding.set('model.isTimesValid', true);
+				}
+			}
+		));
+		this.listeners.push(binding.sub('model.endTime').addListener(eventDescriptor =>
+			{
+				if (eventDescriptor.getCurrentValue() <= binding.sub('model.startTime').toJS()){
+					binding.set('model.isTimesValid', false);
+				} else {
+					binding.set('model.isTimesValid', true);
+				}
+			}
+		));
+	},
+
 	addListenerForTeamManager: function(): void {
 		const binding = this.getDefaultBinding();
 
@@ -342,12 +368,16 @@ export const EventManager = (React as any).createClass({
 
 		// just copy new date
 		// because we don't want modify arg
-		const	newDateCopy	= new Date(newDate.toISOString());
+		const	newDateCopyStartTime	= new Date(newDate),
+				newDateCopyEndTime 		= new Date(newDate);
 
-		// default start time values
-		let		hours			= 10,
-			minute			= 0;
-		const	currStartDate	= binding.toJS('model.startTime');
+		// default start and end time values
+		let		hoursStartTime			= 10,
+				minuteStartTime			= 0,
+				hoursEndTime			= 10,
+				minuteEndTime			= 0;
+		const	currStartDate	= binding.toJS('model.startTime'),
+				currEndDate 	= binding.toJS('model.endTime');
 		// get start time values(hours and minutes) from current start time if current start time isn't undefined
 		if (
 			typeof currStartDate !== 'undefined' &&
@@ -355,18 +385,31 @@ export const EventManager = (React as any).createClass({
 		) {
 			const	time	= new Date(currStartDate);
 
-			minute = time.getMinutes();
-			hours = time.getHours();
+			minuteStartTime = time.getMinutes();
+			hoursStartTime = time.getHours();
+		}
+		// get end time values(hours and minutes) from current end time if current end time isn't undefined
+		if (
+			typeof currEndDate !== 'undefined' &&
+			currEndDate !== null
+		) {
+			const	time	= new Date(currEndDate);
+
+			minuteEndTime = time.getMinutes();
+			hoursEndTime = time.getHours();
 		}
 
 		// set hours and minutes
-		newDateCopy.setHours(hours);
-		newDateCopy.setMinutes(minute);
+		newDateCopyStartTime.setHours(hoursStartTime);
+		newDateCopyStartTime.setMinutes(minuteStartTime);
+		newDateCopyEndTime.setHours(hoursEndTime);
+		newDateCopyEndTime.setMinutes(minuteEndTime);
 
 		binding.atomically()
-			.set('model.startTime',				newDateCopy.toISOString())
-			.set('model.startRegistrationTime',	newDateCopy.toISOString())
-			.set('model.endRegistrationTime',	newDateCopy.toISOString())
+			.set('model.startTime',				newDateCopyStartTime)
+			.set('model.endTime',				newDateCopyEndTime)
+			.set('model.startRegistrationTime',	newDateCopyStartTime)
+			.set('model.endRegistrationTime',	newDateCopyStartTime)
 			.commit();
 	},
 	toNext: function (): void {
@@ -661,6 +704,7 @@ export const EventManager = (React as any).createClass({
 			typeof binding.get('model.startTime')				!== 'undefined' &&
 			binding.get('model.startTime') 						!== null &&
 			binding.get('model.startTime') 						!== '' &&
+			binding.get('model.startTime') < binding.get('model.endTime') &&
 			typeof binding.toJS('model.sportId')				!== 'undefined' &&
 			binding.toJS('model.sportId')						!== '' &&
 			typeof binding.toJS('model.gender')					!== 'undefined' &&

@@ -8,7 +8,8 @@ const FullTimeInput = React.createClass({
 		handleChangeMinutes:	React.PropTypes.func.isRequired,
 		handleChangeHour:		React.PropTypes.func.isRequired,
 		minutesValue:			React.PropTypes.number.isRequired,
-		hourValue:				React.PropTypes.number.isRequired
+		hourValue:				React.PropTypes.number.isRequired,
+		cssClassName: 			React.PropTypes.string
 	},
 	getInitialState: function(){
 		return {focus: false}
@@ -23,15 +24,16 @@ const FullTimeInput = React.createClass({
 	},
 
 	render: function () {
+		const cssClassName = typeof this.props.cssClassName !== 'undefined' ? 'bSmallTimeInput ' + this.props.cssClassName : 'bSmallTimeInput';
 		return (
 			<div className="bFullTimeInput">
-				<TimeInput	cssClassName	= { 'bSmallTimeInput' }
+				<TimeInput	cssClassName	= { cssClassName }
 							value			= { this.props.hourValue }
 							handleChange	= { this.handleChangeHourInput }
 							type			= { TimeInputConsts.TIME_INPUT_TYPE.HOUR }
 				/>
 				<div className="eFullTimeInput_delimiter">:</div>
-				<TimeInput	cssClassName	= { 'bSmallTimeInput' }
+				<TimeInput	cssClassName	= { cssClassName }
 							value			= { this.props.minutesValue }
 							handleChange	= { this.handleChangeMinutesInput }
 							type			= { TimeInputConsts.TIME_INPUT_TYPE.MINUTES }
