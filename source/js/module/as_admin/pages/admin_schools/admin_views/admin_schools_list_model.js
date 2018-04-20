@@ -152,6 +152,23 @@ class AdminSchoolsListClass{
 			}
 		];
 	}
+
+	getRegionList() {
+		return [
+			{
+				key:	'GB',
+				value:	'GB'
+			},
+			{
+				key:	'US',
+				value:	'US'
+			},
+			{
+				key:	'DE',
+				value:	'DE'
+			}
+		];
+	}
 	
 	setColumns(){
 		this.columns = [
@@ -202,6 +219,20 @@ class AdminSchoolsListClass{
 				},
 				filter:{
 					type:'string'
+				}
+			},
+			{
+				text:'Region',
+				isSorted:false,
+				cell:{
+					dataField:'region',
+					type:'general'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: this.getRegionList()
+					}
 				}
 			},
 			{

@@ -118,6 +118,23 @@ SchoolUnionListModel.prototype.getStatusList = function(){
 	];
 };
 
+SchoolUnionListModel.prototype.getRegionList = function(){
+	return [
+		{
+			key:	'GB',
+			value:	'GB'
+		},
+		{
+			key:	'US',
+			value:	'US'
+		},
+		{
+			key:	'DE',
+			value:	'DE'
+		}
+	];
+};
+
 SchoolUnionListModel.prototype.setColumns = function(){
 	this.columns = [
 		{
@@ -167,6 +184,20 @@ SchoolUnionListModel.prototype.setColumns = function(){
 			},
 			filter:{
 				type:'string'
+			}
+		},
+		{
+			text:'Region',
+			isSorted:false,
+			cell:{
+				dataField:'region',
+				type:'general'
+			},
+			filter:{
+				type:'multi-select',
+				typeOptions:{
+					items: this.getRegionList()
+				}
 			}
 		},
 		{
