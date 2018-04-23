@@ -101,6 +101,15 @@ $active-day-background: #b2d7ec;
   transition: border .5s;
   width: $month_day_size;
 
+  &.mExtraSmall {
+    height: 25px !important;
+    width: 25px !important;
+
+    padding-top: 6px;
+
+    font-size: 12px !important;
+  }
+
   &.mSmall {
     height: 40px;
     width: 40px;

@@ -36,6 +36,9 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.ExtraSmall: {
+				return ' mExtraSmall';
+			}
 			case CalendarSize.Small: {
 				return ' mMedium';
 			}
@@ -144,33 +147,33 @@ export class MonthYearSelector extends React.Component<MonthYearSelectorProps, M
 		return (
 			<div className={`bMonthYearSelector ${this.getSizeModifierStyle()}`}>
 				{ this.renderPlaceHolder() }
-				<div className="eMonthYearSelector_smallSizeColumn mLeft">
+				<div className={`eMonthYearSelector_smallSizeColumn ${this.getSizeModifierStyle()} mLeft`}>
 					<div
-						className	= "eMonthYearSelector_arrow mLeft"
+						className	= {`eMonthYearSelector_arrow mLeft ${this.getSizeModifierStyle()}`}
 						onClick		= {this.handleClickPrevMonth.bind(this)}
 					>
 						<i className="fa fa-arrow-left" aria-hidden="true"/>
 					</div>
 				</div>
-				<div className="eMonthYearSelector_middleSizeColumn">
+				<div className={`eMonthYearSelector_middleSizeColumn ${this.getSizeModifierStyle()}`}>
 					<Dropdown
-						optionsArray		= { this.getOptionsForMonthDropdown() }
-						currentOptionId		= { String(this.getCurrentMonth()) }
-						handleChange		= { this.handleChangeMonth.bind(this) }
-						extraCssStyle		= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle() }
+						optionsArray	= { this.getOptionsForMonthDropdown() }
+						currentOptionId	= { String(this.getCurrentMonth()) }
+						handleChange	= { this.handleChangeMonth.bind(this) }
+						extraCssStyle	= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle() }
 					/>
 				</div>
-				<div className="eMonthYearSelector_middleSizeColumn">
+				<div className={`eMonthYearSelector_middleSizeColumn ${this.getSizeModifierStyle()}`}>
 					<Dropdown
-						optionsArray		= { this.getOptionsForYearDropdown() }
-						currentOptionId		= { String(this.getCurrentYear()) }
-						handleChange		= { this.handleChangeYear.bind(this) }
-						extraCssStyle		= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle()}
+						optionsArray	= { this.getOptionsForYearDropdown() }
+						currentOptionId	= { String(this.getCurrentYear()) }
+						handleChange	= { this.handleChangeYear.bind(this) }
+						extraCssStyle	= { this.DROPDOWN_CSS_STYLE + this.getSizeModifierStyle()}
 					/>
 				</div>
-				<div className="eMonthYearSelector_smallSizeColumn mWithoutBorder mRight">
+				<div className={`eMonthYearSelector_smallSizeColumn ${this.getSizeModifierStyle()} mWithoutBorder mRight`}>
 					<div
-						className	= "eMonthYearSelector_arrow mRight"
+						className	= {`eMonthYearSelector_arrow mRight ${this.getSizeModifierStyle()}`}
 						onClick		= {this.handleClickNextMonth.bind(this)}
 					>
 						<i className="fa fa-arrow-right" aria-hidden="true"/>

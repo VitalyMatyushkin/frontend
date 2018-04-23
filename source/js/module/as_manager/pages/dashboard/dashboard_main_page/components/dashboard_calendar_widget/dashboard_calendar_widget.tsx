@@ -15,12 +15,14 @@ export interface DashboardCalendarWidgetState {
 
 export enum CalendarSize {
 	Medium = 'MEDIUM',
-	Small = 'SMALL'
+	Small = 'SMALL',
+	ExtraSmall = 'EXTRA_SMALL'
 }
 
 // It's good size for cute widget fit
 const UP_CONSTRAINT_OF_MEDIUM_SIZE = 890;
 const UP_CONSTRAINT_OF_SMALL_SIZE = 720;
+const UP_CONSTRAINT_OF_EXTRA_SMALL_SIZE = 570;
 
 export class DashboardCalendarWidget extends React.Component<DashboardCalendarWidgetProps, DashboardCalendarWidgetState> {
 	widget = undefined;
@@ -37,7 +39,9 @@ export class DashboardCalendarWidget extends React.Component<DashboardCalendarWi
 		this.setState({width});
 	}
 	getSize() {
-		if(this.state.width <= UP_CONSTRAINT_OF_SMALL_SIZE) {
+		if(this.state.width <= UP_CONSTRAINT_OF_EXTRA_SMALL_SIZE) {
+			return CalendarSize.ExtraSmall;
+		} else if(this.state.width <= UP_CONSTRAINT_OF_SMALL_SIZE) {
 			return CalendarSize.Small;
 		} else if(this.state.width <= UP_CONSTRAINT_OF_MEDIUM_SIZE) {
 			return CalendarSize.Medium;

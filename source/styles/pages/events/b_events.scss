@@ -43,12 +43,19 @@
       @extend .col-xs-12;
     }
 
+    &.mExtraSmall {
+      width: 200px !important;
+      min-width: 200px !important;
+      margin: 0 auto;
+    }
+
     &.mSmall {
       width: 370px !important;
       margin: 0 auto;
     }
 
     &.mMedium {
+
     }
   }
 
@@ -63,6 +70,12 @@
       @extend .col-md-7;
       @extend .col-sm-12;
       @extend .col-xs-12;
+    }
+
+    &.mExtraSmall {
+      width: 200px !important;
+      min-width: 200px !important;
+      margin: 0 auto;
     }
 
     &.mSmall {

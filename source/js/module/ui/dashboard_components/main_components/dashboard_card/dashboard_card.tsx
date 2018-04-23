@@ -70,6 +70,9 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 			return this.props.width;
 		}
 	}
+	getDashboardCardStyle() {
+		return this.state.isResizing ? {width: this.getWidth()} : {};
+	}
 	handleResize(e, {element, size}) {
 		this.setState({resizingWidth: size.width});
 	}
@@ -113,7 +116,6 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 	}
 	render() {
 		const width = this.getWidth();
-		const style = {width};
 
 		return (
 			<Resizable
@@ -130,7 +132,7 @@ export class DashboardCard extends React.Component<DashboardCardProps, Dashboard
 				<div
 					ref={(card) => { this.card = card; }}
 					className={this.getCardStyle()}
-					style={style}
+					style={this.getDashboardCardStyle()}
 				>
 					<DashboardCardHeader
 						index = {this.props.index}

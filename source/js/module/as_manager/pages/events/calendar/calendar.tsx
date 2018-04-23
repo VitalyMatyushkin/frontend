@@ -44,7 +44,7 @@ export const Calendar = (React as any).createClass({
 		if(typeof monthDate !== 'undefined') {
 			return (
 				<MonthCalendar
-					size            = {this.props.size}
+					size			= {this.props.size}
 					monthDate		= {monthDate}
 					todayDate		= {todayDate}
 					selectedDate	= {selectedDate}

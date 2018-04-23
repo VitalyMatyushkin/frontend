@@ -21,17 +21,18 @@ interface DayPanelProps {
 
 export class DayPanel extends React.Component<DayPanelProps> {
 	render() {
-		const classes	= classNames({
-			eMonth_day:	true,
-			mMedium:    this.props.size === CalendarSize.Medium,
-			mSmall:     this.props.size === CalendarSize.Small,
-			mToday:		this.props.isToday === true,
-			mActive:	this.props.isSelected ? false : this.props.isActive,	// nobody care about day activity if day is selected
-			mSelect:	this.props.isSelected === true,
-			mNext:		this.props.isNextMonth === true,
-			mPrev:		this.props.isPrevMonth === true
+		const classes = classNames({
+			eMonth_day:		true,
+			mExtraSmall:	this.props.size === CalendarSize.ExtraSmall,
+			mSmall:			this.props.size === CalendarSize.Small,
+			mMedium:		this.props.size === CalendarSize.Medium,
+			mToday:			this.props.isToday === true,
+			mActive:		this.props.isSelected ? false : this.props.isActive,	// nobody care about day activity if day is selected
+			mSelect:		this.props.isSelected === true,
+			mNext:			this.props.isNextMonth === true,
+			mPrev:			this.props.isPrevMonth === true
 		});
-		
+
 		return <span className={classes} onClick={() => this.props.onClick()}>{this.props.dayName}</span>;
 	}
 }

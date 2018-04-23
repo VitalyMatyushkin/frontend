@@ -31,22 +31,14 @@ export const EventsCalendar = (React as any).createClass({
 		extraStyleForCol: (React as any).PropTypes.string
 	},
 	componentWillReceiveProps(newProps) {
-		if(newProps.size === CalendarSize.Small && this.props.size !== CalendarSize.Small) {
-			this.getDefaultBinding().set(
-				'eventsCalendarComponentState',
-				Immutable.fromJS({
-					viewMode: EventsCalendarViewMode.LeftCol
-				})
-			);
+		let viewMode;
+		if(newProps.size === CalendarSize.ExtraSmall || newProps.size === CalendarSize.Small) {
+			viewMode = EventsCalendarViewMode.LeftCol;
+		} else {
+			viewMode = EventsCalendarViewMode.Default;
 		}
-		if(newProps.size !== CalendarSize.Small && this.props.size === CalendarSize.Small) {
-			this.getDefaultBinding().set(
-				'eventsCalendarComponentState',
-				Immutable.fromJS({
-					viewMode: EventsCalendarViewMode.Default
-				})
-			);
-		}
+
+		this.getDefaultBinding().set('eventsCalendarComponentState', Immutable.fromJS({viewMode}));
 	},
 	componentWillMount () {
 		const	binding         = this.getDefaultBinding(),
@@ -69,6 +61,10 @@ export const EventsCalendar = (React as any).createClass({
 		let viewMode;
 
 		switch (this.props.size) {
+			case CalendarSize.ExtraSmall: {
+				viewMode = EventsCalendarViewMode.LeftCol;
+				break;
+			}
 			case CalendarSize.Small: {
 				viewMode = EventsCalendarViewMode.LeftCol;
 				break;
@@ -116,6 +112,9 @@ export const EventsCalendar = (React as any).createClass({
 	},
 	getSizeModifierStyle() {
 		switch (this.props.size) {
+			case CalendarSize.ExtraSmall: {
+				return ' mExtraSmall';
+			}
 			case CalendarSize.Small: {
 				return ' mSmall';
 			}

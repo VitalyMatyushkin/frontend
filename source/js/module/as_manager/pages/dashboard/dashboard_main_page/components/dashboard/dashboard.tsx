@@ -100,7 +100,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolProfileWidget, delta)}
 				delta={widgetData.delta}
@@ -130,7 +130,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolDataWidgetData, delta)}
 				delta={widgetData.delta}
@@ -159,7 +159,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolClubWidget, delta)}
 				delta={widgetData.delta}
@@ -187,7 +187,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolUsersWidgetData, delta)}
 				delta={widgetData.delta}
@@ -216,7 +216,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolInvitesWidgetData, delta)}
 				delta={widgetData.delta}
@@ -245,7 +245,7 @@ class Dashboard extends React.Component<DashboardProps, {width: number}> {
 				colWidth={this.getColWidth()}
 				mdWidth={3}
 				smWidth={4}
-				xsWidth={6}
+				xsWidth={12}
 				widget={widget}
 				handleResize={(delta) => this.props.handleResize(WIDGET_TYPE.SchoolMessagesWidgetData, delta)}
 				delta={widgetData.delta}
