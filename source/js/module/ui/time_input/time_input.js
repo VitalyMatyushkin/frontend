@@ -44,8 +44,7 @@ const TimeInput = React.createClass({
 				const matchTwoNumbers = value.match(/^[0-9]{2}$/);
 				if (matchTwoNumbers !== null && this.props.type === TimeInputConsts.TIME_INPUT_TYPE.HOUR) {
 					this.setState({isTyping: false});
-					this.input.blur();
-					this.props.handleChange(parseInt(value, 10));
+					this.input.blur(); // it will call this.handleBlur automatically
 				}
 			}
 		}
@@ -101,11 +100,11 @@ const TimeInput = React.createClass({
 			isTyping	: true
 		});
 	},
-	handleBlur: function() {
+	handleBlur: function(e) {
 		this.setState({isTyping: false});
 
-		if(this.state.value !== '') {
-			this.props.handleChange(parseInt(this.state.value, 10));
+		if(e.target.value !== '') {
+			this.props.handleChange(parseInt(e.target.value, 10));
 		} else {
 			this.props.handleChange(0);
 		}

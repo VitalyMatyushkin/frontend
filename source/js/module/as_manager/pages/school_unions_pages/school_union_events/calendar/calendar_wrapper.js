@@ -3,7 +3,7 @@ const 	React		= require('react'),
 
 const	Calendar			= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/calendar'),
 		{Challenges}		= require('module/ui/challenges/challenges'),
-		{AddEventButton}	= require('module/as_manager/pages/events/calendar/calendar_footer');
+		{CalendarFooter}	= require('module/as_manager/pages/events/calendar/calendar_footer');
 
 const	CalendarActions	= require('module/as_manager/pages/school_unions_pages/school_union_events/calendar/actions');
 
@@ -57,7 +57,7 @@ const CalendarWrapper = React.createClass({
 								onClickDeleteEvent	= { () => {} }
 								isUserSchoolWorker	= { true }
 							/>
-							<AddEventButton
+							<CalendarFooter
 								handleClick	= { this.handleClickAddButton }
 							/>
 						</div>

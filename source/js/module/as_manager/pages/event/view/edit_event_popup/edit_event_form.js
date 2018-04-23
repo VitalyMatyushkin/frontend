@@ -20,10 +20,75 @@ const	EventEditStyle		= require('../../../../../../../styles/ui/b_event_edit.scs
 
 const EditEventForm = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	propTypes: {
 		activeSchoolId:		React.PropTypes.string.isRequired,
 		activeSchool:	React.PropTypes.object.isRequired,
 		schoolType:			React.PropTypes.string.isRequired
+	},
+	componentWillMount: function () {
+		this.addListeners();
+	},
+	componentWillUnmount: function () {
+		const binding	= this.getDefaultBinding();
+		
+		this.listeners.forEach(l => binding.removeListener(l));
+		binding.clear();
+	},
+	addListeners: function() {
+		this.addListenersForEventTimeAndSetDefaultValue();
+	},
+	//end time must be greater then start time always (this restriction was add to server 19-04-2018)
+	//if not, add error style in component TimeInputWrapper
+	addListenersForEventTimeAndSetDefaultValue: function(): void{
+		const binding = this.getDefaultBinding();
+		binding.set('model.isTimesValid', true);
+		this.listeners.push(binding.sub('model.startTime').addListener( eventDescriptor =>
+			{
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	startTime 		= new Date(currentValue),
+						startTimeHours 	= startTime.getHours(),
+						endTime 		= new Date(binding.sub('model.endTime').toJS()),
+						endTimeHours 	= endTime.getHours();
+
+				switch(true){
+					case(startTimeHours >= endTimeHours && startTimeHours !== 23):
+						const endTime = new Date(currentValue);
+						endTime.setHours(endTime.getHours() + 1);
+						binding.set('model.endTime', endTime.toISOString());
+						break;
+					case(startTimeHours >= endTimeHours && startTimeHours === 23):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
+				}
+			}
+		));
+		this.listeners.push(binding.sub('model.endTime').addListener(eventDescriptor =>
+			{
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	startTime 		= new Date(binding.sub('model.startTime').toJS()),
+						startTimeHours 	= startTime.getHours(),
+						endTime 		= new Date(currentValue),
+						endTimeHours 	= endTime.getHours();
+				
+				switch(true){
+					case(endTimeHours <= startTimeHours && endTimeHours !== 0):
+						const startTime = new Date(currentValue);
+						startTime.setHours(startTime.getHours() - 1);
+						binding.set('model.startTime', startTime.toISOString());
+						break;
+					case(endTimeHours <= startTimeHours && endTimeHours === 0):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
+				}
+			}
+		));
 	},
 	getActiveSchoolInfo: function() {
 		switch (this.props.schoolType) {
@@ -117,7 +182,8 @@ const EditEventForm = React.createClass({
 		}
 	},
 	render: function() {
-		const	binding	= this.getDefaultBinding();
+		const	binding			= this.getDefaultBinding(),
+				cssClassName 	= Boolean(binding.toJS('model.isTimesValid')) ? '' : 'mError';
 
 		return (
 			<div className="bEventEdit">
@@ -140,6 +206,7 @@ const EditEventForm = React.createClass({
 						minutesValue		= { this.getStartTimeMinutes() }
 						handleChangeHour	= { this.handleChangeStartTimeHour }
 						handleChangeMinutes	= { this.handleChangeStartTimeMinutes }
+						cssClassName 		= { cssClassName }
 					/>
 				</div>
 				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">
@@ -151,6 +218,7 @@ const EditEventForm = React.createClass({
 						minutesValue		= { this.getFinishTimeMinutes() }
 						handleChangeHour	= { this.handleChangeFinishTimeHour }
 						handleChangeMinutes	= { this.handleChangeFinishTimeMinutes }
+						cssClassName 		= { cssClassName }
 					/>
 				</div>
 				<div className="bInputWrapper mZeroHorizontalMargin mSmallWide">

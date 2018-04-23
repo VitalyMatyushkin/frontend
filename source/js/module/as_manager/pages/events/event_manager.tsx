@@ -79,6 +79,8 @@ export const EventManager = (React as any).createClass({
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
 		currentDate.setMinutes(0);
+		const endTime = new Date(currentDate);
+		endTime.setHours(currentDate.getHours() + 1);
 
 		return Immutable.fromJS({
 			// if true - then user click to finish button
@@ -87,8 +89,8 @@ export const EventManager = (React as any).createClass({
 			isTeamManagerSync: false,
 			model: {
 				name:			'',
-				startTime:		currentDate,
-				endTime:		currentDate,
+				startTime:		currentDate.toISOString(),
+				endTime:		endTime.toISOString(),
 				sportId:		undefined,
 				gender:			undefined,
 				ages:			[],
@@ -303,19 +305,43 @@ export const EventManager = (React as any).createClass({
 		binding.set('model.isTimesValid', true);
 		this.listeners.push(binding.sub('model.startTime').addListener( eventDescriptor =>
 			{
-				if (eventDescriptor.getCurrentValue() > binding.sub('model.endTime').toJS()){
-					binding.set('model.isTimesValid', false);
-				} else {
-					binding.set('model.isTimesValid', true);
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	startTime 		= new Date(currentValue),
+						startTimeHours 	= startTime.getHours();
+
+				switch(true){
+					case(currentValue >= binding.sub('model.endTime').toJS() && startTimeHours !== 23):
+						const endTime = new Date(currentValue);
+						endTime.setHours(endTime.getHours() + 1);
+						binding.set('model.endTime', endTime.toISOString());
+						break;
+					case(currentValue >= binding.sub('model.endTime').toJS() && startTimeHours === 23):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
 				}
 			}
 		));
 		this.listeners.push(binding.sub('model.endTime').addListener(eventDescriptor =>
 			{
-				if (eventDescriptor.getCurrentValue() <= binding.sub('model.startTime').toJS()){
-					binding.set('model.isTimesValid', false);
-				} else {
-					binding.set('model.isTimesValid', true);
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	endTime 		= new Date(currentValue),
+						endTimeHours 	= endTime.getHours();
+
+				switch(true){
+					case(currentValue <= binding.sub('model.startTime').toJS() && endTimeHours !== 0):
+						const startTime = new Date(currentValue);
+						startTime.setHours(startTime.getHours() - 1);
+						binding.set('model.startTime', startTime.toISOString());
+						break;
+					case(currentValue >= binding.sub('model.endTime').toJS() && endTimeHours === 0):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
 				}
 			}
 		));
@@ -361,56 +387,6 @@ export const EventManager = (React as any).createClass({
 
 			binding.set('rivals', Immutable.fromJS(rivals));
 		}
-	},
-	onSelectDate: function (newDate: Date): void {
-		// TODO Why do we store date in ISO format?
-		const binding = this.getDefaultBinding();
-
-		// just copy new date
-		// because we don't want modify arg
-		const	newDateCopyStartTime	= new Date(newDate),
-				newDateCopyEndTime 		= new Date(newDate);
-
-		// default start and end time values
-		let		hoursStartTime			= 10,
-				minuteStartTime			= 0,
-				hoursEndTime			= 10,
-				minuteEndTime			= 0;
-		const	currStartDate	= binding.toJS('model.startTime'),
-				currEndDate 	= binding.toJS('model.endTime');
-		// get start time values(hours and minutes) from current start time if current start time isn't undefined
-		if (
-			typeof currStartDate !== 'undefined' &&
-			currStartDate !== null
-		) {
-			const	time	= new Date(currStartDate);
-
-			minuteStartTime = time.getMinutes();
-			hoursStartTime = time.getHours();
-		}
-		// get end time values(hours and minutes) from current end time if current end time isn't undefined
-		if (
-			typeof currEndDate !== 'undefined' &&
-			currEndDate !== null
-		) {
-			const	time	= new Date(currEndDate);
-
-			minuteEndTime = time.getMinutes();
-			hoursEndTime = time.getHours();
-		}
-
-		// set hours and minutes
-		newDateCopyStartTime.setHours(hoursStartTime);
-		newDateCopyStartTime.setMinutes(minuteStartTime);
-		newDateCopyEndTime.setHours(hoursEndTime);
-		newDateCopyEndTime.setMinutes(minuteEndTime);
-
-		binding.atomically()
-			.set('model.startTime',				newDateCopyStartTime)
-			.set('model.endTime',				newDateCopyEndTime)
-			.set('model.startRegistrationTime',	newDateCopyStartTime)
-			.set('model.endRegistrationTime',	newDateCopyStartTime)
-			.commit();
 	},
 	toNext: function (): void {
 		const binding = this.getDefaultBinding();

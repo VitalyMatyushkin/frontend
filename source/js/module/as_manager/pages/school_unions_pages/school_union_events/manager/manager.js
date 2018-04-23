@@ -30,6 +30,8 @@ const Manager = React.createClass({
 		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
 		currentDate.setMinutes(0);
+		const endTime = new Date(currentDate);
+		endTime.setHours(currentDate.getHours() + 1);
 
 		return Immutable.fromJS({
 			// if true - then user click to finish button
@@ -37,8 +39,8 @@ const Manager = React.createClass({
 			isSubmitProcessing: false,
 			model: {
 				name:			'',
-				startTime:		currentDate,
-				endTime:		currentDate,
+				startTime:		currentDate.toISOString(),
+				endTime:		endTime.toISOString(),
 				sportId:		undefined,
 				gender:			undefined,
 				ages:			[],
@@ -61,7 +63,7 @@ const Manager = React.createClass({
 		this.isCopyMode = false;
 
 		LocalEventHelper.setParamsFromUrl(this);
-
+		this.addListeners();
 		this.setSchoolInfo()
 			.then(() => {
 				switch (this.mode) {
@@ -80,7 +82,61 @@ const Manager = React.createClass({
 			});
 	},
 	componentWillUnmount: function () {
-		this.getDefaultBinding().clear();
+		const binding	= this.getDefaultBinding();
+		
+		this.listeners.forEach(l => binding.removeListener(l));
+		binding.clear();
+	},
+	addListeners: function() {
+		this.addListenersForEventTimeAndSetDefaultValue();
+	},
+	//end time must be greater then start time always (this restriction was add to server 19-04-2018)
+	//if not, add error style in component TimeInputWrapper
+	addListenersForEventTimeAndSetDefaultValue: function(){
+		const binding = this.getDefaultBinding();
+		binding.set('model.isTimesValid', true);
+		this.listeners.push(binding.sub('model.startTime').addListener( eventDescriptor =>
+			{
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	startTime 		= new Date(currentValue),
+					startTimeHours 	= startTime.getHours();
+				
+				switch(true){
+					case(currentValue >= binding.sub('model.endTime').toJS() && startTimeHours !== 23):
+						const endTime = new Date(currentValue);
+						endTime.setHours(endTime.getHours() + 1);
+						binding.set('model.endTime', endTime.toISOString());
+						break;
+					case(currentValue >= binding.sub('model.endTime').toJS() && startTimeHours === 23):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
+				}
+			}
+		));
+		this.listeners.push(binding.sub('model.endTime').addListener(eventDescriptor =>
+			{
+				const currentValue = eventDescriptor.getCurrentValue();
+				const 	endTime 		= new Date(currentValue),
+					endTimeHours 	= endTime.getHours();
+				
+				switch(true){
+					case(currentValue <= binding.sub('model.startTime').toJS() && endTimeHours !== 0):
+						const startTime = new Date(currentValue);
+						startTime.setHours(startTime.getHours() - 1);
+						binding.set('model.startTime', startTime.toISOString());
+						break;
+					case(currentValue >= binding.sub('model.endTime').toJS() && endTimeHours === 0):
+						binding.set('model.isTimesValid', false);
+						break;
+					default:
+						binding.set('model.isTimesValid', true);
+						break;
+				}
+			}
+		));
 	},
 	setSchoolInfo: function() {
 		//get school data
@@ -120,6 +176,7 @@ const Manager = React.createClass({
 			typeof binding.get('model.startTime')				!== 'undefined' &&
 			binding.get('model.startTime') 						!== null &&
 			binding.get('model.startTime') 						!== '' &&
+			binding.get('model.startTime') < binding.get('model.endTime') &&
 			typeof binding.toJS('model.sportId')				!== 'undefined' &&
 			binding.toJS('model.sportId')						!== '' &&
 			typeof binding.toJS('model.gender')					!== 'undefined' &&

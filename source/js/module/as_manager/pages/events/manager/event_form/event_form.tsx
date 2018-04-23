@@ -224,7 +224,7 @@ export const EventForm = (React as any).createClass({
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
-						Finish Time
+						Finish/Collection time
 					</div>
 					<TimeInputWrapper cssClassName = {cssClassName} binding={binding.sub('model.endTime')}/>
 				</div>
